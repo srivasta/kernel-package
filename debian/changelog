@@ -1,5 +1,8 @@
 kernel-package (3.61) unstable; urgency=low
 
+  * There were bugs in 3.60, which are fixed in this release. Since the
+    changes since pre-3.60 are so drastic, I am including the changelog
+    entry again (as most people shall not see 3.60)
   * This is a major change in the source/header packages. In architectures
     different from i386, `kernel-headers-*' and `kernel-source-*' are
     incompatible. This also has an effect on libc6-dev, which depends on

@@ -1,5 +1,5 @@
 
-    $Id: copyright.doc,v 1.3 1997/08/29 17:12:52 srivasta Exp $
+    $Id: copyright.doc,v 1.4 1998/02/18 23:30:49 srivasta Exp $
 
 This is the Debian GNU/Linux prepackaged version of the Linux kernel
 Documentation. Linux was written by Linus Torvalds 
@@ -23,8 +23,9 @@ Linux is copyrighted by Linus Torvalds and others.
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program;  if not, write to the Free Software
-   Foundation, Inc., 675 Mass Ave., Cambridge, MA 02139, USA.
+   along with this program; if not, write to the Free Software
+   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+   02111-1307, USA.
 
 On Debian GNU/Linux systems, the complete text of the GNU General
 Public License can be found in `/usr/doc/copyright/GPL'.
