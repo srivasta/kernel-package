@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Wed Jan 26 02:40:23 2000
+## Last Modified On : Wed Jan 26 10:40:46 2000
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 417
+## Update Count	    : 419
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.81 2000/01/26 09:43:53 srivasta Exp $
+## $Id: rules,v 1.82 2000/01/26 16:46:52 srivasta Exp $
 ###############################################################################
 
 #
@@ -28,12 +28,7 @@ email= herbert@greathan.apana.org.au
 
 pgp=$(maintainer)
 
-# The Debian revision of the kernel packages (for example, `2').
-debian := $(shell if test -f debian/changelog; then \
-                     perl -nle 'print /\((\S+)\)/; exit 0' debian/changelog;\
-                  else \
-                     echo 1.00; \
-                  fi; )
+
 #  Package specific stuff
 # decide if image is meant to be in /boot rather than /
 image_in_boot :=
@@ -415,9 +410,26 @@ ifneq ($(strip $(PGP_SIGNATURE)),)
 pgp=$(PGP_SIGNATURE)
 endif
 
+
+# The Debian revision
+HAS_CHANGELOG := $(shell if test -f debian/changelog; then echo YES;\
+                          else echo NO; fi; )
+# If there is a changelog file, it overrides. Else, use the
+# commandline or env var setting. Or else default to 1.00
+ifeq ($(strip $(HAS_CHANGELOG)),YES)
+debian := $(shell if test -f debian/changelog; then \
+                     perl -nle 'print /\((\S+)\)/; exit 0' debian/changelog;\
+                  fi; )
+else
 ifneq ($(strip $(DEBIAN_REVISION)),)
 debian := $(DEBIAN_REVISION)
+else
+debian := 1.00
 endif
+endif
+endif
+
+
 
 ifneq ($(strip $(IMAGE_IN_BOOT)),)
 image_in_boot := $(IMAGE_IN_BOOT)
@@ -627,8 +639,16 @@ fi
 
 clean:
 ifeq ($(strip $(patch_the_kernel)),YES)
-	-test -d $(DIR_PATCH_UNPATCH) && run-parts --verbose $(DIR_PATCH_UNPATCH)
-	-test -d $(ALL_PATCH_UNPATCH) && run-parts --verbose $(ALL_PATCH_UNPATCH)
+	if [ -d $(DIR_PATCH_UNPATCH) ]; then \
+            run-parts --verbose $(DIR_PATCH_UNPATCH); \
+        else \
+	    true; \
+	fi
+	if [ -d $(ALL_PATCH_UNPATCH)  ]; then \
+            run-parts --verbose $(ALL_PATCH_UNPATCH); \
+        else \
+	    true; \
+	fi
 endif
 	rm -f $(FILES_TO_CLEAN) $(STAMPS_TO_CLEAN)
 	test ! -f .config || cp -pf .config config.precious
