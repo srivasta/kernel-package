@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Thu May 20 11:12:03 1999
+## Last Modified On : Fri May 21 12:09:42 1999
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 398
+## Update Count	    : 399
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.68 1999/05/20 16:13:24 srivasta Exp $
+## $Id: rules,v 1.69 1999/05/21 17:09:55 srivasta Exp $
 ###############################################################################
 
 # The version of kernel-package this belongs to
@@ -192,9 +192,6 @@ HAVE_COFF_IMAGE = YES
 coffsrc=arch/$(KERNEL_ARCH)/coffboot/$(kimage)
 coffdest=$(INT_IMAGE_DESTDIR)/vmlinux.coff-$(version)
 DEBCONFIG = $(CONFDIR)/config.pmac
-kimagesrc = arch/$(KERNEL_ARCH)/chrpboot/$(kimage)
-kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
-DEBCONFIG = $(CONFDIR)/config.chrp
 endif
 
 ifneq (,$(findstring $(SUBARCH),PReP prep))
