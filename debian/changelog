@@ -1,3 +1,10 @@
+kernel-package (7.80) unstable; urgency=low
+
+  * Fix a last remaing reference to the old initrd image in the post rm. 
+                                                             closes: Bug#128698
+
+ -- Manoj Srivastava <srivasta@debian.org>  Fri, 11 Jan 2002 14:57:14 -0600
+
 kernel-package (7.79) unstable; urgency=low
 
   * Fix some more problems with mipsel that would have been fixed had I
