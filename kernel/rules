@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.172 2002/04/22 00:36:04 srivasta Exp $
+## $Id: rules,v 1.173 2002/04/22 01:23:24 srivasta Exp $
 ###############################################################################
 
 ifdef KPKG_ARCH
@@ -1065,7 +1065,7 @@ stamp-debian:
 	-test ! -f stamp-debian && test ! -f debian/official && \
 	      rm -rf debian && $(make_directory) debian
 ifeq ($(strip $(patch_the_kernel)),YES)
-	test -f applied_patches && rm -f applied_patches
+	-test -f applied_patches && rm -f applied_patches
 ifneq ($(strip $(valid_patches)),)
 	-for patch in $(valid_patches) ; do            \
           if test -x  $$patch; then                    \
