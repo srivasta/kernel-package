@@ -1,3 +1,13 @@
+kernel-package (8.058) unstable; urgency=low
+
+  * The module version mismatch problem makes it impossible to use kernel
+    sources and a config file to re-create the conditions required for
+    building modules that would install correctly into a pre-buit
+    kernel. Document this, remove faulty instructions from README.modules. 
+                                                   closes: Bug#209278
+
+ -- Manoj Srivastava <srivasta@debian.org>  Mon,  8 Sep 2003 23:19:55 -0500
+
 kernel-package (8.057) unstable; urgency=low
 
   * Fixed an error in the kernel-img.conf man page. (.TP -> .TP .B).
