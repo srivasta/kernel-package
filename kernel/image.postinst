@@ -5,14 +5,14 @@
 # Created On       : Sat Apr 27 05:55:26 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Tue Jul 29 14:58:25 1997
+# Last Modified On : Tue Sep 16 15:02:21 1997
 # Last Machine Used: tiamat.datasync.com
-# Update Count     : 53
+# Update Count     : 54
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
 # 
-#    $Id: image.postinst,v 1.5 1997/08/04 18:09:24 srivasta Exp $
+#    $Id: image.postinst,v 1.6 1997/09/16 20:09:54 srivasta Exp $
 #
 
 # 
@@ -99,9 +99,33 @@ elsif ($reverse_symlink) {		# Maybe /boot is on a dos system?
 } 
 
 
-if ( -f '/lib/modules/$version/modules.dep' ) {
-  unlink '/lib/modules/$version/modules.dep';
-  system("depmod -a $version");
+if ( -f "/lib/modules/$version/modules.dep" ) {
+  unlink "/lib/modules/$version/modules.dep";
+  my $running = '';
+  chop($running=`uname -r`);
+  if ($running eq $version) {
+    print STDERR <<"EOFERR";
+
+ You are attempting to install a kernel version that is the same as
+ the version you are currently running (version $running). The modules
+ list is quite likely to have been changed, and the modules dependency
+ file /lib/modules/$version/modules.dep needs to be re-built. It can
+ not be built correctly right now, since the module list for the
+ running kernel are likely to be different from the kernel installed. 
+ I am removing the modules.dep file, so that it shall be created
+ correctly at next reboot.
+
+ I repeat: you have to reboot in order for the modules file to be
+ created correctly. Do NOT just run depmod -a. Until you reboot, it
+ may be impossible to load modules. Re boot now.
+
+EOFERR
+
+  my $answer='';
+    print "Please Hit return to continue.  ";
+    $answer=<STDIN>;
+  }
+  # system("depmod -a $version");
 }
 
 undef $rootdevice;

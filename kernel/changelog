@@ -1,5 +1,15 @@
 kernel-source-=V (=D) unstable; urgency=low
 
+  * Fixed handling of modules.dep in the image.postinst. We do not attempt
+    to recreate a modules.dep, since the man page admits the file so
+    created may be incorrect. We warn the installer that there maybe
+    problems loading modules into the kernel intil reboot iff the version
+    being installed is the same as the version currently running.
+
+ -- Manoj Srivastava <srivasta@debian.org>  Tue, 16 Sep 1997 15:07:02 -0500
+
+kernel-source-0.20 (1.01) unstable; urgency=low
+
   * No longer create a System.map symlink in /, since that may confuse
     klogd when choosing kernel images using LILO. Since top, ps, and klogd
     look at /boot/System.map-<version>, we just need to make sure that
