@@ -14,7 +14,7 @@
 #
 #
 #
-#    $Id: make-kpkg,v 1.17 1998/07/14 21:09:49 srivasta Exp $
+#    $Id: make-kpkg,v 1.18 1998/07/17 04:49:12 srivasta Exp $
 #
 require 5.002;
 use strict;
@@ -29,7 +29,7 @@ make-kpkg - build Debian kernel packages from Linux kernel sources.
 ($main::MYNAME     = $main::0) =~ s|.*/||;
 $main::Author      = "Manoj Srivastava";
 $main::AuthorMail  = "srivasta\@debian.org";
-$main::Version     = '$Revision: 1.17 $ ';
+$main::Version     = '$Revision: 1.18 $ ';
 
 my $help_opt=0; 
 my $revision=0; 
@@ -549,7 +549,8 @@ compiling kernel images.
 =head1 B<SEE ALSO>
 
 B<kernel-pkg.conf>(5), B<dpkg-deb>(1), B<dpkg-source>(1),  B<make>(1),
-B<The GNU Make manual>.
+B<The GNU Make manual>, and the extensive documentation in the
+directory I</usr/doc/kernel-package/>
 
 =cut
 
