@@ -403,11 +403,11 @@ ifeq ($(strip $(architecture)),sparc)
      endif
   endif
 
-  ifneq ($(shell if [ $(VERSION) -ge 2 -a $(PATCHLEVEL) -ge 5 -a  \
-                    $(SUBLEVEL) -ge 41 ]; then echo new; \
-             elif [ $(VERSION) -ge 2 -a $(PATCHLEVEL) -ge 6 ]; then \
-                                         echo new; \
-             elif [ $(VERSION) -ge 3 ]; then echo new; fi),)
+  ifneq ($(shell if [ $(VERSION)  -ge  2 ] && [ $(PATCHLEVEL) -ge 5 ] &&  \
+                    [ $(SUBLEVEL) -ge 41 ]; then echo new; \
+               elif [ $(VERSION)  -ge  2 ] && [ $(PATCHLEVEL) -ge 6 ]; then \
+                                            echo new; \
+               elif [ $(VERSION)  -ge  3 ]; then echo new; fi),)
     target    = image
     kimagesrc = arch/$(KERNEL_ARCH)/boot/image
     kelfimagesrc = vmlinux
@@ -526,11 +526,11 @@ ifeq ($(strip $(architecture)),mips)
   kimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
   DEBCONFIG= $(CONFDIR)/config.$(KPKG_SUBARCH)
 
-  ifneq ($(shell if [ $(VERSION) -ge 2 -a $(PATCHLEVEL) -ge 5 -a  \
-                      $(SUBLEVEL) -ge 41 ]; then echo new; \
-               elif [ $(VERSION) -ge 2 -a $(PATCHLEVEL) -ge 6 ]; then \
-                                           echo new; \
-               elif [ $(VERSION) -ge 3 ]; then echo new; fi),)
+  ifneq ($(shell if [ $(VERSION)  -ge  2 ]  && [ $(PATCHLEVEL) -ge 5 ] &&    \
+                    [ $(SUBLEVEL) -ge 41 ]; then echo new;                   \
+               elif [ $(VERSION)  -ge  2 ]  && [ $(PATCHLEVEL) -ge 6 ]; then \
+                                            echo new;                        \
+               elif [ $(VERSION)  -ge  3 ]; then echo new; fi),)
     target    =
   else
     target    = boot
@@ -559,11 +559,11 @@ ifeq ($(strip $(architecture)),mipsel)
   #coffsrc = $(strip arch/$(KERNEL_ARCH)/boot/vmlinux.ecoff)
   #coffdest=$(INT_IMAGE_DESTDIR)/vmlinux.ecoff-$(version)
 
-  ifneq ($(shell if [ $(VERSION) -ge 2 -a $(PATCHLEVEL) -ge 5 -a  \
-                      $(SUBLEVEL) -ge 41 ]; then echo new; \
-               elif [ $(VERSION) -ge 2 -a $(PATCHLEVEL) -ge 6 ]; then \
-                                           echo new; \
-               elif [ $(VERSION) -ge 3 ]; then echo new; fi),)
+  ifneq ($(shell if [ $(VERSION)  -ge  2 ]  && [ $(PATCHLEVEL) -ge 5 ] &&    \
+                    [ $(SUBLEVEL) -ge 41 ]; then echo new;                   \
+               elif [ $(VERSION)  -ge  2 ]  && [ $(PATCHLEVEL) -ge 6 ]; then \
+                                            echo new;                        \
+               elif [ $(VERSION)  -ge  3 ]; then echo new; fi),)
     target    =
   else
     target    = boot
@@ -1135,22 +1135,22 @@ canonical_patches=$(subst $(comma),$(space),$(KPKG_SELECTED_PATCHES))
 
 ifneq ($(strip $(canonical_patches)),)
 # test to see if the patches exist
-temp_valid_patches = $(shell for name in $(canonical_patches); do             \
-                            if [ -x $(VERSIONED_DIR_PATCH_APPLY)/$$name -a    \
-                                 -x $(VERSIONED_DIR_PATCH_UNPATCH)/$$name ];  \
-                               then echo $(VERSIONED_DIR_PATCH_APPLY)/$$name; \
-                            elif [ -x $(VERSIONED_ALL_PATCH_APPLY)/$$name -a  \
-                                   -x $(VERSIONED_ALL_PATCH_UNPATCH)/$$name ];\
-                               then echo $(VERSIONED_ALL_PATCH_APPLY)/$$name; \
-                            elif [ -x $(DIR_PATCH_APPLY)/$$name -a            \
-                                 -x $(DIR_PATCH_UNPATCH)/$$name ]; then       \
-                               echo $(DIR_PATCH_APPLY)/$$name;                \
-                            elif [ -x $(ALL_PATCH_APPLY)/$$name -a            \
-                                    -x $(ALL_PATCH_UNPATCH)/$$name ]; then    \
-                               echo $(ALL_PATCH_APPLY)/$$name;                \
-                            else                                              \
-                               echo $$name.error;                             \
-                            fi;                                               \
+temp_valid_patches = $(shell for name in $(canonical_patches); do                \
+                            if [ -x $(VERSIONED_DIR_PATCH_APPLY)/$$name   ] &&   \
+                               [ -x $(VERSIONED_DIR_PATCH_UNPATCH)/$$name ];     \
+                               then echo $(VERSIONED_DIR_PATCH_APPLY)/$$name;    \
+                            elif [ -x $(VERSIONED_ALL_PATCH_APPLY)/$$name   ] && \
+                                 [ -x $(VERSIONED_ALL_PATCH_UNPATCH)/$$name ];   \
+                               then echo $(VERSIONED_ALL_PATCH_APPLY)/$$name;    \
+                            elif [ -x $(DIR_PATCH_APPLY)/$$name   ] &&           \
+                                 [ -x $(DIR_PATCH_UNPATCH)/$$name ]; then        \
+                               echo $(DIR_PATCH_APPLY)/$$name;                   \
+                            elif [ -x $(ALL_PATCH_APPLY)/$$name   ] &&           \
+                                 [ -x $(ALL_PATCH_UNPATCH)/$$name ]; then        \
+                               echo $(ALL_PATCH_APPLY)/$$name;                   \
+                            else                                                 \
+                               echo $$name.error;                                \
+                            fi;                                                  \
                         done)
 
 temp_patch_not_found = $(filter %.error, $(temp_valid_patches))
@@ -1173,22 +1173,22 @@ canonical_unpatches = $(shell new="";                                         \
                               done;                                           \
                               echo $$new;)
 
-temp_valid_unpatches = $(shell for name in $(canonical_unpatches); do         \
-                            if [ -x $(VERSIONED_DIR_PATCH_APPLY)/$$name -a    \
-                                 -x $(VERSIONED_DIR_PATCH_UNPATCH)/$$name ];  \
-                              then echo $(VERSIONED_DIR_PATCH_UNPATCH)/$$name;\
-                            elif [ -x $(VERSIONED_ALL_PATCH_APPLY)/$$name -a  \
-                                   -x $(VERSIONED_ALL_PATCH_UNPATCH)/$$name ];\
-                              then echo $(VERSIONED_ALL_PATCH_UNPATCH)/$$name;\
-                            elif [ -x $(DIR_PATCH_APPLY)/$$name -a            \
-                                 -x $(DIR_PATCH_UNPATCH)/$$name ]; then       \
-                               echo $(DIR_PATCH_UNPATCH)/$$name;              \
-                            elif [ -x $(ALL_PATCH_APPLY)/$$name -a            \
-                                    -x $(ALL_PATCH_UNPATCH)/$$name ]; then    \
-                               echo $(ALL_PATCH_UNPATCH)/$$name;              \
-                            else                                              \
-                               echo $$name.error;                             \
-                            fi;                                               \
+temp_valid_unpatches = $(shell for name in $(canonical_unpatches); do            \
+                            if [ -x $(VERSIONED_DIR_PATCH_APPLY)/$$name   ] &&   \
+                               [ -x $(VERSIONED_DIR_PATCH_UNPATCH)/$$name ];     \
+                              then echo $(VERSIONED_DIR_PATCH_UNPATCH)/$$name;   \
+                            elif [ -x $(VERSIONED_ALL_PATCH_APPLY)/$$name   ] && \
+                                 [ -x $(VERSIONED_ALL_PATCH_UNPATCH)/$$name ];   \
+                              then echo $(VERSIONED_ALL_PATCH_UNPATCH)/$$name;   \
+                            elif [ -x $(DIR_PATCH_APPLY)/$$name   ] &&           \
+                                 [ -x $(DIR_PATCH_UNPATCH)/$$name ]; then        \
+                               echo $(DIR_PATCH_UNPATCH)/$$name;                 \
+                            elif [ -x $(ALL_PATCH_APPLY)/$$name   ] &&           \
+                                 [ -x $(ALL_PATCH_UNPATCH)/$$name ]; then        \
+                               echo $(ALL_PATCH_UNPATCH)/$$name;                 \
+                            else                                                 \
+                               echo $$name.error;                                \
+                            fi;                                                  \
                         done)
 temp_unpatch_not_found = $(filter %.error, $(temp_valid_unpatches))
 unpatch_not_found = $(subst .error,,$(temp_unpatch_not_found))
@@ -1435,8 +1435,8 @@ ifneq ($(strip $(valid_patches)),)
         done
 	echo done >  stamp-patch
 else
-	if [ -n "$(VERSIONED_PATCH_DIR)" -a                   \
-             -d $(VERSIONED_DIR_PATCH_APPLY) ]; then          \
+	if [ -n "$(VERSIONED_PATCH_DIR)" ] &&                   \
+            [ -d $(VERSIONED_DIR_PATCH_APPLY) ]; then          \
             run-parts --exit-on-error $(VERSIONED_DIR_PATCH_APPLY); \
 	    (cd $(VERSIONED_DIR_PATCH_APPLY); ls -1) >>       \
                                            applied_patches;   \
@@ -1444,8 +1444,8 @@ else
         else                                                  \
 	    true;                                             \
 	fi
-	if [ -n "$(VERSIONED_ALL_PATCH_DIR)" -a               \
-             -d $(VERSIONED_ALL_PATCH_APPLY)  ]; then         \
+	if [ -n "$(VERSIONED_ALL_PATCH_DIR)" ] &&               \
+            [ -d $(VERSIONED_ALL_PATCH_APPLY) ]; then         \
             run-parts --exit-on-error $(VERSIONED_ALL_PATCH_APPLY); \
 	    (cd $(VERSIONED_ALL_PATCH_APPLY); ls -1) >>       \
                                            applied_patches;   \
@@ -1453,15 +1453,13 @@ else
         else                                                  \
 	    true;                                             \
 	fi
-	if [ -n "$(PATCH_DIR)" -a                             \
-             -d $(DIR_PATCH_APPLY) ]; then                    \
-            run-parts --exit-on-error $(DIR_PATCH_APPLY);           \
-	    (cd $(DIR_PATCH_APPLY); ls -1) >> applied_patches;\
-        else                                                  \
-	    true;                                             \
+	if [ -n "$(PATCH_DIR)" ] && [ -d $(DIR_PATCH_APPLY) ]; then \
+            run-parts --exit-on-error $(DIR_PATCH_APPLY);            \
+	    (cd $(DIR_PATCH_APPLY); ls -1) >> applied_patches;      \
+        else                                                         \
+	    true;                                                   \
 	fi
-	if [ -n "$(ALL_PATCH_DIR)" -a                         \
-             -d $(ALL_PATCH_APPLY)  ]; then                   \
+	if [ -n "$(ALL_PATCH_DIR)" ] && [ -d $(ALL_PATCH_APPLY)  ]; then \
             run-parts --exit-on-error $(ALL_PATCH_APPLY);           \
 	    (cd $(ALL_PATCH_APPLY); ls -1) >> applied_patches;\
         echo done >  stamp-patch;                                    \
@@ -1542,7 +1540,7 @@ dummy_do_dep:
 stamp-kernel-configure: stamp-debian .config
 	$(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) \
                                  ARCH=$(KERNEL_ARCH) $(config_target) 	
-ifeq ($(shell if [ $(VERSION) -ge 2 -a $(PATCHLEVEL) -ge 5 ]; then \
+ifeq ($(shell if [ $(VERSION) -ge 2 ] && [ $(PATCHLEVEL) -ge 5 ]; then \
                   echo new;fi),)
 	+$(MAKE) -f ./debian/rules dummy_do_dep
 	$(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) \
@@ -1618,29 +1616,29 @@ ifneq ($(strip $(valid_unpatches)),)
         done
 	rm -f stamp-patch
 else
-	if [ -n "$(VERSIONED_PATCH_DIR)" -a                     \
-             -d $(VERSIONED_DIR_PATCH_UNPATCH) ]; then          \
+	if [ -n "$(VERSIONED_PATCH_DIR)"       ]  &&          \
+            [ -d $(VERSIONED_DIR_PATCH_UNPATCH) ]; then        \
             run-parts --report $(VERSIONED_DIR_PATCH_UNPATCH); \
-        else                                                    \
-	    true;                                               \
+        else                                                   \
+	    true;                                             \
 	fi
-	if [ -n "$(VERSIONED_ALL_PATCH_DIR)" -a                 \
-             -d $(VERSIONED_ALL_PATCH_UNPATCH)  ]; then         \
+	if [ -n "$(VERSIONED_ALL_PATCH_DIR)"    ]  &&         \
+            [ -d $(VERSIONED_ALL_PATCH_UNPATCH)  ]; then       \
             run-parts --report $(VERSIONED_ALL_PATCH_UNPATCH); \
-        else                                                    \
-	    true;                                               \
+        else                                                   \
+	    true;                                             \
 	fi
-	if [ -n "$(PATCH_DIR)" -a                               \
-             -d $(DIR_PATCH_UNPATCH) ]; then                    \
+	if [ -n "$(PATCH_DIR)"       ]  &&                    \
+            [ -d $(DIR_PATCH_UNPATCH) ]; then                  \
             run-parts --report $(DIR_PATCH_UNPATCH);           \
-        else                                                    \
-	    true;                                               \
+        else                                                   \
+	    true;                                             \
 	fi
-	if [ -n "$(ALL_PATCH_DIR)" -a                           \
-             -d $(ALL_PATCH_UNPATCH)  ]; then                   \
+	if [ -n "$(ALL_PATCH_DIR)"    ]  &&                   \
+            [ -d $(ALL_PATCH_UNPATCH)  ]; then                 \
             run-parts --report $(ALL_PATCH_UNPATCH);           \
-        else                                                    \
-	    true;                                               \
+        else                                                   \
+	    true;                                             \
 	fi
 	rm -f stamp-patch
 endif
@@ -1717,7 +1715,7 @@ endif
 	(cd $(SOURCE_SRC);         rm -f stamp-building $(STAMPS_TO_CLEAN))
 	(cd $(SOURCE_SRC);         \
          [ ! -d scripts/cramfs ]   || make -C scripts/cramfs distclean ; )
-	if test -f debian/official -a -f debian/README.Debian ; then \
+	if test -f debian/official  -f debian/README.Debian ; then \
            $(install_file) debian/README.Debian $(SOURCE_SRC)/README.Debian ; \
            $(install_file) debian/README.Debian $(SOURCE_DOC)/README.Debian ; \
 	   gzip -9qf $(SOURCE_DOC)/README.Debian;\
@@ -1873,10 +1871,10 @@ ifneq ($(strip $(shell if [ -x /usr/bin/db2html ]; then echo YSE; fi)),)
 	$(MAKE)  mandocs htmldocs
 endif
 	-tar cf - Documentation | (cd $(DOC_DOC); umask 000; tar xsf -)
-ifeq ($(shell if [ $(VERSION) -ge 2 -a $(PATCHLEVEL) -ge 5 ]; then \
+ifneq ($(shell if [ $(VERSION) -ge 2 ] && [ $(PATCHLEVEL) -ge 5 ]; then \
                   echo new;fi),)
 	find -name Kconfig -print0 | xargs -0r cat | \
-	     (umask 000 ; cat > $(DOC_DOC)/Kconfig.collected)
+	     (umask 000 ; cat > $(DOC_DOC)/Kconfig.collected
 # removing if empty should be faster than running find twice
 	if ! test -s $(DOC_DOC)/Kconfig.collected) ; then \
 	    rm -f $(DOC_DOC)/Kconfig.collected ;          \
