@@ -5,9 +5,9 @@
 # Created On       : Mon Jun 17 01:10:11 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Sun Apr 25 15:20:34 2004
+# Last Modified On : Mon Apr 26 15:48:29 2004
 # Last Machine Used: glaurung.internal.golden-gryphon.com
-# Update Count     : 218
+# Update Count     : 219
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
@@ -780,7 +780,7 @@ EOERR1
  The clean target must be called by itself, and not along with other
  targets on the same invocation, since that may cause unforeseen
  errors and complications.  The targets I have been called with are:
-  $Target
+  $Targets
  I am replacing this list with just the clean target, please retry
  with the clean target on a separate invocation.
 EOERR3
