@@ -5,14 +5,14 @@
 # Created On       : Sat Apr 27 05:55:26 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Fri Apr 12 15:01:16 2002
+# Last Modified On : Fri Apr 12 21:09:52 2002
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 233
+# Update Count     : 234
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
 #
-#    $Id: image.postinst,v 1.102 2002/04/12 20:03:33 srivasta Exp $
+#    $Id: image.postinst,v 1.103 2002/04/13 02:13:45 srivasta Exp $
 #
 
 #
@@ -770,8 +770,9 @@ EOIMG
 	"Please note that initrd points to the wrong image now\n";
     }
   }
-
-  image_magic("initrd.img", $realimageloc) if $initrd;
+  if (! defined $ARGV[1] || ! $ARGV[1] || $ARGV[1] =~ m/<unknown>/og) {
+    image_magic("initrd.img", $realimageloc) if $initrd;
+  }
 
   if ($initrd && -l "$image_dir/initrd" && ! $image_in_boot) {
     print STDERR <<"EOIMG";
