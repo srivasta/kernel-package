@@ -41,14 +41,38 @@
 	There is a patch appended to the bottom of this message that
  would allow klogd to discover the new System.map file, and to not
  choke on the non-numeric kernel version.
+	This effort has been based on the ideas and work of Bill
+ Mitchell <mitchell@mozcom.com> and Noel Maddy <ncm@biostat.hfh.edu>. 
+
+	The following patch works for newer 2.2 kernels:
+======================================================================
+--- Makefile.~1~	Wed Apr 28 14:38:52 1999
++++ Makefile	Fri May 14 14:18:50 1999
+@@ -5,2 +5,13 @@
+ 
++# FLAVOUR is like EXTRAVERSION, but it's meant for local use, and the
++# dash between it and the rest of the version is supplied here.  It's used
++# by make-kpkg's --flavour switch, see /usr/doc/kernel-package/Flavours.
++#FLAVOUR =
++
++ifneq ($(strip $(FLAVOUR)),)
++INT_FLAV := -$(FLAVOUR)
++else
++INT_FLAV :=
++endif
++
+ ARCH := $(shell uname -m | sed -e s/i.86/i386/ -e s/sun4u/sparc64/ -e s/arm.*/arm/ -e s/sa110/arm/)
+@@ -61,3 +72,3 @@
+ 
+-KERNELRELEASE=$(VERSION).$(PATCHLEVEL).$(SUBLEVEL)$(EXTRAVERSION)
++KERNELRELEASE=$(VERSION).$(PATCHLEVEL).$(SUBLEVEL)$(EXTRAVERSION)$(INT_FLAV)
+======================================================================
 
 	The patch provided below is from the Makefile for 2.1.47
  kernel, and may not apply cleanly on other Makefiles. It is
  recommended that you use it purely as a guideline, and modify the
  Makefile manually. 
 
-	This effort has been based on the ideas and work of Bill
- Mitchell <mitchell@mozcom.com> and Noel Maddy <ncm@biostat.hfh.edu>. 
 
 ======================================================================
 --- Makefile.dist	Mon Aug  4 12:18:57 1997
