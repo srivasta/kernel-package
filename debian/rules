@@ -5,9 +5,9 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Mon May  5 13:07:39 2003
+## Last Modified On : Sun Aug 10 04:55:06 2003
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 138
+## Update Count	    : 140
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
@@ -34,7 +34,7 @@ export DEB_HOST_GNU_TYPE   := $(shell dpkg-architecture $(ha) -qDEB_HOST_GNU_TYP
 #                          sed 's/^Version: *//')
 #
 
-#    $Id: rules,v 1.38 2003/08/08 19:13:57 srivasta Exp $
+#    $Id: rules,v 1.39 2003/08/10 09:55:11 srivasta Exp $
 
 
 # Please change the maintainer information, as well as the debian version
@@ -88,8 +88,16 @@ install_program= install -p    -o root -g root -m 755
 make_directory=  install -p -d -o root -g root -m 755
 
 
-all build:
 # Builds the binary package.
+all build:
+	$(checkdir)
+	perl -wc kernel/image.preinst
+	perl -wc kernel/image.postinst
+	perl -wc kernel/image.postrm
+	perl -wc kernel/image.prerm
+	perl -wc kernel/include.postinst
+	bash -n kernel/kernel_grub_conf.sh
+	bash -n kernel/kernel_grub_rm.sh
 
 clean:
 	rm -f $(FILES_TO_CLEAN) $(STAMPS_TO_CLEAN)

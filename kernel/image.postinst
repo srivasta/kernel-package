@@ -5,14 +5,14 @@
 # Created On       : Sat Apr 27 05:55:26 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Sun Aug 10 04:44:01 2003
+# Last Modified On : Sun Aug 10 04:45:35 2003
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 246
+# Update Count     : 247
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
 #
-#    $Id: image.postinst,v 1.120 2003/08/10 09:44:09 srivasta Exp $
+#    $Id: image.postinst,v 1.121 2003/08/10 09:45:42 srivasta Exp $
 #
 
 #
@@ -969,7 +969,7 @@ while ( $line=<FSTAB> ) {
   next if $device =~ m|^/dev/vcs|;  #ignore Virtual console capture
 
   next if $filesystem =~ m|^none$|; #swap? in any case, do not run dd
-  next if $type       =~ m|^none$|; #ignore unknown file types
+  next if $ftype      =~ m|^none$|; #ignore unknown file types
   next if $foption    =~ m|noauto|; #any FS not mounted at bootup time
   next if $foption    =~ m|bind|;   #ignore bind mounts
 
