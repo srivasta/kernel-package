@@ -1,3 +1,27 @@
+kernel-package (3.36) unstable; urgency=low
+
+  * All kernel packages produced now list the version of kernel-package
+    used in the file /usr/doc/Buildinfo. This is a bit of a Hack.
+  * The image prerm will allow you to remove an running kernel image and
+    hose your system. You will be warned. (under protest).
+  * Added a variable to choose a no symlink option, which puts the real
+    images in /vmlinuz and /vmlinuz.old, not symlinks (similarily for
+    System.map). This makes it potentially less useful, since unless other
+    action is taken one would have only two images on the machine at the
+    time. This has been added for people who use file systems that do not
+    implement symlinks.
+  * Added a variable to ask for reverse symlinks, that is, vmlinuz is the
+    real file, vmlinuz-2.0.30 is the link. This also restricts the system
+    to two image files unless the user save a copy, added for people with
+    boot on umsdos (can't see symlinks in dos mode) but who want the links
+    to see what the image versions are in Linux. Mutualy exclusive with
+    the no symlink option. (apart from the symlinks, it is identical to
+    the no symlink option). These should fix Bug#11395.
+  * Fixed typo in control file for kernel-doc description. This fixes
+    Bug#11568.
+
+ -- Manoj Srivastava <srivasta@debian.org>  Tue, 29 Jul 1997 17:50:51 -0500
+
 kernel-package (3.35) unstable; urgency=low
 
   * Preserve owner when copying the config file around. This fixes
