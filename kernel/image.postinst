@@ -12,7 +12,7 @@
 # HISTORY          :
 # Description      :
 #
-#    $Id: image.postinst,v 1.84 2001/11/12 18:36:16 srivasta Exp $
+#    $Id: image.postinst,v 1.85 2001/11/12 18:38:46 srivasta Exp $
 #
 
 #
@@ -675,6 +675,7 @@ EOIMG
       print STDERR
 	"Please note that initrd points to the wrong image now\n";
     }
+  }
 
   image_magic("initrd.img", $realimageloc) if $initrd;
 
