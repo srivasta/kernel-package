@@ -1,4 +1,4 @@
-kernel-package (4.08) unstable; urgency=low
+kernel-package (4.08) frozen unstable; urgency=low
 
   * Made the reboot now message mention that one should probably wait
     until after installation is finished before rebooting, since one may
