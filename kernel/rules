@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.124 2001/07/11 21:27:30 srivasta Exp $
+## $Id: rules,v 1.125 2001/07/17 23:38:15 srivasta Exp $
 ###############################################################################
 
 ifdef ARCH
@@ -1200,16 +1200,18 @@ stamp-headers: configure
 	gzip -9qf debian/tmp-headers/usr/share/doc/$(h_package)/debian.README
 	if test -f debian/official -a -f debian/README.Debian ; then \
            $(install_file) debian/README.Debian \
-		debian/tmp-source/usr/src/$(h_package)/README.Debian ; \
-           gzip -9qf debian/tmp-source/usr/src/$(h_package)/README.Debian ; \
+		debian/tmp-headers/usr/src/$(h_package)/README.Debian ; \
+           gzip -9qf debian/tmp-headers/usr/src/$(h_package)/README.Debian ; \
            $(install_file) README.Debian \
-		debian/tmp-source/usr/share/doc/$(h_package)/README.Debian;\
-	 gzip -9qf debian/tmp-source/usr/share/doc/$(h_package)/README.Debian;\
+		debian/tmp-headers/usr/share/doc/$(h_package)/README.Debian;\
+	   gzip -9qf \
+                debian/tmp-headers/usr/share/doc/$(h_package)/README.Debian;\
 	fi
 	if test -f README.Debian ; then \
            $(install_file) README.Debian \
-		debian/tmp-source/usr/share/doc/$(h_package)/README.Debian.1st;\
-	 gzip -9qf debian/tmp-source/usr/share/doc/$(h_package)/README.Debian.1st;\
+	     debian/tmp-headers/usr/share/doc/$(h_package)/README.Debian.1st;\
+	     gzip -9qf \
+              debian/tmp-headers/usr/share/doc/$(h_package)/README.Debian.1st;\
 	fi
 	echo "This was produced by kernel-package version $(kpkg_version)." > \
 	         debian/tmp-headers/usr/share/doc/$(h_package)/Buildinfo
@@ -1241,11 +1243,11 @@ stamp-doc: debian
 	         debian/tmp-doc/usr/share/doc/$(d_package)/Buildinfo
 	if test -f debian/official -a -f debian/README.Debian ; then \
            $(install_file) README.Debian \
-		debian/tmp-source/usr/share/doc/$(h_package)/README.Debian;\
+		debian/tmp-doc/usr/share/doc/$(h_package)/README.Debian;\
 	fi
 	if test -f README.Debian ; then \
            $(install_file) README.Debian \
-	       debian/tmp-source/usr/share/doc/$(d_package)/README.Debian.1st;\
+	       debian/tmp-doc/usr/share/doc/$(d_package)/README.Debian.1st;\
 	fi
 	-tar cf - Documentation | \
            (cd debian/tmp-doc/usr/share/doc/$(d_package); umask 000; tar xsf -)
@@ -1321,13 +1323,14 @@ endif
 	$(install_file) .config $(INT_IMAGE_DESTDIR)/config-$(version)
 	if test -f debian/official -a -f debian/README.Debian ; then \
            $(install_file) debian/README.Debian \
-		debian/tmp-source/usr/share/doc/$(i_package)/README.Debian ; \
-         gzip -9qf debian/tmp-source/usr/share/doc/$(i_package)/README.Debian;\
+		debian/tmp-image/usr/share/doc/$(i_package)/README.Debian ; \
+         gzip -9qf debian/tmp-image/usr/share/doc/$(i_package)/README.Debian;\
 	fi
 	if test -f README.Debian ; then \
            $(install_file) debian/README.Debian \
-	       debian/tmp-source/usr/share/doc/$(i_package)/README.Debian.1st;\
-         gzip -9qf debian/tmp-source/usr/share/doc/$(i_package)/README.Debian.1st;\
+	       debian/tmp-image/usr/share/doc/$(i_package)/README.Debian.1st;\
+           gzip -9qf \
+               debian/tmp-image/usr/share/doc/$(i_package)/README.Debian.1st;\
 	fi
 ifeq ($(strip $(HAVE_EXTRA_DOCS)),YES)
 	$(install_file) $(extra_docs) \

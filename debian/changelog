@@ -1,3 +1,13 @@
+kernel-package (7.51) unstable; urgency=low
+
+  * Brown paper bag time. I was installing the readme file in
+    ./debian/tmp-source even for pacjages that that dir was
+    inappropriate.       closes: Bug#101332, Bug#105275, Bug#105280, Bug#105469
+  * Only put one README file in the kernel-package /usr/share/doc
+    heirarchy.                                               closes: Bug#105540
+
+ -- Manoj Srivastava <srivasta@debian.org>  Tue, 17 Jul 2001 18:37:57 -0500
+
 kernel-package (7.50) unstable; urgency=low
 
   * Ran all the maintainer perl scripts through a use strict; perl -wc
