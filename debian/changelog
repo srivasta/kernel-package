@@ -1,3 +1,12 @@
+kernel-package (3.64) unstable; urgency=low
+
+  * Add a make recommendation for kernel source package as well. 
+    closes: Bug#19223
+  * Added a note to the Flavours document to specify a System.map file for
+    klogd in /etc/init.d/syslog
+
+ -- Manoj Srivastava <srivasta@debian.org>  Tue, 10 Mar 1998 16:06:10 -0600
+
 kernel-package (3.63) unstable; urgency=low
 
   * Added a recommends to shut up lintian; however, we already depended on
