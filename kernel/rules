@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.22 1997/12/25 07:28:20 srivasta Exp $
+## $Id: rules,v 1.23 1997/12/25 16:54:07 srivasta Exp $
 ###############################################################################
 
 # The version of kernel-package this belongs to
@@ -460,61 +460,61 @@ ifdef MODULES_ENABLED
 	chmod 644 debian/tmp-image/lib/modules/$(version)/misc/*
 	(if [ -f modules/BLOCK_MODULES ] ; then \
               cd debian/tmp-image/lib/modules/$(version)/misc; \
-	      for $$mod in `cat ./BLOCK_MODULES` ; do \
+	      for mod in `cat ./BLOCK_MODULES` ; do \
                   if [ -f $$mod ]; then mv $$mod ../block; fi; \
               done; \
               mv ./BLOCK_MODULES ../../../../usr/doc/$(i_package)/; fi)
 	(if [ -f modules/CDROM_MODULES ] ; then \
               cd debian/tmp-image/lib/modules/$(version)/misc; \
-	      for $$mod in `cat ./CDROM_MODULES` ; do \
+	      for mod in `cat ./CDROM_MODULES` ; do \
                   if [ -f $$mod ]; then mv $$mod ../block; fi; \
               done; \
               mv ./CDROM_MODULES ../../../../usr/doc/$(i_package)/; fi)
 	(if [ -f modules/FS_MODULES ]; then \
               cd debian/tmp-image/lib/modules/$(version)/misc; \
-	      for $$mod in `cat ./FS_MODULES` ; do \
+	      for mod in `cat ./FS_MODULES` ; do \
                   if [ -f $$mod ]; then mv $$mod ../block; fi; \
               done; \
               mv ./FS_MODULES ../../../../usr/doc/$(i_package)/; fi)
 	(if [ -f modules/NLS_MODULES ]; then \
               cd debian/tmp-image/lib/modules/$(version)/misc; \
-	      for $$mod in `cat ./NLS_MODULES` ; do \
+	      for mod in `cat ./NLS_MODULES` ; do \
                   if [ -f $$mod ]; then mv $$mod ../block; fi; \
               done; \
               mv ./NLS_MODULES ../../../../usr/doc/$(i_package)/; fi)
 	(if [ -f modules/NET_MODULES ]; then \
               cd debian/tmp-image/lib/modules/$(version)/misc; \
-	      for $$mod in `cat ./NET_MODULES` ; do \
+	      for mod in `cat ./NET_MODULES` ; do \
                   if [ -f $$mod ]; then mv $$mod ../block; fi; \
               done; \
               mv ./NET_MODULES ../../../../usr/doc/$(i_package)/; fi)
 	(if [ -f modules/HAM_MODULES ]; then \
               cd debian/tmp-image/lib/modules/$(version)/misc; \
-	      for $$mod in `cat ./HAM_MODULES` ; do \
+	      for mod in `cat ./HAM_MODULES` ; do \
                   if [ -f $$mod ]; then mv $$mod ../block; fi; \
               done; \
               mv ./HAM_MODULES ../../../../usr/doc/$(i_package)/; fi)
 	(if [ -f modules/IPV4_MODULES ]; then \
               cd debian/tmp-image/lib/modules/$(version)/misc; \
-	      for $$mod in `cat ./IPV4_MODULES` ; do \
+	      for mod in `cat ./IPV4_MODULES` ; do \
                   if [ -f $$mod ]; then mv $$mod ../block; fi; \
               done; \
               mv ./IPV4_MODULES ../../../../usr/doc/$(i_package)/; fi)
 	(if [ -f modules/IPV6_MODULES ]; then \
               cd debian/tmp-image/lib/modules/$(version)/misc; \
-	      for $$mod in `cat ./IPV6_MODULES` ; do \
+	      for mod in `cat ./IPV6_MODULES` ; do \
                   if [ -f $$mod ]; then mv $$mod ../block; fi; \
               done; \
               mv ./IPV6_MODULES ../../../../usr/doc/$(i_package)/; fi)
 	(if [ -f modules/SCSI_MODULES ]; then \
               cd debian/tmp-image/lib/modules/$(version)/misc; \
-	      for $$mod in `cat ./SCSI_MODULES` ; do \
+	      for mod in `cat ./SCSI_MODULES` ; do \
                   if [ -f $$mod ]; then mv $$mod ../block; fi; \
               done; \
               mv ./SCSI_MODULES ../../../../usr/doc/$(i_package)/; fi)
 	(if [ -f modules/NET_MISC_MODULES ]; then \
 	      cd debian/tmp-image/lib/modules/$(version)/misc; \
-	      for $$mod in `cat ./NET_MISC_MODULES` ; do \
+	      for mod in `cat ./NET_MISC_MODULES` ; do \
                   if [ -f $$mod ]; then mv $$mod ../block; fi; \
               done; \
 	      mv ./NET_MISC_MODULES ../../../../usr/doc/$(i_package)/; fi)
