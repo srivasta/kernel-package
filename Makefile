@@ -4,15 +4,16 @@
 ## Created On       : Tue Nov 18 15:53:52 2003
 ## Created On Node  : glaurung.green-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Tue Nov 18 16:12:08 2003
+## Last Modified On : Tue Nov 18 17:26:48 2003
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count     : 9
+## Update Count     : 10
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : 
 ## 
 ###############################################################################
 prefix=
+package = kernel-package
 
 CONFLOC    := /etc/kernel-pkg.conf
 LIBLOC     := /usr/share/kernel-package
