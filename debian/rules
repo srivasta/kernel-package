@@ -5,9 +5,9 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Sat Nov  2 22:10:06 2002
+## Last Modified On : Mon May  5 13:07:39 2003
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 137
+## Update Count	    : 138
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
@@ -34,7 +34,7 @@ export DEB_HOST_GNU_TYPE   := $(shell dpkg-architecture $(ha) -qDEB_HOST_GNU_TYP
 #                          sed 's/^Version: *//')
 #
 
-#    $Id: rules,v 1.35 2002/11/03 04:10:42 srivasta Exp $
+#    $Id: rules,v 1.36 2003/05/05 18:07:46 srivasta Exp $
 
 
 # Please change the maintainer information, as well as the debian version
@@ -117,6 +117,9 @@ stamp-binary:
 	$(make_directory)  $(MAN8DIR)
 	$(make_directory)  $(DOCDIR)
 	$(make_directory)  $(BASH_DIR)
+	$(make_directory)  $(LINTIANDIR)
+	echo "kernel-package: description-synopsis-might-not-be-phrased-properly" \
+                                >>          $(LINTIANDIR)/$(package)
 	$(install_file)    debian/conffiles $(TMPTOP)/DEBIAN/conffiles
 	$(install_file)    debian/changelog $(DOCDIR)/changelog
 	$(install_file)    README $(DOCDIR)/README

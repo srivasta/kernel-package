@@ -5,14 +5,14 @@
 # Created On       : Sat Apr 27 05:55:26 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Thu Mar  6 15:41:13 2003
+# Last Modified On : Mon May  5 12:30:44 2003
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 243
+# Update Count     : 244
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
 #
-#    $Id: image.postinst,v 1.114 2003/04/20 04:37:51 srivasta Exp $
+#    $Id: image.postinst,v 1.115 2003/05/05 18:04:31 srivasta Exp $
 #
 
 #
@@ -1278,8 +1278,8 @@ if ($loader =~ /^lilo/io) {
     print "as the system boots, and then pressing the $rootpartition key\n";
     print "when you see the \"1234F:\" prompt.\n";
     print "";
-    print "For more information, see /usr/doc/mbr/README, and the files\n";
-    print "in the /usr/doc/$loader directory.\n";
+    print "For more information, see /usr/share/doc/mbr/README, and the files\n";
+    print "in the /usr/share/doc/$loader directory.\n";
   }
 }
 else {

@@ -1,3 +1,9 @@
+kernel-package (8.035) unstable; urgency=low
+
+  * use mkdir in favour of $(make_directory) while creating the debian dir. 
+
+ -- Manoj Srivastava <srivasta@debian.org>  Mon,  5 May 2003 12:28:37 -0500
+
 kernel-package (8.034) unstable; urgency=high
 
   * reverse the sense of a conditional.                      closes: Bug#191429

@@ -1,5 +1,5 @@
 
-   $Id: README,v 1.60 2003/04/14 18:23:43 srivasta Exp $
+   $Id: README,v 1.61 2003/05/05 18:04:31 srivasta Exp $
 
 This is the Debian GNU/Linux prepackaged version of the Linux kernel.
 Linux was written by Linus Torvalds <Linus.Torvalds@cs.Helsinki.FI> and
@@ -105,6 +105,17 @@ Phase THREE: Install the kernel image on one or more machines
  --added_patches command line option to selectively apply some patches
  in conjunction with patch_the_kernel)
 
+Getting the kernel source
+------- --- ------ ------
+
+ You can get kerel sources in several different ways: by installing a
+ prepackaged Debian kernel source package (at the time of writing, it
+ is kernel-source-2.4.20_2.4.20-6_all.deb). This shall create a file
+ /usr/src/kernel-source-2.4.20.tar.bz2, which can be unpacked wherever
+ you wish. Alternately, you can get linux-2.4.20.tar.bz2 from you
+ favourite ftp.kernel.org mirror, (/pub/linux/kernel/v2.4/ in the ftp
+ site). 
+
 Unpacking kernel sources:
 -------------------------
 
@@ -125,7 +136,30 @@ create the full spectrum of packages for version 1.99.7 (and doubtless
 this size will go up in the future) [It has. Now even an gzipped kernel
 source is over 23MB].
 
+[ EXAMPLE
+So, suppose you have chosen /usr/local/src/kernel as the place to
+build kernels.
+% cd  /usr/local/src/kernel # or cd /path/to/where-ever/you/have/space
+% tar jvvfx /usr/src/kernel-source-2.4.20.tar.bz2
+  (or, tar jvvfx /path/to/download/linux-2.4.20.tar.bz2)
+]
+
 Now, cd linux (wherever you have created the kernel sources).
+
+Configuration File
+------------- ----
+
+Kernel package by itself does not create any configuration file
+(.config); it uses whatever you have. You can use the previous version
+made for you machine by copying it over from /boot/config-Y.Y.YY, like
+so:
+ % cp /boot/config-Y.Y.YY .config
+where Y.Y.YY stands for the old version of the kernel that you had
+hand tuned.
+
+If you do not wish to copy the old copy over, you can create a new one
+from scratch using make menuconfig (please look at the kenrel
+documentaion for help on configuring your kernel).
 
 Versions and revisions
 ----------------------
