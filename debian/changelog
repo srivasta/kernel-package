@@ -7,6 +7,7 @@ kernel-package (6.22) unstable; urgency=low
   * Changed readme to stop referring to fakeroot explicitly -- so we no
     longer need to track usage. closes: Bug#42798
   * fixed typo in usage message. closes: Bug#43129
+  * Added support for arch independent patches. closes: Bug#42313
 
  -- Manoj Srivastava <srivasta@debian.org>  Thu, 19 Aug 1999 01:55:14 -0500
 
