@@ -22,7 +22,7 @@
 .\" USA.
 .\"
 .\"
-.\"    $Id: make-kpkg.8,v 1.9 1998/04/21 16:41:21 srivasta Exp $
+.\"    $Id: make-kpkg.8,v 1.10 1998/06/11 20:22:03 srivasta Exp $
 .\"
 .TH MAKE\-KPKG 8 "May 2 1997" "Debian" "Debian GNU/Linux manual"
 .SH NAME
@@ -66,6 +66,14 @@ contain a digit.
 No hyphens allowed. (Look at Chapter 5 of the Programmers manual for
 details). Optionally, you may prepend the revision with a digit
 followed by a colon (:) 
+.TP
+.BR \-\-flavour\ foo
+Sets the kernel flavour to the argument \fBnumber\fR. The flavour is 
+also appended to the package name. You need a patched Makefile to 
+make this work propperly (see /usr/doc/kernel-package/\s-1FLAVOURS\s0.gz).
+It may contain only alphanumerics and the characters \- + . (full 
+stop, hyphen, and plus). \fB\s-1NOTE\s0\fR: Hyphens are discouraged.  (Look
+at Chapter 5 of the Programmers manual for details). 
 .TP
 .BR \-\-pgpsign " name"
 Set the string used to sign the 
