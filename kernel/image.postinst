@@ -5,14 +5,14 @@
 # Created On       : Sat Apr 27 05:55:26 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Tue Apr 28 22:53:45 1998
+# Last Modified On : Thu Jun 11 15:02:35 1998
 # Last Machine Used: tiamat.datasync.com
-# Update Count     : 102
+# Update Count     : 103
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
 # 
-#    $Id: image.postinst,v 1.22 1998/05/01 19:24:05 srivasta Exp $
+#    $Id: image.postinst,v 1.23 1998/06/11 20:24:21 srivasta Exp $
 #
 
 # 
@@ -68,30 +68,7 @@ else {				# Let this be the default as well
   $kimage = "vmlinuz"
 }
 
-# Test if we need to do anything in / at all. This test make us idempotent.
-if (! -e "$kimage") {
-  # Hmm. Pristine system? How can that be?
-  warn "$imagedir" . "$kimage does not exist. Installing from scratch, eh?\n";
-  if ($no_symlink) {
-    if (! rename($realimageloc . "$kimage-$version", "$kimage")) {
-      die("Failed to move /boot/$kimage-$version to "
-	  . $imagedir . "$kimage .\n"); 
-    }
-  }
-  elsif ($reverse_symlink) {
-    if (! rename($realimageloc . "$kimage-$version", "$kimage")) {
-      die("Failed to move /boot/$kimage-$version to "
-	  . $imagedir . "$kimage .\n"); 
-    }
-  }
-  else {
-    if (! symlink($realimageloc . "$kimage-$version", "$kimage")) {
-      die("Failed to symbolic-link /boot/$kimage-$version to "
-	  . $imagedir . "$kimage .\n");
-    }
-  }
-}
-elsif (-l "$kimage") {
+if (-l "$kimage") {
   # There is a symbolic link
   my $force_move = 0;
   
@@ -130,6 +107,28 @@ elsif (-l "$kimage") {
     
     # Ok, now we may clobber the previous .old file
     rename("$kimage.$$", "$kimage.old");
+  }
+}
+elsif (! -e "$kimage") {
+  # Hmm. Pristine system? How can that be?
+  warn "$imagedir" . "$kimage does not exist. Installing from scratch, eh?\n";
+  if ($no_symlink) {
+    if (! rename($realimageloc . "$kimage-$version", "$kimage")) {
+      die("Failed to move /boot/$kimage-$version to "
+	  . $imagedir . "$kimage .\n"); 
+    }
+  }
+  elsif ($reverse_symlink) {
+    if (! rename($realimageloc . "$kimage-$version", "$kimage")) {
+      die("Failed to move /boot/$kimage-$version to "
+	  . $imagedir . "$kimage .\n"); 
+    }
+  }
+  else {
+    if (! symlink($realimageloc . "$kimage-$version", "$kimage")) {
+      die("Failed to symbolic-link /boot/$kimage-$version to "
+	  . $imagedir . "$kimage .\n");
+    }
   }
 }
 elsif ($no_symlink) {		# Maybe /boot is on a dos system?
@@ -226,6 +225,8 @@ EOFERR
   }
   # system("depmod -a $version");
 }
+
+exit (0) if $loader =~ /milo/i; # MILO does not have to be executed.
 
 undef $rootdevice;
 undef $rootdisk;
