@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.109 2001/01/27 06:32:16 srivasta Exp $
+## $Id: rules,v 1.110 2001/02/01 18:56:54 srivasta Exp $
 ###############################################################################
 
 ifdef ARCH
@@ -332,6 +332,33 @@ kimagedest = $(INT_IMAGE_DESTDIR)/image-$(version)
 DEBCONFIG= $(CONFDIR)/config.$(SUBARCH)
 endif
 
+##### hppa
+ifeq ($(strip $(architecture)),hppa)
+kimage := vmlinux
+loaderdep=palo
+loader=
+loaderdoc=
+target=$(kimage)
+NEED_DIRECT_GZIP_IMAGE=NO
+kimagesrc=$(strip arch/$(KERNEL_ARCH)/boot/$(kimage))
+kimagedest=$(INT_IMAGE_DESTDIR)/vmlinux-$(version)
+DEBCONFIG=$(CONFDIR)/config.$(SUBARCH)
+endif
+
+##### ia64
+ifeq ($(strip $(architecture)),ia64)
+kimage := vmlinux
+loaderdep=lilo-efi
+loader=
+loaderdoc=
+target=$(kimage)
+NEED_DIRECT_GZIP_IMAGE=NO
+kimagesrc=$(kimage)
+kimagedest=$(INT_IMAGE_DESTDIR)/vmlinux-$(version)
+DEBCONFIG=$(CONFDIR)/config.$(SUBARCH)
+endif
+
+
 
 ######################################################################
 ######################################################################
@@ -364,6 +391,7 @@ EXTRA_VERSION:=$(shell egrep '^EXTRAVERSION +=' Makefile 2>/dev/null | \
 EXTRAVERSION:=$(strip $(EXTRA_VERSION))
 HAVE_NEW_MODLIB:=$(shell egrep '\(INSTALL_MOD_PATH\)' Makefile 2>/dev/null )
 
+# NOTE: FLAVOUR is now obsolete
 # If you want to have more than one kernel configuration per kernel
 # version, set FLAVOUR in the top level kernel Makefile *before*
 # invoking make-kpkg -- it will be appended to UTS_RELEASE in
@@ -386,7 +414,16 @@ INT_FLAV :=
 FLAV_ARG :=
 endif
 
-version = $(VERSION).$(PATCHLEVEL).$(SUBLEVEL)$(EXTRAVERSION)$(INT_FLAV)
+## This is the replacement for FLAVOUR
+ifneq ($(strip $(APPEND_TO_VERSION)),)
+iatv := $(strip $(APPEND_TO_VERSION)
+EXTRAV_ARG := EXTRAVERSION=${EXTRA_VERSION}${iatv}
+else
+iatv :=
+EXTRAV_ARG :=
+endif
+
+version = $(VERSION).$(PATCHLEVEL).$(SUBLEVEL)$(EXTRAVERSION)$(iatv)$(INT_FLAV)
 
 # SUBARCH is used to distinguish Amiga, Atari, Macintosh, etc. kernels
 # for Debian/m68k.  INT_SUBARCH is used in the names of the image file
@@ -787,10 +824,10 @@ stamp-build:
 # debian.config contains the current idea of what the image should
 # have.
 	-test -f stamp-configure || $(deb_rule) configure
-	$(MAKE) $(do_parallel) $(FLAV_ARG) ARCH=$(KERNEL_ARCH)	\
+	$(MAKE) $(do_parallel) $(EXTRAV_ARG) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) \
 	                    CROSS_COMPILE=$(KERNEL_CROSS) $(target)
 ifdef MODULES_ENABLED
-	$(MAKE) $(do_parallel) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) \
+	$(MAKE) $(do_parallel) $(EXTRAV_ARG) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) \
 	                    CROSS_COMPILE=$(KERNEL_CROSS) modules
 endif
 	touch stamp-build
@@ -850,7 +887,8 @@ endif
                ! \( -f debian/official -a -f debian/control \) && \
 	   sed -e 's/=V/$(version)/g'        -e 's/=D/$(debian)/g' \
 	       -e 's/=A/$(architecture)/g'   -e 's/=SA/$(INT_SUBARCH)/g' \
-               -e 's/=L/$(int_loaderdep) /g' \
+               -e 's/=L/$(int_loaderdep) /g'  \
+               -e 's/=CV/$(VERSION).$(PATCHLEVEL)/g' \
                -e 's/=M/$(maintainer) <$(email)>/g'  \
 		         $(CONTROL)> debian/control
 	-test ! -f stamp-debian && test ! -f debian/official && \
@@ -866,11 +904,11 @@ stamp-configure: debian .config
 	test -f stamp-debian || $(deb_rule) debian
 	test -f .config      || $(deb_rule) .config
 	-test ! -f stamp-configure \
-	  && $(MAKE) $(FLAV_ARG) CROSS_COMPILE=$(KERNEL_CROSS) \
+	  && $(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) CROSS_COMPILE=$(KERNEL_CROSS) \
                                  ARCH=$(KERNEL_ARCH) $(config_target) \
-          && $(MAKE) $(FLAV_ARG) CROSS_COMPILE=$(KERNEL_CROSS) \
+          && $(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) CROSS_COMPILE=$(KERNEL_CROSS) \
                                  ARCH=$(KERNEL_ARCH) dep \
-          && $(MAKE) $(FLAV_ARG) CROSS_COMPILE=$(KERNEL_CROSS) \
+          && $(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) CROSS_COMPILE=$(KERNEL_CROSS) \
                                  ARCH=$(KERNEL_ARCH) clean && \
               touch stamp-configure
 
@@ -921,7 +959,8 @@ endif
 endif
 	rm -f $(FILES_TO_CLEAN) $(STAMPS_TO_CLEAN)
 	test ! -f .config || cp -pf .config config.precious
-	-test -f Makefile && $(MAKE) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) distclean
+	-test -f Makefile && \
+            $(MAKE) $(FLAV_ARG) $(EXTRAV_ARG) ARCH=$(KERNEL_ARCH) distclean
 	test ! -f config.precious || mv -f config.precious .config
 	rm -rf $(DIRS_TO_CLEAN)
 	test -f stamp-building || test -f debian/official || rm -rf debian
@@ -984,7 +1023,7 @@ stamp-source: debian
 	-tar cf - `echo * | sed -e 's/debian//g' -e 's/\.deb//g' ` \
 	| (cd debian/tmp-source/usr/src/$(package); umask 000; tar xsf -)
 	(cd debian/tmp-source/usr/src/$(package); \
-            $(MAKE) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) distclean)
+            $(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) distclean)
 	(cd debian/tmp-source/usr/src/$(package); \
                         rm -f stamp-building $(STAMPS_TO_CLEAN))
 	(cd debian/tmp-source/usr/src/$(package)/include; rm -f asm; \
@@ -1169,7 +1208,7 @@ endif
 	dpkg --build debian/tmp-image $(DEB_DEST)
 	rm -f -r debian/tmp-image
 ifeq ($(strip $(do_clean)),YES)
-	$(MAKE) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) clean
+	$(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) clean
 	rm -f stamp-build
 endif
 	touch stamp-image

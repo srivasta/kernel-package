@@ -9,7 +9,7 @@ Architecture: any
 Section: devel
 Priority: optional
 Depends: fileutils (>= 4.0)
-Provides: kernel-headers
+Provides: kernel-headers, kernel-headers-=CV
 Description: Header files related to Linux kernel version =V
  This package provides kernel header files for version =V, for sites 
  that want the latest kernel headers. Please read
@@ -19,7 +19,7 @@ Package: kernel-source-=V
 Architecture: all
 Section: devel
 Priority: optional
-Provides: kernel-source
+Provides: kernel-source, kernel-source-=CV
 Depends: binutils, bzip2, fileutils (>= 4.0)
 Recommends: libc-dev, gcc, make
 Suggests: libncurses-dev | ncurses-dev, task-tcltk-dev, kernel-package
@@ -41,7 +41,7 @@ Package: kernel-image-=V=SA
 Architecture: =A
 Section: base
 Priority: optional
-Provides: kernel-image
+Provides: kernel-image,  kernel-image-=CV
 Depends: fileutils (>= 4.0)
 Suggests: =L fdutils, kernel-doc-=V=SA
 Description: Linux kernel binary image for version =V=SA.
@@ -63,6 +63,7 @@ Package: kernel-doc-=V
 Architecture: all
 Section: doc
 Priority: optional
+Provides: kernel-doc-=CV
 Depends: fileutils (>= 4.0)
 Suggests: kernel-image-=V=SA
 Description: Linux kernel specific documentation for version =V.

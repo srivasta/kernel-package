@@ -1,5 +1,5 @@
 
-    $Id: README,v 1.38 2001/01/19 19:35:09 srivasta Exp $
+    $Id: README,v 1.39 2001/02/01 18:56:53 srivasta Exp $
 
 This is the Debian GNU/Linux packaging scripts for the Linux kernel. 
 This package has been put together by Manoj Srivastava <srivasta@debian.org>.
@@ -213,11 +213,16 @@ old modules directory before installation, like so (need to be root):
 and later get rid of the .save directory.
 
 People who want to have multiple flavours of the same kernel version
-around should look at the file /usr/share/doc/kernel-package/Flavours.gz for
-details (Note: This involves modifying the kernel sources top level
-Makefile; not recommended unless you are *sure* you need it). Also, if
-recompiling and using a different flavour, one needs to do a make-kpkg
-clean in between compiles.
+around should look at the append_to_version flag of make-kpkg. This
+appends to the EXTRAVERSION variable of the kernel Makefile, and does
+not require one to edit that makefile manually.  This can also be done
+by setting the environement variable APPEND_TO_VERSION. The command
+line invocation over rides the env variable. 
+
+The method described in the /usr/share/doc/kernel-package/Flavours.gz
+file is obsolete (Note: This involves modifying the kernel sources top
+level Makefile). Also, if recompiling and using a different flavour,
+one needs to do a make-kpkg clean in between compiles.
 
 You may also place long term directives (like your name and email
 address) in the file /etc/kernel-pkg.conf. Putting your name and
@@ -416,6 +421,7 @@ do_bootloader
               the boot loader. The user may still be asked to create a
               floppy, unless do_bootfloppy is also set to NO. Defaults
               to Yes.
+
 postinst_hook
               Set this variable to a script to be executed during
               installation after all the symbolic links are  cre-
@@ -571,7 +577,7 @@ away. If you continue anyway, the files in /boot shall be over
 written. 
 
 Also, if you try to recompile with a changed --revison option or a
-different flavour, you shall have to make-kpkg clean, and then
+different debian revision, you shall have to make-kpkg clean, and then
 recompile. 
 
 Tecras and other notebooks 

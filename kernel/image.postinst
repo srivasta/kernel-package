@@ -12,7 +12,7 @@
 # HISTORY          : 
 # Description      : 
 # 
-#    $Id: image.postinst,v 1.60 2001/01/19 19:35:10 srivasta Exp $
+#    $Id: image.postinst,v 1.61 2001/02/01 18:56:54 srivasta Exp $
 #
 
 # 
@@ -499,7 +499,7 @@ EOFERR
     print "Please Hit return to continue.  ";
     $answer=<STDIN>;
   }
-  system("depmod -a $version");
+  system("depmod -a -F $realimageloc/System.map-$version $version");
 }
 
 my $linktarget;    

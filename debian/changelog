@@ -1,3 +1,18 @@
+kernel-package (7.32) unstable; urgency=low
+
+  * Added provides kernel-{image,doc,headers}-X.X (as opposed to X.X.XX,
+    at the request of the libc maintainer. 
+  * depmod uses the current kernel's symbols to resolve a new kernel's
+    modules unless the -F option is specified. Fix thanks to JP Sugarbroad
+    <taral@taral.net> closes: Bug#84187
+  * Added support for ia64/hppa, thanks to Randolph Chung
+    <tausq@debian.org> closes: Bug#84332
+  * Implement a append_to_version flag for make-kpkg, that does not
+    require editing kernel Makefiles. Thanks toa suggestion by  Yann
+    Dirson <ydirson@altern.org> closes: Bug#84160
+
+ -- Manoj Srivastava <srivasta@debian.org>  Thu,  1 Feb 2001 12:53:46 -0600
+
 kernel-package (7.31) unstable; urgency=medium
 
   * Hmm. Need to make the revision checking regexp a non greedy one. A one

@@ -1,5 +1,5 @@
 
-   $Id: README,v 1.40 2001/01/19 19:35:10 srivasta Exp $
+   $Id: README,v 1.41 2001/02/01 18:56:54 srivasta Exp $
 
 This is the Debian GNU/Linux prepackaged version of the Linux kernel.
 Linux was written by Linus Torvalds <Linus.Torvalds@cs.Helsinki.FI> and
@@ -140,9 +140,9 @@ a) It only has an effect during the configure phase (in other words,
    before running make-kpkg clean for this option to have an effect.
    So, if you want to re-run make-kpkg with a different revision
    number, you have to make sure you start with a clean slate.
-b) It may contain only alphanumerics and the characters + . - (full
-   stop, and plus) and should contain a digit.  Note: No hyphens
-   allowed (Look atthe Debian Policy manual for details). Optionally,
+b) It may contain only alphanumerics and the characters + . (full
+   stop, and plus) and should contain a digit.  NOTE: No hyphens
+   allowed (Look at the Debian Policy manual for details). Optionally,
    you may prepend the revision with a digit followed by a colon (:);
    this shall put your revision into a new epoch; more on this later.
 
@@ -233,11 +233,16 @@ old modules directory before installation, like so (need to be root):
 and later get rid of the .save directory.
 
 People who want to have multiple flavours of the same kernel version
-around should look at the file /usr/share/doc/kernel-package/Flavours.gz for
-details (Note: This involves modifying the kernel sources top level
-Makefile; not recommended unless you are *sure* you need it). Also, if
-recompiling and using a different flavour, one needs to do a make-kpkg
-clean in between compiles.
+around should look at the append_to_version flag of make-kpkg. This
+appends to the EXTRAVERSION variable of the kernel Makefile, and does
+not require one to edit that makefile manually.  This can also be done
+by setting the environement variable APPEND_TO_VERSION. The command
+line invocation over rides the env variable. 
+
+The method described in the /usr/share/doc/kernel-package/Flavours.gz
+file is obsolete (Note: This involves modifying the kernel sources top
+level Makefile). Also, if recompiling and using a different flavour,
+one needs to do a make-kpkg clean in between compiles.
 
 You may also place long term directives (like your name and email
 address) in the file /etc/kernel-pkg.conf. Putting your name and
@@ -459,6 +464,7 @@ postrm_hook
               nel  image  itself. Errors in the script shall pro-
               duce a warning  message,  but  shall  be  otherwise
               ignored.
+
 Please see kernel-img.conf (5).
 
 
@@ -566,7 +572,6 @@ does not mean to ignore loadlin, you can use the generated
 kernel-image just as easily (simply ignore the fol-de-rol with symlinks
 in /). for instance, you could:
 
-
  [1]# dpkg -BRGiE kernel-image-X.X.XX, # need to be root
         and then
  [2]% cp /boot/vmlinuz-X.X.XX <place where loadlin needs image>
@@ -592,7 +597,7 @@ away. If you continue anyway, the files in /boot shall be over
 written. 
 
 Also, if you try to recompile with a changed --revison option or a
-different flavour, you shall have to make-kpkg clean, and then
+different debian revision, you shall have to make-kpkg clean, and then
 recompile. 
 
 Tecras and other notebooks 

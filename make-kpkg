@@ -14,7 +14,7 @@
 #
 #
 #
-#    $Id: make-kpkg,v 1.52 2001/01/28 08:20:38 srivasta Exp $
+#    $Id: make-kpkg,v 1.53 2001/02/01 18:56:53 srivasta Exp $
 #
 require 5.002;
 use strict;
@@ -29,10 +29,11 @@ make-kpkg - build Debian kernel packages from Linux kernel sources.
 ($main::MYNAME     = $main::0) =~ s|.*/||;
 $main::Author      = "Manoj Srivastava";
 $main::AuthorMail  = "srivasta\@debian.org";
-$main::Version     = '$Revision: 1.52 $ ';
+$main::Version     = '$Revision: 1.53 $ ';
 
 my $added_modules='';
 my $added_patches='';
+my $append_to_version='';
 my $arch='';
 my $arch_in_name=0;
 my $bzimage;
@@ -51,25 +52,26 @@ my $unsign_changelog='';
 my $unsign_source='';
 my $zimage;
 
-my %option_ctl = ("help"            => \$help_opt,
-		  "noexec"          => \$noexec,
-		  "revision=s"      => \$revision,
-		  "flavour=s"       => \$flavour,
-		  "added_modules=s" => \$added_modules,
-		  "added_patches=s" => \$added_patches,
-                  "arch=s"          => \$arch,
-                  "config=s"        => \$config_target,
-                  "cross_compile=s" => \$cross_compile,
-		  "subarch=s"       => \$subarch,
-		  "arch_in_name"    => \$arch_in_name,
-		  "pgpsign=s"       => \$signature,
-		  "key_id=s"        => \$key_id,
-		  "targets"         => \$targ_opt,
-		  "zimage"          => \$zimage,
-		  "rootcmd=s"       => \$root_cmd,
-		  "us"              => \$unsign_source,
-		  "uc"              => \$unsign_changelog,
-		  "bzimage"         => \$bzimage
+my %option_ctl = ("help"            	=> \$help_opt,
+		  "noexec"          	=> \$noexec,
+		  "revision=s"      	=> \$revision,
+		  "flavour=s"       	=> \$flavour,
+		  "added_modules=s" 	=> \$added_modules,
+		  "added_patches=s" 	=> \$added_patches,
+		  "append_to_version=s" => \$append_to_version,
+                  "arch=s"          	=> \$arch,
+                  "config=s"        	=> \$config_target,
+                  "cross_compile=s" 	=> \$cross_compile,
+		  "subarch=s"       	=> \$subarch,
+		  "arch_in_name"    	=> \$arch_in_name,
+		  "pgpsign=s"       	=> \$signature,
+		  "key_id=s"        	=> \$key_id,
+		  "targets"         	=> \$targ_opt,
+		  "zimage"          	=> \$zimage,
+		  "rootcmd=s"       	=> \$root_cmd,
+		  "us"              	=> \$unsign_source,
+		  "uc"              	=> \$unsign_changelog,
+		  "bzimage"         	=> \$bzimage
 		 );
 
 =head1 SYNOPSIS
@@ -106,7 +108,7 @@ stamp-configure, and stamp-debian (and debian/official, if that
 exists) for it to have an effect). I suggest you run make-kpkg clean
 unless you know what you are doing. Secondly, it may contain only
 alphanumerics and the characters + . (full stop, and plus)
-and should contain a digit. B<NOTE>: No hyphens allowed. (Look at the
+and must contain a digit. B<NOTE>: No hyphens allowed. (Look at the
 Debian policy manual for details). Optionally, you may prepend the
 revision with a digit followed by a colon (:)
 
@@ -118,15 +120,28 @@ newer than the one installed on the system.
 
 =back
 
+=item B<--append_to_version> foo
+
+This argument (B<foo>) is appended to the value of the EXTRAVERSION
+variable present in the kernel Makfile. Since EXTRAVERSION is a
+component of the kernel versoin, it is also added to the Debian
+package name, and, as such must obey the policy governing the package
+name. That means it may contain only B<lowercase> alphanumerics and
+the characters - + . (full stop, hyphen, and plus). Uppercase letters
+are not permitted under the Policy for a new package.
+
+=back
+
 =item B<--flavour> foo
 
 =over 2
 
-Sets the kernel flavour to the argument B<number>. The flavour is also
+This option is now deprecaetd in favour of B<--append_to_version>.
+Sets the kernel flavour to the argument B<foo>. The flavour is also
 appended to the package name. You need a patched Makefile to make this
 work properly (see /usr/share/doc/kernel-package/Flavours.gz).  It may
-contain only B<lowercase> alphanumerics and the characters - + . (full stop,
-hyphen, and plus). Uppercase letters are not permitted under the
+contain only B<lowercase> alphanumerics and the characters - + . (full
+stop, hyphen, and plus). Uppercase letters are not permitted under the
 Policy for a new package. B<NOTE>: Hyphens are discouraged.  (Look at
 Chapters 4 of the Policy manual for details).
 
@@ -314,7 +329,10 @@ usage: $main::MYNAME [options] target [target ...]
  --revision number     The debian revision number. ([a-z.+0-9]) (Must
                          have digit, no hyphen allowed)
  --flavour  foo        an additional kernel sub-version. ([-a-z.+0-9])
-                         see /usr/share/doc/kernel-package/Flavours.gz
+                       OBSOLETE
+ --append_to_version foo an additional kernel sub-version. ([-a-z.+0-9])
+                         Does not require editing the kernel Makefile
+                         over rides env var APPEND_TO_VERSION
  --added_modules foo   Comma/space separated list of add on modules
                        affected by the modules_<blah> targets
  --added_patches bar   Comma/space separated list of patches applicable
@@ -331,7 +349,7 @@ usage: $main::MYNAME [options] target [target ...]
                        wide default is zimage, as set in
                        /etc/kernel-pkg.conf) 
  --rootcmd method      A command that provides a means of gaining
-              	       superuser ccess (for example, `sudo' or
+              	       superuser access (for example, `sudo' or
               	       `fakeroot') as needed by dpkg-buildpackages'
               	       -r option.  This is only relevant for the
               	       buildpackage target.
@@ -627,7 +645,7 @@ sub main (){
       print STDERR "only valid for the buildpackage target. The target is:\n"; 
       print STDERR "[$argstring]\n"; 
       if ($root_cmd){
-	print STDERR "Perhaps you would like \n";  
+	print STDERR "Perhaps you would like\n";  
 	print STDERR "% $root_cmd $main::MYNAME $argstring\n"; 
 	print STDERR "instead? At the moment, I am ignoring $root_cmd\n";
       }
@@ -698,7 +716,7 @@ EOERR1
     }
 
     if ($revision !~ m/^(\d+:)?.*?\d.*$/){
-      print STDERR " Error: The revision string must contain digits, \n";
+      print STDERR " Error: The revision string must contain digits,\n";
       print STDERR " or else the package creation scripts complain\n";
       print STDERR " The current value is: $revision\n";
       print STDERR " Aborting.\n";
@@ -725,24 +743,52 @@ EOERR1
       print STDERR "any independent modules; the version from the last\n";
       print STDERR "make-kpkg run when you compiled the kernel-image\n";
       print STDERR "shall be used.\n";
-      print STDERR "Run make-kpkg clean or  if you know what you are doing,\n";
+      print STDERR "Run make-kpkg clean or, if you know what you are doing,\n";
       print STDERR "manually remove stamp-debian, stamp-configure and \n"; 
       print STDERR "debian/changelog for it to have an effect\n"; 
       print STDERR "Please hit return to continue\n";
       my $ans = <STDIN>;
     }
   }
+
   if ($flavour){
+    if ($flavour !~ m/^[a-z\d\.\-\+]+$/o) {
+      print STDERR " Error: The flavour variable may only contain\n";
+      print STDERR " lowercase alphanumerics and  the  characters  - +  .\n";
+      print STDERR " The current value is: $flavour\n";
+      print STDERR " Aborting.\n";
+      exit 1;
+    }
     if ($flavour =~ m/[A-Z]+/o){
       print STDERR "Error: Uppercase letters are not allowed in\n";
       print STDERR "the flavour variable, since the flavour becomes\n";
       print STDERR "part of the kernel-image name; and package names\n";
-      print STDERR "may only cantain lowercase aplha numerics.\n";
+      print STDERR "may only cantain lowercase alphanumerics.\n";
       print STDERR "I have $flavour, which shall be dissallowed by the\n";
       print STDERR "packaging tools. Aborting.\n";
       exit 1;
     }
     $command .= " FLAVOUR=$flavour ";
+  }
+
+  if ($append_to_version){
+    if ($append_to_version !~ m/^[a-z\d\.\-\+]+$/o) {
+      print STDERR " Error: The extended version may only contain\n";
+      print STDERR " lowercase alphanumerics and  the  characters  - +  .\n";
+      print STDERR " The current value is: $append_to_version\n";
+      print STDERR " Aborting.\n";
+      exit 1;
+    }
+    if ($append_to_version =~ m/[A-Z]+/o){
+      print STDERR "Error: Uppercase letters are not allowed in\n";
+      print STDERR "the extended version, since the version becomes\n";
+      print STDERR "part of the kernel-image name; and package names\n";
+      print STDERR "may only cantain lowercase alphanumerics.\n";
+      print STDERR "I have $append_to_version, which shall be dissallowed \n";
+      print STDERR "by the packaging tools. Aborting.\n";
+      exit 1;
+    }
+    $command .= " APPEND_TO_VERSION=$append_to_version ";
   }
   if ($arch){
     $command .= " ARCH=$arch ";

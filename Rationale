@@ -76,6 +76,11 @@
         this can allow, amongst other things, grub users to add and
         remove kernel image stanzas from the grub menu (example
         scripts to do this are in the package).
+   xvi) One can append to the kernel version on the command line, or
+        by setting an environemnt variable. So if your kernel is
+        called kernel-image-2.4.1John.Home; it is unlikely to be
+        overridden by the official 2.4.1 ernel, since they are not the
+        same version.
 
 		   Disadvantages of using make-kpkg
 		   ------------- -- ----- ---------

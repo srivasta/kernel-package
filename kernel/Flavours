@@ -1,6 +1,9 @@
 	     Multiple flavours of the same kernel version
              ======== ======== == === ==== ====== =======
 
+	NOTE: THIS IS NOW OBSOLETE. Use the append_to_version flag instead
+
+
 	There is an expressed need from people to have several
  alternative flavors of a single kernel version around. It is
  certainly useful to have a backup flavour of a kernel version around
