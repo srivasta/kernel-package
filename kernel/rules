@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Thu Jun 11 15:03:53 1998
+## Last Modified On : Tue Jul 14 14:58:55 1998
 ## Last Machine Used: tiamat.datasync.com
-## Update Count	    : 281
+## Update Count	    : 284
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.40 1998/06/11 20:29:08 srivasta Exp $
+## $Id: rules,v 1.41 1998/07/14 21:34:14 srivasta Exp $
 ###############################################################################
 
 # The version of kernel-package this belongs to
@@ -154,8 +154,10 @@ version = $(VERSION).$(PATCHLEVEL).$(SUBLEVEL)$(INT_FLAV)
 # vary from one sub-architecture to the next.
 # Note: Debian/powerpc will eventually use SUBARCH too.
 
+ifneq ($(strip $(SUBARCH)),)
 SUBARCH:=$(shell grep ^SUBARCH Makefile 2>/dev/null | \
                   perl -ple 's/SUBARCH[\s:=]+//g')
+endif
 
 ifneq ($(strip $(SUBARCH)),)
 INT_SUBARCH := -$(SUBARCH)
@@ -587,12 +589,15 @@ endif
              $(DEBDIR)/image.postinst > debian/tmp-image/DEBIAN/postinst
 	chmod 755 debian/tmp-image/DEBIAN/postinst
 	sed -e 's/=V/$(version)/g'    -e 's/=L/$(loader)/g'          \
+	             $(DEBDIR)/image.preinst > debian/tmp-image/DEBIAN/preinst
+	chmod 755 debian/tmp-image/DEBIAN/preinst
+	sed -e 's/=V/$(version)/g'    -e 's/=L/$(loader)/g'          \
 	             $(DEBDIR)/image.prerm > debian/tmp-image/DEBIAN/prerm
 	chmod 755 debian/tmp-image/DEBIAN/prerm
 	$(install_file) debian/changelog \
 	         debian/tmp-image/usr/doc/$(i_package)/changelog.Debian
 	gzip -9qf debian/tmp-image/usr/doc/$(i_package)/changelog.Debian
-ifneq ($(strip $(architecture)),m68k)
+ifdef loaderdoc
 	$(install_file) $(DEBDIR)/$(loaderdoc) \
 	         debian/tmp-image/usr/doc/$(i_package)/$(loaderdoc)
 	gzip -9qf debian/tmp-image/usr/doc/$(i_package)/$(loaderdoc)
@@ -686,8 +691,10 @@ else
 	chmod 644 debian/tmp-image/boot/vmlinuz-$(version)
 endif
 endif
+ifneq ($(wildcard System.map),)
 	cp System.map debian/tmp-image/boot/System.map-$(version)
 	chmod 644 debian/tmp-image/boot/System.map-$(version)
+endif
 	dpkg-gencontrol -p$(i_package) -Pdebian/tmp-image/
 	chown -R root.root debian/tmp-image
 	chmod -R og=rX debian/tmp-image
