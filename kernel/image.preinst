@@ -38,6 +38,8 @@ my $initrd          = "=I";     # initrd kernel
 my $use_hard_links  = '';       # hardlinks do not wirk across fs boundaries
 my $postinst_hook   = '';       #Normally we do not
 my $postrm_hook     = '';       #Normally we do not
+my $preinst_hook    = '';       #Normally we do not
+my $prerm_hook      = '';       #Normally we do not
 my $minimal_swap    = '';       # Do not swap symlinks
 
 
@@ -75,6 +77,10 @@ die "Pre inst Internal error. Aborting." unless $version;
 
 exit 0 if $ARGV[0] =~ /abort-upgrade/;
 exit 1 unless $ARGV[0] =~ /(install|upgrade)/;
+
+# remove multiple leading slashes; make sure there is at least one.
+$realimageloc  =~ s|^/*|/|o;
+$realimageloc  =~ s|/+|/|o;
 
 if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
   if (open(CONF, "$CONF_LOC")) {
@@ -118,6 +124,8 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
       $image_dest      = "$1"  if /image_dest\s*=\s*(\S+)/ig;
       $postinst_hook   = "$1"  if /postinst_hook\s*=\s*(\S+)/ig;
       $postrm_hook     = "$1"  if /postrm_hook\s*=\s*(\S+)/ig;
+      $preinst_hook    = "$1"  if /preinst_hook\s*=\s*(\S+)/ig;
+      $prerm_hook      = "$1"  if /prerm_hook\s*=\s*(\S+)/ig;
     }
     close CONF;
     $have_conffile = "Yes";
@@ -231,5 +239,12 @@ EOF
   ;
   }
 }
+
+## Run user hook script here, if any
+if (-x "$preinst_hook") {
+    system ("$preinst_hook", $version, $realimageloc . "$kimage-$version") &&
+	die "User hook script $preinst_hook failed";
+}
+
 
 exit 0

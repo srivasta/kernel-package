@@ -21,7 +21,7 @@
 .\" Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139,
 .\" USA.
 .\"
-.\" $Id: kernel-img.conf.5,v 1.16 2002/01/22 03:51:06 srivasta Exp $
+.\" $Id: kernel-img.conf.5,v 1.17 2002/02/21 04:53:49 srivasta Exp $
 .\"
 .TH KERNEL\-IMG.CONF 5 "Mar 21 2000" "Debian" "Debian GNU/Linux manual" 
 .\" NAME should be all caps, SECTION should be 1-8, maybe w/ subsection
@@ -173,6 +173,25 @@ Set this variable to a script to be executed in the postrm (that is,
 after the image has been removed) after all the remove actions have
 been performed. This script shall be called with two arguments,
 the first being the
+.I version
+of the kernel image, and the second argument being the
+.I location
+of the kernel image itself. Errors in the script shall produce a
+warning message, but shall be otherwise ignored.
+.TP
+.B preinst_hook 
+Set this variable to a script to be executed before the package is
+unpacked, and can be used to put in additional checks. This script
+shall be called with two arguments, the first being the
+.I version
+of the kernel image, and the second argument being the
+.I location
+of the kernel image itself. 
+.TP
+.B prerm_hook 
+Set this variable to a script to be executed before the package files
+are removed (so any added files may be removed) . This script shall be
+called with two arguments, the first being the
 .I version
 of the kernel image, and the second argument being the
 .I location
