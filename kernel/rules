@@ -5,9 +5,9 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Fri Oct  1 15:44:32 2004
+## Last Modified On : Sat Oct  2 00:56:52 2004
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count	    : 714
+## Update Count	    : 716
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
@@ -1446,6 +1446,14 @@ endif
 	echo using the compiler: >> debian/buildinfo
 	grep LINUX_COMPILER include/linux/compile.h | \
            sed -e 's/.*LINUX_COMPILER "//' -e 's/"$$//' >> debian/buildinfo
+ifneq ($(strip $(shell test -f version.Debian && cat version.Debian)),)
+	echo kernel source package used: >> debian/buildinfo
+	COLUMNS=150 dpkg -l kernel-source-$(shell test -f version.Debian && cat version.Debian) |\
+	 awk '$$1 == "ii" { printf("%s-%s\n", $$2, $$3) }' >> debian/buildinfo
+endif
+	echo applied kernel patches: >> debian/buildinfo
+	COLUMNS=150 dpkg -l $(shell echo $(valid_patches) | tr ' ' '\n' | sed -ne 's/^.*\/\(.*\)/kernel-patch-\1/p') |\
++	 awk '$$1 == "ii" { printf("%s-%s\n", $$2, $$3) }' >> debian/buildinfo
 	echo done >  $@
 
 buildpackage: clean stamp-buildpackage
@@ -2039,7 +2047,7 @@ endif
 	   mv $(IMAGE_TOP)/lib/modules/$(version)/build ./debian/build-link
 ifeq ($(strip $(KERNEL_ARCH)),um)
 	-depmod -q -FSystem.map -b $(IMAGE_TOP) \
-           $(version)-`sed q include/linux/version.h | sed s/\"//g | awk -F\- '{print $2}'`
+           $(version)-`sed q include/linux/version.h | sed s/\"//g | awk -F\- '{print $$2}'`
 else
 	-depmod -q -FSystem.map -b $(IMAGE_TOP) $(version); 
 endif
