@@ -1,3 +1,32 @@
+kernel-package (7.35) unstable; urgency=low
+
+  * A whole bunch of spelling corrections and grammar changes, with many
+    thanks to Diego Biurrun <diego@biurrun.de>
+  * export a number of additional variables in the environment. These
+    variables are: root_cmd FLAVOUR INT_SUBARCH APPEND_TO_VERSION
+    UNSIGN_CHANGELOG  UNSIGN_SOURCE ROOT_CMD. This added information flow
+    through should make the modules config more flexible
+  * Missed an  $(EXTRAV_ARG) while installing modules, which cause d the
+    modules to be installed in the wrong directory. Thanks to  Robert
+    Bihlmeyer <robbe@orcus.priv.at> for catching this. closes: Bug#86727
+  * Added and environement variable FLAVOUR_SEP that determines the
+    seperator for the (deprecated) flavour variable
+  * The spelling of documentation, fixed in last upload, closes: Bug#85194
+  * Well, apparently insisting that the package name be lowercase is
+    kosher. closes: Bug#57187
+  * Now versioned patch directories no longer shadow unversioned patch
+    directories; since the local admin may no longer have control over
+    where the patches live. closes: Bug#89877
+  * now suggest libdb3-dev, since some modules apparently depend on
+    it. Really, this should be a kernel documentation issue. closes: Bug#90869
+  * Fixed typo in man page section. closes: Bug#90893
+  * Also remove /lib/modules/$version/modules.generic_string and 
+    /lib/modules/$version/modules.parportmap. closes: Bug#93044
+  * Use savelog to rotate lilo.conf if asked to overwrite the old
+    one. savelog is part of debianutils, a required package. closes: Bug#93963
+
+ -- Manoj Srivastava <srivasta@debian.org>  Tue, 24 Apr 2001 03:08:17 -0500
+
 kernel-package (7.34) unstable; urgency=medium
 
   * It is spelled Documentation, not Docuementation. 

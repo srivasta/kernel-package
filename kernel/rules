@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Tue Feb  6 09:48:22 2001
+## Last Modified On : Tue Apr 24 02:31:24 2001
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 465
+## Update Count	    : 469
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.114 2001/02/06 15:54:21 srivasta Exp $
+## $Id: rules,v 1.115 2001/04/24 08:09:19 srivasta Exp $
 ###############################################################################
 
 ifdef ARCH
@@ -406,8 +406,12 @@ endif
 FLAVOUR:=$(shell grep ^FLAVOUR Makefile 2>/dev/null | \
                   perl -ple 's/FLAVOUR[\s:=]+//g')
 
+ifeq ($(strip $(FLAVOUR_SEP)),)
+FLAVOUR_SEP:= +
+endif
+
 ifneq ($(strip $(FLAVOUR)),)
-INT_FLAV := -$(FLAVOUR)
+INT_FLAV := $(FLAVOUR_SEP)$(FLAVOUR)
 FLAV_ARG := FLAVOUR=$(FLAVOUR)
 else
 INT_FLAV :=
@@ -465,25 +469,39 @@ endif
 DEBDIR      = $(LIBLOC)
 DEBDIR_NAME = $(shell basename $(DEBDIR))
 
-ifeq ($(strip $(PATCH_DIR)),)
-PATCH_DIR         = $(shell if [ -d \
+ifeq ($(strip $(VERSIONED_PATCH_DIR)),)
+VERSIONED_PATCH_DIR         = $(shell if [ -d \
 /usr/src/kernel-patches/$(architecture)/$(VERSION).$(PATCHLEVEL).$(SUBLEVEL) \
 			       ]; then echo \
 /usr/src/kernel-patches/$(architecture)/$(VERSION).$(PATCHLEVEL).$(SUBLEVEL); \
-				  else echo \
-/usr/src/kernel-patches/$(architecture); \
 			    fi)
 endif
 
-ifeq ($(strip $(ALL_PATCH_DIR)),)
-ALL_PATCH_DIR         = $(shell if [ -d \
+ifeq ($(strip $(VERSIONED_ALL_PATCH_DIR)),)
+VERSIONED_ALL_PATCH_DIR         = $(shell if [ -d \
 /usr/src/kernel-patches/all/$(VERSION).$(PATCHLEVEL).$(SUBLEVEL) \
 			       ]; then echo \
 /usr/src/kernel-patches/all/$(VERSION).$(PATCHLEVEL).$(SUBLEVEL); \
-				  else echo \
-/usr/src/kernel-patches/all; \
 			    fi)
 endif
+
+ifeq ($(strip $(PATCH_DIR)),)
+PATCH_DIR  = $(shell if [ -d /usr/src/kernel-patches/$(architecture)/ ];\
+                        then echo /usr/src/kernel-patches/$(architecture); \
+	             fi)
+endif
+
+ifeq ($(strip $(ALL_PATCH_DIR)),)
+ALL_PATCH_DIR  = $(shell if [ -d /usr/src/kernel-patches/all/ ]; \
+                            then echo /usr/src/kernel-patches/all/ \
+			 fi)
+endif
+
+VERSIONED_ALL_PATCH_APPLY   = $(VERSIONED_ALL_PATCH_DIR)/apply
+VERSIONED_ALL_PATCH_UNPATCH = $(VERSIONED_ALL_PATCH_DIR)/unpatch
+
+VERSIONED_DIR_PATCH_APPLY   = $(VERSIONED_PATCH_DIR)/apply
+VERSIONED_DIR_PATCH_UNPATCH = $(VERSIONED_PATCH_DIR)/unpatch
 
 ALL_PATCH_APPLY   = $(ALL_PATCH_DIR)/apply
 ALL_PATCH_UNPATCH = $(ALL_PATCH_DIR)/unpatch
@@ -701,23 +719,35 @@ canonical_patches=$(subst $(comma),$(space),$(SELECTED_PATCHES))
 
 ifneq ($(strip $(canonical_patches)),)
 # test to see if the patches exist
-valid_patches = $(shell for name in $(canonical_patches); do                 \
-                            if [ -x $(DIR_PATCH_APPLY)/$$name -a           \
-                                 -x $(DIR_PATCH_UNPATCH)/$$name ]; then    \
-                               echo $(DIR_PATCH_APPLY)/$$name;               \
-                            elif [ -x $(ALL_PATCH_APPLY)/$$name -a        \
-                                    -x $(ALL_PATCH_UNPATCH)/$$name ]; then \
-                               echo $(ALL_PATCH_APPLY)/$$name;               \
-                            fi;                                              \
+valid_patches = $(shell for name in $(canonical_patches); do                  \
+                            if [ -x $(VERSIONED_DIR_PATCH_APPLY)/$$name -a    \
+                                 -x $(VERSIONED_DIR_PATCH_UNPATCH)/$$name ];  \
+                               then echo $(VERSIONED_DIR_PATCH_APPLY)/$$name; \
+                            elif [ -x $(VERSIONED_ALL_PATCH_APPLY)/$$name -a  \
+                                   -x $(VERSIONED_ALL_PATCH_UNPATCH)/$$name ];\
+                               then echo $(VERSIONED_ALL_PATCH_APPLY)/$$name; \
+                            elif [ -x $(DIR_PATCH_APPLY)/$$name -a            \
+                                 -x $(DIR_PATCH_UNPATCH)/$$name ]; then       \
+                               echo $(DIR_PATCH_APPLY)/$$name;                \
+                            elif [ -x $(ALL_PATCH_APPLY)/$$name -a            \
+                                    -x $(ALL_PATCH_UNPATCH)/$$name ]; then    \
+                               echo $(ALL_PATCH_APPLY)/$$name;                \
+                            fi;                                               \
                         done)
-valid_unpatches = $(shell for name in $(canonical_patches); do               \
-                            if [ -x $(DIR_PATCH_APPLY)/$$name -a           \
-                                 -x $(DIR_PATCH_UNPATCH)/$$name ]; then    \
-                               echo $(DIR_PATCH_UNPATCH)/$$name;             \
-                            elif [ -x $(ALL_PATCH_APPLY)/$$name -a        \
-                                    -x $(ALL_PATCH_UNPATCH)/$$name ]; then \
-                               echo $(ALL_PATCH_UNPATCH)/$$name;             \
-                            fi;                                              \
+valid_unpatches = $(shell for name in $(canonical_patches); do                \
+                            if [ -x $(VERSIONED_DIR_PATCH_APPLY)/$$name -a    \
+                                 -x $(VERSIONED_DIR_PATCH_UNPATCH)/$$name ];  \
+                              then echo $(VERSIONED_DIR_PATCH_UNPATCH)/$$name;\
+                            elif [ -x $(VERSIONED_ALL_PATCH_APPLY)/$$name -a  \
+                                   -x $(VERSIONED_ALL_PATCH_UNPATCH)/$$name ];\
+                              then echo $(VERSIONED_ALL_PATCH_UNPATCH)/$$name;\
+                            elif [ -x $(DIR_PATCH_APPLY)/$$name -a            \
+                                 -x $(DIR_PATCH_UNPATCH)/$$name ]; then       \
+                               echo $(DIR_PATCH_UNPATCH)/$$name;              \
+                            elif [ -x $(ALL_PATCH_APPLY)/$$name -a            \
+                                    -x $(ALL_PATCH_UNPATCH)/$$name ]; then    \
+                               echo $(ALL_PATCH_UNPATCH)/$$name;              \
+                            fi;                                               \
                         done)
 
 
@@ -777,6 +807,8 @@ $(error Error. The version number $(strip $(version)) is not all \
  the packaging system shall refuse to package the image. )
 endif
 
+# export variables
+export root_cmd FLAVOUR INT_SUBARCH APPEND_TO_VERSION UNSIGN_CHANGELOG  UNSIGN_SOURCE ROOT_CMD
 
 
 ifeq ($(strip $(IN_KERNEL_DIR)),)
@@ -871,6 +903,16 @@ ifneq ($(strip $(valid_patches)),)
 	  fi;                                          \
         done
 else
+	if [ -d $(VERSIONED_DIR_PATCH_APPLY) ]; then \
+            run-parts --verbose $(VERSIONED_DIR_PATCH_APPLY); \
+        else \
+	    true; \
+	fi
+	if [ -d $(VERSIONED_ALL_PATCH_APPLY)  ]; then \
+            run-parts --verbose $(VERSIONED_ALL_PATCH_APPLY); \
+        else \
+	    true; \
+	fi
 	if [ -d $(DIR_PATCH_APPLY) ]; then \
             run-parts --verbose $(DIR_PATCH_APPLY); \
         else \
@@ -945,6 +987,16 @@ ifneq ($(strip $(valid_unpatches)),)
 	  fi;                                              \
         done
 else
+	if [ -d $(VERSIONED_DIR_PATCH_UNPATCH) ]; then \
+            run-parts --verbose $(VERSIONED_DIR_PATCH_UNPATCH); \
+        else \
+	    true; \
+	fi
+	if [ -d $(VERSIONED_ALL_PATCH_UNPATCH)  ]; then \
+            run-parts --verbose $(VERSIONED_ALL_PATCH_UNPATCH); \
+        else \
+	    true; \
+	fi
 	if [ -d $(DIR_PATCH_UNPATCH) ]; then \
             run-parts --verbose $(DIR_PATCH_UNPATCH); \
         else \
@@ -1183,7 +1235,7 @@ ifdef MODULES_ENABLED
 ifeq  ($(strip $(HAVE_NEW_MODLIB)),)
 	$(mod_inst_cmds)
 else
-	$(MAKE) INSTALL_MOD_PATH=$(INSTALL_MOD_PATH) \
+	$(MAKE) $(EXTRAV_ARG) INSTALL_MOD_PATH=$(INSTALL_MOD_PATH) \
                 CROSS_COMPILE=$(KERNEL_CROSS) modules_install
 endif
 endif

@@ -5,14 +5,14 @@
 # Created On       : Sat May 15 11:05:13 1999
 # Created On Node  : glaurung.green-gryphon.com
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Fri Jan 19 13:00:14 2001
+# Last Modified On : Tue Apr 24 02:48:56 2001
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 15
+# Update Count     : 16
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
 # 
-#     $Id: image.postrm,v 1.5 2001/01/19 19:35:10 srivasta Exp $
+#     $Id: image.postrm,v 1.6 2001/04/24 08:09:19 srivasta Exp $
 #
 
 
@@ -152,13 +152,17 @@ if (-f "/lib/modules/$version/modules.dep") {
 if (-f "/lib/modules/$version/modules.isapnpmap") {
   unlink "/lib/modules/$version/modules.isapnpmap";
 }
-
 if (-f "/lib/modules/$version/modules.pcimap") {
   unlink "/lib/modules/$version/modules.pcimap";
 }
-
 if (-f "/lib/modules/$version/modules.usbmap") {
   unlink "/lib/modules/$version/modules.usbmap";
+}
+if (-f "/lib/modules/$version/modules.parportmap") {
+  unlink "/lib/modules/$version/modules.parportmap";
+}
+if (-f "/lib/modules/$version/modules.generic_string") {
+  unlink "/lib/modules/$version/modules.generic_string";
 }
 
 ## Run user hook script here, if any

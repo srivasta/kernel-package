@@ -52,7 +52,18 @@ else
 INT_FLAV :=
 FLAV_ARG :=
 endif
-KVERS = $(kversion).$(kplevel).$(ksublevel)$(kextra:)$(INT_FLAV)
+
+## This is the replacement for FLAVOUR
+ifneq ($(strip $(APPEND_TO_VERSION)),)
+iatv := $(strip $(APPEND_TO_VERSION))
+EXTRAV_ARG := EXTRAVERSION=${EXTRA_VERSION}${iatv}
+else
+iatv :=
+EXTRAV_ARG :=
+endif
+
+KVERS = $(kversion).$(kplevel).$(ksublevel)$(kextra)$(iatv)$(INT_FLAV)
+
 endif
 endif
 

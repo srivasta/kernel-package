@@ -5,14 +5,14 @@
 # Created On       : Sat Apr 27 05:55:26 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Fri Jan 19 12:59:05 2001
+# Last Modified On : Tue Apr 24 03:00:52 2001
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 195
+# Update Count     : 196
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
 # 
-#    $Id: image.postinst,v 1.61 2001/02/01 18:56:54 srivasta Exp $
+#    $Id: image.postinst,v 1.62 2001/04/24 08:09:19 srivasta Exp $
 #
 
 # 
@@ -779,7 +779,12 @@ if (-T "/etc/$loader.conf") {
   }
   else {
     if (&ask("Wipe out your old $Loader configuration and make a new one")){
-      rename("/etc/$loader.conf", "/etc/$loader.conf.OLD");
+      my $ret = system("savelog /etc/$loader.conf");
+      if ($ret) {
+	print "There was a problem saving a copy of your /etc/$loader.conf\n";
+	print "Since this could have grave repercussions, I am aborting.\n";
+	exit(0);
+      }
     }
     else {
       exit (0);

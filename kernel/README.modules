@@ -3,7 +3,7 @@
                 === == ======= === === ==============
 
 	There are a number of add-on modules (that is, kernel modules
- are developed apart fromt he Linux kernel and do not appear in the 
+ are developed apart from the Linux kernel and do not appear in the 
  mainstream kernel sources). Notables, at the time of writing, are the 
  pcmcia-cs and and the alsa sound modules.
 
@@ -13,9 +13,9 @@
  modules whenever one created a new kernel, and kernel-package
  provides some mechanisms to do so for co-operating add-on modules. 
 
-	In order for this to work, the add on modules must appear in
+	In order for this to work, the add-on modules must appear in
  a standard location, choosen to be $(MODULE_LOC)/<mod-name>/
- (MODULE_LOC defaults to /usr/src/modules, and can be set either on in
+ (MODULE_LOC defaults to /usr/src/modules, and can be set either in
  the environment or the configuration file), and must arrange to be
  manipulated by the kernel-package mechanisms.
 
@@ -60,7 +60,7 @@ USER INSTRUCTIONS
 	       make dep;
                make-kpkg --revision number modules_image
           where number is the same revision number used to build the
-          kernel-image package in the previously. This will generate a
+          kernel-image package previously. This will generate a
           pcmcia-modules-<kernel version> deb file in the parent
           directory. 
 
@@ -80,12 +80,12 @@ USER INSTRUCTIONS
 				   the sample files for an example. 
  b) modules:                       generate the modules packages and
                                    sign them with dchanges (this
-                                   creates the sorce and diff packages
+                                   creates the source and diff packages
                                    as well)
  c) modules-config modules_config: only configure the module
  d) modules-clean  modules_clean:  Clean the modules source tree, and
 				   undo all changes made by the above
-				   cammands. 
+				   commands. 
 	
 	So, add to the 
 4% fakeroot make-kpkg --revision=custom.1.0 kernel_image 
@@ -105,7 +105,33 @@ MODULE Packaging hints
  a) KVERS  Contains the kernel version
  b) KSRC   Contains the location of the kernel sources 
  c) KMAINT Contains the Name of the maintainer to pass to PGP
- d) KEMAIL Caontains the email address of the maintainer
+ d) KEMAIL Contains the email address of the maintainer
+
+	Additionally, the following variables may also be present in the 
+ environment:
+   e) APPEND_TO_VERSION This contains a string to be appended to the 
+                        EXTRAVERSION variable. This is already factored 
+                        into the KVERS variable above.
+   f) FLAVOUR Contains the flavour, if any, of the current
+              kernel. This is already factored into the KVERS variable
+	      above.  Please note that FLAVOURS are now deprecated in
+              preference to  APPEND_TO_VERSION
+   g) INT_SUBARCH Contains the SUB arch if any if and only if the 
+                  ARCH_IN_NAME variable has been set. I suspect that the
+                  user wants the .deb names to be modified (but not the
+                  kernel version or the location of the dir in which to
+                  find modules if this is set. This is *NOT* factored
+                  into KVERS above, and is there to be used at your
+                  discretion. 
+   h) UNSIGN_CHANGELOG  A boolean
+   i) UNSIGN_SOURCE     A boolean
+   j) ROOT_CMD          a program, like dufo or fakeroot
+   k) root_cmd This is a misnomer. That variable actually holds arguments
+               for dpkg, specifically, -uc -us -r<blah>, or any
+               combination thereof, asd requested by the user. This
+               may be set in the config file, so if this variable
+               exists, it incorporates and over rides the env vars
+               UNSIGN_CHANGELOG, UNSIGN_SOURCE, and ROOT_CMD
 
 	Please have a look at the sample files for creating a
  dependent modules package, sample.module.rules and

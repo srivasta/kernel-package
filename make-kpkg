@@ -14,7 +14,7 @@
 #
 #
 #
-#    $Id: make-kpkg,v 1.53 2001/02/01 18:56:53 srivasta Exp $
+#    $Id: make-kpkg,v 1.54 2001/04/24 08:09:18 srivasta Exp $
 #
 require 5.002;
 use strict;
@@ -29,7 +29,7 @@ make-kpkg - build Debian kernel packages from Linux kernel sources.
 ($main::MYNAME     = $main::0) =~ s|.*/||;
 $main::Author      = "Manoj Srivastava";
 $main::AuthorMail  = "srivasta\@debian.org";
-$main::Version     = '$Revision: 1.53 $ ';
+$main::Version     = '$Revision: 1.54 $ ';
 
 my $added_modules='';
 my $added_patches='';
@@ -326,7 +326,7 @@ This program should be run in a linux kernel source top level directory.
 usage: $main::MYNAME [options] target [target ...]
   where options are:
  --help                This message.
- --revision number     The debian revision number. ([a-z.+0-9]) (Must
+ --revision number     The debian revision number. ([a-zA-Z.+0-9]) (Must
                          have digit, no hyphen allowed)
  --flavour  foo        an additional kernel sub-version. ([-a-z.+0-9])
                        OBSOLETE
@@ -783,7 +783,7 @@ EOERR1
       print STDERR "Error: Uppercase letters are not allowed in\n";
       print STDERR "the extended version, since the version becomes\n";
       print STDERR "part of the kernel-image name; and package names\n";
-      print STDERR "may only cantain lowercase alphanumerics.\n";
+      print STDERR "may only contain lowercase alphanumerics.\n";
       print STDERR "I have $append_to_version, which shall be dissallowed \n";
       print STDERR "by the packaging tools. Aborting.\n";
       exit 1;

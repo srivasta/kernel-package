@@ -1,5 +1,5 @@
 
-   $Id: README,v 1.41 2001/02/01 18:56:54 srivasta Exp $
+   $Id: README,v 1.42 2001/04/24 08:09:19 srivasta Exp $
 
 This is the Debian GNU/Linux prepackaged version of the Linux kernel.
 Linux was written by Linus Torvalds <Linus.Torvalds@cs.Helsinki.FI> and
@@ -76,7 +76,7 @@ Phase THREE: Install the kernel image on one or more machines
                     # booting the new kernel. YOU HAVE BEEN WARNED!!
 
  With the addition of fakeroot ( a really nice program, I recommend
- it). To use fake root, try setting ROOT_CMD to 'fakeroot --'. Steps 1
+ it). To use fakeroot, try setting ROOT_CMD to 'fakeroot --'. Steps 1
  to 4 can be carried out as a non root user. Step 5 does require root
  privileges.
 
@@ -111,9 +111,9 @@ this size will go up in the future).
 Now, cd linux (wherever you have created the kernel sources).
 
 Versions and revisions
----------------------
+----------------------
 
-The version number is deduced from the kernel Makefile directly. to
+The version number is deduced from the kernel Makefile directly to
 ensure that the version numbers are in sync[1], so you don't have to
 worry about that.
 
@@ -134,7 +134,7 @@ a) It only has an effect during the configure phase (in other words,
    doing).  Additionally, official source package maintainers provide
    their own version numbers and data for the official uploads, and
    hence a number of things, including the Debian revision, is not
-   modified by make-kpkg.  If you happen to have an official sources,
+   modified by make-kpkg.  If you happen to have an official source,
    (that would mean that the file debian/official exists), and want to
    use your own revision number, make sure you remove debian/official
    before running make-kpkg clean for this option to have an effect.
@@ -150,7 +150,7 @@ You should _not_ use a "_" in the revision number! As tempting as it may
 seem, it actually interferes with the policy.
 
 The revision number is required because dpkg imposes an ordering on
-version numbers, so that it can tell whether packages are being up or
+version numbers, so that it can tell whether packages are being up- or
 downgraded and so that dselect can tell whether a package it finds
 available is newer than the one installed on the system. Dselect uses
 an option that prevents a package from being downgraded, for example.
@@ -175,11 +175,11 @@ The reason for telling kernel-package that the package has a version
 is that to dpkg that is always a higher version number than any version
 number starting with a numeral ( e.g. "a" > "2" like "b" > "a". ) This way,
 dselect will not try to upgrade your "roll-it-yourself" kernel-image when
-the a new build of the distribution default kernel appears in the archive. 
+a new build of the distribution default kernel appears in the archive. 
 
 
 Unfortunately, this fails if the upstream maintainer uses epochs to
-correct a version mis numbering ;-(. The good news is that you can add
+correct a version misnumbering ;-(. The good news is that you can add
 your own epoch to your customized image, ugly though that may
 be. (--revision 1:custom.Y; the kernel image file shall remain
 kernel-image-X.X.XX-custom.Y.deb, but dpkg shall know that it should
@@ -236,8 +236,8 @@ People who want to have multiple flavours of the same kernel version
 around should look at the append_to_version flag of make-kpkg. This
 appends to the EXTRAVERSION variable of the kernel Makefile, and does
 not require one to edit that makefile manually.  This can also be done
-by setting the environement variable APPEND_TO_VERSION. The command
-line invocation over rides the env variable. 
+by setting the environment variable APPEND_TO_VERSION. The command
+line invocation overrides the env variable. 
 
 The method described in the /usr/share/doc/kernel-package/Flavours.gz
 file is obsolete (Note: This involves modifying the kernel sources top
@@ -254,54 +254,64 @@ you may put any legal Makefile directive in that file (just make very
 sure you know what you are doing ;-).
 
         At the moment, the user modifiable variables supported are:
-maintainer:	Local kernel-* package maintainer.  Please note that
+
+maintainer	Local kernel-* package maintainer.  Please note that
                 any apostrophes "'" shall have to be quoted like so: 
                 maintainer = John O'\\''Brien. 
                 Yes, this is ugly, but this works.
-email:          The email address of that person.
-pgp:            Name to search for in the pgp database _iff_ separate
+
+email           The email address of that person.
+
+pgp             Name to search for in the pgp database _iff_ separate
                 modules (like pcmcia etc) are being built in
                 /usr/src/modules/*. Can be set from environment
                 variable PGP_SIGNATURE. Defaults to maintainer.
-debian:		The Debian revision of the kernel packages. Can be set
-		from the environment variable DEBIAN_REVISION, defaults
-		to 1.00.
-image_in_boot:	Set to True if you want the kernel image symlink (vmlinuz)
+
+debian 		The Debian revision of the kernel packages. Can be set
+		from the environment variable DEBIAN_REVISION. Defaults
+		to 1.0.
+
+image_in_boot	Set to True if you want the kernel image symlink (vmlinuz)
                 in /boot rather than the default /. Can be set from the
-		environment variable IMAGE_IN_BOOT. defaults to
+		environment variable IMAGE_IN_BOOT. Defaults to
 		undefined. 
-kimage:		The kernel image type (i.e. zImage or bzImage). Can be
+
+kimage		The kernel image type (i.e. zImage or bzImage). Can be
 		set from the environment variable IMAGE_TYPE. Defaults
 		to bzImage.
-no_symlinks      Mutually exclusive to reverse_symlink. Can be used with
+
+no_symlinks     Mutually exclusive to reverse_symlink. Can be used with
                 image_in_boot. The image is placed in vmlinuz (instead
                 of /boot/vmlinuz-X.X.XX). The old vmlinuz is moved to
                 vmlinuz.old unconditionally. (Normally, that is only
                 done if the version of the new image differs from the
                 old one). This restricts you to two images, unless you
                 take additional action and save copies of older
-                images. This is for people who have boot on a system
+                images. This is for people who have /boot on a system
                 that does not use symlinks (and say, they use loadlin)
                 This is a Hack.
+
 reverse_symlink Mutually exclusive to no_symlinks. Can be used with
                 image_in_boot. Just like no_symlinks, except that the
                 /boot/vmlinuz-X.XX is symlinked to the real new
                 image, vmlinuz. This too restricts you to just two
                 images unless further action is taken. The older
                 symlinks are left dangling. This is for people with
-                boot on umsdos, and who can't see the link in dos, but
-                do want to know the image version when in Linux. 
+                /boot on umsdos, and who can't see the link in dos, 
+                but do want to know the image version when in Linux. 
                 This is a Hack.
+
 image_dest    If  you  want  the  symbolic  link  (or  image,  if
-              move_image is set) to be stored in elsewhere than /
+              move_image is set) to be stored elsewhere than /
               set this variable to the dir  where  you  want  the
               symbolic  link.   Please  note  that  this is not a
-              Boolean variable.  This may be of help  to  loadlin
-              users,   who  may  set  both  this  and  move_image
-              Defaults to / This can be used in conjunction  with
+              boolean variable.  This may be of help  to  loadlin
+              users,  who  may  set  both  this  and  move_image.
+              Defaults to /. This can be used in conjunction with
               all above options except image_in_boot, which would
               not   make   sense.   (If   both   image_dest   and
               image_in_boot are set, image_in_boot overrides).
+
 patch_the_kernel This is an experts only variable. If set to YES (ENV
                  variable PATCH_THE_KERNEL overrides this), the build
                  process causes run-parts to be run over
@@ -311,42 +321,45 @@ patch_the_kernel This is an experts only variable. If set to YES (ENV
                  /usr/src/kernel-patches/$(architecture)/unpatch. The
                  special architecture all is used for arch independent
                  patches. You may use the --added_patches command line
-                 in conjunction with this variable to selective apply
+                 in conjunction with this variable to selectively apply
                  only some patches from that directory.
-root_cmd         This should be set to a means of gaining super user
+
+root_cmd         This should be set to a means of gaining superuser
                  access (for example, `sudo' or `fakeroot') as needed
-                 by dpkg-buildpackages's -r option. This is only
+                 by dpkg-buildpackages' -r option. This is only
                  relevant for the buildpackage target, when it is used
                  to call dpkg-buildpackage with the proper
-                 options. The environment variable ROOT_CMD over-rides
+                 options. The environment variable ROOT_CMD overrides
                  this.
+
 do_clean	 Set to anything but YES, this shall forego the make
                  clean done in the kernel source tree after building
                  the kernel image package. The environment variable
-                 CLEAN_SOURCE over-rides this.
+                 CLEAN_SOURCE overrides this.
+
 make_libc_headers  This is meant to be used by the libc6 maintainer,
                    when he compiles libc6, to also package up the
                    corresponding headers. DO NOT SET THIS as a
                    mismatch between the headers you package and libc6
                    may well create a subtle instability in all code
                    compiled on your machine. You have been warned. The
-                   environment variable MAKE_LIBC_HEADERS over-rides
+                   environment variable MAKE_LIBC_HEADERS overrides
                    this. 
 
 The value of a variable can be set so: 
   a) Defaults exist in the rules file. These are the values used if no
      customization is done.
   b) Variables can be set in the config file /etc/kernel-pkg.conf. 
-     These values over ride the defaults.
+     These values override the defaults.
   c) Variables can also be set by setting a corresponding environment
-     variable.  These values over ride the config file and the defaults
+     variable.  These values override the config file and the defaults.
   d) Using make-kpkg options, or, if using the rules file directly, on 
      command line ( # xxx/rules DEBIAN_REVISION=2.0a kernel_image). This 
-     over rides all the above methods.
+     overrides all the above methods.
 
 Please see kernel-pkg.conf (5).
 
-However, most if these are done on the machine you compile on: but you
+However, most of these are done on the machine you compile on: but you
 may need to install generic kernel image packages from time to time,
 and you need control over where the image sticks the symbolic links
 and such. With this in mind, there is the configuration file
@@ -359,31 +372,33 @@ does not exist, and neither does the symbolic link /vmlinuz.  The
 script asks the user whether the symbolic link should be created, and
 stashes the answer into /etc/kernel-img.conf
 
-no_symlinks      Mutually exclusive to reverse_symlink. Can be used with
+no_symlinks     Mutually exclusive to reverse_symlink. Can be used with
                 image_in_boot. The image is placed in vmlinuz (instead
                 of /boot/vmlinuz-X.X.XX). The old vmlinuz is moved to
                 vmlinuz.old unconditionally. (Normally, that is only
                 done if the version of the new image differs from the
                 old one). This restricts you to two images, unless you
                 take additional action and save copies of older
-                images. This is for people who have boot on a system
+                images. This is for people who have /boot on a system
                 that does not use symlinks (and say, they use loadlin)
                 This is a Hack.
+
 reverse_symlink Mutually exclusive to no_symlinks. Can be used with
                 image_in_boot. Just like no_symlinks, except that the
                 /boot/vmlinuz-X.XX is symlinked to the real new
                 image, vmlinuz. This too restricts you to just two
                 images unless further action is taken. The older
                 symlinks are left dangling. This is for people with
-                boot on umsdos, and who can't see the link in dos, but
+                /boot on umsdos, and who can't see the link in dos, but
                 do want to know the image version when in Linux. 
                 This is a Hack.
+
 do_symlink    By  default,  the  kernel  image  post installation
               script shall create or update the /vmlinuz and
               /vmlinuz.old symbolic links.  This is true if a /vmlinuz
               link already exists, however, in absence of /vmlinuz,
               the script looks to see if this configuration file
-              exists. If it does not, the configuration scripts asks
+              exists. If it does not, the configuration script asks
               the user whether to create the symbolic link, and
               stashes the answer in a newly created
               /etc/kernel-img.conf.  If the configuration file already
@@ -391,29 +406,29 @@ do_symlink    By  default,  the  kernel  image  post installation
               link is ever created. This for people who have other
               means of booting their machines, and do not like the
               symbolic links cluttering up their / directory.
-image_in_boot:	Set to True if you want the kernel image symlink (vmlinuz)
-                in /boot rather than the default /. defaults to
-		undefined. 
-image_dest
-              If  you  want  the  symbolic  link  (or  image,  if
-              move_image is set) to be stored in elsewhere than /
+
+image_in_boot	Set to True if you want the kernel image symlink
+                (vmlinuz) in /boot rather than the default /.
+                Defaults to undefined. 
+
+image_dest    If  you  want  the  symbolic  link  (or  image,  if
+              move_image is set)   to be stored elsewhere than  /
               set this variable to the dir  where  you  want  the
               symbolic  link.   Please  note  that  this is not a
               Boolean variable.  This may be of help  to  loadlin
-              users,   who  may  set  both  this  and  move_image
-              Defaults to / This can be used in conjunction  with
+              users,  who  may  set  both  this  and  move_image.
+              Defaults to /. This can be used in conjunction with
               all above options except image_in_boot, which would
               not   make   sense.   (If   both   image_dest   and
               image_in_boot are set, image_in_boot overrides).
 
-move_image
-              Instead  of  creating  symbolic  links  to  (or, is
+move_image    Instead  of  creating  symbolic  links  to  (or, if
               reverse_symlinks  is  set,  from)  image_dest,  the
               image  is  moved  from  its  location in /boot into
               image_dest.   If  reverse_symlinks  is  set,  /boot
               shall  contain a symbolic link to the actual image.
-              This option can be sueful to peopl  using  loadlin,
-              who  may need the image to be moved to a different,
+              This option can be useful to people using  loadlin,
+              who  may need the image to be moved to a  different
               dos partition.  This variable is unset by  default.
 
 clobber_modules
@@ -423,7 +438,7 @@ clobber_modules
               your own risk.  This variable is unset by  default.
 
 do_boot_enable
-              If set to NO, this short circuits all attempts to create
+              If set to NO, this shortcircuits all attempts to create
               boot floppies, run lilo, etc. This has the additional
               side effect that the postinst is silent. Setting both
               do_bootfloppy and do_bootloader to NO implies setting
@@ -431,21 +446,22 @@ do_boot_enable
 
 do_bootfloppy
               If set to NO, this prevents the postinst from asking
-              questions about creating a boot floppy. and no boot
-              floppy is created. The boot loader shall still be run.
+              questions about creating a boot floppy, and no boot
+              floppy is created. The bootloader shall still be run.
               This may cut down on the interaction the postinst has.
-              (It still prompts before formatting /dev/fd0) Defaults
+              (It still prompts before formatting /dev/fd0). Defaults
               to Yes.
+
 do_bootloader
               If set to NO, this prevents the postinst from running
-              the boot loader. The user may still be asked to create a
+              the bootloader. The user may still be asked to create a
               floppy, unless do_bootfloppy is also set to NO. Defaults
               to Yes.
 
 postinst_hook
               Set this variable to a script to be executed during
               installation after all the symbolic links are  cre-
-              ated,  but before running the boot loader or offer-
+              ated,  but before running the bootloader or  offer-
               ing to create a floppy. This script shall be called
               with  two arguments, the first being the version of
               the kernel image, and the second argument being the
@@ -482,7 +498,7 @@ ignore these friendly overtures by the postinst.
 
 If you want a custom kernel, you may generate a config file by any of
 these methods (just follow the directions).
-% make config          # Boring old tty based method
+% make config          # boring old tty based method
 or
 % make menuconfig      # curses based menu driven method (uses color if 
                          you have any)
@@ -506,15 +522,15 @@ With a custom .config file in place (created as above) run again:
 | % make-kpkg  --revision=custom.1.0 build                              |
 | % $Get_Root make-kpkg --revision=custom.1.0 kernel_image              |
 |     (Get_Root is whatever you need to become root -- fakeroot or      |
-|     sudo are examples that come to mind).                             |
+|     sudo are examples that come to mind)                              |
 |                                                                       |
-| For people who wish to see the user name (not root) when they do a    |
-| uname -a on the machine when they install the kernel, there is a     |
+| For people who wish to see the username (not root) when they do a     |
+| uname -a on the machine when they install the kernel, there is a      |
 | trick:                                                                |
 |  % make config                                                        |
 |  % make-kpkg build                                                    |
 |  % $Get_Root make -f debian/rules kernel-image-deb                    |
-| shall generate a kernel image with the user name of the user embedded |
+| shall generate a kernel image with the username of the user embedded  |
 | in it.                                                                |
 -------------------------------------------------------------------------
 
@@ -549,11 +565,13 @@ fast) can use image = /boot/vmlinuz-X.X.XX.
 
 For folks using grub, there are now postinst_hook and postrm_hook
 variables that can be pointed to scripts that add or remove  a line
-from the grub menu list at kerel image install and remove times. A
+from the grub menu list at kernel image install and remove times. A
 sample script to add lines to a grub menu file is included in the dir
 /usr/share/doc/kernel-pacakage/; and simple scripts like:
+
   # perl -nle 'print unless /^#Autogenerated by kernel-image $version/ \
                         .. /^#End kernel-image '$version/'
+
  or for awk fans
   #  awk 'BEGIN{printit=1} 
       /^#Autogenerated by kernel-image $version/{printit=0}
@@ -564,13 +582,14 @@ sample script to add lines to a grub menu file is included in the dir
           /^#Autogenerated by kernel-image $version$/,
           /^#End kernel-image '$version$/ {p=1}
      {if(!p) print}' < foo
- can be added put in a script and added to the postrm hook script to
- remove the lines added by kernel_grub_conf.sh
+
+ can be put in a script and added to the postrm hook script to remove
+ the lines added by kernel_grub_conf.sh
 
 So that loadlin people don't feel left out, all this talk about LILO
 does not mean to ignore loadlin, you can use the generated
 kernel-image just as easily (simply ignore the fol-de-rol with symlinks
-in /). for instance, you could:
+in /). For instance, you could:
 
  [1]# dpkg -BRGiE kernel-image-X.X.XX, # need to be root
         and then
@@ -593,8 +612,7 @@ image contained.
 If you try to install the recompiled kernel image over the previous
 kernel image (same version and flavour), then the install scripts
 detect that, and ask you to move at least the /lib/modules/X.X.XX dir
-away. If you continue anyway, the files in /boot shall be over
-written. 
+away. If you continue anyway, the files in /boot shall be overwritten. 
 
 Also, if you try to recompile with a changed --revison option or a
 different debian revision, you shall have to make-kpkg clean, and then
@@ -607,7 +625,7 @@ Tecras and other notebooks
 
 Tecras and other notebooks, and some PCs have a problem where they
 fail to flush the cache when switching on the a20 gate (IIRC), which
-is provoked by bzImage kernels, but not by zimage kernels. 
+is provoked by bzImage kernels, but not by zImage kernels. 
 
 bzImage files are actually "big zImage" not "bzipped Image".  bzImage
 kernels can be as large as you like, but because they need to decompress
@@ -617,25 +635,27 @@ but they hit the 640k limit.
 
 There are two solutions that I know of:
 
-  1) apply a patch, which flushes the cache.  Unfortunately this
+  1) Apply a patch, which flushes the cache.  Unfortunately this
      causes other machines to crash so is not universally applicable
-     (hence the tecra disks being segregated from the mainstream)
+     (hence the tecra disks being segregated from the mainstream).
 
-  2) build a zimage, rather than bzimage kernel.  This seems to get
+  2) Build a zImage, rather than bzImage kernel.  This seems to get
      round the problem. use the --zimage option to make-kpkg, or even
      set this as the default in /etc/kernel-pkg.conf.
 
-There some add on modules that hook into make-kpkg and the kernel
+There some add-on modules that hook into make-kpkg and the kernel
 sources so that they may be kept in synchrony with the kernel you
 run. If you have such a module source package, for example,
 pcmcia-source, then please read README.modules as well. If you don't
 never mind. (The file is in /usr/share/doc/kernel-source-X.X.XX/. If you
-don't have kernel-source packages installed [that's OK]. there is a
+don't have kernel-source packages installed [that's OK], there is a
 copy in /usr/share/kernel-package/README.modules).
 
 Have fun,
 
 	Manoj Srivastava
+
+
 Foot note 1:
   For an explanation on why this synchronization is required, consider
   this. The kernel knows what version it is, as given in the kernel

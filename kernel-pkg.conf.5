@@ -21,7 +21,7 @@
 .\" Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139,
 .\" USA.
 .\"
-.\" $Id: kernel-pkg.conf.5,v 1.21 2001/01/19 06:24:21 srivasta Exp $
+.\" $Id: kernel-pkg.conf.5,v 1.22 2001/04/24 08:09:18 srivasta Exp $
 .\"
 .TH KERNEL\-PKG.CONF 5 "Jan  7 1997" "Debian" "Debian GNU/Linux manual" 
 .\" NAME should be all caps, SECTION should be 1-8, maybe w/ subsection
@@ -40,37 +40,37 @@ you may put any legal Makefile directive in that file (just make very
 sure you know what you are doing).  
 .PP
 All the variables have reasonable default values, and maybe
-over\-ridden on a per run or a per individual basis by using
+overridden on a per run or a per individual basis by using
 environment variables.  Some of the variables can further be
-over\-ridden by options to 
+overridden by options to 
 .B make\-kpkg.
 .PP
 At the moment, the user modifiable variables supported are:
 .TP
-.B maintainer:     
+.B maintainer
 Local kernel-* package maintainer. Set up at package installation by
 the 
 .IR postinst.
-Can be over\-ridden by the environment variable 
+Can be overridden by the environment variable 
 .B KPKG_MAINTAINER.
 Please note that any apostrophes "'" shall have to be quoted like so:
 maintainer = John O'\\''Brien. Yes, this is ugly, but this works.
 .TP
-.B email:          
+.B email      
 The email address of that person.  Set up at package installation by
 the 
 .IR postinst.
-Can be over\-ridden by the environment variable 
+Can be overridden by the environment variable 
 .B KPKG_EMAIL.
 .TP
-.B pgp:            
+.B pgp           
 Name to search for in the pgp database 
 .BI iff
 separate modules (like pcmcia etc) are being built in
 .IR /usr/src/modules/.
-Can be over\-ridden by the environment variable 
+Can be overridden by the environment variable 
 .B PGP_SIGNATURE, 
-and is over\-ridden (again) by the 
+and is overridden (again) by the 
 .IR \-\-pgpsign
 option of
 .B make-kpkg.
@@ -78,35 +78,35 @@ Defaults to
 .I maintainer.
 (Optional)
 .TP
-.B debian:         
-The Debian revision of the kernel packages. Can be over\-ridden
+.B debian         
+The Debian revision of the kernel packages. Can be overridden
 by the environment variable 
 .B DEBIAN_REVISION, 
-and is over\-ridden (again) by the 
+and is overridden (again) by the 
 .IR \-\-revision
 option of
 .B make-kpkg.
 Defaults to 
-.I 1.00.
+.I 1.0.
 (Optional)
 .TP
-.B image_in_boot:  
+.B image_in_boot
 Set to True if you want the kernel image 
 .I vmlinuz 
 in 
 .I /boot 
 rather than the default 
 .I /.  
-Can be over\-ridden by the environment variable
+Can be overridden by the environment variable
 .B IMAGE_IN_BOOT. 
-defaults to undefined.
+Defaults to undefined.
 (Optional)
 .TP
-.B kimage:         
+.B kimage         
 The kernel image type (i.e. zImage or bzImage). Can be
-over\-ridden from the environment variable 
+overridden from the environment variable 
 .B IMAGE_TYPE,  
-and is over\-ridden (again) by the options
+and is overridden (again) by the options
 .IR \-\-zimage
 or
 .IR \-\-bzimage
@@ -119,7 +119,7 @@ Defaults to
 .B no_symlink
 Whether to use symlinks to the 
 .I image
-file. Can be over\-ridden by the environment variable
+file. Can be overridden by the environment variable
 .B NO_SYMLINK
 Mutualy exclusive to 
 .I reverse_symlink. 
@@ -130,7 +130,8 @@ old vmlinuz is moved to vmlinuz.old unconditionally. (Normally, that
 is only done if the version of the new image differes from the old
 one). This restricts you to two images, unless you take additional
 action and save copies of older images. This is for people who have
-boot on a system that does not use symbolic links (and say, they use
+.I /boot
+on a system that does not use symbolic links (and say, they use
 loadlin as a boot loader). This is a Hack.
 Defaults to  undefined (optional)
 .TP
@@ -138,7 +139,7 @@ Defaults to  undefined (optional)
 Whether to use reverse symlinks (that is, the real file is the one
 without the version number, and the numberd version is the link) to the 
 .I image
-file. Can be over\-ridden by the environment variable
+file. Can be overridden by the environment variable
 .B REVERSE_SYMLINK
 Mutualy exclusive to 
 .I no_symlink.
@@ -147,14 +148,15 @@ Can be used with
 Just like 
 .I no_symlink, 
 except that the
-/boot/vmlinuz-X.XX is sym linked to the real new
-image, vmlinuz. This too restricts you to just two
-images unless futher action is taken. The older
+/boot/vmlinuz-X.XX is symlinked to the real new
+image, vmlinuz. This, too, restricts you to just two
+images unless further action is taken. The older
 symlinks are left dangling. This is for people with
-boot on umsdos, and who can't see the link in dos, but
+.I /boot
+on umsdos, and who can't see the link in dos, but
 do want to know the image version when in Linux. 
 This is a Hack.
-Defaults to  undefined (optional)
+Defaults to  undefined. (optional)
 .TP
 .B patch_the_kernel
 This is an experts only variable. If set to YES (ENV
@@ -185,22 +187,22 @@ menuconfig or xconfig then it is reset to oldconfig.
 This is an experts only variable. If set to NO (ENV
 variable 
 .B USE_SAVED_CONFIG
-overrides this), the file .config.save in the top level directoryis
+overrides this), the file .config.save in the top level directory is
 ignored. 
 .TP
 .B root_cmd 
-This should be set to a means of gaining super user  access (for
+This should be set to a means of gaining superuser access (for
 example, 
 .I `sudo'
 or 
 .I`fakeroot')
 as needed by 
-.B dpkg-buildpackages's 
--r option. Ths is only relevant for the buildpackage taregt, when it
+.B dpkg-buildpackages' 
+-r option. Ths is only relevant for the buildpackage target, when it
 is used to call dpkg-buildpackage with the proper options. The
 environment variable 
 .B ROOT_CMD
-over-rides this. The environment variable
+overrides this. The environment variable
 .B UNSIGN_SOURCE
 adds to this command an option to have dpkg-buildpackage not sign the
 source, similarily, the environment variable
@@ -213,31 +215,31 @@ If set to YES, the symbolic link
 .I /lib/modules/$VERSION/build
 shall be removed from the resulting .deb package.  The environment variable 
 .B DELETE_BUILD_LINK
-over-rides this. 
+overrides this. 
 .TP
 .B do_clean	
 Set to anything but YES, this shall forego the make clean done in the
 kernel source tree after building the kernel image package. The
 environment variable 
 .B CLEAN_SOURCE
-over-rides this.
+overrides this.
 .TP
 .B extra_docs
 This variable should be set to the path of any extra documentation
 that should be installed in 
 .I /usr/share/doc/kernel-image-X.X.XX/
-directory. There is no chacking for name conflicts, and the files are
-not compressed. Hence, if you want the files to be comrepssed, please
-pre-compress it and provide the path of the compressed file.  The
+directory. There is no checking for name conflicts, and the files are
+not compressed. Hence, if you want the files to be compressed, please
+precompress it and provide the path of the compressed file.  The
 environment variable  
 .B EXTRA_DOCS
-over-rides this, and would most likely be how extra documentation is
+overrides this, and would most likely be how extra documentation is
 specified. 
 .TP
 .B make_libc_headers
 This is meant to be used by the 
 .I libc6 
-maintianer, when he compiles
+maintainer, when he compiles
 .I libc6, 
 to also package up the corresponding headers. 
 .B DO NOT SET THIS
@@ -248,10 +250,10 @@ may well
 create a subtle instablity in all code compiled on your machine. You
 have been warned. The environment variable 
 .B MAKE_LIBC_HEADERS
-over-rides this.
+overrides this.
 .TP
 .B CONCURRENCY_LEVEL
-If defined, this variable sets the concurrency leevl of make used to
+If defined, this variable sets the concurrency level of make used to
 compile the kenel and the modules set using 
 .I -j
 flags to the sub make in the 
@@ -262,14 +264,14 @@ Should be a (small) integer, if used.
 .TP
 .B ARCH_IN_NAME
 If defined, this variable causes 
-.B make-kpkg.
+.B make-kpkg
 to use an extended name for the kernel image package by embedding the
 subarchitecture  in the image name, so one could write a script to
 create multiple subarchitectures one after the  other. 
 .B Please note
 that  only  the package 
 .I name
-is  affected,  not modules locations etc.
+is  affected,  not module locations etc.
 .TP
 .B CONFDIR
 This variable should be set to a directory which contains architecture
@@ -282,34 +284,34 @@ several architectures. Defaults to
 .I /usr/share/kernel-package/Config
 .TP
 .B IMAGEDIR
-If you want the image to be stored in elsewhere than
+If you want the image to be stored elsewhere than
 .I /boot
 set this variable to the dir where you want the image. This may be of
 help to
 .B loadlin
-users.Defaults to 
+users. Defaults to 
 .I /boot.
 .TP
 .B MODULE_LOC
-Set this variable, either in the envoronment or in the config file, to
+Set this variable, either in the environment or in the config file, to
 point to the location where the add-on modules are located. Defaults
 to 
 .I /usr/src/modules
 .TP
 .B CONFDIR
-Set this variable, either in the envoronment or in the config file, to
+Set this variable, either in the environment or in the config file, to
 point to the location where the kernel config files are
 located. Defaults to 
 .I /usr/share/kernel-package/Config
 .TP
 .B PATCH_DIR 
-Set this variable, either in the envoronment or in the config file, to
+Set this variable, either in the environment or in the config file, to
 point to the location where the add-on kernel patches are
 located. Defaults to
 .I /usr/src/kernel-patches/ARCHITECTURE
 .TP
 .B ALL_PATCH_DIR 
-Set this variable, either in the envoronment or in the config file, to
+Set this variable, either in the environment or in the config file, to
 point to the location where the add-on arch independent kernel patches
 are located. Defaults to
 .I /usr/src/kernel-patches/all
@@ -321,10 +323,10 @@ customization is done.
 .IP b)
 Variables can be set in the config file 
 .I /etc/kernel-pkg.conf. 
-These values over ride the defaults.
+These values override the defaults.
 .IP c)
-Variables can also be set by setting a corresponding envirnment
-variable.  These values over ride the config file and the defaults.
+Variables can also be set by setting a corresponding environment
+variable.  These values override the config file and the defaults.
 .IP d)
 Using 
 .B make-kpkg 
@@ -333,7 +335,7 @@ command line
 .br
 .BI "# xxx/rules DEBIAN_REVISION=2.0a kernel_image"
 .br
-This over rides all the above methods.
+This overrides all the above methods.
 .SH FILES
 The file described here is
 .I /etc/kernel-pkg.conf.

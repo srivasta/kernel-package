@@ -21,7 +21,7 @@
 .\" Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139,
 .\" USA.
 .\"
-.\" $Id: kernel-img.conf.5,v 1.9 2001/01/19 19:35:09 srivasta Exp $
+.\" $Id: kernel-img.conf.5,v 1.10 2001/04/24 08:09:18 srivasta Exp $
 .\"
 .TH KERNEL\-IMG.CONF 5 "Mar 21 2000" "Debian" "Debian GNU/Linux manual" 
 .\" NAME should be all caps, SECTION should be 1-8, maybe w/ subsection
@@ -53,14 +53,14 @@ and stashes the answer into
 .PP
 At the moment, the user modifiable variables supported are:
 .TP
-.B image_in_boot:  
+.B image_in_boot
 Set to Yes if you want the kernel image 
 .I vmlinuz 
 in 
 .I /boot 
 rather than the default 
 .I /.  
-defaults to No.
+Defaults to No.
 .TP
 .B do_symlink
 By default, the kernel image post installation script shall create or
@@ -73,7 +73,7 @@ symbolic links. This is true if a
 link already exists, however, in absence of
 .I /vmlinuz,
 the script looks to see if this configuration file exists. If it does
-not, the configuration scripts asks the user whether to create the
+not, the configuration script asks the user whether to create the
 symbolic link, and stashes the answer in a newly created
 .I /etc/kernel-img.conf.
 If the configuration file already exists, and 
@@ -94,8 +94,9 @@ The old vmlinuz is moved to vmlinuz.old unconditionally. (Normally, that
 is only done if the version of the new image differs from the old
 one). This restricts you to two images, unless you take additional
 action and save copies of older images. This is for people who have
-boot on a system that does not use symbolic links (and say, they use
-loadlin as a boot loader). This is a Hack.
+.I /boot 
+on a system that does not use symbolic links (and say, they use
+loadlin as a bootloader). This is a Hack.
 Defaults to No. 
 .TP
 .B reverse_symlink
@@ -110,11 +111,12 @@ Can be used with
 Just like 
 .I no_symlink, 
 except that the
-/boot/vmlinuz-X.XX is symbolic linked to the real new
-image, vmlinuz. This too restricts you to just two
-images unless father action is taken. The older
+/boot/vmlinuz-X.XX is a symbolic link to the real new
+image, vmlinuz. This, too, restricts you to just two
+images unless further action is taken. The older
 symlinks are left dangling. This is for people with
-boot on umsdos, and who can't see the link in dos, but
+.I /boot 
+on umsdos, and who can't see the link in dos, but
 do want to know the image version when in Linux. 
 This is a Hack.
 Defaults to  No.
@@ -122,16 +124,16 @@ Defaults to  No.
 .B image_dest 
 If you want the symbolic link (or image, if 
 .B move_image 
-is set) to be stored in elsewhere than
+is set) to be stored elsewhere than
 .I /
 set this variable to the dir where you want the symbolic link.
-Please note that this is not a Boolean variable.  This may be of
+Please note that this is not a boolean variable.  This may be of
 help to
 .B loadlin
 users, who may set both this and
 .B move_image 
 Defaults to 
-.I /
+.I /.
 This can be used in conjunction with all above options except
 .B image_in_boot,
 which would not make sense. (If both 
@@ -145,7 +147,7 @@ overrides)
 .B postinst_hook 
 Set this variable to a script to be executed during installation after
 all the symbolic 
-links are created, but before running the boot loader or offering to
+links are created, but before running the bootloader or offering to
 create a floppy. This script shall be called with two arguments,
 the first being the
 .I version
@@ -167,7 +169,7 @@ of the kernel image itself. Errors in the script shall produce a
 warning message, but shall be otherwise ignored.
 .TP
 .B move_image 
-Instead of creating symbolic links to (or, is 
+Instead of creating symbolic links to (or, if 
 .B reverse_symlinks 
 is set, from)
 .B image_dest,
@@ -204,7 +206,7 @@ to NO. Defaults to Yes.
 .B do_bootfloppy
 If set to NO, this prevents the postinst from asking
 questions about creating a boot floppy. and no boot
-floppy is created. The boot loader shall still be run.
+floppy is created. The bootloader shall still be run.
 This may cut down on the interaction the postinst has.
 (It still prompts before formatting 
 .I /dev/fd0) 
@@ -221,7 +223,7 @@ is also set to NO. Defaults to Yes.
 If set to yes, the kernel image postinst script shall go to extra
 ordinary lengths to ensure that the symbolic links are
 relative. Normally, the symbolic links are relative when it is easily
-determinable that relative links shall work. efaults to No.
+determinable that relative links shall work. Defaults to No.
 .SH FILES
 The file described here is
 .I /etc/kernel-img.conf.
