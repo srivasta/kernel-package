@@ -36,25 +36,36 @@ my $image_dir       = "=D";     # where the image is located
 my $clobber_modules = '';       # target machine defined
 my $initrd          = "=I";     # initrd kernel
 my $use_hard_links  = '';       # hardlinks do not wirk across fs boundaries
+my $postinst_hook   = '';       #Normally we do not
+my $postrm_hook     = '';       #Normally we do not
 
-my $Loader          = "LILO";
-$Loader             = "SILO"  if $loader =~ /silo/io;
-$Loader             = "QUIK"  if $loader =~ /quik/io;
-$Loader             = "PALO"  if $loader =~ /palo/io;
-$Loader             = "NETTROM"  if $loader =~ /nettrom/io;
-$Loader             = "VMELILO"  if $loader =~ /vmelilo/io;
+my $Loader          = "NoLOADER"; # 
+$Loader             = "LILO"     if $loader =~ /^lilo/io;
+$Loader             = "SILO"     if $loader =~ /^silo/io;
+$Loader             = "QUIK"     if $loader =~ /^quik/io;
+$Loader             = "yaboot"   if $loader =~ /^yaboot/io;
+$Loader             = "PALO"     if $loader =~ /^palo/io;
+$Loader             = "NETTROM"  if $loader =~ /^nettrom/io;
+$Loader             = "VMELILO"  if $loader =~ /^vmelilo/io;
+$Loader             = "ZIPL"     if $loader =~ /^zipl/io;
+$Loader             = "ELILO"    if $loader =~ /^elilo/io;
 
 
 #known variables
-my @boilerplate   = ();
-my $bootdevice    = '';
-my $rootdevice    = '';
-my $rootdisk      = '';
-my $rootpartition = '';
+my @boilerplate     = ();
+my @silotemplate    = ();
+my @quiktemplate    = ();
+my @palotemplate    = ();
+my @vmelilotemplate = ();
+my $bootdevice      = '';
+my $rootdevice      = '';
+my $rootdisk        = '';
+my $rootpartition   = '';
 my $image_dest      = "/";
-my $realimageloc  = "/$image_dir/";
-my $have_conffile = "";
+my $realimageloc    = "/$image_dir/";
+my $have_conffile   = "";
 my $CONF_LOC        = '/etc/kernel-img.conf';
+my $relative_links = '';
 
 die "Pre inst Internal error. Aborting." unless $version;
 
@@ -78,6 +89,7 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
       $do_bootfloppy   = '' if /do_bootfloppy\s*=\s*(no|false|0)\s*$/ig;
       $do_bootloader   = '' if /do_bootloader\s*=\s*(no|false|0)\s*$/ig;
       $do_initrd       = '' if /do_initrd\s*=\s*(no|false|0)\s*$/ig;
+      $relative_links  = '' if /relative_links \s*=\s*(no|false|0)\s*$/ig;
       $use_hard_links  = '' if /use_hard_links\s*=\s*(no|false|0)\s*$/ig;
 
       $do_symlink      = "Yes" if /do_symlinks\s*=\s*(yes|true|1)\s*$/ig;
@@ -89,11 +101,13 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
       $do_boot_enable  = "Yes" if /do_boot_enable\s*=\s*(yes|true|1)\s*$/ig;
       $do_bootfloppy   = "Yes" if /do_bootfloppy\s*=\s*(yes|true|1)\s*$/ig;
       $do_bootloader   = "Yes" if /do_bootloader\s*=\s*(yes|true|1)\s*$/ig;
+      $relative_links  = "Yes" if /relative_links\s*=\s*(yes|true|1)\s*$/ig;
       $do_initrd       = "Yes" if /do_initrd\s*=\s*(yes|true|1)\s*$/ig;
       $use_hard_links  = "Yes" if /use_hard_links\s*=\s*(yes|true|1)\s*$/ig;
 
       $image_dest      = "$1"  if /image_dest\s*=\s*(\S+)/ig;
-      $image_dest      = "$1"  if /image_dest\s*=\s*(\S+)/ig;
+      $postinst_hook   = "$1"  if /postinst_hook\s*=\s*(\S+)/ig;
+      $postrm_hook     = "$1"  if /postrm_hook\s*=\s*(\S+)/ig;
     }
     close CONF;
     $have_conffile = "Yes";

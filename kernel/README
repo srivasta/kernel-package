@@ -1,5 +1,5 @@
 
-   $Id: README,v 1.46 2001/08/20 06:31:08 srivasta Exp $
+   $Id: README,v 1.47 2001/09/03 18:10:24 srivasta Exp $
 
 This is the Debian GNU/Linux prepackaged version of the Linux kernel.
 Linux was written by Linus Torvalds <Linus.Torvalds@cs.Helsinki.FI> and
@@ -76,9 +76,11 @@ Phase THREE: Install the kernel image on one or more machines
                     # booting the new kernel. YOU HAVE BEEN WARNED!!
 
  With the addition of fakeroot ( a really nice program, I recommend
- it). To use fakeroot, try setting ROOT_CMD to 'fakeroot --'. Steps 1
- to 4 can be carried out as a non root user. Step 5 does require root
- privileges.
+ it). Steps 1 to 4 can be carried out as a non root user. Step 5 does
+ require root privileges.
+
+ NOTE: To use fakeroot when you are using the buildpackage target, you
+ may also try setting --rootcmd to fakeroot (or to 'fakeroot --').
 
  If you're using the patch_the_kernel facility, you may want to remove
  step 2 and instead insert `--config=menuconfig' into the make-kpkg

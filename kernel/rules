@@ -11,23 +11,23 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.131 2001/08/20 06:31:09 srivasta Exp $
+## $Id: rules,v 1.132 2001/09/03 18:10:24 srivasta Exp $
 ###############################################################################
 
 ifdef ARCH
   ha:=-a$(ARCH)
 endif
 
+DPKG_ARCH := dpkg-architecture
 # set the dpkg-architecture vars
-export DEB_BUILD_ARCH      := $(shell dpkg-architecture $(ha) -qDEB_BUILD_ARCH)
-export DEB_BUILD_GNU_CPU   := $(shell dpkg-architecture $(ha) -qDEB_BUILD_GNU_CPU)
-export DEB_BUILD_GNU_SYSTEM:= $(shell dpkg-architecture $(ha) -qDEB_BUILD_GNU_SYSTEM)
-export DEB_BUILD_GNU_TYPE  := $(shell dpkg-architecture $(ha) -qDEB_BUILD_GNU_TYPE)
-export DEB_HOST_ARCH       := $(shell dpkg-architecture $(ha) -qDEB_HOST_ARCH)
-export DEB_HOST_GNU_CPU    := $(shell dpkg-architecture $(ha) -qDEB_HOST_GNU_CPU)
-export DEB_HOST_GNU_SYSTEM := $(shell dpkg-architecture $(ha) -qDEB_HOST_GNU_SYSTEM)
-export DEB_HOST_GNU_TYPE   := $(shell dpkg-architecture $(ha) -qDEB_HOST_GNU_TYPE)
-
+export DEB_BUILD_ARCH      := $(shell $(DPKG_ARCH) $(ha) -qDEB_BUILD_ARCH)
+export DEB_BUILD_GNU_CPU   := $(shell $(DPKG_ARCH) $(ha) -qDEB_BUILD_GNU_CPU)
+export DEB_BUILD_GNU_TYPE  := $(shell $(DPKG_ARCH) $(ha) -qDEB_BUILD_GNU_TYPE)
+export DEB_HOST_ARCH       := $(shell $(DPKG_ARCH) $(ha) -qDEB_HOST_ARCH)
+export DEB_HOST_GNU_CPU    := $(shell $(DPKG_ARCH) $(ha) -qDEB_HOST_GNU_CPU)
+export DEB_HOST_GNU_SYSTEM := $(shell $(DPKG_ARCH) $(ha) -qDEB_HOST_GNU_SYSTEM)
+export DEB_HOST_GNU_TYPE   := $(shell $(DPKG_ARCH) $(ha) -qDEB_HOST_GNU_TYPE)
+export DEB_BUILD_GNU_SYSTEM:= $(shell $(DPKG_ARCH) $(ha) -qDEB_BUILD_GNU_SYSTEM)
 
 #
 # VERSION=$(shell LC_ALL=C dpkg-parsechangelog | grep ^Version: | \
@@ -374,14 +374,14 @@ endif
 
 ##### ia64
 ifeq ($(strip $(architecture)),ia64)
-kimage := vmlinux
+kimage := vmlinuz
 loaderdep=elilo
-loader=
+loader=elilo
 loaderdoc=
-target=$(kimage)
-NEED_DIRECT_GZIP_IMAGE=NO
-kimagesrc=$(kimage)
-kimagedest=$(INT_IMAGE_DESTDIR)/vmlinux-$(version)
+target=vmlinux
+NEED_DIRECT_GZIP_IMAGE=YES
+kimagesrc=vmlinux
+kimagedest=$(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
 DEBCONFIG=$(CONFDIR)/config.$(SUBARCH)
 endif
 
@@ -504,11 +504,27 @@ i_package := kernel-image-$(version)$(INT_SUBARCH)
 d_package := kernel-doc-$(version)
 l_package := libc-kheaders
 
-FILES_TO_CLEAN  = modules/modversions.h modules/ksyms.ver debian/files
+SOURCE_TOP:= debian/tmp-source
+HEADER_TOP:= debian/tmp-headers
+IMAGE_TOP := debian/tmp-image
+DOC_TOP   := debian/tmp-doc
+
+SOURCE_DOC:= $(SOURCE_TOP)/usr/share/doc/$(package)
+HEADER_DOC:= $(HEADER_TOP)/usr/share/doc/$(h_package)
+IMAGE_DOC := $(IMAGE_TOP)/usr/share/doc/$(i_package)
+DOC_DOC   := $(DOC_TOP)/usr/share/doc/$(d_package)
+
+SOURCE_SRC:= $(SOURCE_TOP)/usr/src/$(package)
+HEADER_SRC:= $(HEADER_TOP)/usr/src/$(h_package)
+
+
+
+FILES_TO_CLEAN  = modules/modversions.h modules/ksyms.ver debian/files \
+                  conf.vars
 STAMPS_TO_CLEAN = stamp-build stamp-configure stamp-source stamp-image \
                   stamp-headers stamp-src stamp-diff stamp-doc \
                   stamp-buildpackage stamp-libc-kheaders stamp-debian
-DIRS_TO_CLEAN   = debian/tmp-source debian/tmp-headers debian/tmp-image
+DIRS_TO_CLEAN   = $(SOURCE_TOP) $(HEADER_TOP) $(IMAGE_TOP) $(DOC_TOP)
 
 CONFLOC    :=$(shell if test -f ~/.kernel-pkg.conf; then\
                         echo ~/.kernel-pkg.conf; \
@@ -568,7 +584,7 @@ DIR_PATCH_UNPATCH = $(PATCH_DIR)/unpatch
 # (suggested by Rob Browning <osiris@cs.utexas.edu>)
 DEB_DEST := ..
 SRCTOP := $(shell if [ "$$PWD" != "" ]; then echo $$PWD; else pwd; fi)
-INSTALL_MOD_PATH=$(SRCTOP)/debian/tmp-image
+INSTALL_MOD_PATH=$(SRCTOP)/$(IMAGE_TOP)
 
 
 install_file=    install -p    -o root -g root -m 644
@@ -1006,8 +1022,33 @@ endif
 	   install -p -m 755 $(DEBDIR)/rules debian/rules
 	touch stamp-debian
 
+conf.vars:
+	@echo "VERSION          = $(VERSION)"        > .mak
+	@echo "PATCHLEVEL       = $(PATCHLEVEL)"    >> .mak
+	@echo "SUBLEVEL 	= $(SUBLEVEL)"      >> .mak
+	@echo "EXTRAVERSION     = $(EXTRAVERSION)"  >> .mak
+	@echo "ARCH             = $(ARCH)"          >> .mak
+	@echo "HOSTCC           = $(HOSTCC)"        >> .mak
+	@echo "HOSTCFLAGS       = $(HOSTCFLAGS)"    >> .mak
+	@echo "CROSS_COMPILE    = $(CROSS_COMPILE)" >> .mak
+	@echo "AS               = $(AS)"            >> .mak
+	@echo "LD               = $(LD)"            >> .mak
+	@echo "CC               = $(CC)"            >> .mak
+	@echo "CPP              = $(CPP)"           >> .mak
+	@echo "AR               = $(AR)"            >> .mak
+	@echo "NM               = $(NM)"            >> .mak
+	@echo "STRIP            = $(STRIP)"         >> .mak
+	@echo "OBJCOPY          = $(OBJCOPY)"       >> .mak
+	@echo "OBJDUMP          = $(OBJDUMP)"       >> .mak
+	@echo "MAKE             = $(MAKE)"          >> .mak
+	@echo "GENKSYMS 	= $(GENKSYMS)"      >> .mak
+	@echo "CFLAGS           = $(CFLAGS)"        >> .mak
+	@echo "AFLAGS           = $(AFLAGS)"        >> .mak
+	@echo "MODFLAGS 	= $(MODFLAGS)"      >> .mak
+	@mv -f .mak $@
+
 configure: debian stamp-configure
-stamp-configure: debian .config
+stamp-configure: debian .config conf.vars
 	test -f stamp-debian || $(deb_rule) debian
 	test -f .config      || $(deb_rule) .config
 	-test ! -f stamp-configure \
@@ -1097,87 +1138,72 @@ stamp-source: debian
 	@test 0 = $$(id | sed -e 's/(.*$$//' -e 's/^uid=//') || \
 		(echo need root priviledges; exit 1)
 	test -f stamp-debian || $(deb_rule) debian
-	rm -rf debian/tmp-source
-	$(make_directory) debian/tmp-source/DEBIAN
-	$(make_directory) debian/tmp-source/usr/src/$(package)
-	$(make_directory) debian/tmp-source/usr/share/doc/$(package)
+	rm -rf $(SOURCE_TOP)
+	$(make_directory) $(SOURCE_TOP)/DEBIAN
+	$(make_directory) $(SOURCE_SRC)
+	$(make_directory) $(SOURCE_DOC)
 	sed -e 's/=P/$(package)/g' -e 's/=V/$(version)/g' \
-	    $(DEBDIR)/include.postinst > debian/tmp-source/DEBIAN/postinst
-	chmod 755 debian/tmp-source/DEBIAN/postinst
+	    $(DEBDIR)/include.postinst > $(SOURCE_TOP)/DEBIAN/postinst
+	chmod 755 $(SOURCE_TOP)/DEBIAN/postinst
 	sed -e 's/=P/$(package)/g' -e 's/=V/$(version)/g' \
-	    $(DEBDIR)/include.prerm > debian/tmp-source/DEBIAN/prerm
-	chmod 755 debian/tmp-source/DEBIAN/prerm
-	$(install_file) debian/changelog \
-	          debian/tmp-source/usr/share/doc/$(package)/changelog.Debian
-	gzip -9qf debian/tmp-source/usr/share/doc/$(package)/changelog.Debian
-	$(install_file) $(DEBDIR)/README \
-	          debian/tmp-source/usr/share/doc/$(package)/debian.README
-	gzip -9qf debian/tmp-source/usr/share/doc/$(package)/debian.README
-	$(install_file) $(DEBDIR)/README.grub \
-	          debian/tmp-source/usr/share/doc/$(package)/README.grub
-	gzip -9qf debian/tmp-source/usr/share/doc/$(package)/README.grub
-	$(install_file) $(DEBDIR)/README.headers \
-	          debian/tmp-source/usr/share/doc/$(package)/README.headers
-	gzip -9qf debian/tmp-source/usr/share/doc/$(package)/README.headers
-	$(install_file) $(DEBDIR)/README.tecra \
-	          debian/tmp-source/usr/share/doc/$(package)/README.tecra
-	gzip -9qf debian/tmp-source/usr/share/doc/$(package)/README.tecra
-	$(install_file) $(DEBDIR)/README.modules \
-	          debian/tmp-source/usr/share/doc/$(package)/README.modules
-	gzip -9qf debian/tmp-source/usr/share/doc/$(package)/README.modules
+	    $(DEBDIR)/include.prerm > $(SOURCE_TOP)/DEBIAN/prerm
+	chmod 755 $(SOURCE_TOP)/DEBIAN/prerm
+	$(install_file) debian/changelog      	 $(SOURCE_DOC)/changelog.Debian
+	gzip -9qf                             	 $(SOURCE_DOC)/changelog.Debian
+	$(install_file) $(DEBDIR)/README      	 $(SOURCE_DOC)/debian.README
+	gzip -9qf                             	 $(SOURCE_DOC)/debian.README
+	$(install_file) $(DEBDIR)/README.grub 	 $(SOURCE_DOC)/README.grub
+	gzip -9qf                                $(SOURCE_DOC)/README.grub
+	$(install_file) $(DEBDIR)/README.headers $(SOURCE_DOC)/README.headers
+	gzip -9qf                                $(SOURCE_DOC)/README.headers
+	$(install_file) $(DEBDIR)/README.tecra   $(SOURCE_DOC)/README.tecra
+	gzip -9qf                                $(SOURCE_DOC)/README.tecra
+	$(install_file) $(DEBDIR)/README.modules $(SOURCE_DOC)/README.modules
+	gzip -9qf                                $(SOURCE_DOC)/README.modules
 	$(install_file) $(DEBDIR)/sample.module.rules \
-	         debian/tmp-source/usr/share/doc/$(package)/sample.module.rules
-	gzip -9qf debian/tmp-source/usr/share/doc/$(package)/sample.module.rules
+	                                      $(SOURCE_DOC)/sample.module.rules
+	gzip -9qf                             $(SOURCE_DOC)/sample.module.rules
 	$(install_file) $(DEBDIR)/sample.module.control \
-               debian/tmp-source/usr/share/doc/$(package)/sample.module.control
-	gzip -9qf \
-               debian/tmp-source/usr/share/doc/$(package)/sample.module.control
-	$(install_file) README \
-	          debian/tmp-source/usr/share/doc/$(package)/README
-	gzip -9qf debian/tmp-source/usr/share/doc/$(package)/README
-	$(install_file) $(DEBDIR)/Flavours \
-	          debian/tmp-source/usr/share/doc/$(package)/Flavours
-	gzip -9qf debian/tmp-source/usr/share/doc/$(package)/Flavours
-	$(install_file) $(DEBDIR)/Rationale \
-	          debian/tmp-source/usr/share/doc/$(package)/Rationale
-	gzip -9qf debian/tmp-source/usr/share/doc/$(package)/Rationale
-	$(install_file) $(DEBDIR)/copyright.source \
-		debian/tmp-source/usr/share/doc/$(package)/copyright
+                                            $(SOURCE_DOC)/sample.module.control
+	gzip -9qf                           $(SOURCE_DOC)/sample.module.control
+	$(install_file) README   	           $(SOURCE_DOC)/README
+	gzip -9qf                                  $(SOURCE_DOC)/README
+	$(install_file) $(DEBDIR)/Flavours         $(SOURCE_DOC)/Flavours
+	gzip -9qf                                  $(SOURCE_DOC)/Flavours
+	$(install_file) $(DEBDIR)/Rationale        $(SOURCE_DOC)/Rationale
+	gzip -9qf                                  $(SOURCE_DOC)/Rationale
+	$(install_file) $(DEBDIR)/copyright.source $(SOURCE_DOC)/copyright
 	echo "This was produced by kernel-package version $(kpkg_version)." > \
-	         debian/tmp-source/usr/share/doc/$(package)/Buildinfo
+	         $(SOURCE_DOC)/Buildinfo
 	-tar cf - `echo * | sed -e 's/debian//g' -e 's/\.deb//g' ` \
-	| (cd debian/tmp-source/usr/src/$(package); umask 000; tar xsf -)
-	(cd debian/tmp-source/usr/src/$(package); \
+	| (cd $(SOURCE_SRC); umask 000; tar xsf -)
+	(cd $(SOURCE_SRC); \
             $(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) distclean)
-	(cd debian/tmp-source/usr/src/$(package); \
+	(cd $(SOURCE_SRC); \
                         rm -f stamp-building $(STAMPS_TO_CLEAN))
-	(cd debian/tmp-source/usr/src/$(package)/include; rm -f asm; )
+	(cd $(SOURCE_SRC)/include; rm -f asm; )
 	if test -f debian/official -a -f debian/README.Debian ; then \
-           $(install_file) debian/README.Debian \
-		debian/tmp-source/usr/src/$(package)/README.Debian ; \
-           $(install_file) debian/README.Debian \
-		debian/tmp-source/usr/share/doc/$(package)/README.Debian ; \
-	   gzip -9qf debian/tmp-source/usr/share/doc/$(package)/README.Debian;\
+           $(install_file) debian/README.Debian $(SOURCE_SRC)/README.Debian ; \
+           $(install_file) debian/README.Debian $(SOURCE_DOC)/README.Debian ; \
+	   gzip -9qf $(SOURCE_DOC)/README.Debian;\
 	else \
 	    sed -e 's/=V/$(version)/g' -e 's/=A/$(architecture)/g' \
-                 $(DEBDIR)/README.source > \
-		 debian/tmp-source/usr/src/$(package)/README.Debian ; \
+                 $(DEBDIR)/README.source >  $(SOURCE_SRC)/README.Debian ; \
 	fi
 	if test -f README.Debian ; then \
-           $(install_file) README.Debian \
-		debian/tmp-source/usr/share/doc/$(package)/README.Debian.1st; \
-	   gzip -9qf debian/tmp-source/usr/share/doc/$(package)/README.Debian.1st;\
+           $(install_file) README.Debian $(SOURCE_DOC)/README.Debian.1st; \
+	   gzip -9qf $(SOURCE_DOC)/README.Debian.1st;\
 	fi
-	chown -R root.root debian/tmp-source
-	chmod -R og=rX debian/tmp-source
-	(cd debian/tmp-source/usr/src/; \
+	chown -R root.root $(SOURCE_TOP)
+	chmod -R og=rX $(SOURCE_TOP)
+	(cd $(SOURCE_TOP)/usr/src/; \
            tar $(TAR_COMPRESSION) -cf $(package).tar.$(TAR_SUFFIX) $(package);\
              rm -rf $(package);)
-	dpkg-gencontrol -isp -p$(package) -Pdebian/tmp-source/
-	chown -R root.root debian/tmp-source
-	chmod -R og=rX debian/tmp-source
-	dpkg --build debian/tmp-source $(DEB_DEST)
-	rm -f -r debian/tmp-source
+	dpkg-gencontrol -isp -p$(package) -P$(SOURCE_TOP)/
+	chown -R root.root $(SOURCE_TOP)
+	chmod -R og=rX $(SOURCE_TOP)
+	dpkg --build $(SOURCE_TOP) $(DEB_DEST)
+	rm -f -r $(SOURCE_TOP)
 	touch stamp-source
 
 libc-kheaders libc_kheaders: stamp-libc-kheaders
@@ -1190,51 +1216,45 @@ stamp-headers: configure
 	@test $$(id | sed -e 's/(.*$$//' -e 's/^uid=//') || \
 		(echo need root priviledges; exit 1)
 	test -f stamp-configure || $(deb_rule) configure
-	rm -rf debian/tmp-headers
-	$(make_directory) debian/tmp-headers/DEBIAN
-	$(make_directory) debian/tmp-headers/usr/src/$(h_package)
-	$(make_directory) debian/tmp-headers/usr/share/doc/$(h_package)
+	rm -rf $(HEADER_TOP)
+	$(make_directory) $(HEADER_TOP)/DEBIAN
+	$(make_directory) $(HEADER_SRC)
+	$(make_directory) $(HEADER_DOC)
 	sed -e 's/=P/$(h_package)/g' -e 's/=V/$(version)/g' \
-		$(DEBDIR)/include.postinst > debian/tmp-headers/DEBIAN/postinst
-	chmod 755 debian/tmp-headers/DEBIAN/postinst
+		$(DEBDIR)/include.postinst > $(HEADER_TOP)/DEBIAN/postinst
+	chmod 755 $(HEADER_TOP)/DEBIAN/postinst
 	sed -e 's/=P/$(h_package)/g' -e 's/=V/$(version)/g' \
-		$(DEBDIR)/include.prerm > debian/tmp-headers/DEBIAN/prerm
-	chmod 755 debian/tmp-headers/DEBIAN/prerm
-	$(install_file) $(DEBDIR)/copyright.headers \
-		debian/tmp-headers/usr/share/doc/$(h_package)/copyright
-	$(install_file) debian/changelog \
-	         debian/tmp-headers/usr/share/doc/$(h_package)/changelog.Debian
-	gzip -9qf debian/tmp-headers/usr/share/doc/$(h_package)/changelog.Debian
-	$(install_file) $(DEBDIR)/README.headers \
-	         debian/tmp-headers/usr/share/doc/$(h_package)/debian.README
-	gzip -9qf debian/tmp-headers/usr/share/doc/$(h_package)/debian.README
+		$(DEBDIR)/include.prerm > $(HEADER_TOP)/DEBIAN/prerm
+	chmod 755 $(HEADER_TOP)/DEBIAN/prerm
+	$(install_file) $(DEBDIR)/copyright.headers $(HEADER_DOC)/copyright
+	$(install_file) debian/changelog         $(HEADER_DOC)/changelog.Debian
+	gzip -9qf                                $(HEADER_DOC)/changelog.Debian
+	$(install_file) $(DEBDIR)/README.headers $(HEADER_DOC)/debian.README
+	gzip -9qf $(HEADER_DOC)/debian.README
+	$(install_file) .config  	        $(HEADER_DOC)/config-$(version)
+	$(install_file) conf.vars  	        $(HEADER_DOC)/conf.vars 
+	gzip -9qf                               $(HEADER_DOC)/config-$(version)
+	gzip -9qf                               $(HEADER_DOC)/conf.vars
 	if test -f debian/official -a -f debian/README.Debian ; then \
-           $(install_file) debian/README.Debian \
-		debian/tmp-headers/usr/src/$(h_package)/README.Debian ; \
-           gzip -9qf debian/tmp-headers/usr/src/$(h_package)/README.Debian ; \
-           $(install_file) README.Debian \
-		debian/tmp-headers/usr/share/doc/$(h_package)/README.Debian;\
-	   gzip -9qf \
-                debian/tmp-headers/usr/share/doc/$(h_package)/README.Debian;\
+           $(install_file) debian/README.Debian $(HEADER_SRC)/README.Debian ; \
+           gzip -9qf $(HEADER_SRC)/README.Debian ; \
+           $(install_file) README.Debian $(HEADER_DOC)/README.Debian;\
+	   gzip -9qf                     $(HEADER_DOC)/README.Debian;\
 	fi
 	if test -f README.Debian ; then \
-           $(install_file) README.Debian \
-	     debian/tmp-headers/usr/share/doc/$(h_package)/README.Debian.1st;\
-	     gzip -9qf \
-              debian/tmp-headers/usr/share/doc/$(h_package)/README.Debian.1st;\
+           $(install_file) README.Debian $(HEADER_DOC)/README.Debian.1st;\
+	     gzip -9qf                   $(HEADER_DOC)/README.Debian.1st;\
 	fi
 	echo "This was produced by kernel-package version $(kpkg_version)." > \
-	         debian/tmp-headers/usr/share/doc/$(h_package)/Buildinfo
-	-tar cf - include | \
-            (cd debian/tmp-headers/usr/src/$(h_package); umask 000; tar xsf -)
-	(cd debian/tmp-headers/usr/src/$(h_package)/include; rm -f asm; \
-		ln -s asm-$(KERNEL_ARCH) asm)
+	         $(HEADER_DOC)/Buildinfo
+	-tar cf - include |        (cd $(HEADER_SRC); umask 000; tar xsf -)
+	(cd $(HEADER_SRC)/include; rm -f asm; ln -s asm-$(KERNEL_ARCH) asm)
 	dpkg-gencontrol -DArchitecture=$(architecture) -isp \
-                        -p$(h_package) -Pdebian/tmp-headers/
-	chown -R root.root debian/tmp-headers
-	chmod -R og=rX debian/tmp-headers
-	dpkg --build debian/tmp-headers $(DEB_DEST)
-	rm -rf debian/tmp-headers
+                        -p$(h_package) -P$(HEADER_TOP)/
+	chown -R root.root $(HEADER_TOP)
+	chmod -R og=rX $(HEADER_TOP)
+	dpkg --build $(HEADER_TOP) $(DEB_DEST)
+	rm -rf $(HEADER_TOP)
 	touch stamp-headers
 
 kernel-doc kernel_doc: stamp-doc
@@ -1242,39 +1262,33 @@ stamp-doc: debian
 	@test $$(id | sed -e 's/(.*$$//' -e 's/^uid=//') || \
 		(echo need root priviledges; exit 1)
 	test -f stamp-debian || $(deb_rule) debian
-	rm -rf            debian/tmp-doc
-	$(make_directory) debian/tmp-doc/DEBIAN
-	$(make_directory) debian/tmp-doc/usr/share/doc/$(d_package)
-	$(install_file) debian/changelog \
-	         debian/tmp-doc/usr/share/doc/$(d_package)/changelog.Debian
-	$(install_file) $(DEBDIR)/README.doc \
-	         debian/tmp-doc/usr/share/doc/$(d_package)/README.Debian
+	rm -rf            $(DOC_TOP)
+	$(make_directory) $(DOC_TOP)/DEBIAN
+	$(make_directory) $(DOC_DOC)
+	$(install_file) debian/changelog          $(DOC_DOC)/changelog.Debian
+	$(install_file) $(DEBDIR)/README.doc      $(DOC_DOC)/README.Debian
 	echo "This was produced by kernel-package version $(kpkg_version)." > \
-	         debian/tmp-doc/usr/share/doc/$(d_package)/Buildinfo
+	         $(DOC_DOC)/Buildinfo
 	if test -f debian/official -a -f debian/README.Debian ; then \
-           $(install_file) debian/README.Debian \
-		debian/tmp-doc/usr/share/doc/$(d_package)/README.Debian;\
+           $(install_file) debian/README.Debian $(DOC_DOC)/README.Debian;\
 	fi
 	if test -f README.Debian ; then \
-           $(install_file) README.Debian \
-	       debian/tmp-doc/usr/share/doc/$(d_package)/README.Debian.1st;\
+           $(install_file) README.Debian $(DOC_DOC)/README.Debian.1st;\
 	fi
-	-tar cf - Documentation | \
-           (cd debian/tmp-doc/usr/share/doc/$(d_package); umask 000; tar xsf -)
-	-gzip -9fqr debian/tmp-doc/usr/share/doc/$(d_package)
-	$(install_file) $(DEBDIR)/copyright.doc \
-		debian/tmp-doc/usr/share/doc/$(d_package)/copyright
+	-tar cf - Documentation | (cd $(DOC_DOC); umask 000; tar xsf -)
+	-gzip -9fqr $(DOC_DOC)
+	$(install_file) $(DEBDIR)/copyright.doc $(DOC_DOC)/copyright
 	sed -e 's/=P/$(d_package)/g' -e 's/=V/$(version)/g' \
-		$(DEBDIR)/include.postinst > debian/tmp-doc/DEBIAN/postinst
-	chmod 755 debian/tmp-doc/DEBIAN/postinst
+		$(DEBDIR)/include.postinst > $(DOC_TOP)/DEBIAN/postinst
+	chmod 755 $(DOC_TOP)/DEBIAN/postinst
 	sed -e 's/=P/$(d_package)/g' -e 's/=V/$(version)/g' \
-		$(DEBDIR)/include.prerm > debian/tmp-doc/DEBIAN/prerm
-	chmod 755 debian/tmp-doc/DEBIAN/prerm
-	dpkg-gencontrol -isp -p$(d_package) -Pdebian/tmp-doc/
-	chown -R root.root debian/tmp-doc
-	chmod -R og=rX debian/tmp-doc
-	dpkg --build debian/tmp-doc $(DEB_DEST)
-	rm -rf debian/tmp-doc
+		$(DEBDIR)/include.prerm > $(DOC_TOP)/DEBIAN/prerm
+	chmod 755 $(DOC_TOP)/DEBIAN/prerm
+	dpkg-gencontrol -isp -p$(d_package) -P$(DOC_TOP)/
+	chown -R root.root $(DOC_TOP)
+	chmod -R og=rX $(DOC_TOP)
+	dpkg --build $(DOC_TOP) $(DEB_DEST)
+	rm -rf $(DOC_TOP)
 	touch stamp-doc
 
 kernel-image kernel_image: stamp-image
@@ -1287,64 +1301,57 @@ stamp-image: configure build kernel-image-deb
 kernel-image-deb:
 	@test $$(id | sed -e 's/(.*$$//' -e 's/^uid=//')    \
 		 || (echo need root priviledges; exit 1)
-	rm -f -r ./debian/tmp-image ./debian/tmp-image.deb
+	rm -f -r ./$(IMAGE_TOP) ./$(IMAGE_TOP).deb
 	test -f stamp-configure     || $(deb_rule) configure
 	test -f stamp-build         || $(deb_rule) build
-	$(make_directory) debian/tmp-image/DEBIAN
-	$(make_directory) debian/tmp-image/$(IMAGEDIR)
-	$(make_directory) debian/tmp-image/usr/share/doc/$(i_package)
+	$(make_directory) $(IMAGE_TOP)/DEBIAN
+	$(make_directory) $(IMAGE_TOP)/$(IMAGEDIR)
+	$(make_directory) $(IMAGE_DOC)
 	sed -e 's/=V/$(version)/g'    -e 's/=B/$(image_in_boot)/g'   \
             -e 's/=S/$(no_symlink)/g' -e 's/=R/$(reverse_symlink)/g' \
             -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \
             -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'        \
-             $(DEBDIR)/image.postinst > debian/tmp-image/DEBIAN/postinst
-	chmod 755 debian/tmp-image/DEBIAN/postinst
+             $(DEBDIR)/image.postinst > $(IMAGE_TOP)/DEBIAN/postinst
+	chmod 755 $(IMAGE_TOP)/DEBIAN/postinst
 	sed -e 's/=V/$(version)/g'    -e 's/=B/$(image_in_boot)/g'   \
             -e 's/=S/$(no_symlink)/g' -e 's/=R/$(reverse_symlink)/g' \
             -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \
             -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'        \
-             $(DEBDIR)/image.postrm > debian/tmp-image/DEBIAN/postrm
-	chmod 755 debian/tmp-image/DEBIAN/postrm
+             $(DEBDIR)/image.postrm > $(IMAGE_TOP)/DEBIAN/postrm
+	chmod 755 $(IMAGE_TOP)/DEBIAN/postrm
 	sed -e 's/=V/$(version)/g'    -e 's/=L/$(loader)/g'          \
 	    -e 's/=I/$(INITRD)/g'                                    \
-	             $(DEBDIR)/image.preinst > debian/tmp-image/DEBIAN/preinst
-	chmod 755 debian/tmp-image/DEBIAN/preinst
+	             $(DEBDIR)/image.preinst > $(IMAGE_TOP)/DEBIAN/preinst
+	chmod 755 $(IMAGE_TOP)/DEBIAN/preinst
 	sed -e 's/=V/$(version)/g'    -e 's/=L/$(loader)/g'          \
-	             $(DEBDIR)/image.prerm > debian/tmp-image/DEBIAN/prerm
-	chmod 755 debian/tmp-image/DEBIAN/prerm
-	$(install_file) Documentation/Changes \
-	         debian/tmp-image/usr/share/doc/$(i_package)/
-	gzip -9qf debian/tmp-image/usr/share/doc/$(i_package)/Changes 
-	$(install_file) debian/changelog \
-	         debian/tmp-image/usr/share/doc/$(i_package)/changelog.Debian
-	gzip -9qf debian/tmp-image/usr/share/doc/$(i_package)/changelog.Debian
+	             $(DEBDIR)/image.prerm > $(IMAGE_TOP)/DEBIAN/prerm
+	chmod 755 $(IMAGE_TOP)/DEBIAN/prerm
+	$(install_file) Documentation/Changes 	  $(IMAGE_DOC)/
+	gzip -9qf $(IMAGE_DOC)/Changes 
+	$(install_file) debian/changelog          $(IMAGE_DOC)/changelog.Debian
+	gzip -9qf $(IMAGE_DOC)/changelog.Debian
 ifdef loaderdoc
-	$(install_file) $(DEBDIR)/$(loaderdoc) \
-	         debian/tmp-image/usr/share/doc/$(i_package)/$(loaderdoc)
-	gzip -9qf debian/tmp-image/usr/share/doc/$(i_package)/$(loaderdoc)
+	$(install_file) $(DEBDIR)/$(loaderdoc)    $(IMAGE_DOC)/$(loaderdoc)
+	gzip -9qf $(IMAGE_DOC)/$(loaderdoc)
 endif
-	$(install_file) $(DEBDIR)/README.image \
-	         debian/tmp-image/usr/share/doc/$(i_package)/debian.README
-	gzip -9qf debian/tmp-image/usr/share/doc/$(i_package)/debian.README
-	$(install_file) $(DEBDIR)/copyright.image \
-		debian/tmp-image/usr/share/doc/$(i_package)/copyright
+	$(install_file) $(DEBDIR)/README.image    $(IMAGE_DOC)/debian.README
+	gzip -9qf $(IMAGE_DOC)/debian.README
+	$(install_file) $(DEBDIR)/copyright.image $(IMAGE_DOC)/copyright
 	echo "This was produced by kernel-package version $(kpkg_version)." > \
-	         debian/tmp-image/usr/share/doc/$(i_package)/Buildinfo
-	$(install_file) .config $(INT_IMAGE_DESTDIR)/config-$(version)
+	         $(IMAGE_DOC)/Buildinfo
+	$(install_file) .config          $(INT_IMAGE_DESTDIR)/config-$(version)
+	$(install_file) conf.vars                 $(IMAGE_DOC)/conf.vars
+	gzip -9qf $(IMAGE_DOC)/conf.vars
 	if test -f debian/official -a -f debian/README.Debian ; then \
-           $(install_file) debian/README.Debian \
-		debian/tmp-image/usr/share/doc/$(i_package)/README.Debian ; \
-         gzip -9qf debian/tmp-image/usr/share/doc/$(i_package)/README.Debian;\
+           $(install_file) debian/README.Debian $(IMAGE_DOC)/README.Debian ; \
+         gzip -9qf $(IMAGE_DOC)/README.Debian;\
 	fi
 	if test -f README.Debian ; then \
-           $(install_file) README.Debian \
-	       debian/tmp-image/usr/share/doc/$(i_package)/README.Debian.1st;\
-           gzip -9qf \
-               debian/tmp-image/usr/share/doc/$(i_package)/README.Debian.1st;\
+           $(install_file) README.Debian $(IMAGE_DOC)/README.Debian.1st;\
+           gzip -9qf                     $(IMAGE_DOC)/README.Debian.1st;\
 	fi
 ifeq ($(strip $(HAVE_EXTRA_DOCS)),YES)
-	$(install_file) $(extra_docs) \
-	         debian/tmp-image/usr/share/doc/$(i_package)/
+	$(install_file) $(extra_docs) 	         $(IMAGE_DOC)/
 endif
 ifdef MODULES_ENABLED
 ifeq  ($(strip $(HAVE_NEW_MODLIB)),)
@@ -1369,14 +1376,14 @@ endif
 	-test -f System.map &&  chmod 644 \
                         $(INT_IMAGE_DESTDIR)/System.map-$(version)
 ifeq ($(strip $(delete_build_link)),YES)
-	rm -f debian/tmp-image/lib/modules/$(version)/build
+	rm -f $(IMAGE_TOP)/lib/modules/$(version)/build
 endif
 	dpkg-gencontrol -DArchitecture=$(architecture) -isp \
-                        -p$(i_package) -Pdebian/tmp-image/
-	chown -R root.root debian/tmp-image
-	chmod -R og=rX debian/tmp-image
-	dpkg --build debian/tmp-image $(DEB_DEST)
-	rm -f -r debian/tmp-image
+                        -p$(i_package) -P$(IMAGE_TOP)/
+	chown -R root.root $(IMAGE_TOP)
+	chmod -R og=rX $(IMAGE_TOP)
+	dpkg --build $(IMAGE_TOP) $(DEB_DEST)
+	rm -f -r $(IMAGE_TOP)
 ifeq ($(strip $(do_clean)),YES)
 	$(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) clean
 	rm -f stamp-build

@@ -12,7 +12,7 @@
 # HISTORY          : 
 # Description      : 
 # 
-#     $Id: image.postrm,v 1.11 2001/08/20 06:31:08 srivasta Exp $
+#     $Id: image.postrm,v 1.12 2001/09/03 18:10:24 srivasta Exp $
 #
 
 
@@ -40,27 +40,35 @@ my $use_hard_links  = '';       # hardlinks do not work across fs boundaries
 my $postinst_hook   = '';       #Normally we do not
 my $postrm_hook     = '';       #Normally we do not
 
-my $Loader          = "LILO";
-$Loader             = "SILO"  if $loader =~ /silo/io;
-$Loader             = "QUIK"  if $loader =~ /quik/io;
-$Loader             = "PALO"  if $loader =~ /palo/io;
-$Loader             = "NETTROM"  if $loader =~ /nettrom/io;
-$Loader             = "VMELILO"  if $loader =~ /vmelilo/io;
+my $Loader          = "NoLOADER"; # 
+$Loader             = "LILO"     if $loader =~ /^lilo/io;
+$Loader             = "SILO"     if $loader =~ /^silo/io;
+$Loader             = "QUIK"     if $loader =~ /^quik/io;
+$Loader             = "yaboot"   if $loader =~ /^yaboot/io;
+$Loader             = "PALO"     if $loader =~ /^palo/io;
+$Loader             = "NETTROM"  if $loader =~ /^nettrom/io;
+$Loader             = "VMELILO"  if $loader =~ /^vmelilo/io;
+$Loader             = "ZIPL"     if $loader =~ /^zipl/io;
+$Loader             = "ELILO"    if $loader =~ /^elilo/io;
 
 
 # This should not point to /tmp, because of security risks.
 my $temp_file_name = "/var/log/$loader" . "_log.$$";
 
 #known variables
-my @boilerplate = ();
-my $bootdevice = '';
-my $rootdevice = '';
-my $rootdisk = '';
-my $rootpartition = '';
+my @boilerplate     = ();
+my @silotemplate    = ();
+my @quiktemplate    = ();
+my @palotemplate    = ();
+my @vmelilotemplate = ();
+my $bootdevice      = '';
+my $rootdevice      = '';
+my $rootdisk        = '';
+my $rootpartition   = '';
 my $image_dest      = "/";
-my $realimageloc  = "/$image_dir/";
-my $have_conffile = "";
-my $CONF_LOC      = '/etc/kernel-img.conf';
+my $realimageloc    = "/$image_dir/";
+my $have_conffile   = "";
+my $CONF_LOC        = '/etc/kernel-img.conf';
 my $relative_links = '';
 
 # remove multiple leading slashes; make sure there is at least one.

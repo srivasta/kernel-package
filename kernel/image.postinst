@@ -5,14 +5,14 @@
 # Created On       : Sat Apr 27 05:55:26 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Thu Aug  2 10:37:59 2001
+# Last Modified On : Sun Sep  2 03:35:43 2001
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 211
+# Update Count     : 212
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
 #
-#    $Id: image.postinst,v 1.74 2001/08/20 06:31:08 srivasta Exp $
+#    $Id: image.postinst,v 1.75 2001/09/03 18:10:24 srivasta Exp $
 #
 
 #
@@ -44,15 +44,15 @@ my $postrm_hook     = '';       #Normally we do not
 my $package_name    = "kernel-image-$version";
 
 my $Loader          = "NoLOADER"; # 
-$Loader             = "LILO"     if $loader =~ /lilo/io;
-$Loader             = "SILO"     if $loader =~ /silo/io;
-$Loader             = "QUIK"     if $loader =~ /quik/io;
-$Loader             = "yaboot"   if $loader =~ /yaboot/io;
-$Loader             = "PALO"     if $loader =~ /palo/io;
-$Loader             = "NETTROM"  if $loader =~ /nettrom/io;
-$Loader             = "VMELILO"  if $loader =~ /vmelilo/io;
-$Loader             = "ZIPL"     if $loader =~ /zipl/io;
-
+$Loader             = "LILO"     if $loader =~ /^lilo/io;
+$Loader             = "SILO"     if $loader =~ /^silo/io;
+$Loader             = "QUIK"     if $loader =~ /^quik/io;
+$Loader             = "yaboot"   if $loader =~ /^yaboot/io;
+$Loader             = "PALO"     if $loader =~ /^palo/io;
+$Loader             = "NETTROM"  if $loader =~ /^nettrom/io;
+$Loader             = "VMELILO"  if $loader =~ /^vmelilo/io;
+$Loader             = "ZIPL"     if $loader =~ /^zipl/io;
+$Loader             = "ELILO"    if $loader =~ /^elilo/io;
 
 # This should not point to /tmp, because of security risks.
 my $temp_file_name = "/var/log/$loader" . "_log.$$";
@@ -102,7 +102,6 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
       $clobber_modules = '' if /clobber_modules\s*=\s*(no|false|0)\s*$/ig;
       $do_boot_enable  = '' if /do_boot_enable\s*=\s*(no|false|0)\s*$/ig;
       $do_bootfloppy   = '' if /do_bootfloppy\s*=\s*(no|false|0)\s*$/ig;
-      $do_bootloader   = '' if /do_bootloader\s*=\s*(no|false|0)\s*$/ig;
       $relative_links  = '' if /relative_links \s*=\s*(no|false|0)\s*$/ig;
       $do_bootloader   = '' if /do_bootloader\s*=\s*(no|false|0)\s*$/ig;
       $do_initrd       = '' if /do_initrd\s*=\s*(no|false|0)\s*$/ig;
@@ -130,13 +129,20 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
   }
 }
 
+# For some versions of kernel-package, we had tis warning in the
+# postinst, but the rules did not really interpolate the value in.
+# Here is a sanity check.
+my $pattern = "=" . "I";
+$initrd=~ s/^$pattern$//;
+
 # no floppy disk support available for m68k VME, and it is not very useful 
 # to make a boot floppy on PowerMac hardware at all.
-$do_bootfloppy = "" if $loader =~ /vmelilo/io;
-$do_bootfloppy = "" if $loader =~ /quik/io;
-$do_bootfloppy = "" if $loader =~ /yaboot/io;
-$do_bootfloppy = "" if $loader =~ /noloader/io;
-$do_bootfloppy = "" if $loader =~ /zipl/io;
+$do_bootfloppy = "" if $loader =~ /^vmelilo/io;
+$do_bootfloppy = "" if $loader =~ /^quik/io;
+$do_bootfloppy = "" if $loader =~ /^yaboot/io;
+$do_bootfloppy = "" if $loader =~ /^noloader/io;
+$do_bootfloppy = "" if $loader =~ /^zipl/io;
+$do_bootfloppy = "" if $loader =~ /^elilo/io;
 
 # We can't have boot floppies for initrd kernels
 $do_bootfloppy = "" if $initrd;
@@ -582,13 +588,12 @@ if ( -d "/lib/modules/$version" ) {
   system("depmod -a -F $realimageloc/System.map-$version $version");
 }
 
+# The initrd symlink should probably be i the same dir that the symlinks are in
 if ($initrd) {
   my $ret = system("mkinitrd -o " . $realimageloc . "initrd-$version " .
 		   "/lib/modules/$version");
   die("Failed to create initrd image.\n") if $ret;
-  chdir($realimageloc) or die "could not chdir to $realimageloc:$!\n";
   image_magic("initrd", $realimageloc) if $initrd;
-  chdir("$image_dest") or die "could not chdir to $image_dest:$!\n";
 }
 
 image_magic($kimage, $image_dest);
@@ -821,17 +826,18 @@ print "A new kernel image has been installed, and usually that means  \n";
 print "that some action has to be taken to make sure that the new     \n";
 print "kernel image is used next time the machine boots. Usually,     \n";
 print "this entails running a ``bootloader'' like grub, SILO, loadlin,\n";
-print "LILO, QUIK, VMELILO, ZIPL, or booting from a floppy.         \n\n";
+print "LILO, ELILO, QUIK, VMELILO, ZIPL, or booting from a floppy.   \n\n";
 
-if ( ! -x "/sbin/$loader" ) {
+if ( ! -x "$loaderloc" ) {
   print "Hmm. $Loader";
   printf " (LInux LOader)"                     if $loader =~ /^lilo/i;
-  printf " (Sparc Improved Linux lOader)"      if $loader =~ /silo/i;
-  printf " (QUIK: PowerMac Boot Loader)"       if $loader =~ /quik/i;
-  printf " (yaboot: PowerMac Boot Loader)"     if $loader =~ /yaboot/i;
-  printf " (PALO: PA-RISC Boot Loader)"        if $loader =~ /palo/i;
-  printf " (VMELILO: m68k VME Boot Loader)"    if $loader =~ /vmelilo/i;
-  printf " (ZIPL: s390 & zSeries Boot Loader)" if $loader =~ /zipl/i;
+  printf " (Efi LInux LOader)"                 if $loader =~ /^elilo/i;
+  printf " (Sparc Improved Linux lOader)"      if $loader =~ /^silo/i;
+  printf " (QUIK: PowerMac Boot Loader)"       if $loader =~ /^quik/i;
+  printf " (yaboot: PowerMac Boot Loader)"     if $loader =~ /^yaboot/i;
+  printf " (PALO: PA-RISC Boot Loader)"        if $loader =~ /^palo/i;
+  printf " (VMELILO: m68k VME Boot Loader)"    if $loader =~ /^vmelilo/i;
+  printf " (ZIPL: s390 & zSeries Boot Loader)" if $loader =~ /^zipl/i;
   printf ", which is the boot loader I    \n";
   print "have additional help for, is not installed (it is, after all,\n";
   print "just one of many options). I am assuming you have made some  \n";
@@ -839,12 +845,12 @@ if ( ! -x "/sbin/$loader" ) {
   print "Please hit return to continue.                               \n";
   my $answer = <STDIN>;
   exit (0) unless defined $rootdevice;
-  exit (0) if $loader =~ /silo/i; # No idea how to make non SILO floppies
-  exit (0) if $loader =~ /quik/i;
-  exit (0) if $loader =~ /yaboot/i;
-  exit (0) if $loader =~ /palo/i; # No such thing as PALO floppies
-  exit (0) if $loader =~ /vmelilo/i;
-  exit (0) if $loader =~ /zipl/i;
+  exit (0) if $loader =~ /^silo/i; # No idea how to make non SILO floppies
+  exit (0) if $loader =~ /^quik/i;
+  exit (0) if $loader =~ /^yaboot/i;
+  exit (0) if $loader =~ /^palo/i; # No such thing as PALO floppies
+  exit (0) if $loader =~ /^vmelilo/i;
+  exit (0) if $loader =~ /^zipl/i;
 
   if ($do_bootfloppy) {
     print "I can make a non-LILO diskette instead, but it won't be as useful.\n";
@@ -944,6 +950,12 @@ if (-T "/etc/$loader.conf") {
     my $ret = &run_lilo();
     exit $ret;
   }
+  elsif ($loader =~ /^elilo/io) {
+    print "I don't know how to create an elilo.conf file from scratch,\n";
+    print "sorry.  elilo can do that for you, if you invoke it with the\n";
+    print "correct options.  Aborting.\n";
+    exit(0);
+  }
   else {
     if (&ask("Wipe out your old $Loader configuration and make a new one")){
       my $ret = system("savelog /etc/$loader.conf");
@@ -957,6 +969,12 @@ if (-T "/etc/$loader.conf") {
       exit (0);
     }
   }
+}
+elsif ($loader =~ /^elilo/io) {
+  print "I don't know how to create an elilo.conf file from scratch,\n";
+  print "sorry.  elilo can do that for you, if you invoke it with the\n";
+  print "correct options.  Aborting.\n";
+  exit(0);
 }
 
 if (! &ask_y("Do you wish to set up Linux to boot from the hard disk")) {
@@ -1325,15 +1343,15 @@ sub make_liloconf {
       print CONF "initrd=".$realimageloc."initrd\n";
     }
   }
-  elsif ($loader =~ /vmelilo/io) {
+  elsif ($loader =~ /^vmelilo/io) {
     print CONF "boot      = $bootdevice\n",
                "root      = $rootdevice\n",
                @vmelilotemplate;
   }
-  elsif ($loader =~ /quik/io) {
+  elsif ($loader =~ /^quik/io) {
     print CONF @quiktemplate;
   }
-  elsif ($loader =~ /palo/io) {
+  elsif ($loader =~ /^palo/io) {
     print CONF @palotemplate;
   }
   else {
@@ -1349,7 +1367,7 @@ sub run_lilo (){
   if ($loader =~ /^lilo/io or $loader =~ /vmelilo/io) {
     print "Testing $loader.conf ... \n";
     unlink $temp_file_name;                        # security
-    $ret = system("/sbin/$loader -t >$temp_file_name 2>&1");
+    $ret = system("$loaderloc -t >$temp_file_name 2>&1");
     if ($ret) {
       my $ans;
       print "An error occurred while running $loader in test mode, a log is\n";
@@ -1366,7 +1384,13 @@ sub run_lilo (){
     print "boot sector... \n";
   }
 
-  $ret = system("/sbin/$loader >$temp_file_name 2>&1");
+  if ($loader =~ /^elilo/io) {
+    $ret = system("$loaderloc 2>&1 | tee $temp_file_name");
+  }
+  else {
+    $ret = system("$loaderloc >$temp_file_name 2>&1");
+  }
+
   if ($ret) {
     my $ans;
     print "There was an error with running $loader, a log file is \n";
