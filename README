@@ -1,5 +1,5 @@
 
-    $Id: README,v 1.17 1998/05/11 06:54:54 srivasta Exp $
+    $Id: README,v 1.18 1998/07/17 04:48:01 srivasta Exp $
 
 This is the Debian Linux packaging scripts for the Linux kernel. 
 This package has been put together by Manoj Srivastava <srivasta@debian.org>.
@@ -32,7 +32,7 @@ base:         gzip, shellutils, and grep.
 Some of these packages are marked essential, and hence are going to be
 present on your machine already. Others you have to check and install.
 
-Of course, pretty gui front ends to kernel configuration require more
+Of course, pretty GUI front ends to kernel configuration require more
 packages, but they are not strictly essential (though quite nice really). 
 
 
@@ -47,7 +47,7 @@ packages, but they are not strictly essential (though quite nice really).
 
  With the addition of fakeroot ( a really nice program, I recommend
  it) Steps 1 to 4 can be carried out as a non root user. Step 5 does
- require root priviledges. 
+ require root privileges. 
  
 Unpacking kernel sources:
 -------------------------
@@ -135,13 +135,13 @@ to dpkg if you actually do want to downgrade later).
 The reason for telling kernel-package that the package has a version
 "custom-x.y.whatever.you-want.to+add.more-just.do.not+use.an=underscore" 
 is that to dpkg that is always a higher version number than any version
-number starting with a numeral ( eg. "a" > "2" like "b" > "a". ) This way,
+number starting with a numeral ( e.g. "a" > "2" like "b" > "a". ) This way,
 dselect will not try to upgrade your "roll-it-yourself" kernel-image when
 the a new build of the distribution default kernel appears in the archive. 
 
 
 Unfortunately, this fails if the upstream maintainer uses epochs to
-correct a version misnumbering;-(. The good news is that you can add
+correct a version misnumbering ;-(. The good news is that you can add
 your own epoch to your customized image, ugly though that may
 be. (--revision 1:custom.Y; the kernel image file shall remain
 kernel-image-X.X.XX-custom.Y.deb, but dpkg shall know that it should
@@ -156,7 +156,7 @@ So, try using an epoch for your custom packages:
   make-kpkg --rootcmd fakeroot --revision=3:custom.1.0 kernel_image
 
 And the next time when you build a kernel, because you just bought a new
-soundcard or you discovered that you suddenly want masquerading in your
+sound card or you discovered that you suddenly want masquerading in your
 kernel enabled, you'll type: 
   make-kpkg --rootcmd fakeroot --revision=3:custom.2.0 kernel_image
 
@@ -167,7 +167,7 @@ install the package (as root):
 
 This will install the kernel, the modules, the map file and do some other
 administrativia and finally it will ask you if you want to make a
-bootfloppy and if you want to run lilo now. 
+boot floppy and if you want to run lilo now. 
 
 Now, there is a caveat: If you already have kernel 2.0.29 installed,
 and you have a freshly created custom 2.0.29 kernel, just installing
@@ -184,7 +184,7 @@ old modules directory before installation, like so (need to be root):
 	# dpkg -i kernel-image-2.0.29_custom.1.0_i386.deb
 and later get rid of the .save directory.
 
-yesPeople who want to have multiple flavours of the same kernel version
+People who want to have multiple flavours of the same kernel version
 around should look at the file /usr/doc/kernel-package/Flavours.gz for
 details (Note: This involves modifying the kernel sources top level
 Makefile; not recommended unless you are *sure* you need it).
@@ -214,21 +214,21 @@ image_in_boot:	Set to True if you want the kernel image symlink (vmlinuz)
 kimage:		The kernel image type (i.e. zImage or bzImage). Can be
 		set from the environment variable IMAGE_TYPE. Defaults
 		to bzImage.
-no_symlink      Mutualy exclusive to reverse_symlink. Can be used with
+no_symlink      Mutually exclusive to reverse_symlink. Can be used with
                 image_in_boot. The image is placed in vmlinuz (instead
                 of /boot/vmlinuz-X.X.XX). The old vmlinuz is moved to
                 vmlinuz.old unconditionally. (Normally, that is only
-                done if the version of the new image differes from the
+                done if the version of the new image differs from the
                 old one). This restricts you to two images, unless you
                 take additional action and save copies of older
                 images. This is for people who have boot on a system
                 that does not use symlinks (and say, they use loadlin)
                 This is a Hack.
-reverse_symlink Mutualy exclusive to no_symlink. Can be used with
+reverse_symlink Mutually exclusive to no_symlink. Can be used with
                 image_in_boot. Just like no_symlink, except that the
-                /boot/vmlinuz-X.XX is sym linked to the real new
+                /boot/vmlinuz-X.XX is symlinked to the real new
                 image, vmlinuz. This too restricts you to just two
-                images unless futher action is taken. The older
+                images unless further action is taken. The older
                 symlinks are left dangling. This is for people with
                 boot on umsdos, and who can't see the link in dos, but
                 do want to know the image version when in Linux. 
@@ -243,8 +243,8 @@ patch_the_kernel This is an experts only variable. If set to YES (ENV
                  is still evolving.
 root_cmd         This should be set to a means of gaining super user
                  access (for example, `sudo' or `fakeroot') as needed
-                 by dpkg-buildpackages's -r option. Ths is only
-                 relevant for the buildpackage taregt, when it is used
+                 by dpkg-buildpackages's -r option. This is only
+                 relevant for the buildpackage target, when it is used
                  to call dpkg-buildpackage with the proper
                  options. The environment variable ROOT_CMD over-rides
                  this.
@@ -252,11 +252,11 @@ do_clean	 Set to anything but YES, this shall forego the make
                  clean done in the kernel source tree after building
                  the kernel image package. The environment variable
                  CLEAN_SOURCE over-rides this.
-make_libc_headers  This is meant to be used by the libc6 maintianer,
+make_libc_headers  This is meant to be used by the libc6 maintainer,
                    when he compiles libc6, to also package up the
                    corresponding headers. DO NOT SET THIS as a
                    mismatch between the headers you package and libc6
-                   may well create a subtle instablity in all code
+                   may well create a subtle instability in all code
                    compiled on your machine. You have been warned. The
                    environment variable MAKE_LIBC_HEADERS over-rides
                    this. 
@@ -326,8 +326,8 @@ fast) can use image = /boot/vmlinuz-X.X.XX.
 
 So that loadlin people don't feel left out, all this talk about LILO
 does not mean to ignore loadlin, you can use the generated
-kernel-image just as easily (simply ignore the fol-de-rol with sym
-links in /). for instance, you could:
+kernel-image just as easily (simply ignore the fol-de-rol with symlinks
+in /). for instance, you could:
 
  [1]# dpkg -BRGiE kernel-image-X.X.XX, # need to be root
         and then

@@ -1,5 +1,5 @@
 
-   $Id: README,v 1.18 1998/07/17 04:25:49 srivasta Exp $
+   $Id: README,v 1.19 1998/07/17 04:48:23 srivasta Exp $
 
 This is the Debian GNU/Linux prepackaged version of the Linux kernel.
 Linux was written by Linus Torvalds <Linus.Torvalds@cs.Helsinki.FI> and
@@ -67,7 +67,7 @@ in section misc.
 
  With the addition of fakeroot ( a really nice program, I recommend
  it) Steps 1 to 4 can be carried out as a non root user. Step 5 does
- require root priviledges.  
+ require root privileges.  
 
  Detailed instructions
 
