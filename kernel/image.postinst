@@ -12,7 +12,7 @@
 # HISTORY          :
 # Description      :
 #
-#    $Id: image.postinst,v 1.93 2002/01/24 17:11:34 srivasta Exp $
+#    $Id: image.postinst,v 1.94 2002/02/05 09:20:07 srivasta Exp $
 #
 
 #
@@ -737,7 +737,7 @@ if ($initrd) {
   if ($initrd && -l "initrd" ) {
     print STDERR <<"EOIMG";
 
-I Note that you have an old initrd symbolic link in place. The name of
+I note that you have an old initrd symbolic link in place. The name of
 the symbolic link is being changed to initrd.img I have two options
 here.  I can: (A) delete the old symbolic link (default).  You shall
 need to update the boot loader (b) Igore it and do nothing
@@ -760,7 +760,7 @@ EOIMG
 
   if ($initrd && -l "$image_dir/initrd" && ! $image_in_boot) {
     print STDERR <<"EOIMG";
-I Note that you have an old $image_dir/initrd symbolic link in place.
+I note that you have an old $image_dir/initrd symbolic link in place.
 The location of the symbolic link is now the same location as the kernel
 image symbolic links, names, in $image_dest.  I have two options here.
 I can:

@@ -14,7 +14,7 @@
 #
 #
 #
-#    $Id: make-kpkg,v 1.68 2002/01/07 15:46:52 srivasta Exp $
+#    $Id: make-kpkg,v 1.69 2002/02/05 09:20:06 srivasta Exp $
 #
 require 5.002;
 use strict;
@@ -29,7 +29,7 @@ make-kpkg - build Debian kernel packages from Linux kernel sources.
 ($main::MYNAME     = $main::0) =~ s|.*/||;
 $main::Author      = "Manoj Srivastava";
 $main::AuthorMail  = "srivasta\@debian.org";
-$main::Version     = '$Revision: 1.68 $ ';
+$main::Version     = '$Revision: 1.69 $ ';
 
 my $added_modules='';
 my $added_patches='';
@@ -386,7 +386,10 @@ usage: $main::MYNAME [options] target [target ...]
  --arch_in_name        Embed the subarch in the image package name
  --initrd              Create a image package suitable for initrd  
  --pgpsign  name       An ID used to sign the changes file using pgp.
+ --config target       Change the type of configure done from the  default
+                       oldconfig.
  --targets             Lists the known targets.
+ --noexec              Pass a -n option to the make process
  --zimage              Create a kernel using zImage rather than bzImage
  --bzimage             Create a kernel using bzImage (in case the site
                        wide default is zimage, as set in

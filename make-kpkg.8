@@ -22,7 +22,7 @@
 .\" USA.
 .\"
 .\"
-.\"    $Id: make-kpkg.8,v 1.49 2002/01/28 18:37:19 srivasta Exp $
+.\"    $Id: make-kpkg.8,v 1.50 2002/02/05 09:20:06 srivasta Exp $
 .\"
 .TH MAKE\-KPKG 1 "May 2 1997" "Debian" "Debian GNU/Linux manual"
 .SH NAME
@@ -472,6 +472,19 @@ to subtly break systems. Please look at
 for details.  Creating and installing a self created libc-kheaders
 package may break your system unless you know what you are doing. You
 have been warned.
+.SH "ENVIRONMENT VARIABLES"
+The following variables (documented aboce) affect 
+.B make-kpkg:
+.I DEBIAN_REVISION_MANDATORY
+.I APPEND_TO_VERSION
+.I VERSION_H_OK
+.I PATCH_THE_KERNEL
+.I NO_UNPATCH_BY_DEFAULT
+.I KPKG_ARCH
+.I CROSS_COMPILE
+.I KPKG_SUBARCH
+.I ARCH_IN_NAME
+.I INITRD
 .SH FILES
 Apart from the runtime options, the 
 .I debian.rules
