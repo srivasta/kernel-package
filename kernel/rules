@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Wed Mar 18 01:08:32 1998
+## Last Modified On : Tue Apr 21 11:46:43 1998
 ## Last Machine Used: tiamat.datasync.com
-## Update Count	    : 236
+## Update Count	    : 258
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.31 1998/03/19 09:06:16 srivasta Exp $
+## $Id: rules,v 1.32 1998/04/21 16:52:26 srivasta Exp $
 ###############################################################################
 
 # The version of kernel-package this belongs to
@@ -58,6 +58,8 @@ endif
 
 # Sparcs use silo, not lilo. Try to accomodate them
 # PowerPCs use yet another loader: quik.
+# m68k doesn't use lilo (atari lilo is alpha software; amiga lilo is
+# stable but unpackaged; mac lilo, who knows?).
 ifeq ($(strip $(architecture)),sparc)
 loaderdep=silo
 loader=silo
@@ -68,11 +70,24 @@ loaderdep=quik
 loader=quik
 loaderdoc=QuikDefault
 else
+ifeq ($(strip $(architecture)),m68k)
+loaderdep=
+loader=lilo
+loaderdoc=
+else
 loaderdep=lilo (>= 19.1)
 loader=lilo
 loaderdoc=LiloDefault
 endif
 endif
+endif
+
+ifneq ($(strip $(loaderdep)),)
+int_loaderdep := "$(loaderdep), "
+else
+int_loaderdep :=
+endif
+
 
 #  Package specific stuff
 # The following variable is used to simplify the process of making
@@ -129,15 +144,16 @@ endif
 
 
 # The name of the package (for example, `emacs').
-package = kernel-source-$(version)
-h_package = kernel-headers-$(version)
-i_package = kernel-image-$(version)$(INT_SUBARCH)
-d_package = kernel-doc-$(version)
+package   := kernel-source-$(version)
+h_package := kernel-headers-$(version)
+i_package := kernel-image-$(version)$(INT_SUBARCH)
+d_package := kernel-doc-$(version)
+l_package := libc-kheaders
 
 FILES_TO_CLEAN = modules/modversions.h modules/ksyms.ver debian/files
 STAMPS_TO_CLEAN = stamp-build stamp-configure stamp-source stamp-image \
                   stamp-headers stamp-src stamp-diff stamp-doc \
-                  stamp-buildpackage
+                  stamp-buildpackage stamp-libc-kheaders
 DIRS_TO_CLEAN  = debian/tmp-source debian/tmp-headers debian/tmp-image
 
 CONFLOC:=/etc/kernel-pkg.conf
@@ -249,7 +265,8 @@ ifeq ($(strip $(IN_KERNEL_DIR)),)
 # Hah! Not in kernel directory!!
 build configure clean binary kernel_source kernel-source kernel-headers\
 stamp-source kernel_headers stamp-headers kernel_image stamp-image \
-kernel-image kernel-doc kernel_doc stamp-doc buildpackage:
+kernel-image kernel-doc kernel_doc stamp-doc buildpackage \
+libc_kheaders libc-kheaders stamp-libc-kheaders:
 	@echo "You should invoke this command from the top level directory of"
 	@echo "a linux kernel source directory tree, and as far as I can tell,"
 	@echo "the current directory:"
@@ -308,7 +325,7 @@ endif
 	-test ! -f stamp-configure && \
 	   sed -e 's/=V/$(version)/g'        -e 's/=D/$(debian)/g' \
 	       -e 's/=A/$(architecture)/g'   -e 's/=SA/$(INT_SUBARCH)/g' \
-               -e 's/=M/$(maintainer) <$(email)>/g' -e 's/=L/$(loaderdep)/g' \
+               -e 's/=M/$(maintainer) <$(email)>/g' -e 's/=L/$(int_loaderdep)/g' \
 		         $(DEBDIR)/Control > debian/control
 	-test ! -f stamp-configure && test ! -f debian/official && \
 	   sed -e 's/=V/$(version)/g' -e 's/=D/$(debian)/g' \
@@ -325,7 +342,10 @@ endif
               touch stamp-configure
 
 .config:
-	test -f .config || $(install_file) $(DEBDIR)/config .config
+	test -f .config || (test -f .config.save && \
+		            cp -pf .config.save .config) || \
+			true
+	test -f .config || cp -pf $(DEBDIR)/config .config
 
 
 clean:
@@ -396,13 +416,44 @@ stamp-source: configure
                         rm -f stamp-building $(STAMPS_TO_CLEAN))
 	(cd debian/tmp-source/usr/src/$(package)/include; rm -f asm; \
 		ln -s asm-$(KERNEL_ARCH) asm)
-	$(install_file) .config debian/tmp-source/usr/src/$(package)/.config
+	sed -e 's/=V/$(version)/g' -e 's/=A/$(architecture)/g'\
+                 $(DEBDIR)/README.source > \
+		debian/tmp-source/usr/src/$(package)/README.Debian
+	$(install_file) .config debian/tmp-source/usr/src/$(package)/.config.save
 	dpkg-gencontrol -p$(package) -Pdebian/tmp-source/
 	chown -R root.root debian/tmp-source
 	chmod -R og=rX debian/tmp-source
 	dpkg --build debian/tmp-source $(DEB_DEST)
 	rm -f -r debian/tmp-source
 	touch stamp-source
+
+libc-kheaders libc_kheaders: stamp-libc-kheaders
+stamp-libc-kheaders: configure
+	@test root = "`whoami`" || (echo need root priviledges; exit 1)
+	test -f stamp-configure || $(deb_rule) configure
+	rm -rf debian/tmp-kheaders
+	$(make_directory) debian/tmp-kheaders/DEBIAN
+	$(make_directory) debian/tmp-kheaders/usr/src/$(l_package)
+	$(make_directory) debian/tmp-kheaders/usr/doc/$(l_package)
+	$(install_file) debian/changelog \
+	         debian/tmp-kheaders/usr/doc/$(l_package)/changelog.debian
+	$(install_file) $(DEBDIR)/README.headers \
+	         debian/tmp-kheaders/usr/doc/$(l_package)/debian.README
+	echo "This was produced by kernel-package version $(kpkg_version)." > \
+	         debian/tmp-kheaders/usr/doc/$(l_package)/Buildinfo
+	(cd include; tar cf - linux asm-$(KERNEL_ARCH) ) | \
+            (cd debian/tmp-kheaders/usr/include/; umask 000; tar xsf -)
+	(cd debian/tmp-kheaders/usr/include/; mv asm-$(KERNEL_ARCH) asm)
+	gzip -9qf debian/tmp-kheaders/usr/doc/
+	$(install_file) $(DEBDIR)/copyright.headers \
+		debian/tmp-kheaders/usr/doc/$(l_package)/copyright
+	dpkg-gencontrol -p$(l_package) -Pdebian/tmp-kheaders/
+	chown -R root.root debian/tmp-kheaders
+	chmod -R og=rX debian/tmp-kheaders
+	dpkg --build debian/tmp-kheaders $(DEB_DEST)
+	rm -rf debian/tmp-kheaders
+	touch stamp-libc-kheaders
+
 
 kernel-headers kernel_headers: stamp-headers
 stamp-headers: configure
@@ -584,8 +635,14 @@ ifneq ($(strip $(architecture)),m68k)
                    debian/tmp-image/boot/vmlinuz-$(version)
 	chmod 644 debian/tmp-image/boot/vmlinuz-$(version)
 else
+ifeq ($(strip $(architecture)),powerpc)
+	cp arch/$(KERNEL_ARCH)/$(SUBARCH)/boot/$(kimage) \
+                   debian/tmp-image/boot/vmlinuz-$(version)
+	chmod 644 debian/tmp-image/boot/vmlinuz-$(version)
+else
 	gzip -9vc vmlinux > debian/tmp-image/boot/vmlinuz-$(version)
 	chmod 644 debian/tmp-image/boot/vmlinuz-$(version)
+endif
 endif
 	cp System.map debian/tmp-image/boot/System.map-$(version)
 	chmod 644 debian/tmp-image/boot/System.map-$(version)
