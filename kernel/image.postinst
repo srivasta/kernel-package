@@ -5,14 +5,14 @@
 # Created On       : Sat Apr 27 05:55:26 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Wed Aug  1 22:13:47 2001
+# Last Modified On : Thu Aug  2 10:37:59 2001
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 210
+# Update Count     : 211
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
 #
-#    $Id: image.postinst,v 1.72 2001/08/02 03:21:28 srivasta Exp $
+#    $Id: image.postinst,v 1.73 2001/08/02 15:45:46 srivasta Exp $
 #
 
 #
@@ -137,6 +137,9 @@ $do_bootfloppy = "" if $loader =~ /quik/io;
 $do_bootfloppy = "" if $loader =~ /yaboot/io;
 $do_bootfloppy = "" if $loader =~ /noloader/io;
 $do_bootfloppy = "" if $loader =~ /zipl/io;
+
+# We can't have boot floppies for initrd kernels
+$do_bootfloppy = "" if $initrd;
 
 if ($image_in_boot) {
   $image_dest = "/$image_dir/";

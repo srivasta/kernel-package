@@ -1,3 +1,9 @@
+kernel-package (7.58) unstable; urgency=low
+
+  * disable the making of boot floppies for initrd kernels.  closes: Bug#107415
+
+ -- Manoj Srivastava <srivasta@debian.org>  Thu,  2 Aug 2001 10:45:08 -0500
+
 kernel-package (7.57) unstable; urgency=low
 
   * Incorporated s390 specific patches.                      closes: Bug#107402
