@@ -1,3 +1,32 @@
+kernel-package (5.05) unstable; urgency=low
+
+  * Fix documentation about using the rootcmd option. closes: BUG#25566
+  * fixed source postinst so it no longer expects an untarred
+    /usr/src/kernel-source-VERSION directory. closes: BUG#25650, 26511
+  * allow clean to work even if .config does not exist. closes: BUG#26265
+  * Fix case in the name of the Flavours file. closes: BUG#26434
+  * Made the images go into $(IMAGE_DESTDIR), which defaults to
+    /boot. This can now be set by loadlin folks in the config file to
+    whatever they wish. Also changed the postinst to not freak out when
+    the image apparently goes missing. 
+  * Added the support for different config files depending on architecture
+    and sub arch. A set of config files for different archs are shipped in
+    /usr/lib/kernel-package/Config/. This is useful for people who compile
+    for several architectures.
+  * Major cleanup and rewrite for mutiarchitecture support. All arch
+    related stuff is catured in a section on top. There is no need to edit
+    it into the kernel makeile, we can now determine subarchs ourselves. 
+  * Also pass along the maintainers email address while compiling the
+    modules, not just the name. 
+  * Make sure that sparcs use the vmlinux file, and gzip it. This 
+    closes: BUG#26199
+  * Cleaned up the modules installation part. Now it conforms more closely
+    to the kernel makefile, and indeed, it uses the kernel Makefile for
+    the newer kernles where the module install path is modifiable using
+    the new INSTALL_MOD_PATH variable.
+
+ -- Manoj Srivastava <srivasta@debian.org>  Tue,  8 Sep 1998 14:45:30 -0500
+
 kernel-package (5.04) unstable; urgency=low
 
   * Backed out of System.map changes introduced in 5.02 since the patch
