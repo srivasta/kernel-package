@@ -5,14 +5,14 @@
 # Created On       : Sat Apr 27 05:55:26 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Mon Nov 20 22:22:53 2000
+# Last Modified On : Thu Jan 18 23:47:16 2001
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 191
+# Update Count     : 193
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
 # 
-#    $Id: image.postinst,v 1.57 2000/12/01 00:41:29 srivasta Exp $
+#    $Id: image.postinst,v 1.58 2001/01/19 06:24:22 srivasta Exp $
 #
 
 # 
@@ -100,6 +100,7 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
       $relative_links  = "Yes" if /relative_links\s*=\s*(yes|true|1)\s*$/ig;
 
       $image_dest      = "$1"  if /image_dest\s*=\s*(\S+)/ig;
+      $postinst_hook   = "$1"  if /postinst_hook\s*=\s*(\S+)/ig;
     }
     close CONF;
     $have_conffile = "Yes";
@@ -587,6 +588,12 @@ EOFERRONE
       symlink $linktarget,  "/usr/doc/kernel-image-$version";
     }
   }
+}
+
+## Run user hook script here, if any
+if (-x "$postinst_hook") {
+  system ("$postinst_hook", $version, $realimageloc . "$kimage-$version") ||
+	    warn "User hook script $postinst_hook failed";
 }
 
 exit (0) unless $do_boot_enable;	# Exit if explicitly asked to

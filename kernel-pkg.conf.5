@@ -21,7 +21,7 @@
 .\" Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139,
 .\" USA.
 .\"
-.\" $Id: kernel-pkg.conf.5,v 1.20 2000/12/01 00:41:29 srivasta Exp $
+.\" $Id: kernel-pkg.conf.5,v 1.21 2001/01/19 06:24:21 srivasta Exp $
 .\"
 .TH KERNEL\-PKG.CONF 5 "Jan  7 1997" "Debian" "Debian GNU/Linux manual" 
 .\" NAME should be all caps, SECTION should be 1-8, maybe w/ subsection
@@ -221,6 +221,18 @@ kernel source tree after building the kernel image package. The
 environment variable 
 .B CLEAN_SOURCE
 over-rides this.
+.TP
+.B extra_docs
+This variable should be set to the path of any extra documentation
+that should be installed in 
+.I /usr/share/doc/kernel-image-X.X.XX/
+directory. There is no chacking for name conflicts, and the files are
+not compressed. Hence, if you want the files to be comrepssed, please
+pre-compress it and provide the path of the compressed file.  The
+environment variable  
+.B EXTRA_DOCS
+over-rides this, and would most likely be how extra documentation is
+specified. 
 .TP
 .B make_libc_headers
 This is meant to be used by the 

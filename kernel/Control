@@ -28,7 +28,7 @@ Description: Linux kernel source for version =V
  .
  You may configure the kernel to your setup by typing "make config"
  and following instructions, but you could get ncursesX.X-dev and
- tk4X-dev and try "make menuconfig" for a jazzier, and easier to use
+ tkX.X-dev and try "make menuconfig" for a jazzier, and easier to use
  interface. Also, please read the detailed documentation in the file
  /usr/share/doc/kernel-source-=V/README.headers.gz. 
  .

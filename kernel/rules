@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Thu Nov 30 18:28:59 2000
+## Last Modified On : Fri Jan 19 00:16:35 2001
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 453
+## Update Count	    : 455
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.106 2000/12/19 06:33:16 srivasta Exp $
+## $Id: rules,v 1.107 2001/01/19 06:24:22 srivasta Exp $
 ###############################################################################
 
 ifdef ARCH
@@ -482,7 +482,13 @@ ifneq ($(strip $(PGP_SIGNATURE)),)
 pgp=$(PGP_SIGNATURE)
 endif
 
+ifneq ($(strip $(EXTRA_DOCS)),)
+extra_docs = $(EXTRA_DOCS)
+endif
 
+ifneq ($(strip $(extra_docs)),)
+HAVE_EXTRA_DOCS:=$(shell if [ -e $(extra_docs) ]; then echo YES; fi)
+endif
 
 # The Debian revision
 ifneq ($(strip $(DEBIAN_REVISION)),)
@@ -1122,6 +1128,10 @@ endif
 	echo "This was produced by kernel-package version $(kpkg_version)." > \
 	         debian/tmp-image/usr/share/doc/$(i_package)/Buildinfo
 	$(install_file) .config $(INT_IMAGE_DESTDIR)/config-$(version)
+ifeq ($(strip $(HAVE_EXTRA_DOCS)),YES)
+	$(install_file) $(extra_docs) \
+	         debian/tmp-image/usr/share/doc/$(i_package)/
+endif
 ifdef MODULES_ENABLED
 ifeq  ($(strip $(HAVE_NEW_MODLIB)),)
 	$(mod_inst_cmds)

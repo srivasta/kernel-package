@@ -5,14 +5,14 @@
 # Created On       : Sat May 15 11:05:13 1999
 # Created On Node  : glaurung.green-gryphon.com
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Mon Jul 10 01:23:35 2000
+# Last Modified On : Thu Jan 18 22:40:41 2001
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 12
+# Update Count     : 13
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
 # 
-#     $Id: image.postrm,v 1.3 2000/07/10 06:25:18 srivasta Exp $
+#     $Id: image.postrm,v 1.4 2001/01/19 06:24:22 srivasta Exp $
 #
 
 
@@ -146,6 +146,17 @@ if (-l $image_dest . "$kimage.old") {
 
 if (-f "/lib/modules/$version/modules.dep") {
   unlink "/lib/modules/$version/modules.dep";
+}
+if (-f "/lib/modules/$version/modules.isapnpmap") {
+  unlink "/lib/modules/$version/modules.isapnpmap";
+}
+
+if (-f "/lib/modules/$version/modules.pcimap") {
+  unlink "/lib/modules/$version/modules.pcimap";
+}
+
+if (-f "/lib/modules/$version/modules.usbmap") {
+  unlink "/lib/modules/$version/modules.usbmap";
 }
 
 exit 0;

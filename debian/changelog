@@ -1,3 +1,20 @@
+kernel-package (7.24) unstable; urgency=low
+
+  * In the images postrm, ensure that modules.{isapnpmap,pcimap,usbmap}
+    are also removed. closes: Bug#81559
+  * Added a user specified postinst script, run by the kernel image
+    postinst after creating all the symlinks, but before calling the
+    bootloader or offering to create a boot floppy. closes: Bug#82742
+  * changed the long description to not suggest tk4.x-dev packages (long
+    gone from Debian). Now we just say tkX.X-dev package. closes: Bug#81305
+  * The user specified postinst should address the needs of people using
+    grub who want a nerw line in the grub menu. closes: Bug#81419
+  * Allow the kerel-image package creator to specify additional
+    documentation that shall be installed in the documentation directory
+    /usr/share/doc/kernel-image-X.X.XX/ . 
+
+ -- Manoj Srivastava <srivasta@debian.org>  Fri, 19 Jan 2001 00:23:23 -0600
+
 kernel-package (7.23) unstable; urgency=low
 
   * add missing space tp the DEB_HOST_GNU_TYPE macro. closes: Bug#78840
