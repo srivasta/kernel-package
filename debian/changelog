@@ -1,3 +1,14 @@
+kernel-package (7.64) unstable; urgency=low
+
+  * Added more customization to the default boot loader file created for
+    hppa. Many thanks to  Richard Hirst <rhirst@linuxcare.com>, both for
+    his contribution, and his patience with my thick headedness.
+  * Fix a typo in the rules file (thanks to Bdale Garbee to finding
+    this). I was totally oblivious to this now rather obvious typo.
+                                                             closes: Bug#112444
+
+ -- Manoj Srivastava <srivasta@debian.org>  Fri, 21 Sep 2001 22:32:09 -0500
+
 kernel-package (7.63) unstable; urgency=medium
 
   * Suppress the question before running the boot loader (optionally).

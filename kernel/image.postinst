@@ -12,7 +12,7 @@
 # HISTORY          :
 # Description      :
 #
-#    $Id: image.postinst,v 1.78 2001/09/10 16:49:08 srivasta Exp $
+#    $Id: image.postinst,v 1.79 2001/09/22 03:32:43 srivasta Exp $
 #
 
 #
@@ -433,6 +433,8 @@ sub image_magic {
 	    print CONF "image_in_boot = Yes\n";
 	    print CONF "do_symlink = Yes\n";
 	    print CONF "relative_links = Yes\n";
+	    print CONF "do_bootfloppy = No\n";
+	     print CONF "do_bootloader = No\n";
 	  } else {
 	    print CONF "# Do not create symbolic links in /\n";
 	    print CONF "Do_Symlinks = $do_symlink\n";

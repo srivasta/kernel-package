@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Wed Aug  1 22:15:31 2001
+## Last Modified On : Fri Sep 21 22:28:38 2001
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 487
+## Update Count	    : 488
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.136 2001/09/10 16:49:08 srivasta Exp $
+## $Id: rules,v 1.137 2001/09/22 03:32:44 srivasta Exp $
 ###############################################################################
 
 ifdef ARCH
@@ -1229,7 +1229,7 @@ real_stamp_source:
 	   gzip -9qf                     $(SOURCE_DOC)/README.Debian.1st;\
 	fi
 	chmod -R og=rX $(SOURCE_TOP)
-	chown -R root.root $(SOURCE_TOP)/$(package)
+	chown -R root.root $(SOURCE_TOP)
 	(cd $(SOURCE_TOP)/usr/src/; \
            tar $(TAR_COMPRESSION) -cf $(package).tar.$(TAR_SUFFIX) $(package);\
              rm -rf $(package);)
