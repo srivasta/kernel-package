@@ -355,15 +355,25 @@ ifeq ($(strip $(architecture)),sparc)
   kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
   DEBCONFIG = $(CONFDIR)/config.sparc
   ARCH_IN_NAME = YES
-  ifneq (,$(filter sparc64%,$(KPKG_SUBARCH)))
-    KERNEL_ARCH = sparc64
-  else
-    ifneq (,$(filter sparc%,$(KPKG_SUBARCH)))
-      KERNEL_ARCH = sparc
+
+  ifeq (,$(KPKG_SUBARCH))
+    ifeq (sparc64,$(strip $(shell uname -m)))
+      KPKG_SUBARCH = sparc64
     else
-      KERNEL_ARCH = $(strip $(shell uname -m))
+      KPKG_SUBARCH = sparc32
     endif
   endif
+
+  ifneq (,$(filter sparc64%,$(KPKG_SUBARCH)))
+     KERNEL_ARCH = sparc64
+  else
+     ifneq (,$(filter sparc%,$(KPKG_SUBARCH)))
+        KERNEL_ARCH = sparc
+     else
+        KERNEL_ARCH = $(strip $(shell uname -m))
+     endif
+  endif
+
   ifneq ($(shell if [ $(VERSION) -ge 2 -a $(PATCHLEVEL) -ge 5 -a  \
                     $(SUBLEVEL) -ge 41 ]; then echo new; \
              elif [ $(VERSION) -ge 2 -a $(PATCHLEVEL) -ge 6 ]; then \
