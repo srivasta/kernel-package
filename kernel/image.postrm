@@ -5,9 +5,9 @@
 # Created On       : Sat May 15 11:05:13 1999
 # Created On Node  : glaurung.green-gryphon.com
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Tue Oct  7 11:09:11 2003
-# Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 31
+# Last Modified On : Wed Feb 18 17:08:23 2004
+# Last Machine Used: glaurung.internal.golden-gryphon.com
+# Update Count     : 32
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
@@ -247,6 +247,10 @@ if (-x "$postrm_hook") {
 	    warn "User hook script $postrm_hook failed";
 }
 
+if (-f $realimageloc . "initrd.img-$version") {
+  unlink $realimageloc . "initrd.img-$version";
+}
+
 # Ignore all invocations uxcept when called on to purge.
 exit 0 unless $ARGV[0] =~ /purge/;
 
@@ -269,9 +273,6 @@ if (-f "/lib/modules/$version/modules.usbmap") {
   unlink "/lib/modules/$version/modules.usbmap";
 }
 
-if (-f $realimageloc . "initrd.img-$version") {
-  unlink $realimageloc . "initrd.img-$version";
-}
 if (-f "/lib/modules/$version/modules.parportmap") {
   unlink "/lib/modules/$version/modules.parportmap";
 }
