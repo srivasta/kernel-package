@@ -256,14 +256,14 @@ if (-f $realimageloc . "initrd.img-$version") {
   unlink $realimageloc . "initrd.img-$version";
 }
 
-# Ignore all invocations uxcept when called on to purge.
-exit 0 unless $ARGV[0] =~ /purge/;
-
 # check and remove damaged and dangling symlinks
 image_magic($kimage,          $image_dest);
 image_magic($kimage . ".old", $image_dest);
 image_magic("initrd.img",     $image_dest) if $initrd;
 image_magic("initrd.img.old", $image_dest) if $initrd;
+
+# Ignore all invocations uxcept when called on to purge.
+exit 0 unless $ARGV[0] =~ /purge/;
 
 if (-f "/lib/modules/$version/modules.dep") {
   unlink "/lib/modules/$version/modules.dep";

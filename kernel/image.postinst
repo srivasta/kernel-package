@@ -1272,7 +1272,7 @@ EOMSG
 if ($initrd) {
   print STDERR <<"EOMSGA";
 
- Initial rootdisk image: $realimageloc/initrd.img-$version (Size: $initrdsize)
+ Initial rootdisk image: ${realimageloc}initrd.img-$version (Size: $initrdsize)
 EOMSGA
   ;
 }
