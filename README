@@ -1,5 +1,5 @@
 
-    $Id: README,v 1.14 1998/02/18 07:09:33 srivasta Exp $
+    $Id: README,v 1.15 1998/03/05 22:41:24 srivasta Exp $
 
 This is the Debian Linux packaging scripts for the Linux kernel. 
 This package has been put together by Manoj Srivastava <srivasta@debian.org>.
@@ -40,11 +40,14 @@ packages, but they are not strictly essential (though quite nice really).
 1% cd <kernel source tree>
 2% make config   # or make menuconfig or make xconfig and configure
 3% make-kpkg clean
-4% make-kpkg -revision=custom.1.0 kernel_image
+4% make-kpkg --rootcmd fakeroot --revision=custom.1.0 kernel_image 
 5% dpkg -i ../kernel-image-X.XXX_1.0_<arch>.deb
 6% shutdown -r now # If and only if LILO worked or you have a means of
                    # booting the new kernel. YOU HAVE BEEN WARNED!!
 
+ With the addition of fakeroot ( a really nice program, I recommend
+ it) Steps 1 to 4 can be carried out as a non root user. Step 5 does
+ require root priviledges. 
  
 Unpacking kernel sources:
 -------------------------
@@ -150,17 +153,17 @@ has entered the garden of eden, and we must forever use epochs to
 guard against forced upgrades.
 
 So, try using an epoch for your custom packages: 
-  make-kpkg -revision=3:custom.1.0 kernel_image
+  make-kpkg --rootcmd fakeroot --revision=3:custom.1.0 kernel_image
 
 And the next time when you build a kernel, because you just bought a new
 soundcard or you discovered that you suddenly want masquerading in your
 kernel enabled, you'll type: 
-  make-kpkg -revision=3:custom.2.0 kernel_image
+  make-kpkg --rootcmd fakeroot --revision=3:custom.2.0 kernel_image
 
 When make-kpkg is finished, you'll have 
 kernel-image-2.0.29_custom.1.0_i386.deb and all it takes now is to
-install the package:
-  dpkg -i kernel-image-2.0.29_custom.1.0_i386.deb
+install the package (as root):
+# dpkg -i kernel-image-2.0.29_custom.1.0_i386.deb
 
 This will install the kernel, the modules, the map file and do some other
 administrativia and finally it will ask you if you want to make a
@@ -175,7 +178,7 @@ likely if your old kernel was the default gigantic generic kernel),
 then you shall have a mish-mash of modules in /lib/modules/2.0.29 ;-(
 
 Unfortunately, there is no reasonable solution; I suggest moving the
-old modules directory before installation, like so:
+old modules directory before installation, like so (need to be root):
 
 	# mv /lib/modules/2.0.29 /lib/modules/2.0.29.save
 	# dpkg -i kernel-image-2.0.29_custom.1.0_i386.deb
@@ -262,7 +265,7 @@ Please see kernel-pkg.conf (5).
 
 To generate a new kernel image, just run
 % make-kpkg clean
-% make-kpkg -revision custom.1.0 kernel_image
+% make-kpkg --rootcmd fakeroot --revision custom.1.0 kernel_image
 
 This will create a default kernel image (as in the image package or
 available on the boot disks.  The kernel image package produced will
@@ -283,19 +286,20 @@ have a .config file, just copy it to this directory, and you are go.
 
 With a custom .config file in place (created as above) run again:
 % make-kpkg clean
-% make-kpkg -revision custom.1.0 kernel_image
+% make-kpkg --rootcmd fakeroot --revision custom.1.0 kernel_image
 
 To create a source or header package, run
 % make-kpkg clean
-% make-kpkg -revision custom.1.0 kernel_source
-% make-kpkg -revision custom.1.0 kernel_headers
+% make-kpkg --rootcmd fakeroot --revision custom.1.0 kernel_source
+% make-kpkg --rootcmd fakeroot --revision custom.1.0 kernel_headers
 Note: You only need one of these.
 
 Similarly, the documentation package is built by:
-% make-kpkg -revision=custom.1.0 kernel_doc
+% make-kpkg --rootcmd fakeroot --revision=custom.1.0 kernel_doc
 
 Or if you want to generate the whole package, 
-% make-kpkg -revision custom.1.0 -signature "Your pgp id" dist
+% make-kpkg --rootcmd fakeroot --revision custom.1.0 \
+            -pgpsign "Your pgp id" buildpackage
 Note that this needs a pgp key.
 
 A note on LILO: the kernel-image install-scripts arrange to have
@@ -314,7 +318,7 @@ does not mean to ignore loadlin, you can use the generated
 kernel-image just as easily (simply ignore the fol-de-rol with sym
 links in /). for instance, you could:
 
- [1]% dpkg -BRGiE kernel-image-X.X.XX,
+ [1]# dpkg -BRGiE kernel-image-X.X.XX, # need to be root
         and then
  [2]% cp /boot/vmlinuz-X.X.XX <place where loadlin needs image>
  [3]% echo '' > /boot/vmlinuz-X.X.XX
