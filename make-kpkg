@@ -14,7 +14,7 @@
 #
 #
 #
-#    $Id: make-kpkg,v 1.36 2000/01/27 09:10:32 srivasta Exp $
+#    $Id: make-kpkg,v 1.37 2000/02/01 07:59:08 srivasta Exp $
 #
 require 5.002;
 use strict;
@@ -29,7 +29,7 @@ make-kpkg - build Debian kernel packages from Linux kernel sources.
 ($main::MYNAME     = $main::0) =~ s|.*/||;
 $main::Author      = "Manoj Srivastava";
 $main::AuthorMail  = "srivasta\@debian.org";
-$main::Version     = '$Revision: 1.36 $ ';
+$main::Version     = '$Revision: 1.37 $ ';
 
 my $help_opt=0; 
 my $revision=0; 
@@ -92,10 +92,11 @@ kernel source directory.
 Sets the Debian revision number for the packages produced to the
 argument B<number>. This has certain constraints: It only has an
 effect during the configure phase (in other words, if a file called
-stamp-configure exists, this option has no effect -- run make-kpkg
-clean or manually remove stamp-configure for it to have an
-effect). Secondly, it may contain only alphanumerics and the
-characters + . (full stop, and plus) and should contain a
+stamp-configure or both debian/changelog and debian/official exists,
+this option has no effect -- run make-kpkg clean or manually remove 
+stamp-configure (and debian/official, if that exists)
+for it to have an effect). Secondly, it may contain only alphanumerics 
+and the characters + . (full stop, and plus) and should contain a
 digit. B<NOTE>: No hyphens allowed. (Look at Chapter 5 of the
 Programmers manual for details). Optionally, you may prepend the
 revision with a digit followed by a colon (:)
@@ -625,11 +626,21 @@ EOERR1
 	print STDERR " Aborting.\n";
 	exit 1;
       }
-    
+
+    if (-f 'debian/changelog' && -f 'debian/official') {
+      print STDERR "Warning: This appears to be an official package, \n"; 
+      print STDERR "which is special in the sense that it supplies its\n"; 
+      print STDERR "own details. The --revision options is ignored for\n"; 
+      print STDERR "official packages. Please manually remove \n"; 
+      print STDERR "debian/changelog, debian/official, and stamp-configure \n";  
+      print STDERR "for it to have an effect\n"; 
+      print STDERR "Please hit return to continue\n";
+      my $ans = <STDIN>;
+    }
     if (-f 'stamp-configure'){
       print STDERR "Warning: The $revision option only has an effect during\n"; 
       print STDERR "the configure phase -- in other words, since the file\n"; 
-      print STDERR "stamp-configure exists, this option has no effect -- \n"; 
+      print STDERR "stamp-configure exists, this option has no effect \n"; 
       print STDERR "run make-kpkg clean or manually remove stamp-configure \n";  
       print STDERR "for it to have an effect\n"; 
       print STDERR "Please hit return to continue\n";

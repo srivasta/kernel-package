@@ -12,7 +12,7 @@
 # HISTORY          : 
 # Description      : 
 # 
-#    $Id: image.postinst,v 1.32 2000/01/26 09:54:47 srivasta Exp $
+#    $Id: image.postinst,v 1.33 2000/02/01 07:59:09 srivasta Exp $
 #
 
 # 
@@ -299,6 +299,7 @@ EOFERRONE
 }
 
 
+exit (0) if $loader =~ /silo/i; # SILO does not have to be executed.
 exit (0) if $loader =~ /milo/i; # MILO does not have to be executed.
 exit (0) if $loader =~ /nettrom/i; # NETTROM does not have to be executed.
 

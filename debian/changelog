@@ -1,3 +1,18 @@
+kernel-package (6.33) frozen unstable; urgency=low
+
+  * Make kernel-packageconfig escape single "'"s in the maintainer
+    name. Now irish eyes should be smilin' again ;-). This is a bug fix,
+    since it causes make-kpkg to fail for people with apostrophes in their
+    names.
+  * Add warning if using --revision with an official kernel source (in
+    other words if ./debian/official exists). Added this also to the man
+    page for make-kpkg; this apparently has been causing confudion.
+  * closes: Bug#56506, Bug#56544, Bug#56632
+  * Change the generated postinst for sparc kernel images to not require
+    silo to be run (since it apparently does not need to be). closes: Bug#56580
+
+ -- Manoj Srivastava <srivasta@debian.org>  Tue,  1 Feb 2000 01:49:05 -0600
+
 kernel-package (6.32) frozen unstable; urgency=low
 
   * darnit. Forgot to mention frozen in the last upload. The current
