@@ -1,5 +1,28 @@
 kernel-source-=V (=D) unstable; urgency=low
 
+  * Added ARCH to make called, this allows for cross compiling kernels
+    (added on a request by  James Troup <J.J.Troup@scm.brad.ac.uk>)
+  * Make kernel-headers arch: any, so we can indeed have different headers
+    for diferent architectures.
+  * m68k can now handle vmlinuz, so reverse that behaviour in the rules
+    file. AFAIK m68k still uses zImage.
+  * Improvements to /usr/doc/kernel-patch/MultiArch.gz, based on
+    suggestions by James Troup <J.J.Troup@scm.brad.ac.uk>/
+  * Upgraded to standards version 2.4.0.0
+  * Fixed old FSF address in copyright file.
+
+ -- Manoj Srivastava <srivasta@debian.org>  Mon,  9 Feb 1998 17:11:05 -0600
+
+kernel-source-0.30 (1.01) unstable; urgency=low
+
+  * Redid the Headers README file
+  * Added a rationale to the LinkPolicy document. So far, it detailed
+    *what* Debian did. Now, it also says *why* we do it.
+
+ -- Manoj Srivastava <srivasta@debian.org>  Thu, 29 Jan 1998 19:13:58 -0600
+
+kernel-source-0.29 (1.01) unstable; urgency=low
+
   * Important changes for kernel-source-* and kernel-header-* packages: now
     kernel-source-* packages also provide the exact kernel-header-* (libc6
     need only depend on kernel-header-* now.
@@ -8,6 +31,41 @@ kernel-source-=V (=D) unstable; urgency=low
     This is used in the libc6 package.
 
  -- Manoj Srivastava <srivasta@debian.org>  Sat, 13 Dec 1997 12:46:47 -0600
+
+
+kernel-source-0.28 (1.01) unstable; urgency=low
+
+  * Fixed a typo where we tried to dd /vmlinuz-2.0.32 rather than the
+    correct /boot/vmlinuz-2.0.32 in image.postinst. How come this glaring
+    an error has gone unreported until now?
+
+ -- Manoj Srivastava <srivasta@debian.org>  Fri, 23 Jan 1998 14:36:34 -0600
+
+kernel-source-0.27 (1.01) unstable; urgency=low
+
+ * Fixed Typo in kernel rules that put all modules into block (this
+    is more of a thinko/cut and paste error. fixes: Bug#16697,Bug#16702
+  * No longer a fatal error if there is no /vmlinuz (or
+    equivalent). fixes: Bug#16899
+  * Added language to the abort on /usr/src/linux not being a
+    link. 
+  * Documented the fact that if you re-run make-kpkg with a different
+    revision number, you have to reconfigure the kernel. 
+    fixes: Bug#16968
+  * ignore obsolete fdformat in favour of superformat.
+  * Changed the kernel rules file not break on the sound modules of
+    2.1.70+ kernels (I think it is a bug in the kernel Makfile, but this
+    fix make make-kpkg handle the problem and be more robust).
+  * Modified image.postinst to also cater to people on whose architecture
+    the image is not called vmlinuz but something else (like vmlinux, for
+    example). closes:Bug#16258
+  * Made the postrm's also know about the kernel versrion, not just the
+    postinst. (Sorry). closes:Bug#15920
+  * Changed include.postrm to be more careful about removing the symbolic
+    link /usr/src/linux-X.Y.Z. Keep track if there is another package
+    installed that could provide the link.
+
+ -- Manoj Srivastava <srivasta@debian.org>  Wed, 21 Jan 1998 03:27:35 -0600
 
 kernel-source-0.26 (1.01) unstable; urgency=low
 
