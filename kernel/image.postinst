@@ -12,7 +12,7 @@
 # HISTORY          :
 # Description      :
 #
-#    $Id: image.postinst,v 1.98 2002/03/05 20:54:10 srivasta Exp $
+#    $Id: image.postinst,v 1.99 2002/03/16 07:40:28 srivasta Exp $
 #
 
 #
@@ -1181,6 +1181,12 @@ Symbolic links, unless otherwise specified, can be found in $image_dest
 $Loader sets up your system to boot Linux directly from your hard
 disk, without the need for booting from $install_boot_method.
 
+EOMSGB
+;
+
+if ($do_bootloader) {
+   print STDERR <<"EOMSGC";
+
 WARNING
 If you are keeping another operating system or another version
 of Linux on a separate disk partition, you should not have $Loader
@@ -1190,7 +1196,7 @@ system un-bootable. If you only want to run this version of Linux,
 go ahead and install the boot block here. If it does not work, you
 can still boot this system from $install_boot_method.
 
-EOMSGB
+EOMSGC
 ;
 
 if ($do_bootfloppy) {

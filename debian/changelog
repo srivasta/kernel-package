@@ -1,3 +1,12 @@
+kernel-package (7.97) unstable; urgency=low
+
+  * Don't issue a boot block warning if we are not installing a boot
+    loader.                                                  closes: Bug#138534
+  * Thanks to "Dr. Rafael Sepulveda" <drs@gnulinux.org.mx>, we havce a
+    bash completions file for make-kpkg.
+
+ -- Manoj Srivastava <srivasta@debian.org>  Sat, 16 Mar 2002 01:38:48 -0600
+
 kernel-package (7.96) unstable; urgency=low
 
   * Support labels in /etc/fstab. closes: Bug#121127, Bug#136949
