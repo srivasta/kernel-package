@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Tue Apr 24 02:31:24 2001
+## Last Modified On : Fri May  4 18:41:59 2001
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 469
+## Update Count	    : 473
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.116 2001/04/25 07:19:22 srivasta Exp $
+## $Id: rules,v 1.117 2001/05/04 23:51:40 srivasta Exp $
 ###############################################################################
 
 ifdef ARCH
@@ -493,7 +493,7 @@ endif
 
 ifeq ($(strip $(ALL_PATCH_DIR)),)
 ALL_PATCH_DIR  = $(shell if [ -d /usr/src/kernel-patches/all/ ]; \
-                            then echo /usr/src/kernel-patches/all/ \
+                            then echo /usr/src/kernel-patches/all/ ;\
 			 fi)
 endif
 
@@ -814,7 +814,7 @@ $(error Error. The version number $(strip $(version)) is not all \
 endif
 
 # export variables
-export root_cmd FLAVOUR INT_SUBARCH APPEND_TO_VERSION UNSIGN_CHANGELOG  UNSIGN_SOURCE ROOT_CMD
+export root_cmd FLAVOUR INT_SUBARCH APPEND_TO_VERSION UNSIGN_CHANGELOG  UNSIGN_SOURCE ROOT_CMD MODULE_LOC
 
 
 ifeq ($(strip $(IN_KERNEL_DIR)),)
@@ -909,25 +909,29 @@ ifneq ($(strip $(valid_patches)),)
 	  fi;                                          \
         done
 else
-	if [ -d $(VERSIONED_DIR_PATCH_APPLY) ]; then \
+	if [ -n "$(VERSIONED_PATCH_DIR)" -a                   \
+             -d $(VERSIONED_DIR_PATCH_APPLY) ]; then          \
             run-parts --verbose $(VERSIONED_DIR_PATCH_APPLY); \
-        else \
-	    true; \
+        else                                                  \
+	    true;                                             \
 	fi
-	if [ -d $(VERSIONED_ALL_PATCH_APPLY)  ]; then \
+	if [ -n "$(VERSIONED_ALL_PATCH_DIR)" -a               \
+             -d $(VERSIONED_ALL_PATCH_APPLY)  ]; then         \
             run-parts --verbose $(VERSIONED_ALL_PATCH_APPLY); \
-        else \
-	    true; \
+        else                                                  \
+	    true;                                             \
 	fi
-	if [ -d $(DIR_PATCH_APPLY) ]; then \
-            run-parts --verbose $(DIR_PATCH_APPLY); \
-        else \
-	    true; \
+	if [ -n "$(PATCH_DIR)" -a                             \
+             -d $(DIR_PATCH_APPLY) ]; then                    \
+            run-parts --verbose $(DIR_PATCH_APPLY);           \
+        else                                                  \
+	    true;                                             \
 	fi
-	if [ -d $(ALL_PATCH_APPLY)  ]; then \
-            run-parts --verbose $(ALL_PATCH_APPLY); \
-        else \
-	    true; \
+	if [ -n "$(ALL_PATCH_DIR)" -a                         \
+             -d $(ALL_PATCH_APPLY)  ]; then                   \
+            run-parts --verbose $(ALL_PATCH_APPLY);           \
+        else                                                  \
+	    true;                                             \
 	fi
 endif
 endif
@@ -993,25 +997,29 @@ ifneq ($(strip $(valid_unpatches)),)
 	  fi;                                              \
         done
 else
-	if [ -d $(VERSIONED_DIR_PATCH_UNPATCH) ]; then \
+	if [ -n "$(VERSIONED_PATCH_DIR)" -a                     \
+             -d $(VERSIONED_DIR_PATCH_UNPATCH) ]; then          \
             run-parts --verbose $(VERSIONED_DIR_PATCH_UNPATCH); \
-        else \
-	    true; \
+        else                                                    \
+	    true;                                               \
 	fi
-	if [ -d $(VERSIONED_ALL_PATCH_UNPATCH)  ]; then \
+	if [ -n "$(VERSIONED_ALL_PATCH_DIR)" -a                 \
+             -d $(VERSIONED_ALL_PATCH_UNPATCH)  ]; then         \
             run-parts --verbose $(VERSIONED_ALL_PATCH_UNPATCH); \
-        else \
-	    true; \
+        else                                                    \
+	    true;                                               \
 	fi
-	if [ -d $(DIR_PATCH_UNPATCH) ]; then \
-            run-parts --verbose $(DIR_PATCH_UNPATCH); \
-        else \
-	    true; \
+	if [ -n "$(PATCH_DIR)" -a                               \
+             -d $(DIR_PATCH_UNPATCH) ]; then                    \
+            run-parts --verbose $(DIR_PATCH_UNPATCH);           \
+        else                                                    \
+	    true;                                               \
 	fi
-	if [ -d $(ALL_PATCH_UNPATCH)  ]; then \
-            run-parts --verbose $(ALL_PATCH_UNPATCH); \
-        else \
-	    true; \
+	if [ -n "$(ALL_PATCH_DIR)" -a                           \
+             -d $(ALL_PATCH_UNPATCH)  ]; then                   \
+            run-parts --verbose $(ALL_PATCH_UNPATCH);           \
+        else                                                    \
+	    true;                                               \
 	fi
 endif
 endif

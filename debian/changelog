@@ -1,3 +1,13 @@
+kernel-package (7.38) unstable; urgency=low
+
+  * Added missing ; in setting a patch directory. Also added checks for
+    uninitialized patch directories while applying or unapplying a
+    patch. closes: Bug#96327
+  * libdv3 -> libdb3. closes: Bug#96271
+  * export MODULE_LOC in case the modules need it. closes: Bug#96188
+
+ -- Manoj Srivastava <srivasta@debian.org>  Fri,  4 May 2001 18:51:33 -0500
+
 kernel-package (7.37) unstable; urgency=low
 
   * Added a new patch for FLAVOUR for 2.4.3 kernels.
