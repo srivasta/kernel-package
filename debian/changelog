@@ -1,8 +1,11 @@
 kernel-package (4.03) unstable; urgency=low
 
   * Fixed a typo which mis warned about rootcmd. closes: Bug#20286
+  * Added the klogd patch from Yann Dirson <ydirson@a2points.com> to the
+    Flavours file, which allows klogd to not choke on non-numeric kernel
+    version numbers. This is also logged as Bug 20135.
 
- -- Manoj Srivastava <srivasta@debian.org>  Fri, 27 Mar 1998 12:21:29 -0600
+ -- Manoj Srivastava <srivasta@debian.org>  Fri, 27 Mar 1998 12:37:04 -0600
 
 kernel-package (4.02) unstable; urgency=low
 
