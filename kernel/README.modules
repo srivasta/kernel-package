@@ -147,29 +147,31 @@ MODULE Packaging hints
  b) KSRC   Contains the location of the kernel sources 
  c) KMAINT Contains the Name of the maintainer to pass to PGP
  d) KEMAIL Contains the email address of the maintainer
- e) MODDIR Contains the destination directory where the .debs are put
+ e) KPKG_DEST_DIR Contains the destination directory where the .debs are put
  f) KDREV  Contains the Debian revision used for the kernel image
+ g) KPKG_MAINTAINER Contains the Name of the maintainer (may be different from 
+                    KMAINT, since the latter can be a key id)
 
 	Additionally, the following variables may also be present in the 
  environment:
-   g) APPEND_TO_VERSION This contains a string to be appended to the 
+   h) APPEND_TO_VERSION This contains a string to be appended to the 
                         EXTRAVERSION variable. This is already factored 
                         into the KVERS variable above.
-   h) FLAVOUR Contains the flavour, if any, of the current
+   i) FLAVOUR Contains the flavour, if any, of the current
               kernel. This is already factored into the KVERS variable
 	      above.  Please note that FLAVOURS are now deprecated in
               preference to  APPEND_TO_VERSION
-   i) INT_SUBARCH Contains the SUB arch if any if and only if the 
+   j) INT_SUBARCH Contains the SUB arch if any if and only if the 
                   ARCH_IN_NAME variable has been set. I suspect that the
                   user wants the .deb names to be modified (but not the
                   kernel version or the location of the dir in which to
                   find modules if this is set. This is *NOT* factored
                   into KVERS above, and is there to be used at your
                   discretion. 
-   j) UNSIGN_CHANGELOG  A boolean
-   k) UNSIGN_SOURCE     A boolean
-   l) ROOT_CMD          a program, like sudo or fakeroot
-   m) root_cmd This is a misnomer. That variable actually holds arguments
+   k) UNSIGN_CHANGELOG  A boolean
+   l) UNSIGN_SOURCE     A boolean
+   m) ROOT_CMD          a program, like sudo or fakeroot
+   n) root_cmd This is a misnomer. That variable actually holds arguments
                for dpkg, specifically, -uc -us -r<blah>, or any
                combination thereof, asd requested by the user. This
                may be set in the config file, so if this variable
