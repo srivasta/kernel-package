@@ -1,3 +1,13 @@
+kernel-package (7.03) frozen unstable; urgency=low
+
+  * Aaargh. A single space got inserted into thepostinst after my
+    testing. I was just adding comments, I swear. I'll not add anything
+    after the test, I promise. "$_/$loader_exec " => "$_/$loader_exec".  
+    This fixes an important bug, which caused lilo not to be run on
+    installing the kernel image. closes: Bug#61646
+
+ -- Manoj Srivastava <srivasta@debian.org>  Mon,  3 Apr 2000 11:16:06 -0500
+
 kernel-package (7.02) frozen unstable; urgency=low
 
   * Added a dependency on fileutiles >=4.0, since the package would fail
