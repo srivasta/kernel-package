@@ -14,7 +14,7 @@
 #
 #
 #
-#    $Id: make-kpkg,v 1.82 2003/07/30 22:28:52 srivasta Exp $
+#    $Id: make-kpkg,v 1.83 2003/07/30 22:36:19 srivasta Exp $
 #
 require 5.002;
 use strict;
@@ -29,7 +29,7 @@ make-kpkg - build Debian kernel packages from Linux kernel sources.
 ($main::MYNAME     = $main::0) =~ s|.*/||;
 $main::Author      = "Manoj Srivastava";
 $main::AuthorMail  = "srivasta\@debian.org";
-$main::Version     = '$Revision: 1.82 $ ';
+$main::Version     = '$Revision: 1.83 $ ';
 
 my $added_modules='';
 my $added_patches='';
@@ -914,7 +914,7 @@ EOMSG
     $command .= " -n ";
   }
   if ($initrd) {
-    if (! (-e 'debian/official' || $ENC{INITRD_OK}) ) {
+    if (! (-e 'debian/official' || $ENV{INITRD_OK}) ) {
       print STDERR "Warning: You are using the initrd option, that may not\n";
       print STDERR "work unless you have applied the initrd cramfs patch to\n";
       print STDERR "the kernel, or modified mkinitrd not to use cramfs by\n";
