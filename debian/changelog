@@ -1,7 +1,7 @@
 kernel-package (8.024) unstable; urgency=low
 
   * Re named MODDIR to KDIST_DEST_DIR to avoid name space clashed. 
-                                                             closes: Bug#185279
+                                                 closes: Bug#185279, Bug#186181
   * Fix settin up OOT_CMD                                    closes: Bug#186177
   * Also pass in $(maintainer) to the modules, since this could be
     different from $(pgp).  This is for Bug#186187
