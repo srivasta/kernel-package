@@ -5,9 +5,9 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Sat Oct  2 00:56:52 2004
+## Last Modified On : Mon Oct  4 00:11:48 2004
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count	    : 716
+## Update Count	    : 717
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
@@ -2064,7 +2064,10 @@ else
 	cp $(kimagesrc) $(kimagedest)
 endif
 ifeq ($(strip $(KERNEL_ARCH)),um)
-	chmod 755 $(kimagedest);				
+	chmod 755 $(kimagedest);	
+ifeq (,$(findstring nostrip,$(DEB_BUILD_OPTIONS)))
+	strip --strip-unneeded --remove-section=.note --remove-section=.comment  $(kimagedest);
+endif
 else							
 	chmod 644 $(kimagedest);
 endif
