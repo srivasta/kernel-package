@@ -5,16 +5,16 @@
 # Created On       : Mon Jun 17 01:10:11 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Tue Jul 14 15:07:43 1998
+# Last Modified On : Sun Sep  6 22:39:38 1998
 # Last Machine Used: tiamat.datasync.com
-# Update Count     : 104
+# Update Count     : 106
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
 #
 #
 #
-#    $Id: make-kpkg,v 1.18 1998/07/17 04:49:12 srivasta Exp $
+#    $Id: make-kpkg,v 1.19 1998/09/08 19:54:12 srivasta Exp $
 #
 require 5.002;
 use strict;
@@ -29,7 +29,7 @@ make-kpkg - build Debian kernel packages from Linux kernel sources.
 ($main::MYNAME     = $main::0) =~ s|.*/||;
 $main::Author      = "Manoj Srivastava";
 $main::AuthorMail  = "srivasta\@debian.org";
-$main::Version     = '$Revision: 1.18 $ ';
+$main::Version     = '$Revision: 1.19 $ ';
 
 my $help_opt=0; 
 my $revision=0; 
@@ -104,7 +104,7 @@ newer than the one installed on the system.
 
 Sets the kernel flavour to the argument B<number>. The flavour is 
 also appended to the package name. You need a patched Makefile to 
-make this work propperly (see /usr/doc/kernel-package/FLAVOURS.gz).
+make this work properly (see /usr/doc/kernel-package/Flavours.gz).
 It may contain only alphanumerics and the characters - + . (full 
 stop, hyphen, and plus). B<NOTE>: Hyphens are discouraged.  (Look
 at Chapter 5 of the Programmers manual for details). 
@@ -202,7 +202,7 @@ usage: $main::MYNAME [options] target [target ...]
  --revision number     The debian revision number. ([a-z.+0-9]) (Must
                          have digit, no hyphen allowed)
  --flavour  foo        an additional kernel sub-version. ([-a-z.+0-9])
-                         see /usr/doc/kernel-package/FLAVOURS.gz
+                         see /usr/doc/kernel-package/Flavours.gz
  --pgpsign  name       A ID used to sign the changes file using pgp.
  --targets             Lists the known targets.
  --zimage              Create a kernel using zImage rather than bzImage
