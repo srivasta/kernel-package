@@ -1,3 +1,15 @@
+kernel-package (6.22) unstable; urgency=low
+
+  * Removed bashims from the examples for multi-arch. Thanks to
+    Gregory T. Norris <haphazard@socket.net>. closes: Bug#41691
+  * Made the usage messages go to stdout rather than stdin. 
+    closes: Bug#42011
+  * Changed readme to stop referring to fakeroot explicitly -- so we no
+    longer need to track usage. closes: Bug#42798
+  * fixed typo in usage message. closes: Bug#43129
+
+ -- Manoj Srivastava <srivasta@debian.org>  Thu, 19 Aug 1999 01:55:14 -0500
+
 kernel-package (6.21) unstable; urgency=low
 
   * Added documentation about potential gcc problems with the kernel
