@@ -1,3 +1,21 @@
+kernel-package (7.87) unstable; urgency=low
+
+  * Since the usage messaes are so long, do not output usage on error,
+    since they may mask the error; instead tell the user how to get
+    command line or target help.                             closes: Bug#134116
+  * Added a patch from Guido Guenther <agx@sigxcpu.org> to add bootloader
+    support for mips ip22.  It furthermore changes the default kernel
+    format from ecoff to elf on mip since this is what the bootloader
+    expects. People needing an ecoff kernel(for whatever reason) can
+    easily convert the elf kernel to ecoff using elf2ecoff(from the mips
+    tools package).                                          closes: Bug#134560
+  * Well, since I have reports that only 2.2 kernels can't meke dep in
+    parrallel, I have now re-enabled make dep in parrallel for post 2.3
+    kernel versions. I wish there was somew better way to determine if
+    make -jN dep were feasible instead of guessing by version numbers.
+
+ -- Manoj Srivastava <srivasta@debian.org>  Mon, 18 Feb 2002 09:07:41 -0600
+
 kernel-package (7.86) unstable; urgency=low
 
   * Changed the man page and update the warning message for a pre existing

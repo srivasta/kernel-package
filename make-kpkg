@@ -14,7 +14,7 @@
 #
 #
 #
-#    $Id: make-kpkg,v 1.70 2002/02/16 18:37:39 srivasta Exp $
+#    $Id: make-kpkg,v 1.71 2002/02/18 15:08:32 srivasta Exp $
 #
 require 5.002;
 use strict;
@@ -29,7 +29,7 @@ make-kpkg - build Debian kernel packages from Linux kernel sources.
 ($main::MYNAME     = $main::0) =~ s|.*/||;
 $main::Author      = "Manoj Srivastava";
 $main::AuthorMail  = "srivasta\@debian.org";
-$main::Version     = '$Revision: 1.70 $ ';
+$main::Version     = '$Revision: 1.71 $ ';
 
 my $added_modules='';
 my $added_patches='';
@@ -642,7 +642,7 @@ sub main (){
   
   $ret = GetOptions(%option_ctl);
   if(!$ret) {
-	print "$usage\n" ;
+	print "use --help to display command line syntax help.\n" ;
 	exit 1;
   }
   if ($help_opt || $targ_opt){
@@ -653,13 +653,13 @@ sub main (){
 
   if ($bzimage && $zimage){
     print "Use only one of bzimage and zimage options.\n";
-    print "$usage\n";
+    print "use --help to display command line syntax help.\n";
     exit 1;
   }
 
   if ($config_target !~ /^(?:|old|menu|x)(config)?$/) {
     print "Config type must be one of {config,oldconfig,menuconfig,xconfig}.\n";
-    print "$usage\n";
+    print "use --help to display command line syntax help.\n";
     exit 1;
   }
   $config_target .= 'config' if ($1 eq '');
@@ -698,7 +698,7 @@ sub main (){
   }
   if ($errors){
     print STDERR "Error: $errors\n";
-    print "$targets_help\n";
+    print "use --targets to display help on valid targets.\n";
     exit 1;
   }
   # See if we are running in a linux kernel directory

@@ -12,7 +12,7 @@
 # HISTORY          :
 # Description      :
 #
-#    $Id: image.postinst,v 1.94 2002/02/05 09:20:07 srivasta Exp $
+#    $Id: image.postinst,v 1.95 2002/02/18 15:08:32 srivasta Exp $
 #
 
 #
@@ -31,7 +31,7 @@ my $do_bootfloppy   = "Yes";	# target machine defined
 my $do_bootloader   = "Yes";	# target machine defined
 my $move_image      = '';       # target machine defined
 my $kimage          = "=K";	# Should be empty, mostly
-my $loader          = "=L";     # lilo, silo, quik, palo, vmelilo, or nettrom
+my $loader          = "=L";     # lilo, silo, quik, palo, vmelilo, nettrom or arcboot
 my $image_dir       = "=D";     # where the image is located
 my $clobber_modules = '';       # target machine defined
 my $relative_links  = "";       # target machine defined
@@ -53,6 +53,7 @@ $Loader             = "NETTROM"  if $loader =~ /^nettrom/io;
 $Loader             = "VMELILO"  if $loader =~ /^vmelilo/io;
 $Loader             = "ZIPL"     if $loader =~ /^zipl/io;
 $Loader             = "ELILO"    if $loader =~ /^elilo/io;
+$Loader             = "ARCBOOT"  if $loader =~ /^arcboot/io;
 
 # This should not point to /tmp, because of security risks.
 my $temp_file_name = "/var/log/$loader" . "_log.$$";
@@ -64,6 +65,7 @@ my @quiktemplate    = ();
 my @palotemplate    = ();
 my @vmelilotemplate = ();
 my @zipltemplate    = ();
+my @arcboottemplate = ();
 my $bootdevice      = '';
 my $rootdevice      = '';
 my $rootdisk        = '';
@@ -154,6 +156,7 @@ $do_bootfloppy = "" if $loader =~ /^yaboot/io;
 $do_bootfloppy = "" if $loader =~ /^noloader/io;
 $do_bootfloppy = "" if $loader =~ /^zipl/io;
 $do_bootfloppy = "" if $loader =~ /^elilo/io;
+$do_bootfloppy = "" if $loader =~ /^arcboot/io;
 
 # We can't have boot floppies for initrd kernels
 $do_bootfloppy = "" if $initrd;
@@ -933,6 +936,7 @@ exit (0) if $loader =~ /silo/i; # SILO does not have to be executed.
 exit (0) if $loader =~ /yaboot/i; # yaboot does not have to be executed.
 exit (0) if $loader =~ /milo/i; # MILO does not have to be executed.
 exit (0) if $loader =~ /nettrom/i; # NETTROM does not have to be executed.
+exit (0) if $loader =~ /arcboot/i; # ARCBOOT does not have to be executed.
 
 exit (0) unless $loaderloc;
 
@@ -1025,6 +1029,7 @@ if ( ! -x "$loaderloc" ) {
   printf " (PALO: PA-RISC Boot Loader)"        if $loader =~ /^palo/i;
   printf " (VMELILO: m68k VME Boot Loader)"    if $loader =~ /^vmelilo/i;
   printf " (ZIPL: s390 & zSeries Boot Loader)" if $loader =~ /^zipl/i;
+  printf " (ARCBOOT: MIPS SGI IP22  Boot Loader)" if $loader =~ /^arcboot/i;
   printf ", which is the boot loader I    \n";
   print "have additional help for, is not installed (it is, after all,\n";
   print "just one of many options). I am assuming you have made some  \n";
@@ -1038,6 +1043,7 @@ if ( ! -x "$loaderloc" ) {
   exit (0) if $loader =~ /^palo/i; # No such thing as PALO floppies
   exit (0) if $loader =~ /^vmelilo/i;
   exit (0) if $loader =~ /^zipl/i;
+  exit (0) if $loader =~ /^arcboot/i;
 
   if ($do_bootfloppy) {
     print "I can make a non-LILO diskette instead, but it won't be as useful.\n";
@@ -1113,6 +1119,11 @@ if ( ! -x "$loaderloc" ) {
   "image=" . $image_dest . "$kimage\n",
   "parmfile=/boot/parmfile\n"
                 );
+
+@arcboottemplate = (
+    "label=Linux\n",
+    "image=" . $image_dest . "$kimage\n",
+);
 
 if($loader =~ /^zipl/io)
   {

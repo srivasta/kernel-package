@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Sun Jan  6 04:06:17 2002
+## Last Modified On : Mon Feb 18 09:03:46 2002
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 515
+## Update Count	    : 517
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.154 2002/02/16 18:37:39 srivasta Exp $
+## $Id: rules,v 1.155 2002/02/18 15:08:33 srivasta Exp $
 ###############################################################################
 
 ifdef KPKG_ARCH
@@ -396,12 +396,12 @@ endif
 ##### mips
 ifeq ($(strip $(architecture)),mips)
 kimage := vmlinux
-loaderdep=
-loader=
+loaderdep=arcboot
+loader=arcboot
 loaderdoc=
 target = boot
 NEED_DIRECT_GZIP_IMAGE=NO
-kimagesrc = $(strip arch/$(KERNEL_ARCH)/boot/vmlinux.ecoff)
+kimagesrc = $(strip vmlinux)
 kimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
 DEBCONFIG= $(CONFDIR)/config.$(KPKG_SUBARCH)
 endif
@@ -772,7 +772,20 @@ endif
 
 ifneq ($(strip $(CONCURRENCY_LEVEL)),)
 do_parallel = -j$(CONCURRENCY_LEVEL)
+
+# Well, I wish there was something better than guessing by version number
+CAN_DO_DEP_FAST=$(shell if   [ $VERSION -lt 2 ];    then echo '';  \
+                        elif [ $VERSION -gt 2 ];    then echo YES; \
+                        elif [ $PATCHLEVEL -lt 4 ]; then echo '';  \
+                        else                             echo YES; \
+                        fi)
+ifneq ($(strip $(CAN_DO_DEP_FAST)),)
+fast_dep= -j$(CONCURRENCY_LEVEL)
 endif
+
+endif
+
+
 
 ifneq ($(strip $(INITRD)),)
 initrddep := initrd-tools (>= 0.1.1), # there is a space here
@@ -1124,7 +1137,7 @@ stamp-configure: debian .config conf.vars
 	  && $(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) \
                                  ARCH=$(KERNEL_ARCH) $(config_target) \
           && $(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) \
-                                 ARCH=$(KERNEL_ARCH) dep \
+                                 ARCH=$(KERNEL_ARCH) $(fast_dep) dep \
           && $(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) \
                                  ARCH=$(KERNEL_ARCH) clean && \
               touch stamp-configure
