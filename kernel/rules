@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Tue Mar 26 21:04:15 2002
+## Last Modified On : Fri Mar 29 09:33:19 2002
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 523
+## Update Count	    : 529
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.166 2002/03/27 03:26:51 srivasta Exp $
+## $Id: rules,v 1.167 2002/03/29 16:00:15 srivasta Exp $
 ###############################################################################
 
 ifdef KPKG_ARCH
@@ -1024,7 +1024,7 @@ debian:
 	@echo ""
 	@echo "Please install bin86 and try again."
 else
-all build: configure stamp-build
+all build: debian configure stamp-build
 stamp-build:
 # Builds the binary package.
 # debian.config contains the current idea of what the image should
@@ -1118,7 +1118,7 @@ endif
 		$(DEBDIR)/changelog > debian/changelog
 	-test ! -f debian/rules && \
 	   install -p -m 755 $(DEBDIR)/rules debian/rules
-	touch stamp-debian
+	touch $@
 
 conf.vars:
 	@echo "VERSION          = $(VERSION)"        > .mak
@@ -1150,20 +1150,16 @@ dummy_do_dep:
 	+$(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) \
                                  ARCH=$(KERNEL_ARCH) $(fast_dep) dep 
 
-stamp_configure_dummy: debian .config
-	$(deb_rule) $?
-
-stamp-kernel-configure: stamp_configure_dummy
+stamp-kernel-configure: debian .config
 	$(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) \
                                  ARCH=$(KERNEL_ARCH) $(config_target) 	
-	+$(deb_rule) dummy_do_dep
+	+$(MAKE) -f ./debian/rules dummy_do_dep
 	$(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) \
                                  ARCH=$(KERNEL_ARCH) clean 
 	touch $@
 
-configure: debian stamp-configure
+configure: debian .config stamp-configure
 stamp-configure: debian .config conf.vars stamp-kernel-configure
-	$(deb_rule) $(filter-out conf.vars stamp-kernel-configure, $?)
 	touch $@
 
 

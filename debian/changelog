@@ -1,3 +1,13 @@
+kernel-package (7.104) unstable; urgency=low
+
+  * Fix the rules file to short circuit a twisty set of confusing
+    dependencies for configuration related targets.  The bug it closes
+    used an non-standard build method (--rootcmd fakeroot is how I do it),
+    but it used to work before, and it should do so again. Hopefully
+    nothing else broke.                                      closes: Bug#140455
+
+ -- Manoj Srivastava <srivasta@debian.org>  Fri, 29 Mar 2002 09:59:40 -0600
+
 kernel-package (7.103) unstable; urgency=low
 
   * Added the potential value AUTO for PATCH_THE_KERNEL, which is useful
