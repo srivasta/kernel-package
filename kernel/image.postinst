@@ -12,7 +12,7 @@
 # HISTORY          : 
 # Description      : 
 # 
-#    $Id: image.postinst,v 1.49 2000/05/12 14:49:23 srivasta Exp $
+#    $Id: image.postinst,v 1.50 2000/05/20 20:19:19 srivasta Exp $
 #
 
 # 
@@ -39,6 +39,7 @@ $Loader             = "QUIK"  if $loader =~ /quik/io;
 $Loader             = "NETTROM"  if $loader =~ /nettrom/io;
 
 
+
 # This should not point to /tmp, because of security risks.
 my $temp_file_name = "/var/log/$loader" . "_log.$$";
 
@@ -49,14 +50,24 @@ my $rootdevice    = '';
 my $rootdisk      = '';
 my $rootpartition = '';
 my $image_dest      = "/";
-my $realimageloc  = "$image_dir/";
+my $realimageloc  = "/$image_dir/";
 my $have_conffile = "";
 my $CONF_LOC      = '/etc/kernel-img.conf';
 
 # Ignore all invocations uxcept when called on to configure.
 exit 0 unless $ARGV[0] =~ /configure/;
 
+# Do some preliminary sanity checks here to ensure we actually have an
+# valid image dir
 chdir('/')           or die "could not chdir to /:$!\n";
+die "Internal Error: ($image_dir) is not a directory!\n" 
+  unless -d $image_dir;
+
+# remove multiple leading slashes; make sure there is at least one.
+$realimageloc  =~ s|^/*|/|o;
+$realimageloc  =~ s|/+|/|o;
+die "Internal Error: ($realimageloc) is not a directory!\n" 
+  unless -d $realimageloc;
 
 if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
   if (open(CONF, "$CONF_LOC")) {
@@ -96,48 +107,30 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
 if (! -d "$image_dest") {
   die "Expected Image Destination dir ($image_dest) to be a valid directory!\n";
 }
-if (! -d $image_dir) {
-  die "Internal Error: ($image_dir) is not a directory!\n";
-}
 
-if (! $image_dir) {
-  $image_dir         = "boot"  
-}
-else {
-  $image_dir  =~ s|^/||o;
-}
-
-if ($image_in_boot) {
-  $image_dest = "/$image_dir/";
-  $realimageloc = "";
+if ($image_in_boot) {  
+  $image_dest = "/$image_dir/"; 
+  $image_dest =~ s|^/*|/|o; 
 }
 
 # sanity
-if (!($do_bootfloppy || $do_bootloader)) {
-  $do_boot_enable = '';
-}
+if (!($do_bootfloppy || $do_bootloader)) {  $do_boot_enable = ''; }
 
-# most of our work is done in $image_dest
+# most of our work is done in $image_dest (nominally /)
 chdir("$image_dest") or die "could not chdir to $image_dest:$!\n";
 
 # Paranoid check to make sure that the correct value is put in there
-if (! $kimage) {		# Hmm. empty
-  $kimage = "vmlinuz"
-}
-elsif ($kimage =~ m/^b?zImage$/o) { # these produce vmlinuz
-  $kimage = "vmlinuz"
-}
-elsif ($kimage =~ m/^Image$/o) {
-  my $nop = $kimage;
-}
-elsif ($kimage =~ m/^vmlinux$/o) {
-  my $nop = $kimage;
-  #
-}
-else {				# Let this be the default as well
-  $kimage = "vmlinuz"
-}
+if (! $kimage)                    { $kimage = "vmlinuz";} # Hmm. empty
+elsif ($kimage =~ m/^b?zImage$/o) { $kimage = "vmlinuz";} # these produce vmlinuz
+elsif ($kimage =~ m/^Image$/o)    { my $nop = $kimage;  }
+elsif ($kimage =~ m/^vmlinux$/o)  { my $nop = $kimage;  }
+else                              { $kimage = "vmlinuz";} # Default
 
+die "Internal Error: Could not find image (" . $realimageloc
+  . "$kimage-$version)\n" unless -e $realimageloc
+  . "$kimage-$version";
+
+# search for the boot loader in the path
 my $loader_exec;
 ($loader_exec = $loader)  =~ s|.*/||;
 my ($loaderloc) = grep -x, map "$_/$loader_exec", 
@@ -145,14 +138,14 @@ my ($loaderloc) = grep -x, map "$_/$loader_exec",
 
 
 if ($move_image) {		# Maybe $image_dest is in on dos, or something?
-  if (-e "$kimage-$version") {
+  if (-e "$kimage-$version") {	# we should be in dir /, normally
     rename("$kimage-$version", "$kimage-$version.$$") || 
       die "failed to move " . $image_dest . "$kimage:$!";
   }
   my $ret = system("mv -f " . $realimageloc . "$kimage-$version " . 
 		   " $kimage-$version");
   if ($ret) {
-    die("Failed to move /$image_dir/$kimage-$version to "
+    die("Failed to move " . $realimageloc . "$kimage-$version to "
 	. $image_dest . "$kimage-$version.\n"); 
   }
   # Ok, now we may clobber the previous .old files
@@ -163,7 +156,7 @@ if ($move_image) {		# Maybe $image_dest is in on dos, or something?
   if ($reverse_symlink) {
     symlink($image_dest . "$kimage-$version", 
 	    $realimageloc . "$kimage-$version")
-      || die("Failed to symbolic-link /$image_dir/$kimage-$version to "
+      || die("Failed to symbolic-link " . $image_dest . "$kimage-$version to "
 	     . $image_dest . "$kimage-$version .\n");
   }
 } 
@@ -180,7 +173,7 @@ elsif (-l "$kimage") {
     # make sure we change this state of affairs
     $force_move = 1;
   }
-  # follow link target.  
+  # follow link target. (we are in $image_dest, which should be / normally
   if (!$force_move) {
     my $vmlinuz_target = readlink "$kimage";
     if (!defined($vmlinuz_target)) {
@@ -200,7 +193,7 @@ elsif (-l "$kimage") {
     
     if (! symlink($realimageloc . "$kimage-$version", "$kimage")) {
       rename("$kimage.$$", "$kimage");
-      die("Failed to symbolic-link /$image_dir/$kimage-$version to "
+      die("Failed to symbolic-link " . $realimageloc . "$kimage-$version to "
 	  . $image_dest . "$kimage .\n"); 
     }
     
@@ -210,14 +203,15 @@ elsif (-l "$kimage") {
 }
 elsif (! -e "$kimage") {
   # Hmm. Pristine system? How can that be?
-  # Possibly they do not want a link here.
+  # Possibly they do not want a link here. (we should be in /
+  # here[$image_dest, really]
   warn "$image_dest" . "$kimage does not exist. Installing from scratch, eh?\n";
   warn "Or maybe you don't want a symbolic link here. Hmm.?\n";
   if ($no_symlink) {
-    my $ret = system("cp -a --backup=t" . $realimageloc . "$kimage-$version "
+    my $ret = system("cp -a --backup=t " . $realimageloc . "$kimage-$version "
 		     . " $kimage");
     if ($ret) {
-      die("Failed to copy /$image_dir/$kimage-$version to "
+      die("Failed to copy " . $realimageloc . "$kimage-$version to "
 	  . $image_dest . "$kimage .\n"); 
     }
   }
@@ -225,7 +219,7 @@ elsif (! -e "$kimage") {
     my $ret = system("mv -f " . $realimageloc . "$kimage-$version "
 		     . "$kimage"); 
     if ($ret) {
-      die("Failed to move /$image_dir/$kimage-$version to "
+      die("Failed to move " . $realimageloc . "$kimage-$version to "
 	  . $image_dest . "$kimage .\n"); 
     }
   }
@@ -252,13 +246,13 @@ elsif (! -e "$kimage") {
   if ($do_symlink =~ /Yes/i) {
     if ($reverse_symlink) {
       symlink($image_dest . "$kimage", $realimageloc . "$kimage-$version")
-	|| die("Failed to symbolic-link /$image_dir/$kimage-$version to "
-	       . $image_dest . "$kimage .\n");
+	|| die("Failed to symbolic-link " . $realimageloc
+	       . "$kimage-$version to " . $image_dest . "$kimage .\n");
     }
     else {
       symlink($realimageloc . "$kimage-$version", "$kimage") ||
-	die("Failed to symbolic-link /$image_dir/$kimage-$version to "
-	    . $image_dest . "$kimage .\n");
+	die("Failed to symbolic-link " . $realimageloc
+	    . "$kimage-$version to "  . $image_dest . "$kimage .\n");
     }
   }
 }
@@ -272,7 +266,7 @@ elsif ($no_symlink) {		# Maybe /$image_dir is on a dos system?
   
   if ($ret) {
     if (-e "$kimage.$$") { rename("$kimage.$$", "$kimage"); }
-    die("Failed to copy /$image_dir/$kimage-$version to "
+    die("Failed to copy " . $realimageloc . "$kimage-$version to "
 	. $image_dest . "/$kimage .\n"); 
   }
   
@@ -284,10 +278,11 @@ elsif ($reverse_symlink) {		# Maybe /$image_dir is on a dos system?
     rename("$kimage", "$kimage.$$") || 
       die "failed to move " . $image_dest . "$kimage:$!";
   }
-  my $ret = system("mv -f " . $realimageloc . "$kimage-$version " . "$kimage");
+  my $ret = system("mv -f " . $realimageloc . "$kimage-$version "
+		   . $image_dest . "$kimage"); 
   if ($ret) {
     if (-e "$kimage.$$") {rename("$kimage.$$", "$kimage");}
-    die("Failed to move /$image_dir/$kimage-$version to "
+    die("Failed to move " . $realimageloc . "$kimage-$version to "
 	. $image_dest . "$kimage .\n"); 
   }
   
@@ -378,11 +373,12 @@ if (-d "/usr/doc") {
     my $targetdir;
     my $stargetdir;
     if (-x '/bin/pwd') {
+      # Oooh. Moving away from $image_dest (which is normally /, but
+      # not always
       chdir('/usr/doc/');
       $targetdir=`/bin/pwd`;
       chdir('/usr/share/doc/');
       $stargetdir=`/bin/pwd`;
-      chdir('/');
 
       chdir('/usr/doc');
       if (-f '../share/doc/') {
@@ -396,6 +392,9 @@ if (-d "/usr/doc") {
 	$linktarget = "/usr/share/doc/kernel-image-$version";
       }
     }
+    # Make sure we are back where we want to be, in $image_dest[/]
+    chdir("$image_dest");
+    
     if ($targetdir ne $stargetdir) {
       if (-d "/usr/doc/kernel-image-$version") {
 	print STDERR "Yikes! The old directory, /usr/doc/kernel-image-$version\n";

@@ -1,3 +1,14 @@
+kernel-package (7.11) unstable; urgency=low
+
+  * Cleaned up the postinst some more; make sure that we always know which
+    directory we are in.
+  * Use absolute paths for the kernel image files real location, os we can
+    manipulate stuff independent of the current working directory. Either
+    one of these would fix the problem that Igor Mozetic
+    <igor.mozetic@uni-mb.si> has reported.
+
+ -- Manoj Srivastava <srivasta@debian.org>  Fri, 19 May 2000 16:03:55 -0500
+
 kernel-package (7.10) unstable; urgency=high
 
   * Forgot to set decent default for do_bootloader; and the default is not
