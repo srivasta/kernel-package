@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Thu Jan  7 23:25:21 1999
+## Last Modified On : Fri Jan 22 09:01:35 1999
 ## Last Machine Used: tiamat.golden-gryphon.com
-## Update Count	    : 380
+## Update Count	    : 383
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.59 1999/01/08 05:32:17 srivasta Exp $
+## $Id: rules,v 1.60 1999/01/22 15:30:02 srivasta Exp $
 ###############################################################################
 
 # The version of kernel-package this belongs to
@@ -130,7 +130,7 @@ ifneq ($(strip $(filter ppc powerpc,$(architecture))),)
 # sub archs can be CHRP, PowerMac, PReP
 GUESS_SUBARCH:=$(shell awk '/machine/ { print $$3}' /proc/cpuinfo)
 
-ifeq (,$(findstring $(SUBARCH),CHRP PowerMac PReP pmac))
+ifeq (,$(findstring $(SUBARCH),CHRP Power PReP pmac))
 SUBARCH:=$(GUESS_SUBARCH)
 endif
 
@@ -140,7 +140,7 @@ kimage := zImage
 target = $(kimage)
 
 # PowerPCs use yet another loader: quik.
-ifeq ($(strip $(SUBARCH)),PowerMac)
+ifeq ($(strip $(SUBARCH)),Power)
 SUBARCH:=pmac
 endif
 ifeq ($(strip $(SUBARCH)),pmac)
@@ -267,15 +267,18 @@ endif
 version = $(VERSION).$(PATCHLEVEL).$(SUBLEVEL)$(EXTRAVERSION)$(INT_FLAV)
 
 # SUBARCH is used to distinguish Amiga, Atari, Macintosh, etc. kernels
-# for Debian/m68k.  It only affects the naming of the kernel-image as
-# the source and doc packages are architecture independent and the
+# for Debian/m68k.  INT_SUBARCH is used in the names of the image file
+# produced. It only affects the naming of the kernel-image as the
+# source and doc packages are architecture independent and the
 # kernel-headers do not vary from one sub-architecture to the next.
-# Note: Debian/powerpc will eventually use SUBARCH too.
 
+# This is the default
+INT_SUBARCH :=
+
+ifneq ($(strip $(ARCH_IN_NAME)),)
 ifneq ($(strip $(SUBARCH)),)
 INT_SUBARCH := -$(SUBARCH)
-else
-INT_SUBARCH :=
+endif
 endif
 
 
@@ -782,19 +785,20 @@ define mod_inst_cmds
                 echo Installing modules under $$MODLIB/$$2; \
         }; \
         \
-        if [ -f BLOCK_MODULES ]; then inst_mod BLOCK_MODULES block; fi; \
-        if [ -f NET_MODULES   ]; then inst_mod NET_MODULES   net;   fi; \
-        if [ -f IPV4_MODULES  ]; then inst_mod IPV4_MODULES  ipv4;  fi; \
-        if [ -f IPV6_MODULES  ]; then inst_mod IPV6_MODULES  ipv6;  fi; \
-        if [ -f SCSI_MODULES  ]; then inst_mod SCSI_MODULES  scsi;  fi; \
-        if [ -f FS_MODULES    ]; then inst_mod FS_MODULES    fs;    fi; \
-        if [ -f NLS_MODULES   ]; then inst_mod NLS_MODULES   fs;    fi; \
-        if [ -f CDROM_MODULES ]; then inst_mod CDROM_MODULES cdrom; fi; \
-        if [ -f HAM_MODULES   ]; then inst_mod HAM_MODULES   net;   fi; \
-        if [ -f SOUND_MODULES ]; then inst_mod SOUND_MODULES sound; fi; \
-        if [ -f VIDEO_MODULES ]; then inst_mod VIDEO_MODULES video; fi; \
-        if [ -f FC4_MODULES   ]; then inst_mod FC4_MODULES   fc4;   fi; \
-        if [ -f IRDA_MODULES  ]; then inst_mod IRDA_MODULES  net;   fi; \
+	if [ -f BLOCK_MODULES    ]; then inst_mod BLOCK_MODULES    block; fi; \
+	if [ -f NET_MODULES      ]; then inst_mod NET_MODULES      net;   fi; \
+	if [ -f NET_MISC_MODULES ]; then inst_mod NET_MISC_MODULES misc;  fi; \
+	if [ -f IPV4_MODULES     ]; then inst_mod IPV4_MODULES     ipv4;  fi; \
+	if [ -f IPV6_MODULES     ]; then inst_mod IPV6_MODULES     ipv6;  fi; \
+	if [ -f SCSI_MODULES     ]; then inst_mod SCSI_MODULES     scsi;  fi; \
+	if [ -f FS_MODULES       ]; then inst_mod FS_MODULES       fs;    fi; \
+	if [ -f NLS_MODULES      ]; then inst_mod NLS_MODULES      fs;    fi; \
+	if [ -f CDROM_MODULES    ]; then inst_mod CDROM_MODULES    cdrom; fi; \
+	if [ -f HAM_MODULES      ]; then inst_mod HAM_MODULES      net;   fi; \
+	if [ -f SOUND_MODULES    ]; then inst_mod SOUND_MODULES    sound; fi; \
+	if [ -f VIDEO_MODULES    ]; then inst_mod VIDEO_MODULES    video; fi; \
+	if [ -f FC4_MODULES      ]; then inst_mod FC4_MODULES      fc4;   fi; \
+	if [ -f IRDA_MODULES     ]; then inst_mod IRDA_MODULES     net;   fi; \
         \
         ls *.o > .allmods; \
         echo $$MODULES | tr ' ' '\n' | sort | comm -23 .allmods - > .misc; \
