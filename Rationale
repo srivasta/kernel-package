@@ -37,25 +37,35 @@
         in /boot, which is part of the image package, and hence is
         the kernel image and the configuration file are always
         together.
-  viii) It allows to create a package with the headers, or the
+  viii) It allows you to specify a directory with config files, with
+        separate config files for each subarchitecture (even allows
+        for different config files for 2386, i486, etc). It is really
+        neat for people who need to compile kernels for a variety of
+        sub architectures.
+    ix) It allows to create a package with the headers, or the
         sources, also as a deb file, and enables the package
         management system to keep track of those (and there are
         packages that depend on the package management system being
         aware of these packages)
-    ix) Since the kernel image package is a full fledged Debian
+     x) Since the kernel image package is a full fledged Debian
         package, it comes with maintainer scripts, which take care of
         details like offering to make a boot disk, manipulating
         symbolic links in / so that you can make boot loader scripts
         static (just refer to the symbolic links, rather than the real
         image files; the names of the symbolic links do not change,
         but the kernel image file names change with the version)
-     x) There is support for the multitudinous sub architectures that
-        have blossomed under the umbrella of the m68k architecture.
-    xi) There is support there for optionally applying patches to the
+    xi) There is support for the multitudinous sub architectures that
+        have blossomed under the umbrella of the m68k and powerpc
+        architectures.
+   xii) There is support there for optionally applying patches to the
         kernel provided as a kernel-patch .deb file, and building a
         patched kernel auto-magically, and still retain an UN-patched
         kernel source tree
-
+  xiii) Allows one to compile a kernel for another computer, for
+        example using a fast machine to compile the kernel for
+	installation on a slower machine. This is really nice since
+	the modules are all included in the .deb; and one does not
+	have to deal with modules manually.
 
 		   Disadvantages of using make-kpkg
 		   ------------- -- ----- ---------
