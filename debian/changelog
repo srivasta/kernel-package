@@ -1,3 +1,10 @@
+kernel-package (7.66) unstable; urgency=low
+
+  * Optionally make --revision mandatory. (is this feeping creaturism
+    yet?)                                                   closes: Bug#113934
+
+ -- Manoj Srivastava <srivasta@debian.org>  Sun, 30 Sep 2001 03:59:09 -0500
+
 kernel-package (7.65) unstable; urgency=low
 
   * Remember to unpatch the kernel even of the env varis not on during

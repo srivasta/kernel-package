@@ -14,7 +14,7 @@
 #
 #
 #
-#    $Id: make-kpkg,v 1.63 2001/09/08 23:57:06 srivasta Exp $
+#    $Id: make-kpkg,v 1.64 2001/09/30 08:59:40 srivasta Exp $
 #
 require 5.002;
 use strict;
@@ -29,7 +29,7 @@ make-kpkg - build Debian kernel packages from Linux kernel sources.
 ($main::MYNAME     = $main::0) =~ s|.*/||;
 $main::Author      = "Manoj Srivastava";
 $main::AuthorMail  = "srivasta\@debian.org";
-$main::Version     = '$Revision: 1.63 $ ';
+$main::Version     = '$Revision: 1.64 $ ';
 
 my $added_modules='';
 my $added_patches='';
@@ -729,6 +729,27 @@ EOERR1
   my $command = "$rules_file ";
   if ($signature){
     $command .= "  PGP_SIGNATURE=$signature ";
+  }
+
+  if ($revision) {
+    if (-e "debian/changelog") {
+      open(INPUT, "debian/changelog") or die "Can not open debian/changelog";
+      $line=<INPUT>;
+      close INPUT;
+      chomp $line;
+      my $version = '';
+      $line =~ m/\((\S+)\)/;
+      $version = $1;
+      if ($revision && $version !~ m/$revision/) {
+	print STDERR <<"EOMSG";
+I note that you are using the --revision flag with the value $revision.
+However, the ./debian/changelog file exists, and has a different value
+$version.  I am confused by this discrepancy, and am halting.
+EOMSG
+      ;
+	exit (2);
+      }
+    }
   }
 
   if ($revision){

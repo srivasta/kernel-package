@@ -22,7 +22,7 @@
 .\" USA.
 .\"
 .\"
-.\"    $Id: make-kpkg.8,v 1.41 2001/09/29 21:56:39 srivasta Exp $
+.\"    $Id: make-kpkg.8,v 1.42 2001/09/30 08:59:40 srivasta Exp $
 .\"
 .TH MAKE\-KPKG 1 "May 2 1997" "Debian" "Debian GNU/Linux manual"
 .SH NAME
@@ -83,7 +83,11 @@ details).
 .I Actually, that is a lie: official kernel and modules maintainers have special dispensation to use hyphens, but it is strongly deprecated for most people, since no sanitization of the version number is done, and dpkg and friends may choke on it at the end of the compile unless one knows what one is doing.
 Optionally, you may prepend the revision with a digit
 followed by a colon (:). The default is
-.B custom\-1.00
+.B 1.00.Custom
+unless the env variable
+.B DEBIAN_REVISION_MANDATORY
+is set, in which case an error is generated if the revision is not set
+on the command line or the config file.
 .TP
 .BR \-\-append-to-version " foo"
 .TP

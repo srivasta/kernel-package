@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.138 2001/09/29 21:56:39 srivasta Exp $
+## $Id: rules,v 1.139 2001/09/30 08:59:40 srivasta Exp $
 ###############################################################################
 
 ifdef ARCH
@@ -627,6 +627,12 @@ ifneq ($(strip $(extra_docs)),)
 HAVE_EXTRA_DOCS:=$(shell if [ -e $(extra_docs) ]; then echo YES; fi)
 endif
 
+ifneq ($(strip $(DEBIAN_REVISION_MANDATORY)),)
+debian_revision_mandatory:=$(DEBIAN_REVISION_MANDATORY)
+endif
+
+
+
 # The Debian revision
 ifneq ($(strip $(DEBIAN_REVISION)),)
 HAS_CHANGELOG := $(shell \
@@ -653,7 +659,11 @@ ifneq ($(strip $(DEBIAN_REVISION)),)
 debian := $(DEBIAN_REVISION)
 else
 ifeq ($(strip $(debian)),)
-debian := Custom.1.00
+ifneq ($(strip $(debian_revision_mandatory)),)
+$(error A Debian revision is mandatory, but none was provided)
+else
+debian := 1.00.Custom
+endif
 endif
 endif
 endif
