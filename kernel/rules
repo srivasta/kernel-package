@@ -553,23 +553,45 @@ endif
 
 ##### mips
 ifeq ($(strip $(architecture)),mips)
-  kimage := vmlinux
-  loaderdep=arcboot
-  loader=arcboot
-  loaderdoc=
-  NEED_DIRECT_GZIP_IMAGE=NO
-  kimagesrc = $(strip vmlinux)
+  # SGI ELF32
+  ifneq (,$(filter r4k-ip22 r5k-ip22 r5k-ip32 r10k-ip32,$(strip $(KPKG_SUBARCH))))
+    kimage := vmlinux
+    loaderdep = arcboot
+    loader = arcboot
+    loaderdoc =
+  endif
+  # SGI ELF64
+  ifneq (,$(filter r10k-ip27 r10k-ip28 r10k-ip30,$(strip $(KPKG_SUBARCH))))
+    kimage := vmlinux.64
+    loaderdep = arcboot
+    loader = arcboot
+    loaderdoc =
+  endif
+  # Broadcom SWARM
+  ifneq (,$(filter sb1-swarm-bn,$(strip $(KPKG_SUBARCH))))
+    kimage := vmlinux
+    loaderdep = sibyl
+    loader = sibyl
+    loaderdoc =
+  endif
+
+  # Default value for e.g. a generic header package
+  ifeq (,$(kimage))
+    kimage := vmlinux
+  endif
+
+  NEED_DIRECT_GZIP_IMAGE = NO
+  kimagesrc = $(kimage)
   kimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
-  DEBCONFIG= $(CONFDIR)/config.$(KPKG_SUBARCH)
 
   ifneq ($(shell if [ $(VERSION)  -ge  2 ]  && [ $(PATCHLEVEL) -ge 5 ] &&    \
                     [ $(SUBLEVEL) -ge 41 ]; then echo new;                   \
                elif [ $(VERSION)  -ge  2 ]  && [ $(PATCHLEVEL) -ge 6 ]; then \
                                             echo new;                        \
                elif [ $(VERSION)  -ge  3 ]; then echo new; fi),)
-    target    =
+    target =
   else
-    target    = boot
+    target = boot
   endif
 
   ifneq (,$(filter mips64%,$(KPKG_SUBARCH)))
@@ -582,29 +604,66 @@ endif
 
 ##### mipsel
 ifeq ($(strip $(architecture)),mipsel)
-  kimage := vmlinux
-  loaderdep=delo
-  loader=delo
-  loaderdoc=
-  NEED_DIRECT_GZIP_IMAGE=NO
-  kimagesrc = $(strip vmlinux)
+  # DECstations
+  ifneq (,$(filter r3k-kn02 r4k-kn04,$(strip $(KPKG_SUBARCH))))
+    kimage := vmlinux
+    kimagesrc = $(kimage)
+    loaderdep = delo
+    loader = delo
+    loaderdoc =
+  endif
+  # Cobalt
+  ifneq (,$(filter r5k-cobalt,$(strip $(KPKG_SUBARCH))))
+    kimage := vmlinux
+    kimagesrc = $(kimage)
+    loaderdep = colo
+    loader = colo
+    loaderdoc =
+  endif
+  # LASAT
+  ifneq (,$(filter r5k-lasat,$(strip $(KPKG_SUBARCH))))
+    kimage := vmlinux
+    kimagesrc = $(kimage)
+    loaderdep =
+    loader =
+    loaderdoc =
+  endif
+  # Broadcom SWARM
+  ifneq (,$(filter sb1-swarm-bn,$(strip $(KPKG_SUBARCH))))
+    kimage := vmlinux
+    kimagesrc = $(kimage)
+    loaderdep = sibyl
+    loader = sibyl
+    loaderdoc =
+  endif
+  # xxs1500
+  ifneq (,$(filter xxs1500,$(strip $(KPKG_SUBARCH))))
+    kimage := vmlinux.srec
+    kimagesrc = $(strip arch/$(KERNEL_ARCH)/boot/$(kimage))
+    loaderdep = 
+    loader = 
+    loaderdoc =
+  endif
+
+  # Default value for e.g. a generic header package
+  ifeq (,$(kimage))
+    kimage := vmlinux
+  endif
+
+  NEED_DIRECT_GZIP_IMAGE = NO
   kimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
-  DEBCONFIG= $(CONFDIR)/config.$(KPKG_SUBARCH)
-  KERNEL_ARCH= mips
-  #HAVE_COFF_IMAGE = YES
-  #coffsrc = $(strip arch/$(KERNEL_ARCH)/boot/vmlinux.ecoff)
-  #coffdest=$(INT_IMAGE_DESTDIR)/vmlinux.ecoff-$(version)
 
   ifneq ($(shell if [ $(VERSION)  -ge  2 ]  && [ $(PATCHLEVEL) -ge 5 ] &&    \
                     [ $(SUBLEVEL) -ge 41 ]; then echo new;                   \
                elif [ $(VERSION)  -ge  2 ]  && [ $(PATCHLEVEL) -ge 6 ]; then \
                                             echo new;                        \
                elif [ $(VERSION)  -ge  3 ]; then echo new; fi),)
-    target    =
+    target =
   else
-    target    = boot
+    target = boot
   endif
 
+  KERNEL_ARCH = mips
   ifneq (,$(filter mips64el%,$(KPKG_SUBARCH)))
     KERNEL_ARCH = mips64
   endif
@@ -1576,7 +1635,7 @@ endif
             mv -f scripts/package/builddeb scripts/package/builddeb.dist
 	test ! -e scripts/package/Makefile || \
             (mv -f scripts/package/Makefile scripts/package/Makefile.dist && \
-               touch scripts/package/Makefile)
+               echo "# Dummy file " >  scripts/package/Makefile)
 	@test -f $(DEBDIR)/rules || \
             echo Error: Could not find $(DEBDIR)/rules
 	-test ! -f stamp-debian && test ! -f debian/official && \
