@@ -1,3 +1,12 @@
+kernel-package (6.12) unstable; urgency=low
+
+  * Added a warning if the --revision flag is given and a stamp-configure
+    file already exists, since the --revision flag has no effect. Also
+    require the revision flag to only contain anlphanumerics and . and +,
+    and error out if otherwise. closes: Bug#35951
+
+ -- Manoj Srivastava <srivasta@debian.org>  Wed, 19 May 1999 11:52:58 -0500
+
 kernel-package (6.11) unstable; urgency=low
 
   * A cut and paste error in kernel rules file was corrected. 
