@@ -1,3 +1,13 @@
+kernel-package (3.49) unstable; urgency=low
+
+  * Made the postrm's also know about the kernel versrion, not just the
+    postinst. (Sorry). closes:Bug#15920
+  * Changed include.postrm to be more careful about removing the symbolic
+    link /usr/src/linux-X.Y.Z. Keep track if there is another package
+    installed that could provide the link.
+
+ -- Manoj Srivastava <srivasta@debian.org>  Sat, 13 Dec 1997 23:04:47 -0600
+
 kernel-package (3.48) unstable; urgency=low
 
   * Important changes for kernel-source-* and kernel-header-* packages: now

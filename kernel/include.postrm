@@ -5,16 +5,16 @@
 # Created On       : Sat Apr 27 05:44:16 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Sat Dec 13 12:21:12 1997
+# Last Modified On : Sat Dec 13 23:01:04 1997
 # Last Machine Used: tiamat.datasync.com
-# Update Count     : 13
+# Update Count     : 17
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
 # 
 # 
 #
-#    $Id: include.postrm,v 1.3 1997/12/13 18:53:14 srivasta Exp $
+#    $Id: include.postrm,v 1.4 1997/12/14 05:05:32 srivasta Exp $
 #
 
 
@@ -25,6 +25,7 @@ my $package="=P";
 my $version="=V";
 
 my $LastVersion = '';
+my $AnotherVersion = '';
 
 # Ignore all invocations uxcept when called on to configure.
 exit 0 unless ($ARGV[0] && $ARGV[0] =~ /remove/);
@@ -83,6 +84,11 @@ else {
       next if /^\#/o;
 
       $LastVersion = $_ ;
+
+      # See if there is a package with the same version
+      if (/\-$version$/o) {	# Aha!
+	$AnotherVersion = $_;
+      }
     }
     close (REGISTRY);
   }
@@ -139,8 +145,6 @@ ERR
     if (-d "$LastVersion") {
       symlink $LastVersion, "linux" or 
 	die "Error linking /usr/src/$LastVersion to /usr/src/linux: $!";
-      symlink $LastVersion, "linux-$version" or 
-	die "Error linking /usr/src/$LastVersion to /usr/src/linux-$version: $!";
     }
     else {
       print STDERR "Could not find dir /usr/src/$LastVersion\n";
@@ -150,6 +154,14 @@ ERR
   }
   else {
     print STDERR "No version to link /usr/src/linux to.\n";
+  }
+
+  if ($AnotherVersion) {
+    if (-d "$AnotherVersion") {
+      symlink $AnotherVersion, "linux-$version" or 
+	die 
+	 "Error linking /usr/src/$AnotherVersion to /usr/src/linux-$version: $!";
+    }
   }
 }
 else {
