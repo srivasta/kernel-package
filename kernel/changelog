@@ -1,5 +1,23 @@
 kernel-source-=V (=D) unstable; urgency=low
 
+  * Handle obsolete /System.map and /System.old links left around by older
+    kernel-package packages. All the programs that look at the information
+    in the map files (including top, ps, and klogd) also will look at
+    /boot/System.map-<version>, we just need to ensure that that file is
+    present, and no longer require the symbolic link. 
+    Actually, having the sumbolic link in / is technically detrimental
+    (apart from cluttering up /); many programs, though looking in /boot,
+    stll allow /Sytem.map to override. If you use LILO to choose between
+    multiple kernels, then the /System.map symbolic link only applies to
+    one such kernel, for all other choices the symbols loaded will be
+    wrong. Not having the symbolic links at all prevents this. 
+    Therefore, the new image.postinst file shall offer to remove the
+    symbolic links in /. This should fix BUG#13359
+
+ -- Manoj Srivastava <srivasta@debian.org>  Fri, 26 Sep 1997 10:44:39 -0500
+
+kernel-source-0.21 (1.01) unstable; urgency=low
+
   * Fixed handling of modules.dep in the image.postinst. We do not attempt
     to recreate a modules.dep, since the man page admits the file so
     created may be incorrect. We warn the installer that there maybe
