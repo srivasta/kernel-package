@@ -598,7 +598,8 @@ ifeq ($(strip $(architecture)),um)
   kimage := linux
   target = linux
   kimagesrc  = $(strip linux)
-  kimagedest = $(INT_IMAGE_DESTDIR)/linux-$(version)
+  INT_IMAGE_DESTDIR=$(IMAGE_DOC)
+  kimagedest = debian/tmp-image$(IMAGEDIR)/linux-$(version)
   loaderdep=
   loaderdoc=
   KERNEL_ARCH = um
@@ -2004,11 +2005,7 @@ endif
 	echo "This was produced by kernel-package version $(kpkg_version)." > \
 	           $(IMAGE_DOC)/Buildinfo
 	chmod 0644 $(IMAGE_DOC)/Buildinfo
-ifeq ($(strip $(KERNEL_ARCH)),um)
-	$(install_file) .config          $(IMAGE_DOC)/config
-else
 	$(install_file) .config          $(INT_IMAGE_DESTDIR)/config-$(version)
-endif
 	$(install_file) conf.vars        $(IMAGE_DOC)/conf.vars
 	gzip -9qf                        $(IMAGE_DOC)/conf.vars
 	$(install_file) debian/buildinfo $(IMAGE_DOC)/buildinfo
