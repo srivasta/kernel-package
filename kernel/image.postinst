@@ -5,14 +5,14 @@
 # Created On       : Sat Apr 27 05:55:26 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Sun Mar 15 15:44:20 1998
+# Last Modified On : Wed Apr 15 23:19:46 1998
 # Last Machine Used: tiamat.datasync.com
-# Update Count     : 99
+# Update Count     : 100
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
 # 
-#    $Id: image.postinst,v 1.19 1998/03/19 09:07:13 srivasta Exp $
+#    $Id: image.postinst,v 1.20 1998/04/21 16:44:31 srivasta Exp $
 #
 
 # 
@@ -242,6 +242,10 @@ while ( $line=<FSTAB> ) {
   if ( $line =~ m/^\#/ ) {
     next;
   }
+
+  # ignore leading spaces. 
+  $line =~ m/^\s+//og;
+  
 #  ($device,$filesystem)=split(/[ \t]+/, $line);
   ($device,$filesystem,$ftype,$foption)=split(/[ \t]+/, $line);
   next unless $device =~ m|^/dev/|; #ignore NFS and proc systems
