@@ -1,3 +1,17 @@
+kernel-package (5.03) unstable; urgency=low
+
+  * Applied numerous spelling corrections and punctuation fixes from
+    Nathan E Norman <finn@midco.net>.
+  * Make kernel-source packages suggest bin86, and mention in the
+    description that this is only applicable to Intel architectures. 
+  * Added documentation to make-kpkg, and its man page, to point to
+    /usr/doc/kernel-package. I, too, have doubts about the efficacy of
+    this step.
+  * Tighten the regular expression that snag the kernel version and
+    sublevel information. closes: BUG#24629
+
+ -- Manoj Srivastava <srivasta@debian.org>  Fri, 17 Jul 1998 12:40:09 -0500
+
 kernel-package (5.02) unstable; urgency=low
 
   * Changed the pre rm warning message while removing a image mentioned in
@@ -30,7 +44,7 @@ kernel-package (5.01) unstable; urgency=low
   * Doh! A dangling symlink does not return true on an -e test; a valid
     symlink does! Fixed error on logic that made dangling sym links cause
     kernel-image packages to fail. closes: BUG#23273
-  * make the proccess not error out when there is no config.precious
+  * make the process not error out when there is no config.precious
     file. 
 
  -- Manoj Srivastava <srivasta@debian.org>  Thu, 11 Jun 1998 15:15:13 -0500
