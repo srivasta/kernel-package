@@ -13,7 +13,7 @@
 # Description      : 
 # 
 #
-#    $Id: image.prerm,v 1.14 2001/09/08 21:22:38 srivasta Exp $
+#    $Id: image.prerm,v 1.15 2001/09/10 16:49:08 srivasta Exp $
 #
 # 
 #use strict;
@@ -69,6 +69,7 @@ my $have_conffile   = "";
 my $CONF_LOC        = '/etc/kernel-img.conf';
 my $relative_links = '';
 my $silent_modules  = '';
+my $silent_loader   = '';
 
 
 # Variables used

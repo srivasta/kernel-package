@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.135 2001/09/08 23:57:06 srivasta Exp $
+## $Id: rules,v 1.136 2001/09/10 16:49:08 srivasta Exp $
 ###############################################################################
 
 ifdef ARCH
@@ -1100,7 +1100,7 @@ endif
 # file at this point
 
 clean:
-	@test $$(id -u) -ne 0 -o "X$(int_get_root)" != "X"  || \
+	@test $$(id -u) -eq 0 -o "X$(int_get_root)" != "X" || \
 		(echo need root priviledges; exit 1)
 	@test $$(id -u) -ne 0 && $(int_get_root) $(deb_rule) real_stamp_clean \
                 || true
@@ -1163,7 +1163,7 @@ binary-arch:  kernel_image  kernel_headers
 
 kernel-source kernel_source: stamp-source
 stamp-source: debian
-	@test $$(id -u) -ne 0 -o "X$(int_get_root)" != "X"  || \
+	@test $$(id -u) -eq 0 -o "X$(int_get_root)" != "X" || \
 		(echo need root priviledges; exit 1)
 	@test $$(id -u) -ne 0 && $(int_get_root) $(deb_rule) real_stamp_source\
                 || true
@@ -1247,7 +1247,7 @@ stamp-libc-kheaders: configure
 
 kernel-headers kernel_headers: stamp-headers
 stamp-headers: configure
-	@test $$(id -u) -ne 0 -o "X$(int_get_root)" != "X"  || \
+	@test $$(id -u) -eq 0 -o "X$(int_get_root)" != "X" || \
 		(echo need root priviledges; exit 1)
 	@test $$(id -u) -ne 0 && \
                                 $(int_get_root) $(deb_rule) real_stamp_headers\
@@ -1347,7 +1347,7 @@ stamp-image: configure build kernel-image-deb
 # seems to create a working .deb with a kernel that gives the correct
 # user name (as opposed to root@...)
 kernel-image-deb:
-	@test $$(id -u) -eq 0  -o  "X$(int_get_root)" != "X" || \
+	@test $$(id -u) -eq 0  -o "X$(int_get_root)" != "X" || \
 		 (echo need root priviledges; exit 1)
 	@test $$(id -u) -ne 0 && $(int_get_root) $(deb_rule) real_stamp_image\
                 || true

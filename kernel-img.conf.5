@@ -21,7 +21,7 @@
 .\" Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139,
 .\" USA.
 .\"
-.\" $Id: kernel-img.conf.5,v 1.14 2001/09/08 21:22:38 srivasta Exp $
+.\" $Id: kernel-img.conf.5,v 1.15 2001/09/10 16:49:08 srivasta Exp $
 .\"
 .TH KERNEL\-IMG.CONF 5 "Mar 21 2000" "Debian" "Debian GNU/Linux manual" 
 .\" NAME should be all caps, SECTION should be 1-8, maybe w/ subsection
@@ -262,7 +262,16 @@ already been unpacked.  In this latter case the existence of the
 directory is benign.  If you set this varable, you shall no longer be
 given a chance to abort if a preexisting modules directory 
 .TT /lib/modules/$version
-is detected. 
+is detected.  This is unset be default.
+.TP
+.B silent_loader
+If set, this option shall cause the question asked before running the
+boot laoder in the installation process to be skipped. Whether or not
+the boot loader is run is unaffected by this option ( see
+.B do_bootloader
+to see how to control whether the boot loader is run or not, and the
+absense of the configuration file will also make the install process
+voluble and interactive).
 .SH FILES
 The file described here is
 .I /etc/kernel-img.conf.

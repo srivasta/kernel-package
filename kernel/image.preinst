@@ -68,6 +68,7 @@ my $have_conffile   = "";
 my $CONF_LOC        = '/etc/kernel-img.conf';
 my $relative_links  = '';
 my $silent_modules  = '';
+my $silent_loader   = '';
 
 die "Pre inst Internal error. Aborting." unless $version;
 
@@ -94,6 +95,7 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
       $relative_links  = '' if /relative_links \s*=\s*(no|false|0)\s*$/ig;
       $use_hard_links  = '' if /use_hard_links\s*=\s*(no|false|0)\s*$/ig;
       $silent_modules  = '' if /silent_modules\s*=\s*(no|false|0)\s*$/ig;
+      $silent_loader   = '' if /silent_loader\s*=\s*(no|false|0)\s*$/ig;
 
       $do_symlink      = "Yes" if /do_symlinks\s*=\s*(yes|true|1)\s*$/ig;
       $no_symlink      = "Yes" if /no_symlinks\s*=\s*(yes|true|1)\s*$/ig;
@@ -108,6 +110,7 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
       $do_initrd       = "Yes" if /do_initrd\s*=\s*(yes|true|1)\s*$/ig;
       $use_hard_links  = "Yes" if /use_hard_links\s*=\s*(yes|true|1)\s*$/ig;
       $silent_modules  = 'Yes' if /silent_modules\s*=\s*(yes|true|1)\s*$/ig;
+      $silent_loader   = 'Yes' if /silent_loader\s*=\s*(yes|true|1)\s*$/ig;
 
       $image_dest      = "$1"  if /image_dest\s*=\s*(\S+)/ig;
       $postinst_hook   = "$1"  if /postinst_hook\s*=\s*(\S+)/ig;

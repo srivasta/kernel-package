@@ -1,12 +1,17 @@
+kernel-package (7.63) unstable; urgency=medium
+
+  * Suppress the question before running the boot loader (optionally).
+  * AAArgh. $$(id -u) -eq 0; not $$(id -u) -ne 0.            closes: Bug#111881
+
+ -- Manoj Srivastava <srivasta@debian.org>  Mon, 10 Sep 2001 11:48:27 -0500
+
 kernel-package (7.62) unstable; urgency=low
 
   * experimental change to allow root_cmd to be used on every target.
     This may break things.                       closes: Bug#95582, Bug#107561
   * Add an option to prevent the preinst from whining about existing
     /lib/modules/$version
-
-  --
-
+  
  -- Manoj Srivastava <srivasta@debian.org>  Sat,  8 Sep 2001 16:08:33 -0500
 
 kernel-package (7.61) unstable; urgency=low
