@@ -212,8 +212,15 @@ if (-x "$prerm_hook") {
 }
 if (-d "/etc/kernel/prerm.d") {
   system ("run-parts", "-v", "--exit-on-error", "--arg=$version",
+          "--arg=$realimageloc" . "$kimage-$version",
           "/etc/kernel/prerm.d") &&
             die "Failed to process /etc/kernel/prerm.d";
+}
+if (-d "/etc/kernel/prerm.d/$version") {
+  system ("run-parts", "-v", "--exit-on-error", "--arg=$version",
+          "--arg=$realimageloc" . "$kimage-$version",
+          "/etc/kernel/prerm.d/$version") &&
+            die "Failed to process /etc/kernel/prerm.d/$version";
 }
 
 # The rest is just us being nice to lilo users.

@@ -219,12 +219,12 @@ as needed by
 .B dpkg\-buildpackages' 
 -r option. The environment variable 
 .B ROOT_CMD
-overrides this. The environment variable
+overrides this. Use the environment variable
 .B UNSIGN_SOURCE
-adds to this command an option to have dpkg\-buildpackage not sign the
-source, similarily, the environment variable
+to pass an option to dpkg\-buildpackage to not sign the
+source, similarily, use the environment variable
 .B UNSIGN_CHANGELOG 
-adds to this command an option to have dpkg\-buildpackage not sign the
+pass an option to dpkg\-buildpackage to not sign the
 changelog. Again, this variable is only usefule for the
 .I buildpackage
 target. Set the  environment variable 

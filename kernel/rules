@@ -5,9 +5,9 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Wed Dec  8 03:46:11 2004
+## Last Modified On : Tue Feb  8 15:05:59 2005
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count	    : 731
+## Update Count	    : 755
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
@@ -52,6 +52,23 @@ maintainer = Herbert Xu
 email= herbert@greathan.apana.org.au
 
 pgp=$(maintainer)
+
+# Where we read our config information from
+CONFLOC    :=$(shell if test -f ~/.kernel-pkg.conf; then\
+                        echo ~/.kernel-pkg.conf; \
+                     else \
+                        echo /etc/kernel-pkg.conf; \
+                     fi)
+# Where the package libs are stored
+LIBLOC     :=/usr/share/kernel-package
+# Default location of the modules
+ifeq ($(strip $(MODULE_LOC)),)
+MODULE_LOC =/usr/src/modules
+endif
+#
+DEBDIR      = $(LIBLOC)
+DEBDIR_NAME = $(shell basename $(DEBDIR))
+
 
 
 #  Package specific stuff
@@ -114,23 +131,37 @@ IMAGEDIR=/boot
 INT_IMAGE_DESTDIR=debian/tmp-image$(IMAGEDIR)
 
 
+
 comma:= ,
 empty:=
 space:= $(empty) $(empty)
-localversion_files := $(wildcard localversion*)
+
+# Install rules
+install_file=    install -p    -o root -g root -m 644
+install_program= install -p    -o root -g root -m 755
+make_directory=  install -p -d -o root -g root -m 755
+deb_rule = $(MAKE) -f $(DEBDIR)/rules
 
 
-VERSION =$(shell grep -E '^VERSION +=' Makefile 2>/dev/null | \
- sed -e 's/[^0-9]*\([0-9]*\)/\1/')
-PATCHLEVEL =$(shell grep -E '^PATCHLEVEL +=' Makefile 2>/dev/null | \
- sed -e 's/[^0-9]*\([0-9]*\)/\1/')
-SUBLEVEL =$(shell grep -E '^SUBLEVEL +=' Makefile 2>/dev/null | \
- sed -e 's/[^0-9]*\([0-9]*\)/\1/')
-EXTRA_VERSION =$(shell grep -E '^EXTRAVERSION +=' Makefile 2>/dev/null | \
- sed -e 's/EXTRAVERSION *= *\([^ \t]*\)/\1/')
-LOCALVERSION = $(subst $(space),, $(shell cat /dev/null $(localversion_files)) \
-                 $(CONFIG_LOCALVERSION))
+# localversion_files := $(wildcard localversion*)
+# VERSION =$(shell grep -E '^VERSION +=' Makefile 2>/dev/null | \
+#  sed -e 's/[^0-9]*\([0-9]*\)/\1/')
+# PATCHLEVEL =$(shell grep -E '^PATCHLEVEL +=' Makefile 2>/dev/null | \
+#  sed -e 's/[^0-9]*\([0-9]*\)/\1/')
+# SUBLEVEL =$(shell grep -E '^SUBLEVEL +=' Makefile 2>/dev/null | \
+#  sed -e 's/[^0-9]*\([0-9]*\)/\1/')
+# EXTRA_VERSION =$(shell grep -E '^EXTRAVERSION +=' Makefile 2>/dev/null | \
+#  sed -e 's/EXTRAVERSION *= *\([^ \t]*\)/\1/')
+# LOCALVERSION = $(subst $(space),, $(shell cat /dev/null $(localversion_files)) \
+#                  $(CONFIG_LOCALVERSION))
 
+# Could have used :=, but some patches do seem to patch the
+# Makefile. perhaps deferring the rule makes that better
+VERSION      =$(shell $(MAKE) -sf $(DEBDIR)/kernel_version.mk debian_VERSION)
+PATCHLEVEL   =$(shell $(MAKE) -sf $(DEBDIR)/kernel_version.mk debian_PATCHLEVEL)
+SUBLEVEL     =$(shell $(MAKE) -sf $(DEBDIR)/kernel_version.mk debian_SUBLEVEL)
+EXTRA_VERSION=$(shell $(MAKE) -sf $(DEBDIR)/kernel_version.mk debian_EXTRAVERSION)
+LOCALVERSION =$(shell $(MAKE) -sf $(DEBDIR)/kernel_version.mk debian_LOCALVERSION)
 
 
 
@@ -640,8 +671,8 @@ ifeq ($(strip $(architecture)),mipsel)
   ifneq (,$(filter xxs1500,$(strip $(KPKG_SUBARCH))))
     kimage := vmlinux.srec
     kimagesrc = $(strip arch/$(KERNEL_ARCH)/boot/$(kimage))
-    loaderdep = 
-    loader = 
+    loaderdep =
+    loader =
     loaderdoc =
   endif
 
@@ -902,20 +933,6 @@ STAMPS_TO_CLEAN = stamp-build stamp-configure stamp-source stamp-image \
                   stamp-patch stamp-kernel-configure
 DIRS_TO_CLEAN   = $(SOURCE_TOP) $(HEADER_TOP) $(IMAGE_TOP) $(DOC_TOP)
 
-CONFLOC    :=$(shell if test -f ~/.kernel-pkg.conf; then\
-                        echo ~/.kernel-pkg.conf; \
-                     else \
-                        echo /etc/kernel-pkg.conf; \
-                     fi)
-LIBLOC     :=/usr/share/kernel-package
-
-ifeq ($(strip $(MODULE_LOC)),)
-MODULE_LOC =/usr/src/modules
-endif
-
-DEBDIR      = $(LIBLOC)
-DEBDIR_NAME = $(shell basename $(DEBDIR))
-
 ifeq ($(strip $(VERSIONED_PATCH_DIR)),)
 VERSIONED_PATCH_DIR         = $(shell if [ -d \
 /usr/src/kernel-patches/$(architecture)/$(VERSION).$(PATCHLEVEL).$(SUBLEVEL) \
@@ -962,11 +979,6 @@ DEB_DEST := ..
 SRCTOP := $(shell if [ "$$PWD" != "" ]; then echo $$PWD; else pwd; fi)
 INSTALL_MOD_PATH=$(SRCTOP)/$(IMAGE_TOP)
 KPKG_DEST_DIR ?= $(SRCTOP)/..
-
-install_file=    install -p    -o root -g root -m 644
-install_program= install -p    -o root -g root -m 755
-make_directory=  install -p -d -o root -g root -m 755
-deb_rule = $(MAKE) -f $(DEBDIR)/rules
 
 # Include any site specific overrides here.
 -include $(CONFLOC)
@@ -1153,53 +1165,69 @@ endif
 #endif
 #you can automated it a bit more with $(foreach) and $(if)
 
-###ROOT_COMMAND
+
+###
+### In the following, we define these variables
+### ROOT_CMD      -- set in the environment, plaing old sudo or fakeroot
+### root_cmd      -- The same
+### int_root_cmd  -- the argument passed to dpkg-buildpackage
+###                  -r$(ROOT_CMD)
 ifneq ($(strip $(ROOT_CMD)),)
-int_root_cmd := -r$(strip $(ROOT_CMD))
+ # ROOT_CMD is not supposed to have -r or -us and -uc
+ int_dummy_root := $(ROOT_CMD)
+ # remove -us and -uc
+ ifneq ($(strip $(findstring -us, $(int_dummy_root))),)
+   int_dummy_root := $(subst -us,, $(strip $(int_dummy_root)))
+   int_us := -us
+ endif
+ ifneq ($(strip $(findstring -uc, $(int_dummy_root))),)
+   int_dummy_root := $(subst -uc,, $(strip $(int_dummy_root)))
+   int_uc := -uc
+ endif
+ ifneq ($(strip $(findstring -r, $(int_dummy_root))),)
+   int_dummy_root := $(subst -r,, $(strip $(int_dummy_root)))
+ endif
+ # sanitize
+ ROOT_CMD     :=   $(strip $(int_dummy_root))
+ int_root_cmd := -r$(strip $(int_dummy_root))
 else
-# well, ROOT_CMD is not set yet
-ifneq ($(strip $(root_cmd)),)
-
-# Try and set ROOT_CMD from root_cmd
-int_dummy_root := $(root_cmd)
-ifneq ($(strip $(findstring -us, $(int_dummy_root))),)
-int_dummy_root := $(subst -us,, $(strip $(int_dummy_root)))
+  # well, ROOT_CMD is not set yet
+  ifneq ($(strip $(root_cmd)),)
+    # Try and set ROOT_CMD from root_cmd
+    int_dummy_root := $(root_cmd)
+    # remove -us and -uc
+    ifneq ($(strip $(findstring -us, $(int_dummy_root))),)
+      int_dummy_root := $(subst -us,, $(strip $(int_dummy_root)))
+      int_us := -us
+    endif
+    ifneq ($(strip $(findstring -uc, $(int_dummy_root))),)
+      int_dummy_root := $(subst -uc,, $(strip $(int_dummy_root)))
+      int_uc := -uc
+    endif
+    # now that -us and -uc are gone, remove -r
+    ifneq ($(strip $(findstring -r, $(int_dummy_root))),)
+      int_dummy_root := $(subst -r,, $(strip $(int_dummy_root)))
+    endif
+    # Finally, sanitized
+    ROOT_CMD     :=   $(strip $(int_dummy_root))
+    int_root_cmd := -r$(strip $(int_dummy_root))
+  endif
 endif
-ifneq ($(strip $(findstring -uc, $(int_dummy_root))),)
-int_dummy_root := $(subst -uc,, $(strip $(int_dummy_root)))
-endif
 
-
-ifneq ($(strip $(findstring -r, $(int_dummy_root))),)
-ROOT_CMD := $(patsubst -r%, %, $(filter -r%, $(strip $(int_dummy_root))))
-else
-ROOT_CMD     := $(strip $(root_cmd))
-endif
-
-
-ifeq ($(strip $(findstring -r, $(root_cmd))),)
-int_root_cmd := -r$(strip $(root_cmd))
-else
-int_root_cmd := $(root_cmd)
-endif
-endif
+# make sure that root_cmd and ROOT_CMD are the same
+ifneq ($(strip $(ROOT_CMD)),)
+  root_cmd := $(ROOT_CMD)
 endif
 
 ifneq ($(strip $(UNSIGN_SOURCE)),)
-int_root_cmd := $(int_root_cmd) -us
+  int_us := -us
 endif
 
 ifneq ($(strip $(UNSIGN_CHANGELOG)),)
-int_root_cmd := $(int_root_cmd) -uc
-endif
-
-# make sure that root_cmd and int_root_cmd are the same
-ifneq ($(strip $(int_root_cmd)),)
-root_cmd := $(int_root_cmd)
+  int_uc := -uc
 endif
 
 int_am_root  := $(shell [ $$(id -u) -eq 0 ] && echo "YES" )
-int_get_root := $(shell [ $$(id -u) -ne 0 ] && echo "$(ROOT_CMD)" )
 
 
 ifneq ($(strip $(CLEAN_SOURCE)),)
@@ -1616,11 +1644,8 @@ ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
 endif
 	test -f stamp-configure || $(deb_rule) configure
 	echo 'Building Package' > stamp-building
-ifneq ($(strip $(root_cmd)),)
-	dpkg-buildpackage -nc $(strip $(root_cmd)) -m"$(maintainer) <$(email)>" -k"$(pgp)"
-else
-	dpkg-buildpackage -nc -m"$(maintainer) <$(email)>" -k"$(pgp)"
-endif
+	dpkg-buildpackage -nc $(strip $(root_cmd)) $(strip $(int_us)) $(strip $(int_uc))  \
+             -m"$(maintainer) <$(email)>" -k"$(pgp)"
 	rm -f stamp-building
 	echo done >  $@
 
@@ -1682,19 +1707,18 @@ endif
 	   install -p -m 755 $(DEBDIR)/rules debian/rules
 	echo done >  $@
 
-# We could always do $(MAKE) -n -p dummy | grep ^CC >> .mak here if we cared
-ifeq ($(strip $(INCLUDE_KERNEL_MAKEFILE)),yes)
-include Makefile
-conf_vars:
+conf_vars: Makefile .config
+	@rm -f .mak
+	@touch .mak
 	@echo Please ignore the warning about overriding and ignoring targets above.
 	@echo These are harmless. They are only invoked in a part of the process
 	@echo that tries to snarf variable values for the conf.vars file.
-	@echo "VERSION          = $(VERSION)"        > .mak
+	@echo "VERSION          = $(VERSION)"       >> .mak
 	@echo "PATCHLEVEL       = $(PATCHLEVEL)"    >> .mak
-	@echo "SUBLEVEL 	      = $(SUBLEVEL)"      >> .mak
+	@echo "SUBLEVEL 	= $(SUBLEVEL)"      >> .mak
 	@echo "EXTRAVERSION     = $(EXTRAVERSION)"  >> .mak
 ifneq ($(strip $(iatv)),)
-	@echo "APPEND_TO_VERSION = $(iatv)"          >> .mak
+	@echo "APPEND_TO_VERSION = $(iatv)"         >> .mak
 endif
 ifeq ($(strip $(patch_the_kernel)),YES)
 	@echo "KPKG_SELECTED_PATCHES = $(KPKG_SELECTED_PATCHES)" >> .mak
@@ -1703,33 +1727,18 @@ ifeq ($(strip $(MODULES_ENABLED)),YES)
 	@echo "KPKG_SELECTED_MODULES = $(KPKG_SELECTED_MODULES)" >> .mak
 endif
 	@echo "Debian Revision  = $(debian)"        >> .mak
-	@echo "ARCH             = $(ARCH)"          >> .mak
-	@echo "KPKG_ARCH        = $(KPKG_ARCH)"     >> .mak
-	@echo "HOSTCC           = $(HOSTCC)"        >> .mak
-	@echo "HOSTCFLAGS       = $(HOSTCFLAGS)"    >> .mak
-	@echo "CROSS_COMPILE    = $(CROSS_COMPILE)" >> .mak
-	@echo "AS               = $(AS)"            >> .mak
-	@echo "LD               = $(LD)"            >> .mak
-	@echo "CC               = $(CC)"            >> .mak
-	@echo "CPP              = $(CPP)"           >> .mak
-	@echo "AR               = $(AR)"            >> .mak
-	@echo "NM               = $(NM)"            >> .mak
-	@echo "STRIP            = $(STRIP)"         >> .mak
-	@echo "OBJCOPY          = $(OBJCOPY)"       >> .mak
-	@echo "OBJDUMP          = $(OBJDUMP)"       >> .mak
-	@echo "MAKE             = $(MAKE)"          >> .mak
-	@echo "GENKSYMS 	      = $(GENKSYMS)"      >> .mak
-	@echo "CFLAGS           = $(CFLAGS)"        >> .mak
-	@echo "AFLAGS           = $(AFLAGS)"        >> .mak
-	@echo "MODFLAGS 	      = $(MODFLAGS)"      >> .mak
+	@echo "KPKG_ARCH        = $(KPKG_ARCH)"        >> .mak
+# Fetch the rest of the information from the kernel's Makefile
+	@$(MAKE) -sf $(DEBDIR)/kernel_version.mk  ARCH=$(KERNEL_ARCH) \
+          $(CROSS_ARG) debian_conf_var              >> .mak
 	@echo "do_parallel      = $(do_parallel)"   >> .mak
 	@echo "fast_dep         = $(fast_dep)"      >> .mak
 	@sed -e 's%$(TOPDIR)%$$(TOPDIR)%g' .mak     > conf.vars
+# Use the kernel's Makefile to calculate the TOPDIR.
+# TOPDIR is obsolete in 2.6 kernels, so the kernel_version.mk
+# will get us the right answer
+#	@sed -e 's%$(shell $(MAKE) --quiet -f $(DEBDIR)/kernel_version.mk debian_TOPDIR)%$$(TOPDIR)%g' .mak     > conf.vars
 	@rm -f .mak
-else
-conf.vars: Makefile
-	$(MAKE) -f debian/rules INCLUDE_KERNEL_MAKEFILE=yes conf_vars
-endif
 
 dummy_do_dep:
 	+$(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) \
@@ -1774,10 +1783,10 @@ endif
 
 clean:
 ifeq ($(strip $(int_am_root)),)
-ifeq ($(strip $(int_get_root)),)
+ifeq ($(strip $(int_root_cmd)),)
 	@echo "You may need root privileges - some parts may fail"
 endif
-	$(int_get_root) $(deb_rule) real_stamp_clean
+	$(int_root_cmd) $(deb_rule) real_stamp_clean
 else
 	$(deb_rule) real_stamp_clean
 endif
@@ -1831,10 +1840,10 @@ binary-arch:  kernel_image  kernel_headers
 kernel-source kernel_source: stamp-source
 stamp-source: stamp-debian
 ifeq ($(strip $(int_am_root)),)
-ifeq ($(strip $(int_get_root)),)
+ifeq ($(strip $(int_root_cmd)),)
 	@echo need root privileges; exit 1
 else
-	$(int_get_root) $(deb_rule) real_stamp_source
+	$(int_root_cmd) $(deb_rule) real_stamp_source
 endif
 else
 	$(deb_rule) real_stamp_source
@@ -1932,10 +1941,10 @@ stamp-libc-kheaders: configure
 kernel-headers kernel_headers: stamp-headers
 stamp-headers: configure
 ifeq ($(strip $(int_am_root)),)
-ifeq ($(strip $(int_get_root)),)
+ifeq ($(strip $(int_root_cmd)),)
 	@echo need root privileges; exit 1
 else
-	$(int_get_root) $(deb_rule) real_stamp_headers
+	$(int_root_cmd) $(deb_rule) real_stamp_headers
 endif
 else
 	$(deb_rule) real_stamp_headers
@@ -2021,10 +2030,10 @@ endif
 kernel-doc kernel_doc: stamp-doc
 stamp-doc: stamp-debian
 ifeq ($(strip $(int_am_root)),)
-ifeq ($(strip $(int_get_root)),)
+ifeq ($(strip $(int_root_cmd)),)
 	@echo need root privileges; exit 1
 else
-	$(int_get_root) $(deb_rule) real_stamp_doc
+	$(int_root_cmd) $(deb_rule) real_stamp_doc
 endif
 else
 	$(deb_rule) real_stamp_doc
@@ -2092,10 +2101,10 @@ stamp-image: configure build kernel-image-deb
 # user name (as opposed to root@...)
 kernel-image-deb:
 ifeq ($(strip $(int_am_root)),)
-ifeq ($(strip $(int_get_root)),)
+ifeq ($(strip $(int_root_cmd)),)
 	@echo need root privileges; exit 1
 else
-	$(int_get_root) $(deb_rule) real_stamp_image
+	$(int_root_cmd) $(deb_rule) real_stamp_image
 endif
 else
 	$(deb_rule) real_stamp_image
@@ -2342,7 +2351,7 @@ endif
                   echo "Module $$module processed fine";            \
               else                                                  \
                    echo "Module $$module failed.";                  \
-                   if [ "X$(strip $(root_cmd))" != "X" ]; then      \
+                   if [ "X$(strip $(int_root_cmd))" != "X" ]; then      \
                       echo "Perhaps $$module does not understand --rootcmd?";  \
                       echo "If you see messages that indicate that it is not"; \
                       echo "in fact being built as root, please file a bug ";  \
@@ -2377,7 +2386,7 @@ endif
                   echo "Module $$module processed fine";            \
               else                                                  \
                    echo "Module $$module failed.";                  \
-                   if [ "X$(strip $(root_cmd))" != "X" ]; then      \
+                   if [ "X$(strip $(int_root_cmd))" != "X" ]; then      \
                       echo "Perhaps $$module does not understand --rootcmd?";  \
                       echo "If you see messages that indicate that it is not"; \
                       echo "in fact being built as root, please file a bug ";  \

@@ -314,8 +314,15 @@ if (-x "$preinst_hook") {
 }
 if (-d "/etc/kernel/preinst.d") {
   system ("run-parts", "-v", "--exit-on-error", "--arg=$version",
+          "--arg=$realimageloc" . "$kimage-$version",
           "/etc/kernel/preinst.d") &&
             die "Failed to process /etc/kernel/preinst.d";
+}
+if (-d "/etc/kernel/preinst.d/$version") {
+  system ("run-parts", "-v", "--exit-on-error", "--arg=$version",
+          "--arg=$realimageloc" . "$kimage-$version",
+          "/etc/kernel/preinst.d/$version") &&
+            die "Failed to process /etc/kernel/preinst.d/$version";
 }
 
 exit 0

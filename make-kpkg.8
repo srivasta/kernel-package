@@ -364,13 +364,13 @@ package, perform any actions
 necessary for a kernel loaded using 
 .B initrd.  
 .B NOTE:
-this requires a non\-standard cramfs initrd patch to the kernel
-sources, (unless the mkinitrd configuration has been modified not to
-use cramfs) or may result in a unbootable kernel. The patch is
-generally present in the kernel sources shipped by Debian, but is not
-present in pristine kernel sources.  This option may include extra
-dependencies, and modifications to maintainer scripts.  It has no
-effect when
+in older kernels, this required a non\-standard cramfs initrd patch to
+the kernel sources, (unless the mkinitrd configuration was modified
+not to use cramfs) or may result in a unbootable kernel. The patch was
+usually present in the kernel sources shipped by Debian.  Some
+architectures still need patches to fix cramfs problems. This option
+may include extra dependencies, and modifications to maintainer
+scripts.  It has no effect when
 .B make\-kpkg is not making a 
 .I kernel\-image 
 package. The same effect can be achieved by setting the environment
@@ -553,13 +553,17 @@ script files. The directories are
 .I /etc/kernel/preinst.d/,
 .I /etc/kernel/postinst.d/,
 .I /etc/kernel/prerm.d/,
+.I /etc/kernel/postrm.d/,
 and 
-.I /etc/kernel/postrm.d/.
+.I /etc/kernel/preinst.d/<VERSION>/,
+.I /etc/kernel/postinst.d/<VERSION>/,
+.I /etc/kernel/prerm.d/<VERSION>/,
+.I /etc/kernel/postrm.d/<VERSION>/.
 If they exists, the kernel-image package shall run a 
 .B run-parts
-program over the directory, giving the version being installed or
-removed as an argument, in the corresponding phase of installation or
-removal. 
+program over the directory (including the versioned one), giving the
+version being installed or removed as an argument, in the
+corresponding phase of installation or removal.
 .IP
 On installation, it also offers to run the Linux loader,
 .I LILO

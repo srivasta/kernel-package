@@ -5,9 +5,9 @@
 # Created On       : Sat May 15 11:05:13 1999
 # Created On Node  : glaurung.green-gryphon.com
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Sat Nov 20 14:35:09 2004
+# Last Modified On : Tue Feb  8 13:13:45 2005
 # Last Machine Used: glaurung.internal.golden-gryphon.com
-# Update Count     : 33
+# Update Count     : 34
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
@@ -86,8 +86,8 @@ my $silent_loader   = '';
 $realimageloc  =~ s|^/*|/|o;
 $realimageloc  =~ s|/+|/|o;
 
-# most of our work is done in $image_dir
-chdir("$image_dir") or die "could not chdir to $image_dir:$!\n";
+# The destdir may be gone by now.
+# chdir("$image_dir") or die "could not chdir to $image_dir:$!\n";
 
 if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
   if (open(CONF, "$CONF_LOC")) {
@@ -248,8 +248,15 @@ if (-x "$postrm_hook") {
 }
 if (-d "/etc/kernel/postrm.d") {
   system ("run-parts", "-v", "--exit-on-error", "--arg=$version",
+          "--arg=$realimageloc" . "$kimage-$version",
           "/etc/kernel/postrm.d") &&
             die "Failed to process /etc/kernel/postrm.d";
+}
+if (-d "/etc/kernel/postrm.d/$version") {
+  system ("run-parts", "-v", "--exit-on-error", "--arg=$version",
+          "--arg=$realimageloc" . "$kimage-$version",
+          "/etc/kernel/postrm.d/$version") &&
+            die "Failed to process /etc/kernel/postrm.d/$version";
 }
 
 # check and remove damaged and dangling symlinks

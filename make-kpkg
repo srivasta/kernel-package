@@ -305,20 +305,21 @@ useful for debugging.
 =over 2
 
 If make-kpkg is generating a kernel-image package, perform any actions
-necessary for a kernel loaded using initrd. B<NOTE:> this requires a
-non-standard cramfs initrd patch to the kernel, unless you have
-modified the mkinitrd configuration. The patch is usually shipped with
-B<Debian>.
+necessary for a kernel loaded using initrd. B<NOTE:> in older kernels,
+this required a non-standard cramfs initrd patch to the kernel, unless
+the mkinitrd configuration was modified not to use cramfs. The patch
+usually shipped with B<Debian>.  Some architectures still need patches
+to fix cramfs problems.
 
 This may include extra dependencies, and modifications to maintainer
 scripts.  It has no effect when make-kpkg is not making a kernel-image
 package.
 
-This may result in a non-bootable kernel if the cramfs initrd patch
-has not been applied to kernel sources, or the mkinitrd is not
-configured to use something other than cramfs. Therefore, using this
-option causes make-kpkg to emit a warning, unless the environment
-variable INITRD_OK is set.
+This may result in a non-bootable kernel if the cramfs initrd fix has
+not been applied to kernel (or the mkinitrd is not configured to use
+something other than cramfs). Therefore, using this option causes
+make-kpkg to emit a warning, unless the environment variable INITRD_OK
+is set.
 
 =back
 
@@ -1012,11 +1013,12 @@ EOMSG
   if ($initrd) {
     if (! (-e 'debian/official' || $ENV{INITRD_OK}) ) {
       print STDERR "Warning: You are using the initrd option, that may not\n";
-      print STDERR "work unless you have applied the initrd cramfs patch to\n";
+      print STDERR "work, depending on your kernel version and architecture,\n";
+      print STDERR "unless you have applied the initrd cramfs patch to\n";
       print STDERR "the kernel, or modified mkinitrd not to use cramfs by\n";
       print STDERR "default. The  cramfs initrd patch, is included in the \n";
-      print STDERR "Debian supplied kernel sources, but is not present in \n";
-      print STDERR "pristine kernel sources.\n";
+      print STDERR "Debian supplied kernel sources. New kernels on most\n";
+      print STDERR "architectures do work fine.\n";
       print STDERR "By default, I assume you know what you are doing, and I\n";
       print STDERR "apologize for being so annoying. Should I abort[Ny]?\n";
       my $ans = <STDIN>;

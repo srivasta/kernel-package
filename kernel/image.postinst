@@ -1011,8 +1011,16 @@ if (-x "$postinst_hook") {
 
 if (-d "/etc/kernel/postinst.d") {
   system ("run-parts", "-v", "--exit-on-error", "--arg=$version",
+          "--arg=$realimageloc" . "$kimage-$version",
           "/etc/kernel/postinst.d") &&
             die "Failed to process /etc/kernel/postinst.d";
+}
+
+if (-d "/etc/kernel/postinst.d/$version") {
+  system ("run-parts", "-v", "--exit-on-error", "--arg=$version",
+          "--arg=$realimageloc" . "$kimage-$version",
+          "/etc/kernel/postinst.d/$version") &&
+            die "Failed to process /etc/kernel/postinst.d/$version";
 }
 
 
@@ -1039,6 +1047,9 @@ exit (0) if $loader =~ /milo/i; # MILO does not have to be executed.
 exit (0) if $loader =~ /nettrom/i; # NETTROM does not have to be executed.
 exit (0) if $loader =~ /arcboot/i; # ARCBOOT does not have to be executed.
 exit (0) if $loader =~ /delo/i; # DELO does not have to be executed.
+if ($official_image =~ /^\s*YES\s*$/o) {
+  exit (0) if $loader =~ /quik/i; # maintainer asked quik invocation to be ignored
+}
 
 exit (0) unless $loaderloc;
 
