@@ -5,9 +5,9 @@
 # Created On       : Sat May 15 11:05:13 1999
 # Created On Node  : glaurung.green-gryphon.com
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Wed Feb 18 17:08:23 2004
+# Last Modified On : Sat Nov 20 14:35:09 2004
 # Last Machine Used: glaurung.internal.golden-gryphon.com
-# Update Count     : 32
+# Update Count     : 33
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
@@ -252,15 +252,16 @@ if (-d "/etc/kernel/postrm.d") {
             die "Failed to process /etc/kernel/postrm.d";
 }
 
-if (-f $realimageloc . "initrd.img-$version") {
-  unlink $realimageloc . "initrd.img-$version";
-}
-
 # check and remove damaged and dangling symlinks
-image_magic($kimage,          $image_dest);
-image_magic($kimage . ".old", $image_dest);
-image_magic("initrd.img",     $image_dest) if $initrd;
-image_magic("initrd.img.old", $image_dest) if $initrd;
+if ($ARGV[0] !~ /upgrade/) {
+  if (-f $realimageloc . "initrd.img-$version") {
+    unlink $realimageloc . "initrd.img-$version";
+  }
+  image_magic($kimage,          $image_dest);
+  image_magic($kimage . ".old", $image_dest);
+  image_magic("initrd.img",     $image_dest) if $initrd;
+  image_magic("initrd.img.old", $image_dest) if $initrd;
+}
 
 # Ignore all invocations uxcept when called on to purge.
 exit 0 unless $ARGV[0] =~ /purge/;
