@@ -14,7 +14,7 @@
 # 
 # 
 #
-#    $Id: include.postinst,v 1.12 1999/10/08 10:33:42 srivasta Exp $
+#    $Id: include.postinst,v 1.13 1999/10/09 04:43:28 srivasta Exp $
 #
 
 
@@ -78,7 +78,7 @@ if ($stop_and_read) {
   $answer = <STDIN>;
 }
 
-if (-d "/usr/doc") {
+if (-d "/usr/doc" && ! -l "/usr/doc") {
   # Well, we still need to handle this, at least for the time being
   if (-d "/usr/share/doc/$package") {
     # So the new doc dir exists, goody

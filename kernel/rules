@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.77 1999/10/08 10:33:42 srivasta Exp $
+## $Id: rules,v 1.78 1999/10/09 04:43:28 srivasta Exp $
 ###############################################################################
 
 #
@@ -489,13 +489,13 @@ TAR_COMPRESSION := $(shell \
       if tar --help | grep -- \-\-bzip2 >/dev/null; then  \
          echo --bzip2; \
       else \
-         echo --gzip
+         echo --gzip; \
       fi )
 TAR_SUFFIX := $(shell \
       if tar --help | grep -- \-\-bzip2 >/dev/null; then  \
          echo bz2; \
       else \
-         echo gz
+         echo gz; \
       fi )
 
 ifeq ($(strip $(IN_KERNEL_DIR)),)

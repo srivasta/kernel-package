@@ -12,7 +12,7 @@
 # HISTORY          : 
 # Description      : 
 # 
-#    $Id: image.postinst,v 1.29 1999/10/08 10:44:25 srivasta Exp $
+#    $Id: image.postinst,v 1.30 1999/10/09 04:43:28 srivasta Exp $
 #
 
 # 
@@ -240,7 +240,7 @@ EOFERR
   system("depmod -a $version");
 }
 
-if (-d "/usr/doc") {
+if (-d "/usr/doc" && ! -l "/usr/doc") {
   # Well, we still need to handle this, at least for the time being
   if (-d "/usr/share/doc/kernel-image-$version") {
     # So the new doc dir exists, goody

@@ -1,3 +1,9 @@
+kernel-package (6.25) unstable; urgency=high
+
+  * Fixed stupid little typos that made the package unusable. closes: Bug#46982
+
+ -- Manoj Srivastava <srivasta@debian.org>  Fri,  8 Oct 1999 23:43:11 -0500
+
 kernel-package (6.24) unstable; urgency=low
 
   * updated module installation for the latest set of kernels (2.0.38,
