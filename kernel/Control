@@ -9,11 +9,10 @@ Architecture: any
 Section: devel
 Priority: optional
 Provides: kernel-headers
-Description: Linux kernel headers.
+Description: Header files related to a specific Linux kernel.
  This package provides kernel header files, for sites that want the latest
- kernel headers, but not the full source (Unless you really need a specific
- kernel version, you should consider just using the headers that come with
- libc5-dev, those correspond to a known good kernel)
+ kernel headers, and some of these are also needed by libc6-dev. 
+ Please read /usr/doc/kernel-headers-=V/debian.README.gz for details
 
 Package: kernel-source-=V
 Architecture: all
@@ -25,16 +24,14 @@ Recommends: libc-dev, gcc, make
 Suggests: ncurses-dev, tk-dev
 Description: Linux kernel source.
  This package provides the source code for the Linux kernel, as well
- as the scripts that maintain the symbolic link /usr/src/linux). This
- also contains everything in the package kernel-headers-=V, and thus
- if you install kernel-source-=V you do not also need to install
- kernel-headers-=V. 
+ as the scripts that maintain the symbolic link /usr/src/linux). 
  .
  You may configure the kernel to your setup by typing "make config"
  and following instructions, but you could get ncursesX.X-dev and
  tk4X-dev and try "make menuconfig" for a jazzier, and easier to use
  interface. Also, on intel platforms, you may wish to get bin86 (if
- you wish to compile the kernel sources, that is.)
+ you wish to compile the kernel sources, that is.) Also, please read 
+ /usr/doc/kernel-source-V/README.headers.gz.
 
 Package: kernel-image-=V=SA
 Architecture: =A

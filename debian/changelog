@@ -1,3 +1,10 @@
+kernel-package (4.05) unstable; urgency=low
+
+  * Fixed the long description of the kernel-* packages, which had gotten
+    quite outdated. This should clear some confusion.
+
+ -- Manoj Srivastava <srivasta@debian.org>  Wed,  1 Apr 1998 16:28:19 -0600
+
 kernel-package (4.04) frozen unstable; urgency=low
 
   * Made kernel-package depend on fileutils (>= 3.16-4), since we use the
