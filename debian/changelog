@@ -1,3 +1,19 @@
+kernel-package (6.03) frozen unstable; urgency=high
+
+  * This update fixes a release critical bug, and only includes bug fixes
+    since the previous version in frozen, apart from making the package
+    2.2.X ready (mostly EXTRAVERSION support). I strongly feel that this
+    should be allowed in frozen, even in deep freeze.
+  * Added an option arch_in_name to ask kernel package to embedd the sub
+    architecture in the kernel image name (this reverses the default of
+    always embedding the arch in the name). Note that only the image
+    package _name_ is affected. fixes: BUG#31972
+  * The new Power macs report themselves as Power Macintoshes rather than
+    PwerMac's. Changed reg expression to allow either. fixes: BUG#32262
+  * Also install NET_MISC_MODULES modules. fixes: BUG#31934, BUG#31936
+
+ -- Manoj Srivastava <srivasta@debian.org>  Fri, 22 Jan 1999 09:29:15 -0600
+
 kernel-package (6.02) unstable; urgency=low
 
   * Make kernel-doc-XXX now suggest kernel-image-=V=SA(that is, now we
