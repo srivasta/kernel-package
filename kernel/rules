@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.66 1999/05/18 03:30:09 srivasta Exp $
+## $Id: rules,v 1.67 1999/05/20 04:57:41 srivasta Exp $
 ###############################################################################
 
 # The version of kernel-package this belongs to
@@ -674,7 +674,7 @@ stamp-headers: configure
             (cd debian/tmp-headers/usr/src/$(h_package); umask 000; tar xsf -)
 	(cd debian/tmp-headers/usr/src/$(h_package)/include; rm -f asm; \
 		ln -s asm-$(KERNEL_ARCH) asm)
-	dpkg-gencontrol -DArchitecture=$(KERNEL_ARCH) -isp \
+	dpkg-gencontrol -DArchitecture=$(architecture) -isp \
                         -p$(h_package) -Pdebian/tmp-headers/
 	chown -R root.root debian/tmp-headers
 	chmod -R og=rX debian/tmp-headers
