@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Tue May 25 15:53:46 1999
+## Last Modified On : Tue Jun  1 12:21:01 1999
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 402
+## Update Count	    : 403
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.71 1999/05/25 20:56:00 srivasta Exp $
+## $Id: rules,v 1.72 1999/06/01 18:05:24 srivasta Exp $
 ###############################################################################
 
 #
@@ -205,6 +205,7 @@ kimagesrc = arch/$(KERNEL_ARCH)/boot/$(kimage)
 kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
 DEBCONFIG = $(CONFDIR)/config.prep
 endif
+
 endif
 
 

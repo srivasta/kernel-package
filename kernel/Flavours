@@ -41,6 +41,7 @@
 	There is a patch appended to the bottom of this message that
  would allow klogd to discover the new System.map file, and to not
  choke on the non-numeric kernel version.
+
 	This effort has been based on the ideas and work of Bill
  Mitchell <mitchell@mozcom.com> and Noel Maddy <ncm@biostat.hfh.edu>. 
 
