@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.185 2002/11/03 04:06:11 srivasta Exp $
+## $Id: rules,v 1.186 2002/11/06 09:07:45 srivasta Exp $
 ###############################################################################
 
 ifdef KPKG_ARCH
@@ -66,6 +66,9 @@ make_libc_headers := NO
 
 # run make clean after build
 do_clean := YES
+
+# install uncompressed kernel ELF-image (for oprofile)
+int_install_vmlinux := NO
 
 # what kernel config target to run in our configure target.
 config_target := oldconfig
@@ -360,6 +363,8 @@ target = $(kimage)
 kimagesrc = $(strip arch/$(KERNEL_ARCH)/boot/$(kimage))
 kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
 DEBCONFIG= $(CONFDIR)/config.$(KPKG_SUBARCH)
+kelfimagesrc = vmlinux
+kelfimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
 endif
 
 ##### S/390
@@ -646,6 +651,12 @@ endif
 ifneq ($(strip $(DEBIAN_REVISION_MANDATORY)),)
 debian_revision_mandatory:=$(DEBIAN_REVISION_MANDATORY)
 endif
+ 
+
+ifneq ($(strip $(install_vmlinux)),)
+int_install_vmlinux:=$(install_vmlinux)
+endif
+ 
 
 
 
@@ -1619,6 +1630,12 @@ endif
 ifeq ($(strip $(HAVE_COFF_IMAGE)),YES)
 	cp $(coffsrc)   $(coffdest)
 	chmod 644       $(coffdest)
+endif
+ifeq ($(strip $(int_install_vmlinux)),YES)
+ifneq ($(strip $(kelfimagesrc)),)
+	cp $(kelfimagesrc) $(kelfimagedest)
+	chmod 644 $(kelfimagedest)
+endif
 endif
 	-test -s applied_patches && cp applied_patches                        \
                         $(INT_IMAGE_DESTDIR)/patches-$(version)

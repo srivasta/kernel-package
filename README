@@ -1,5 +1,5 @@
 
-    $Id: README,v 1.53 2002/10/29 21:12:32 srivasta Exp $
+    $Id: README,v 1.54 2002/11/06 09:07:45 srivasta Exp $
 
 This is the Debian GNU/Linux packaging scripts for the Linux kernel. 
 This package has been put together by Manoj Srivastava <srivasta@debian.org>.
@@ -349,6 +349,13 @@ do_clean	 Set to anything but YES, this shall forego the make
                  clean done in the kernel source tree after building
                  the kernel image package. The environment variable
                  CLEAN_SOURCE overrides this.
+
+install_vmlinux  Set to YES to install the uncompressed kernel
+                 ELF image along with the bootable compressed kernel
+		 image (vmlinuz).
+		 This image is necessary for profiling kernel and
+		 userspace with oprofile (oprofile.sourceforge.net,
+		 i386 only).
 
 make_libc_headers  This is meant to be used by the libc6 maintainer,
                    when he compiles libc6, to also package up the

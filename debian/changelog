@@ -1,3 +1,14 @@
+kernel-package (8.014) unstable; urgency=low
+
+  * Fix typo in man page                                     closes: Bug#167861
+  * Depend on c-compiler, not gcc                            closes: Bug#167970
+  * Allow for a new option to also install vmlinux (only useful as yet on
+    i386 machines. Johannes Stezenbach provided the initial patch, which I
+    reworked to not fail on other architectures. 
+  * recognize the supercesion of fileutils by coreutils      closes: Bug#167809
+
+ -- Manoj Srivastava <srivasta@debian.org>  Wed,  6 Nov 2002 03:05:46 -0600
+
 kernel-package (8.013) unstable; urgency=low
 
   * Incorporated kernel modules packager HOWTO.              closes: Bug#167483

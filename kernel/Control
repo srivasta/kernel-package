@@ -41,7 +41,7 @@ Architecture: =A
 Section: base
 Priority: optional
 Provides: kernel-image,  kernel-image-=CV
-Depends: =I fileutils (>= 4.0)
+Depends: =I coreutils | fileutils (>= 4.0)
 Suggests: =L fdutils, kernel-doc-=V=SA | kernel-source-=V 
 Description: Linux kernel binary image for version =V=SA.
  This package contains the Linux kernel image for version =V=SA,
