@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Wed Oct 28 12:14:41 1998
+## Last Modified On : Mon Nov  9 18:03:29 1998
 ## Last Machine Used: tiamat.datasync.com
-## Update Count	    : 370
+## Update Count	    : 373
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.56 1998/10/28 20:00:06 srivasta Exp $
+## $Id: rules,v 1.57 1998/11/10 00:13:32 srivasta Exp $
 ###############################################################################
 
 # The version of kernel-package this belongs to
@@ -56,6 +56,7 @@ KERNEL_ARCH:=$(architecture)
 DEBCONFIG = $(CONFDIR)/config
 IMAGE_DESTDIR=/boot
 INT_IMAGE_DESTDIR=debian/tmp-image$(IMAGE_DESTDIR)
+
 ######################################################################
 ###          Architecture specific stuff                           ###
 ######################################################################
@@ -76,7 +77,11 @@ ifeq ($(strip $(architecture)),m68k)
 # stable but unpackaged; mac lilo, who knows?).
 # sub archs can be Amiga, Atari, Mac
 GUESS_SUBARCH:=$(shell awk '/Model/ { print $$2}' /proc/hardware)
+
+ifeq (,$(findstring $(SUBARCH),Amiga Atari Mac))
 SUBARCH:=$(GUESS_SUBARCH)
+endif
+
 NEED_DIRECT_GZIP_IMAGE=YES
 kimage := zImage
 loaderdep=
@@ -98,23 +103,15 @@ endif
 endif
 endif
 
-ifeq ($(strip $(architecture)),sparc)
-kimage := vmlinuz
-loaderdep=silo
-loader=silo
-loaderdoc=SiloDefault
-target = vmlinux
-NEED_DIRECT_GZIP_IMAGE=YES
-kimagesrc = vmlinux
-kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
-DEBCONFIG = $(CONFDIR)/config.sparc
-endif
-
 ### ppc powerpc et al
 ifneq ($(strip $(filter ppc powerpc,$(architecture))),)
 # sub archs can be CHRP, PowerMac, PReP
 GUESS_SUBARCH:=$(shell awk '/machine/ { print $$3}' /proc/cpuinfo)
+
+ifeq (,$(findstring $(SUBARCH),CHRP PowerMac PReP pmac))
 SUBARCH:=$(GUESS_SUBARCH)
+endif
+
 #The only place we have needed to change
 KERNEL_ARCH:=ppc
 kimage := zImage
@@ -123,6 +120,8 @@ target = $(kimage)
 # PowerPCs use yet another loader: quik.
 ifeq ($(strip $(SUBARCH)),PowerMac)
 SUBARCH:=pmac
+endif
+ifeq ($(strip $(SUBARCH)),pmac)
 loaderdep=quik
 loader=quik
 loaderdoc=QuikDefault
@@ -160,9 +159,27 @@ kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
 DEBCONFIG = $(CONFDIR)/config.alpha
 endif
 
+ifeq ($(strip $(architecture)),sparc)
+kimage := vmlinuz
+loaderdep=silo
+loader=silo
+loaderdoc=SiloDefault
+target = vmlinux
+NEED_DIRECT_GZIP_IMAGE=YES
+kimagesrc = vmlinux
+kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
+DEBCONFIG = $(CONFDIR)/config.sparc
+endif
+
+
 ifeq ($(strip $(architecture)),i386)
 # sub archs can be i386 i486 i586 i686
 GUESS_SUBARCH:=$(shell uname -m)
+
+ifeq (,$(findstring $(SUBARCH),i386 i486 i586 i686))
+SUBARCH:=$(GUESS_SUBARCH)
+endif
+
 kimage := bzImage
 loaderdep=lilo (>= 19.1)
 loader=lilo
@@ -170,21 +187,7 @@ loaderdoc=LiloDefault
 target = $(kimage)
 kimagesrc = $(strip arch/$(KERNEL_ARCH)/boot/$(kimage))
 kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
-ifeq ($(strip $(GUESS_SUBARCH)),i386)
-        DEBCONFIG= $(CONFDIR)/config.i386
-else
-ifeq ($(strip $(GUESS_SUBARCH)),i486)
-        DEBCONFIG= $(CONFDIR)/config.i486
-else
-ifeq ($(strip $(GUESS_SUBARCH)),i586)
-        DEBCONFIG= $(CONFDIR)/config.i586
-else
-ifeq ($(strip $(GUESS_SUBARCH)),i686)
-        DEBCONFIG= $(CONFDIR)/config.i686
-endif
-endif
-endif
-endif
+DEBCONFIG= $(CONFDIR)/config.$(SUBARCH)
 endif
 
 ######################################################################
@@ -538,6 +541,8 @@ stamp-source: configure
 		 debian/tmp-source/usr/src/$(package)/README.Debian ; \
 	fi
 	$(install_file) .config debian/tmp-source/usr/src/$(package)/.config.save
+	chown -R root.root debian/tmp-source
+	chmod -R og=rX debian/tmp-source
 	(cd debian/tmp-source/usr/src/; tar zcf $(package).tar.gz $(package);\
             rm -rf $(package);)
 	dpkg-gencontrol -p$(package) -Pdebian/tmp-source/
@@ -703,7 +708,7 @@ else
 	-for module in $(MODULE_LOC)/* ; do \
 	    (cd $$module; \
               ./debian/rules KVERS="$(version)" KSRC="$(SRCTOP)" \
-                             KMAINT="$(pgp)" KEMAIL="<$email>" \
+                             KMAINT="$(pgp)" KEMAIL="$(email)" \
                              KDREV="$(debian)" kdist_image; ); \
         done
 endif
@@ -716,7 +721,7 @@ else
 	-for module in $(MODULE_LOC)/* ; do \
 	    (cd $$module; \
               ./debian/rules KVERS="$(version)" KSRC="$(SRCTOP)" \
-                             KMAINT="$(pgp)" KEMAIL="<$email>" \
+                             KMAINT="$(pgp)" KEMAIL="$(email)" \
                              KDREV="$(debian)" kdist; ); \
         done
 endif
@@ -728,7 +733,7 @@ else
 	-for module in $(MODULE_LOC)/* ; do \
 	    (cd $$module; \
               ./debian/rules KVERS="$(version)" KSRC="$(SRCTOP)" \
-                             KMAINT="$(pgp)" KEMAIL="<$email>" \
+                             KMAINT="$(pgp)" KEMAIL="$(email)" \
                              KDREV="$(debian)" kdist_configure; ); \
         done
 endif
