@@ -5,16 +5,16 @@
 # Created On       : Mon Jun 17 01:10:11 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Sun Apr 30 02:55:08 2000
+# Last Modified On : Mon Jul 10 00:55:40 2000
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 138
+# Update Count     : 140
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
 #
 #
 #
-#    $Id: make-kpkg,v 1.41 2000/04/30 20:51:55 srivasta Exp $
+#    $Id: make-kpkg,v 1.42 2000/07/10 06:25:17 srivasta Exp $
 #
 require 5.002;
 use strict;
@@ -29,7 +29,7 @@ make-kpkg - build Debian kernel packages from Linux kernel sources.
 ($main::MYNAME     = $main::0) =~ s|.*/||;
 $main::Author      = "Manoj Srivastava";
 $main::AuthorMail  = "srivasta\@debian.org";
-$main::Version     = '$Revision: 1.41 $ ';
+$main::Version     = '$Revision: 1.42 $ ';
 
 my $help_opt=0; 
 my $revision=0; 
@@ -685,6 +685,10 @@ EOERR1
       print STDERR "Warning: The $revision option only has an effect during\n"; 
       print STDERR "the configure phase -- in other words, since the file\n"; 
       print STDERR "stamp-configure exists, this option has no effect \n"; 
+      print STDERR "Also, this option has no effect when compiling the \n";
+      print STDERR "any independent modules; the version from the last\n";
+      print STDERR "make-kpkg run when you compiled the kernel-image shall\n";
+      print STDERR "be used.\n";
       print STDERR "run make-kpkg clean or  if you know what you are doing,\n"; 
       print STDERR "manually remove stamp-debian, stamp-configure and \n"; 
       print STDERR "debian/changelog for it to have an effect\n"; 
@@ -694,10 +698,8 @@ EOERR1
   }
   if ($flavour){
     if ($flavour =~ m/[A-Z]+/o){
-      print STDERR "Warning: Uppercase letters are not permitted in";
-      print STDERR "the flavour variable.";
-      print STDERR "Changing the Flavour from $flavour to \L$flavour\E";
-      $flavour = "\L$flavour\E";
+      print STDERR "Warning: Uppercase letters aredeprecated in";
+      print STDERR "the flavour variable. I have $flavour";
     }
     $command .= " FLAVOUR=$flavour ";
   }

@@ -5,22 +5,55 @@
 # Created On       : Fri May 17 03:28:59 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Tue Oct 13 12:14:06 1998
-# Last Machine Used: tiamat.datasync.com
-# Update Count     : 58
+# Last Modified On : Sun Jul  9 18:00:03 2000
+# Last Machine Used: glaurung.green-gryphon.com
+# Update Count     : 63
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
 # 
 #
-#    $Id: image.prerm,v 1.8 1999/10/08 10:33:42 srivasta Exp $
+#    $Id: image.prerm,v 1.9 2000/07/10 06:25:19 srivasta Exp $
 #
 # 
 
 $|=1;
 # Predefined values:
-my $version = "=V";		# 
-my $loader  = "=L";		# lilo or silo
+my $version         = "=V";
+my $image_in_boot   = "=B";	# Should be empty, mostly
+my $no_symlink      = "=S";	# Should be empty, mostly
+my $reverse_symlink = "=R";	# Should be empty, mostly
+my $do_symlinks     = "Yes";	# target machine defined
+my $do_boot_enable  = "Yes";	# target machine defined
+my $do_bootfloppy   = "Yes";	# target machine defined
+my $do_bootloader   = "Yes";	# target machine defined
+my $move_image      = '';       # target machine defined
+my $kimage          = "=K";	# Should be empty, mostly
+my $loader          = "=L";     # lilo, silo, quik, or nettrom
+my $image_dir       = "=D";     # where the image is located
+my $clobber_modules = '';       # target machine defined
+
+my $Loader          = "LILO";
+$Loader             = "SILO"  if $loader =~ /silo/io;
+$Loader             = "QUIK"  if $loader =~ /quik/io;
+$Loader             = "NETTROM"  if $loader =~ /nettrom/io;
+
+
+
+# This should not point to /tmp, because of security risks.
+my $temp_file_name = "/var/log/$loader" . "_log.$$";
+
+#known variables
+my @boilerplate   = ();
+my $bootdevice    = '';
+my $rootdevice    = '';
+my $rootdisk      = '';
+my $rootpartition = '';
+my $image_dest      = "/";
+my $realimageloc  = "/$image_dir/";
+my $have_conffile = "";
+my $CONF_LOC      = '/etc/kernel-img.conf';
+
 
 # Variables used
 my $image='';
@@ -36,6 +69,13 @@ if ($ARGV[0] && ($ARGV[0] =~ /remove/ || $ARGV[0] =~ /upgrade/)) {
 
 # Ignore all invocations uxcept when called on to remove
 exit 0 unless ($ARGV[0] && $ARGV[0] =~ /remove/) ;
+
+# Paranoid check to make sure that the correct value is put in there
+if (! $kimage)                    { $kimage = "vmlinuz";} # Hmm. empty
+elsif ($kimage =~ m/^b?zImage$/o) { $kimage = "vmlinuz";} # these produce vmlinuz
+elsif ($kimage =~ m/^Image$/o)    { my $nop = $kimage;  }
+elsif ($kimage =~ m/^vmlinux$/o)  { my $nop = $kimage;  }
+else                              { $kimage = "vmlinuz";} # Default
 
 #check to see if we are trying to remove a running kernel
 # if so we abort right now.
@@ -90,7 +130,7 @@ if (-f "/etc/$loader.conf") { #I know, could be a link, but ..
 	$image = readlink ($image);
       }
       if (defined($image) && -e $image) {
-	$WouldInvalidate |= $image =~ /vmlinuz-$version/;
+	$WouldInvalidate |= $image =~ /$kimage-$version/;
       }
       else {
 	&success(); # invalid $loader.conf file
@@ -105,10 +145,10 @@ if (-f "/etc/$loader.conf") { #I know, could be a link, but ..
     print STDERR <<"EOF";
 
  You have a valid /etc/$loader.conf file that mentions
- vmlinuz-$version.  Removing kernel-image-$version would invalidate
+ $kimage-$version.  Removing kernel-image-$version would invalidate
  that file. (you will have to edit /etc/$loader.conf or re-target
  symbolic links mentioned there (typically, /vmlinuz and /vmlinuz.old)
- to not refer to vmlinuz-$version and will have to re-run $loader). 
+ to not refer to $kimage-$version and will have to re-run $loader). 
 
  I repeat: you shall have to make changes to your boot loader setup
  and will have to re-run $loader.

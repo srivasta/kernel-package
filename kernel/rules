@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Sun Apr 30 02:41:00 2000
+## Last Modified On : Mon Jul 10 01:02:22 2000
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 430
+## Update Count	    : 431
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.97 2000/05/20 21:02:23 srivasta Exp $
+## $Id: rules,v 1.98 2000/07/10 06:25:19 srivasta Exp $
 ###############################################################################
 
 #
@@ -237,6 +237,22 @@ target = boot
 kimagesrc = arch/$(KERNEL_ARCH)/boot/vmlinux.gz
 kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
 DEBCONFIG = $(CONFDIR)/config.alpha
+endif
+
+
+ifeq ($(strip $(architecture)),sparc64)
+kimage := vmlinuz
+loaderdep=silo
+loader=silo
+loaderdoc=SiloDefault
+target = vmlinux
+NEED_DIRECT_GZIP_IMAGE=YES
+kimagesrc = vmlinux
+kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
+DEBCONFIG = $(CONFDIR)/config.sparc
+KERNEL_ARCH=sparc64
+ARCH_IN_NAME=yes
+SUBARCH=sun4u
 endif
 
 ifeq ($(strip $(architecture)),sparc)
@@ -481,11 +497,13 @@ endif
 
 ifneq ($(strip $(CONFIG_TARGET)),)
 config_target := $(CONFIG_TARGET)
+have_new_config_target := yes
 endif
 
 # If config_target doesn't end in `config' then reset it to `oldconfig'.
 ifneq ($(patsubst %config,config,$(strip $(config_target))),config)
 config_target := oldconfig
+have_new_config_target :=
 endif
 
 ifneq ($(strip $(USE_SAVED_CONFIG)),)
@@ -725,7 +743,8 @@ endif
 	test -f .config || (test -f $(DEBDIR)/config && \
 		            cp -pf $(DEBDIR)/config  .config) || \
 			true
-	test -f .config || $(error Need an config file .config)
+	test -f .config || test -n "$(have_new_config_target)" || \
+                        $(error Need an config file .config)
 
 clean:
 ifeq ($(strip $(patch_the_kernel)),YES)

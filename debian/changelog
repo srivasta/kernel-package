@@ -1,3 +1,36 @@
+kernel-package (7.12) unstable; urgency=low
+
+  * Fixed implementation of the --config target in make-kpkg, to allow
+    operation when there is no .config file present. really closes: Bug#64786
+  * Fixed the FILES section in kernel-package(5)/ closes: Bug#65730
+  * Try and make relative links when creating links to image files, if
+    possible. This used to be the old behaviour, but did not work right
+    for people who had the symbolic links created in non standard
+    locations. This version should work better for most people. 
+    closes: Bug#64949, Bug# 65116
+  * Added to the information message that make-kpkg provides that the
+    --revision option also has no effect ewhen making modules; the values
+    that were used when the last kernel_image were made are sued (which is
+    what one wants anyway). closes: Bug#65212
+  * Updated the README about the gcc/kernel issues (which are now mostly
+    solved), made the footnote appear more like one, and stuff. 
+    closes: Bug#65386
+  * Make sure we remove modules.dep when the kernel-image package is
+    removed, so that we do not get messages from dpkg saying that
+    /lib/modules/<version> was not removed because it was not empty. This
+    closes: Bug#66341
+  * Added a warning in the make floppy routine of the image postinst to
+    warn if the kernel is larger than some hard coded limit. This breakage
+    should really be fixed in the kernel. closes: Bug#66596
+  * Since it is just a suggestion in the packaging manual, do not force
+    all flavours to be downcased. (make-kpkg shall still complain). 
+  * Added a new arch section for sparc64. closes: Bug#64866
+  * cleaned up the postrm, now it should warn people putting the
+    symlinks in non-standard places and still using lilo about removing a
+    kernel that may have been used in lilo. closes: Bug#65737
+
+ -- Manoj Srivastava <srivasta@debian.org>  Mon, 10 Jul 2000 01:22:27 -0500
+
 kernel-package (7.11) unstable; urgency=low
 
   * Cleaned up the postinst some more; make sure that we always know which

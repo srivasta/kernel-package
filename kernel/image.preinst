@@ -5,9 +5,9 @@
 # Created On       : Sun Jun 14 03:38:02 1998
 # Created On Node  : tiamat.datasync.com
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Sun Apr 30 02:13:25 2000
+# Last Modified On : Mon Jul 10 01:15:02 2000
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 33
+# Update Count     : 35
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
@@ -23,13 +23,31 @@ my $version         = "=V";
 my $image_in_boot   = "=B";     # Should be empty, mostly
 my $no_symlink      = "=S";     # Should be empty, mostly
 my $reverse_symlink = "=R";     # Should be empty, mostly
+my $do_symlinks     = "Yes";	# target machine defined
+my $do_boot_enable  = "Yes";	# target machine defined
+my $do_bootfloppy   = "Yes";	# target machine defined
+my $do_bootloader   = "Yes";	# target machine defined
+my $move_image      = '';       # target machine defined
 my $kimage          = "=K";     # Should be empty, mostly
 my $loader          = "=L";     # lilo, silo, quik, or nettrom
 my $image_dir       = "=D";     # where the image is located
-my $do_symlinks     = "Yes";    # target machine defined
-my $move_image      = '';       # target machine defined
 my $clobber_modules = '';       # target machine defined
 
+my $Loader          = "LILO";
+$Loader             = "SILO"  if $loader =~ /silo/io;
+$Loader             = "QUIK"  if $loader =~ /quik/io;
+$Loader             = "NETTROM"  if $loader =~ /nettrom/io;
+
+
+#known variables
+my @boilerplate   = ();
+my $bootdevice    = '';
+my $rootdevice    = '';
+my $rootdisk      = '';
+my $rootpartition = '';
+my $image_dest      = "/";
+my $realimageloc  = "/$image_dir/";
+my $have_conffile = "";
 my $CONF_LOC        = '/etc/kernel-img.conf';
 
 die "Pre inst Internal error. Aborting." unless $version;

@@ -5,14 +5,14 @@
 # Created On       : Sat Apr 27 05:55:26 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Fri May 12 09:40:29 2000
+# Last Modified On : Mon Jul 10 00:37:03 2000
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 175
+# Update Count     : 181
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
 # 
-#    $Id: image.postinst,v 1.51 2000/05/20 21:02:23 srivasta Exp $
+#    $Id: image.postinst,v 1.52 2000/07/10 06:25:18 srivasta Exp $
 #
 
 # 
@@ -137,6 +137,40 @@ my ($loaderloc) = grep -x, map "$_/$loader_exec",
   map { length($_) ? $_ : "." }  split /:/, $ENV{PATH};
 
 
+######################################################################
+######################################################################
+###########        Test whether a relative symlinkwould be OK #######
+######################################################################
+######################################################################
+sub test_relative {
+  my %params = @_;
+  my $cwd;
+
+  die "Internal Error: Missing Required paramater 'Old Dir' " 
+    unless $params{'Old Dir'};
+  die "Internal Error: Missing Required paramater New Dir' " 
+    unless  $params{'New Dir'};
+  
+
+  die "Internal Error: No such dir $params{'Old Dir'} " 
+    unless -d $params{'Old Dir'};
+  die "Internal Error: No such dir $params{'New Dir'} " 
+    unless -d $params{'New Dir'};
+  
+  chomp($cwd = `pwd`);
+  chdir ($params{'New Dir'}) or die "Could not chdir to $params{'New Dir'}:$!";
+  my $ok = 0;
+  $params{'Old Dir'}  =~ s|^/*||o;
+  if (-d $params{'Old Dir'} ) {
+    $ok = 1;
+  }
+  chdir ($cwd) or die "Could not chdir to $params{'New Dir'}:$!";
+  return $ok;
+}
+######################################################################
+######################################################################
+
+
 if ($move_image) {		# Maybe $image_dest is in on dos, or something?
   if (-e "$kimage-$version") {	# we should be in dir /, normally
     rename("$kimage-$version", "$kimage-$version.$$") || 
@@ -154,10 +188,14 @@ if ($move_image) {		# Maybe $image_dest is in on dos, or something?
       die "failed to move " . $image_dest . "$kimage:$!";
   }
   if ($reverse_symlink) {
-    symlink($image_dest . "$kimage-$version", 
+    my $Old = $image_dest;
+    if (test_relative ('Old Dir' => $Old, 'New Dir' => $realimageloc)) {
+      $Old   =~ s|^/*||o;
+    }
+    symlink($Old . "$kimage-$version", 
 	    $realimageloc . "$kimage-$version")
       || die("Failed to symbolic-link " . $image_dest . "$kimage-$version to "
-	     . $image_dest . "$kimage-$version .\n");
+	     . $realimageloc . "$kimage-$version .\n");
   }
 } 
 elsif (-l "$kimage") {
@@ -190,8 +228,11 @@ elsif (-l "$kimage") {
     # don't clobber $kimage.old quite yet
     rename("$kimage", "$kimage.$$") || 
       die "failed to move " . $image_dest . "$kimage:$!";
-    
-    if (! symlink($realimageloc . "$kimage-$version", "$kimage")) {
+    my $Old = $realimageloc;
+    if (test_relative ('Old Dir' => $Old, 'New Dir' => `pwd`)) {
+      $Old   =~ s|^/*||o;
+    }
+    if (! symlink($Old . "$kimage-$version", "$kimage")) {
       rename("$kimage.$$", "$kimage");
       die("Failed to symbolic-link " . $realimageloc . "$kimage-$version to "
 	  . $image_dest . "$kimage .\n"); 
@@ -245,12 +286,20 @@ elsif (! -e "$kimage") {
   }
   if ($do_symlink =~ /Yes/i) {
     if ($reverse_symlink) {
-      symlink($image_dest . "$kimage", $realimageloc . "$kimage-$version")
+      my $Old = $image_dest;
+      if (test_relative ('Old Dir' => $Old, 'New Dir' => $realimageloc)) {
+	$Old   =~ s|^/*||o;
+      }
+      symlink($Old . "$kimage", $realimageloc . "$kimage-$version")
 	|| die("Failed to symbolic-link " . $realimageloc
 	       . "$kimage-$version to " . $image_dest . "$kimage .\n");
     }
     else {
-      symlink($realimageloc . "$kimage-$version", "$kimage") ||
+      my $Old = $realimageloc;
+      if (test_relative ('Old Dir' => $Old, 'New Dir' => $image_dest)) {
+	$Old   =~ s|^/*||o;
+      }
+      symlink($Old . "$kimage-$version", "$kimage") ||
 	die("Failed to symbolic-link " . $realimageloc
 	    . "$kimage-$version to "  . $image_dest . "$kimage .\n");
     }
@@ -286,7 +335,11 @@ elsif ($reverse_symlink) {		# Maybe /$image_dest is on a dos system?
 	. $image_dest . "$kimage .\n"); 
   }
   
-  if (! symlink($image_dest . "$kimage", $realimageloc . "$kimage-$version")) {
+  my $old = $image_dest;
+  if (test_relative ('Old Dir' => $Old, 'New Dir' => $realimageloc)) {
+    $Old   =~ s|^/*||o;
+  }
+  if (! symlink($Old . "$kimage", $realimageloc . "$kimage-$version")) {
     warn "Could not symlink " . $image_dest . "$kimage to $kimage-$version :$!";
   }
   # Ok, now we may clobber the previous .old files
@@ -742,8 +795,48 @@ sub makefloppy {
   my $answer;
   my $done = 0;
   my $drive = 0;
-
+  my $imageloc = '';
+	
   return unless $do_bootfloppy;
+
+  if ($no_symlink || $reverse_symlink) {
+    $imageloc = $image_dest . $kimage;	  
+  }
+  else {
+    $imageloc = $realimageloc . "$kimage-$version";
+  }
+
+  if (-e $imageloc) {
+    my ($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size,
+	$atime,$mtime,$ctime,$blksize,$blocks)
+      = stat ($imageloc);
+    if ($size >= 520192) {
+      print STDERR "Please note that the system size is $size\n";
+      print STDERR "This is greater than the size that the kernel\n";
+      print STDERR "loader supports on i386 machines. What this\n";
+      print STDERR "means is that you need to use lilo to boot\n";
+      print STDERR "this kernel on i386 machines; the floppy is\n";
+      print STDERR "not going to be sufficient by itself on an \n";
+      print STDERR "i386 box. Of course, things may have changed since\n";
+      print STDERR "July 200, when this diagnostic was written. Your\n";
+      print STDERR "Mileage may indeed vary. Please consider yourselves\n";
+      print STDERR "warned.\n";
+      print STDERR "Please hit return to continue.";
+      $answer=<STDIN>;
+    }
+  }
+  else {
+    print STDERR "Ulp!. I couldn't find the image where I expected\n";
+    print STDERR "it to be, namely, $imageloc\n";
+    print STDERR "You shall have to create the floppy manually, I'm\n";
+    print STDERR "afraid, using commands like\n";
+    print STDERR "\tdd if=/path/to/$kimage-$version of=/dev/fd$drive\n";
+    print STDERR "\trdev /dev/fd$drive $rootdevice\n";
+    print STDERR "\trdev -R /dev/fd$drive 1\n";
+    print STDERR "Aborting\n";
+    return;
+  }
+  
   
   print <<EO_MSG_A;
 
@@ -847,14 +940,6 @@ EO_MSG_B
       my $ret;
       
       if ($loader =~ /lilo/io) {
-	my $imageloc = '';
-	
-	if ($no_symlink || $reverse_symlink) {
-	  $imageloc = $image_dest . $kimage;	  
-	}
-	else {
-	  $imageloc = $realimageloc . "$kimage-$version";
-	}
 	if (-e "$imageloc") {
 	  $ret = system '/bin/dd', "if=$imageloc", "of=/dev/fd$drive";
 	  last MKBOOT if $ret;

@@ -5,14 +5,14 @@
 # Created On       : Sat May 15 11:05:13 1999
 # Created On Node  : glaurung.green-gryphon.com
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Wed Jun  2 17:04:48 1999
+# Last Modified On : Mon Jul 10 01:23:35 2000
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 5
+# Update Count     : 12
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
 # 
-#     $Id: image.postrm,v 1.2 1999/06/02 22:21:29 srivasta Exp $
+#     $Id: image.postrm,v 1.3 2000/07/10 06:25:18 srivasta Exp $
 #
 
 
@@ -21,12 +21,18 @@
 $|=1;
 # Predefined values:
 my $version         = "=V";
-my $image_in_boot   = "=B";     # Should be empty, mostly
-my $no_symlink      = "=S";     # Should be empty, mostly
-my $reverse_symlink = "=R";     # Should be empty, mostly
-my $kimage          = "=K";     # Should be empty, mostly
+my $image_in_boot   = "=B";	# Should be empty, mostly
+my $no_symlink      = "=S";	# Should be empty, mostly
+my $reverse_symlink = "=R";	# Should be empty, mostly
+my $do_symlinks     = "Yes";	# target machine defined
+my $do_boot_enable  = "Yes";	# target machine defined
+my $do_bootfloppy   = "Yes";	# target machine defined
+my $do_bootloader   = "Yes";	# target machine defined
+my $move_image      = '';       # target machine defined
+my $kimage          = "=K";	# Should be empty, mostly
 my $loader          = "=L";     # lilo, silo, quik, or nettrom
-my $image_dest      = "=D";     # where the image is located
+my $image_dir       = "=D";     # where the image is located
+my $clobber_modules = '';       # target machine defined
 
 my $Loader          = "LILO";
 $Loader             = "SILO"  if $loader =~ /silo/io;
@@ -50,14 +56,14 @@ my $bootdevice = '';
 my $rootdevice = '';
 my $rootdisk = '';
 my $rootpartition = '';
-my $imagedir = "/";
-my $realimageloc = "$image_dest/";
+my $image_dest      = "/";
+my $realimageloc  = "/$image_dir/";
+my $have_conffile = "";
+my $CONF_LOC      = '/etc/kernel-img.conf';
 
-
-if ($image_in_boot) {
-  $imagedir = "/$image_dest/";
-  $realimageloc = "";
-}
+# remove multiple leading slashes; make sure there is at least one.
+$realimageloc  =~ s|^/*|/|o;
+$realimageloc  =~ s|/+|/|o;
 
 # Ignore all invocations uxcept when called on to purge.
 exit 0 unless $ARGV[0] =~ /purge/;
@@ -65,49 +71,89 @@ exit 0 unless $ARGV[0] =~ /purge/;
 # most of our work is done in $imagedir
 chdir("$imagedir") or die "could not chdir to $imagedir:$!\n";
 
-# Paranoid check to make sure that the correct value is put in there
-if (! $kimage) {                # Hmm. empty
-  $kimage = "vmlinuz"
-}
-elsif ($kimage =~ m/^b?zImage$/o) { # these produce vmlinuz
-  $kimage = "vmlinuz"
-}
-elsif ($kimage =~ m/^Image$/o) {
-  my $nop = $kimage;
-}
-elsif ($kimage =~ m/^vmlinux$/o) {
-  my $nop = $kimage;
-  #
-}
-else {                          # Let this be the default as well
-  $kimage = "vmlinuz"
+if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
+  if (open(CONF, "$CONF_LOC")) {
+    while (<CONF>) {
+      chomp;
+      s/\#.*$//g;
+      next if /^\s*$/;
+
+      $do_symlink      = "" if /do_symlinks\s*=\s*(no|false|0)\s*$/ig;
+      $no_symlink      = "" if /no_symlinks\s*=\s*(no|false|0)\s*$/ig;
+      $reverse_symlink = "" if /reverse_symlinks\s*=\s*(no|false|0)\s*$/ig;
+      $image_in_boot   = "" if /image_in_boot\s*=\s*(no|false|0)\s*$/ig;
+      $move_image      = "" if /move_image\s*=\s*(no|false|0)\s*$/ig;
+      $clobber_modules = '' if /clobber_modules\s*=\s*(no|false|0)\s*$/ig;
+      $do_boot_enable  = '' if /do_boot_enable\s*=\s*(no|false|0)\s*$/ig;
+      $do_bootfloppy   = '' if /do_bootfloppy\s*=\s*(no|false|0)\s*$/ig;
+      $do_bootloader   = '' if /do_bootloader\s*=\s*(no|false|0)\s*$/ig;
+
+
+      $do_symlink      = "Yes" if /do_symlinks\s*=\s*(yes|true|1)\s*$/ig;
+      $no_symlink      = "Yes" if /no_symlinks\s*=\s*(yes|true|1)\s*$/ig;
+      $reverse_symlink = "Yes" if /reverse_symlinks\s*=\s*(yes|true|1)\s*$/ig;
+      $image_in_boot   = "Yes" if /image_in_boot\s*=\s*(yes|true|1)\s*$/ig;
+      $move_image      = "Yes" if /move_image\s*=\s*(yes|true|1)\s*$/ig;
+      $clobber_modules = "Yes" if /clobber_modules\s*=\s*(yes|true|1)\s*$/ig;
+      $do_boot_enable  = "Yes" if /do_boot_enable\s*=\s*(yes|true|1)\s*$/ig;
+      $do_bootfloppy   = "Yes" if /do_bootfloppy\s*=\s*(yes|true|1)\s*$/ig;
+      $do_bootloader   = "Yes" if /do_bootloader\s*=\s*(yes|true|1)\s*$/ig;
+
+      $image_dest      = "$1"  if /image_dest\s*=\s*(\S+)/ig;
+    }
+    close CONF;
+    $have_conffile = "Yes";
+  }
 }
 
-if (-l "$kimage") {
+if ($image_in_boot) {$image_dest = "/$image_dir/"; $image_dest =~ s|^/*|/|o; }
+
+# Paranoid check to make sure that the correct value is put in there
+if (! $kimage)                    {$kimage = "vmlinuz"} # Hmm. empty
+elsif ($kimage =~ m/^b?zImage$/o) {$kimage = "vmlinuz"} # these produce vmlinuz
+elsif ($kimage =~ m/^Image$/o)    { my $nop = $kimage;}
+elsif ($kimage =~ m/^vmlinux$/o)  { my $nop = $kimage;}
+else                              {$kimage = "vmlinuz"} # default
+
+if (-l $image_dest . "$kimage") {
   # There is a symbolic link
   my $force_move = 0;
-  my $vmlinuz_target = readlink "$kimage";
+  my $vmlinuz_target = readlink $image_dest . "$kimage";
   if (!defined($vmlinuz_target)) {
     # what, a dangling symlink?
-    warn "The link "  . $imagedir . "$kimage is a danglink link\n";
+    warn "The link "  . $image_dest . "$kimage is a dangling link\n";
     warn "Removing dangling sym link "  . $imagedir . "$kimage \n";
+    warn "Unless you used the optional flag in lilo, you may  \n";
+    warn " need to re-run lilo\n";
     # Remove the dangling link
-    unlink $imagedir . $kimage;
+    unlink $image_dest . $kimage;
   }
 }
-if (-l "$kimage.old") {
+if (-l $image_dest . "$kimage.old") {
   # There is a symbolic link
   my $force_move = 0;
-  my $vmlinuz_target = readlink "$kimage" . ".old" ;
+  my $vmlinuz_target = readlink $image_dest . "$kimage" . ".old" ;
   if (!defined($vmlinuz_target)) {
     # what, a dangling symlink?
-    warn "The link "  . $imagedir . "$kimage" . ".old is a danglink link\n";
-    warn "Removing dangling sym link "  . $imagedir . "$kimage" . ".old \n";
+    warn "The link "  . $image_dest . "$kimage" . ".old is a dangling link\n";
+    warn "Removing dangling sym link "  . $image_dest . "$kimage" . ".old \n";
+    warn "Unless you used the optional flag in lilo, you may  \n";
+    warn " need to re-run lilo\n";
     # Remove the dangling link
-    unlink $imagedir . $kimage . ".old";
+    unlink $image_dest . $kimage . ".old";
   }
+}
+
+if (-f "/lib/modules/$version/modules.dep") {
+  unlink "/lib/modules/$version/modules.dep";
 }
 
 exit 0;
 
 __END__
+
+
+
+
+
+
