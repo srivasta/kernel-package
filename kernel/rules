@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Fri Oct 16 12:35:38 1998
+## Last Modified On : Wed Oct 28 12:14:41 1998
 ## Last Machine Used: tiamat.datasync.com
-## Update Count	    : 369
+## Update Count	    : 370
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.55 1998/10/16 18:54:56 srivasta Exp $
+## $Id: rules,v 1.56 1998/10/28 20:00:06 srivasta Exp $
 ###############################################################################
 
 # The version of kernel-package this belongs to
@@ -115,7 +115,8 @@ ifneq ($(strip $(filter ppc powerpc,$(architecture))),)
 # sub archs can be CHRP, PowerMac, PReP
 GUESS_SUBARCH:=$(shell awk '/machine/ { print $$3}' /proc/cpuinfo)
 SUBARCH:=$(GUESS_SUBARCH)
-KERNEL_ARCH:=ppc		#The only place we have needed to change
+#The only place we have needed to change
+KERNEL_ARCH:=ppc
 kimage := zImage
 target = $(kimage)
 
