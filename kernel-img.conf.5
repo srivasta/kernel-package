@@ -21,7 +21,7 @@
 .\" Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139,
 .\" USA.
 .\"
-.\" $Id: kernel-img.conf.5,v 1.7 2001/01/19 06:24:21 srivasta Exp $
+.\" $Id: kernel-img.conf.5,v 1.8 2001/01/19 18:07:20 srivasta Exp $
 .\"
 .TH KERNEL\-IMG.CONF 5 "Mar 21 2000" "Debian" "Debian GNU/Linux manual" 
 .\" NAME should be all caps, SECTION should be 1-8, maybe w/ subsection
@@ -142,11 +142,11 @@ are set,
 .B image_in_boot
 overrides)
 .TP
-.B postinst_hook script
+.B postinst_hook 
 Set this variable to a script to be executed after all the symbolic
 links are created, but before running the boot loader or offering to
 create a floppy. This script shall be called with two arguments,
-the forst being the
+the first being the
 .I version
 of the kernel image, and the second argument being the
 .I location
