@@ -1,3 +1,13 @@
+kernel-package (8.056) unstable; urgency=low
+
+  * Updated the preinst to separate out the LILO instructions. 
+                                                     closes: Bug#207907
+  * Fixed regexp issues and an error in creating the kernel version for
+    comparison. Patch thanks to Toni Timonen <ttimonen@users.sourceforge.net>
+                                                     closes: Bug#208897
+  
+ -- Manoj Srivastava <srivasta@debian.org>  Fri,  5 Sep 2003 20:42:09 -0500
+
 kernel-package (8.055) unstable; urgency=low
 
   * Updated README.modules to correct the procedure of building modules

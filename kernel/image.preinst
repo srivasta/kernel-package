@@ -178,15 +178,20 @@ This will not work unless you have configured your boot loader to use
 initrd. (An initrd image is a kernel image that expects to use an INITial 
 Ram Disk to mount a minimal root file system into RAM and use that for
 booting).
+
 EOF
     if ($loader =~ m/^lilo/i) {
-      print STDERR "As a reminder, in order to configure lilo, you need to\n";
-      print STDERR "add an 'initrd=/initrd.img' to the image=/vmlinuz\n";
-      print STDERR "stanza of your /etc/lilo.conf\n";
+      print STDERR "    As a reminder, in order to configure LILO, you need\n";
+      print STDERR "    to add an 'initrd=/initrd.img' to the image=/vmlinuz\n";
+      print STDERR "    stanza of your /etc/lilo.conf\n";
     }
     print STDERR <<EOF;
-I repeat, You need to configure your boot loader. If you have already done
-so, and you wish to get rid of this message, please put
+
+I repeat, You need to configure your boot loader -- please read your
+bootloader documentation for details on how to add initrd images.
+
+If you have already done so, and you wish to get rid of this message,
+please put
   `do_initrd = Yes'
 in /etc/kernel-img.conf. Note that this is optional, but if you do not, 
 you'll continue to see this message whenever you install a kernel 
