@@ -1,3 +1,9 @@
+kernel-package (6.13) unstable; urgency=low
+
+  * Typo fixes for powerpc stuff.
+
+ -- Manoj Srivastava <srivasta@debian.org>  Thu, 20 May 1999 11:08:51 -0500
+
 kernel-package (6.12) unstable; urgency=low
 
   * Added a warning if the --revision flag is given and a stamp-configure
