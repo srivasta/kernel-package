@@ -22,7 +22,7 @@
 .\" USA.
 .\"
 .\"
-.\"    $Id: make-kpkg.8,v 1.64 2002/09/13 05:01:05 srivasta Exp $
+.\"    $Id: make-kpkg.8,v 1.65 2002/10/29 21:12:32 srivasta Exp $
 .\"
 .TH MAKE\-KPKG 1 "May 2 1997" "Debian" "Debian GNU/Linux manual"
 .SH NAME
@@ -308,11 +308,13 @@ package, perform any actions
 necessary for a kernel loaded using 
 .B initrd.  
 .B NOTE:
-this requires a non-standard cramfs patch to the kernel sources, or
-may result in a unbootable kernel. The patch is generally present in
-the kernel sources shipped by Debian, but is not present in pristine
-kernel sources.  This option may include extra dependencies, and
-modifications to maintainer scripts.  It has no effect when
+this requires a non-standard cramfs initrd patch to the kernel
+sources, (unless the mkintrd configuration has been modified not to
+use cramfs) or may result in a unbootable kernel. The patch is
+generally present in the kernel sources shipped by Debian, but is not
+present in pristine kernel sources.  This option may include extra
+dependencies, and modifications to maintainer scripts.  It has no
+effect when
 .B make\-kpkg is not making a 
 .I kernel-image 
 package. The same effect can be achieved by setting the environment

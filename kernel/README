@@ -1,5 +1,5 @@
 
-   $Id: README,v 1.54 2002/09/01 01:15:03 srivasta Exp $
+   $Id: README,v 1.55 2002/10/29 21:12:33 srivasta Exp $
 
 This is the Debian GNU/Linux prepackaged version of the Linux kernel.
 Linux was written by Linus Torvalds <Linus.Torvalds@cs.Helsinki.FI> and
@@ -75,7 +75,10 @@ Phase TWO: Create a portable kernel image .deb file
       sudo are examples that come to mind).  NOTE: if you have
       instructed your boot loader to expect initrd kernels (which is
       the norm for recent official kernel image packages) you need to
-      addd --initrd to the line above
+      addd --initrd to the line above, and make sure that you have
+      applied the cramfs initrd patch to the kernel sources (or
+      modified mkinitrd config not to create a cramfs initrd). The
+      cramfs initrd patch is shipped with Debian kernel sources.
    % $Get_Root make-kpkg --initrd --revision=custom.1.0 kernel_image 
       Personally, I prefer non initrd images for my personal machines,
       since then adding third party modules to the machine has fewere
@@ -225,9 +228,14 @@ effect)
  these images, you need to instruct you boot loader that this is a
  kernel image using intrd, and tell the boot loader where to find the
  initrd image.  Unfortunately, you can't just substitute a non initrd
- image afterwards without changing the boot loader instructions. So,
- if your boot loader configuration expects to see an initrd image, add
- --initrd to the above invocation, like so:
+ image afterwards without changing the boot loader instructions.
+ Additionally, the mkinitrd program in Debian creatre a cramfs initrd,
+ and you need an additional cramfs initrd patch in the kernel to be
+ able to load the initrd. This patch is shipped with official debian
+ kernel sources. So, you must apply the patch, or configure mkintrd to
+ use another file system. like ext2. So, if your boot loader
+ configuration expects to see an initrd image, add --initrd to the
+ above invocation, like so:
    make-kpkg clean
    $Get_Root make-kpkg --initrd --revision=3:custom.2.0 kernel_image
 

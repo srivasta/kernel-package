@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.183 2002/09/13 05:01:05 srivasta Exp $
+## $Id: rules,v 1.184 2002/10/29 21:12:33 srivasta Exp $
 ###############################################################################
 
 ifdef KPKG_ARCH
@@ -829,6 +829,12 @@ endif
 ifneq ($(strip $(SOURCE_CLEAN_HOOK)),)
 source_clean_hook=$(SOURCE_CLEAN_HOOK)
 endif
+ifneq ($(strip $(HEADER_CLEAN_HOOK)),)
+header_clean_hook=$(HEADER_CLEAN_HOOK)
+endif
+ifneq ($(strip $(DOC_CLEAN_HOOK)),)
+doc_clean_hook=$(DOC_CLEAN_HOOK)
+endif
 
 ifneq ($(strip $(INITRD)),)
 initrddep := initrd-tools (>= 0.1.1), # there is a space here
@@ -1441,6 +1447,10 @@ endif
 	-tar cf - include |        (cd $(HEADER_SRC); umask 000; tar xsf -)
 	(cd $(HEADER_SRC)/include; rm -f asm; ln -s asm-$(KERNEL_ARCH) asm)
 	$(install_file) .config  	        $(HEADER_SRC)/.config
+ifneq ($(strip $(header_clean_hook)),)
+	(cd $(HEADER_SRC);              \
+               test -x $(header_clean_hook) && $(header_clean_hook))
+endif
 	dpkg-gencontrol -DArchitecture=$(architecture) -isp \
                         -p$(h_package) -P$(HEADER_TOP)/
 	chown -R root.root $(HEADER_TOP)
@@ -1477,6 +1487,10 @@ endif
            $(install_file) README.Debian $(DOC_DOC)/README.Debian.1st;\
 	fi
 	-tar cf - Documentation | (cd $(DOC_DOC); umask 000; tar xsf -)
+ifneq ($(strip $(doc_clean_hook)),)
+	(cd $(DOC_DOC);              \
+               test -x $(doc_clean_hook) && $(doc_clean_hook))
+endif
 	-gzip -9fqr $(DOC_DOC)
 	$(install_file) $(DEBDIR)/copyright.doc $(DOC_DOC)/copyright
 	sed -e 's/=P/$(d_package)/g' -e 's/=V/$(version)/g' \

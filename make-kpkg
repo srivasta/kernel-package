@@ -14,7 +14,7 @@
 #
 #
 #
-#    $Id: make-kpkg,v 1.75 2002/09/01 01:15:03 srivasta Exp $
+#    $Id: make-kpkg,v 1.76 2002/10/29 21:12:32 srivasta Exp $
 #
 require 5.002;
 use strict;
@@ -29,7 +29,7 @@ make-kpkg - build Debian kernel packages from Linux kernel sources.
 ($main::MYNAME     = $main::0) =~ s|.*/||;
 $main::Author      = "Manoj Srivastava";
 $main::AuthorMail  = "srivasta\@debian.org";
-$main::Version     = '$Revision: 1.75 $ ';
+$main::Version     = '$Revision: 1.76 $ ';
 
 my $added_modules='';
 my $added_patches='';
@@ -292,13 +292,17 @@ useful for debugging.
 
 If make-kpkg is generating a kernel-image package, perform any actions
 necessary for a kernel loaded using initrd. B<NOTE:> this requires a
-non-standard patch to the kernel, usually shipped with B<Debian>; but
-shall not work for standard kernel sources. This may include extra
-dependencies, and modifications to maintainer scripts.  It has no
-effect when make-kpkg is not making a kernel-image package.
+non-standard cramfs initrd patch to the kernel, unless you have
+modified the mkinitrd configuration. The patch is usually shipped with
+B<Debian>.
 
-This may result in a non-bootable kernel if the cramfs patch has not
-been applied to kernel sources.
+This may include extra dependencies, and modifications to maintainer
+scripts.  It has no effect when make-kpkg is not making a kernel-image
+package.
+
+This may result in a non-bootable kernel if the cramfs initrd patch
+has not been applied to kernel sources, or the mkinitrd is not
+configured to use something other than cramfs..
 
 =back
 
@@ -907,11 +911,13 @@ EOMSG
   if ($noexec){
     $command .= " -n ";
   }
-  if ($initrd) {
+  if ($initrd && ! -e 'debian/official') {
     print STDERR "Warning: You are using the initrd option, that may not\n";
-    print STDERR "work for standard kernels. You need a cramfs patch, \n";
-    print STDERR "which is included in the Debian supplied kernel sources,\n";
-    print STDERR "but is not present in pristine kernel sources.\n";
+    print STDERR "work unless you have applied the initrd cramfs patch to \n";
+    print STDERR "the kernel, or modified mkinitrd not to use cramfs by\n";
+    print STDERR "default. The  cramfs initrd patch, is included in the \n";
+    print STDERR "Debian supplied kernel sources, but is not present in \n";
+    print STDERR "pristine kernel sources.\n";
     print STDERR "By default, I assume you know what you are doing, and I\n";
     print STDERR "apologize for being so annoying. Should I abort[Ny]?\n";
     my $ans = <STDIN>;

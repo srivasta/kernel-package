@@ -1,3 +1,17 @@
+kernel-package (8.011) unstable; urgency=low
+
+  * Added a note to the initrd section mentioning that it is the initrd
+    cramfs patch that one is talking about.                  closes: Bug#166062
+  * Added header_clean_hook and doc_clean_hook, analogous to
+    source_clean_hook.                                       closes: Bug#160830
+  * remove file utils from dependencies.                     closes: Bug#161450
+  * fixed spelling error                                     closes: Bug#162070
+  * Do not caution for initrd options for official images.   closes: Bug#162708
+  * I give in. kernel-package now depends on gcc and make.   closes: Bug#166189
+  * added patch for README.modules from  Nicolas Sabouret    closes: Bug#165151
+
+ -- Manoj Srivastava <srivasta@debian.org>  Tue, 29 Oct 2002 15:10:20 -0600
+
 kernel-package (8.010) unstable; urgency=low
 
   * Warn early on version mismatch.                          closes: Bug#160460
