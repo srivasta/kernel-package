@@ -5,16 +5,16 @@
 # Created On       : Mon Jun 17 01:10:11 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Sat Nov  2 21:20:25 2002
+# Last Modified On : Fri Nov  8 18:40:53 2002
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 185
+# Update Count     : 186
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
 #
 #
 #
-#    $Id: make-kpkg,v 1.77 2002/11/03 04:06:11 srivasta Exp $
+#    $Id: make-kpkg,v 1.78 2002/11/09 00:42:51 srivasta Exp $
 #
 require 5.002;
 use strict;
@@ -29,7 +29,7 @@ make-kpkg - build Debian kernel packages from Linux kernel sources.
 ($main::MYNAME     = $main::0) =~ s|.*/||;
 $main::Author      = "Manoj Srivastava";
 $main::AuthorMail  = "srivasta\@debian.org";
-$main::Version     = '$Revision: 1.77 $ ';
+$main::Version     = '$Revision: 1.78 $ ';
 
 my $added_modules='';
 my $added_patches='';
@@ -755,7 +755,7 @@ EOERR1
       my $version = '';
       $line =~ m/\((\S+)\)/;
       $version = $1;
-      if ($revision && $version != $revision) {
+      if ($revision && $version ne $revision) {
 	print STDERR <<"EOMSG";
 I note that you are using the --revision flag with the value 
    $revision.

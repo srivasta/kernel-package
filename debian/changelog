@@ -1,3 +1,10 @@
+kernel-package (8.015) unstable; urgency=low
+
+  * Fix typo in make-kpkg that prevented running code for detecting version
+    mismatch.                                                closes: Bug#163744
+
+ -- Manoj Srivastava <srivasta@debian.org>  Fri,  8 Nov 2002 18:42:35 -0600
+
 kernel-package (8.014) unstable; urgency=low
 
   * Fix typo in man page                                     closes: Bug#167861
