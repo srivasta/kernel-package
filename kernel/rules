@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Wed Dec 24 12:33:10 1997
+## Last Modified On : Thu Dec 25 01:27:08 1997
 ## Last Machine Used: tiamat.datasync.com
-## Update Count	    : 210
+## Update Count	    : 211
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.21 1997/12/24 19:13:48 srivasta Exp $
+## $Id: rules,v 1.22 1997/12/25 07:28:20 srivasta Exp $
 ###############################################################################
 
 # The version of kernel-package this belongs to
@@ -460,42 +460,63 @@ ifdef MODULES_ENABLED
 	chmod 644 debian/tmp-image/lib/modules/$(version)/misc/*
 	(if [ -f modules/BLOCK_MODULES ] ; then \
               cd debian/tmp-image/lib/modules/$(version)/misc; \
-	      mv `cat ./BLOCK_MODULES` ../block; \
+	      for $$mod in `cat ./BLOCK_MODULES` ; do \
+                  if [ -f $$mod ]; then mv $$mod ../block; fi; \
+              done; \
               mv ./BLOCK_MODULES ../../../../usr/doc/$(i_package)/; fi)
 	(if [ -f modules/CDROM_MODULES ] ; then \
               cd debian/tmp-image/lib/modules/$(version)/misc; \
-	      mv `cat ./CDROM_MODULES` ../cdrom; \
+	      for $$mod in `cat ./CDROM_MODULES` ; do \
+                  if [ -f $$mod ]; then mv $$mod ../block; fi; \
+              done; \
               mv ./CDROM_MODULES ../../../../usr/doc/$(i_package)/; fi)
 	(if [ -f modules/FS_MODULES ]; then \
               cd debian/tmp-image/lib/modules/$(version)/misc; \
-	      mv `cat ./FS_MODULES` ../fs; \
+	      for $$mod in `cat ./FS_MODULES` ; do \
+                  if [ -f $$mod ]; then mv $$mod ../block; fi; \
+              done; \
               mv ./FS_MODULES ../../../../usr/doc/$(i_package)/; fi)
 	(if [ -f modules/NLS_MODULES ]; then \
               cd debian/tmp-image/lib/modules/$(version)/misc; \
-	      mv `cat ./NLS_MODULES` ../fs; \
+	      for $$mod in `cat ./NLS_MODULES` ; do \
+                  if [ -f $$mod ]; then mv $$mod ../block; fi; \
+              done; \
               mv ./NLS_MODULES ../../../../usr/doc/$(i_package)/; fi)
 	(if [ -f modules/NET_MODULES ]; then \
               cd debian/tmp-image/lib/modules/$(version)/misc; \
-	      mv `cat ./NET_MODULES` ../net; \
+	      for $$mod in `cat ./NET_MODULES` ; do \
+                  if [ -f $$mod ]; then mv $$mod ../block; fi; \
+              done; \
               mv ./NET_MODULES ../../../../usr/doc/$(i_package)/; fi)
 	(if [ -f modules/HAM_MODULES ]; then \
               cd debian/tmp-image/lib/modules/$(version)/misc; \
-	      mv `cat ./HAM_MODULES` ../net; \
+	      for $$mod in `cat ./HAM_MODULES` ; do \
+                  if [ -f $$mod ]; then mv $$mod ../block; fi; \
+              done; \
               mv ./HAM_MODULES ../../../../usr/doc/$(i_package)/; fi)
 	(if [ -f modules/IPV4_MODULES ]; then \
               cd debian/tmp-image/lib/modules/$(version)/misc; \
-	      mv `cat ./IPV4_MODULES` ../ipv4; \
+	      for $$mod in `cat ./IPV4_MODULES` ; do \
+                  if [ -f $$mod ]; then mv $$mod ../block; fi; \
+              done; \
               mv ./IPV4_MODULES ../../../../usr/doc/$(i_package)/; fi)
 	(if [ -f modules/IPV6_MODULES ]; then \
               cd debian/tmp-image/lib/modules/$(version)/misc; \
-	      mv `cat ./IPV6_MODULES` ../ipv6; \
+	      for $$mod in `cat ./IPV6_MODULES` ; do \
+                  if [ -f $$mod ]; then mv $$mod ../block; fi; \
+              done; \
               mv ./IPV6_MODULES ../../../../usr/doc/$(i_package)/; fi)
 	(if [ -f modules/SCSI_MODULES ]; then \
               cd debian/tmp-image/lib/modules/$(version)/misc; \
-	      mv `cat ./SCSI_MODULES` ../scsi; \
+	      for $$mod in `cat ./SCSI_MODULES` ; do \
+                  if [ -f $$mod ]; then mv $$mod ../block; fi; \
+              done; \
               mv ./SCSI_MODULES ../../../../usr/doc/$(i_package)/; fi)
 	(if [ -f modules/NET_MISC_MODULES ]; then \
 	      cd debian/tmp-image/lib/modules/$(version)/misc; \
+	      for $$mod in `cat ./NET_MISC_MODULES` ; do \
+                  if [ -f $$mod ]; then mv $$mod ../block; fi; \
+              done; \
 	      mv ./NET_MISC_MODULES ../../../../usr/doc/$(i_package)/; fi)
 endif
 	$(install_file) .config \
