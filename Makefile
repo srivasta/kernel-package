@@ -4,9 +4,9 @@
 ## Created On       : Tue Nov 18 15:53:52 2003
 ## Created On Node  : glaurung.green-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Mon Feb 16 18:19:45 2004
+## Last Modified On : Fri Oct  1 16:21:53 2004
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 19
+## Update Count     : 20
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : 
@@ -59,6 +59,8 @@ check:
 	bash -n kernel/kernel_grub_conf.sh
 	bash -n kernel/kernel_grub_rm.sh
 	bash -n kernel/sample.posthook.sh
+	bash -n kernel/um.postinst
+	bash -n kernel/um.prerm
 
 install:
 	$(make_directory)  $(MAN1DIR)
