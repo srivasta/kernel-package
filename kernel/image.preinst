@@ -1,20 +1,20 @@
 #! /usr/bin/perl
-#                              -*- Mode: Cperl -*- 
-# image.preinst --- 
-# Author           : Manoj Srivastava ( srivasta@tiamat.datasync.com ) 
+#                              -*- Mode: Cperl -*-
+# image.preinst ---
+# Author           : Manoj Srivastava ( srivasta@tiamat.datasync.com )
 # Created On       : Sun Jun 14 03:38:02 1998
 # Created On Node  : tiamat.datasync.com
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Tue Oct  7 11:21:10 2003
+# Last Modified On : Tue Nov 18 16:28:47 2003
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 56
+# Update Count     : 58
 # Status           : Unknown, Use with caution!
-# HISTORY          : 
-# Description      : 
-# 
-# 
+# HISTORY          :
+# Description      :
+#
+#
 
-# 
+#
 #use strict; #for debugging
 
 $|=1;
@@ -33,7 +33,8 @@ my $mkimage         = "=M";     # command to generate the initrd image
 my $do_initrd       = '';       # target machine defined
 my $warn_initrd     = 'YES';    # target machine defined
 my $kimage          = "=K";     # Should be empty, mostly
-my $loader          = "=L";     # lilo, silo, quik, palo, vmelilo, or nettrom
+my $loader          = "=L";     # lilo, silo, quik, palo, vmelilo, nettrom
+                                # or elilo
 my $image_dir       = "=D";     # where the image is located
 my $clobber_modules = '';       # target machine defined
 my $initrd          = "=I";     # initrd kernel
@@ -49,7 +50,7 @@ my $force_build_link = '';	# There is no harm in checking the link
 my $official_image    = "=OF";      # only true for official images
 
 
-my $Loader          = "NoLOADER"; # 
+my $Loader          = "NoLOADER"; #
 $Loader             = "LILO"     if $loader =~ /^lilo/io;
 $Loader             = "SILO"     if $loader =~ /^silo/io;
 $Loader             = "QUIK"     if $loader =~ /^quik/io;
@@ -190,15 +191,20 @@ if ($initrd && !$do_initrd) {
 
 You are attempting to install an initrd kernel image (version $version)
 This will not work unless you have configured your boot loader to use
-initrd. (An initrd image is a kernel image that expects to use an INITial 
+initrd. (An initrd image is a kernel image that expects to use an INITial
 Ram Disk to mount a minimal root file system into RAM and use that for
 booting).
 
 EOF
     if ($loader =~ m/^lilo/i) {
-      print STDERR "    As a reminder, in order to configure LILO, you need\n";
-      print STDERR "    to add an 'initrd=/initrd.img' to the image=/vmlinuz\n";
-      print STDERR "    stanza of your /etc/lilo.conf\n";
+      print STDERR "   As a reminder, in order to configure LILO, you need\n";
+      print STDERR "   to add an 'initrd=/initrd.img' to the image=/vmlinuz\n";
+      print STDERR "   stanza of your /etc/lilo.conf\n";
+    }
+    elsif ($loader =~ m/^elilo/i) {
+      print STDERR "   As a reminder, in order to configure ELILO, you need\n";
+      print STDERR "   to add an 'initrd=/initrd.img' to the image=/vmlinuz\n";
+      print STDERR "   stanza of your /etc/elilo.conf\n";
     }
     print STDERR <<EOF;
 
@@ -208,8 +214,8 @@ bootloader documentation for details on how to add initrd images.
 If you have already done so, and you wish to get rid of this message,
 please put
   `do_initrd = Yes'
-in /etc/kernel-img.conf. Note that this is optional, but if you do not, 
-you'll continue to see this message whenever you install a kernel 
+in /etc/kernel-img.conf. Note that this is optional, but if you do not,
+you'll continue to see this message whenever you install a kernel
 image using initrd.
 EOF
     if (-f "/etc/lilo.conf"){
@@ -218,7 +224,7 @@ EOF
       while (<CONF>) {
 	chomp;
 	if (m/^(\s*ramdisk\s*=\s*0)/g) {
-	  print STDERR 
+	  print STDERR
 	    "In addition, the line\n\t\"$1\"\nshould be removed or commented.";
 	  last;
 	}
@@ -242,12 +248,12 @@ However, the directory /lib/modules/$version still exists.
 
 As you have instructed, an attempt was made to move the directory out
 of the way. Unfortunately, There was a problem moving
-/lib/modules/$version to /lib/modules/${version}_$$.  
+/lib/modules/$version to /lib/modules/${version}_$$.
 
 I suggest you move /lib/modules/$version out of the way manually,
 and then try re-installing this image.
 
-I am aborting. 
+I am aborting.
 EOF
       ;
       exit 1;

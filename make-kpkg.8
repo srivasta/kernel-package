@@ -396,6 +396,16 @@ be entered with either a \- or a \-\- prefix, and you may use a space
 or an = symbol between an option string and a value. You may also use
 the form option=value; for details these and other variant forms
 supported, please read man Getopt::Long (3perl).
+.TP
+.B CONCURRENCY_LEVEL
+If defined, this variable sets the concurrency level of make used to
+compile the kernel and the modules set using 
+.I -j
+flags to the sub make in the 
+.B build
+target of 
+.B make-kpkg.
+Should be a (small) integer, if used.
 .SH TARGETS
 .TP
 .B clean
@@ -618,6 +628,7 @@ The following variables (documented above) affect
 .I SOURCE_CLEAN_HOOK
 .I MODULE_LOC
 .I INITRD_OK
+.I CONCURRENCY_LEVEL
 .SH FILES
 Apart from the runtime options, the 
 .I debian.rules
