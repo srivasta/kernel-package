@@ -2,6 +2,7 @@ kernel-package (6.15) unstable; urgency=low
 
   * Some days you can't win. Yet another cut and paste error in powermac
     rules. 
+  * closes: Bug#38078, Bug#38094
 
  -- Manoj Srivastava <srivasta@debian.org>  Fri, 21 May 1999 12:10:30 -0500
 
