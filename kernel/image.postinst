@@ -12,7 +12,7 @@
 # HISTORY          :
 # Description      :
 #
-#    $Id: image.postinst,v 1.92 2002/01/22 03:51:07 srivasta Exp $
+#    $Id: image.postinst,v 1.93 2002/01/24 17:11:34 srivasta Exp $
 #
 
 #
@@ -63,6 +63,7 @@ my @silotemplate    = ();
 my @quiktemplate    = ();
 my @palotemplate    = ();
 my @vmelilotemplate = ();
+my @zipltemplate    = ();
 my $bootdevice      = '';
 my $rootdevice      = '';
 my $rootdisk        = '';
@@ -1102,6 +1103,17 @@ if ( ! -x "$loaderloc" ) {
   "image     = " . $image_dest . "$kimage\n",
   "read-only\n"
                 );
+
+@zipltemplate = (
+  "[defaultboot]\n",
+  "default=debian\n",
+  "\n",
+  "[debian]\n",
+  "target=/boot\n",
+  "image=" . $image_dest . "$kimage\n",
+  "parmfile=/boot/parmfile\n"
+                );
+
 if($loader =~ /^zipl/io)
   {
     $install_boot_method = "VM-reader or a boot tape";
@@ -1578,6 +1590,9 @@ sub make_liloconf {
   }
   elsif ($loader =~ /^palo/io) {
     print CONF @palotemplate;
+  }
+  elsif ($loader =~ /^zipl/io) {
+    print CONF @zipltemplate;
   }
   else {
     print CONF @silotemplate;
