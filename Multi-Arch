@@ -77,8 +77,6 @@ m68k Kernel maintainer:
 ============================================================
 #! /bin/sh
 set -e
-PATCHNAME=<patch name or number>
-PATCHDIR=/usr/src/kernel-patches/$ARCHITECTURE
 
 if ! test -d kernel -a -d Documentation ; then
     echo "Not in kernel top level directory. Exiting" >&2
@@ -86,6 +84,15 @@ if ! test -d kernel -a -d Documentation ; then
 fi
 
 ARCHITECTURE=`dpkg --print-installation-architecture`
+PATCHNAME=<patch name or number>
+
+if test -f debian/APPLIED_$ARCHITECTURE_$PATCHNAME ; then
+   exit 0 
+fi
+
+PATCHDIR=/usr/src/kernel-patches/$ARCHITECTURE
+
+# Example on how to get current kernel version number etc
 VERSION=$(grep ^VERSION Makefile 2>/dev/null | \
                  sed -e 's/[^0-9]*\([0-9]*\)/\1/')
 PATCHLEVEL=$( grep ^PATCHLEVEL Makefile 2>/dev/null | \
@@ -93,20 +100,21 @@ PATCHLEVEL=$( grep ^PATCHLEVEL Makefile 2>/dev/null | \
 SUBLEVEL=$(grep ^SUBLEVEL Makefile 2>/dev/null | \
                   sed -e 's/[^0-9]*\([0-9]*\)/\1/')
 
+#Add test here for version numbers if we are finicky about versions
+
 PATCH_VERSION=$(patch -v | head -1 | sed -e 's/[^0-9\.]//g')
 
-if dpkg --compare-versions $(PATCH_VERSION) >= 2.2 
+if dpkg --compare-versions $PATCH_VERSION \>= 2.2 
 then
     PATCH_OPTIONS= -l -s -z -p1  
 else
     PATCH_OPTIONS= -l -s -b -p1
 fi
 
-if test -f debian/APPLIED_$ARCHITECTURE_$PATCHNAME ; then
-   exit 0 
-fi
+# Assume compressed patch
+zcat $PATCHDIR/$PATCHNAME | patch $PATCH_OPTIONS 
+# patch $PATCH_OPTIONS < $PATCHDIR/$PATCHNAME
 
-patch -R $PATCH_OPTIONS < $PATCHDIR/$PATCHNAME
 echo "Removing empty files after patching" >&2
 find . -type f -size 0 -exec rm {} \; -print
 touch debian/APPLIED_$ARCHITECTURE_$PATCHNAME 
@@ -121,7 +129,6 @@ exit 0
 #! /bin/sh
 set -e
 PATCHNAME=<patch name or number>
-PATCHDIR=/usr/src/kernel-patches/$ARCHITECTURE
 
 if ! test -d kernel -a -d Documentation ; then
     echo "Not in kernel top level directory. Exiting" >&2
@@ -129,27 +136,24 @@ if ! test -d kernel -a -d Documentation ; then
 fi
 
 ARCHITECTURE=`dpkg --print-installation-architecture`
-VERSION=$(grep ^VERSION Makefile 2>/dev/null | \
-                 sed -e 's/[^0-9]*\([0-9]*\)/\1/')
-PATCHLEVEL=$( grep ^PATCHLEVEL Makefile 2>/dev/null | \
-                    sed -e 's/[^0-9]*\([0-9]*\)/\1/')
-SUBLEVEL=$(grep ^SUBLEVEL Makefile 2>/dev/null | \
-                  sed -e 's/[^0-9]*\([0-9]*\)/\1/')
+if ! test -f debian/APPLIED_$ARCHITECTURE_$PATCHNAME ; then
+   exit 0 
+fi
+PATCHDIR=/usr/src/kernel-patches/$ARCHITECTURE
 
 PATCH_VERSION=$(patch -v | head -1 | sed -e 's/[^0-9\.]//g')
 
-if dpkg --compare-versions $(PATCH_VERSION) >= 2.2 
+if dpkg --compare-versions $PATCH_VERSION \>= 2.2 
 then
     PATCH_OPTIONS= -l -s -z -p1  
 else
     PATCH_OPTIONS= -l -s -b -p1
 fi
 
-if ! test -f debian/APPLIED_$ARCHITECTURE_$PATCHNAME ; then
-   exit 0 
-fi
+# Is the patch compressed?
+zcat $PATCHDIR/$PATCHNAME | patch -R $PATCH_OPTIONS
+#patch -R $PATCH_OPTIONS < $PATCHDIR/$PATCHNAME
 
-patch -R $PATCH_OPTIONS < $PATCHDIR/$PATCHNAME
 echo "Removing empty files after unpatching" >&2
 find . -type f -size 0 -exec rm {} \; -print
 rm -f debian/APPLIED_$ARCHITECTURE_$PATCHNAME
