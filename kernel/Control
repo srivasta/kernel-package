@@ -29,10 +29,10 @@ Description: Linux kernel source.
  You may configure the kernel to your setup by typing "make config"
  and following instructions, but you could get ncursesX.X-dev and
  tk4X-dev and try "make menuconfig" for a jazzier, and easier to use
- interface. Also, on intel platforms, you may wish to get bin86 (if
- you wish to compile the kernel sources, that is.) Ignore the suggestion 
+ interface. Also, on intel platforms, you MUST get bin86 if
+ you wish to compile the kernel sources. Ignore the suggestion to get bin86
  for non intel architectures. Also, please read the detailed documentation
- /usr/doc/kernel-source-V/README.headers.gz. 
+ /usr/doc/kernel-source-=V/README.headers.gz. 
  .
  If you wish to use this package to create a custom Linux kernel, then
  it is suggested that you investigate the package kernel-package,
