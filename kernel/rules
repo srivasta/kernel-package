@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.153 2002/01/11 06:47:15 srivasta Exp $
+## $Id: rules,v 1.154 2002/02/16 18:37:39 srivasta Exp $
 ###############################################################################
 
 ifdef KPKG_ARCH
@@ -1123,8 +1123,7 @@ stamp-configure: debian .config conf.vars
 	-test ! -f stamp-configure \
 	  && $(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) \
                                  ARCH=$(KERNEL_ARCH) $(config_target) \
-          && $(MAKE) $(do_parallel) $(EXTRAV_ARG) $(FLAV_ARG) \
-                                 $(CROSS_ARG) \
+          && $(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) \
                                  ARCH=$(KERNEL_ARCH) dep \
           && $(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) \
                                  ARCH=$(KERNEL_ARCH) clean && \

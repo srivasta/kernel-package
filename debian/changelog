@@ -1,3 +1,12 @@
+kernel-package (7.86) unstable; urgency=low
+
+  * Changed the man page and update the warning message for a pre existing
+    version.h file.
+  * Apparently, one should not tun make -j2 dep. So, do not make deb in
+    parrallel even when OCNCURRENCY_LEVEL is set.            closes: Bug#134263
+
+ -- Manoj Srivastava <srivasta@debian.org>  Sat, 16 Feb 2002 12:37:17 -0600
+
 kernel-package (7.85) unstable; urgency=low
 
   * Add the two missing options in the run time help.        closes: Bug#132397

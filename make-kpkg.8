@@ -22,7 +22,7 @@
 .\" USA.
 .\"
 .\"
-.\"    $Id: make-kpkg.8,v 1.50 2002/02/05 09:20:06 srivasta Exp $
+.\"    $Id: make-kpkg.8,v 1.51 2002/02/16 18:37:39 srivasta Exp $
 .\"
 .TH MAKE\-KPKG 1 "May 2 1997" "Debian" "Debian GNU/Linux manual"
 .SH NAME
@@ -432,7 +432,12 @@ This target allows you to build all packages under
 but does not create the source or diff files, and does not create and sign
 a changes file. This is the only modules related option you need if
 you just want to compile the add on modules image files for
-installation on one or more machines.
+installation on one or more machines. Generally called inconjunction
+with 
+.B kernel_image,
+especially if also using the option
+.B append_to_version
+(prevents spurious warnings).
 .TP
 .B modules_clean
 This target allows you to clean all packages under
