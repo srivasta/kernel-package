@@ -5,9 +5,9 @@
 # Created On       : Fri Jan 19 12:25:31 2001
 # Created On Node  : glaurung.green-gryphon.com
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Tue Jul 24 12:01:07 2001
-# Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 12
+# Last Modified On : Wed Feb 18 17:45:21 2004
+# Last Machine Used: glaurung.internal.golden-gryphon.com
+# Update Count     : 13
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
@@ -58,7 +58,7 @@ version="$1"
 vmlinuz_location="$2"
 
 # This means we have a separate boot partition
-if [ $kernel_not_on_root_partition == 'YES' ]; then
+if [ "$kernel_not_on_root_partition" == 'YES' ]; then
     vmlinuz_location=`basename "$vmlinuz_location"`
     echo $vmlinuz_location
 fi
