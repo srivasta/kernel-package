@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Fri Feb 27 16:28:57 1998
+## Last Modified On : Thu Mar  5 16:49:49 1998
 ## Last Machine Used: tiamat.datasync.com
-## Update Count	    : 225
+## Update Count	    : 234
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.28 1998/02/27 22:29:05 srivasta Exp $
+## $Id: rules,v 1.29 1998/03/05 23:07:13 srivasta Exp $
 ###############################################################################
 
 # The version of kernel-package this belongs to
@@ -56,6 +56,16 @@ kimage := bzImage
 endif
 endif
 
+# Sparcs use silo, not lilo. Try to accomodate them
+ifeq ($(strip $(architecture)),sparc)
+loaderdep=silo
+loader=silo
+loaderdoc=SiloDefault
+else
+loaderdep=lilo (>= 19.1)
+loader=lilo
+loaderdoc=LiloDefault
+endif
 
 #  Package specific stuff
 # The following variable is used to simplify the process of making
@@ -138,12 +148,17 @@ SRCTOP := $(shell if [ "$$PWD" != "" ]; then echo $$PWD; else pwd; fi)
 DEBDIR := $(LIBLOC)
 DEBDIR_NAME:= $(shell basename $(DEBDIR))
 
+ifeq ($(strip $(architecture)),sparc)
+DEBCONFIG:= $(DEBDIR)/config.sparc
+else
+DEBCONFIG:= $(DEBDIR)/config
+endif
 
 # The file which has local configuration
 CONFIG_FILE := $(shell if test -e .config ; then \
                            echo .config; \
                        elif test -e $(DEBDIR)/config ; then \
-                           echo $(DEBDIR)/config; \
+                           echo $(DEBCONFIG); \
                        else echo /dev/null ; \
                        fi)
 
@@ -271,15 +286,15 @@ configure: stamp-configure
 stamp-configure: .config
 	@test -f $(DEBDIR)/rules || \
             echo Error: Could not find $(DEBDIR)/rules
-ifneq ($(strip $(patch_the_kernel)),YES)
-	-test -d $(DIR_PATCH_APPLY) && run-parts --verbose $(DIR_PATCH_APPLY)
-endif
 	-test ! -f stamp-configure && test ! -f debian/official && \
 	      rm -rf debian && $(make_directory) debian
+ifeq ($(strip $(patch_the_kernel)),YES)
+	-test -d $(DIR_PATCH_APPLY) && run-parts --verbose $(DIR_PATCH_APPLY)
+endif
 	-test ! -f stamp-configure && \
 	   sed -e 's/=V/$(version)/g'        -e 's/=D/$(debian)/g' \
 	       -e 's/=A/$(architecture)/g'   -e 's/=SA/$(INT_SUBARCH)/g' \
-               -e 's/=M/$(maintainer) <$(email)>/g' \
+               -e 's/=M/$(maintainer) <$(email)>/g' -e 's/=L/$(loaderdep)/g' \
 		         $(DEBDIR)/Control > debian/control
 	-test ! -f stamp-configure && test ! -f debian/official && \
 	   sed -e 's/=V/$(version)/g' -e 's/=D/$(debian)/g' \
@@ -300,19 +315,19 @@ endif
 
 
 clean:
+ifeq ($(strip $(patch_the_kernel)),YES)
+	-test -d $(DIR_PATCH_UNPATCH) && run-parts --verbose $(DIR_PATCH_UNPATCH)
+endif
 	rm -f $(FILES_TO_CLEAN) $(STAMPS_TO_CLEAN)
 	cp -pf .config config.precious
 	-test -f Makefile && $(MAKE) ARCH=$(architecture) distclean
 	mv -f config.precious .config
 	rm -rf $(DIRS_TO_CLEAN)
 	test -f stamp-building || test -f debian/official || rm -rf debian
-ifneq ($(strip $(patch_the_kernel)),YES)
-	-test -d $(DIR_PATCH_UNPATCH) && run-parts --verbose $(DIR_PATCH_UNPATCH)
-endif
 
 binary:       binary-indep binary-arch
-binary-indep: kernel_source kernel_headers kernel_doc
-binary-arch:  kernel_image
+binary-indep: kernel_source kernel_doc
+binary-arch:  kernel_image  kernel_headers
 
 
 kernel-source kernel_source: stamp-source
@@ -459,21 +474,21 @@ ifdef MODULES_ENABLED
 	$(make_directory) debian/tmp-image/lib/modules/$(version)/block
 endif
 	$(make_directory) debian/tmp-image/usr/doc/$(i_package)
-	sed -e 's/=V/$(version)/g' -e 's/=B/$(image_in_boot)/g'      \
+	sed -e 's/=V/$(version)/g'    -e 's/=B/$(image_in_boot)/g'   \
             -e 's/=S/$(no_symlink)/g' -e 's/=R/$(reverse_symlink)/g' \
-            -e 's/=K/$(kimage)/g'                                    \
+            -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \
              $(DEBDIR)/image.postinst > debian/tmp-image/DEBIAN/postinst
 	chmod 755 debian/tmp-image/DEBIAN/postinst
-	sed -e 's/=V/$(version)/g' \
+	sed -e 's/=V/$(version)/g'    -e 's/=L/$(loader)/g'          \
 	             $(DEBDIR)/image.prerm > debian/tmp-image/DEBIAN/prerm
 	chmod 755 debian/tmp-image/DEBIAN/prerm
 	$(install_file) debian/changelog \
 	         debian/tmp-image/usr/doc/$(i_package)/changelog.debian
 	gzip -9qf debian/tmp-image/usr/doc/$(i_package)/changelog.debian
 ifneq ($(strip $(architecture)),m68k)
-	$(install_file) $(DEBDIR)/LiloDefault \
-	         debian/tmp-image/usr/doc/$(i_package)/LiloDefault
-	gzip -9qf debian/tmp-image/usr/doc/$(i_package)/LiloDefault
+	$(install_file) $(DEBDIR)/$(loaderdoc) \
+	         debian/tmp-image/usr/doc/$(i_package)/$(loaderdoc)
+	gzip -9qf debian/tmp-image/usr/doc/$(i_package)/$(loaderdoc)
 endif
 	$(install_file) $(DEBDIR)/README.image \
 	         debian/tmp-image/usr/doc/$(i_package)/debian.README
@@ -548,18 +563,13 @@ ifdef MODULES_ENABLED
 endif
 	$(install_file) .config \
 	         debian/tmp-image/boot/config-$(version)
-# sparc has no vmlinuz; m68k has vmlinuz, just the kernel makefiles
+# SILO can boot gzip'ed kernel; m68k has vmlinuz, just the kernel makefiles
 # don't seem to realise it.
-ifeq ($(strip $(filter m68k sparc,$(architecture))),)
+ifneq ($(strip $(architecture)),m68k)
 	cp arch/$(architecture)/boot/$(kimage) \
                    debian/tmp-image/boot/vmlinuz-$(version)
 	chmod 644 debian/tmp-image/boot/vmlinuz-$(version)
-endif
-ifeq ($(strip $(architecture)),sparc)
-	elftoaout vmlinux -o debian/tmp-image/boot/vmlinux-$(version)
-	chmod 644 debian/tmp-image/boot/vmlinux-$(version)
-endif
-ifeq ($(strip $(architecture)),m68k)
+else
 	gzip -9vc vmlinux > debian/tmp-image/boot/vmlinuz-$(version)
 	chmod 644 debian/tmp-image/boot/vmlinuz-$(version)
 endif
