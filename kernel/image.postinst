@@ -5,14 +5,14 @@
 # Created On       : Sat Apr 27 05:55:26 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivasta
-# Last Modified On : Fri Jan 23 13:09:50 1998
+# Last Modified On : Tue Feb 10 15:38:57 1998
 # Last Machine Used: tiamat.datasync.com
-# Update Count     : 66
+# Update Count     : 70
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
 # 
-#    $Id: image.postinst,v 1.12 1998/01/23 20:48:37 srivasta Exp $
+#    $Id: image.postinst,v 1.13 1998/02/13 03:56:09 srivasta Exp $
 #
 
 # 
@@ -245,9 +245,10 @@ close(FSTAB);
 if (! defined($rootdevice)) {
   my $answer;
   print "Could not find where the current root file system is mounted!\n";
-  print "Please make some arrangement for your system to boot the new\n";
-  print "kernel (like running LILO, or getting a boot floppy). \n";
-  print "Please hit return to continue.\n";
+  print "Please make some arrangement for your system to boot the new \n";
+  print "kernel (like running LILO, loadlin, solo, or getting a boot  \n";
+  print "floppy).                                                     \n"; 
+  print "Please hit return to continue.                               \n";
   $answer = <STDIN>;
   exit (0);
 }
@@ -258,10 +259,20 @@ else {
   $rootpartition =~ s/$rootdisk//;
 }
 
+print "A new kernel image has been installed, and usually that means  \n";
+print "that some action has to be taken to make sure that the new     \n";
+print "kernel image is used next time the machine boots. Usually,     \n";
+print "this entails running a ``bootloader'' like grub, silo, loadlin,\n";
+print "or LILO, or booting from a floppy.                           \n\n";
+
 if ( ! -x "/sbin/lilo" ) {
-  print "A new kernel image has been installed, but LILO, the Linux\n";
-  print "boot loader, is not present. Please install LILO, or make\n";
-  print "some other arrangement for your system to boot the new kernel\n";
+  print "Hmm. LILO (LInux LOader), which is the only boot loader I    \n";
+  print "have additional help for, is not installed (it is, after all,\n";
+  print "just one of many optionss [and it is just an i386 binary]).  \n"; 
+  print "I am assuming you have made some  other arrangement for your \n";
+  print "system to boot the new kernel                                \n";
+  print "Please hit return to continue.                               \n";
+  $answer = <STDIN>;
   exit (0) unless defined $rootdevice;
 
   print "I can make a non-LILO diskette instead, but it won't be as useful.\n";

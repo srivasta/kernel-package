@@ -4,17 +4,17 @@
 # Author           : Manoj Srivastava ( srivasta@pilgrim.umass.edu ) 
 # Created On       : Sat Apr 27 05:42:43 1996
 # Created On Node  : melkor.pilgrim.umass.edu
-# Last Modified By : Manoj Srivasta
-# Last Modified On : Tue Jan 20 02:11:30 1998
+# Last Modified By : Manoj Srivastava
+# Last Modified On : Thu Feb 12 21:43:38 1998
 # Last Machine Used: tiamat.datasync.com
-# Update Count     : 16
+# Update Count     : 17
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
 # 
 # 
 #
-#    $Id: include.postinst,v 1.4 1998/01/21 09:28:24 srivasta Exp $
+#    $Id: include.postinst,v 1.5 1998/02/13 03:56:10 srivasta Exp $
 #
 
 
@@ -137,6 +137,10 @@ ERR
       exit 1;
     }
   }
+}
+
+# make sure the linux link exists
+if (! -e 'linux') {
   if (! symlink $package, 'linux') {
     print STDERR <<"ERR";
   Could not link /usr/src/$package to /usr/src/linux.  
@@ -144,6 +148,10 @@ ERR
 ERR
   ;
   }
+}
+
+# make sure the linux-version link exists
+if (! -e "linux-$version") {
   if (! symlink $package, "linux-$version") {
     print STDERR <<"ERR";
   Could not link /usr/src/$package to /usr/src/linux-$version.  
@@ -152,7 +160,6 @@ ERR
   ;
   }
 }
-
 
 if (open(REGISTRY,"/usr/src/.linux-versions")) {
   $/ = 0777;

@@ -1,3 +1,10 @@
+kernel-package (3.56) unstable; urgency=low
+
+  * Mentioned in the copyright file that the GPL and Artistic licences are
+    available on the file system.
+
+ --
+
 kernel-package (3.55) unstable; urgency=low
 
   * Added ARCH to make called, this allows for cross compiling kernels
