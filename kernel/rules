@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Tue Jun  1 12:21:01 1999
+## Last Modified On : Fri Oct  8 05:24:08 1999
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 403
+## Update Count	    : 410
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.76 1999/08/31 04:26:58 srivasta Exp $
+## $Id: rules,v 1.77 1999/10/08 10:33:42 srivasta Exp $
 ###############################################################################
 
 #
@@ -351,7 +351,7 @@ l_package := libc-kheaders
 FILES_TO_CLEAN  = modules/modversions.h modules/ksyms.ver debian/files
 STAMPS_TO_CLEAN = stamp-build stamp-configure stamp-source stamp-image \
                   stamp-headers stamp-src stamp-diff stamp-doc \
-                  stamp-buildpackage stamp-libc-kheaders
+                  stamp-buildpackage stamp-libc-kheaders stamp-debian
 DIRS_TO_CLEAN   = debian/tmp-source debian/tmp-headers debian/tmp-image
 
 CONFLOC    :=/etc/kernel-pkg.conf
@@ -369,7 +369,7 @@ PATCH_DIR         = /usr/src/kernel-patches/$(architecture)
 endif
 
 ifeq ($(strip $(ALL_PATCH_DIR)),)
-PATCH_DIR         = /usr/src/kernel-patches/all
+ALL_PATCH_DIR         = /usr/src/kernel-patches/all
 endif
 
 ALL_PATCH_APPLY   = $(ALL_PATCH_DIR)/apply
@@ -485,12 +485,25 @@ HAVE_VALID_PACKAGE_VERSION := $(shell \
         echo "Could not find $(DEBDIR)/kpkg-vercheck" ; \
       fi )
 
+TAR_COMPRESSION := $(shell \
+      if tar --help | grep -- \-\-bzip2 >/dev/null; then  \
+         echo --bzip2; \
+      else \
+         echo --gzip
+      fi )
+TAR_SUFFIX := $(shell \
+      if tar --help | grep -- \-\-bzip2 >/dev/null; then  \
+         echo bz2; \
+      else \
+         echo gz
+      fi )
+
 ifeq ($(strip $(IN_KERNEL_DIR)),)
 # Hah! Not in kernel directory!!
 build configure clean binary kernel_source kernel-source kernel-headers\
 stamp-source kernel_headers stamp-headers kernel_image stamp-image \
 kernel-image kernel-doc kernel_doc stamp-doc buildpackage \
-libc_kheaders libc-kheaders stamp-libc-kheaders kernel-image-deb:
+libc_kheaders libc-kheaders stamp-libc-kheaders kernel-image-deb debian:
 	@echo "You should invoke this command from the top level directory of"
 	@echo "a linux kernel source directory tree, and as far as I can tell,"
 	@echo "the current directory:"
@@ -508,7 +521,7 @@ ifneq ($(strip $(HAVE_VALID_PACKAGE_VERSION)),YES)
 # Hah! Bogus version number
 build configure clean binary kernel_source kernel-source kernel-headers\
 stamp-source kernel_headers stamp-headers kernel_image stamp-image \
-kernel-image kernel-doc kernel_doc stamp-doc buildpackage kernel-image-deb:
+kernel-image kernel-doc kernel_doc stamp-doc buildpackage kernel-image-deb debian:
 	@echo "Problems ecountered with the version number $(debian)."
 	@echo "$(HAVE_VALID_PACKAGE_VERSION)"
 	@echo ""
@@ -540,28 +553,31 @@ endif
 	rm -f stamp-building
 	touch stamp-buildpackage
 
-configure: stamp-configure
-stamp-configure: .config
+debian: stamp-debian
+stamp-debian:
 	@test -f $(DEBDIR)/rules || \
             echo Error: Could not find $(DEBDIR)/rules
-	-test ! -f stamp-configure && test ! -f debian/official && \
+	-test ! -f stamp-debian && test ! -f debian/official && \
 	      rm -rf debian && $(make_directory) debian
 ifeq ($(strip $(patch_the_kernel)),YES)
 	-test -d $(DIR_PATCH_APPLY) && run-parts --verbose $(DIR_PATCH_APPLY)
 	-test -d $(ALL_PATCH_APPLY) && run-parts --verbose $(ALL_PATCH_APPLY)
 endif
-	-test ! -f stamp-configure && \
+	-test ! -f stamp-debian && \
 	   sed -e 's/=V/$(version)/g'        -e 's/=D/$(debian)/g' \
 	       -e 's/=A/$(architecture)/g'   -e 's/=SA/$(INT_SUBARCH)/g' \
                -e 's/=L/$(int_loaderdep) /g' \
                -e 's/=M/$(maintainer) <$(email)>/g'  \
 		         $(DEBDIR)/Control > debian/control
-	-test ! -f stamp-configure && test ! -f debian/official && \
+	-test ! -f stamp-debian && test ! -f debian/official && \
 	   sed -e 's/=V/$(version)/g' -e 's/=D/$(debian)/g' \
 	    -e 's/=A/$(architecture)/g' -e 's/=M/$(maintainer) <$(email)>/g' \
 		$(DEBDIR)/changelog > debian/changelog
 	-test ! -f debian/rules && \
 	   $(install_program) $(DEBDIR)/rules debian/rules
+
+configure: stamp-configure
+stamp-configure: .config
 	-test ! -f stamp-configure && \
 	  (test -f .config || \
                 $(install_file) $(DEBDIR)/config .config) \
@@ -598,50 +614,50 @@ binary-arch:  kernel_image  kernel_headers
 
 
 kernel-source kernel_source: stamp-source
-stamp-source: configure
+stamp-source: debian
 	@test root = "`whoami`" || (echo need root priviledges; exit 1)
-	test -f stamp-configure || $(deb_rule) configure
+	test -f stamp-debian || $(deb_rule) debian
 	rm -rf debian/tmp-source
 	$(make_directory) debian/tmp-source/DEBIAN
 	$(make_directory) debian/tmp-source/usr/src/$(package)
-	$(make_directory) debian/tmp-source/usr/doc/$(package)
+	$(make_directory) debian/tmp-source/usr/share/doc/$(package)
 	sed -e 's/=P/$(package)/g' -e 's/=V/$(version)/g' \
 	    $(DEBDIR)/include.postinst > debian/tmp-source/DEBIAN/postinst
 	chmod 755 debian/tmp-source/DEBIAN/postinst
 	sed -e 's/=P/$(package)/g' -e 's/=V/$(version)/g' \
+	    $(DEBDIR)/include.prerm > debian/tmp-source/DEBIAN/prerm
+	chmod 755 debian/tmp-source/DEBIAN/prerm
+	sed -e 's/=P/$(package)/g' -e 's/=V/$(version)/g' \
 		$(DEBDIR)/include.postrm > debian/tmp-source/DEBIAN/postrm
 	chmod 755 debian/tmp-source/DEBIAN/postrm
 	$(install_file) debian/changelog \
-	          debian/tmp-source/usr/doc/$(package)/changelog.Debian
-	gzip -9qf debian/tmp-source/usr/doc/$(package)/changelog.Debian
-	$(install_file) $(DEBDIR)/LinkPolicy \
-	          debian/tmp-source/usr/doc/$(package)/LinkPolicy
-	gzip -9qf debian/tmp-source/usr/doc/$(package)/LinkPolicy
+	          debian/tmp-source/usr/share/doc/$(package)/changelog.Debian
+	gzip -9qf debian/tmp-source/usr/share/doc/$(package)/changelog.Debian
 	$(install_file) $(DEBDIR)/README \
-	          debian/tmp-source/usr/doc/$(package)/debian.README
-	gzip -9qf debian/tmp-source/usr/doc/$(package)/debian.README
+	          debian/tmp-source/usr/share/doc/$(package)/debian.README
+	gzip -9qf debian/tmp-source/usr/share/doc/$(package)/debian.README
 	$(install_file) $(DEBDIR)/README.headers \
-	          debian/tmp-source/usr/doc/$(package)/README.headers
-	gzip -9qf debian/tmp-source/usr/doc/$(package)/README.headers
+	          debian/tmp-source/usr/share/doc/$(package)/README.headers
+	gzip -9qf debian/tmp-source/usr/share/doc/$(package)/README.headers
 	$(install_file) $(DEBDIR)/README.tecra \
-	          debian/tmp-source/usr/doc/$(package)/README.tecra
-	gzip -9qf debian/tmp-source/usr/doc/$(package)/README.tecra
+	          debian/tmp-source/usr/share/doc/$(package)/README.tecra
+	gzip -9qf debian/tmp-source/usr/share/doc/$(package)/README.tecra
 	$(install_file) $(DEBDIR)/README.modules \
-	          debian/tmp-source/usr/doc/$(package)/README.modules
-	gzip -9qf debian/tmp-source/usr/doc/$(package)/README.modules
+	          debian/tmp-source/usr/share/doc/$(package)/README.modules
+	gzip -9qf debian/tmp-source/usr/share/doc/$(package)/README.modules
 	$(install_file) README \
-	          debian/tmp-source/usr/doc/$(package)/README
-	gzip -9qf debian/tmp-source/usr/doc/$(package)/README
+	          debian/tmp-source/usr/share/doc/$(package)/README
+	gzip -9qf debian/tmp-source/usr/share/doc/$(package)/README
 	$(install_file) $(DEBDIR)/Flavours \
-	          debian/tmp-source/usr/doc/$(package)/Flavours
-	gzip -9qf debian/tmp-source/usr/doc/$(package)/Flavours
+	          debian/tmp-source/usr/share/doc/$(package)/Flavours
+	gzip -9qf debian/tmp-source/usr/share/doc/$(package)/Flavours
 	$(install_file) $(DEBDIR)/Rationale \
-	          debian/tmp-source/usr/doc/$(package)/Rationale
-	gzip -9qf debian/tmp-source/usr/doc/$(package)/Rationale
+	          debian/tmp-source/usr/share/doc/$(package)/Rationale
+	gzip -9qf debian/tmp-source/usr/share/doc/$(package)/Rationale
 	$(install_file) $(DEBDIR)/copyright.source \
-		debian/tmp-source/usr/doc/$(package)/copyright
+		debian/tmp-source/usr/share/doc/$(package)/copyright
 	echo "This was produced by kernel-package version $(kpkg_version)." > \
-	         debian/tmp-source/usr/doc/$(package)/Buildinfo
+	         debian/tmp-source/usr/share/doc/$(package)/Buildinfo
 	-tar cf - `echo * | sed -e 's/debian//g' -e 's/\.deb//g' ` \
 	| (cd debian/tmp-source/usr/src/$(package); umask 000; tar xsf -)
 	(cd debian/tmp-source/usr/src/$(package); \
@@ -658,11 +674,11 @@ stamp-source: configure
                  $(DEBDIR)/README.source > \
 		 debian/tmp-source/usr/src/$(package)/README.Debian ; \
 	fi
-	$(install_file) .config debian/tmp-source/usr/src/$(package)/.config.save
 	chown -R root.root debian/tmp-source
 	chmod -R og=rX debian/tmp-source
-	(cd debian/tmp-source/usr/src/; tar zcf $(package).tar.gz $(package);\
-            rm -rf $(package);)
+	(cd debian/tmp-source/usr/src/; \
+           tar $(TAR_COMPRESSION) -cf $(package).tar.$(TAR_SUFFIX) $(package);\
+             rm -rf $(package);)
 	dpkg-gencontrol -isp -p$(package) -Pdebian/tmp-source/
 	chown -R root.root debian/tmp-source
 	chmod -R og=rX debian/tmp-source
@@ -682,26 +698,26 @@ stamp-headers: configure
 	rm -rf debian/tmp-headers
 	$(make_directory) debian/tmp-headers/DEBIAN
 	$(make_directory) debian/tmp-headers/usr/src/$(h_package)
-	$(make_directory) debian/tmp-headers/usr/doc/$(h_package)
+	$(make_directory) debian/tmp-headers/usr/share/doc/$(h_package)
 	sed -e 's/=P/$(h_package)/g' -e 's/=V/$(version)/g' \
 		$(DEBDIR)/include.postinst > debian/tmp-headers/DEBIAN/postinst
 	chmod 755 debian/tmp-headers/DEBIAN/postinst
 	sed -e 's/=P/$(h_package)/g' -e 's/=V/$(version)/g' \
+		$(DEBDIR)/include.prerm > debian/tmp-headers/DEBIAN/prerm
+	chmod 755 debian/tmp-headers/DEBIAN/prerm
+	sed -e 's/=P/$(h_package)/g' -e 's/=V/$(version)/g' \
 		$(DEBDIR)/include.postrm > debian/tmp-headers/DEBIAN/postrm
 	chmod 755 debian/tmp-headers/DEBIAN/postrm
 	$(install_file) $(DEBDIR)/copyright.headers \
-		debian/tmp-headers/usr/doc/$(h_package)/copyright
+		debian/tmp-headers/usr/share/doc/$(h_package)/copyright
 	$(install_file) debian/changelog \
-	         debian/tmp-headers/usr/doc/$(h_package)/changelog.Debian
-	gzip -9qf debian/tmp-headers/usr/doc/$(h_package)/changelog.Debian
-	$(install_file) $(DEBDIR)/LinkPolicy \
-	       debian/tmp-headers/usr/doc/$(h_package)/LinkPolicy
-	gzip -9qf debian/tmp-headers/usr/doc/$(h_package)/LinkPolicy
+	         debian/tmp-headers/usr/share/doc/$(h_package)/changelog.Debian
+	gzip -9qf debian/tmp-headers/usr/share/doc/$(h_package)/changelog.Debian
 	$(install_file) $(DEBDIR)/README.headers \
-	         debian/tmp-headers/usr/doc/$(h_package)/debian.README
-	gzip -9qf debian/tmp-headers/usr/doc/$(h_package)/debian.README
+	         debian/tmp-headers/usr/share/doc/$(h_package)/debian.README
+	gzip -9qf debian/tmp-headers/usr/share/doc/$(h_package)/debian.README
 	echo "This was produced by kernel-package version $(kpkg_version)." > \
-	         debian/tmp-headers/usr/doc/$(h_package)/Buildinfo
+	         debian/tmp-headers/usr/share/doc/$(h_package)/Buildinfo
 	-tar cf - include | \
             (cd debian/tmp-headers/usr/src/$(h_package); umask 000; tar xsf -)
 	(cd debian/tmp-headers/usr/src/$(h_package)/include; rm -f asm; \
@@ -715,25 +731,23 @@ stamp-headers: configure
 	touch stamp-headers
 
 kernel-doc kernel_doc: stamp-doc
-stamp-doc: configure
+stamp-doc: debian
 	@test root = "`whoami`" || (echo need root priviledges; exit 1)
-	test -f stamp-configure || $(deb_rule) configure
+	test -f stamp-debian || $(deb_rule) debian
 	rm -rf            debian/tmp-doc
 	$(make_directory) debian/tmp-doc/DEBIAN
-	$(make_directory) debian/tmp-doc/usr/doc/$(d_package)
+	$(make_directory) debian/tmp-doc/usr/share/doc/$(d_package)
 	$(install_file) debian/changelog \
-	         debian/tmp-doc/usr/doc/$(d_package)/changelog.Debian
-	$(install_file) $(DEBDIR)/LinkPolicy \
-	       debian/tmp-doc/usr/doc/$(d_package)/LinkPolicy.Debian
+	         debian/tmp-doc/usr/share/doc/$(d_package)/changelog.Debian
 	$(install_file) $(DEBDIR)/README.doc \
-	         debian/tmp-doc/usr/doc/$(d_package)/README.Debian
+	         debian/tmp-doc/usr/share/doc/$(d_package)/README.Debian
 	echo "This was produced by kernel-package version $(kpkg_version)." > \
-	         debian/tmp-doc/usr/doc/$(d_package)/Buildinfo
+	         debian/tmp-doc/usr/share/doc/$(d_package)/Buildinfo
 	-tar cf - Documentation | \
-            (cd debian/tmp-doc/usr/doc/$(d_package); umask 000; tar xsf -)
-	-gzip -9fqr debian/tmp-doc/usr/doc/$(d_package)
+            (cd debian/tmp-doc/usr/share/doc/$(d_package); umask 000; tar xsf -)
+	-gzip -9fqr debian/tmp-doc/usr/share/doc/$(d_package)
 	$(install_file) $(DEBDIR)/copyright.doc \
-		debian/tmp-doc/usr/doc/$(d_package)/copyright
+		debian/tmp-doc/usr/share/doc/$(d_package)/copyright
 	dpkg-gencontrol -isp -p$(d_package) -Pdebian/tmp-doc/
 	chown -R root.root debian/tmp-doc
 	chmod -R og=rX debian/tmp-doc
@@ -755,7 +769,7 @@ kernel-image-deb:
 	test -f stamp-build || $(deb_rule) build
 	$(make_directory) debian/tmp-image/DEBIAN
 	$(make_directory) debian/tmp-image/boot
-	$(make_directory) debian/tmp-image/usr/doc/$(i_package)
+	$(make_directory) debian/tmp-image/usr/share/doc/$(i_package)
 	sed -e 's/=V/$(version)/g'    -e 's/=B/$(image_in_boot)/g'   \
             -e 's/=S/$(no_symlink)/g' -e 's/=R/$(reverse_symlink)/g' \
             -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \
@@ -775,20 +789,20 @@ kernel-image-deb:
 	             $(DEBDIR)/image.prerm > debian/tmp-image/DEBIAN/prerm
 	chmod 755 debian/tmp-image/DEBIAN/prerm
 	$(install_file) debian/changelog \
-	         debian/tmp-image/usr/doc/$(i_package)/changelog.Debian
-	gzip -9qf debian/tmp-image/usr/doc/$(i_package)/changelog.Debian
+	         debian/tmp-image/usr/share/doc/$(i_package)/changelog.Debian
+	gzip -9qf debian/tmp-image/usr/share/doc/$(i_package)/changelog.Debian
 ifdef loaderdoc
 	$(install_file) $(DEBDIR)/$(loaderdoc) \
-	         debian/tmp-image/usr/doc/$(i_package)/$(loaderdoc)
-	gzip -9qf debian/tmp-image/usr/doc/$(i_package)/$(loaderdoc)
+	         debian/tmp-image/usr/share/doc/$(i_package)/$(loaderdoc)
+	gzip -9qf debian/tmp-image/usr/share/doc/$(i_package)/$(loaderdoc)
 endif
 	$(install_file) $(DEBDIR)/README.image \
-	         debian/tmp-image/usr/doc/$(i_package)/debian.README
-	gzip -9qf debian/tmp-image/usr/doc/$(i_package)/debian.README
+	         debian/tmp-image/usr/share/doc/$(i_package)/debian.README
+	gzip -9qf debian/tmp-image/usr/share/doc/$(i_package)/debian.README
 	$(install_file) $(DEBDIR)/copyright.image \
-		debian/tmp-image/usr/doc/$(i_package)/copyright
+		debian/tmp-image/usr/share/doc/$(i_package)/copyright
 	echo "This was produced by kernel-package version $(kpkg_version)." > \
-	         debian/tmp-image/usr/doc/$(i_package)/Buildinfo
+	         debian/tmp-image/usr/share/doc/$(i_package)/Buildinfo
 	$(install_file) .config $(INT_IMAGE_DESTDIR)/config-$(version)
 ifdef MODULES_ENABLED
 ifeq  ($(strip $(HAVE_NEW_MODLIB)),)
@@ -892,9 +906,9 @@ define mod_inst_cmds
         \
 	if [ -f BLOCK_MODULES    ]; then inst_mod BLOCK_MODULES    block; fi; \
 	if [ -f NET_MODULES      ]; then inst_mod NET_MODULES      net;   fi; \
-	if [ -f NET_MISC_MODULES ]; then inst_mod NET_MISC_MODULES misc;  fi; \
 	if [ -f IPV4_MODULES     ]; then inst_mod IPV4_MODULES     ipv4;  fi; \
 	if [ -f IPV6_MODULES     ]; then inst_mod IPV6_MODULES     ipv6;  fi; \
+        if [ -f ATM_MODULES      ]; then inst_mod ATM_MODULES      atm;   fi; \
 	if [ -f SCSI_MODULES     ]; then inst_mod SCSI_MODULES     scsi;  fi; \
 	if [ -f FS_MODULES       ]; then inst_mod FS_MODULES       fs;    fi; \
 	if [ -f NLS_MODULES      ]; then inst_mod NLS_MODULES      fs;    fi; \
@@ -904,12 +918,30 @@ define mod_inst_cmds
 	if [ -f VIDEO_MODULES    ]; then inst_mod VIDEO_MODULES    video; fi; \
 	if [ -f FC4_MODULES      ]; then inst_mod FC4_MODULES      fc4;   fi; \
 	if [ -f IRDA_MODULES     ]; then inst_mod IRDA_MODULES     net;   fi; \
+        if [ -f USB_MODULES      ]; then inst_mod USB_MODULES      usb;   fi; \
         \
-        ls *.o > .allmods; \
+        for f in *.o; do [ -r $$f ] && echo $$f; done > .allmods; \
         echo $$MODULES | tr ' ' '\n' | sort | comm -23 .allmods - > .misc; \
         if [ -s .misc ]; then inst_mod .misc misc; fi; \
         rm -f .misc .allmods; \
         )
 endef
+
+# 		2.0.38	2.2.12	2.3.1
+# BLOCK_MODULES	X	X	X
+# NET_MODULES	X	X	X
+# IPV4_MODULES	X	X	X
+# IPV6_MODULES		X	X
+# ATM_MODULES			X
+# SCSI_MODULES	X	X	X
+# FS_MODULES	X	X	X
+# NLS_MODULES		X	X
+# CDROM_MODULES	X	X	X
+# HAM_MODULES		X	X
+# SOUND_MODULES		X	X
+# VIDEO_MODULES		X	X
+# FC4_MODULES		X	X
+# IRDA_MODULES		X	X
+# USB_MODULES			X
 
 .PHONY: binary binary-arch binary-indep clean modules modules_image

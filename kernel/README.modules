@@ -48,7 +48,7 @@ USER INSTRUCTIONS
           machine is named myhost, you would use --revision myhost.1
           in the command line.  If you had to rebuild your custom
           kernel, you would use --revision myhost.2 and so on.  See
-          /usr/doc/kernel-package/README.gz for more information on
+          /usr/share/doc/kernel-package/README.gz for more information on
           revision numbers.
 
      3)   To build the actual module packages, execute:

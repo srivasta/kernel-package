@@ -1,42 +1,140 @@
-#! /usr/bin/perl
-#                              -*- Mode: Perl -*- 
-# debian.postinst --- 
-# Author           : Manoj Srivastava ( srivasta@pilgrim.umass.edu ) 
-# Created On       : Sat Apr 27 05:55:26 1996
-# Created On Node  : melkor.pilgrim.umass.edu
-# Last Modified By : Manoj Srivastava
-# Last Modified On : Mon Jun  2 15:15:14 1997
-# Last Machine Used: tiamat.datasync.com
-# Update Count     : 31
-# Status           : Unknown, Use with caution!
-# HISTORY          : 
-# Description      : 
-# 
-# 
-#
-#    $Id: postinst,v 1.2 1997/06/03 03:32:44 srivasta Exp $
-#
+#! /bin/sh
 
-$|=1;
-# Predefined values:
-my $ret;
-my $confcmd = "/usr/sbin/kernel-packageconfig";
+# Abort if any command returns an error value 
+set -e 
 
-# Ignore all invocations uxcept when called on to configure.
-exit 0 unless $ARGV[0] =~ /configure/;
+# This script is called as the last step of the installation of the 
+# package.  All the package's files are in place, dpkg has already
+# done its automatic conffile handling, and all the packages we depend
+# of are already fully installed and configured.
 
-# most of our work is done in /etc
-chdir("/etc") or die "could not chdir to /etc:$!\n";
+# The following idempotent stuff doesn't generally need protecting 
+# against being run in the abort-* cases.
 
--x "$confcmd" || 
-  die "Garbled installation: Could not find $confcmd";
-$ret = system "$confcmd";
-if ($ret) {
-  my $ans;
-  print "There was an error running $confcmd, and the package maybe \n";
-  print "misconfigured.  Please run $confcmd by hand, or edit the file \n";
-  print "/etc/kernel-pkg.conf by hand.\n";
-  exit (1);
-}
-exit (0);
-__END__
+package_name=libcgi-perl;
+
+# Ensure the menu system is updated
+[ ! -x /usr/bin/update-menus ] || /usr/bin/update-menus
+
+
+
+case "$1" in
+  configure)
+    # Configure this package.  If the package must prompt the user for
+    # information, do it here.
+
+    cd /etc;
+    if [ -f /usr/sbin/kernel-packageconfig ]; then
+	echo "Garbled installation: Could not find /usr/sbin/kernel-packageconfig";
+	exit 1;
+    else
+	/usr/sbin/kernel-packageconfig
+    fi
+
+    if [ -d /usr/doc ]; then
+	# Well, we still need to handle this, at least for the time being
+	if [   -d /usr/share/doc/$package_name ]; then
+	    # So the new doc dir exists, goody
+	    if [ -d /usr/doc/$package_name ]; then
+		echo "Yikes! The old directory, /usr/doc/$package_name"
+		echo "has not ben removed! This is an error; attempting"
+		echo "repairs"
+		if [ -f /usr/doc/$package_name/.dhelp ]; then
+		    rm -f /usr/doc/$package_name/.dhelp
+		    rmdir --ignore-fail-on-non-empty /usr/doc/$package_name/
+		fi
+		if [ -d /usr/doc/$package_name ]; then
+		    cat <<EOF 
+Failed repairs. There are old files in /usr/doc/$package_name/ created
+by you or another script. I can copy them over to the new location
+/usr/share/doc/$package_name, if you wish, preserving your versions of
+the files.  No files shall be over written, instead, backup versions
+shall be created in /usr/share/doc/$package_name as needed.
+
+Shall I copy the files over [Yn]?
+EOF
+		    read answer;
+		    case answer in
+			[Nn]*)
+			    echo "Not copying over, aborting";
+			    exit 1;
+			    ;;
+			*)
+			     cp -ab --version-control=t \
+				/usr/doc/$package_name  \
+				    /usr/share/doc/$package_name/.. ;
+			    rm -rf /usr/doc/$package_name;
+		    esac
+		fi
+	    fi
+            if [ -e /usr/doc/$package_name ]; then
+                echo "/usr/doc/$package_name exists, but is not a directory"
+                if [ -L /usr/doc/$package_name ]; then
+                    echo "it is a symbolic link, overwriting"
+                    ln -sf ../share/doc/$package_name /usr/doc/$package_name
+                else
+                    echo "This is an error. Aborting"
+                    exit 1
+                fi
+            fi
+            # File unexists. Free to go ahead and create link
+	    ln -sf ../share/doc/$package_name /usr/doc/$package_name
+	fi
+    fi
+
+    # There are three sub-cases:
+    if test "${2+set}" != set; then
+      # We're being installed by an ancient dpkg which doesn't remember
+      # which version was most recently configured, or even whether
+      # there is a most recently configured version.
+      :
+
+    elif test -z "$2" -o "$2" = "<unknown>"; then
+      # The package has not ever been configured on this system, or was
+      # purged since it was last configured.
+      :
+
+    else
+      # Version $2 is the most recently configured version of this
+      # package.
+      :
+
+    fi ;;
+  abort-upgrade)
+    # Back out of an attempt to upgrade this package FROM THIS VERSION
+    # to version $2.  Undo the effects of "prerm upgrade $2".
+    :
+
+    ;;
+  abort-remove)
+    if test "$2" != in-favour; then
+      echo "$0: undocumented call to \`postinst $*'" 1>&2
+      exit 0
+    fi
+    # Back out of an attempt to remove this package, which was due to
+    # a conflict with package $3 (version $4).  Undo the effects of
+    # "prerm remove in-favour $3 $4".
+    :
+
+    ;;
+  abort-deconfigure)
+    if test "$2" != in-favour -o "$5" != removing; then
+      echo "$0: undocumented call to \`postinst $*'" 1>&2
+      exit 0
+    fi
+    # Back out of an attempt to deconfigure this package, which was
+    # due to package $6 (version $7) which we depend on being removed
+    # to make way for package $3 (version $4).  Undo the effects of
+    # "prerm deconfigure in-favour $3 $4 removing $6 $7".
+    :
+
+    ;;
+  *) echo "$0: didn't understand being called with \`$1'" 1>&2
+     exit 0;;
+esac
+
+if command -v install-docs >/dev/null 2>&1; then
+  install-docs -i /usr/share/doc-base/libcgi-perl
+fi
+
+exit 0

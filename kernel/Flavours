@@ -53,7 +53,7 @@
  
 +# FLAVOUR is like EXTRAVERSION, but it's meant for local use, and the
 +# dash between it and the rest of the version is supplied here.  It's used
-+# by make-kpkg's --flavour switch, see /usr/doc/kernel-package/Flavours.
++# by make-kpkg's --flavour switch, see /usr/share/doc/kernel-package/Flavours.
 +#FLAVOUR =
 +
 +ifneq ($(strip $(FLAVOUR)),)

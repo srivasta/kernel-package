@@ -1,5 +1,5 @@
 
-    $Id: README,v 1.27 1999/08/19 07:16:47 srivasta Exp $
+    $Id: README,v 1.28 1999/10/08 10:33:39 srivasta Exp $
 
 This is the Debian Linux packaging scripts for the Linux kernel. 
 This package has been put together by Manoj Srivastava <srivasta@debian.org>.
@@ -197,7 +197,7 @@ old modules directory before installation, like so (need to be root):
 and later get rid of the .save directory.
 
 People who want to have multiple flavours of the same kernel version
-around should look at the file /usr/doc/kernel-package/Flavours.gz for
+around should look at the file /usr/share/doc/kernel-package/Flavours.gz for
 details (Note: This involves modifying the kernel sources top level
 Makefile; not recommended unless you are *sure* you need it). Also, if
 recompiling and using a different flavour, one needs to do a make-kpkg
@@ -432,7 +432,7 @@ There some add on modules that hook into make-kpkg and the kernel
 sources so that they may be kept in synchrony woth the kernel you
 run. If you have such a module source package, for example,
 pcmcia-source, then please read README.modules as well. If you don't
-never mind. (The file is in /usr/doc/kernel-source-X.X.XX/. If you
+never mind. (The file is in /usr/share/doc/kernel-source-X.X.XX/. If you
 don't have kernsel-source packages installed [that's OK]. there is a
 copy in /usr/share/kernel-package/README.modules).
 

@@ -13,7 +13,7 @@
 # Description      : 
 # 
 #
-#    $Id: image.prerm,v 1.7 1998/10/14 05:59:00 srivasta Exp $
+#    $Id: image.prerm,v 1.8 1999/10/08 10:33:42 srivasta Exp $
 #
 # 
 
@@ -27,6 +27,12 @@ my $image='';
 my $answer='';
 my $running = '';
 my $WouldInvalidate = 0;
+
+if ($ARGV[0] && ($ARGV[0] =~ /remove/ || $ARGV[0] =~ /upgrade/)) {
+  if (-l "/usr/doc/kernel-image-$version") {
+    unlink "/usr/doc/kernel-image-$version";
+  }
+}
 
 # Ignore all invocations uxcept when called on to remove
 exit 0 unless ($ARGV[0] && $ARGV[0] =~ /remove/) ;

@@ -1,3 +1,30 @@
+kernel-package (6.24) unstable; urgency=low
+
+  * updated module installation for the latest set of kernels (2.0.38,
+    2.2.12, and 2.3.18, at the time of writing). 
+  * use bzip2 instead of gzip for the kernel source tar ball, if tar
+    supports bzip2 (falls back to gzip for older tar versions). This may
+    close  Bug#42137.
+  * patched rules to accomodate the official kernel packages maintainer
+    (configure things only when one absolutely needs to). closes: Bug#46161
+  * Removed install of LinkPolicy, since we no longer do that (we provide
+    a tarball instead). closes: Bug#45090
+  * The normal upload closes: Bug#45471, Bug#44483, Bug#45427
+    which were fixed in the NMU
+  * Moved kernel-package and all generated packages to FHS compliance. 
+
+ -- Manoj Srivastava <srivasta@debian.org>  Fri,  8 Oct 1999 05:31:53 -0500
+
+kernel-package (6.23.1) unstable; urgency=low
+
+  * NMU, as Manoj is busy with RL(ok'd by Manoj).
+  * Fixed typo in rules file, which kept arch-patches from applying.
+    closes: Bug#45471, Bug#44483
+  * Changed location of GPL in /usr/share/kernel-package/README.
+    closes: Bug#45427
+
+ -- Adam Heath <doogie@debian.org>  Tue, 21 Sep 1999 02:34:02 -0500
+
 kernel-package (6.23) unstable; urgency=low
 
   * Added a smallish patch. This patch allows kernel-package to detect

@@ -22,7 +22,7 @@
 .\" USA.
 .\"
 .\"
-.\"    $Id: make-kpkg.8,v 1.18 1999/07/14 16:06:06 srivasta Exp $
+.\"    $Id: make-kpkg.8,v 1.19 1999/10/08 10:33:40 srivasta Exp $
 .\"
 .TH MAKE\-KPKG 8 "May 2 1997" "Debian" "Debian GNU/Linux manual"
 .SH NAME
@@ -64,7 +64,7 @@ you may prepend the revision with a digit followed by a colon (:)
 .BR \-\-flavour\ foo
 Sets the kernel flavour to the argument \fBfoo\fR. The flavour is
 also appended to the package name. You need a patched Makefile to make
-this work propperly (see /usr/doc/kernel-package/\s-1FLAVOURS\s0.gz).
+this work propperly (see /usr/share/doc/kernel-package/\s-1FLAVOURS\s0.gz).
 It may contain only alphanumerics and the characters \- + . (full
 stop, hyphen, and plus). Uppercase letter are also not permitted under
 the Policy for a new package. \fB\s-1NOTE\s0\fR: Hyphens are
@@ -295,10 +295,10 @@ snippet, and any legal make directives may be included in there.
 .B Note:
 Caution is urged with this file, since you can totally change the way that the 
 make is run by suitable editing this file. Please look at
-.I /usr/doc/kernel-package/Problems.gz
+.I /usr/share/doc/kernel-package/Problems.gz
 for a list of known problems while compiling kernel images. Extensive
 tutorial like documentation is also available in
-.I /usr/doc/kernel-package/README.gz
+.I /usr/share/doc/kernel-package/README.gz
 and it is recommended that one read that before using this utility.
 .SH "SEE ALSO"
 .BR kernel-pkg.conf (5),
@@ -308,7 +308,7 @@ and it is recommended that one read that before using this utility.
 .BR The\ Programmers\ manual, 
 .BR The\ GNU\ Make\ manual,
 and the extensive documentation in the directory 
-.B /usr/doc/kernel-package
+.B /usr/share/doc/kernel-package
 .SH AUTHOR
 This manual page was written by Manoj Srivastava <srivasta@debian.org>,
 for the Debian GNU/Linux system.

@@ -5,9 +5,9 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Tue May 25 15:55:30 1999
+## Last Modified On : Fri Oct  8 05:30:31 1999
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 124
+## Update Count	    : 125
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
@@ -19,7 +19,7 @@
 #                          sed 's/^Version: *//')
 #
 
-#    $Id: rules,v 1.16 1999/07/14 15:29:04 srivasta Exp $
+#    $Id: rules,v 1.17 1999/10/08 10:33:40 srivasta Exp $
 
 
 # Please change the maintainer information, as well as the debian version
@@ -53,7 +53,7 @@ SRCTOP     := $(shell if [ "$$PWD" != "" ]; then echo $$PWD; else pwd; fi)
 DEBDIR     := $(LIBLOC)
 DEBDIR_NAME:= $(shell basename $(DEBDIR))
 
-DOCDIR  = debian/tmp/usr/doc/$(package)
+DOCDIR  = debian/tmp/usr/share/doc/$(package)
 MAN1DIR = debian/tmp/usr/share/man/man1
 MAN5DIR = debian/tmp/usr/share/man/man5
 MAN8DIR = debian/tmp/usr/share/man/man8
@@ -96,6 +96,7 @@ stamp-binary:
 	$(make_directory)  $(DOCDIR)
 	$(install_file)    debian/conffiles debian/tmp/DEBIAN/conffiles
 	$(install_program) debian/postinst debian/tmp/DEBIAN/postinst
+	$(install_program) debian/prerm debian/tmp/DEBIAN/prerm
 	$(install_file)    debian/changelog $(DOCDIR)/changelog
 	$(install_file)    README $(DOCDIR)/README
 	$(install_file)    kernel/Flavours $(DOCDIR)/Flavours

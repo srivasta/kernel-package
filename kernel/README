@@ -1,5 +1,5 @@
 
-   $Id: README,v 1.28 1999/08/19 07:16:49 srivasta Exp $
+   $Id: README,v 1.29 1999/10/08 10:33:41 srivasta Exp $
 
 This is the Debian GNU/Linux prepackaged version of the Linux kernel.
 Linux was written by Linus Torvalds <Linus.Torvalds@cs.Helsinki.FI> and
@@ -25,7 +25,7 @@ Linux is copyrighted by Linus Torvalds and others.
    Foundation, Inc., 675 Mass Ave., Cambridge, MA 02139, USA.
 
 On Debian GNU/Linux systems, the complete text of the GNU General
-Public License can be found in `/usr/doc/copyright/GPL'.
+Public License can be found in `/usr/share/common-licenses/GPL'.
 
 INSTALLATION NOTES:
 
@@ -217,7 +217,7 @@ old modules directory before installation, like so (need to be root):
 and later get rid of the .save directory.
 
 People who want to have multiple flavours of the same kernel version
-around should look at the file /usr/doc/kernel-package/Flavours.gz for
+around should look at the file /usr/share/doc/kernel-package/Flavours.gz for
 details (Note: This involves modifying the kernel sources top level
 Makefile; not recommended unless you are *sure* you need it). Also, if
 recompiling and using a different flavour, one needs to do a make-kpkg
@@ -454,8 +454,8 @@ There some add on modules that hook into make-kpkg and the kernel
 sources so that they may be kept in synchrony woth the kernel you
 run. If you have such a module source package, for example,
 pcmcia-source, then please read README.modules as well. If you don't
-never mind. (The file is in /usr/doc/kernel-source-X.X.XX/. If you
-don't have kernsel-source packages installed [that's OK]. there is a
+never mind. (The file is in /usr/share/doc/kernel-source-X.X.XX/. If you
+don't have kernel-source packages installed [that's OK]. there is a
 copy in /usr/share/kernel-package/README.modules).
 
 Have fun,

@@ -14,7 +14,7 @@
 #
 #
 #
-#    $Id: make-kpkg,v 1.31 1999/08/19 07:02:29 srivasta Exp $
+#    $Id: make-kpkg,v 1.32 1999/10/08 10:33:39 srivasta Exp $
 #
 require 5.002;
 use strict;
@@ -29,7 +29,7 @@ make-kpkg - build Debian kernel packages from Linux kernel sources.
 ($main::MYNAME     = $main::0) =~ s|.*/||;
 $main::Author      = "Manoj Srivastava";
 $main::AuthorMail  = "srivasta\@debian.org";
-$main::Version     = '$Revision: 1.31 $ ';
+$main::Version     = '$Revision: 1.32 $ ';
 
 my $help_opt=0; 
 my $revision=0; 
@@ -114,7 +114,7 @@ newer than the one installed on the system.
 
 Sets the kernel flavour to the argument B<number>. The flavour is also
 appended to the package name. You need a patched Makefile to make this
-work properly (see /usr/doc/kernel-package/Flavours.gz).  It may
+work properly (see /usr/share/doc/kernel-package/Flavours.gz).  It may
 contain only alphanumerics and the characters - + . (full stop,
 hyphen, and plus). Uppercase letter are also not permitted under the
 Policy for a new package. B<NOTE>: Hyphens are discouraged.  (Look at
@@ -266,7 +266,7 @@ and a value.
 
 my $usage = <<"EOUSAGE";
 This program should be run in a linux kernel source top level directory.
-/usr/doc/kernel-package/Problems.gz contains a list of known problems.
+/usr/share/doc/kernel-package/Problems.gz contains a list of known problems.
 
 usage: $main::MYNAME [options] target [target ...]
   where options are:
@@ -274,7 +274,7 @@ usage: $main::MYNAME [options] target [target ...]
  --revision number     The debian revision number. ([a-z.+0-9]) (Must
                          have digit, no hyphen allowed)
  --flavour  foo        an additional kernel sub-version. ([-a-z.+0-9])
-                         see /usr/doc/kernel-package/Flavours.gz
+                         see /usr/share/doc/kernel-package/Flavours.gz
  --arch     foo        architecture
  --cross_compile       target string
  --subarch  bar        Set the sub arch for the image being compiled
@@ -681,8 +681,8 @@ I</etc/kernel-pkg.conf> file is actually a I<Makefile> snippet, and any
 legal make directives may be included in there.  B<Note>: Caution is
 urged with this file, since you can totally change the way that the
 make is run by suitable editing this file. Please look at
-I</usr/doc/kernel-package/Problems.gz> for a list of known problems while
-compiling kernel images.
+I</usr/share/doc/kernel-package/Problems.gz> for a list of known
+problems while compiling kernel images.
 
 =cut
 
@@ -691,7 +691,7 @@ compiling kernel images.
 
 B<kernel-pkg.conf>(5), B<dpkg-deb>(1), B<dpkg-source>(1),  B<make>(1),
 B<The GNU Make manual>, and the extensive documentation in the
-directory I</usr/doc/kernel-package/>
+directory I</usr/share/doc/kernel-package/>
 
 =cut
 

@@ -2,7 +2,7 @@ Source: kernel-source-=V
 Section: devel
 Priority: optional
 Maintainer:  =M
-Standards-Version: 3.0.0.0
+Standards-Version: 3.0.1.0
 
 Package: kernel-headers-=V
 Architecture: any
@@ -11,7 +11,7 @@ Priority: optional
 Provides: kernel-headers
 Description: Header files related to a specific Linux kernel.
  This package provides kernel header files, for sites that want the latest
- kernel headers. Please read /usr/doc/kernel-headers-=V/debian.README.gz
+ kernel headers. Please read /usr/share/doc/kernel-headers-=V/debian.README.gz
  for details 
 
 Package: kernel-source-=V
@@ -23,8 +23,7 @@ Depends: binutils | gas
 Recommends: libc-dev, gcc, make
 Suggests: ncurses-dev, tk-dev, kernel-package, bin86
 Description: Linux kernel source.
- This package provides the source code for the Linux kernel, as well
- as the scripts that maintain the symbolic link /usr/src/linux). 
+ This package provides the source code for the Linux kernel. 
  .
  You may configure the kernel to your setup by typing "make config"
  and following instructions, but you could get ncursesX.X-dev and
@@ -32,7 +31,7 @@ Description: Linux kernel source.
  interface. Also, on intel platforms, you MUST get bin86 if
  you wish to compile the kernel sources. Ignore the suggestion to get bin86
  for non intel architectures. Also, please read the detailed documentation
- /usr/doc/kernel-source-=V/README.headers.gz. 
+ /usr/share/doc/kernel-source-=V/README.headers.gz. 
  .
  If you wish to use this package to create a custom Linux kernel, then
  it is suggested that you investigate the package kernel-package,
@@ -69,7 +68,7 @@ Description: Linux kernel specific documentation.
  This package provides The various readme's in the kernel
  Documentation/ subdirectory: these typically contain kernel-specific
  installation notes for some drivers for example. See
- /usr/doc/kernel-doc-X.X.XX/Documentation/00-INDEX for a list of what
+ /usr/share/doc/kernel-doc-X.X.XX/Documentation/00-INDEX for a list of what
  is contained in each file.  Please read the Changes file, as it
  contains information about the problems, which may result by
  upgrading your kernel.

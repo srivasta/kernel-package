@@ -12,7 +12,7 @@
 # HISTORY          : 
 # Description      : 
 # 
-#    $Id: image.postinst,v 1.27 1999/08/31 04:26:58 srivasta Exp $
+#    $Id: image.postinst,v 1.28 1999/10/08 10:33:42 srivasta Exp $
 #
 
 # 
@@ -232,13 +232,73 @@ if ( -f "/lib/modules/$version/modules.dep" ) {
  can not stress that too much. You need to re boot soon.
 
 EOFERR
-
-  my $answer='';
+  ;
+    
+    my $answer='';
     print "Please Hit return to continue.  ";
     $answer=<STDIN>;
   }
   # system("depmod -a $version");
 }
+
+if (-d "/usr/doc") {
+  # Well, we still need to handle this, at least for the time being
+  if (-d "/usr/share/doc/kernel-image-$version") {
+    # So the new doc dir exists, goody
+    if (-d "/usr/doc/kernel-image-$version") {
+      print STDERR "Yikes! The old directory, /usr/doc/kernel-image-$version\n";
+      print STDERR "has not ben removed! This is an error; attempting\n";
+      print STDERR "repairs";
+      if (-f "/usr/doc/kernel-image-$version/.dhelp") {
+	unlink "/usr/doc/kernel-image-$version/.dhelp";
+	rmdir "/usr/doc/kernel-image-$version";
+      }
+      if (-d "/usr/doc/kernel-image-$version") {
+	print STDERR <<"EOFERRONE";
+Failed repairs. There are old files in /usr/doc/$package_name/ created
+by you or another script. I can copy them over to the new location
+/usr/share/doc/$package_name, if you wish, preserving your versions of
+the files.  No files shall be over written, instead, backup versions
+shall be created in /usr/share/doc/$package_name as needed.
+
+EOFERRONE
+  ;
+	my $answer='';
+	print "Shall I copy the files over [Yn]?";
+	$answer=<STDIN>;
+	if ($answer =~ /^n/i) {
+	  print "Not copying over, aborting\n";
+	  exit 1;
+	}
+	else {
+	  system "cp", "-ab", "--version-control=t",
+	  "/usr/doc/kernel-image-$version",
+	  "/usr/share/doc/kernel-image-$version/.." ||
+	    die "Error copying files over: $?";
+	  system "rm", "-rf", "/usr/doc/kernel-image-$version" ||
+	    die "Error removing old directory:$?";
+	}
+      }
+    }
+    if (-e "/usr/doc/kernel-image-$version") {
+      print STDERR "/usr/doc/kernel-image-$version exists, but is not a directory\n";
+      if (-l "/usr/doc/kernel-image-$version") {
+	print STDERR "It is a symbolic link. Overwriting\n";
+	unlink "/usr/doc/kernel-image-$version";
+	symlink "../share/doc/kernel-image-$version",
+	"/usr/doc/kernel-image-$version";
+      }
+      else {
+	print STDERR "This is an error. Aborting\n";
+	exit 1;
+      }
+    }
+    # File unexists. Free to go ahead and create link
+    symlink "../share/doc/kernel-image-$version",
+    "/usr/doc/kernel-image-$version";
+  }
+}
+
 
 exit (0) if $loader =~ /milo/i; # MILO does not have to be executed.
 exit (0) if $loader =~ /nettrom/i; # NETTROM does not have to be executed.
