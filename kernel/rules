@@ -5,9 +5,9 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Tue Feb  8 15:05:59 2005
+## Last Modified On : Fri Feb 11 12:19:48 2005
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count	    : 755
+## Update Count	    : 759
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
@@ -1644,7 +1644,7 @@ ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
 endif
 	test -f stamp-configure || $(deb_rule) configure
 	echo 'Building Package' > stamp-building
-	dpkg-buildpackage -nc $(strip $(root_cmd)) $(strip $(int_us)) $(strip $(int_uc))  \
+	dpkg-buildpackage -nc $(strip $(int_root_cmd)) $(strip $(int_us)) $(strip $(int_uc))  \
              -m"$(maintainer) <$(email)>" -k"$(pgp)"
 	rm -f stamp-building
 	echo done >  $@
@@ -1707,7 +1707,7 @@ endif
 	   install -p -m 755 $(DEBDIR)/rules debian/rules
 	echo done >  $@
 
-conf_vars: Makefile .config
+conf.vars: Makefile .config
 	@rm -f .mak
 	@touch .mak
 	@echo Please ignore the warning about overriding and ignoring targets above.
@@ -1733,11 +1733,11 @@ endif
           $(CROSS_ARG) debian_conf_var              >> .mak
 	@echo "do_parallel      = $(do_parallel)"   >> .mak
 	@echo "fast_dep         = $(fast_dep)"      >> .mak
-	@sed -e 's%$(TOPDIR)%$$(TOPDIR)%g' .mak     > conf.vars
+#	@sed -e 's%$(TOPDIR)%$$(TOPDIR)%g' .mak     > conf.vars
 # Use the kernel's Makefile to calculate the TOPDIR.
 # TOPDIR is obsolete in 2.6 kernels, so the kernel_version.mk
 # will get us the right answer
-#	@sed -e 's%$(shell $(MAKE) --quiet -f $(DEBDIR)/kernel_version.mk debian_TOPDIR)%$$(TOPDIR)%g' .mak     > conf.vars
+	@sed -e 's%$(shell $(MAKE) -sf $(DEBDIR)/kernel_version.mk debian_TOPDIR)%$$(TOPDIR)%g' .mak     > conf.vars
 	@rm -f .mak
 
 dummy_do_dep:
@@ -1783,10 +1783,10 @@ endif
 
 clean:
 ifeq ($(strip $(int_am_root)),)
-ifeq ($(strip $(int_root_cmd)),)
+ifeq ($(strip $(ROOT_CMD)),)
 	@echo "You may need root privileges - some parts may fail"
 endif
-	$(int_root_cmd) $(deb_rule) real_stamp_clean
+	$(ROOT_CMD) $(deb_rule) real_stamp_clean
 else
 	$(deb_rule) real_stamp_clean
 endif
@@ -1840,10 +1840,10 @@ binary-arch:  kernel_image  kernel_headers
 kernel-source kernel_source: stamp-source
 stamp-source: stamp-debian
 ifeq ($(strip $(int_am_root)),)
-ifeq ($(strip $(int_root_cmd)),)
+ifeq ($(strip $(ROOT_CMD)),)
 	@echo need root privileges; exit 1
 else
-	$(int_root_cmd) $(deb_rule) real_stamp_source
+	$(ROOT_CMD) $(deb_rule) real_stamp_source
 endif
 else
 	$(deb_rule) real_stamp_source
@@ -1941,10 +1941,10 @@ stamp-libc-kheaders: configure
 kernel-headers kernel_headers: stamp-headers
 stamp-headers: configure
 ifeq ($(strip $(int_am_root)),)
-ifeq ($(strip $(int_root_cmd)),)
+ifeq ($(strip $(ROOT_CMD)),)
 	@echo need root privileges; exit 1
 else
-	$(int_root_cmd) $(deb_rule) real_stamp_headers
+	$(ROOT_CMD) $(deb_rule) real_stamp_headers
 endif
 else
 	$(deb_rule) real_stamp_headers
@@ -2030,10 +2030,10 @@ endif
 kernel-doc kernel_doc: stamp-doc
 stamp-doc: stamp-debian
 ifeq ($(strip $(int_am_root)),)
-ifeq ($(strip $(int_root_cmd)),)
+ifeq ($(strip $(ROOT_CMD)),)
 	@echo need root privileges; exit 1
 else
-	$(int_root_cmd) $(deb_rule) real_stamp_doc
+	$(ROOT_CMD) $(deb_rule) real_stamp_doc
 endif
 else
 	$(deb_rule) real_stamp_doc
@@ -2101,10 +2101,10 @@ stamp-image: configure build kernel-image-deb
 # user name (as opposed to root@...)
 kernel-image-deb:
 ifeq ($(strip $(int_am_root)),)
-ifeq ($(strip $(int_root_cmd)),)
+ifeq ($(strip $(ROOT_CMD)),)
 	@echo need root privileges; exit 1
 else
-	$(int_root_cmd) $(deb_rule) real_stamp_image
+	$(ROOT_CMD) $(deb_rule) real_stamp_image
 endif
 else
 	$(deb_rule) real_stamp_image
@@ -2126,65 +2126,82 @@ endif
 	$(make_directory) $(IMAGE_DOC)
 ifneq ($(strip $(KERNEL_ARCH)),um)
   ifneq ($(strip $(KERNEL_ARCH)),xen)
-	sed -e 's/=V/$(version)/g'    -e 's/=B/$(link_in_boot)/g'   \
+	sed -e 's/=V/$(version)/g'    -e 's/=B/$(link_in_boot)/g'    \
             -e 's/=S/$(no_symlink)/g' -e 's/=R/$(reverse_symlink)/g' \
             -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \
             -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'        \
             -e 's@=M@$(MKIMAGE)@g'    -e 's/=OF/$(AM_OFFICIAL)/g'    \
             -e 's@=A@$(DEB_HOST_ARCH)@g'                             \
-             -e 's/=ST/$(INT_STEM)/g'                                \
+            -e 's/=ST/$(INT_STEM)/g'                                 \
              $(DEBDIR)/image.postinst > $(IMAGE_TOP)/DEBIAN/postinst
 	chmod 755 $(IMAGE_TOP)/DEBIAN/postinst
-	sed -e 's/=V/$(version)/g'    -e 's/=B/$(link_in_boot)/g'   \
+	sed -e 's/=V/$(version)/g'    -e 's/=B/$(link_in_boot)/g'    \
             -e 's/=S/$(no_symlink)/g' -e 's/=R/$(reverse_symlink)/g' \
             -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \
             -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'        \
             -e 's@=M@$(MKIMAGE)@g'    -e 's/=OF/$(AM_OFFICIAL)/g'    \
+            -e 's@=A@$(DEB_HOST_ARCH)@g'                             \
+            -e 's/=ST/$(INT_STEM)/g'                                 \
              $(DEBDIR)/image.postrm > $(IMAGE_TOP)/DEBIAN/postrm
 	chmod 755 $(IMAGE_TOP)/DEBIAN/postrm
-	sed -e 's/=V/$(version)/g'    -e 's/=L/$(loader)/g'          \
-             -e 's/=I/$(INITRD)/g'     -e 's/=OF/$(AM_OFFICIAL)/g'    \
-             -e 's@=M@$(MKIMAGE)@g'    -e 's@=A@$(DEB_HOST_ARCH)@g'   \
+	sed -e 's/=V/$(version)/g'    -e 's/=B/$(link_in_boot)/g'    \
+            -e 's/=S/$(no_symlink)/g' -e 's/=R/$(reverse_symlink)/g' \
+            -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \
+            -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'        \
+            -e 's@=M@$(MKIMAGE)@g'    -e 's/=OF/$(AM_OFFICIAL)/g'    \
+            -e 's@=A@$(DEB_HOST_ARCH)@g'                             \
             -e 's/=ST/$(INT_STEM)/g'                                 \
-	             $(DEBDIR)/image.preinst > $(IMAGE_TOP)/DEBIAN/preinst
+             $(DEBDIR)/image.preinst > $(IMAGE_TOP)/DEBIAN/preinst
 	chmod 755 $(IMAGE_TOP)/DEBIAN/preinst
-	sed -e 's/=V/$(version)/g'    -e 's/=L/$(loader)/g'          \
-             -e 's@=M@$(MKIMAGE)@g'    -e 's/=OF/$(AM_OFFICIAL)/g'    \
+	sed -e 's/=V/$(version)/g'    -e 's/=B/$(link_in_boot)/g'    \
+            -e 's/=S/$(no_symlink)/g' -e 's/=R/$(reverse_symlink)/g' \
+            -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \
+            -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'        \
+            -e 's@=M@$(MKIMAGE)@g'    -e 's/=OF/$(AM_OFFICIAL)/g'    \
+            -e 's@=A@$(DEB_HOST_ARCH)@g'                             \
             -e 's/=ST/$(INT_STEM)/g'                                 \
              $(DEBDIR)/image.prerm > $(IMAGE_TOP)/DEBIAN/prerm
 	chmod 755 $(IMAGE_TOP)/DEBIAN/prerm
   else
-	sed -e 's/=V/$(version)/g'    -e 's/=B/$(link_in_boot)/g'   \
+	sed -e 's/=V/$(version)/g'    -e 's/=B/$(link_in_boot)/g'    \
             -e 's/=S/$(no_symlink)/g' -e 's/=R/$(reverse_symlink)/g' \
             -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \
             -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'        \
             -e 's@=M@$(MKIMAGE)@g'    -e 's/=OF/$(AM_OFFICIAL)/g'    \
             -e 's@=A@$(DEB_HOST_ARCH)@g'                             \
-            -e 's/=SA/$(KPKG_SUBARCH)/g'                              \
+            -e 's/=ST/$(INT_STEM)/g'                                 \
              $(DEBDIR)/xen.postinst > $(IMAGE_TOP)/DEBIAN/postinst
 	chmod 755 $(IMAGE_TOP)/DEBIAN/postinst
-	sed -e 's/=V/$(version)/g'    -e 's/=L/$(loader)/g'          \
-             -e 's@=M@$(MKIMAGE)@g'    -e 's/=OF/$(AM_OFFICIAL)/g'    \
+	sed -e 's/=V/$(version)/g'    -e 's/=B/$(link_in_boot)/g'    \
+            -e 's/=S/$(no_symlink)/g' -e 's/=R/$(reverse_symlink)/g' \
+            -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \
+            -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'        \
+            -e 's@=M@$(MKIMAGE)@g'    -e 's/=OF/$(AM_OFFICIAL)/g'    \
+            -e 's@=A@$(DEB_HOST_ARCH)@g'                             \
+            -e 's/=ST/$(INT_STEM)/g'                                 \
              $(DEBDIR)/xen.prerm > $(IMAGE_TOP)/DEBIAN/prerm
 	chmod 755 $(IMAGE_TOP)/DEBIAN/prerm
   endif
 else
 	$(make_directory) $(UML_DIR)
 	$(make_directory) $(MAN1DIR)
-	sed -e 's/=V/$(version)/g'    -e 's/=B/$(link_in_boot)/g'   \
+	sed -e 's/=V/$(version)/g'    -e 's/=B/$(link_in_boot)/g'    \
             -e 's/=S/$(no_symlink)/g' -e 's/=R/$(reverse_symlink)/g' \
             -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \
             -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'        \
             -e 's@=M@$(MKIMAGE)@g'    -e 's/=OF/$(AM_OFFICIAL)/g'    \
             -e 's@=A@$(DEB_HOST_ARCH)@g'                             \
-             $(DEBDIR)/um.postinst > $(IMAGE_TOP)/DEBIAN/postinst
+            -e 's/=ST/$(INT_STEM)/g'                                 \
+              $(DEBDIR)/um.postinst > $(IMAGE_TOP)/DEBIAN/postinst
 	chmod 755 $(IMAGE_TOP)/DEBIAN/postinst
-	sed -e 's/=V/$(version)/g'    -e 's/=B/$(link_in_boot)/g'   \
+	sed -e 's/=V/$(version)/g'    -e 's/=B/$(link_in_boot)/g'    \
             -e 's/=S/$(no_symlink)/g' -e 's/=R/$(reverse_symlink)/g' \
             -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \
             -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'        \
             -e 's@=M@$(MKIMAGE)@g'    -e 's/=OF/$(AM_OFFICIAL)/g'    \
-             $(DEBDIR)/um.prerm > $(IMAGE_TOP)/DEBIAN/prerm
+            -e 's@=A@$(DEB_HOST_ARCH)@g'                             \
+            -e 's/=ST/$(INT_STEM)/g'                                 \
+              $(DEBDIR)/um.prerm > $(IMAGE_TOP)/DEBIAN/prerm
 	chmod 755 $(IMAGE_TOP)/DEBIAN/prerm
 	$(install_file) $(DEBDIR)/linux.1 $(MAN1DIR)/linux-$(version).1
 	gzip -9fq       $(MAN1DIR)/linux-$(version).1
@@ -2351,7 +2368,7 @@ endif
                   echo "Module $$module processed fine";            \
               else                                                  \
                    echo "Module $$module failed.";                  \
-                   if [ "X$(strip $(int_root_cmd))" != "X" ]; then      \
+                   if [ "X$(strip $(ROOT_CMD))" != "X" ]; then      \
                       echo "Perhaps $$module does not understand --rootcmd?";  \
                       echo "If you see messages that indicate that it is not"; \
                       echo "in fact being built as root, please file a bug ";  \
@@ -2386,7 +2403,7 @@ endif
                   echo "Module $$module processed fine";            \
               else                                                  \
                    echo "Module $$module failed.";                  \
-                   if [ "X$(strip $(int_root_cmd))" != "X" ]; then      \
+                   if [ "X$(strip $(ROOT_CMD))" != "X" ]; then      \
                       echo "Perhaps $$module does not understand --rootcmd?";  \
                       echo "If you see messages that indicate that it is not"; \
                       echo "in fact being built as root, please file a bug ";  \
