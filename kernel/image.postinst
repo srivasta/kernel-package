@@ -12,7 +12,7 @@
 # HISTORY          :
 # Description      :
 #
-#    $Id: image.postinst,v 1.80 2001/09/29 21:56:39 srivasta Exp $
+#    $Id: image.postinst,v 1.81 2001/10/02 16:15:12 srivasta Exp $
 #
 
 #
@@ -594,8 +594,28 @@ EOFERR
 
 # We may not have any modules installed
 if ( -d "/lib/modules/$version" ) {
-  system("depmod -a -F $realimageloc/System.map-$version $version");
+  my $ret = system("depmod -a -F $realimageloc/System.map-$version $version");
+  # my $exit_value  = $? >> 8;
+  # my $signal_num  = $? & 127;
+  # my $dumped_core = $? & 128;
+  if ($ret) {
+    if ( -f "/lib/modules/$version/modules.dep") {
+      unlink "/lib/modules/$version/modules.dep";
+    }
+    print "There was a problem running depmod.  This may be benign, \n";
+    print "(You may have versioned symbol names, for instance).\n";
+    print "Or this could be an error. In any case, since depmod is \n";
+    print "run at install time, we could just defer running depmod\n";
+    if (&ask_y("Would you like to abort now")) {
+      exit (1);
+    }
+    else {
+       print STFERR "Ok, continuing as directed\n";
+    }
+  }
 }
+
+
 
 # The initrd symlink should probably be i the same dir that the symlinks are in
 if ($initrd) {
@@ -760,6 +780,8 @@ if (-x "$postinst_hook") {
     system ("$postinst_hook", $version, $realimageloc . "$kimage-$version") &&
 	warn "User hook script $postinst_hook failed";
 }
+
+
 
 exit (0) unless $do_boot_enable;	# Exit if explicitly asked to
 
