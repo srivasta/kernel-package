@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Wed Feb 18 17:57:02 2004
+## Last Modified On : Tue Mar  2 20:54:21 2004
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count	    : 659
+## Update Count	    : 663
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.227 2003/10/07 16:24:20 srivasta Exp $
+## arch-tag: aa70d4e5-79bf-405c-95ec-5fa9f7ae7b69
 ###############################################################################
 
 ifdef KPKG_ARCH
@@ -1627,7 +1627,7 @@ endif
 	$(make_directory) $(SOURCE_SRC)
 	$(make_directory) $(SOURCE_DOC)
 	sed -e 's/=P/$(package)/g' -e 's/=V/$(version)/g' \
-	    $(DEBDIR)/include.postinst > $(SOURCE_TOP)/DEBIAN/postinst
+	    $(DEBDIR)/src.postinst > $(SOURCE_TOP)/DEBIAN/postinst
 	chmod 755 $(SOURCE_TOP)/DEBIAN/postinst
 	$(install_file) debian/changelog         $(SOURCE_DOC)/changelog
 	gzip -9qf                             	 $(SOURCE_DOC)/changelog
@@ -1831,7 +1831,7 @@ endif
 	-find $(DOC_DOC) -type f -name \*.gz -perm +111 -exec gunzip {} \;
 	$(install_file) $(DEBDIR)/copyright.doc $(DOC_DOC)/copyright
 	sed -e 's/=P/$(d_package)/g' -e 's/=V/$(version)/g' \
-		$(DEBDIR)/include.postinst > $(DOC_TOP)/DEBIAN/postinst
+		$(DEBDIR)/src.postinst > $(DOC_TOP)/DEBIAN/postinst
 	chmod 755 $(DOC_TOP)/DEBIAN/postinst
 	dpkg-gencontrol -isp -p$(d_package) -P$(DOC_TOP)/
 	chmod -R og=rX $(DOC_TOP)

@@ -5,16 +5,16 @@
 # Created On       : Sat Apr 27 05:42:43 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Tue Mar  2 18:41:35 2004
+# Last Modified On : Tue Mar  2 18:34:29 2004
 # Last Machine Used: glaurung.internal.golden-gryphon.com
-# Update Count     : 44
+# Update Count     : 42
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
 #
 #
 #
-#  arch-tag: 1c716174-2f0a-476d-a626-a1322e62503a
+#  arch-tag: ae5907e4-2617-4db5-964a-1b5f45bedc1a
 #
 
 
@@ -42,46 +42,12 @@ my $CONF_LOC          = '/etc/kernel-img.conf';
 # most of our work is done in /usr/src.
 chdir '/usr/src' or die "Could not chdir to /usr/src:$!";
 
-if (-d "$package") {
-
-  chdir "/usr/src/$package/include" ||
-    die "Could not chdir to  /usr/src/$package/include:$!";
-
-  if (! -d "asm-$architecture") {
-    warn "/usr/src/$package/include/asm-$architecture does not exist.\n";
-  }
-  elsif (-e 'asm') {
-    if (! -l 'asm') {
-      warn "/usr/src/$package/include/asm is not a symlink.\n";
-      $stop_and_read++;
-    }
-    else {
-      my $target=readlink 'asm';
-      if ("$target" ne "asm-$architecture") {
-	if (! unlink 'asm') {
-	  warn "could not unlink /usr/src/$package/include/asm: $!\n";
-	  warn "It points to /usr/src/$package/include/$target\n";
-	  warn  "rather than at /usr/src/$package/include/asm-$architecture\n";
-	  $stop_and_read++;
-	}
-	else {
-	  if (! symlink "asm-$architecture", 'asm') {
-	    warn "Could not link /usr/src/$package/include/asm:$!\n";
-	    warn "to /usr/src/$package/include/asm-$architecture\n";
-	    $stop_and_read++;
-	  }
-	}
-      }
+if (-l 'linux') {
+  if (-e "linux-$version" ){
+    if (! unlink "linux-$version") {
+      exit 0;
     }
   }
-}
-
-chdir '/usr/src' or die "Could not chdir to /usr/src:$!";
-
-if ($stop_and_read) {
-  my $answer;
-  print STDERR " Please Hit return to continue.";
-  $answer = <STDIN>;
 }
 
 if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
@@ -91,8 +57,7 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
       s/\#.*$//g;
       next if /^\s*$/;
 
-      $src_postinst_hook      = "$1"  if /src_postinst_hook\s*=\s*(\S+)/ig;
-      $header_postinst_hook   = "$1"  if /header_postinst_hook\s*=\s*(\S+)/ig;
+      $src_postinst_hook   = "$1"  if /src_postinst_hook\s*=\s*(\S+)/ig;
     }
     close CONF;
     $have_conffile = "Yes";
@@ -103,10 +68,6 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
 if (-x "$src_postinst_hook") {
     system ("$src_postinst_hook", $package, $version) &&
 	warn "User hook script $src_postinst_hook failed";
-}
-if (-x "$header_postinst_hook") {
-    system ("$header_postinst_hook", $package, $version) &&
-	warn "User hook script $header_postinst_hook failed";
 }
 
 

@@ -204,8 +204,21 @@ warning message, but shall be otherwise ignored.
 .TP
 .B src_postinst_hook 
 Unlike the other hook variables, this is meant for a script run during
-the post inst of a headers or a source package. This script shall be
-called with two arguments, the first being the
+the post inst of a docs, headers or a source package. Using this hook
+for the headers package is now being deprecated, at some point the
+headers post install script shall only run the headers_postinst_hook.
+This script shall be called with two arguments, the first being the
+.I name
+of the package being installed (could be kernel-source-X.X.XX or
+kernel-headers-X.X.XX), and the second argument being the
+.I version
+of the package being installed. Errors in the script shall produce a
+warning message, but shall be otherwise ignored. 
+.TP
+.B headers_postinst_hook 
+Unlike the other hook variables, this is meant for a script run during
+the post inst of a headers package only. This script
+shall be called with two arguments, the first being the
 .I name
 of the package being installed (could be kernel-source-X.X.XX or
 kernel-headers-X.X.XX), and the second argument being the
