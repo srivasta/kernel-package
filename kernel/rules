@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Mon Aug  4 17:43:04 1997
+## Last Modified On : Tue Sep 16 17:04:50 1997
 ## Last Machine Used: tiamat.datasync.com
-## Update Count	    : 192
+## Update Count	    : 196
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.10 1997/08/05 00:15:58 srivasta Exp $
+## $Id: rules,v 1.11 1997/09/18 05:02:15 srivasta Exp $
 ###############################################################################
 
 # The version of kernel-package this belongs to
@@ -37,6 +37,10 @@ reverse_symlink :=
 # The version numbers for kernel-image, kernel-headers and
 # kernel-source are deduced from the Makefile (see below,
 # and footnote 1 for details)
+
+# Whether to look for and install kernel patches by default.
+# Be very careful if you do this.
+patch_the_kernel := NO
 
 # The default architecture (all if architecture independent)
 architecture:=$(shell dpkg --print-architecture)
@@ -102,6 +106,10 @@ CONFLOC:=/etc/kernel-pkg.conf
 LIBLOC:=/usr/lib/kernel-package
 MODULE_LOC := /usr/src/modules
 
+PATCH_DIR        := /usr/src/kernel-patches/$(architecture)
+DIR_PATCH_APPLY   = $(PATCH_DIR)/apply
+DIR_PATCH_UNPATCH = $(PATCH_DIR)/unpatch
+
 # The destination of all .deb files
 # (suggested by Rob Browning <osiris@cs.utexas.edu>)
 DEB_DEST := ..
@@ -165,6 +173,11 @@ ifneq ($(strip $(IMAGE_TYPE)),)
 kimage = $(IMAGE_TYPE)
 endif
 
+ifneq ($(strip $(PATCH_THE_KERNEL)),)
+patch_the_kernel = $(PATCH_THE_KERNEL)
+endif
+
+
 # See if we are being run in the kernel directory
 IN_KERNEL_DIR := $(shell if test -d drivers -a -d kernel -a -d fs -a \
                                  -d include/linux ; then \
@@ -210,9 +223,11 @@ stamp-buildpackage: configure
 
 configure: stamp-configure
 stamp-configure: .config
-	-@test -f $(DEBDIR)/rules || \
+	@test -f $(DEBDIR)/rules || \
             echo Error: Could not find $(DEBDIR)/rules
-	test -f $(DEBDIR)/rules
+ifneq ($(strip $(patch_the_kernel)),YES)
+	-test -d $(DIR_PATCH_APPLY) && run-parts --verbose $(DIR_PATCH_APPLY)
+endif
 	-test ! -f stamp-configure && test ! -f debian/official && \
 	      rm -rf debian && $(make_directory) debian
 	-test ! -f stamp-configure && \
@@ -242,6 +257,9 @@ clean:
 	mv -f config.precious .config
 	rm -rf $(DIRS_TO_CLEAN)
 	test -f stamp-building || test -f debian/official || rm -rf debian
+ifneq ($(strip $(patch_the_kernel)),YES)
+	-test -d $(DIR_PATCH_UNPATCH) && run-parts --verbose $(DIR_PATCH_UNPATCH)
+endif
 
 binary:       binary-indep binary-arch
 binary-indep: kernel_source kernel_headers kernel_doc
