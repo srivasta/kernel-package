@@ -5,16 +5,16 @@
 # Created On       : Sat Apr 27 05:42:43 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Wed Feb 18 16:07:10 1998
+# Last Modified On : Wed Feb 18 16:58:55 1998
 # Last Machine Used: tiamat.datasync.com
-# Update Count     : 23
+# Update Count     : 24
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
 # 
 # 
 #
-#    $Id: include.postinst,v 1.6 1998/02/18 22:25:04 srivasta Exp $
+#    $Id: include.postinst,v 1.7 1998/02/18 23:00:55 srivasta Exp $
 #
 
 
@@ -116,7 +116,7 @@ ERR
   }
 }
 
-if (stop_and_read) {
+if ($stop_and_read) {
   my $answer;
   print STDERR " Please Hit return to continue.";
   $answer = <STDIN>;

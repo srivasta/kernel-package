@@ -1,3 +1,36 @@
+kernel-package (3.61) unstable; urgency=low
+
+  * This is a major change in the source/header packages. In architectures
+    different from i386, `kernel-headers-*' and `kernel-source-*' are
+    incompatible. This also has an effect on libc6-dev, which depends on
+    kernel-headers-2.0.3x | kernel-source-2.0.3x, which is only true on
+    i386 architectures. One possible solution would be to make libc6-dev
+    depend on kernel-headers-2.0.32, but that won't work because
+    kernel-source provides kernel-headers. In fact, since kernel-headers
+    are arch dependent, but kernel-source is arch: all, kernel-source-*
+    should not provide kernel-header* at all. 
+    
+    Once kernel source stops providing kernel-header*, and libc6-dev
+    depends on kernel-headers-2.0.32 and links /usr/include/{linux,asm} to
+    /usr/src/kernel-headers-2.0.32 (nor /usr/src/linux-2.0.32) things
+    would work again in a Multi arch compatible fashion.
+  
+    Hence, now kernel-source-* packages compiled with this kernel-package
+    shall not provide any sort of kernel-headers. For the sake of
+    backwards compatibility, /usr/src/linux-$version symlinks are still
+    being provided (as people may upload newer kernels while keeping an
+    older libc6-dev around, which depends on /usr/src/linux-2.0.32. 
+  
+    However, I have been badgered enough about this that I shall remove
+    the /usr/src/linux-$version symlinks at some point. This version no
+    longer registers stuff in /usr/src/.linux-versions, and is no longer
+    as paranoid about /usr/src/linux; but it does not outright remove
+    those files either, so as not to cause people with older kernels
+    having a problem during removal.As soon as it is deemed permissible,
+    we shall get less paranoid about /usr/src/linux-$version as well. 
+
+ -- Manoj Srivastava <srivasta@debian.org>  Wed, 18 Feb 1998 17:00:06 -0600
+
 kernel-package (3.60) unstable; urgency=low
 
   * This is a major change in the source/header packages. In architectures
