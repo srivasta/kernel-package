@@ -27,7 +27,7 @@
 .\" (c) 2003 Software in the Public Interest
 .\" Esta traducción ha sido realizada por Rubén Porras <nahoo@inicia.es>
 .\" Está basada en la página de manual original:
-.\" versión 1.3 del CVS de /cvs/debian-doc/manpages/english/kernel-package/
+.\" versión 1.5 del CVS de /cvs/debian-doc/manpages/english/kernel-package/
 .\" Revisada por Rudy Godoy <rudy@kernel-panik.org>
 
 .TH KERNEL\-PKG.CONF 5 "7 de junio de 1997" "Debian" "manual Debian GNU/Linux" 
@@ -123,7 +123,8 @@ Por omisión está indeterminado.
 (Opcional)
 .TP
 .B kimage         
-El tipo de imagen del núcleo (e.g. zImage o bzImage). Puede ser modificado mediante la variable de entorno 
+El tipo de imagen del núcleo (e.g. zImage o bzImage). Puede ser modificado
+mediante la variable de entorno
 .B IMAGE_TYPE,  
 o (de nuevo) por las opciones
 .IR \-\-zimage
@@ -279,12 +280,22 @@ eliminar arquitecturas).
 Esta variable debe de apuntar a la ruta donde se encuentra toda la documentación
 extra que debe instalarse en el directorio
 .I /usr/share/doc/kernel-image-X.X.XX/ .
-No hay ninguna comprobación de conflictos entre nombres, y los ficheros no
-son comprimidos. Debido a esto, si desea que los ficheros sean comprimidos debe
-de comprimirlos y luego proporcionar la ruta al fichero comprimido. La variable de
+No hay ninguna comprobación de conflictos entre nombres, y los ficheros no son
+comprimidos. Debido a esto, si desea que los ficheros sean comprimidos debe de
+comprimirlos y luego proporcionar la ruta al fichero comprimido. La variable de
 entorno
 .B EXTRA_DOCS
 lo modifica, es la forma más habitual de empaquetar documentación extra. 
+.TP
+.B kpkg_follow_symlinks_in_src
+Esta opción es especialmente útil para aquellos que usan multitud de enlaces
+simbólicos para compilar los núcleos. Con esta opción, los paquetes
+kernel-source y kernel-header no estarán llenos de enlaces rotos, en su lugar,
+se seguirán los enlaces simbólicos. Dese cuenta de que cualquier enlace
+simbólico en las fuentes del núcleo se sustituirá por el fichero enlazado. La
+variable de entorno
+.B KPKG_FOLLOW_SYMLINKS_IN_SRC
+modifica este comportamiento.
 .TP
 .B make_libc_headers
 Esta opción es para el encargado de
@@ -397,3 +408,5 @@ No tiene fallos. Cualquier cosa que se lo parezca es un delirio, de verdad.
 .SH AUTOR
 Esta página del manual fue escrita por Manoj Srivastava <srivasta@debian.org>,
 para el sistema Debian GNU/Linux.
+.SH TRADUCTOR
+Traducción de Rubén Porras Campo <debian-l10n-spanish@lists.debian.org>

@@ -1,3 +1,19 @@
+kernel-package (8.068) unstable; urgency=low
+
+  * Bug fix: Added support for gconfig.  Mention that it is only for 2.6.X
+    kernels, and that 2.6.X kernels have changed the requirements for make
+    xconfig as well. Make sure the make-kpkg does not barf on
+    gconfig. "kernel-source-2.6.0-test9: packages needed for QTand GTK+
+    config. interfaces", thanks to Laurent Ghys        (Closes: #219324).
+  * Bug fix: "kernel-package: typo in conf.vars rule", thanks to Peter
+    Cordes                                             (Closes: #220149).
+  * Bug fix: "kernel-package: update spanish manpages", thanks to Ruben
+    Porras                                             (Closes: #218716).
+  * Changed sparc/sparc64 subarch logic, thanks to Ben Collins
+    <bcollins@debian.org> and Rob Radez <rob@osinvestor.com>
+
+ -- Manoj Srivastava <srivasta@debian.org>  Mon, 10 Nov 2003 22:02:02 -0600
+
 kernel-package (8.067) unstable; urgency=low
 
   * Change docbook-utils from recommends to suggests  closes: Bug#215177

@@ -26,10 +26,12 @@ Description: Linux kernel source for version =V
  This package provides the source code for the Linux kernel version =V.
  .
  You may configure the kernel to your setup by typing "make config"
- and following instructions, but you could get ncursesX.X-dev and
- tkX.X-dev and try "make menuconfig" for a jazzier, and easier to use
- interface. Also, please read the detailed documentation in the file
- /usr/share/doc/kernel-source-=V/README.headers.gz. 
+ and following instructions, but you could get ncursesX.X-dev and try
+ "make menuconfig" for a jazzier, and easier to use interface. There 
+ are options to use QT or GNOME based configuration interfaces, but they
+ need additional packages to be installed. Also, please read the detailed 
+ documentation in the file
+ /usr/share/doc/kernel-source-=V/README.headers.gz.
  .
  If you wish to use this package to create a custom Linux kernel, then
  it is suggested that you investigate the package kernel-package,

@@ -18,8 +18,10 @@ have a few other packages installed before you can compile your own kernels
 Firstly, you will need gcc, the libc development package (libc5-dev or
 libc6-dev at the time of writing), and, on Intel platforms, bin86. [If
 you use the menuconfig target of make, you will need ncursesX.X-dev,
-and make xconfig also requires tkX.X-dev, and other packages these
-depend on]
+and make xconfig also requires either tkX.X-dev for 2.4.X kernels, or
+libqt3-mt-dev and g++ >= 3.0 for the new 2.6 kenel versions, and 2.6.X
+kernels also have an additional option, make gconfig, which requires
+libglade2-dev, and other packages these depend on]
 
 The packages suggested are:
 devel:        gcc, libc5-dev/libc6-dev, binutils, make, and, for intel
@@ -35,7 +37,7 @@ Also, please note that some versions of gcc do not interact well with
 the kernel sources (gcc 2.95 has problems compiling the kernel without
 the flag '-fno-strict-aliasing'. This issue has been taken care of for
 recent kernels (2.2 and 2.4 series are fine) (I think you may have to
-edit the makefile for older kernels, or something). You may control
+edit the makefile for older kernels, or something).  You may control
 which version of gcc used in kernel compilation by setting the
 Makefile variables CC and HOSTCC in the top level kernel Makefile. You
 can do this simply by 
@@ -52,7 +54,9 @@ packages, but they are not strictly essential (though quite nice really).
 
 Phase ONE: Getting and configuring the kernel
  1% cd <kernel source tree> (make sure you have write permission there)
- 2% make config   # or make menuconfig or make xconfig and configure
+ 2% make config # or make menuconfig or make xconfig (or, for 2.6.x
+    kernels, make gconfig) and configure
+
 Phase TWO: Create a portable kernel image .deb file
  3% make-kpkg clean
  4% $Get_Root make-kpkg --revision=custom.1.0 kernel_image 
@@ -80,14 +84,12 @@ Phase THREE: Install the kernel image on one or more machines
 
  If you're using the patch_the_kernel facility, you may want to remove
  step 2 and instead insert `--config=menuconfig' into the make-kpkg
- command-line of step 4 (or perhaps use `xconfig' or `config' in place
- of `menuconfig').  This way, patching the kernel happens before
- menuconfig (or whichever), and you'll get better defaults for any
- questions introduced by the patches. (Also look at the
- --added_patches command line option to selectively apply some patches
- in conjunction with patch_the_kernel)
-
-
+ command-line of step 4 (or perhaps use `xconfig' or `config' (or, for
+ 2.6.X kernels, `gconfig') in place of `menuconfig').  This way,
+ patching the kernel happens before menuconfig (or whichever), and
+ you'll get better defaults for any questions introduced by the
+ patches. (Also look at the --added_patches command line option to
+ selectively apply some patches in conjunction with patch_the_kernel)
 
 Getting the kernel source
 ------- --- ------ ------
@@ -117,7 +119,8 @@ the tar file (that is, if you choose to build everything together with
 the dist target in debian.rules -- say if you want, for whatever
 reason, to run dchanges on the files created). I needed nearly 60MB to
 create the full spectrum of packages for version 1.99.7 (and doubtless
-this size will go up in the future).
+this size will go up in the future) [It has. Now even an gzipped kernel
+source is over 23MB].
 
 Make sure that the user who is building the kernel has adequate write
 permissions in the kernel source tree, and also has write permissions
@@ -127,9 +130,9 @@ other means of getting these write permission while building.
 [ EXAMPLE
 So, suppose you have chosen /usr/local/src/kernel as the place to
 build kernels.
- % cd  /usr/local/src/kernel # or cd /path/to/where-ever/you/have/space
- % tar jvvfx /usr/src/kernel-source-2.4.20.tar.bz2
-   (or, tar jvvfx /path/to/download/linux-2.4.20.tar.bz2)
+% cd  /usr/local/src/kernel # or cd /path/to/where-ever/you/have/space
+% tar jvvfx /usr/src/kernel-source-2.4.20.tar.bz2
+  (or, tar jvvfx /path/to/download/linux-2.4.20.tar.bz2)
 
 	The next two steps are optionsl, you only need them if you are
  going to create third party modules (stuff in
@@ -278,11 +281,12 @@ effect)
  Additionally, the mkinitrd program in Debian creatre a cramfs initrd,
  and you need an additional cramfs initrd patch in the kernel to be
  able to load the initrd. This patch is shipped with official debian
- kernel sources.  So, if your boot loader configuration expects to see
- an initrd image, add --initrd to the above invocation, like so:
+ kernel sources.  So, you must apply the patch, or configure mkintrd
+ to use another file system. like ext2. So, if your boot loader
+ configuration expects to see an initrd image, add --initrd to the
+ above invocation, like so:
    make-kpkg clean
    $Get_Root make-kpkg --initrd --revision=3:custom.2.0 kernel_image
-
 
 When make-kpkg is finished, you'll have 
 kernel-image-2.0.29_custom.1.0_i386.deb and all it takes now is to
@@ -322,7 +326,7 @@ level Makefile). Also, if recompiling and using a different flavour,
 one needs to do a make-kpkg clean in between compiles.
 
 You may also place long term directives (like your name and email
-address) in the file /etc/kernel-pkg.conf. (or ~/.kernel-pkg.conf)
+address) in the file /etc/kernel-pkg.conf (or ~/.kernel-pkg.conf).
 Putting your name and address in that file is a good idea, to remind
 you that this is not an official package, unless, of course, you
 happen to be the maintainer (Hi Herbert). The file
@@ -435,7 +439,6 @@ kpkg_follow_symlinks_in_src
               links in the kernel sources woudl be flattened as well.
               The environment variable KPKG_FOLLOW_SYMLINKS_IN_SRC
               overrides this. Symlink farming is described below.
-            
 
 make_libc_headers  This is meant to be used by the libc6 maintainer,
                    when he compiles libc6, to also package up the
@@ -450,7 +453,7 @@ The value of a variable can be set so:
   a) Defaults exist in the rules file. These are the values used if no
      customization is done.
   b) Variables can be set in the config file /etc/kernel-pkg.conf (or
-     ~/.kernel-pkg.conf) These values override the defaults.
+     ~/.kernel-pkg.conf).  These values override the defaults.
   c) Variables can also be set by setting a corresponding environment
      variable.  These values override the config file and the defaults.
   d) Using make-kpkg options, or, if using the rules file directly, on 
@@ -591,7 +594,6 @@ To generate a new kernel image, just run
       sudo are examples that come to mind) or (if you use initrd)
    $Get_Root make-kpkg --initrd --revision=3:custom.2.0 kernel_image
 
-
 This will create a default kernel image (as in the image package or
 available on the boot disks.  The kernel image package produced, on
 installation, shall offer you a chance to create a boot disk, or to
@@ -607,6 +609,7 @@ or
                          you have any)
 % make xconfig         # An X window system based method -- make sure
                          you are running X windows when you call this.
+% make gconfig         # The gnome version, if you have version 2.6.X.
 All these methods ultimately generate a .config file.  If you already 
 have a .config file, just copy it to this directory, and you are go.
 
@@ -615,6 +618,7 @@ With a custom .config file in place (created as above) run again:
 % $Get_Root make-kpkg --revision=custom.1.0 kernel_image
       (Get_Root is whatever you need to become root -- fakeroot or
       sudo are examples that come to mind).
+   $Get_Root make-kpkg --initrd --revision=3:custom.2.0 kernel_image
 
 |-----------------------------------------------------------------------|
 |                           Special needs                               |
@@ -820,7 +824,8 @@ There are two solutions that I know of:
 
   2) Build a zImage, rather than bzImage kernel.  This seems to get
      round the problem. use the --zimage option to make-kpkg, or even
-     set this as the default in /etc/kernel-pkg.conf (or ~/.kernel-pkg.conf) .
+     set this as the default in /etc/kernel-pkg.conf (or
+     ~/.kernel-pkg.conf).
 
 There some add-on modules that hook into make-kpkg and the kernel
 sources so that they may be kept in synchrony with the kernel you
@@ -854,8 +859,6 @@ Foot note 1:
 Manoj Srivastava                        <srivasta@debian.org>
 PGP Key ID: 1024/C7261095 
 Key fingerprint =  CB D9 F4 12 68 07 E4 05  CC 2D 27 12 1D F5 E8 6E 
-
-
 ======================================================================
 
 

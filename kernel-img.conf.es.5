@@ -27,7 +27,7 @@
 .\" (c) 2003 Software in the Public Interest
 .\" Esta traducción ha sido realizada por Rubén Porras <nahoo@inicia.es>
 .\" Está basada en la página de manual original:
-.\" versión 1.2 del CVS de
+.\" versión 1.7 del CVS de
 .\" /cvs/debian-doc/manpages/english/kernel-package/kernel-img.conf.5 
 .\" Revisada por Rudy Godoy <rudy@kernel-panik.org>
 
@@ -42,9 +42,9 @@ imágenes del núcleo
 .SH "DESCRIPCIÓN"
 El fichero 
 .I /etc/kernel\-img.conf
-es un simple fichero que se consulta durante el proceso de post-instalación de la
-imagen del núcleo y que permite personalizar localmente algunos aspectos de la
-instalación, modificando las opciones predeterminadas de la propia imagen.
+es un simple fichero que se consulta durante el proceso de post-instalación de
+la imagen del núcleo y que permite personalizar localmente algunos aspectos de
+la instalación, modificando las opciones predeterminadas de la propia imagen.
 .PP
 El formato de los valores es una simple pareja
 .B VAR = VALOR. 
@@ -56,8 +56,8 @@ teniendo en cuenta las mayúsculas.
 Este fichero se crea automáticamente por el script de instalación si no existe,
 al contrario que con el enlace simbólico
 .I /vmlinuz.
-El script pregunta al usuario si se debe de crear el enlace simbólico y guarda la
-respuesta en
+El script pregunta al usuario si se debe de crear el enlace simbólico y guarda
+la respuesta en
 .I /etc/kernel\-img.conf
 .PP
 En este momento, las variables modificables por el usuario son:
@@ -204,6 +204,17 @@ de la imagen del núcleo, el segundo es la
 de la imagen del núcleo. Los errores en el script sólo producirán un mensaje de
 aviso.
 .TP
+.B src_postinst_hook
+A diferencia de las otras variables hook, este es para un script que se ejecuta
+durante el postinst de un paquete fuente o con las cabeceras. Este script
+necesita dos argumentos, el primero es el
+.I nombre
+del paquete que se esta instalando (podría ser kernel-source-X.X.XX o
+kernel-headers-X.X.XX), y el segundo argumento es la
+.I versión
+del paquete que esta siendo instalado. Los errores en el script sólo producirán
+un mensaje de aviso.
+.TP
 .B move_image 
 En vez de crear el enlace simbólico a (o, si 
 .B reverse_symlinks 
@@ -293,6 +304,31 @@ y el lugar de la imagen (normalmente /boot) se encuentran en el mismo sistema de
 ficheros (ya que no se pueden crear enlaces duros entre sistemas de ficheros).
 .B Está avisado.
 .TP
+.B relink_build_link
+Esta opción manipula el enlace de construcción creado por los núcleos
+recientes. Si el enlace es un enlace colgante, y si parece que el
+correspondiente kernel-headers está instalado en el sistema, se creará un nuevo
+enlace apuntándolo. Por omisión se reenlazará el directorio de construcción
+(SI).
+.TP
+.B force_build_link
+Esta opción manipula el enlace de construcción creado por los núcleos
+recientes. Si el enlace es un enlace colgante se creará un nuevo
+enlace a /usr/src/kernel-headers-X.Y.ZZ, sin importar que estén o no
+instalados. Por omisión está sin establecer, ya que no creamos enlaces colgantes
+de forma predeterminada.
+.TP
+.B mkimage
+Debe ser una orden que produzca una imagen initrd dado un directorio. Se pasa a
+la opción
+.I \-m
+del programa
+.I mkinitrd.
+Por ejemplo, puede ser
+ mkimage="genromfs -d %s -f %s"
+o
+ mkimage="mkcramfs %s %s"
+.TP
 .B silent_modules
 Está opción es para aquellos que se sienten molestos cuando se les avisa de
 módulos existentes en el directorio
@@ -315,6 +351,12 @@ no afecta a que el gestor de arranque sea o no ejecutado (lea
 .B do_bootloader
 para entender como controlarlo, la ausencia de un fichero de configuración hará
 el proceso de instalación ameno e interactivo).
+.TP
+.B ignore_depmod_error
+Si está establecido, no pide confirmación para continuar después de un problema
+con depmod en el script de pos-instalación. Esto facilita las instalaciones
+automatizadas, aunque puede enmascarar algún problema con la imagen del
+núcleo. De todas formas todavía se muestra un diagnóstico. 
 .SH FICHEROS
 El fichero descrito en este documento es
 .I /etc/kernel-img.conf.
@@ -328,3 +370,5 @@ No tiene fallos. Cualquier cosa que se lo parezca es un delirio, de verdad.
 .SH AUTOR
 Esta página del manual fue escrita por Manoj Srivastava <srivasta@debian.org>,
 para el sistema Debian GNU/Linux.
+.SH TRADUCTOR
+Traducción de Rubén Porras Campo <debian-l10n-spanish@lists.debian.org>

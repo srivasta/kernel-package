@@ -5,9 +5,9 @@
 # Created On       : Mon Jun 17 01:10:11 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Sat Sep 27 20:35:12 2003
+# Last Modified On : Mon Nov 10 21:36:00 2003
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 208
+# Update Count     : 210
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
@@ -265,7 +265,7 @@ I</etc/kernel-pkg.conf>.
 
 Change the type of configure done from the default C<oldconfig>.
 I<target> must be one of C<oldconfig>, C<config>, C<menuconfig>,
-C<xconfig>, or C<old>, C<menu> or C<x>.
+C<xconfig>, C<gconfig>, or C<old>, C<menu>, C<g> or C<x>.
 
 This option is particularly useful when using PATCH_THE_KERNEL if some
 of the patches change what configuration options are available.
@@ -685,8 +685,8 @@ sub main (){
     exit 1;
   }
 
-  if ($config_target !~ /^(?:|old|menu|x)(config)?$/) {
-    print "Config type must be one of {config,oldconfig,menuconfig,xconfig}.\n";
+  if ($config_target !~ /^(?:|old|menu|x|g)(config)?$/) {
+    print "Config type must be one of {config,oldconfig,menuconfig,xconfig,gconfig}.\n";
     print "use --help to display command line syntax help.\n";
     exit 1;
   }

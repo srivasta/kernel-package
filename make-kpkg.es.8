@@ -28,7 +28,7 @@
 .\" (c) 2003 Software in the Public Interest
 .\" Esta traducción ha sido realizada por Rubén Porras Campo <nahoo@inicia.es>
 .\" Está basada en la página de manual original:
-.\" versión 1.8 del CVS de
+.\" versión 1.10 del CVS de
 .\" /cvs/debian-doc/manpages/english/kernel-package/make-kpkg.8
 .\" Revisada por Rudy Godoy <rudy@kernel-panik.org>
 
@@ -299,6 +299,14 @@ Cambia el tipo de configuración hecha desde el \f(CWoldconfig\fR por omisión.
 .Sp
 Esta opción es particularmente útil cuando se usa \s-1PATCH_THE_KERNEL\s0 por si
 alguno de los parches cambia las opciones de configuración disponibles.
+.B Nota
+Sin embargo
+.BR make\-kpkg
+busca al arrancar algunas opciones en el fichero de configuración, notablemente
+el hecho de que los módulos estén o no habilitados, de manera que cambiar el
+estado durante esta configuración retrasada resulta en un error. Si es
+necesario, cree el fichero de configuración lo más próximo a lo deseado antes de
+llamar a make\-kpkg con esta opción.
 .TP
 .B \-\-targets
 Muestra una lista de objetivos conocidos. Lea la sección
@@ -337,7 +345,9 @@ a cualquier valor no nulo.
 Para evitar el aviso en tiempo de instalación, lea kernel-img.conf(5), y añada
 una directiva
 .I warn_initrd 
-en ese fichero.
+en ese fichero. Para evitar el aviso en tiempo de compilación, establezca la
+variable de entorno
+.B INITRD_OK.
 .TP
 .B \-\-zimage
 Crea una imagen del núcleo del tipo zImage en vez de bzImage (predeterminada).
@@ -346,6 +356,17 @@ Crea una imagen del núcleo del tipo zImage en vez de bzImage (predeterminada).
 .B \-\-bzimage
 Crea un núcleo bzImage. Útil para gente que quiera un núcleo bzImage donde el
 núcleo predeterminado es un zImage. 
+.TP
+ .B \-\-mkimage
+Debe ser una orden que produzca una imagen initrd dado un directorio. Se pasa a
+la opción
+.I \-m
+del programa
+.I mkinitrd.
+Por ejemplo, puede ser
+ "genromfs -d %s -f %s"
+o
+ "mkcramfs %s %s"
 .TP
 .B \-\-rootcmd tal
 La orden que proporciona acceso de superusuario (por ejemplo, `sudo' o
@@ -582,7 +603,8 @@ Las siguientes variables (documentadas arriba) afectan a
 .I ARCH_IN_NAME
 .I INITRD
 .I SOURCE_CLEAN_HOOK
-.I  MODULE_LOC
+.I MODULE_LOC
+.I INITRD_OK
 .SH FICHEROS
 Aparte de las opciones de ejecución, el fichero 
 .I debian.rules

@@ -5,9 +5,9 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Fri Oct 31 11:18:41 2003
+## Last Modified On : Mon Nov 10 21:11:08 2003
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 620
+## Update Count	    : 623
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
@@ -78,6 +78,7 @@ config_target := oldconfig
 
 # The default architecture (all if architecture independent)
 CROSS_ARG:=
+
 ifdef KPKG_ARCH
   architecture:=$(KPKG_ARCH)
 else
@@ -133,203 +134,200 @@ HAVE_NEW_MODLIB =$(shell egrep '\(INSTALL_MOD_PATH\)' Makefile 2>/dev/null )
 
 ### m68k
 ifeq ($(strip $(architecture)),m68k)
-
-ifeq (,$(findstring /$(KPKG_SUBARCH)/,/amiga/atari/mac/mvme147/mvme16x/bvme6000/))
- GUESS_SUBARCH:=$(shell awk '/Model/ { print $$2}' /proc/hardware)
- ifneq (,$(findstring Motorola,$(GUESS_SUBARCH)))
-  GUESS_SUBARCH:=$(shell awk '/Model/ { print $$3}' /proc/hardware)
-  ifneq (,$(findstring MVME147,$(GUESS_SUBARCH)))
-   KPKG_SUBARCH:=mvme147
-  else
-   KPKG_SUBARCH:=mvme16x
-  endif
- else
-  ifneq (,$(findstring BVME,$(GUESS_SUBARCH)))
-   KPKG_SUBARCH:=bvme6000
-  else
-   ifneq (,$(findstring Amiga,$(GUESS_SUBARCH)))
-    KPKG_SUBARCH:=amiga
-   else
-    ifneq (,$(findstring Atari,$(GUESS_SUBARCH)))
-     KPKG_SUBARCH:=atari
+  ifeq (,$(findstring /$(KPKG_SUBARCH)/,/amiga/atari/mac/mvme147/mvme16x/bvme6000/))
+    GUESS_SUBARCH:=$(shell awk '/Model/ { print $$2}' /proc/hardware)
+    ifneq (,$(findstring Motorola,$(GUESS_SUBARCH)))
+     GUESS_SUBARCH:=$(shell awk '/Model/ { print $$3}' /proc/hardware)
+     ifneq (,$(findstring MVME147,$(GUESS_SUBARCH)))
+      KPKG_SUBARCH:=mvme147
+     else
+      KPKG_SUBARCH:=mvme16x
+     endif
     else
-     ifneq (,$(findstring Mac,$(GUESS_SUBARCH)))
-      KPKG_SUBARCH:=mac
+     ifneq (,$(findstring BVME,$(GUESS_SUBARCH)))
+      KPKG_SUBARCH:=bvme6000
+     else
+      ifneq (,$(findstring Amiga,$(GUESS_SUBARCH)))
+       KPKG_SUBARCH:=amiga
+      else
+       ifneq (,$(findstring Atari,$(GUESS_SUBARCH)))
+        KPKG_SUBARCH:=atari
+       else
+        ifneq (,$(findstring Mac,$(GUESS_SUBARCH)))
+         KPKG_SUBARCH:=mac
+        endif
+       endif
+      endif
      endif
     endif
-   endif
   endif
- endif
-endif
-
-NEED_DIRECT_GZIP_IMAGE=NO
-kimage := zImage
-target = $(kimage)
-kimagesrc = vmlinux.gz
-kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
-DEBCONFIG = $(CONFDIR)/config.$(KPKG_SUBARCH)
-ifneq (,$(findstring $(KPKG_SUBARCH),mvme147 mvme16x bvme6000))
- loaderdep=vmelilo
- loader=vmelilo
- loaderdoc=VmeliloDefault
-else
- loaderdep=
- loader=lilo
- loaderdoc=
-endif
-
+  NEED_DIRECT_GZIP_IMAGE=NO
+  kimage := zImage
+  target = $(kimage)
+  kimagesrc = vmlinux.gz
+  kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
+  DEBCONFIG = $(CONFDIR)/config.$(KPKG_SUBARCH)
+  ifneq (,$(findstring $(KPKG_SUBARCH),mvme147 mvme16x bvme6000))
+    loaderdep=vmelilo
+    loader=vmelilo
+    loaderdoc=VmeliloDefault
+  else
+    loaderdep=
+    loader=lilo
+    loaderdoc=
+  endif
 endif
 
 ### ARM
 ifeq ($(strip $(architecture)),arm)
-GUESS_SUBARCH:='netwinder'
+  GUESS_SUBARCH:='netwinder'
 
-ifneq (,$(findstring $(KPKG_SUBARCH),netwinder))
-KPKG_SUBARCH:=$(GUESS_SUBARCH)
-kimage := zImage
-target = Image
-kimagesrc = arch/$(KERNEL_ARCH)/boot/Image
-kimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
-loaderdep=
-loader=nettrom
-loaderdoc=
-NEED_DIRECT_GZIP_IMAGE=NO
-DEBCONFIG= $(CONFDIR)/config.netwinder
-else
-kimage := zImage
-target = zImage
-NEED_DIRECT_GZIP_IMAGE=NO
-kimagesrc = arch/$(KERNEL_ARCH)/boot/zImage
-kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
-DEBCONFIG = $(CONFDIR)/config.arm
-endif
+  ifneq (,$(findstring $(KPKG_SUBARCH),netwinder))
+    KPKG_SUBARCH:=$(GUESS_SUBARCH)
+    kimage := zImage
+    target = Image
+    kimagesrc = arch/$(KERNEL_ARCH)/boot/Image
+    kimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
+    loaderdep=
+    loader=nettrom
+    loaderdoc=
+    NEED_DIRECT_GZIP_IMAGE=NO
+    DEBCONFIG= $(CONFDIR)/config.netwinder
+  else
+    kimage := zImage
+    target = zImage
+    NEED_DIRECT_GZIP_IMAGE=NO
+    kimagesrc = arch/$(KERNEL_ARCH)/boot/zImage
+    kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
+    DEBCONFIG = $(CONFDIR)/config.arm
+  endif
 endif
 
 ### PowerPC
 ifneq ($(strip $(filter ppc powerpc,$(architecture))),)
-ifeq ($(DEB_BUILD_ARCH),powerpc)
-# This is only meaningful when building on a PowerPC
-ifeq ($(GUESS_SUBARCH),)
-GUESS_SUBARCH:=$(shell awk '/machine/ { print $$3}' /proc/cpuinfo)
-ifneq (,$(findstring Power,$(GUESS_SUBARCH)))
-GUESS_SUBARCH:=pmac
-else
-ifneq (,$(findstring iMac,$(GUESS_SUBARCH)))
-GUESS_SUBARCH:=pmac
-endif
-endif
-else
-GUESS_SUBARCH:=pmac
-endif
-endif
+  ifeq ($(DEB_BUILD_ARCH),powerpc)
+  # This is only meaningful when building on a PowerPC
+    ifeq ($(GUESS_SUBARCH),)
+      GUESS_SUBARCH:=$(shell awk '/machine/ { print $$3}' /proc/cpuinfo)
+      ifneq (,$(findstring Power,$(GUESS_SUBARCH)))
+        GUESS_SUBARCH:=pmac
+      else
+        ifneq (,$(findstring iMac,$(GUESS_SUBARCH)))
+          GUESS_SUBARCH:=pmac
+        endif
+      endif
+    else
+      GUESS_SUBARCH:=pmac
+    endif
+  endif
 
-ifeq (,$(findstring $(KPKG_SUBARCH),apus prpmc chrp mbx pmac prep Amiga APUs CHRP MBX PReP chrp-rs6k ))
-KPKG_SUBARCH:=$(GUESS_SUBARCH)
-endif
+  ifeq (,$(findstring $(KPKG_SUBARCH),apus prpmc chrp mbx pmac prep Amiga APUs CHRP MBX PReP chrp-rs6k ))
+    KPKG_SUBARCH:=$(GUESS_SUBARCH)
+  endif
 
-KERNEL_ARCH:=ppc
+  KERNEL_ARCH:=ppc
 
-ifneq (,$(findstring $(KPKG_SUBARCH),APUs apus Amiga))
-KPKG_SUBARCH:=apus
-loader := NoLoader
-kimage := vmapus.gz
-target = zImage
-kimagesrc = $(shell if [ -d arch/$(KERNEL_ARCH)/boot/images ]; then \
+  ifneq (,$(findstring $(KPKG_SUBARCH),APUs apus Amiga))
+    KPKG_SUBARCH:=apus
+    loader := NoLoader
+    kimage := vmapus.gz
+    target = zImage
+    kimagesrc = $(shell if [ -d arch/$(KERNEL_ARCH)/boot/images ]; then \
 	echo arch/$(KERNEL_ARCH)/boot/images/vmapus.gz ; else \
 	echo arch/$(KERNEL_ARCH)/boot/$(kimage) ; fi)
-kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
-DEBCONFIG = $(CONFDIR)/config.apus
-endif
+    kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
+    DEBCONFIG = $(CONFDIR)/config.apus
+  endif
 
-ifneq (,$(findstring $(KPKG_SUBARCH),chrp-rs6k))
-KPKG_SUBARCH:=chrp-rs6k
-loaderdep=quik
-loader=quik
-loaderdoc=QuikDefault
-kimage := zImage
-target = $(kimage)
-kimagesrc = $(shell if [ -d arch/$(KERNEL_ARCH)/chrpboot ]; then \
+  ifneq (,$(findstring $(KPKG_SUBARCH),chrp-rs6k))
+    KPKG_SUBARCH:=chrp-rs6k
+    loaderdep=quik
+    loader=quik
+    loaderdoc=QuikDefault
+    kimage := zImage
+    target = $(kimage)
+    kimagesrc = $(shell if [ -d arch/$(KERNEL_ARCH)/chrpboot ]; then \
 	echo arch/$(KERNEL_ARCH)/chrpboot/$(kimage) ; else \
 	echo arch/$(KERNEL_ARCH)/boot/images/$(kimage).chrp-rs6k ; fi)
-kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
-DEBCONFIG = $(CONFDIR)/config.chrp
-endif
+    kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
+    DEBCONFIG = $(CONFDIR)/config.chrp
+  endif
 
-ifneq (,$(findstring $(KPKG_SUBARCH),CHRP chrp))
-KPKG_SUBARCH:=chrp
-loaderdep=quik
-loader=quik
-loaderdoc=QuikDefault
-kimage := zImage
-target = $(kimage)
-kimagesrc = $(shell if [ -d arch/$(KERNEL_ARCH)/chrpboot ]; then \
-	echo arch/$(KERNEL_ARCH)/chrpboot/$(kimage) ; else \
-	echo arch/$(KERNEL_ARCH)/boot/images/$(kimage).chrp ; fi)
-kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
-DEBCONFIG = $(CONFDIR)/config.chrp
-endif
+  ifneq (,$(findstring $(KPKG_SUBARCH),CHRP chrp))
+    KPKG_SUBARCH:=chrp
+    loaderdep=quik
+    loader=quik
+    loaderdoc=QuikDefault
+    kimage := zImage
+    target = $(kimage)
+    kimagesrc = $(shell if [ -d arch/$(KERNEL_ARCH)/chrpboot ]; then \
+         echo arch/$(KERNEL_ARCH)/chrpboot/$(kimage) ; else \
+         echo arch/$(KERNEL_ARCH)/boot/images/$(kimage).chrp ; fi)
+    kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
+    DEBCONFIG = $(CONFDIR)/config.chrp
+  endif
 
-ifneq (,$(findstring $(KPKG_SUBARCH),PRPMC prpmc))
-KPKG_SUBARCH:=prpmc
-loader := NoLoader
-kimage := zImage
-target = $(kimage)
-kimagesrc = arch/$(KERNEL_ARCH)/boot/images/zImage.pplus
-kimagedest = $(INT_IMAGE_DESTDIR)/zImage.pplus-$(version)
-endif
+  ifneq (,$(findstring $(KPKG_SUBARCH),PRPMC prpmc))
+    KPKG_SUBARCH:=prpmc
+    loader := NoLoader
+    kimage := zImage
+    target = $(kimage)
+    kimagesrc = arch/$(KERNEL_ARCH)/boot/images/zImage.pplus
+    kimagedest = $(INT_IMAGE_DESTDIR)/zImage.pplus-$(version)
+  endif
 
-ifneq (,$(findstring $(KPKG_SUBARCH),MBX mbx))
-KPKG_SUBARCH:=mbx
-loader := NoLoader
-kimage := zImage
-target = $(kimage)
-kimagesrc = $(shell if [ -d arch/$(KERNEL_ARCH)/mbxboot ]; then \
+  ifneq (,$(findstring $(KPKG_SUBARCH),MBX mbx))
+    KPKG_SUBARCH:=mbx
+    loader := NoLoader
+    kimage := zImage
+    target = $(kimage)
+    kimagesrc = $(shell if [ -d arch/$(KERNEL_ARCH)/mbxboot ]; then \
 	echo arch/$(KERNEL_ARCH)/mbxboot/$(kimage) ; else \
 	echo arch/$(KERNEL_ARCH)/boot/images/zvmlinux.embedded; fi)
-kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
-DEBCONFIG = $(CONFDIR)/config.mbx
-endif
+    kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
+    DEBCONFIG = $(CONFDIR)/config.mbx
+  endif
 
-ifneq (,$(findstring $(KPKG_SUBARCH),pmac))
-KPKG_SUBARCH:=pmac
-target := zImage
-ifeq ($(DEB_BUILD_ARCH),powerpc)
-# This is only meaningful when building on a PowerPC
-ifneq (,$(shell grep NewWorld /proc/cpuinfo))
-loaderdep=yaboot
-loader=yaboot
-#loaderdoc=
-else
-loaderdep=quik
-loader=quik
-loaderdoc=QuikDefault
-endif
-else
-loaderdep=yaboot
-loader=yaboot
-endif
-kimagesrc = vmlinux
-kimage := vmlinux
-kimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
-HAVE_COFF_IMAGE = YES
-coffsrc = $(shell if [ -d arch/$(KERNEL_ARCH)/coffboot ]; then \
-	echo arch/$(KERNEL_ARCH)/coffboot/$(kimage).coff ; else \
-	echo arch/$(KERNEL_ARCH)/boot/images/$(kimage).coff ; fi)
-coffdest=$(INT_IMAGE_DESTDIR)/vmlinux.coff-$(version)
-DEBCONFIG = $(CONFDIR)/config.pmac
-endif
+  ifneq (,$(findstring $(KPKG_SUBARCH),pmac))
+    KPKG_SUBARCH:=pmac
+    target := zImage
+    ifeq ($(DEB_BUILD_ARCH),powerpc)
+      # This is only meaningful when building on a PowerPC
+      ifneq (,$(shell grep NewWorld /proc/cpuinfo))
+        loaderdep=yaboot
+        loader=yaboot
+        #loaderdoc=
+      else
+        loaderdep=quik
+        loader=quik
+        loaderdoc=QuikDefault
+      endif
+    else
+      loaderdep=yaboot
+      loader=yaboot
+    endif
+    kimagesrc = vmlinux
+    kimage := vmlinux
+    kimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
+    HAVE_COFF_IMAGE = YES
+    coffsrc = $(shell if [ -d arch/$(KERNEL_ARCH)/coffboot ]; then \
+         echo arch/$(KERNEL_ARCH)/coffboot/$(kimage).coff ; else \
+         echo arch/$(KERNEL_ARCH)/boot/images/$(kimage).coff ; fi)
+    coffdest=$(INT_IMAGE_DESTDIR)/vmlinux.coff-$(version)
+    DEBCONFIG = $(CONFDIR)/config.pmac
+  endif
 
-ifneq (,$(findstring $(KPKG_SUBARCH),PReP prep))
-KPKG_SUBARCH:=prep
-loader := NoLoader
-kimage := zImage
-target = $(kimage)
-kimagesrc = $(shell if [ -d arch/$(KERNEL_ARCH)/boot/images ]; then \
-	echo arch/$(KERNEL_ARCH)/boot/images/$(kimage).prep ; else \
-	echo arch/$(KERNEL_ARCH)/boot/$(kimage) ; fi)
-kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
-DEBCONFIG = $(CONFDIR)/config.prep
-endif
+  ifneq (,$(findstring $(KPKG_SUBARCH),PReP prep))
+    KPKG_SUBARCH:=prep
+    loader := NoLoader
+    kimage := zImage
+    target = $(kimage)
+    kimagesrc = $(shell if [ -d arch/$(KERNEL_ARCH)/boot/images ]; then \
+         echo arch/$(KERNEL_ARCH)/boot/images/$(kimage).prep ; else \
+         echo arch/$(KERNEL_ARCH)/boot/$(kimage) ; fi)
+    kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
+    DEBCONFIG = $(CONFDIR)/config.prep
+  endif
 
 endif
 
@@ -357,17 +355,13 @@ kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
 DEBCONFIG = $(CONFDIR)/config.sparc
 ARCH_IN_NAME = YES
 
-ifneq (,$(filter sparc64%,$(KPKG_SUBARCH)))
-KERNEL_ARCH = sparc64
-else
-  ifeq ($(KPKG_SUBARCH),sparc64)
-  KERNEL_ARCH = sparc64
+  ifneq (,$(filter sparc64%,$(KPKG_SUBARCH)))
+    KERNEL_ARCH = sparc64
   else
-    KERNEL_ARCH = $(strip $(shell uname -m))
     ifneq (,$(filter sparc%,$(KPKG_SUBARCH)))
       KERNEL_ARCH = sparc
     else
-      KPKG_SUBARCH = sparc64
+      KERNEL_ARCH = $(strip $(shell uname -m))
     endif
   endif
 endif
@@ -1403,7 +1397,7 @@ conf.vars:
 	@echo "SUBLEVEL 	      = $(SUBLEVEL)"      >> .mak
 	@echo "EXTRAVERSION     = $(EXTRAVERSION)"  >> .mak
 ifneq ($(strip $(iatv)),)
-	@echo "APPEND_TO_ERSION = $(iatv)"          >> .mak
+	@echo "APPEND_TO_VERSION = $(iatv)"          >> .mak
 endif
 	@echo "ARCH             = $(ARCH)"          >> .mak
 	@echo "KPKG_ARCH        = $(KPKG_ARCH)"     >> .mak
