@@ -1,4 +1,4 @@
-kernel-package (6.30) unstable; urgency=low
+kernel-package (6.30) frozen unstable; urgency=low
 
   * Make sure we test for uid 0, not just root.
   * Make sure that we really support HOSTCC and CC variables Thanks go to 
