@@ -1,3 +1,11 @@
+kernel-package (8.033) unstable; urgency=low
+
+  * Fixed missing space before right bracket errors pointed out by Daniel
+    Schepler, which completely broke things for 2.4.20 kernels 
+                                                 closes: Bug#191429, Bug#191430
+
+ -- Manoj Srivastava <srivasta@debian.org>  Wed, 30 Apr 2003 12:41:37 -0500
+
 kernel-package (8.032) unstable; urgency=low
 
   * Make the compilation abort if no valid patches were found (since this

@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Sun Apr 13 15:07:27 2003
+## Last Modified On : Wed Apr 30 12:35:47 2003
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 562
+## Update Count	    : 563
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.200 2003/04/27 23:54:34 srivasta Exp $
+## $Id: rules,v 1.201 2003/04/30 17:45:23 srivasta Exp $
 ###############################################################################
 
 ifdef KPKG_ARCH
@@ -359,7 +359,7 @@ endif
 endif
 
 ifneq ($(shell if [ $(VERSION) -ge 2 -a $(PATCHLEVEL) -ge 5 -a  \
-                    $(SUBLEVEL) -ge 41]; then echo new; \
+                    $(SUBLEVEL) -ge 41 ]; then echo new; \
              elif [ $(VERSION) -ge 2 -a $(PATCHLEVEL) -ge 6 ]; then \
                                          echo new; \
              elif [ $(VERSION) -ge 3 ]; then echo new; fi),)
@@ -1279,7 +1279,7 @@ dummy_do_dep:
 stamp-kernel-configure: stamp-debian .config
 	$(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) \
                                  ARCH=$(KERNEL_ARCH) $(config_target) 	
-ifneq ($(shell if [ $(VERSION) -ge 2 -a $(PATCHLEVEL) -ge 5]; then \
+ifneq ($(shell if [ $(VERSION) -ge 2 -a $(PATCHLEVEL) -ge 5 ]; then \
                   echo new;fi),)
 	+$(MAKE) -f ./debian/rules dummy_do_dep
 	$(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) \
