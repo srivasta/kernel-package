@@ -1,3 +1,9 @@
+kernel-package (3.57) unstable; urgency=low
+
+  * Mention mawk as a provider of awk in the README/ closes: Bug#18156
+
+ -- Manoj Srivastava <srivasta@debian.org>  Fri, 13 Feb 1998 13:06:19 -0600
+
 kernel-package (3.56) unstable; urgency=low
 
   * Mentioned in the copyright file that the GPL and Artistic licences are

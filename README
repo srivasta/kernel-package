@@ -1,5 +1,5 @@
 
-    $Id: README,v 1.12 1998/01/21 09:49:34 srivasta Exp $
+    $Id: README,v 1.13 1998/02/13 19:40:35 srivasta Exp $
 
 This is the Debian Linux packaging scripts for the Linux kernel. 
 This package has been put together by Manoj Srivastava <srivasta@debian.org>.
@@ -24,7 +24,7 @@ also requires tkX.X-dev, and other packages these depend on]
 The packages suggested are:
 devel:        gcc, libc5-dev, binutils, make, and, for intel x86 platforms,
               bin86 (non-intel platforms don't need this).
-interpreters: gawk.
+interpreters: awk, which is contained in either the mawk or gawk packages
 base:         gzip, shellutils, and grep.
 
 Of course, pretty gui front ends to kernel configuration require more
