@@ -5,15 +5,15 @@
 # Created On       : Fri May 17 03:28:59 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Thu Mar  5 14:15:10 1998
+# Last Modified On : Fri Jun 12 10:56:01 1998
 # Last Machine Used: tiamat.datasync.com
-# Update Count     : 56
+# Update Count     : 57
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
 # 
 #
-#    $Id: image.prerm,v 1.5 1998/03/05 22:52:48 srivasta Exp $
+#    $Id: image.prerm,v 1.6 1998/07/14 21:31:38 srivasta Exp $
 #
 # 
 
@@ -98,10 +98,14 @@ if (-f "/etc/$loader.conf") { #I know, could be a link, but ..
   if ($WouldInvalidate) {
     print STDERR <<"EOF";
 
- You have a valid /etc/$loader.conf file that mentions vmlinuz-$version.
- Removing kernel-image-$version would invalidate that file. (you will
- have to edit /etc/$loader.conf to not refer to vmlinuz-$version and
- re-run $loader).
+ You have a valid /etc/$loader.conf file that mentions
+ vmlinuz-$version.  Removing kernel-image-$version would invalidate
+ that file. (you will have to edit /etc/$loader.conf or re-target
+ symbolic links mentioned there (typically, /vmlinuz and /vmlinuz.old)
+ to not refer to vmlinuz-$version and will have to re-run $loader). 
+
+ I repeat: you shall have to make changes to your boot loader setup
+ and will have to re-run $loader.
 
 EOF
   ;
