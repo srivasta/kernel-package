@@ -1,5 +1,5 @@
 
-    $Id: Problems,v 1.12 1999/07/15 20:16:11 srivasta Exp $
+    $Id: Problems,v 1.13 2000/05/12 14:49:23 srivasta Exp $
 
  This is an (incomplete) list of problems that people have encountered
  in the past while using kernel-package. Please remember to configure
@@ -144,3 +144,7 @@ make: *** [all] Error 2
         may have to edit the makefile for this, or something). This is
         an universal problem, hopefully there shall be a compromise
         somewhere 
+ 
+        A symptom may be failures like:
+Makefile:153: arch/i586/Makefile: No such file or directory
+make[1]: *** No rule to make target `arch/i586/Makefile'.  Stop.
