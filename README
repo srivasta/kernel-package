@@ -1,9 +1,8 @@
 
-    $Id: README,v 1.32 2000/04/30 08:14:34 srivasta Exp $
+    $Id: README,v 1.33 2000/04/30 20:51:55 srivasta Exp $
 
-This is the Debian Linux packaging scripts for the Linux kernel. 
+This is the Debian GNU/Linux packaging scripts for the Linux kernel. 
 This package has been put together by Manoj Srivastava <srivasta@debian.org>.
-
 
 INSTALLATION NOTES:
 
@@ -55,7 +54,6 @@ Phase THREE: Install the kernel image on one or more machines
  5# dpkg -i ../kernel-image-X.XXX_1.0_<arch>.deb
  6# shutdown -r now # If and only if LILO worked or you have a means of
                     # booting the new kernel. YOU HAVE BEEN WARNED!!
-
 
  With the addition of fakeroot ( a really nice program, I recommend
  it). To use fake root, try setting ROOT_CMD to 'fakeroot --'. Steps 1
@@ -120,12 +118,12 @@ a) It only has an effect during the configure phase (in other words,
    before running make-kpkg clean for this option to have an effect.
    So, if you want to re-run make-kpkg with a different revision
    number, you have to make sure you start with a clean slate.
-b) It may contain only alphanumerics and the characters + . - (full stop,
-   hyphen, and plus) and should contain a digit.  (Look at Chapter 5 
-   of the Programmers manual for details). Optionally, you
+b) It may contain only alphanumerics and the characters + . - (full
+   stop, hyphen, and plus) and should contain a digit.  (Look at
+   Chapter 5 of the Programmers manual for details). Optionally, you
    may prepend the revision with a digit followed by a colon (:); this
-   shall put your revision into a new epoch; (which makes older dpkg very
-   confused), more on this later.
+   shall put your revision into a new epoch; (which makes older dpkg
+   very confused), more on this later.
 
 You should _not_ use a "_" in the revision number! As tempting as it may
 seem, it actually interferes with the policy.
@@ -180,6 +178,7 @@ So, try using an epoch for your custom packages:
 And the next time when you build a kernel, because you just bought a new
 sound card or you discovered that you suddenly want masquerading in your
 kernel enabled, you'll type: 
+  make-kpkg clean
   $Get_Root make-kpkg --revision=3:custom.2.0 kernel_image
       (Get_Root is whatever you need to become root -- fakeroot or
       sudo are examples that come to mind).
@@ -228,7 +227,7 @@ snippet included during the kernel packages build process, and hence
 you may put any legal Makefile directive in that file (just make very
 sure you know what you are doing ;-).
 
-	At the moment, the user modifiable variables supported are:
+        At the moment, the user modifiable variables supported are:
 maintainer:	Local kernel-* package maintainer.  Please note that
                 any apostrophes "'" shall have to be quoted like so: 
                 maintainer = John O'\\''Brien. 
@@ -267,11 +266,16 @@ reverse_symlink Mutually exclusive to no_symlink. Can be used with
                 boot on umsdos, and who can't see the link in dos, but
                 do want to know the image version when in Linux. 
                 This is a Hack.
-image_dest    If you want the image to  be  stored  in  elsewhere
-              than  /boot  set this variable to the dir where you
-              want the image. This may  be  of  help  to  loadlin
-              users.Defaults  to  /boot.  This over rides all the
-              above methods.
+image_dest    If  you  want  the  symbolic  link  (or  image,  if
+              move_image is set) to be stored in elsewhere than /
+              set this variable to the dir  where  you  want  the
+              symbolic  link.   Please  note  that  this is not a
+              Boolean variable.  This may be of help  to  loadlin
+              users,   who  may  set  both  this  and  move_image
+              Defaults to / This can be used in conjunction  with
+              all above options except image_in_boot, which would
+              not   make   sense.   (If   both   image_dest   and
+              image_in_boot are set, image_in_boot overrides).
 patch_the_kernel This is an experts only variable. If set to YES (ENV
                  variable PATCH_THE_KERNEL overrides this), the build
                  process causes run-parts to be run over
@@ -327,7 +331,6 @@ does not exist, and neither does the symbolic link /vmlinuz.  The
 script asks the user whether the symbolic link should be created, and
 stashes the answer into /etc/kernel-img.conf
 
-
 no_symlink      Mutually exclusive to reverse_symlink. Can be used with
                 image_in_boot. The image is placed in vmlinuz (instead
                 of /boot/vmlinuz-X.X.XX). The old vmlinuz is moved to
@@ -347,17 +350,12 @@ reverse_symlink Mutually exclusive to no_symlink. Can be used with
                 boot on umsdos, and who can't see the link in dos, but
                 do want to know the image version when in Linux. 
                 This is a Hack.
-image_dest    If you want the image to  be  stored  in  elsewhere
-              than  /boot  set this variable to the dir where you
-              want the image. This may  be  of  help  to  loadlin
-              users.Defaults  to  /boot.  This over rides all the
-              above methods.
 do_symlink    By  default,  the  kernel  image  post installation
               script shall create or update the /vmlinuz and
               /vmlinuz.old symbolic links.  This is true if a /vmlinuz
               link already exists, however, in absence of /vmlinuz,
               the script looks to see if this configuration file
-              exists. If it does not, the config­ uration scripts asks
+              exists. If it does not, the configuration scripts asks
               the user whether to create the symbolic link, and
               stashes the answer in a newly created
               /etc/kernel-img.conf.  If the configuration file already
@@ -368,6 +366,33 @@ do_symlink    By  default,  the  kernel  image  post installation
 image_in_boot:	Set to True if you want the kernel image symlink (vmlinuz)
                 in /boot rather than the default /. defaults to
 		undefined. 
+image_dest
+              If  you  want  the  symbolic  link  (or  image,  if
+              move_image is set) to be stored in elsewhere than /
+              set this variable to the dir  where  you  want  the
+              symbolic  link.   Please  note  that  this is not a
+              Boolean variable.  This may be of help  to  loadlin
+              users,   who  may  set  both  this  and  move_image
+              Defaults to / This can be used in conjunction  with
+              all above options except image_in_boot, which would
+              not   make   sense.   (If   both   image_dest   and
+              image_in_boot are set, image_in_boot overrides).
+
+move_image
+              Instead  of  creating  symbolic  links  to  (or, is
+              reverse_symlinks  is  set,  from)  image_dest,  the
+              image  is  moved  from  its  location in /boot into
+              image_dest.   If  reverse_symlinks  is  set,  /boot
+              shall  contain a symbolic link to the actual image.
+              This option can be sueful to peopl  using  loadlin,
+              who  may need the image to be moved to a different,
+              dos partition.  This variable is unset by  default.
+
+clobber_modules
+              If  set,  the  preinst  shall  silently try to move
+              /lib/modules/version out of the way if  it  is  the
+              same  version  as the image being installed. Use at
+              your own risk.  This variable is unset by  default.
 Please see kernel-img.conf (5).
 
 
@@ -436,6 +461,8 @@ Or if you want to generate the whole package,
 % $Get_Root make-kpkg --revision=custom.1.0 \
             --pgpsign="Your pgp ID" buildpackage
 Note that this needs a pgp key.
+      (Get_Root is whatever you need to become root -- fakeroot or
+      sudo are examples that come to mind).
 
 A note on LILO: the kernel-image install-scripts arrange to have
 /vmlinuz and /vmlinuz.old point to the latest kernel image and the
@@ -483,7 +510,7 @@ recompile.
 
 Tecras and other notebooks 
 --------------------------
-	  (Many thanks to Philip Hands <phil@hands.com> and
+          (Many thanks to Philip Hands <phil@hands.com> and
            Avery Pennarun <apenwarr@worldvisions.ca> for this explanation)
 
 Tecras and other notebooks, and some PCs have a problem where they
@@ -500,15 +527,14 @@ There are two solutions that I know of:
 
   1) apply a patch, which flushes the cache.  Unfortunately this
      causes other machines to crash so is not universally applicable
-     (hence the tecra disks being segragated from the mainstream)
+     (hence the tecra disks being segregated from the mainstream)
 
   2) build a zimage, rather than bzimage kernel.  This seems to get
      round the problem. use the --zimage option to make-kpkg, or even
      set this as the default in /etc/kernel-pkg.conf.
 
-
 There some add on modules that hook into make-kpkg and the kernel
-sources so that they may be kept in synchrony woth the kernel you
+sources so that they may be kept in synchrony with the kernel you
 run. If you have such a module source package, for example,
 pcmcia-source, then please read README.modules as well. If you don't
 never mind. (The file is in /usr/share/doc/kernel-source-X.X.XX/. If you
@@ -523,7 +549,7 @@ Foot note 1:
   this. The kernel knows what version it is, as given in the kernel
   Makefile as the variables VERSION, PATCHLEVEL, and SUBLEVEL. It will
   look for the modules in /lib/modules/$VERSION.$PATCHLEVEL.$SUBLEVEL.
-  The debian scripts think they know what the kernel version is, as
+  The Debian scripts think they know what the kernel version is, as
   given in the Debian file rules as the variable v (near the top). It
   then proceeds to put the modules in /lib/modules/$v.  So, it is
   essential that the kernel (Makefile) and the Debian script (rules)

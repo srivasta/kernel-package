@@ -22,7 +22,7 @@
 .\" USA.
 .\"
 .\"
-.\"    $Id: make-kpkg.8,v 1.25 2000/04/30 08:14:34 srivasta Exp $
+.\"    $Id: make-kpkg.8,v 1.26 2000/04/30 20:51:55 srivasta Exp $
 .\"
 .TH MAKE\-KPKG 8 "May 2 1997" "Debian" "Debian GNU/Linux manual"
 .SH NAME
@@ -85,7 +85,7 @@ you may prepend the revision with a digit followed by a colon (:)
 .BR \-\-flavour\ foo
 Sets the kernel flavour to the argument \fBfoo\fR. The flavour is
 also appended to the package name. You need a patched Makefile to make
-this work propperly (see /usr/share/doc/kernel-package/\s-1Flavours\s0.gz).
+this work properly (see /usr/share/doc/kernel-package/\s-1Flavours\s0.gz).
 It may contain only alphanumerics and the characters \- + . (full
 stop, hyphen, and plus). Uppercase letter are also not permitted under
 the Policy for a new package. \fB\s-1NOTE\s0\fR: Hyphens are
@@ -95,6 +95,19 @@ details). Please note that you shall need to
 .I clean
 .B FIRST
 if you wish to recompile the kernel-image using a flavour.
+.TP
+.BR \-\-added_modules\ foo
+The argument should be a comma or space separated list of additional
+add-on modules (not in the main kernel tree) that you wish to
+build when you invoke the modules_blah targets. You may give full path
+names of the directory the modules 
+reside in, or just the module name if it can be found in 
+.B MODULE_LOC,
+which defaults to 
+.I /usr/src/modules.
+The default is that all modules in
+.B MODULE_LOC,
+are compiled when the modules_blah targets are invoked.
 .TP
 .BR \-\-arch\ foo
 This is useful for setting the architecture when you are cross

@@ -14,7 +14,7 @@
 #
 #
 #
-#    $Id: make-kpkg,v 1.40 2000/04/30 08:14:34 srivasta Exp $
+#    $Id: make-kpkg,v 1.41 2000/04/30 20:51:55 srivasta Exp $
 #
 require 5.002;
 use strict;
@@ -29,11 +29,12 @@ make-kpkg - build Debian kernel packages from Linux kernel sources.
 ($main::MYNAME     = $main::0) =~ s|.*/||;
 $main::Author      = "Manoj Srivastava";
 $main::AuthorMail  = "srivasta\@debian.org";
-$main::Version     = '$Revision: 1.40 $ ';
+$main::Version     = '$Revision: 1.41 $ ';
 
 my $help_opt=0; 
 my $revision=0; 
 my $flavour=''; 
+my $added_modules='';
 my $arch='';
 my $cross_compile='';
 my $config_target='oldconfig';
@@ -52,6 +53,7 @@ my %option_ctl = ("help"            => \$help_opt,
 		  "noexec"          => \$noexec,
 		  "revision=s"      => \$revision,
 		  "flavour=s"       => \$flavour,
+		  "added_modules=s" => \$added_modules,
                   "arch=s"          => \$arch,
                   "config=s"        => \$config_target,
                   "cross_compile=s" => \$cross_compile,
@@ -125,6 +127,19 @@ Policy for a new package. B<NOTE>: Hyphens are discouraged.  (Look at
 Chapters 4 and  5 of the Programmers manual for details).
 
 
+=back
+
+=item B<--added_modules> foo
+
+=over 2
+
+The argument should be a comma or space separated list of additional
+add-on modules (not in the main kernel tree) that you wish to
+build when you invoke the modules_blah targets. You may give full path
+names of the directory the modules reside in, or just the module name
+if it can be found in C<MODULE_LOC>, which defaults to /usr/src/modules.
+The default is that all modules in  C<MODULE_LOC> are compiled when
+the modules_blah targets are invoked.
 =back
 
 =item B<--arch> foo
@@ -279,6 +294,8 @@ usage: $main::MYNAME [options] target [target ...]
                          have digit, no hyphen allowed)
  --flavour  foo        an additional kernel sub-version. ([-a-z.+0-9])
                          see /usr/share/doc/kernel-package/Flavours.gz
+ --added_modules foo   Comma/space separated list of add on modules
+                       affected byt the modules_<blah> targets
  --arch     foo        architecture
  --cross_compile       target string
  --subarch  bar        Set the sub arch for the image being compiled
@@ -695,6 +712,9 @@ EOERR1
   }
   if ($subarch){
     $command .= " SUBARCH=$subarch ";
+  }
+  if ($added_modules) {
+    $command .= " SELECTED_MODULES=\"$added_modules\"";
   }
   if ($arch_in_name){
     $command .= " ARCH_IN_NAME=YES ";

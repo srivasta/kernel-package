@@ -1,3 +1,15 @@
+kernel-package (7.06) unstable; urgency=low
+
+  * Somehow, kernel-doc-blah was never made to have /usr/doc links; it is
+    fixed in this version. 
+  * Added a new option to kernel package to allow specifying which modules
+    one means to compile when doing the modulkes targets - this also
+    allows people to use kernel-package to compile modules in non standard
+    location, by giving a full path for the module directory. 
+    closes: Bug#54807
+
+ -- Manoj Srivastava <srivasta@debian.org>  Sun, 30 Apr 2000 15:51:37 -0500
+
 kernel-package (7.05) unstable; urgency=low
 
   * Changed image postinst to allow people to specify they want the image
