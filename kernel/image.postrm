@@ -1,0 +1,113 @@
+#! /usr/bin/perl
+#                              -*- Mode: Perl -*- 
+# image.postrm --- 
+# Author           : Manoj Srivastava ( srivasta@glaurung.green-gryphon.com ) 
+# Created On       : Sat May 15 11:05:13 1999
+# Created On Node  : glaurung.green-gryphon.com
+# Last Modified By : Manoj Srivastava
+# Last Modified On : Sat May 15 11:14:24 1999
+# Last Machine Used: glaurung.green-gryphon.com
+# Update Count     : 4
+# Status           : Unknown, Use with caution!
+# HISTORY          : 
+# Description      : 
+# 
+#     $Id: image.postrm,v 1.1 1999/05/15 16:27:50 srivasta Exp $
+#
+
+
+# 
+# use strict; #for debugging
+$|=1;
+# Predefined values:
+my $version         = "=V";
+my $image_in_boot   = "=B";     # Should be empty, mostly
+my $no_symlink      = "=S";     # Should be empty, mostly
+my $reverse_symlink = "=R";     # Should be empty, mostly
+my $kimage          = "=K";     # Should be empty, mostly
+my $loader          = "=L";     # lilo, silo, quik, or nettrom
+my $image_dest      = "=D";     # where the image is located
+
+my $Loader          = "LILO";
+$Loader             = "SILO"  if $loader =~ /silo/io;
+$Loader             = "QUIK"  if $loader =~ /quik/io;
+$Loader             = "NETTROM"  if $loader =~ /nettrom/io;
+
+if (! $image_dest) {
+  $image_dest         = "boot"  
+}
+else {
+  $image_dest  =~ s|^/||o;
+}
+
+
+# This should not point to /tmp, because of security risks.
+my $temp_file_name = "/var/log/$loader" . "_log.$$";
+
+#known variables
+my @boilerplate = ();
+my $bootdevice = '';
+my $rootdevice = '';
+my $rootdisk = '';
+my $rootpartition = '';
+my $imagedir = "/";
+my $realimageloc = "$image_dest/";
+
+
+if ($image_in_boot) {
+  $imagedir = "/$image_dest/";
+  $realimageloc = "";
+}
+
+# Ignore all invocations uxcept when called on to purge.
+exit 0 unless $ARGV[0] =~ /purge/;
+
+# most of our work is done in $imagedir
+chdir("$imagedir") or die "could not chdir to $imagedir:$!\n";
+
+# Paranoid check to make sure that the correct value is put in there
+if (! $kimage) {                # Hmm. empty
+  $kimage = "vmlinuz"
+}
+elsif ($kimage =~ m/^b?zImage$/o) { # these produce vmlinuz
+  $kimage = "vmlinuz"
+}
+elsif ($kimage =~ m/^Image$/o) {
+  my $nop = $kimage;
+}
+elsif ($kimage =~ m/^vmlinux$/o) {
+  my $nop = $kimage;
+  #
+}
+else {                          # Let this be the default as well
+  $kimage = "vmlinuz"
+}
+
+if (-l "$kimage") {
+  # There is a symbolic link
+  my $force_move = 0;
+  my $vmlinuz_target = readlink "$kimage";
+  if (!defined($vmlinuz_target)) {
+    # what, a dangling symlink?
+    warn "The link "  . $imagedir . "$kimage is a danglink link\n";
+    warn "Removing dangling sym link "  . $imagedir . "$kimage \n";
+    # Remove the dangling link
+    unlink $imagedir . $kimage;
+  }
+}
+if (-l "$kimage.old") {
+  # There is a symbolic link
+  my $force_move = 0;
+  my $vmlinuz_target = readlink "$kimage" . ".old" ;
+  if (!defined($vmlinuz_target)) {
+    # what, a dangling symlink?
+    warn "The link "  . $imagedir . "$kimage" . ".old is a danglink link\n";
+    warn "Removing dangling sym link "  . $imagedir . "$kimage" . ".old \n";
+    # Remove the dangling link
+    unlink $imagedir . $kimage . ".old";
+  }
+}
+
+return 0;
+
+__END__

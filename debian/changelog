@@ -1,3 +1,12 @@
+kernel-package (6.09) unstable; urgency=low
+
+  * Added new changes for PowerMacs (boy do those sub archs multiply out
+    there) Thanks to Hartmut Koptein <koptein@debian.org>
+  * On a purge, kernel-image deletes either /vmlinuz or /v,linuz.old if it
+    is a dangling symlink, after warning the user. closes: Bug#33522
+
+ -- Manoj Srivastava <srivasta@debian.org>  Sat, 15 May 1999 11:26:37 -0500
+
 kernel-package (6.08) unstable; urgency=low
 
   * Allow all lowercase subarch names for the power pc family (mostly for

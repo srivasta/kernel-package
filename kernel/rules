@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Sat May 15 00:13:05 1999
+## Last Modified On : Sat May 15 11:24:02 1999
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 392
+## Update Count	    : 395
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.64 1999/05/15 06:51:30 srivasta Exp $
+## $Id: rules,v 1.65 1999/05/15 16:27:50 srivasta Exp $
 ###############################################################################
 
 # The version of kernel-package this belongs to
@@ -138,25 +138,51 @@ ifeq ($(strip $(GUESS_SUBARCH)),netwinder)
 endif
 endif
 
-### ppc powerpc et al
+### PowerPC
 ifneq ($(strip $(filter ppc powerpc,$(architecture))),)
-# sub archs can be CHRP, PowerMac, PReP
 GUESS_SUBARCH:=$(shell awk '/machine/ { print $$3}' /proc/cpuinfo)
 
-ifeq (,$(findstring $(SUBARCH),chrp power prep CHRP Power PReP pmac))
+ifeq (,$(findstring $(SUBARCH),apus bbox chrp mbx pmac prep APUs BBOX CHRP MBX Power PReP ))
 SUBARCH:=$(GUESS_SUBARCH)
 endif
 
-#The only place we have needed to change
 KERNEL_ARCH:=ppc
 kimage := zImage
 target = $(kimage)
 
-# PowerPCs use yet another loader: quik.
-ifneq (,$(findstring $(SUBARCH)),Power power)
-SUBARCH:=pmac
+ifneq (,$(findstring $(SUBARCH)),APUs apus)
+SUBARCH:=apus
+kimagesrc = arch/$(KERNEL_ARCH)/boot/$(kimage)
+kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
+DEBCONFIG = $(CONFDIR)/config.apus
 endif
-ifeq ($(strip $(SUBARCH)),pmac)
+
+ifneq (,$(findstring $(SUBARCH)),BBOX bbox)
+SUBARCH:=bbox
+kimagesrc = arch/$(KERNEL_ARCH)/boot/$(kimage))
+kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
+DEBCONFIG = $(CONFDIR)/config.bbox
+endif
+
+ifneq (,$(findstring $(SUBARCH)),CHRP chrp)
+SUBARCH:=chrp
+loaderdep=quik
+loader=quik
+loaderdoc=QuikDefault
+kimagesrc = arch/$(KERNEL_ARCH)/chrpboot/$(kimage)
+kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
+DEBCONFIG = $(CONFDIR)/config.chrp
+endif
+
+ifneq (,$(findstring $(SUBARCH)),MBX mbx)
+SUBARCH:=mbx
+kimagesrc = arch/$(KERNEL_ARCH)/boot/$(kimage))
+kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
+DEBCONFIG = $(CONFDIR)/config.mbx
+endif
+
+ifneq (,$(findstring $(SUBARCH)),Power pmac)
+SUBARCH:=pmac
 loaderdep=quik
 loader=quik
 loaderdoc=QuikDefault
@@ -165,11 +191,7 @@ kimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
 HAVE_COFF_IMAGE = YES
 coffsrc=arch/$(KERNEL_ARCH)/coffboot/$(kimage)
 coffdest=$(INT_IMAGE_DESTDIR)/vmlinux.coff-$(version)
-DEBCONFIG = $(CONFDIR)/config.powermac
-endif
-
-ifneq (,$(findstring $(SUBARCH)),CHRP chrp)
-SUBARCH:=chrp
+DEBCONFIG = $(CONFDIR)/config.pmac
 kimagesrc = arch/$(KERNEL_ARCH)/chrpboot/$(kimage)
 kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
 DEBCONFIG = $(CONFDIR)/config.chrp
@@ -183,6 +205,8 @@ DEBCONFIG = $(CONFDIR)/config.prep
 endif
 endif
 
+
+##### Alpha
 ifeq ($(strip $(architecture)),alpha)
 kimage := vmlinuz
 loaderdep=
@@ -699,7 +723,13 @@ stamp-image: configure build
             -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \
             -e 's,=D,$(IMAGE_DESTDIR),g'                             \
              $(DEBDIR)/image.postinst > debian/tmp-image/DEBIAN/postinst
-	chmod 755 debian/tmp-image/DEBIAN/postinst
+	chmod 755 debian/tmp-image/DEBIAN/postrm
+	sed -e 's/=V/$(version)/g'    -e 's/=B/$(image_in_boot)/g'   \
+            -e 's/=S/$(no_symlink)/g' -e 's/=R/$(reverse_symlink)/g' \
+            -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \
+            -e 's,=D,$(IMAGE_DESTDIR),g'                             \
+             $(DEBDIR)/image.postinst > debian/tmp-image/DEBIAN/postinst
+	chmod 755 debian/tmp-image/DEBIAN/postrm
 	sed -e 's/=V/$(version)/g'    -e 's/=L/$(loader)/g'          \
 	             $(DEBDIR)/image.preinst > debian/tmp-image/DEBIAN/preinst
 	chmod 755 debian/tmp-image/DEBIAN/preinst
