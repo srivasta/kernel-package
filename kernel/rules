@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.84 2000/01/27 05:57:16 srivasta Exp $
+## $Id: rules,v 1.85 2000/01/27 06:13:30 srivasta Exp $
 ###############################################################################
 
 #
@@ -664,7 +664,8 @@ binary-arch:  kernel_image  kernel_headers
 
 kernel-source kernel_source: stamp-source
 stamp-source: debian
-	@test 0 = $(id | sed -e 's/(.*$//' -e 's/^uid=//') || (echo need root priviledges; exit 1)
+	@test 0 = $$(id | sed -e 's/(.*$$//' -e 's/^uid=//') || \
+		(echo need root priviledges; exit 1)
 	test -f stamp-debian || $(deb_rule) debian
 	rm -rf debian/tmp-source
 	$(make_directory) debian/tmp-source/DEBIAN
@@ -739,7 +740,7 @@ stamp-libc-kheaders: configure
 
 kernel-headers kernel_headers: stamp-headers
 stamp-headers: configure
-	@test $(id | sed -e 's/(.*$//' -e 's/^uid=//') || \
+	@test $$(id | sed -e 's/(.*$$//' -e 's/^uid=//') || \
 		(echo need root priviledges; exit 1)
 	test -f stamp-configure || $(deb_rule) configure
 	rm -rf debian/tmp-headers
@@ -776,7 +777,7 @@ stamp-headers: configure
 
 kernel-doc kernel_doc: stamp-doc
 stamp-doc: debian
-	@test $(id | sed -e 's/(.*$//' -e 's/^uid=//') || \
+	@test $$(id | sed -e 's/(.*$$//' -e 's/^uid=//') || \
 		(echo need root priviledges; exit 1)
 	test -f stamp-debian || $(deb_rule) debian
 	rm -rf            debian/tmp-doc
@@ -808,7 +809,7 @@ stamp-image: configure build kernel-image-deb
 # seems to create a working .deb with a kernel that gives the correct
 # user name (as opposed to root@...)
 kernel-image-deb:
-	@test $(id | sed -e 's/(.*$//' -e 's/^uid=//')    \
+	@test $$(id | sed -e 's/(.*$$//' -e 's/^uid=//')    \
 		 || (echo need root priviledges; exit 1)
 	rm -f -r ./debian/tmp-image ./debian/tmp-image.deb
 	test -f stamp-configure     || $(deb_rule) configure
