@@ -5,9 +5,9 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Tue Mar  2 22:30:26 2004
+## Last Modified On : Tue Mar  2 22:45:48 2004
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count	    : 667
+## Update Count	    : 670
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
@@ -1669,6 +1669,7 @@ else
 	| (cd $(SOURCE_SRC); umask 000; tar xspf -)
 	(cd $(SOURCE_SRC)/include; rm -f asm ; )
 endif
+	$(install_file) debian/changelog         $(SOURCE_SRC)/Debian.src.changelog
 	(cd $(SOURCE_SRC); \
             $(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) distclean)
 	(cd $(SOURCE_SRC);         rm -f stamp-building $(STAMPS_TO_CLEAN))
@@ -1930,6 +1931,10 @@ endif
 	if test -f README.Debian ; then \
            $(install_file) README.Debian $(IMAGE_DOC)/README.Debian.1st;\
            gzip -9qf                     $(IMAGE_DOC)/README.Debian.1st;\
+	fi
+	if test -f Debian.src.changelog; then \
+	  $(install_file) Debian.src.changelog  $(IMAGE_DOC)/; \
+           gzip -9qf                             $(IMAGE_DOC)/Debian.src.changelog;\
 	fi
 ifeq ($(strip $(HAVE_EXTRA_DOCS)),YES)
 	$(install_file) $(extra_docs) 	         $(IMAGE_DOC)/
