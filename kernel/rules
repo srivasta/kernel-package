@@ -259,7 +259,7 @@ ifneq ($(strip $(filter ppc powerpc,$(architecture))),)
         GUESS_SUBARCH:=pmac
       else
         # At the request of Colin Watson, changed from find string iMac.
-        # Any powerpc system that would contain  Mac in /proc/cpuinfo is a 
+        # Any powerpc system that would contain  Mac in /proc/cpuinfo is a
         # PowerMac system, according to arch/ppc/platforms/* in the kernel source
         ifneq (,$(findstring Mac,$(GUESS_SUBARCH)))
           GUESS_SUBARCH:=pmac
@@ -495,8 +495,8 @@ endif
 
 ##### S/390
 ifeq ($(strip $(architecture)),s390)
-  # make it possible to build s390x kernels on s390 for 2.4 kernels only 
-  # because 2.6 always use s390 as architecture. 
+  # make it possible to build s390x kernels on s390 for 2.4 kernels only
+  # because 2.6 always use s390 as architecture.
   ifeq (4,$(PATCHLEVEL))
     ifeq (,$(findstring $(KPKG_SUBARCH),s390 s390x))
       KPKG_SUBARCH = s390
@@ -624,10 +624,10 @@ ifeq ($(strip $(architecture)),um)
                                             echo new;                        \
                elif [ $(VERSION)  -ge  3 ]; then echo new; fi),)
     target  = vmlinux
-    kimage := vmlinux	
+    kimage := vmlinux
   else
     target  = linux
-    kimage := linux	
+    kimage := linux
   endif
 
 
@@ -661,7 +661,7 @@ ifeq ($(strip $(architecture)),xen)
     target    = bzImage
   endif
   kimage := $(target)
- 
+
   ifeq (,$(filter xen0,$(KPKG_SUBARCH)))
      # only domain-0 are bootable via xen so only domain0 subarch needs grub and xen-vm
      loaderdep=grub,xen-vm
@@ -672,7 +672,7 @@ ifeq ($(strip $(architecture)),xen)
      loader=
      loaderdoc=
   endif
- 
+
   kimagesrc = $(kimage)
   kimagedest = $(INT_IMAGE_DESTDIR)/xen-linux-$(version)
 endif
@@ -741,7 +741,7 @@ UTS_RELEASE_VERSION=$(shell if [ -f include/linux/version.h ]; then             
                  perl -nle  'm/^\s*\#define\s+UTS_RELEASE\s+("?)(\S+)\1/g && print $$2;';\
                  else echo "" ;                                                         \
                  fi)
- 
+
 version = $(VERSION).$(PATCHLEVEL).$(SUBLEVEL)$(EXTRAVERSION)$(iatv)$(INT_FLAV)$(LOCALVERSION)
 
 # See if we are being run in the kernel directory
@@ -776,7 +776,7 @@ ifneq ($(strip $(version)),$(strip $(lc_version)))
  kernel image package, this is a Debian policy violation, and \
  the packaging system shall refuse to package the image. Lower -casing version.)
 
-    version := $(lc_version)                                                     
+    version := $(strip $(lc_version))
   endif
 endif
 
@@ -932,12 +932,12 @@ endif
 ifneq ($(strip $(DEBIAN_REVISION_MANDATORY)),)
 debian_revision_mandatory:=$(DEBIAN_REVISION_MANDATORY)
 endif
- 
+
 
 ifneq ($(strip $(install_vmlinux)),)
 int_install_vmlinux:=$(install_vmlinux)
 endif
- 
+
 ifneq ($(strip $(KPKG_FOLLOW_SYMLINKS_IN_SRC)),)
 int_follow_symlinks_in_src=YES
 else
@@ -1368,7 +1368,7 @@ old_applied_patches=$(shell if [ -f applied_patches ]; then                   \
                             fi )
 
 ifeq ($(strip $(valid_unpatches)),)
-ifneq ($(strip $(old_applied_patches)),) 
+ifneq ($(strip $(old_applied_patches)),)
 old_unpatches=$(shell new="";                                          \
                       for name in $(notdir $(old_applied_patches)); do \
                           new="$$name $$new";                          \
@@ -1666,16 +1666,16 @@ endif
 
 dummy_do_dep:
 	+$(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) \
-                                 ARCH=$(KERNEL_ARCH) $(fast_dep) dep 
+                                 ARCH=$(KERNEL_ARCH) $(fast_dep) dep
 
 stamp-kernel-configure: stamp-debian .config
 	$(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) \
-                                 ARCH=$(KERNEL_ARCH) $(config_target) 	
+                                 ARCH=$(KERNEL_ARCH) $(config_target)
 ifeq ($(shell if [ $(VERSION) -ge 2 ] && [ $(PATCHLEVEL) -ge 5 ]; then \
                   echo new;fi),)
 	+$(MAKE) -f ./debian/rules dummy_do_dep
 	$(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) \
-                                 ARCH=$(KERNEL_ARCH) clean 
+                                 ARCH=$(KERNEL_ARCH) clean
 else
 ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 	$(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) \
@@ -1710,9 +1710,9 @@ ifeq ($(strip $(int_am_root)),)
 ifeq ($(strip $(int_get_root)),)
 	@echo "You may need root privileges - some parts may fail"
 endif
-	$(int_get_root) $(deb_rule) real_stamp_clean 
+	$(int_get_root) $(deb_rule) real_stamp_clean
 else
-	$(deb_rule) real_stamp_clean 
+	$(deb_rule) real_stamp_clean
 endif
 
 # Perhaps a list of patches should be dumped to a file on patching? so we
@@ -1902,13 +1902,13 @@ endif
 	$(install_file) conf.vars  	     $(HEADER_DOC)/conf.vars
 	gzip -9qf                                $(HEADER_DOC)/config-$(version)
 	gzip -9qf                                $(HEADER_DOC)/conf.vars
-	$(install_file) CREDITS                  $(HEADER_DOC)/     
+	$(install_file) CREDITS                  $(HEADER_DOC)/
 	gzip -9qf                                $(HEADER_DOC)/CREDITS
-	$(install_file) MAINTAINERS              $(HEADER_DOC)/     
+	$(install_file) MAINTAINERS              $(HEADER_DOC)/
 	gzip -9qf                                $(HEADER_DOC)/MAINTAINERS
-	$(install_file) REPORTING-BUGS           $(HEADER_DOC)/     
+	$(install_file) REPORTING-BUGS           $(HEADER_DOC)/
 	gzip -9qf                                $(HEADER_DOC)/REPORTING-BUGS
-	$(install_file) README                   $(HEADER_DOC)/     
+	$(install_file) README                   $(HEADER_DOC)/
 	gzip -9qf                                $(HEADER_DOC)/README
 	if test -f debian/official && test -f debian/README.Debian ; then \
            $(install_file) debian/README.Debian $(HEADER_DOC)/README.Debian ; \
@@ -2165,10 +2165,10 @@ ifeq ($(strip $(KERNEL_ARCH)),um)
 	-depmod -q -FSystem.map -b $(IMAGE_TOP) \
            $(version)-`sed q include/linux/version.h | sed s/\"//g | awk -F\- '{print $$2}'`
 else
-	-depmod -q -FSystem.map -b $(IMAGE_TOP) $(version); 
+	-depmod -q -FSystem.map -b $(IMAGE_TOP) $(version);
 endif
 	test ! -e ./debian/source-link ||                                              \
-	   mv ./debian/source-link $(IMAGE_TOP)/lib/modules/$(version)/source 
+	   mv ./debian/source-link $(IMAGE_TOP)/lib/modules/$(version)/source
 	test ! -e  ./debian/build-link ||                                              \
 	   mv  ./debian/build-link $(IMAGE_TOP)/lib/modules/$(version)/build
 
@@ -2179,11 +2179,11 @@ else
 	cp $(kimagesrc) $(kimagedest)
 endif
 ifeq ($(strip $(KERNEL_ARCH)),um)
-	chmod 755 $(kimagedest);	
+	chmod 755 $(kimagedest);
 ifeq (,$(findstring nostrip,$(DEB_BUILD_OPTIONS)))
 	strip --strip-unneeded --remove-section=.note --remove-section=.comment  $(kimagedest);
 endif
-else							
+else
 	chmod 644 $(kimagedest);
 endif
 ifeq ($(strip $(HAVE_COFF_IMAGE)),YES)
@@ -2209,9 +2209,9 @@ endif
                         $(INT_IMAGE_DESTDIR)/patches-$(version)
 ifneq ($(strip $(KERNEL_ARCH)),um)
 	test ! -f System.map ||  cp System.map                         \
-                        $(INT_IMAGE_DESTDIR)/System.map-$(version);    
+                        $(INT_IMAGE_DESTDIR)/System.map-$(version);
 	test ! -f System.map ||  chmod 644                             \
-                        $(INT_IMAGE_DESTDIR)/System.map-$(version);    
+                        $(INT_IMAGE_DESTDIR)/System.map-$(version);
 else
 	mv $(INSTALL_MOD_PATH)/lib/modules/* $(UML_DIR)/ -v
 	rm -rf $(INSTALL_MOD_PATH)/lib
@@ -2248,7 +2248,7 @@ endif
 
 
 # only generate module image packages
-modules-image modules_image: configure 
+modules-image modules_image: configure
 ifeq ($(strip $(shell grep -E ^[^\#]*CONFIG_MODULES $(CONFIG_FILE))),)
 	@echo Modules not configured, so not making $@
 else
@@ -2283,7 +2283,7 @@ endif
 endif
 
 # generate the modules packages and sign them
-modules: configure 
+modules: configure
 ifeq ($(strip $(shell grep -E ^[^\#]*CONFIG_MODULES $(CONFIG_FILE))),)
 	@echo Modules not configured, so not making $@
 else
