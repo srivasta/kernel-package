@@ -5,16 +5,16 @@
 # Created On       : Mon Jun 17 01:10:11 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Mon Aug 25 15:29:29 2003
+# Last Modified On : Mon Aug 25 16:00:29 2003
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 195
+# Update Count     : 201
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
 #
 #
 #
-#    $Id: make-kpkg,v 1.85 2003/08/25 20:32:30 srivasta Exp $
+#    $Id: make-kpkg,v 1.86 2003/08/25 21:00:46 srivasta Exp $
 #
 require 5.002;
 use strict;
@@ -29,7 +29,7 @@ make-kpkg - build Debian kernel packages from Linux kernel sources.
 ($main::MYNAME     = $main::0) =~ s|.*/||;
 $main::Author      = "Manoj Srivastava";
 $main::AuthorMail  = "srivasta\@debian.org";
-$main::Version     = '$Revision: 1.85 $ ';
+$main::Version     = '$Revision: 1.86 $ ';
 
 my $added_modules='';
 my $added_patches='';
@@ -676,13 +676,15 @@ sub main (){
   }
   $config_target .= 'config' if ($1 eq '');
 
-  if ($ENV{'MAKEFLAGS'} =~ /-j/ || $ENV{'MAKEFLAGS'} =~ /--jobs/ ) {
+  if ($ENV{'MAKEFLAGS'} && 
+      ($ENV{'MAKEFLAGS'} =~ /-j/ || $ENV{'MAKEFLAGS'} =~ /--jobs/ )) {
     $errors .= "The environment variable MAKEFLAGS contains the flag -j.\n" .
       "Unfortunately, this is not supported at this time. Instead, please\n" .
         "use the supported mechanism by setting CONCURRENCY_LEVEL\n" ;
   }
 
-  if ($ENV{'MFLAGS'} =~ /-j/ || $ENV{'MFLAGS'} =~ /--jobs/ ) {
+  if ($ENV{'MFLAGS'} && 
+      ($ENV{'MFLAGS'} =~ /-j/ || $ENV{'MFLAGS'} =~ /--jobs/ )) {
     $errors .= "The environment variable MFLAGS contains the flag -j.\n" .
       "Unfortunately, this is not supported at this time. Instead, please\n" .
         "use the supported mechanism by setting CONCURRENCY_LEVEL\n" ;
@@ -959,15 +961,15 @@ EOMSG
     $command .= " IMAGE_TYPE=bzImage ";
   }
 
-  my $hostcc = $ENV{'HOSTCC'};
-  $hostcc =~ s/^\s+//g;
-  $hostcc =~ s/\s+$//g;
+  my $hostcc = $ENV{'HOSTCC'} if $ENV{'HOSTCC'};
+  $hostcc =~ s/^\s+//g if $hostcc;
+  $hostcc =~ s/\s+$//g if $hostcc;
   $hostcc .= " ";
   if ($hostcc eq " ") { $hostcc = "gcc"; };
 
-  my $cc = $ENV{'CC'};
-  $cc =~ s/^\s+//g;
-  $cc =~ s/\s+$//g;
+  my $cc = $ENV{'CC'} if $ENV{'CC'};
+  $cc =~ s/^\s+//g if $cc;
+  $cc =~ s/\s+$//g if $cc;
   $cc .= " ";
   if ($cc eq ' ') { $cc = $cross_compile; $cc .= "gcc "; };
 
