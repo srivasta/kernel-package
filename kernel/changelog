@@ -15,6 +15,7 @@ kernel-source-=V (=D) unstable; urgency=low
     same kernel version. 
   * Added dependencies to targets in rules. Now things should work as
     expected if one edits a .config file. 
+  * Fixed destination for the Buildinfo file. This fixes BUG#11884.
 
  -- Manoj Srivastava <srivasta@debian.org>  Mon,  4 Aug 1997 13:03:51 -0500
 
