@@ -1,3 +1,10 @@
+kernel-package (3.63) unstable; urgency=low
+
+  * Added a recommends to shut up lintian; however, we already depended on
+    packages that depended on make, so this is a no op.
+
+ -- Manoj Srivastava <srivasta@debian.org>  Sun,  8 Mar 1998 15:12:28 -0600
+
 kernel-package (3.62) unstable; urgency=low
 
   * Mentioned rootcmd and fakeroot in the README. Mention where one need
