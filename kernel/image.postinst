@@ -12,7 +12,7 @@
 # HISTORY          : 
 # Description      : 
 # 
-#    $Id: image.postinst,v 1.36 2000/02/29 06:27:15 srivasta Exp $
+#    $Id: image.postinst,v 1.37 2000/02/29 06:50:57 srivasta Exp $
 #
 
 # 
@@ -250,7 +250,7 @@ if (-d "/usr/doc") {
     my $targetdir;
     my $stargetdir;
     
-    if (-x /bin/pwd) {
+    if (-x '/bin/pwd') {
       chdir('/usr/doc/');
       $targetdir=`/bin/pwd`;
       chdir('/usr/share/doc/');
