@@ -11,8 +11,8 @@ endif
 ifndef KSRC
 KSRC=/usr/src/linux
 endif
-ifndef MODDIR
-MODDIR=..
+ifndef KPKG_DEST_DIR
+KPKG_DEST_DIR=..
 endif
 
 ifndef BUILD_DIR
@@ -93,9 +93,10 @@ epoch=$(shell echo $(KVERS) | perl -ne 'm/^(\d+:)/ && print $$1')
 # We also need the package version
 pversion	= $(shell sed -ne '1s/.*\((.*)\).*/\1/' debian/changelog)
 
-# MODDIR is the place where the final .deb package should be made. This is the
-# default value, when make-kpkg is used it will supply to real value
-MODDIR		= ..
+# KPKG_DEST_DIR is the place where the final .deb package should be
+# made. This is the default value, when make-kpkg is used it will
+# supply to real value
+KPKG_DEST_DIR		= ..
 
 # Lets define the standard targets first
 

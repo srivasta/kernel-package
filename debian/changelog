@@ -1,3 +1,9 @@
+kernel-package (8.025) unstable; urgency=low
+
+  * Yike. typo fix.
+
+ -- Manoj Srivastava <srivasta@acm.org>  Mon, 24 Mar 2003 23:17:40 -0600
+
 kernel-package (8.024) unstable; urgency=low
 
   * Re named MODDIR to KDIST_DEST_DIR to avoid name space clashed. 

@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Mon Mar 24 22:44:22 2003
+## Last Modified On : Mon Mar 24 23:17:16 2003
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 560
+## Update Count	    : 561
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.194 2003/03/25 05:03:10 srivasta Exp $
+## $Id: rules,v 1.195 2003/03/25 05:17:50 srivasta Exp $
 ###############################################################################
 
 ifdef KPKG_ARCH
@@ -1134,7 +1134,7 @@ ifdef MODULES_ENABLED
 endif
 	echo done >  stamp-build
 
-buildpackage: stamp-buildpackage
+buildpackage: clean stamp-buildpackage
 stamp-buildpackage: configure
 ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
 	@(echo "The changelog says we are creating $(saved_version), but I thought the version is $(version)"; exit 1)
@@ -1142,9 +1142,9 @@ endif
 	test -f stamp-configure || $(deb_rule) configure
 	echo 'Building Package' > stamp-building
 ifneq ($(strip $(root_cmd)),)
-	dpkg-buildpackage $(strip $(root_cmd)) -m"$(maintainer) <$(email)>" -k"$(pgp)"
+	dpkg-buildpackage -nc $(strip $(root_cmd)) -m"$(maintainer) <$(email)>" -k"$(pgp)"
 else
-	dpkg-buildpackage -m"$(maintainer) <$(email)>" -k"$(pgp)"
+	dpkg-buildpackage -nc -m"$(maintainer) <$(email)>" -k"$(pgp)"
 endif
 	rm -f stamp-building
 	echo done >  stamp-buildpackage
