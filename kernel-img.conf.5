@@ -77,7 +77,7 @@ link already exists, however, in absence of
 the script looks to see if this configuration file exists. If it does
 not, the configuration script asks the user whether to create the
 symbolic link, and stashes the answer in a newly created
-.I /etc/kernel-img.conf.
+.I /etc/kernel\-img.conf.
 If the configuration file already exists, and 
 if this option is set to No, no symbolic link is ever created. This
 for people who have other means of booting their machines, and do not
@@ -103,8 +103,8 @@ Mutually exclusive to
 Can be used with
 .I link_in_boot (image_in_boot).
 If set to Yes, the real image is placed in vmlinuz (instead of
-/boot/vmlinuz-X.X.XX). If you use link_in_boot in conjunction with
-this, /boot/vmlinuz-X.X.XX is moved to /boot/vmlinuz.  The old vmlinuz
+/boot/vmlinuz\-X.X.XX). If you use link_in_boot in conjunction with
+this, /boot/vmlinuz\-X.X.XX is moved to /boot/vmlinuz.  The old vmlinuz
 is moved to vmlinuz.old unconditionally. (Normally, that is only done
 if the version of the new image differs from the old one). This
 restricts you to two images, unless you take additional action and
@@ -126,7 +126,7 @@ Can be used with
 Just like 
 .I no_symlinks, 
 except that the
-/boot/vmlinuz-X.XX is a symbolic link to the real new
+/boot/vmlinuz\-X.XX is a symbolic link to the real new
 image, vmlinuz. This, too, restricts you to just two
 images unless further action is taken. The older
 symlinks are left dangling. This is for people with
@@ -170,7 +170,7 @@ of the kernel image, and the second argument being the
 .I location
 of the kernel image itself. Errors in the script shall produce a
 warning message, but shall be otherwise ignored. An example script for
-grub users is present in /usr/share/doc/kernel-package/ directory.
+grub users is present in /usr/share/doc/kernel\-package/ directory.
 .TP
 .B postrm_hook 
 Set this variable to a script to be executed in the postrm (that is,
@@ -209,8 +209,8 @@ for the headers package is now being deprecated, at some point the
 headers post install script shall only run the headers_postinst_hook.
 This script shall be called with two arguments, the first being the
 .I name
-of the package being installed (could be kernel-source-X.X.XX or
-kernel-headers-X.X.XX), and the second argument being the
+of the package being installed (could be kernel\-source\-X.X.XX or
+kernel\-headers\-X.X.XX), and the second argument being the
 .I version
 of the package being installed. Errors in the script shall produce a
 warning message, but shall be otherwise ignored. 
@@ -220,8 +220,8 @@ Unlike the other hook variables, this is meant for a script run during
 the post inst of a headers package only. This script
 shall be called with two arguments, the first being the
 .I name
-of the package being installed (could be kernel-source-X.X.XX or
-kernel-headers-X.X.XX), and the second argument being the
+of the package being installed (could be kernel\-source\-X.X.XX or
+kernel\-headers\-X.X.XX), and the second argument being the
 .I version
 of the package being installed. Errors in the script shall produce a
 warning message, but shall be otherwise ignored. 
@@ -285,7 +285,7 @@ determinable that relative links shall work. Defaults to No.
 .TP
 .B do_initrd
 Set to YES to prevent the
-.I kernel-image
+.I kernel\-image
 post installation script from issueing a warning when installing an
 initrd kernel. This assumes you have correctly set up your boot loader
 to be able to boot the initrd image. Default: no. This is deprecated
@@ -295,7 +295,7 @@ option (please note that the sense of the option is inverted).
 .TP
 .B warn_initrd
 Set to NO to prevent the
-.I kernel-image
+.I kernel\-image
 post installation script from issueing a warning when installing an
 initrd kernel. This assumes you have correctly set up your boot loader
 to be able to boot the initrd image. This is now preferred to 
@@ -323,7 +323,7 @@ systems).
 .TP
 .B relink_build_link
 This option manipulates the build link created by recent kernels. If
-the link is a dangling link, and if a the corresponding kernel-headers
+the link is a dangling link, and if a the corresponding kernel\-headers
 appear to have been installed on the system, a new symlink shall be
 created to point to them. The default is to relink the build link
 (YES).
@@ -331,7 +331,7 @@ created to point to them. The default is to relink the build link
 .B force_build_link
 This option manipulates the build link created by recent kernels. If
 the link is a dangling link, a new symlink shall be created to point
-to /usr/src/kernel-headers-X.Y.ZZ, whether they have been installed or
+to /usr/src/kernel\-headers\-X.Y.ZZ, whether they have been installed or
 not. The default is unset, we don't create potentially dangling
 symlinks by default.
 .TP
@@ -351,7 +351,7 @@ This option has been put in for the people who are vastly irritated on
 being warned about preexisting modules directory 
 .TT /lib/modules/$version
 That directory may belong to an old or defunct 
-.TT kernel-image-$version 
+.TT kernel\-image\-$version 
 package, in which case problems may arise with leftover modules in that
 dir tree, or the directory may legitimately exist due to a independent
 modules package being installed for this kernel version that has
@@ -370,16 +370,16 @@ to see how to control whether the boot loader is run or not, and the
 absense of the configuration file will also make the install process
 voluble and interactive).
 .TP 
-.B ignore_depmod_error
+.B ignore_depmod_err
 If set, does not prompt to continue after a depmod problem in the
 postinstall script. This facilitates automated installs, though it may
 mask a problem with the kernel image. A diagnostic is still issued.
 .SH FILES
 The file described here is
-.I /etc/kernel-img.conf.
+.I /etc/kernel\-img.conf.
 .SH "SEE ALSO"
-.BR make-kpkg (1),
-.BR kernel-pkg.conf (5),
+.BR make\-kpkg (1),
+.BR kernel\-pkg.conf (5),
 .BR make (1),
 .B The GNU Make manual.
 .SH BUGS

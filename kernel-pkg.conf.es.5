@@ -86,7 +86,7 @@ Puede ser modificado mediante la variable de entorno
 o (de nuevo) por la opción 
 .IR \-\-pgpsign
 de
-.B make-kpkg.
+.B make\-kpkg.
 Por omisión es 
 .I maintainer.
 (Opcional)
@@ -98,7 +98,7 @@ la variable de entorno
 o (de nuevo) por la opción 
 .IR \-\-revision
 de
-.B make-kpkg.
+.B make\-kpkg.
 Por omisión es 
 .I 1.0.0.Custom
 (Opcional)
@@ -107,7 +107,7 @@ Por omisión es
 Normalmente sin definir. Si ésta o la variable de entorno
 .B DEBIAN_REVISION_MANDATORY
 están establecidas, entonces, la falta de una revisión de Debian causa un error (y
-.B make-kpkg
+.B make\-kpkg
 no proporcionará un valor por omisión de 1.0.0.Custom)
 .TP
 .B link_in_boot
@@ -131,7 +131,7 @@ o (de nuevo) por las opciones
 o
 .IR \-\-bzimage
 de
-.B make-kpkg.
+.B make\-kpkg.
 Por omisión es 
 .I bzImage.
 (Opcional)
@@ -145,7 +145,7 @@ Mutuamente excluyente con
 .I reverse_symlinks. 
 Puede usarse con
 .I link_in_boot. 
-La imagen se coloca en vmlinuz (en vez de en /boot/vmlinuz-X.X.XX). El vmlinuz
+La imagen se coloca en vmlinuz (en vez de en /boot/vmlinuz\-X.X.XX). El vmlinuz
 anterior se mueve a vmlinuz.old incondicionalmente. (Normalmente, sólo se hace
 si la versión de la nueva imagen difiere de la anterior). Esto le restringe a
 dos imágenes, a menos que usted tome medidas adicionales y guarde copias de
@@ -168,7 +168,7 @@ Se puede usar junto con
 .I link_in_boot.
 Igual que
 .I no_symlinks, 
-excepto porque /boot/vmlinuz-X.XX es enlazado con la nueva imagen real,
+excepto porque /boot/vmlinuz\-X.XX es enlazado con la nueva imagen real,
 vmlinuz. Esto también le restringe a dos imágenes a menos que tome alguna acción
 adicional. Los enlaces anteriores quedan colgando. Esto es para aquellos con
 .I /boot
@@ -180,10 +180,10 @@ Por omisión está sin definir. (opcional)
 Esta variable es sólo para expertos. Si es YES (la variable de entorno 
 .B PATCH_THE_KERNEL 
 lo modifica), el proceso de construcción hace que se ejecute sobre
-.I /usr/src/kernel-patches/$(architecture)/apply 
+.I /usr/src/kernel\-patches/$(architecture)/apply 
 y (afortunadamente) deshaga el proceso durante la fase de limpieza ejecutando
-run-parts sobre 
-.I /usr/src/kernel-patches/$(architecture)/unpatch. 
+run\-parts sobre 
+.I /usr/src/kernel\-patches/$(architecture)/unpatch. 
 La arquitectura especial all se usa para parches independientes de la arquitectura.
 .TP
 .B config_target
@@ -205,7 +205,7 @@ lo modifica), el fichero .config.save en el directorio principal es ignorado.
 .TP
 .B root_cmd 
 Esta variable que se pasa a
-.B dpkg-buildpackage
+.B dpkg\-buildpackage
 en el objetivo
 .I buildpackage.
 Establece el modo de ganar permisos de superusuario (por ejemplo, 
@@ -213,15 +213,15 @@ Establece el modo de ganar permisos de superusuario (por ejemplo,
 o
 .I`fakeroot')
 que 
-.B dpkg-buildpackages' 
+.B dpkg\-buildpackages' 
 necesita usando la opción -r. La variable de entorno 
 .B ROOT_CMD
 lo modifica. La variable de entorno
 .B UNSIGN_SOURCE
-añade a esta orden una opción para que dpkg-buildpackage no firme las fuentes,
+añade a esta orden una opción para que dpkg\-buildpackage no firme las fuentes,
 similarmente, la variable de entorno
 .B UNSIGN_CHANGELOG 
-añade a esta orden una opción para que dpkg-buildpackage no firme el fichero de
+añade a esta orden una opción para que dpkg\-buildpackage no firme el fichero de
 cambios. De nuevo, esta variable sólo es útil para el objetivo
 .I buildpackage. 
 Establezca la variable de entorno
@@ -251,7 +251,7 @@ sólo i386).
 .B source_clean_hook
 Si apunta a un ejecutable, este será ejecutado desde el directorio principal de
 las fuentes (temporales) del núcleo antes de que sean empaquetadas,
-.I ./debian/tmp-source/usr/src/kernel-source-X.X.XX.
+.I ./debian/tmp\-source/usr/src/kernel\-source\-X.X.XX.
 No tiene efecto sobre otra cosa que no sean las fuentes empaquetadas -- si el
 script opera en el directorio actual y sus descendientes, el árbol de
 directorios con el código fuente original no se verá modificado. Esto ayuda a
@@ -279,7 +279,7 @@ eliminar arquitecturas).
 .B extra_docs
 Esta variable debe de apuntar a la ruta donde se encuentra toda la documentación
 extra que debe instalarse en el directorio
-.I /usr/share/doc/kernel-image-X.X.XX/ .
+.I /usr/share/doc/kernel\-image\-X.X.XX/ .
 No hay ninguna comprobación de conflictos entre nombres, y los ficheros no son
 comprimidos. Debido a esto, si desea que los ficheros sean comprimidos debe de
 comprimirlos y luego proporcionar la ruta al fichero comprimido. La variable de
@@ -290,7 +290,7 @@ lo modifica, es la forma más habitual de empaquetar documentación extra.
 .B kpkg_follow_symlinks_in_src
 Esta opción es especialmente útil para aquellos que usan multitud de enlaces
 simbólicos para compilar los núcleos. Con esta opción, los paquetes
-kernel-source y kernel-header no estarán llenos de enlaces rotos, en su lugar,
+kernel\-source y kernel\-header no estarán llenos de enlaces rotos, en su lugar,
 se seguirán los enlaces simbólicos. Dese cuenta de que cualquier enlace
 simbólico en las fuentes del núcleo se sustituirá por el fichero enlazado. La
 variable de entorno
@@ -319,15 +319,15 @@ compilar el núcleo y los módulos usando la opción
 en el subproceso make del objetivo
 .B build
 de
-.B make-kpkg.
+.B make\-kpkg.
 Si se usa, debería ser un entero (pequeño).
 .TP
 .B ARCH_IN_NAME
 Si se define, esta variable hace que
-.B make-kpkg
-use un nombre extendido para la imagen del núcleo empotrando la sub-arquitectura
+.B make\-kpkg
+use un nombre extendido para la imagen del núcleo empotrando la sub\-arquitectura
 en el nombre de la imagen, de este modo uno puede escribir un script que cree
-múltiples sub-arquitecturas, una detrás de la otra.
+múltiples sub\-arquitecturas, una detrás de la otra.
 .B Note
 que solamente afecta al
 .I nombre
@@ -337,10 +337,10 @@ del paquete, no afecta a la localización de los módulos y demás.
 Esta variable debe apuntar a un directorio que contenga ficheros
 .I .config
 específicos de una arquitectura (consulte
-.I /usr/share/kernel-package/Config
+.I /usr/share/kernel\-package/Config
 para ejemplos). Útil para los que necesiten compilar para varias
 arquitecturas. Por omisión apunta a
-.I /usr/share/kernel-package/Config
+.I /usr/share/kernel\-package/Config
 .TP
 .B IMAGEDIR
 Si quiere que la imagen se guarde en algún otro sitio distinto de
@@ -360,18 +360,18 @@ configuración al lugar donde se encuentren módulos adicionales. Por omisión
 Establezca esta variable, bien en el entorno o bien en el fichero de
 configuración al lugar donde se encuentren los ficheros de configuración del
 núcleo. Por omisión
-.I /usr/share/kernel-package/Config
+.I /usr/share/kernel\-package/Config
 .TP
 .B PATCH_DIR 
 Establezca esta variable, bien en el entorno o bien en el fichero de
 configuración al lugar donde se encuentren parches adicionales. Por omisión
-.I /usr/src/kernel-patches/ARCHITECTURE
+.I /usr/src/kernel\-patches/ARCHITECTURE
 .TP
 .B ALL_PATCH_DIR 
 Establezca esta variable, bien en el entorno o bien en el fichero de
 configuración al lugar donde se encuentren parches independientes de la
 arquitectura adicionales. Por omisión
-.I /usr/src/kernel-patches/all
+.I /usr/src/kernel\-patches/all
 .PP
 El valor una variable puede establecerse de forma que:
 .IP a)
@@ -379,7 +379,7 @@ Los valores predeterminados están en el fichero rules. Se usan siempre que no
 haya ninguna otra preferencia establecida.
 .IP b)
 Las variables pueden establecerse en el fichero de configuración 
-.I /etc/kernel-pkg.conf. 
+.I /etc/kernel\-pkg.conf. 
 Estos valores modifican los predeterminados.
 .IP c)
 Las variables también se pueden establecer con su correspondiente variable de
@@ -387,7 +387,7 @@ entorno. Estos valores predominan sobre el fichero de configuración y los
 valores predeterminados.
 .IP d)
 Usando las opciones de 
-.B make-kpkg 
+.B make\-kpkg 
 , o, si se usa directamente el fichero rules, en la línea de órdenes 
 .br
 .BI "# xxx/rules DEBIAN_REVISION=2.0a kernel_image"
@@ -395,12 +395,12 @@ Usando las opciones de
 Esto predomina sobre todos los métodos descritos anteriormente.
 .SH FICHEROS
 El fichero descrito en este documento es
-.I /etc/kernel-pkg.conf.
+.I /etc/kernel\-pkg.conf.
 o
-.I ~/.kernel-pkg.conf.
+.I ~/.kernel\-pkg.conf.
 .SH "VÉASE TAMBIÉN"
-.BR make-kpkg (1),
-.BR kernel-img.conf (5),
+.BR make\-kpkg (1),
+.BR kernel\-img.conf (5),
 .BR make (1),
 .B El manual de GNU Make.
 .SH FALLOS
@@ -409,4 +409,4 @@ No tiene fallos. Cualquier cosa que se lo parezca es un delirio, de verdad.
 Esta página del manual fue escrita por Manoj Srivastava <srivasta@debian.org>,
 para el sistema Debian GNU/Linux.
 .SH TRADUCTOR
-Traducción de Rubén Porras Campo <debian-l10n-spanish@lists.debian.org>
+Traducción de Rubén Porras Campo <debian\-l10n\-spanish@lists.debian.org>

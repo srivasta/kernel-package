@@ -30,24 +30,24 @@
 kernel\-package \- A system for creating kernel related packages
 .SH "DESCRIPTION"
 The 
-.B kernel-package
+.B kernel\-package
 package grew out of desire to automate the routine steps required to
 compile and install a custom kernel. If you are looking for
 instructions on how to use 
-.B kernel-package,
+.B kernel\-package,
 please have a look at the manual 
-.B make-kpkg (1).
+.B make\-kpkg (1).
 Configuring instructions are to be found in
-.B kernel-pkg.conf(5).
-.SH "Advantages of using kernel-package"
+.B kernel\-pkg.conf(5).
+.SH "Advantages of using kernel\-package"
 .RS
 .TP 
 .B i) Convenience. 
 I used to compile kernels manually, and it involved a series of steps
-to be taken in order; kernel-package was written to take all the
+to be taken in order; kernel\-package was written to take all the
 required steps (it has grown beyond that now, but essentially, that is
 what it does). This is especially important to novices: 
-.B make-kpkg
+.B make\-kpkg
 takes all the steps required to compile a kernel, and installation of
 kernels is a snap.
 .TP
@@ -70,7 +70,7 @@ correct file into place.
 .TP
 .B v) Module hooks
 Several other kernel module packages are hooked into 
-.B kernel-package,
+.B kernel\-package,
 so one can seamlessly compile, say, 
 .B pcmcia 
 modules at the same time as one compiles a kernel, and be assured that
@@ -78,7 +78,7 @@ the modules so compiled are compatible.
 .TP
 .B vi) dpkg support
 It enables you to use the package management system to keep track of
-the kernels created. Using make-kpkg creates a .deb file, and dpkg can
+the kernels created. Using make\-kpkg creates a .deb file, and dpkg can
 track it for you. This facilitates the task of other packages that
 depend on the kernel packages. 
 .TP
@@ -91,7 +91,7 @@ the configuration file are always together.
 .TP
 .B viii) Multiple config files
 It allows you to specify a directory with config files, with separate
-config files for each sub-architecture (even allows for different
+config files for each sub\-architecture (even allows for different
 config files for i386, i486, etc). It is really neat for people who
 need to compile kernels for a variety of sub architectures.
 .TP
@@ -112,12 +112,12 @@ version).
 .TP
 .B xi) Sub architecture support
 There is support for the multitudinous sub architectures that have
-blossomed under the umbrella of the m68k and power-PC architectures.
+blossomed under the umbrella of the m68k and power\-PC architectures.
 .TP
-.B xii) kernel-patch support
+.B xii) kernel\-patch support
 There is support there for optionally applying patches to the kernel
-provided as a kernel-patch .deb file, and building a patched kernel
-auto-magically, and still retain an UN-patched kernel source tree.
+provided as a kernel\-patch .deb file, and building a patched kernel
+auto\-magically, and still retain an UN\-patched kernel source tree.
 .TP
 .B xiii) Portable kernel images
 Allows one to compile a kernel for another computer, for example using
@@ -142,17 +142,17 @@ package).
 .B xvi) Append descriptive bits to the kernel version
 One can append to the kernel version on the command line, or by
 setting an environment variable. So if your kernel is called
-kernel-image-2.4.1John.Home; it is unlikely to be overridden by the
+kernel\-image\-2.4.1John.Home; it is unlikely to be overridden by the
 official 2.4.1 kernel, since they are not the same version.
 .RE
-.SH "Disadvantages of using make-kpkg"
+.SH "Disadvantages of using make\-kpkg"
 .TP
 .B i) Automation.
 This is a cookie cutter approach to compiling kernels, and there are
 people who like being close to the bare metal.
 .TP
 .B ii) Non traditional
-This is not how it is done in the non-Debian world. This flouts
+This is not how it is done in the non\-Debian world. This flouts
 tradition. (It has been pointed out, though, that this is fast
 becoming Debian tradition).
 .TP
@@ -168,10 +168,10 @@ it used to be before
 .B fakeroot)
 .RE
 .SH FILES
-.I /etc/kernel-pkg.conf.
-.I /etc/kernel-img.conf.
+.I /etc/kernel\-pkg.conf.
+.I /etc/kernel\-img.conf.
 .SH "SEE ALSO"
-.BR make-kpkg (1),
+.BR make\-kpkg (1),
 .BR make (1),
 .B The GNU Make manual.
 .SH BUGS

@@ -1334,12 +1334,18 @@ ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
 	@(echo "The changelog says we are creating $(saved_version), but I thought the version is $(version)"; exit 1)
 endif
 ifneq ($(strip $(UTS_RELEASE_VERSION)), $(strip $(version)))
-	@echo "The UTS Release version in include/linux/version.h" 
-	@echo "     \"$(strip $(UTS_RELEASE_VERSION))\" "
-	@echo "does not match current version " 
-	@echo "     \"$(strip $(version))\" "
-	@echo "Reconfiguring." 
-	touch Makefile
+	if [ -f include/linux/version.h ]; then                                          \
+             uts_ver=$(grep 'define UTS_RELEASE' include/linux/version.h |                \
+                perl -nle  'm/^\s*\#define\s+UTS_RELEASE\s+("?)(\S+)\1/g && print $$2;'); \
+	    if [ "X$$uts_ver" != "X$(strip $(UTS_RELEASE_VERSION))" ]; then              \
+                echo "The UTS Release version in include/linux/version.h";                \
+	       echo "     \"$$uts_ver\" ";                                               \
+                echo "does not match current version " ;                                  \
+                echo "     \"$(strip $(version))\" " ;                                    \
+                echo "Reconfiguring." ;                                                   \
+                touch Makefile;                                                           \
+             fi;                                                                          \
+	fi
 endif
 	-test -f stamp-configure || $(deb_rule) configure
 	$(MAKE) $(do_parallel) $(EXTRAV_ARG) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) \

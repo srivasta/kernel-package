@@ -664,6 +664,9 @@ Or if you want to generate the whole package,
 Note that this needs a pgp key.
       (Get_Root is whatever you need to become root -- fakeroot or
       sudo are examples that come to mind).
+Here is a nice, practical example:
+% make-kpkg -rfakeroot --append-to-version $(hostname) \
+             --revision $(date +'%Y%m%d')
 
 A note on boot loaders: the kernel-image install-scripts arrange to
 have /vmlinuz and /vmlinuz.old point to the latest kernel image and
@@ -854,7 +857,31 @@ Foot note 1:
   number in the file rules (v = X.X.XX) to be the same version as
   given in the kernel Makefile (this will be
   $VERSION.$PATCHLEVEL.$SUBLEVEL).
+#############################################################################
+#############################################################################
+## This is a working script contributed by Don Armstrong 
 
+#!/bin/sh
+# Copyright 2004 Don Armstrong (~don@archimedes.ucr.edu)
+# This script is licensed under the GPL v2
+KERNEL="linux-2.4.24"
+MAKE_KPKG="make-kpkg"
+EXTRAVERSION=`date +'%m%d%Y'`
+MAKE_KPKG_OPTIONS="--rootcmd fakeroot --revision=$EXTRAVERSION"
+DATE=`date +'%m_%d_%Y'`
+
+for CONFIG in `cd config; ls *.gz; cd ..`; do
+	  MACHINE=$(echo $CONFIG|cut -d _ -f 1);
+	  gzip -dc config/$CONFIG > $KERNEL/.config
+	  cd $KERNEL
+	  $MAKE_KPKG $MAKE_KPKG_OPTIONS --append-to-version $MACHINE clean
+	  $MAKE_KPKG $MAKE_KPKG_OPTIONS --append-to-version $MACHINE kernel_image modules_image
+    gzip -c .config > ../config/${MACHINE}_config_${KERNEL}_${DATE}.gz
+    cd ..;
+done;
+
+#############################################################################
+#############################################################################
 -- 
 Manoj Srivastava                        <srivasta@debian.org>
 PGP Key ID: 1024/C7261095 

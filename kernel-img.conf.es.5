@@ -42,7 +42,7 @@ imágenes del núcleo
 .SH "DESCRIPCIÓN"
 El fichero 
 .I /etc/kernel\-img.conf
-es un simple fichero que se consulta durante el proceso de post-instalación de
+es un simple fichero que se consulta durante el proceso de post\-instalación de
 la imagen del núcleo y que permite personalizar localmente algunos aspectos de
 la instalación, modificando las opciones predeterminadas de la propia imagen.
 .PP
@@ -74,7 +74,7 @@ se reubica normalmente es el enlace simbólico.
 Por omisión es No.
 .TP
 .B do_symlinks
-Por omisión, el script de post-instalación de la imagen del núcleo crea o
+Por omisión, el script de post\-instalación de la imagen del núcleo crea o
 actualiza los enlaces simbólicos
 .I /vmlinuz
 y 
@@ -84,7 +84,7 @@ Esto es cierto si ya existe un enlace
 , sin embargo, en ausencia de éste, el script busca el fichero de configuración.
 Si no existe, el script de configuración pregunta al usuario si desea crear el
 enlace simbólico, y guarda la respuesta en el fichero
-.I /etc/kernel-img.conf
+.I /etc/kernel\-img.conf
 recién creado.
 Si el fichero de configuración ya existe, y esta opción está puesta a NO, nunca
 se crea ningún enlace. Esto es para aquellos que no quieran tener enlaces
@@ -108,8 +108,8 @@ Mutuamente excluyente con
 Puede usarse con
 .I link_in_boot (image_in_boot).
 Si es Yes, la imagen real es colocada en vmlinuz (en vez de en
-/boot/vmlinuz-X.X.XX). Si usa link_in_boot junto con esto, se mueve
-/boot/vmlinuz-X.X.XX a /boot/vmlinuz. El vmlinuz previo se mueve
+/boot/vmlinuz\-X.X.XX). Si usa link_in_boot junto con esto, se mueve
+/boot/vmlinuz\-X.X.XX a /boot/vmlinuz. El vmlinuz previo se mueve
 incondicionalmente a vmlinuz.old. (Normalmente, esto sólo se hace si la versión
 de la nueva imagen es diferente de la anterior). Esto le restringe a dos
 imágenes, a menos que tome acciones adicionales y guarde copias de imágenes
@@ -133,7 +133,7 @@ Se puede usar junto con
 .I link_in_boot (image_in_boot).
 Igual que
 .I no_symlinks, 
-excepto porque /boot/vmlinuz-X.XX es enlazado con la nueva imagen real,
+excepto porque /boot/vmlinuz\-X.XX es enlazado con la nueva imagen real,
 vmlinuz. Esto también le restringe a dos imágenes a menos que tome alguna acción
 adicional. Los enlaces anteriores quedan colgando. Esto es para aquellos con
 .I /boot
@@ -172,7 +172,7 @@ de la imagen del núcleo, el segundo es la
 .I localización
 de la imagen del núcleo. Los errores en el script sólo producirán un mensaje de
 aviso. Un script de ejemplo para usuarios de grub se puede encontrar
-en /usr/share/doc/kernel-package/.
+en /usr/share/doc/kernel\-package/.
 .TP
 .B postrm_hook 
 Establezca esta variable apuntando a un script que debe ser ejecutado después de
@@ -212,8 +212,8 @@ momento el script de postinst del paquete con las cabeceras sólo deberá ejecutar
 headers_postinst_hook.
 Este script necesita dos argumentos, el primero es el
 .I nombre
-del paquete que se esta instalando (podría ser kernel-source-X.X.XX o
-kernel-headers-X.X.XX), y el segundo argumento es la
+del paquete que se esta instalando (podría ser kernel\-source\-X.X.XX o
+kernel\-headers\-X.X.XX), y el segundo argumento es la
 .I versión
 del paquete que esta siendo instalado. Los errores en el script sólo producirán
 un mensaje de aviso.
@@ -223,8 +223,8 @@ A diferencia de las otras variables hook, ésta es sólo para un script que se
 ejecuta durante el postinst de un paquete de cabeceras. Este script necesita dos
 argumentos, el primero es el
 .I nombre
-del paquete que se esta instalando (podría ser kernel-source-X.X.XX o
-kernel-headers-X.X.XX), y el segundo argumento es la
+del paquete que se esta instalando (podría ser kernel\-source\-X.X.XX o
+kernel\-headers\-X.X.XX), y el segundo argumento es la
 .I versión
 del paquete que esta siendo instalado. Los errores en el script sólo producirán
 un mensaje de aviso.
@@ -284,7 +284,7 @@ funcionará. Por omisión es No.
 .TP
 .B do_initrd
 Si es YES el script de postinst de
-.I kernel-image
+.I kernel\-image
 no avisará de que está instalando un núcleo que usa initrd. Esto asume que ha
 configurado correctamente su gestor de arranque para que arranque la imagen
 initrd. Por omisión es No. Esta opción está desaconsejada en favor de la opción
@@ -294,7 +294,7 @@ más descriptiva
 .TP
 .B warn_initrd
 Si es NO el script de postinst de
-.I kernel-image
+.I kernel\-image
 no avisará de que está instalando un núcleo que usa initrd. Esto asume que ha
 configurado correctamente su gestor de arranque para que arranque la imagen
 initrd. Esta opción se prefiere respecto a
@@ -321,14 +321,14 @@ ficheros (ya que no se pueden crear enlaces duros entre sistemas de ficheros).
 .B relink_build_link
 Esta opción manipula el enlace de construcción creado por los núcleos
 recientes. Si el enlace es un enlace colgante, y si parece que el
-correspondiente kernel-headers está instalado en el sistema, se creará un nuevo
+correspondiente kernel\-headers está instalado en el sistema, se creará un nuevo
 enlace apuntándolo. Por omisión se reenlazará el directorio de construcción
 (SI).
 .TP
 .B force_build_link
 Esta opción manipula el enlace de construcción creado por los núcleos
 recientes. Si el enlace es un enlace colgante se creará un nuevo
-enlace a /usr/src/kernel-headers-X.Y.ZZ, sin importar que estén o no
+enlace a /usr/src/kernel\-headers\-X.Y.ZZ, sin importar que estén o no
 instalados. Por omisión está sin establecer, ya que no creamos enlaces colgantes
 de forma predeterminada.
 .TP
@@ -348,7 +348,7 @@ Está opción es para aquellos que se sienten molestos cuando se les avisa de
 módulos existentes en el directorio
 .TT /lib/modules/$version.
 Este directorio probablemente pertenezca a un paquete 
-.TT kernel-image-$version
+.TT kernel\-image\-$version
 viejo o que ya no existe, en cuyo caso pueden aparecer problemas con módulos
 que hayan quedado en ese directorio, o puede que el directorio exista
 legítimamente porque se haya instalado un paquete independiente con módulos
@@ -366,17 +366,17 @@ no afecta a que el gestor de arranque sea o no ejecutado (lea
 para entender como controlarlo, la ausencia de un fichero de configuración hará
 el proceso de instalación ameno e interactivo).
 .TP
-.B ignore_depmod_error
+.B ignore_depmod_err
 Si está establecido, no pide confirmación para continuar después de un problema
-con depmod en el script de pos-instalación. Esto facilita las instalaciones
+con depmod en el script de pos\-instalación. Esto facilita las instalaciones
 automatizadas, aunque puede enmascarar algún problema con la imagen del
 núcleo. De todas formas todavía se muestra un diagnóstico. 
 .SH FICHEROS
 El fichero descrito en este documento es
-.I /etc/kernel-img.conf.
+.I /etc/kernel\-img.conf.
 .SH "VÉASE TAMBIÉN"
-.BR make-kpkg (1),
-.BR kernel-pkg.conf (5),
+.BR make\-kpkg (1),
+.BR kernel\-pkg.conf (5),
 .BR make (1),
 .B El manual de GNU Make.
 .SH FALLOS
@@ -385,4 +385,4 @@ No tiene fallos. Cualquier cosa que se lo parezca es un delirio, de verdad.
 Esta página del manual fue escrita por Manoj Srivastava <srivasta@debian.org>,
 para el sistema Debian GNU/Linux.
 .SH TRADUCTOR
-Traducción de Rubén Porras Campo <debian-l10n-spanish@lists.debian.org>
+Traducción de Rubén Porras Campo <debian\-l10n\-spanish@lists.debian.org>
