@@ -11,8 +11,17 @@ Priority: optional
 Provides: kernel-headers
 Description: Header files related to a specific Linux kernel.
  This package provides kernel header files, for sites that want the latest
- kernel headers, and some of these are also needed by libc6-dev. 
- Please read /usr/doc/kernel-headers-=V/debian.README.gz for details
+ kernel headers. Please read /usr/doc/kernel-headers-=V/debian.README.gz
+ for details 
+
+Package: libc-kheaders
+Architecture: any
+Section: devel
+Priority: optional
+Provides: kernel-headers
+Description: Header files related to a specific Linux kernel.
+ This package provides kernel header files needed by libc6-dev. 
+ Please read /usr/doc/libc-kheaders/debian.README.gz for details
 
 Package: kernel-source-=V
 Architecture: all
@@ -38,7 +47,7 @@ Architecture: =A
 Section: base
 Priority: optional
 Provides: kernel-image
-Suggests: =L, fdutils, kernel-doc-=V
+Suggests: =L fdutils, kernel-doc-=V
 Description: Linux kernel binary image.
  This package contains the Linux kernel image, the System.map file,
  and the modules built by the packager.  It also contains scripts that
