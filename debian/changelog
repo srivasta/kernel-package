@@ -1,3 +1,10 @@
+kernel-package (5.09) unstable; urgency=high
+
+  * Fixed missing / on a pattern match,. This essentially hosed
+    make-kpkg. closes: Bug#27937
+
+ -- Manoj Srivastava <srivasta@debian.org>  Wed, 14 Oct 1998 16:29:27 -0500
+
 kernel-package (5.08) unstable; urgency=low
 
   * Added documentation of the tecra kernel issue in the README. 
