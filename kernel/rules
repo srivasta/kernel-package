@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.223 2003/09/28 01:16:53 srivasta Exp $
+## $Id: rules,v 1.224 2003/09/30 05:32:03 srivasta Exp $
 ###############################################################################
 
 ifdef KPKG_ARCH
@@ -209,6 +209,7 @@ endif
 ifneq ($(strip $(filter ppc powerpc,$(architecture))),)
 ifeq ($(DEB_BUILD_ARCH),powerpc)
 # This is only meaningful when building on a PowerPC
+ifeq ($(GUESS_SUBARCH),)
 GUESS_SUBARCH:=$(shell awk '/machine/ { print $$3}' /proc/cpuinfo)
 ifneq (,$(findstring Power,$(GUESS_SUBARCH)))
 GUESS_SUBARCH:=pmac
@@ -220,8 +221,9 @@ endif
 else
 GUESS_SUBARCH:=pmac
 endif
+endif
 
-ifeq (,$(findstring $(KPKG_SUBARCH),apus chrp mbx pmac prep Amiga APUs CHRP MBX PReP ))
+ifeq (,$(findstring $(KPKG_SUBARCH),apus chrp mbx pmac prep Amiga APUs CHRP MBX PReP chrp-rs6k ))
 KPKG_SUBARCH:=$(GUESS_SUBARCH)
 endif
 
@@ -237,6 +239,20 @@ kimagesrc = $(shell if [ -d arch/$(KERNEL_ARCH)/boot/images ]; then \
 	echo arch/$(KERNEL_ARCH)/boot/$(kimage) ; fi)
 kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
 DEBCONFIG = $(CONFDIR)/config.apus
+endif
+
+ifneq (,$(findstring $(KPKG_SUBARCH),chrp-rs6k))
+KPKG_SUBARCH:=chrp-rs6k
+loaderdep=quik
+loader=quik
+loaderdoc=QuikDefault
+kimage := zImage
+target = $(kimage)
+kimagesrc = $(shell if [ -d arch/$(KERNEL_ARCH)/chrpboot ]; then \
+	echo arch/$(KERNEL_ARCH)/chrpboot/$(kimage) ; else \
+	echo arch/$(KERNEL_ARCH)/boot/images/$(kimage).chrp-rs6k ; fi)
+kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
+DEBCONFIG = $(CONFDIR)/config.chrp
 endif
 
 ifneq (,$(findstring $(KPKG_SUBARCH),CHRP chrp))
@@ -439,6 +455,13 @@ NEED_DIRECT_GZIP_IMAGE=NO
 kimagesrc = $(strip vmlinux)
 kimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
 DEBCONFIG= $(CONFDIR)/config.$(KPKG_SUBARCH)
+
+ifneq (,$(filter mips64%,$(KPKG_SUBARCH)))
+  KERNEL_ARCH = mips64
+endif
+ifneq (,$(filter %-64,$(KPKG_SUBARCH)))
+  KERNEL_ARCH = mips64
+endif
 endif
 
 ##### mipsel
@@ -456,6 +479,13 @@ KERNEL_ARCH= mips
 #HAVE_COFF_IMAGE = YES
 #coffsrc = $(strip arch/$(KERNEL_ARCH)/boot/vmlinux.ecoff)
 #coffdest=$(INT_IMAGE_DESTDIR)/vmlinux.ecoff-$(version)
+
+ifneq (,$(filter mips64el%,$(KPKG_SUBARCH)))
+  KERNEL_ARCH = mips64el
+endif
+ifneq (,$(filter %-64,$(KPKG_SUBARCH)))
+  KERNEL_ARCH = mips64el
+endif
 endif
 
 ifeq ($(strip $(architecture)),um)
