@@ -1,5 +1,5 @@
 
-    $Id: README,v 1.48 2002/01/06 10:10:09 srivasta Exp $
+    $Id: README,v 1.49 2002/01/07 15:46:52 srivasta Exp $
 
 This is the Debian GNU/Linux packaging scripts for the Linux kernel. 
 This package has been put together by Manoj Srivastava <srivasta@debian.org>.
@@ -52,7 +52,8 @@ Phase TWO: Create a portable kernel image .deb file
       sudo are examples that come to mind).
 Phase THREE: Install the kernel image on one or more machines
  5# dpkg -i ../kernel-image-X.XXX_1.0_<arch>.deb
- 6# shutdown -r now # If and only if LILO worked or you have a means of
+ 6# shutdown -r now # If and only if LILO/SILO/QUIK/PALO/VMELILO/ZIPL/yaboot/..
+                    # worked or you have a means of
                     # booting the new kernel. YOU HAVE BEEN WARNED!!
 
  With the addition of fakeroot ( a really nice program, I recommend
@@ -475,7 +476,8 @@ To generate a new kernel image, just run
 This will create a default kernel image (as in the image package or
 available on the boot disks.  The kernel image package produced, on
 installation, shall offer you a chance to create a boot disk, or to
-run LILO, but the default is not to do either, and you may choose to
+run LILO (or SILO, QUIK, VMELILO, ZIPL, yaboot, PALO, or update the
+grub menu), but the default is not to do either, and you may choose to
 ignore these friendly overtures by the postinst.
 
 If you want a custom kernel, you may generate a config file by any of
@@ -534,15 +536,16 @@ Note that this needs a pgp key.
       (Get_Root is whatever you need to become root -- fakeroot or
       sudo are examples that come to mind).
 
-A note on LILO: the kernel-image install-scripts arrange to have
-/vmlinuz and /vmlinuz.old point to the latest kernel image and the
-next most recent one, respectively.  You may choose to have LILO take
-advantage of this by putting image = /vmlinuz and image = /vmlinuz.old
-lines in your lilo.conf (please read documentation on LILO for
-details). Oh, and if your kernel image package uses initrd (as do the
-newer official kernel image packages), please do not forget to add a
-line (initrd=/boot/initrd-2.4.X-flavour) in your lilo.conf file
-pointing out this fact to lilo.
+A note on boot loaders: the kernel-image install-scripts arrange to
+have /vmlinuz and /vmlinuz.old point to the latest kernel image and
+the next most recent one, respectively.  You may choose to have your
+boot loader take advantage of this by putting image = /vmlinuz and
+image = /vmlinuz.old lines in your lilo.conf (or whatever config files
+your boot loader uses -- please read documentation on your boot loader
+for details). Oh, and if your kernel image package uses initrd (as do
+the newer official kernel image packages), please do not forget to add
+a line (initrd=/boot/initrd-2.4.X-flavour) in your lilo.conf file
+pointing out this fact to your boot loader.
 
 Conversely, people who wish to tightly control the versions in
 lilo.conf (believe me, people, this gets to be a pain in the neck

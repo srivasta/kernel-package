@@ -69,7 +69,7 @@
 +#FLAVOUR =
 +
 +ifneq ($(strip $(FLAVOUR)),)
-+INT_FLAV := -$(FLAVOUR)
++INT_FLAV := +$(FLAVOUR)
 +else
 +INT_FLAV :=
 +endif
@@ -94,7 +94,7 @@ diff -Naur linux-2.4.2.orig/Documentation/kbuild/makefiles.txt linux-2.4.2/Docum
  The top Makefile exports the following variables:
  
 -    VERSION, PATCHLEVEL, SUBLEVEL, EXTRAVERSION
-+    VERSION, PATCHLEVEL, SUBLEVEL, EXTRAVERSION, FLAVOR
++    VERSION, PATCHLEVEL, SUBLEVEL, EXTRAVERSION, FLAVOUR
  
  	These variables define the current kernel version.  A few arch
  	Makefiles actually use these values directly; they should use
@@ -116,10 +116,10 @@ diff -Naur linux-2.4.2.orig/Makefile linux-2.4.2/Makefile
  EXTRAVERSION =
  
 -KERNELRELEASE=$(VERSION).$(PATCHLEVEL).$(SUBLEVEL)$(EXTRAVERSION)
-+ifdef FLAVOR
-+  FLAVOR:=+$(FLAVOR)
++ifdef FLAVOUR
++  INT_FLAVOUR:=+$(FLAVOUR)
 +endif
-+KERNELRELEASE=$(VERSION).$(PATCHLEVEL).$(SUBLEVEL)$(EXTRAVERSION)$(FLAVOR)
++KERNELRELEASE=$(VERSION).$(PATCHLEVEL).$(SUBLEVEL)$(EXTRAVERSION)$(INT_FLAVOUR)
  
  ARCH := $(shell uname -m | sed -e s/i.86/i386/ -e s/sun4u/sparc64/ -e s/arm.*/arm/ -e s/sa110/arm/)
  
@@ -178,7 +178,7 @@ diff -Naur linux-2.4.2.orig/scripts/Menuconfig linux-2.4.2/scripts/Menuconfig
 +#FLAVOUR = speed_hack
 +
 +ifneq ($(strip $(FLAVOUR)),)
-+INT_FLAV := -$(FLAVOUR)
++INT_FLAV := +$(FLAVOUR)
 +else
 +INT_FLAV :=
 +endif

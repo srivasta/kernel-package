@@ -1,3 +1,12 @@
+kernel-package (7.78) unstable; urgency=low
+
+  * Added more documentation pointing to the support for non-LILO boot
+    loaders as well. 
+  * Fixed a FLAVOURS patch in FLAVOURS.gz that may have caused some
+    problems. 
+
+ -- Manoj Srivastava <srivasta@debian.org>  Mon,  7 Jan 2002 09:46:26 -0600
+
 kernel-package (7.77) unstable; urgency=low
 
   * Fix image.postrm to know about the new initrd name.      closes: Bug#126738

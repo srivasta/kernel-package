@@ -22,7 +22,7 @@
 .\" USA.
 .\"
 .\"
-.\"    $Id: make-kpkg.8,v 1.46 2002/01/06 10:10:10 srivasta Exp $
+.\"    $Id: make-kpkg.8,v 1.47 2002/01/07 15:46:52 srivasta Exp $
 .\"
 .TH MAKE\-KPKG 1 "May 2 1997" "Debian" "Debian GNU/Linux manual"
 .SH NAME
@@ -365,13 +365,27 @@ to point to the new kernel image in the image directory, which is
 nominally 
 .I /boot.
 On installation, it also offers to run the Linux loader,
-.I LILO,
-creating a configuration file for 
 .I LILO
+(or alternates like 
+.I loadlin, SILO, QUIK, VMELILO, ZIPL, yaboot, PALO 
+or 
+.I GRUB
+), creating a configuration file for supported boot loaders
 if needed. At that time it also offers to put the new kernel on a
 floppy, formatting the floppy if needed.  On deletion, the package
 checks the version of the kernel running, and refuses to delete a
-running kernel.
+running kernel.  
+.I grub
+rates a special mention here, since grub may not need to be rerun
+after installing a kernel image, though an automated change to the
+menu list would be nice on install and removal of kernel image
+packages. Please see the documentation about hooks in
+.B kernel-img.conf(5).
+These hooks are variables that can be pointed to scripts that add or
+remove  a line from the grub menu list at kernel image install and
+remove times. A sample script to add lines to a grub menu file is
+included in the dir 
+.TT /usr/share/doc/kernel-package/.
 .TP
 .B build
 This target, used by target
