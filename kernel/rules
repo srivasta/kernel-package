@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.159 2002/03/01 17:57:44 srivasta Exp $
+## $Id: rules,v 1.160 2002/03/03 18:09:17 srivasta Exp $
 ###############################################################################
 
 ifdef KPKG_ARCH
@@ -663,7 +663,7 @@ endif
 # *AND* there is a DEBIAN_REVISION, in which case the DEBIAN_REVISION
 # over rides (since we are going to replace the changelog file soon
 # anyway.  Else, use the commandline or env var setting. Or else
-# default to 1.00.Custom, unless the human has requested that the
+# default to 10.00.Custom, unless the human has requested that the
 # revision is mandatory, in which case we raise an error
 
 ifeq ($(strip $(HAS_CHANGELOG)),YES)
@@ -678,7 +678,7 @@ ifeq ($(strip $(debian)),)
 ifneq ($(strip $(debian_revision_mandatory)),)
 $(error A Debian revision is mandatory, but none was provided)
 else
-debian := 1.00.Custom
+debian := 10.00.Custom
 endif
 endif
 endif

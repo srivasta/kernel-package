@@ -5,9 +5,9 @@
 # Created On       : Sun Jun 14 03:38:02 1998
 # Created On Node  : tiamat.datasync.com
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Mon Feb 18 15:31:45 2002
+# Last Modified On : Fri Mar  1 16:16:34 2002
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 46
+# Update Count     : 48
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
@@ -148,17 +148,22 @@ if ($initrd && !$do_initrd) {
 
 You are attempting to install an initrd kernel image (version $version)
 This will not work unless you have configured your boot loader to use
-initrd.
+initrd. (An initrd image is a kernel image that expects to use an INITial 
+Ram Disk to mount a minimal root file system into RAM and use that for
+booting).
 EOF
     if ($loader =~ m/^lilo/i) {
       print STDERR "As a reminder, in order to configure lilo, you need to\n";
-      print STDERR "add an 'initrd=/initrd.img' in your /etc/lilo.conf\n";
+      print STDERR "add an 'initrd=/initrd.img' to the image=/vmlinuz\n";
+      print STDERR "stanza of your /etc/lilo.conf\n";
     }
     print STDERR <<EOF;
 I repeat, You need to configure your boot loader. If you have already done
 so, and you wish to get rid of this message, please put
   `do_initrd = Yes'
-in /etc/kernel-img.conf.
+in /etc/kernel-img.conf. Note that this is optional, but if you do not, 
+you'll contitnue to see this message whenever you install a kernel 
+image using initrd.
 EOF
     if (-f "/etc/lilo.conf"){
       my $ramdisk_found = 0;

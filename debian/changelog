@@ -1,3 +1,9 @@
+kernel-package (7.94) unstable; urgency=low
+
+  * bumped the default version.                              closes: Bug#136432
+
+ -- Manoj Srivastava <srivasta@debian.org>  Sun,  3 Mar 2002 12:09:00 -0600
+
 kernel-package (7.93) unstable; urgency=low
 
   * Kernel-package currently has no proper bootloader handling for
