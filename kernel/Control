@@ -22,7 +22,7 @@ Priority: optional
 Provides: kernel-source
 Depends: binutils, bzip2, fileutils (>= 4.0)
 Recommends: libc-dev, gcc, make
-Suggests: libncurses-dev | ncurses-dev, tk-dev, kernel-package, bin86
+Suggests: libncurses-dev | ncurses-dev, task-tcltk-dev, kernel-package, bin86
 Description: Linux kernel source for version =V
  This package provides the source code for the Linux kernel version =V.
  .

@@ -21,7 +21,7 @@
 .\" Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139,
 .\" USA.
 .\"
-.\" $Id: kernel-pkg.conf.5,v 1.17 2000/03/21 07:04:43 srivasta Exp $
+.\" $Id: kernel-pkg.conf.5,v 1.18 2000/04/30 08:14:34 srivasta Exp $
 .\"
 .TH KERNEL\-PKG.CONF 5 "Jan  7 1997" "Debian" "Debian GNU/Linux manual" 
 .\" NAME should be all caps, SECTION should be 1-8, maybe w/ subsection
@@ -167,6 +167,19 @@ and (hopefully) reverses the process during clean by
 running run-parts over
 .I /usr/src/kernel-patches/$(architecture)/unpatch. 
 The special architecture all is used for arch independent patches.
+.TP
+.B config_target
+What type of configure step to do.
+Defaults to oldconfig, which is good for non-interactive (or minimally
+interactive) runs.
+If you are setting patch_the_kernel to YES and some of the patches
+change what configuration settings are available, then you may wish to
+set this to something else (like menuconfig or xconfig).
+(ENV variable
+.B CONFIG_TARGET
+overrides this setting.)
+If the value of config_target is other than config, oldconfig,
+menuconfig or xconfig then it is reset to oldconfig.
 .TP
 .B use_saved_config
 This is an experts only variable. If set to NO (ENV

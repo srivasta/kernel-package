@@ -1,3 +1,36 @@
+kernel-package (7.05) unstable; urgency=low
+
+  * Changed image postinst to allow people to specify they want the image
+    moved from /boot into some other location (for example, loadlin users)
+    closes: Bug#61832
+  * Changed the default version number from 1.00. closes: Bug#62836
+  * Can't reproduce .config being deleted (and indeed, there is not code
+    in lernel-package that directly deletes that file). I'm closing this
+    bug until we get a reproducible problem, or at least more
+    details. Until then, just chalk it up to happenstance. 
+    closes: Bug#61606
+  * Make sure we ignore spaces in the value of the HOSTCC and CC env
+    variables. 
+  * Make the source package suggest task-tcltk-dev, rather than tk-dev,
+    since the latter is no longer provided by modern packages (apparently
+    it was not meant to be a publically used virtual package)
+  * Rewrote the preinst to pay attention to the kernel-img.conf. Added a
+    variable called clobber_modules that shall have the preinst move
+    /lib/modules/version dir out of the way silently. (I strongly suggest
+    that this varible not be set unless you know what you are
+    doing). closes: Bug#62745
+  * Added (courtesey of Peter Moulder) a new option called --config to
+    make-kpkg, which allows you to specify what configure target shallb e
+    used by make-kpkg. Defaults to oldconfig. This was added so you can
+    run your usual config step _after_ the kernel has been patched by
+    make-kpkg. closes: Bug#61503
+  * Added a new target to make-kpkg, called debian, which essentially
+    creates a ,.debian directory and runs the kernel patch process. This
+    is so you have an alternative to using --config; you can just call
+    make-kpkg debian, make menuconfig, make-kpkg ....
+
+ -- Manoj Srivastava <srivasta@debian.org>  Sun, 30 Apr 2000 03:14:18 -0500
+
 kernel-package (7.04) frozen unstable; urgency=low
 
   * Make sure that version specific kernel-patch subdirectories are

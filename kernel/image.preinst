@@ -1,71 +1,118 @@
-#! /bin/sh
-#                               -*- Mode: Sh -*- 
+#! /usr/bin/perl
+#                              -*- Mode: Perl -*- 
 # image.preinst --- 
 # Author           : Manoj Srivastava ( srivasta@tiamat.datasync.com ) 
 # Created On       : Sun Jun 14 03:38:02 1998
 # Created On Node  : tiamat.datasync.com
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Tue Jul 14 14:13:16 1998
-# Last Machine Used: tiamat.datasync.com
-# Update Count     : 21
+# Last Modified On : Sun Apr 30 02:13:25 2000
+# Last Machine Used: glaurung.green-gryphon.com
+# Update Count     : 33
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
 # 
 # 
 
-# check for and offer to abort if the modules dir already exists.
+# 
+# use strict; #for debugging
+$|=1;
 
-set -e
+# Predefined values:
+my $version         = "=V";
+my $image_in_boot   = "=B";     # Should be empty, mostly
+my $no_symlink      = "=S";     # Should be empty, mostly
+my $reverse_symlink = "=R";     # Should be empty, mostly
+my $kimage          = "=K";     # Should be empty, mostly
+my $loader          = "=L";     # lilo, silo, quik, or nettrom
+my $image_dir       = "=D";     # where the image is located
+my $do_symlinks     = "Yes";    # target machine defined
+my $move_image      = '';       # target machine defined
+my $clobber_modules = '';       # target machine defined
 
-version="=V";
+my $CONF_LOC        = '/etc/kernel-img.conf';
 
-if [ "X$version" = "X" ]; then
-    echo >&2 "Pre inst Internal error. Aborting."
-    exit 1;
-fi
-# This script is called before this version of this package is installed.
-# When this script is called, the package's files have not been unpacked
-# yet.
+die "Pre inst Internal error. Aborting." unless $version;
 
-case "$1" in
-  install|upgrade)
-    # About to upgrade this package from version $2 TO THIS VERSION.
-    # "prerm upgrade" has already been called for the old version of
-    # this package.
-    if [ -d /lib/modules/$version ]; then
-        echo >&2 "You are attempting to install a kernel image (version $version)"
-	echo >&2 "However, the directory /lib/modules/$version still exists."
-	echo >&2 "If you have deselected some modules, this could be bad."
-	echo >&2 ""
-	echo >&2 "This is your last chance to abort the installation of this"
-	echo >&2 "kernel image (nothing has been changed yet). "
-	echo >&2 ""
-	echo >&2 "I suggest you move /lib/modules/$version out of the way,"
-	echo >&2 "perhaps to /lib/modules/$version.old or something,"
-	echo >&2 "and then try re-installing this image."
-	echo >&2 ""
-	echo -n >&2 "Do you want to stop now? [Y/n] "
-	read ans;
-	case $ans in
-	    [Nn]*)
-		:
-		;;
-	    *)
-		echo >&2 "Ok, Aborting"
-		exit 1;
-		;;
-	esac
-    fi
-    ;;
-  abort-upgrade)
-    # Back out of an attempt to upgrade this package FROM THIS VERSION to
-    # version $2.  Undo the effects of "postrm upgrade $2".
-    # since we do not have a postrm, we need do nothing.
-    :
-    ;;
-  *) echo "$0: didn't understand being called with \`$1'" 1>&2
-     exit 1;;
-esac
+exit 0 if $ARGV[0] =~ /abort-upgrade/;
+exit 1 unless $ARGV[0] =~ /(install|upgrade)/;
+
+if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
+  if (open(CONF, "$CONF_LOC")) {
+    while (<CONF>) {
+      chomp;
+      s/\#.*$//g;
+      next if /^\s*$/;
+
+      $do_symlink      = "" if /do_symlinks\s*=\s*(no|false|0)\s*$/ig;
+      $no_symlink      = "" if /no_symlinks\s*=\s*(no|false|0)\s*$/ig;
+      $reverse_symlink = "" if /reverse_symlinks\s*=\s*(no|false|0)\s*$/ig;
+      $image_in_boot   = "" if /image_in_boot\s*=\s*(no|false|0)\s*$/ig;
+      $move_image      = "" if /move_image\s*=\s*(no|false|0)\s*$/ig;
+      $clobber_modules = '' if /clobber_modules\s*=\s*(no|false|0)\s*$/ig;
+
+      $do_symlink      = "Yes" if /do_symlinks\s*=\s*(yes|true|1)\s*$/ig;
+      $no_symlink      = "Yes" if /no_symlinks\s*=\s*(yes|true|1)\s*$/ig;
+      $reverse_symlink = "Yes" if /reverse_symlinks\s*=\s*(yes|true|1)\s*$/ig;
+      $image_in_boot   = "Yes" if /image_in_boot\s*=\s*(yes|true|1)\s*$/ig;
+      $move_image      = "Yes" if /move_image\s*=\s*(yes|true|1)\s*$/ig;
+      $clobber_modules = "Yes" if /clobber_modules\s*=\s*(yes|true|1)\s*$/ig;
+
+      $image_dest      = "$1"  if /image_dest\s*=\s*(\S+)/ig;
+      $image_dest      = "$1"  if /image_dest\s*=\s*(\S+)/ig;
+    }
+    close CONF;
+    $have_conffile = "Yes";
+    $have_conffile = "Yes";	# stop perl complaining
+  }
+}
+
+# About to upgrade this package from version $2 TO THIS VERSION.
+# "prerm upgrade" has already been called for the old version of
+# this package.
+
+if (-d "/lib/modules/$version") {
+
+  if ($clobber_modules) {
+    my $ret = system("mv /lib/modules/$version /lib/modules/$version_$$");
+    if ($ret) {
+      print STDERR <<EOF;
+You are attempting to install a kernel image (version $version)
+However, the directory /lib/modules/$version still exists.
+
+As you have instructed, an attempt was made to move the directory out
+of the way. Unfortunately, There was a problem moving
+/lib/modules/$version to /lib/modules/$version_$$.  
+
+I suggest you move /lib/modules/$version out of the way manually,
+and then try re-installing this image.
+
+I am aborting. 
+EOF
+      ;
+      exit 1;
+    }
+  }
+  else {
+    print STDERR <<EOF;
+
+You are attempting to install a kernel image (version $version)
+However, the directory /lib/modules/$version still exists.
+If you have deselected some modules, this could be bad.
+
+This is your last chance to abort the installation of this
+kernel image (nothing has been changed yet). 
+
+I suggest you move /lib/modules/$version out of the way,
+perhaps to /lib/modules/$version.old or something,
+and then try re-installing this image.
+EOF
+  ;
+    print STDERR "Do you want to stop now? [Y/n]";
+    my $answer = <STDIN>;
+    print STDERR "Ok, Aborting\n" if $answer =~ /^n/i;
+    exit 1 unless  $answer =~ /^n/i;
+  }
+}
 
 exit 0

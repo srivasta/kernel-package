@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Sun Apr  9 13:24:35 2000
+## Last Modified On : Sun Apr 30 02:41:00 2000
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 428
+## Update Count	    : 430
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.93 2000/04/09 18:25:58 srivasta Exp $
+## $Id: rules,v 1.94 2000/04/30 08:14:35 srivasta Exp $
 ###############################################################################
 
 #
@@ -51,6 +51,9 @@ make_libc_headers := NO
 
 # run make clean after build
 do_clean := YES
+
+# what kernel config target to run in our configure target.
+config_target := oldconfig
 
 
 # The default architecture (all if architecture independent)
@@ -431,7 +434,7 @@ ifneq ($(strip $(DEBIAN_REVISION)),)
 debian := $(DEBIAN_REVISION)
 else
 ifeq ($(strip $(debian)),)
-debian := 1.00
+debian := Custom.1.00
 endif
 endif
 endif
@@ -457,6 +460,15 @@ endif
 
 ifneq ($(strip $(PATCH_THE_KERNEL)),)
 patch_the_kernel = $(PATCH_THE_KERNEL)
+endif
+
+ifneq ($(strip $(CONFIG_TARGET)),)
+config_target := $(CONFIG_TARGET)
+endif
+
+# If config_target doesn't end in `config' then reset it to `oldconfig'.
+ifneq ($(patsubst %config,config,$(strip $(config_target))),config)
+config_target := oldconfig
 endif
 
 ifneq ($(strip $(USE_SAVED_CONFIG)),)
@@ -637,7 +649,7 @@ stamp-configure: debian .config
 	test -f .config      || $(deb_rule) .config
 	-test ! -f stamp-configure \
 	  && $(MAKE) $(FLAV_ARG) CROSS_COMPILE=$(KERNEL_CROSS) \
-                                 ARCH=$(KERNEL_ARCH) oldconfig \
+                                 ARCH=$(KERNEL_ARCH) $(config_target) \
           && $(MAKE) $(FLAV_ARG) CROSS_COMPILE=$(KERNEL_CROSS) \
                                  ARCH=$(KERNEL_ARCH) dep \
           && $(MAKE) $(FLAV_ARG) CROSS_COMPILE=$(KERNEL_CROSS) \

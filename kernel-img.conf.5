@@ -21,7 +21,7 @@
 .\" Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139,
 .\" USA.
 .\"
-.\" $Id: kernel-img.conf.5,v 1.2 2000/03/21 16:38:03 srivasta Exp $
+.\" $Id: kernel-img.conf.5,v 1.3 2000/04/30 08:14:34 srivasta Exp $
 .\"
 .TH KERNEL\-IMG.CONF 5 "Mar 21 2000" "Debian" "Debian GNU/Linux manual" 
 .\" NAME should be all caps, SECTION should be 1-8, maybe w/ subsection
@@ -120,15 +120,51 @@ This is a Hack.
 Defaults to  No.
 .TP
 .B image_dest 
-If you want the image to be stored in elsewhere than
-.I /boot
-set this variable to the dir where you want the image. 
+If you want the symbolic link (or image, if 
+.B move_image 
+is set) to be stored in elsewhere than
+.I /
+set this variable to the dir where you want the symbolic link.
 Please note that this is not a Boolean variable.  This may be of
 help to
 .B loadlin
-users.Defaults to 
-.I /boot.
-This over rides all the above methods.
+users, who may set both this and
+.B move_image 
+Defaults to 
+.I /
+This can be used in conjunction with all above options except
+.B image_in_boot,
+which would not make sense. (If both 
+.B image_dest 
+and 
+.B image_in_boot
+are set, 
+.B image_in_boot
+overrides).
+.TP
+.B move_image 
+Instead of creating symbolic links to (or, is 
+.B reverse_symlinks 
+is set, from)
+.B image_dest,
+the image is moved from its location in
+.I /boot
+into 
+.B image_dest.
+If 
+.B reverse_symlinks 
+is set, 
+.I /boot
+shall contain a symbolic link to the actual image.
+This option can be sueful to peopl using loadlin, who may need the
+image to be moved to a different, dos partition.
+This variable is unset by default.
+.TP
+.B clobber_modules
+If set, the preinst shall silently try to move /lib/modules/version
+out of the way if it is the same version as the image being
+installed. Use at your own risk.
+This variable is unset by default.
 .SH FILES
 The file described here is
 .I /etc/kernel-img.conf.
