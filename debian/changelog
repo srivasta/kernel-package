@@ -1,4 +1,4 @@
-kernel-package (8.9) unstable; urgency=low
+kernel-package (8.009) unstable; urgency=low
 
   * Improved documentation for SOURCE_CLEAN_HOOK.            closes: Bug#159799
   * Allow removal of the kernel-image pointed to by /vmlinuz.
