@@ -1,5 +1,5 @@
 
-    $Id: README,v 1.42 2001/05/12 18:55:52 srivasta Exp $
+    $Id: README,v 1.43 2001/07/11 21:27:30 srivasta Exp $
 
 This is the Debian GNU/Linux packaging scripts for the Linux kernel. 
 This package has been put together by Manoj Srivastava <srivasta@debian.org>.
@@ -272,7 +272,7 @@ no_symlinks     Mutually exclusive to reverse_symlink. Can be used with
                 that does not use symlinks (and say, they use loadlin)
                 This is a Hack.
 
-reverse_symlink Mutually exclusive to no_symlinks. Can be used with
+reverse_symlinks Mutually exclusive to no_symlinks. Can be used with
                 image_in_boot. Just like no_symlinks, except that the
                 /boot/vmlinuz-X.XX is symlinked to the real new
                 image, vmlinuz. This too restricts you to just two
@@ -367,7 +367,7 @@ no_symlinks     Mutually exclusive to reverse_symlink. Can be used with
                 that does not use symlinks (and say, they use loadlin)
                 This is a Hack.
 
-reverse_symlink Mutually exclusive to no_symlinks. Can be used with
+reverse_symlinks Mutually exclusive to no_symlinks. Can be used with
                 image_in_boot. Just like no_symlinks, except that the
                 /boot/vmlinuz-X.XX is symlinked to the real new
                 image, vmlinuz. This too restricts you to just two
@@ -377,7 +377,7 @@ reverse_symlink Mutually exclusive to no_symlinks. Can be used with
                 do want to know the image version when in Linux. 
                 This is a Hack.
 
-do_symlink    By  default,  the  kernel  image  post installation
+do_symlinks   By  default,  the  kernel  image  post installation
               script shall create or update the /vmlinuz and
               /vmlinuz.old symbolic links.  This is true if a /vmlinuz
               link already exists, however, in absence of /vmlinuz,

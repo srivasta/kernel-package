@@ -1,5 +1,5 @@
 
-    $Id: Problems,v 1.13 2000/05/12 14:49:23 srivasta Exp $
+    $Id: Problems,v 1.14 2001/07/11 21:37:52 srivasta Exp $
 
  This is an (incomplete) list of problems that people have encountered
  in the past while using kernel-package. Please remember to configure
@@ -148,3 +148,10 @@ make: *** [all] Error 2
         A symptom may be failures like:
 Makefile:153: arch/i586/Makefile: No such file or directory
 make[1]: *** No rule to make target `arch/i586/Makefile'.  Stop.
+
+      n) I keep getting this kind of messages:  
+
+ make[1]: i386-linux-gcc: Command not found        
+
+	This is a result of having the env variable ARCH set when you do 
+        not intend to cross compile the kernel.  Unsetting ARCH works fine.

@@ -21,7 +21,7 @@
 .\" Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139,
 .\" USA.
 .\"
-.\" $Id: kernel-img.conf.5,v 1.12 2001/07/06 19:53:01 srivasta Exp $
+.\" $Id: kernel-img.conf.5,v 1.13 2001/07/11 21:27:30 srivasta Exp $
 .\"
 .TH KERNEL\-IMG.CONF 5 "Mar 21 2000" "Debian" "Debian GNU/Linux manual" 
 .\" NAME should be all caps, SECTION should be 1-8, maybe w/ subsection
@@ -62,7 +62,7 @@ rather than the default
 .I /.  
 Defaults to No.
 .TP
-.B do_symlink
+.B do_symlinks
 By default, the kernel image post installation script shall create or
 update the 
 .I /vmlinuz
@@ -81,12 +81,12 @@ if this option is set to No, no symbolic link is ever created. This
 for people who have other means of booting their machines, and do not
 like the symbolic links cluttering up their / directory.  Defaults to Yes. 
 .TP
-.B no_symlink
+.B no_symlinks
 Whether to use symlinks to the 
 .I image
 file. 
 Mutually exclusive to 
-.I reverse_symlink. 
+.I reverse_symlinks. 
 Can be used with
 .I image_in_boot. 
 If set to Yes, the image is placed in vmlinuz (instead of /boot/vmlinuz-X.X.XX).
@@ -99,17 +99,17 @@ on a system that does not use symbolic links (and say, they use
 loadlin as a bootloader). This is a Hack.
 Defaults to No. 
 .TP
-.B reverse_symlink
+.B reverse_symlinks
 Whether to use reverse symlinks (that is, the real file is the one
 without the version number, and the number version is the link) to the 
 .I image
 file. 
 Mutually exclusive to 
-.I no_symlink.
+.I no_symlinks.
 Can be used with
 .I image_in_boot.
 Just like 
-.I no_symlink, 
+.I no_symlinks, 
 except that the
 /boot/vmlinuz-X.XX is a symbolic link to the real new
 image, vmlinuz. This, too, restricts you to just two

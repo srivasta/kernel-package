@@ -21,7 +21,7 @@
 .\" Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139,
 .\" USA.
 .\"
-.\" $Id: kernel-pkg.conf.5,v 1.25 2001/07/06 19:53:01 srivasta Exp $
+.\" $Id: kernel-pkg.conf.5,v 1.26 2001/07/11 21:27:30 srivasta Exp $
 .\"
 .TH KERNEL\-PKG.CONF 5 "Jan  7 1997" "Debian" "Debian GNU/Linux manual" 
 .\" NAME should be all caps, SECTION should be 1-8, maybe w/ subsection
@@ -123,13 +123,13 @@ Defaults to
 .I bzImage.
 (Optional)
 .TP
-.B no_symlink
+.B no_symlinks
 Whether to use symlinks to the 
 .I image
 file. Can be overridden by the environment variable
 .B NO_SYMLINK
 Mutualy exclusive to 
-.I reverse_symlink. 
+.I reverse_symlinks. 
 Can be used with
 .I image_in_boot. 
 The image is placed in vmlinuz (instead of /boot/vmlinuz-X.X.XX). The
@@ -142,18 +142,18 @@ on a system that does not use symbolic links (and say, they use
 loadlin as a boot loader). This is a Hack.
 Defaults to  undefined (optional)
 .TP
-.B reverse_symlink
+.B reverse_symlinks
 Whether to use reverse symlinks (that is, the real file is the one
 without the version number, and the numberd version is the link) to the 
 .I image
 file. Can be overridden by the environment variable
 .B REVERSE_SYMLINK
 Mutualy exclusive to 
-.I no_symlink.
+.I no_symlinks.
 Can be used with
 .I image_in_boot.
 Just like 
-.I no_symlink, 
+.I no_symlinks, 
 except that the
 /boot/vmlinuz-X.XX is symlinked to the real new
 image, vmlinuz. This, too, restricts you to just two
