@@ -1,5 +1,5 @@
 
-    $Id: copyright,v 1.4 1998/02/13 03:56:09 srivasta Exp $
+    $Id: copyright,v 1.5 1998/02/18 07:09:55 srivasta Exp $
 
 This is the Debian Linux packaging scripts for the Linux kernel.  This
 package has been written and maintained by 
@@ -13,7 +13,7 @@ Manoj Srivastava <srivasta@debian.org>.
     it under the terms of either:
     
         a) the GNU General Public License as published by the Free
-        Software Foundation; either version 1, or (at your option) any
+        Software Foundation; either version 2, or (at your option) any
         later version, or
 
         b) the "Artistic License" which comes with this Kit.
