@@ -1,5 +1,5 @@
 
-    $Id: copyright.image,v 1.4 1998/02/18 23:30:50 srivasta Exp $
+    $Id: copyright.image,v 1.5 1999/07/14 16:06:07 srivasta Exp $
 
 This is the Debian GNU/Linux prepackaged version of the Linux kernel
 binary image. Linux was written by Linus Torvalds
@@ -28,4 +28,4 @@ Linux is copyrighted by Linus Torvalds and others.
    02111-1307, USA.
 
 On Debian GNU/Linux systems, the complete text of the GNU General
-Public License can be found in `/usr/doc/copyright/GPL'.
+Public License can be found in `/usr/share/common-licenses/GPL'.

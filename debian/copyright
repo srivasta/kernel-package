@@ -1,5 +1,5 @@
 
-    $Id: copyright,v 1.5 1998/02/18 07:09:55 srivasta Exp $
+    $Id: copyright,v 1.6 1999/07/14 16:06:06 srivasta Exp $
 
 This is the Debian Linux packaging scripts for the Linux kernel.  This
 package has been written and maintained by 
@@ -27,8 +27,8 @@ Manoj Srivastava <srivasta@debian.org>.
     Kit, in the file named "Artistic".  If not, I'll be glad to provide one.
 
 On Debian GNU/Linux systems, the complete text of the GNU General
-Public License can be found in `/usr/doc/copyright/GPL'. The artistic
-Licence is available as `/usr/doc/copyright/Artistic'. 
+Public License can be found in `/usr/share/common-licenses/GPL'. The artistic
+Licence is available as `/usr/share/common-licenses/Artistic'. 
 
     A copy of the GNU General Public License is also available at
     <URL:http://www.gnu.org/copyleft/gpl.html>.  You may also obtain

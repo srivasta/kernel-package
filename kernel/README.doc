@@ -1,5 +1,5 @@
 
-    $Id: README.doc,v 1.2 1997/06/03 03:26:29 srivasta Exp $
+    $Id: README.doc,v 1.3 1999/07/14 16:06:06 srivasta Exp $
 
 This is the Debian GNU/Linux prepackaged version of the Linux kernel
 Documentation. Linux was written by Linus Torvalds 
@@ -25,7 +25,7 @@ Linux is copyrighted by Linus Torvalds and others.
    Foundation, Inc., 675 Mass Ave., Cambridge, MA 02139, USA.
 
 On Debian GNU/Linux systems, the complete text of the GNU General
-Public License can be found in `/usr/doc/copyright/GPL'.
+Public License can be found in `/usr/share/common-licenses/GPL'.
 
    There are various readme's in the kernel Documentation/
    subdirectory: these typically contain kernel-specific installation

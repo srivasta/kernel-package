@@ -1,5 +1,5 @@
 
-   $Id: README,v 1.24 1999/07/14 15:26:10 srivasta Exp $
+   $Id: README,v 1.25 1999/07/14 16:06:06 srivasta Exp $
 
 This is the Debian GNU/Linux prepackaged version of the Linux kernel.
 Linux was written by Linus Torvalds <Linus.Torvalds@cs.Helsinki.FI> and
@@ -431,7 +431,7 @@ run. If you have such a module source package, for example,
 pcmcia-source, then please read README.modules as well. If you don't
 never mind. (The file is in /usr/doc/kernel-source-X.X.XX/. If you
 don't have kernsel-source packages installed [that's OK]. there is a
-copy in /usr/lib/kernel-package/README.modules).
+copy in /usr/share/kernel-package/README.modules).
 
 Have fun,
 

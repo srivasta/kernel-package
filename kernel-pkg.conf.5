@@ -21,7 +21,7 @@
 .\" Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139,
 .\" USA.
 .\"
-.\" $Id: kernel-pkg.conf.5,v 1.11 1999/07/14 15:26:09 srivasta Exp $
+.\" $Id: kernel-pkg.conf.5,v 1.12 1999/07/14 16:06:05 srivasta Exp $
 .\"
 .TH KERNEL\-PKG.CONF 5 "Jan  7 1997" "Debian" "Debian GNU/Linux manual" 
 .\" NAME should be all caps, SECTION should be 1-8, maybe w/ subsection
@@ -217,10 +217,10 @@ This variable should be set to a directory which contains architecture
 specific 
 .I .config
 files (look at
-.I /usr/lib/kernel-package/Config
+.I /usr/share/kernel-package/Config
 for examples). This is useful for people who need to compile for
 several architectures. Defaults to 
-.I /usr/lib/kernel-package/Config
+.I /usr/share/kernel-package/Config
 .TP
 .B IMAGE_DESTDIR
 If you want the image to be stored in elsewhere than
@@ -241,7 +241,7 @@ to
 Set this variable, either in the envoronment or in the config file, to
 point to the location where the kernel config files are
 located. Defaults to 
-.I /usr/lib/kernel-package/Config
+.I /usr/share/kernel-package/Config
 .TP
 .B PATCH_DIR 
 Set this variable, either in the envoronment or in the config file, to
