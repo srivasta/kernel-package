@@ -1,3 +1,10 @@
+kernel-package (6.11) unstable; urgency=low
+
+  * A cut and paste error in kernel rules file was corrected. 
+    closes: Bug#37877
+
+ -- Manoj Srivastava <srivasta@debian.org>  Mon, 17 May 1999 22:30:58 -0500
+
 kernel-package (6.10) unstable; urgency=low
 
   * Added new patch for flavours that works with 2.2 kernel Makefiles. 
