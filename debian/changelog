@@ -5,6 +5,7 @@ kernel-package (6.18) unstable; urgency=low
   * Documented the fact that recompilations, especially ones which change
     the revision, directly or indirectly, amy need an intervening
     make-kpkg clean. closes: Bug#38320
+  * Added documentation enhancements based on feedback from Remo Badi. 
 
  -- Manoj Srivastava <srivasta@debian.org>  Tue,  1 Jun 1999 13:01:48 -0500
 
