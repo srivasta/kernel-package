@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.186 2002/11/06 09:07:45 srivasta Exp $
+## $Id: rules,v 1.187 2002/12/23 23:31:21 srivasta Exp $
 ###############################################################################
 
 ifdef KPKG_ARCH
@@ -322,9 +322,17 @@ kimage := vmlinuz
 loaderdep=silo
 loader=silo
 loaderdoc=SiloDefault
+
 target = vmlinux
-NEED_DIRECT_GZIP_IMAGE=YES
 kimagesrc = vmlinux
+ifneq ($(shell if [ $VERSION -ge 2 -a $PATCHLEVEL -ge 5 -a $SUBLEVEL -ge 41 ];\
+                   then echo new; \
+                fi),)
+target = image
+kimagesrc = arch/sparc/boot/image
+endif
+
+NEED_DIRECT_GZIP_IMAGE=YES
 kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
 DEBCONFIG = $(CONFDIR)/config.sparc
 # make-kpkg --subarch=sun4u binary-arch
@@ -402,9 +410,9 @@ kimage := vmlinuz
 loaderdep=elilo
 loader=elilo
 loaderdoc=
-target=vmlinux
-NEED_DIRECT_GZIP_IMAGE=YES
-kimagesrc=vmlinux
+target=compressed
+NEED_DIRECT_GZIP_IMAGE=NO
+kimagesrc=vmlinux.gz
 kimagedest=$(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
 DEBCONFIG=$(CONFDIR)/config.$(KPKG_SUBARCH)
 endif
@@ -868,6 +876,10 @@ CONFIG_FILE := $(shell if test -e .config ; then \
                            echo $(CONFDIR)/config ; \
                        elif test -e $(DEBDIR)/config ; then \
                            echo $(DEBDIR)/config ; \
+                       elif test -e /boot/config-$(version) ; then \
+                           echo /boot/config-$(version) ; \
+                       elif test -e /boot/config-$$(uname -r) ; then \
+                           echo /boot/config-$$(uname -r) ; \
                        else echo /dev/null ; \
                        fi)
 
@@ -971,6 +983,17 @@ endif
 endif
 endif
 
+old_applied_patches=$(shell if [ -f applied_patches ]; then                   \
+                               cat applied_patches;                           \
+                            else                                              \
+                               echo '';                                       \
+                            fi )
+
+ifeq ($(strip $(valid_unpatches)),)
+ifneq ($(strip $(old_applied_patches)),)
+valid_unpatches=$(old_applied_patches)
+endif
+endif
 
 # See if we are being run in the kernel directory
 IN_KERNEL_DIR := $(shell if test -d drivers -a -d kernel -a -d fs -a \

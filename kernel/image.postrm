@@ -12,7 +12,7 @@
 # HISTORY          : 
 # Description      : 
 # 
-#     $Id: image.postrm,v 1.24 2002/09/01 01:15:04 srivasta Exp $
+#     $Id: image.postrm,v 1.25 2002/12/23 23:31:21 srivasta Exp $
 #
 
 
@@ -266,6 +266,9 @@ if (-f "/lib/modules/$version/modules.generic_string") {
 }
 if (-f "/lib/modules/$version/modules.ieee1394map") {
   unlink "/lib/modules/$version/modules.ieee1394map";
+}
+if (-f "/lib/modules/$version/modules.pnpbiosmap") {
+  unlink "/lib/modules/$version/modules.pnpbiosmap";
 }
 
 if (-d "/lib/modules/$version" ) {
