@@ -5,16 +5,16 @@
 # Created On       : Mon Jun 17 01:10:11 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Fri Nov  8 18:40:53 2002
+# Last Modified On : Mon Apr 14 13:19:56 2003
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 186
+# Update Count     : 187
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
 #
 #
 #
-#    $Id: make-kpkg,v 1.78 2002/11/09 00:42:51 srivasta Exp $
+#    $Id: make-kpkg,v 1.79 2003/04/14 18:23:43 srivasta Exp $
 #
 require 5.002;
 use strict;
@@ -29,7 +29,7 @@ make-kpkg - build Debian kernel packages from Linux kernel sources.
 ($main::MYNAME     = $main::0) =~ s|.*/||;
 $main::Author      = "Manoj Srivastava";
 $main::AuthorMail  = "srivasta\@debian.org";
-$main::Version     = '$Revision: 1.78 $ ';
+$main::Version     = '$Revision: 1.79 $ ';
 
 my $added_modules='';
 my $added_patches='';
@@ -859,7 +859,7 @@ EOMSG
       exit 1;
     }
     if (-f "include/linux/version.h" && ! -f 'debian/official' && 
-	! $ENV{"VERSION_H_OK"}) {
+	! $ENV{"VERSION_H_OK"} && ! $Targets =~ m/^\s*clean\s*$/ ) {
       print STDERR "Warning: The file include/linux/version.h exists\n";
       print STDERR "If it was created just now by calling make-kpkg with\n";
       print STDERR "the --append_to_version option on a clean source tree,\n";

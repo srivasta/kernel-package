@@ -1,3 +1,10 @@
+kernel-package (8.028) unstable; urgency=low
+
+  * Make sure the docs do not recommend make-kpkg clean <any_other_target>
+  * make make-kpkg complain less o clean targets
+
+ -- Manoj Srivastava <srivasta@debian.org>  Mon, 14 Apr 2003 13:22:20 -0500
+
 kernel-package (8.027) unstable; urgency=low
 
   * Fix sparc rules once again, to account for newer kernel versions

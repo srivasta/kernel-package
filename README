@@ -1,5 +1,5 @@
 
-    $Id: README,v 1.57 2003/03/06 23:04:20 srivasta Exp $
+    $Id: README,v 1.58 2003/04/14 18:23:43 srivasta Exp $
 
 This is the Debian GNU/Linux packaging scripts for the Linux kernel. 
 This package has been put together by Manoj Srivastava <srivasta@debian.org>.
@@ -823,7 +823,7 @@ Pause and breathe again. You have now configured your options for the
 next kernel compilation, but you have not yet compiled it.
 
 
-7. Compile the kernel: use the command "make-kpkg clean
+7. Compile the kernel: use the command "make-kpkg clean; make-kpkg
    kernel_image". This will cause a bunch of grinding and text;
    depending on the speed of your computer and the options you chose,
    this could take minutes (fast computer) to hours (slow
@@ -840,8 +840,9 @@ next kernel compilation, but you have not yet compiled it.
    package.  A more complicated comman line to build your kernel
    image, with all kinds of bells and whistels, is:
 
+   make-kpkg clean   
    make-kpkg -rootcmd fakeroot --append-to-version -custom.${VER} \
-        --revision custom.${VER} clean   kernel_image modules-image
+        --revision custom.${VER} kernel_image modules-image
    This one also builds any standalone modules packages you may have
    installed on your machine.
 
