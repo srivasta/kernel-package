@@ -5,9 +5,9 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Sun Dec  7 18:30:21 2003
+## Last Modified On : Sun Dec  7 19:27:06 2003
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 644
+## Update Count	    : 647
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
@@ -1431,6 +1431,9 @@ endif
 ifeq ($(strip $(INCLUDE_KERNEL_MAKEFILE)),yes)
 include Makefile
 conf_vars:
+	@echo Please ignore the warning about overriding and ignoring targets above.
+	@echo These are harmless. They are only invoked in a part of the process
+	@echo that tries to snarf variable values for the conf.vars file.
 	@echo "VERSION          = $(VERSION)"        > .mak
 	@echo "PATCHLEVEL       = $(PATCHLEVEL)"    >> .mak
 	@echo "SUBLEVEL 	      = $(SUBLEVEL)"      >> .mak

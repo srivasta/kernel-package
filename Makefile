@@ -4,9 +4,9 @@
 ## Created On       : Tue Nov 18 15:53:52 2003
 ## Created On Node  : glaurung.green-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Sat Dec  6 17:15:29 2003
+## Last Modified On : Sun Dec  7 19:22:01 2003
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count     : 13
+## Update Count     : 14
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : 
@@ -99,6 +99,8 @@ install:
 	(cd kernel;        tar cf - * | \
            (cd             $(prefix)/usr/share/$(package);\
                            tar xf -))
+	find $(prefix)/usr/share/$(package) -type d -name .arch-ids -print0 | \
+           xargs -0r rm -rf
 	$(install_file)    Rationale $(prefix)/usr/share/$(package)/
 # Hack, tell the   rules file what version of kernel package it is
 	sed -e             's/=K=V/$(version)/' kernel/rules > \
