@@ -1,0 +1,138 @@
+.\" Hey, Emacs! This is an -*- nroff -*- source file.
+.\" Copyright (c) 2000 Manoj Srivastava <srivasta@debian.org>
+.\"
+.\" This is free documentation; you can redistribute it and/or
+.\" modify it under the terms of the GNU General Public License as
+.\" published by the Free Software Foundation; either version 2 of
+.\" the License, or (at your option) any later version.
+.\"
+.\" The GNU General Public License's references to "object code"
+.\" and "executables" are to be interpreted as the output of any
+.\" document formatting or typesetting system, including
+.\" intermediate and printed output.
+.\"
+.\" This manual is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public
+.\" License along with this manual; if not, write to the Free
+.\" Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139,
+.\" USA.
+.\"
+.\" $Id: kernel-img.conf.5,v 1.1 2000/03/21 07:08:55 srivasta Exp $
+.\"
+.TH KERNEL\-IMG.CONF 5 "Mar 21 2000" "Debian" "Debian GNU/Linux manual" 
+.\" NAME should be all caps, SECTION should be 1-8, maybe w/ subsection
+.\" other parms are allowed: see man(7), man(1)
+.SH NAME
+kernel\-img.conf \- site wide configuration file for kernel image packages
+.SH SYNOPSIS
+.I /etc/kernel\-img.conf
+.SH "DESCRIPTION"
+The file 
+.I /etc/kernel\-img.conf
+is a simple file looked at by the kernel image post installation
+process to allow local options for handling some aspects of the
+installation, overriding the defaults built into the image itself. 
+.PP
+The format of the file is a simple 
+.B VAR = VALUE 
+pair. This file is automatically created by the installation script if
+it does not exist, and niether does the symbolic link
+.I /vmlinuz.
+The script asks the user whether the symbolic link should be created, 
+and stashes the answer into 
+.I /etc/kernel\-img.conf
+.PP
+At the moment, the user modifiable variables supported are:
+.TP
+.B image_in_boot:  
+Set to True if you want the kernel image 
+.I vmlinuz 
+in 
+.I /boot 
+rather than the default 
+.I /.  
+defaults to undefined.
+.TP
+.B do_symlink
+By default, the kernel image post installation script shall create or
+update the 
+.I /vmlinuz
+and 
+.I /vmlinuz.old 
+symbolic links. This is true if a 
+.I /vmlinuz
+link already exists, however, in absence of
+.I /vmlinuz,
+the script looks to see if this configuration file exists. If it does
+not, the configuration scripts asks the user whether to create the
+symbolic link, and stashes the answer in a newly created
+.I /etc/kernel-img.conf.
+If the configuration file already exists, and 
+if this option is set to no, no symbolic link is ever created. This
+for people who have other means of booting their machines, and do not
+like the symbolic links cluttering up their / directory. 
+.TP
+.B no_symlink
+Whether to use symlinks to the 
+.I image
+file. 
+Mutually exclusive to 
+.I reverse_symlink. 
+Can be used with
+.I image_in_boot. 
+The image is placed in vmlinuz (instead of /boot/vmlinuz-X.X.XX). The
+old vmlinuz is moved to vmlinuz.old unconditionally. (Normally, that
+is only done if the version of the new image differs from the old
+one). This restricts you to two images, unless you take additional
+action and save copies of older images. This is for people who have
+boot on a system that does not use symbolic links (and say, they use
+loadlin as a boot loader). This is a Hack.
+Defaults to  undefined (optional)
+.TP
+.B reverse_symlink
+Whether to use reverse symlinks (that is, the real file is the one
+without the version number, and the number version is the link) to the 
+.I image
+file. 
+Mutually exclusive to 
+.I no_symlink.
+Can be used with
+.I image_in_boot.
+Just like 
+.I no_symlink, 
+except that the
+/boot/vmlinuz-X.XX is symbolic linked to the real new
+image, vmlinuz. This too restricts you to just two
+images unless father action is taken. The older
+symlinks are left dangling. This is for people with
+boot on umsdos, and who can't see the link in dos, but
+do want to know the image version when in Linux. 
+This is a Hack.
+Defaults to  undefined (optional)
+.TP
+.B image_dest 
+If you want the image to be stored in elsewhere than
+.I /boot
+set this variable to the dir where you want the image. This may be of
+help to
+.B loadlin
+users.Defaults to 
+.I /boot.
+This over rides all the above methods.
+.SH FILES
+The file described here is
+.I /etc/kernel-img.conf.
+.SH "SEE ALSO"
+.BR make-kpkg (8),
+.BR kernel-pkg.conf (5),
+.BR make (1),
+.B The GNU Make manual.
+.SH BUGS
+There are no bugs.  Any resemblance thereof is delirium. Really.
+.SH AUTHOR
+This manual page was written by Manoj Srivastava <srivasta@debian.org>,
+for the Debian GNU/Linux system.
