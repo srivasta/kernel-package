@@ -5,16 +5,16 @@
 # Created On       : Sat Apr 27 05:44:16 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Sat Dec 13 23:01:04 1997
+# Last Modified On : Wed Feb 18 15:43:38 1998
 # Last Machine Used: tiamat.datasync.com
-# Update Count     : 17
+# Update Count     : 18
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
 # 
 # 
 #
-#    $Id: include.postrm,v 1.4 1997/12/14 05:05:32 srivasta Exp $
+#    $Id: include.postrm,v 1.5 1998/02/18 22:25:05 srivasta Exp $
 #
 
 
@@ -35,39 +35,7 @@ chdir '/usr/src' or die "Could not chdir to /usr/src:$!";
 
 # let us make sure that if the file .linux-versions exists, and that
 # we can read and write to it.
-if (! -f '.linux-versions') {
-  my $answer;
-  print STDERR <<"ERR";
-The file /usr/src/.linux-versions does not exist. This is an 
-misconfiguration, making it hard to provide a /usr/src/linux
-symlink if the latest target is removed.
-
-Please Hit return to continue.
-ERR
-  ;
- $answer = <STDIN>;
-  if (open(REGISTRY,">/usr/src/.linux-versions")) {
-    print REGISTRY <<REG;
-# This is a list of the current versions of Linux kernel sources or
-# kernel header packages on the system. 
-REG
-      ;
-    close(REGISTRY);
-  }
-  else {
-    my $answer;
-    print STDERR <<"ERR";
- The file /usr/src/.linux-versions should be read and writable. ($!)
- Please change permissions on /usr/src/
-
- Please Hit return to continue.
-ERR
-     ;
-    $answer = <STDIN>;
-    
-  }
-}
-else {
+if (-f '.linux-versions') {
   my $found = 0;
   my @Versions = ();
 
@@ -109,63 +77,39 @@ else {
 # Test if we need to do anything at all. This test and exit make us
 # idempotent. 
 
-if (! -l 'linux') {
-  print STDERR 
-    "Error: /usr/src/linux not a symbolic link, not removing.\n";
-  exit 1;
-}
-if (! -l "linux-$version") {
-  print STDERR 
-    "Error: /usr/src/linux-$version not a symbolic link, not removing.\n";
-  exit 1;
-}
-# fine.  We now have a link.
-my $old_target = readlink('linux');
-die "could not read link /usr/src/linux:$!" unless defined $old_target;
+if (-l 'linux') {
+  my $old_target = readlink('linux');
+  die "could not read link /usr/src/linux:$!" unless defined $old_target;
 
-if ("$old_target" eq "$package") {
-  unlink 'linux' or do {
-    print STDERR <<"ERR";
+  if ("$old_target" eq "$package") {
+    unlink 'linux' or do {
+      print STDERR <<"ERR";
   Could not remove /usr/src/linux ($!)
   Please remove manually.
 ERR
   ;
-    exit 1;
-  } ;
-  unlink "linux-$version" or do {
-    print STDERR <<"ERR";
+      exit 1;
+    } ;
+    unlink "linux-$version" or do {
+      print STDERR <<"ERR";
   Could not remove /usr/src/linux-$version ($!)
   Please remove manually.
 ERR
   ;
-    exit 1;
-  } ;
+      exit 1;
+    } ;
   
-  if ($LastVersion) {
-    if (-d "$LastVersion") {
-      symlink $LastVersion, "linux" or 
-	die "Error linking /usr/src/$LastVersion to /usr/src/linux: $!";
-    }
-    else {
-      print STDERR "Could not find dir /usr/src/$LastVersion\n";
-      print STDERR "  maybe corrupt /usr/src/.linux-versions?\n";
-      die "  Please create the link /usr/src/linux manually\n";
+    if ($AnotherVersion) {
+      if (-d "$AnotherVersion") {
+	symlink $AnotherVersion, "linux-$version" or 
+	  die 
+	    "Error linking /usr/src/$AnotherVersion to /usr/src/linux-$version: $!";
+      }
     }
   }
   else {
-    print STDERR "No version to link /usr/src/linux to.\n";
+    exit 0;
   }
-
-  if ($AnotherVersion) {
-    if (-d "$AnotherVersion") {
-      symlink $AnotherVersion, "linux-$version" or 
-	die 
-	 "Error linking /usr/src/$AnotherVersion to /usr/src/linux-$version: $!";
-    }
-  }
-}
-else {
-  exit 0;
 }
 
 

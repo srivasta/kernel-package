@@ -61,3 +61,6 @@
      ii) This is not how it is done in the non-Debian world. This
          flouts tradition. (It has been pointed out, though, that this
          is fast becoming Debian tradition)
+    iii) It forces you to use fakeroot or sudo or super or be root to
+         create a kernel image .deb file (this is not as bad as it
+         used to be before fakeroot)

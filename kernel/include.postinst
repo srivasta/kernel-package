@@ -5,16 +5,16 @@
 # Created On       : Sat Apr 27 05:42:43 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Thu Feb 12 21:43:38 1998
+# Last Modified On : Wed Feb 18 16:07:10 1998
 # Last Machine Used: tiamat.datasync.com
-# Update Count     : 17
+# Update Count     : 23
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
 # 
 # 
 #
-#    $Id: include.postinst,v 1.5 1998/02/13 03:56:10 srivasta Exp $
+#    $Id: include.postinst,v 1.6 1998/02/18 22:25:04 srivasta Exp $
 #
 
 
@@ -30,84 +30,6 @@ exit 0 unless ($ARGV[0] && $ARGV[0] =~ /configure/);
 # most of our work is done in /usr/src.
 chdir '/usr/src' or die "Could not chdir to /usr/src:$!";
 
-# Test if we need to do anything at all. This test and exit make us
-# idempotent. 
-
-if (-e 'linux' && ! -l 'linux') {
-  my $answer;
-  print STDERR <<"EOF";
- Error configuring $package: /usr/src/linux does not seem to be a 
-       symbolic link, possibly from an old package or a left-over from a 
-       user installed kernel. Please remove /usr/src/linux and try to
-       reconfigure $package.  (Look at /usr/doc/$package/LinkPolicy
-       for details; local source should, in general, be kept in
-       /usr/local/src)
-
- Please Hit return to continue.
-EOF
-  $answer = <STDIN>;
-  exit 1;
-}
-
-if (-e "linux-$version" && ! -l "linux-$version" ) {
-  my $answer;
-  print STDERR <<"EOF";
- Error configuring $package: /usr/src/linux-$version does not seem to
-       be a symbolic link, possibly from an old package or a left-over
-       from a user installed kernel. Please remove
-       /usr/src/linux-$version and try to reconfigure $package.
-       (Look at /usr/doc/$package/LinkPolicy for details; local source
-       should, in general, be kept in /usr/local/src)
-
- Please Hit return to continue.
-EOF
-  $answer = <STDIN>;
-  exit 1;
-}
-
-# fine.  We now have a link.
-my $old_target='';
-$old_target = readlink('linux') if -e 'linux';
-die "could not read link /usr/src/linux:$!" unless defined $old_target;
-
-# before we change the link, let us make sure that if the file
-# .linux-versions exists, we can read and write to it.
-if (-f '.linux-versions') {
-  my $answer;
-  if (! -r '.linux-versions' && -w _) {
-    print STDERR <<"ERR";
- The file /usr/src/.linux-versions should be read and writable. ($!)
- Please change permissions and reconfigure $package.
-
- Please Hit return to continue.
-ERR
-  ;
-    $answer = <STDIN>;
-    exit 1;
-  }
-}
-else {
-  my $answer;
-  open(REGISTRY,">>/usr/src/.linux-versions") || do {
-    print STDERR <<"ERR";
- The file /usr/src/.linux-versions should be read and writable. ($!)
- Please change permissions and reconfigure $package.
-
- Please Hit return to continue.
-ERR
-  ;
-    $answer = <STDIN>;
-    exit 1;
-  };
-  print REGISTRY <<"REG";
-# This is a list of the current versions of Linux kernel sources or
-# kernel header packages on the system.
-REG
-  ;
-  close(REGISTRY);
-}
-
-## Another paranoid check before we do anything:
 if (! -d "$package") {
   my $answer;
   print STDERR "I could not find the directory /usr/src/$package.\n";
@@ -118,23 +40,66 @@ if (! -d "$package") {
   $answer = <STDIN>;
   exit 1;
 }
-if ("$old_target" ne "$package") {
-  if (-e 'linux') {
-    if (! unlink 'linux') {
-      print STDERR <<"ERR";
+
+
+chdir "/usr/src/$package/include" ||
+  die "Could not chdir to  /usr/src/$package/include:$!";
+
+my $architecture;
+chop ($architecture = `dpkg --print-architecture`);
+
+my $stop_and_read = 0;
+
+
+if (! -d "asm-$architecture") {
+  warn "/usr/src/$package/include/asm-$architecture does not exist.\n";
+}
+elsif (-e 'asm') {
+  if (! -l 'asm') {
+    warn "/usr/src/$package/include/asm is not a symlink.\n";
+    $stop_and_read++;
+  }
+  else {
+    my $target=readlink 'asm';
+    if ("$target" ne "asm-$architecture") {
+      if (! unlink 'asm') {
+	warn "could not unlink /usr/src/$package/include/asm: $!\n";
+	warn "It points to /usr/src/$package/include/$target\n";
+	warn  "rather than at /usr/src/$package/include/asm-$architecture\n";
+	$stop_and_read++;
+      }
+      else {
+	if (! symlink "asm-$architecture", 'asm') {
+	  warn "Could not link /usr/src/$package/include/asm:$!\n";
+	  warn "to /usr/src/$package/include/asm-$architecture\n";
+	  $stop_and_read++;
+	}
+      }
+    }
+  }
+}
+
+
+
+# Test if we need to do anything at all. This test and exit make us
+# idempotent. 
+
+if (-l 'linux') {
+
+  my $old_target='';
+  $old_target = readlink('linux') if -e 'linux';
+  die "could not read link /usr/src/linux:$!" unless defined $old_target;
+
+  ## Another paranoid check before we do anything:
+  if ("$old_target" ne "$package") {
+    if (-e 'linux') {
+      if (! unlink 'linux') {
+	print STDERR <<"ERR";
   Could not remove /usr/src/linux to relink:$!
   Please change permissions and reconfigure $package.
 ERR
-      exit 1;
-    }
-  }
-  if (-e "linux-$version" ){
-    if (! unlink "linux-$version") {
-      print STDERR <<"ERR";
-  Could not remove /usr/src/linux-$version to relink:$!
-  Please change permissions and reconfigure $package.
-ERR
-      exit 1;
+  $stop_and_read++;
+      }
     }
   }
 }
@@ -147,72 +112,66 @@ if (! -e 'linux') {
   Please add the link by hand.
 ERR
   ;
+    $stop_and_read++;
+  }
+}
+
+if (stop_and_read) {
+  my $answer;
+  print STDERR " Please Hit return to continue.";
+  $answer = <STDIN>;
+}
+
+if (-e "linux-$version" && ! -l "linux-$version" ) {
+  my $answer;
+  print STDERR <<"EOF";
+ Error configuring $package: /usr/src/linux-$version does not seem to
+       be a symbolic link, possibly from an old package or a left-over
+       from a user installed kernel. Please remove
+       /usr/src/linux-$version and try to reconfigure $package.
+       (Look at /usr/doc/$package/LinkPolicy for details; local source
+       should, in general, be kept in /usr/local/src)
+
+EOF
+  ;
+  
+  print STDERR " Please Hit return to continue.";
+  $answer = <STDIN>;
+  exit 1;
+}
+
+if (-e "linux-$version" ){
+  if (! unlink "linux-$version") {
+    print STDERR <<"ERR";
+  Could not remove /usr/src/linux-$version to relink:$!
+  Please change permissions and reconfigure $package.
+ERR
+  ;
+    my $answer;
+    print STDERR " Please Hit return to continue.";
+    $answer = <STDIN>;
+    exit 1;
   }
 }
 
 # make sure the linux-version link exists
 if (! -e "linux-$version") {
   if (! symlink $package, "linux-$version") {
+    my $answer;
     print STDERR <<"ERR";
   Could not link /usr/src/$package to /usr/src/linux-$version.  
   Please add the link by hand.
 ERR
   ;
+    print STDERR " Please Hit return to continue.";
+    $answer = <STDIN>;
+    exit 1;;
   }
 }
 
-if (open(REGISTRY,"/usr/src/.linux-versions")) {
-  $/ = 0777;
-  my $name=<REGISTRY>;
-  close (REGISTRY);
-  if ($name !~ m/$package/) {
-    if (open(REGISTRY,">>/usr/src/.linux-versions")) {
-      print REGISTRY "$package\n";
-      close(REGISTRY);
-    }
-    else {
-      warn "Error registering $package in /usr/src/.linux-versions: $!";
-    }
-  }
-}
-else {
-  warn "Error registering $package in /usr/src/.linux-versions: $!"; 
-}
 
-chdir "/usr/src/$package/include" ||
-  die "Could not chdir to  /usr/src/$package/include:$!";
+exit 0;
 
-my $architecture;
-chop ($architecture = `dpkg --print-architecture`);
-
-if (! -d "asm-$architecture") {
-  warn "/usr/src/$package/include/asm-$architecture does not exist.\n";
-  exit 0;
-}
-
-if (-e 'asm') {
-  if (! -l 'asm') {
-    warn "/usr/src/$package/include/asm is not a symlink.\n";
-    exit 0;
-  }
-  else {
-    my $target=readlink 'asm';
-    if ("$target" eq "asm-$architecture") {
-      exit 0;
-    }
-    if (! unlink 'asm') {
-      warn "could not unlink /usr/src/$package/include/asm: $!\n";
-      warn "It points to /usr/src/$package/include/$target\n";
-      die  "rather than at /usr/src/$package/include/asm-$architecture\n";
-    }
-  }
-}
-if (! symlink "asm-$architecture", 'asm') {
-  warn "Could not link /usr/src/$package/include/asm:$!\n";
-  die "It should point to /usr/src/$package/include/asm-$architecture\n";
-}
-
-exit 0
 __END__
 
 
