@@ -1,3 +1,10 @@
+kernel-package (7.89) unstable; urgency=low
+
+  * Bah. Make vars are $(BLAH), not $BLAH. Silly typos. Thanks for the
+    catch go to James Mayer <james.mayer@acm.org>            closes: Bug#134921
+
+ -- Manoj Srivastava <srivasta@debian.org>  Wed, 20 Feb 2002 14:08:56 -0600
+
 kernel-package (7.88) unstable; urgency=low
 
   * ramdisk = 0 settings in lilo.conf prevent initrds from working

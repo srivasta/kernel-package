@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.155 2002/02/18 15:08:33 srivasta Exp $
+## $Id: rules,v 1.156 2002/02/20 20:09:04 srivasta Exp $
 ###############################################################################
 
 ifdef KPKG_ARCH
@@ -774,9 +774,9 @@ ifneq ($(strip $(CONCURRENCY_LEVEL)),)
 do_parallel = -j$(CONCURRENCY_LEVEL)
 
 # Well, I wish there was something better than guessing by version number
-CAN_DO_DEP_FAST=$(shell if   [ $VERSION -lt 2 ];    then echo '';  \
-                        elif [ $VERSION -gt 2 ];    then echo YES; \
-                        elif [ $PATCHLEVEL -lt 4 ]; then echo '';  \
+CAN_DO_DEP_FAST=$(shell if   [ $(VERSION) -lt 2 ];    then echo '';  \
+                        elif [ $(VERSION) -gt 2 ];    then echo YES; \
+                        elif [ $(PATCHLEVEL) -lt 4 ]; then echo '';  \
                         else                             echo YES; \
                         fi)
 ifneq ($(strip $(CAN_DO_DEP_FAST)),)
