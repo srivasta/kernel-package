@@ -5,14 +5,14 @@
 # Created On       : Sat Apr 27 05:55:26 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Fri Nov  2 02:22:02 2001
+# Last Modified On : Tue Nov 13 13:38:14 2001
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 218
+# Update Count     : 219
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
 #
-#    $Id: image.postinst,v 1.85 2001/11/12 18:38:46 srivasta Exp $
+#    $Id: image.postinst,v 1.86 2001/11/13 19:39:42 srivasta Exp $
 #
 
 #
@@ -647,7 +647,7 @@ if ( -d "/lib/modules/$version" ) {
 # The initrd symlink should probably be in the same dir that the
 # symlinks are in
 if ($initrd) {
-  my $ret = system("mkinitrd -o " . $realimageloc . "initrd-$version " .
+  my $ret = system("mkinitrd -o " . $realimageloc . "initrd.img-$version " .
 		   "/lib/modules/$version");
   die("Failed to create initrd image.\n") if $ret;
 
