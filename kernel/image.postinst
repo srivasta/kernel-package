@@ -5,14 +5,14 @@
 # Created On       : Sat Apr 27 05:55:26 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Wed Jan 26 03:54:28 2000
+# Last Modified On : Mon Feb  7 00:55:23 2000
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 108
+# Update Count     : 110
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
 # 
-#    $Id: image.postinst,v 1.33 2000/02/01 07:59:09 srivasta Exp $
+#    $Id: image.postinst,v 1.34 2000/02/07 06:59:14 srivasta Exp $
 #
 
 # 
@@ -270,7 +270,7 @@ EOFERRONE
 	  exit 1;
 	}
 	else {
-	  system "cp", "-ab", "--version-control=t",
+	  system "cp", "-a", "--backup=t",
 	  "/usr/doc/kernel-image-$version",
 	  "/usr/share/doc/kernel-image-$version/.." ||
 	    die "Error copying files over: $?";

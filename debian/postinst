@@ -55,7 +55,7 @@ EOF
 			    exit 1;
 			    ;;
 			*)
-			     cp -ab --version-control=t \
+			     cp -a --backup=t \
 				/usr/doc/$package_name  \
 				    /usr/share/doc/$package_name/.. ;
 			    rm -rf /usr/doc/$package_name;

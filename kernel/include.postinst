@@ -5,16 +5,16 @@
 # Created On       : Sat Apr 27 05:42:43 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Wed Feb 18 17:07:43 1998
-# Last Machine Used: tiamat.datasync.com
-# Update Count     : 25
+# Last Modified On : Mon Feb  7 00:57:58 2000
+# Last Machine Used: glaurung.green-gryphon.com
+# Update Count     : 27
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
 # 
 # 
 #
-#    $Id: include.postinst,v 1.13 1999/10/09 04:43:28 srivasta Exp $
+#    $Id: include.postinst,v 1.14 2000/02/07 06:59:14 srivasta Exp $
 #
 
 
@@ -108,7 +108,7 @@ EOFERRONE
 	  exit 1;
 	}
 	else {
-	  system "cp", "-ab", "--version-control=t",
+	  system "cp", "-a", "--backup=t",
 	  "/usr/doc/$package",
 	  "/usr/share/doc/$package/.." ||
 	    die "Error copying files over: $?";
