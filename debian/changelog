@@ -6,8 +6,12 @@ kernel-package (8.001) unstable; urgency=low
   * Added a run-parts ./debian/image.d/ to allow patches to install
     arbitary files (like /boot/Kerntypes-${KVERSION}) in the deb, or take
     other action.                                            closes: Bug#145695
+  * For initrd images, do not remove modules.dep even on depmod
+    failure. Instead, issue dire warnings spelling out the effect of a
+    malfunctioning or missing modules.dep. For non-initrd kernels, just
+    delete modules.dep as always, it gets recreated on boot. closes: Bug#145739
 
- -- Manoj Srivastava <srivasta@debian.org>  Fri,  3 May 2002 16:10:28 -0500
+ -- Manoj Srivastava <srivasta@debian.org>  Sat,  4 May 2002 14:16:39 -0500
 
 kernel-package (7.112) unstable; urgency=medium
 

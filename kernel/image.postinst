@@ -5,14 +5,14 @@
 # Created On       : Sat Apr 27 05:55:26 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Thu Apr 25 01:43:23 2002
+# Last Modified On : Sat May  4 13:50:19 2002
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 236
+# Update Count     : 238
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
 #
-#    $Id: image.postinst,v 1.106 2002/04/25 07:29:25 srivasta Exp $
+#    $Id: image.postinst,v 1.107 2002/05/04 19:20:30 srivasta Exp $
 #
 
 #
@@ -720,17 +720,33 @@ EOFERR
 # We may not have any modules installed
 if ( -d "/lib/modules/$version" ) {
   my $ret = system("depmod -a -F $realimageloc/System.map-$version $version");
-  # my $exit_value  = $? >> 8;
-  # my $signal_num  = $? & 127;
-  # my $dumped_core = $? & 128;
+  my $exit_value  = $? >> 8;
+  my $signal_num  = $? & 127;
+  my $dumped_core = $? & 128;
   if ($ret) {
     if ( -f "/lib/modules/$version/modules.dep") {
-      unlink "/lib/modules/$version/modules.dep";
+      unlink "/lib/modules/$version/modules.dep" unless $initrd;
     }
     print "There was a problem running depmod.  This may be benign, \n";
     print "(You may have versioned symbol names, for instance).\n";
-    print "Or this could be an error. In any case, since depmod is \n";
-    print "run at install time, we could just defer running depmod\n";
+    print "Or this could be an error.\n";
+    print "\tdepmod exited with return value $exit_value\n";
+    print "\tdepmod got a signal $signal_num \n" if $signal_num ;
+    print "\tdepmod dumped core \n" if $dumped_core ;
+    if ($initrd) {
+      print "Since this image uses initrd, I am not deleting the file\n";
+      print "/lib/modules/$version/modules.dep. However, there is no\n";
+      print "guarantee that the file is valid. I would strongly advice\n";
+      print "you to either abort and fix the errors in depmod, or \n";
+      print "regenerate the initrd image with a known good modules.dep\n";
+      print "file. I repeat, an initrd kenrel image with a bad modules.dep\n";
+      print "shall fail to boot.\n";
+    }
+    else {
+      print "In any case, since depmod is run at install time, \n";
+      print "we could just defer running depmod\n";
+    }
+
     if (&ask_y("Would you like to abort now")) {
       exit (1);
     }
@@ -1166,9 +1182,10 @@ else
 # creating some info about kernel and initrd
 my $ksize=sprintf("%.0f",(stat($realimageloc .
 			       "$kimage-$version"))[7]/1024)."kB";
+my $initrdsize='';
 if ($initrd) {
-  my $initrdsize=sprintf("%.0f",(stat($realimageloc .
-				      "initrd.img-$version"))[7]/1024)."kB";
+  $initrdsize=sprintf("%.0f",(stat($realimageloc .
+				   "initrd.img-$version"))[7]/1024)."kB";
 }
 
 
