@@ -949,7 +949,7 @@ else {                          # Not making an initrd emage
     }
     else {
       if (-l "initrd.img.old" || ! -e "initrd.img.old" )      {
-        rename("initrd.img", "initrd.old");
+        rename("initrd.img", "initrd.img.old");
       }
       else      {
         warn "initrd.img.old is not a symlink, not clobbering\n";

@@ -37,7 +37,8 @@ _make_kpkg()
     [[ "$CROSS_COMPILE" ]] && paroptions=${paroptions//--cross[-_]compile}
     [[ "$KPKG_ARCH" ]] && paroptions=${paroptions/--arch}
     [[ "$KPKG_SUBARCH" ]] && paroptions=${paroptions/--subarch}
-    [[ $( grep CONFIG_BLK_DEV_INITRD .config | cut -d= -f2) == "y" ]] && \
+    [[ $(grep CONFIG_BLK_DEV_INITRD .config 2>/dev/null \
+        | cut -d= -f2) == "y" ]] && \
 	[[ "$INITRD" == "YES" ]] && paroptions=${paroptions/--initrd}
 
     for (( i=0; i < ${#COMP_WORDS}-1; i++ )); do
