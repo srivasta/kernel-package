@@ -1,3 +1,11 @@
+kernel-package (8.6) unstable; urgency=low
+
+  * Fix typo in postrm. closes: Bug#156579, Bug#156927, Bug#156853, Bug#157132
+  * Also closes: Bug#157101, Bug#157087, Bug#156292
+  * Clean first, then unpatch.                               closes: Bug#157099
+
+ -- Manoj Srivastava <srivasta@debian.org>  Sun, 18 Aug 2002 04:05:01 -0500
+
 kernel-package (8.005) unstable; urgency=low
 
   * Fixed a typo in image postinst, allowing us to make relative links. 

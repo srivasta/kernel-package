@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.180 2002/08/09 03:38:59 srivasta Exp $
+## $Id: rules,v 1.181 2002/08/18 09:05:18 srivasta Exp $
 ###############################################################################
 
 ifdef KPKG_ARCH
@@ -1228,16 +1228,16 @@ clean:
 # only unpatch what we have applied? That would be changed, though saner,
 # behaviour
 real_stamp_clean:
+	rm -f $(FILES_TO_CLEAN) $(STAMPS_TO_CLEAN)
+	test ! -f .config || cp -pf .config config.precious
+	-test -f Makefile && \
+            $(MAKE) $(FLAV_ARG) $(EXTRAV_ARG) ARCH=$(KERNEL_ARCH) distclean
 ifeq ($(strip $(patch_the_kernel)),YES)
 	$(deb_rule) unpatch_now
 endif
 ifeq ($(strip $(NO_UNPATCH_BY_DEFAULT)),)
 	(test -f stamp-patch && $(deb_rule) unpatch_now) || true
 endif
-	rm -f $(FILES_TO_CLEAN) $(STAMPS_TO_CLEAN)
-	test ! -f .config || cp -pf .config config.precious
-	-test -f Makefile && \
-            $(MAKE) $(FLAV_ARG) $(EXTRAV_ARG) ARCH=$(KERNEL_ARCH) distclean
 	test ! -f config.precious || mv -f config.precious .config
 	rm -rf $(DIRS_TO_CLEAN)
 	-test -f stamp-building || test -f debian/official || rm -rf debian
