@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Mon Nov 10 11:02:58 1997
+## Last Modified On : Mon Dec  1 13:47:54 1997
 ## Last Machine Used: tiamat.datasync.com
-## Update Count	    : 204
+## Update Count	    : 205
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.16 1997/11/10 17:40:48 srivasta Exp $
+## $Id: rules,v 1.17 1997/12/01 19:54:10 srivasta Exp $
 ###############################################################################
 
 # The version of kernel-package this belongs to
@@ -228,7 +228,7 @@ all build: configure
 # Builds the binary package.
 # debian.config contains the current idea of what the image should
 # have.
-	-test ! -f stamp-configure || $(deb_rule) configure
+	-test -f stamp-configure || $(deb_rule) configure
 	make $(kimage)
 ifdef MODULES_ENABLED
 	make  modules
