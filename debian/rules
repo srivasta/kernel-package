@@ -14,7 +14,7 @@
 ##
 ###############################################################################
 
-#    $Id: rules,v 1.5 1997/08/04 19:17:15 srivasta Exp $
+#    $Id: rules,v 1.6 1997/08/29 17:12:13 srivasta Exp $
 
 
 # Please change the maintainer information, as well as the debian version
@@ -49,9 +49,9 @@ DEBDIR := $(LIBLOC)
 DEBDIR_NAME:= $(shell basename $(DEBDIR))
 
 # install commands
-install_file= install -o root -g root -m 644
-install_program= install -o root -g root -m 755
-make_directory= install -d -o root -g root -m 755
+install_file= install -p -o root -g root -m 644
+install_program= install -p -o root -g root -m 755
+make_directory= install -p -d -o root -g root -m 755
 
 
 all build:
