@@ -1,3 +1,20 @@
+kernel-package (8.005) unstable; urgency=low
+
+  * Fixed a typo in image postinst, allowing us to make relative links. 
+                                                             closes: Bug#153788
+  * Ask before unlinking modules.dep if we have initrd.      closes: Bug#154648
+  * The postrm now knows that the initrd symlinks are in the same place
+    that the image symlinks are.                             closes: Bug#150777
+  * fix implementation of automated patcheing so that the configuration
+    variable patch_the_kernel can be set to AUTO as well, not just the env
+    variable. Caught by ingo at gmx.net as well.             closes: Bug#152653
+  * Added big warnings that the initrd option requires a non-standard
+    cramfs patch, enerally shipped with Debian supplied kernel sources,
+    but not in the upstream sources.                         closes: Bug#149236
+  * Make the patches unapply in reverse order                closes: Bug#151862
+
+ -- Manoj Srivastava <srivasta@debian.org>  Thu,  8 Aug 2002 22:38:41 -0500
+
 kernel-package (8.004) unstable; urgency=low
 
   * Mention that the symbolic links are not manipulated when the package
