@@ -1,4 +1,4 @@
-kernel-package (8.033) unstable; urgency=low
+kernel-package (8.033) unstable; urgency=high
 
   * Fixed missing space before right bracket errors pointed out by Daniel
     Schepler, which completely broke things for 2.4.20 kernels 
