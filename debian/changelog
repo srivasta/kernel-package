@@ -1,3 +1,34 @@
+kernel-package (3.62) unstable; urgency=low
+
+  * Mentioned rootcmd and fakeroot in the README. Mention where one need
+    to be root all over too.
+  * Added error message from a machine that need the --zimage option to
+    the Problems file.
+  * Mentioned in the rationale that the kernel image configuration files
+    are kept in /boot for further reference.
+  * Modified README.headers to indicate why kernel-source did not provide
+    the headers required by libc6, but kernel-headers does.
+  * Brought the headers README upto date
+  * Make the kernel-image suggest SILo on the sparcs rather than LILO.
+
+    Made a series of changes for sparc architecture machines. Since the
+    patches are hand installed, please test this version carefully
+  
+  * Added documentaion for actiosn take for SILO
+  * Created a special config.sparc for sparc machines
+  * Changed the image prerm to look for and deal with silo as well as lilo
+    installations
+  * Major changes in image.postinst for SILO. 
+  * Added loader specific variables, and passed them in to the control
+    file and to the postinst scripts. Added support for config.sparc. Make
+    the unpatch happen before cleaning out the debian directory. Do not
+    remove the debian directory after applying the kernel patch. Make
+    kernel-doc in the binary-indeo area. Let sparcs also have compressed
+    kernels
+  * closes: Bug#18845, Bug:18846
+
+ -- Manoj Srivastava <srivasta@debian.org>  Thu,  5 Mar 1998 17:08:04 -0600
+
 kernel-package (3.61) unstable; urgency=low
 
   * There were bugs in 3.60, which are fixed in this release. Since the
