@@ -19,7 +19,7 @@
 #                          sed 's/^Version: *//')
 #
 
-#    $Id: rules,v 1.14 1999/07/14 15:26:10 srivasta Exp $
+#    $Id: rules,v 1.15 1999/07/14 15:28:07 srivasta Exp $
 
 
 # Please change the maintainer information, as well as the debian version
@@ -54,7 +54,7 @@ DEBDIR     := $(LIBLOC)
 DEBDIR_NAME:= $(shell basename $(DEBDIR))
 
 DOCDIR  = debian/tmp/usr/doc/$(package)
-MAN2DIR = debian/tmp/usr/share/man/man1
+MAN1DIR = debian/tmp/usr/share/man/man1
 MAN5DIR = debian/tmp/usr/share/man/man5
 MAN8DIR = debian/tmp/usr/share/man/man8
 
