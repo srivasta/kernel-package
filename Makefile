@@ -4,9 +4,9 @@
 ## Created On       : Tue Nov 18 15:53:52 2003
 ## Created On Node  : glaurung.green-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Tue Nov 18 17:56:39 2003
+## Last Modified On : Sat Dec  6 17:15:29 2003
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count     : 11
+## Update Count     : 13
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : 
@@ -100,7 +100,7 @@ install:
            (cd             $(prefix)/usr/share/$(package);\
                            tar xf -))
 	$(install_file)    Rationale $(prefix)/usr/share/$(package)/
-	# Hack, tell the   rules file what version of kernel package it is
+# Hack, tell the   rules file what version of kernel package it is
 	sed -e             's/=K=V/$(version)/' kernel/rules > \
                               $(prefix)/usr/share/$(package)/rules
 
