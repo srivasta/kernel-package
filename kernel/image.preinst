@@ -110,7 +110,7 @@ EOF
   ;
     print STDERR "Do you want to stop now? [Y/n]";
     my $answer = <STDIN>;
-    print STDERR "Ok, Aborting\n" if $answer =~ /^n/i;
+    print STDERR "Ok, Aborting\n" unless $answer =~ /^n/i;
     exit 1 unless  $answer =~ /^n/i;
   }
 }

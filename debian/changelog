@@ -1,3 +1,13 @@
+kernel-package (7.07) unstable; urgency=low
+
+  * Fix a (cosmetic) bug in the preinst that printed a message in the
+    wrong fork. closes: Bug#63409
+  * Hmm. chdir to / before testing whether something is a directory. test
+    for it being a dir before stripping the leading / off. Either one of
+    these changes would fix the bugs reported. closes: Bug#63419, Bug#63388
+
+ -- Manoj Srivastava <srivasta@debian.org>  Wed,  3 May 2000 01:45:29 -0500
+
 kernel-package (7.06) unstable; urgency=low
 
   * Somehow, kernel-doc-blah was never made to have /usr/doc links; it is

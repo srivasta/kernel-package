@@ -12,7 +12,7 @@
 # HISTORY          : 
 # Description      : 
 # 
-#    $Id: image.postinst,v 1.46 2000/04/30 08:14:35 srivasta Exp $
+#    $Id: image.postinst,v 1.47 2000/05/03 06:52:56 srivasta Exp $
 #
 
 # 
@@ -50,6 +50,11 @@ my $realimageloc  = "$image_dir/";
 my $have_conffile = "";
 my $CONF_LOC      = '/etc/kernel-img.conf';
 
+# Ignore all invocations uxcept when called on to configure.
+exit 0 unless $ARGV[0] =~ /configure/;
+
+chdir('/')           or die "could not chdir to /:$!\n";
+
 if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
   if (open(CONF, "$CONF_LOC")) {
     while (<CONF>) {
@@ -79,6 +84,12 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
   }
 }
 
+if (! -d "$image_dest") {
+  die "Expected Image Destination dir ($image_dest) to be a valid directory!\n";
+}
+if (! -d $image_dir) {
+  die "Internal Error: ($image_dir) is not a directory!\n";
+}
 
 if (! $image_dir) {
   $image_dir         = "boot"  
@@ -92,15 +103,6 @@ if ($image_in_boot) {
   $realimageloc = "";
 }
 
-# Ignore all invocations uxcept when called on to configure.
-exit 0 unless $ARGV[0] =~ /configure/;
-
-if (! -d "$image_dest") {
-  die "Expected Image Destination dir ($image_dest) to be a valid directory!\n";
-}
-if (! -d $image_dir) {
-  die "Internal Error: ($image_dir) is not a directory!\n";
-}
 
 # most of our work is done in $image_dest
 chdir("$image_dest") or die "could not chdir to $image_dest:$!\n";
