@@ -5,16 +5,16 @@
 # Created On       : Mon Jun 17 01:10:11 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Wed Jan 21 03:47:18 1998
+# Last Modified On : Thu Jan 29 19:07:16 1998
 # Last Machine Used: tiamat.datasync.com
-# Update Count     : 95
+# Update Count     : 96
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
 #
 #
 #
-#    $Id: make-kpkg,v 1.10 1998/01/21 09:49:35 srivasta Exp $
+#    $Id: make-kpkg,v 1.11 1998/01/30 01:26:45 srivasta Exp $
 #
 require 5.002;
 use strict;
@@ -29,7 +29,7 @@ make-kpkg - build Debian kernel packages from Linux kernel sources.
 ($main::MYNAME     = $main::0) =~ s|.*/||;
 $main::Author      = "Manoj Srivastava";
 $main::AuthorMail  = "srivasta\@debian.org";
-$main::Version     = '$Revision: 1.10 $ ';
+$main::Version     = '$Revision: 1.11 $ ';
 
 my $help_opt=0; 
 my $revision=0; 
@@ -46,7 +46,7 @@ my %option_ctl = ("help"       => \$help_opt,
 		  "pgpsign=s"  => \$signature,
 		  "targets"    => \$targ_opt,
 		  "zimage"     => \$zimage,
-		  "rootcmd"    => \$root_cmd,
+		  "rootcmd=s"  => \$root_cmd,
 		  "bzimage"    => \$bzimage
 		 );
 
@@ -420,7 +420,7 @@ sub main (){
       print STDERR "Warning: The rootcmd option (set to ($root_cmd)is\n"; 
       print STDERR "only valid for the buildpackage target.\n"; 
       print STDERR "Please hit return to continue\n";
-      my $ans = <>;
+      my $ans = <STDIN>;
     }
   }
   # Fine. Now we check targets.
