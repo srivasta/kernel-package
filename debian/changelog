@@ -6,9 +6,7 @@ kernel-package (6.40) frozen unstable; urgency=low
     modules when we can. The cases we can't use the kernel makefile is for
     2.0.XX and older kernels (since the prefix to modlib was not present
     then). closes: Bug#59516
-  * Fixed some typos. Since the bug report did ot indicate what the typos
-    were, and I am  not inclined to play guessing games, I am assuming the
-    typos fixed were what the reporter intended. closes: Bug#59528
+  * Fixed some typos. closes: Bug#59528
 
  -- Manoj Srivastava <srivasta@debian.org>  Fri,  3 Mar 2000 09:55:47 -0600
 
