@@ -12,7 +12,7 @@
 # HISTORY          : 
 # Description      : 
 # 
-#    $Id: image.postinst,v 1.38 2000/03/03 16:03:56 srivasta Exp $
+#    $Id: image.postinst,v 1.39 2000/03/03 16:06:18 srivasta Exp $
 #
 
 # 
@@ -374,7 +374,7 @@ close(FSTAB);
 if (! defined($rootdevice)) {
   my $answer;
   print "Could not find where the current root file system is mounted!\n";
-  print "Please make some arrangement for your system to boot the new \n";
+  print "Please make some arrangements for your system to boot the new\n";
   print "kernel (like running LILO, loadlin, SILO, QUIK, or getting a \n";
   print "boot floppy).                                                \n"; 
   print "Please hit return to continue.                               \n";
@@ -402,7 +402,7 @@ if ( ! -x "/sbin/$loader" ) {
   printf ", which is the boot loader I    \n";
   print "have additional help for, is not installed (it is, after all,\n";
   print "just one of many options). I am assuming you have made some  \n"; 
-  print "other arrangements for your system to boot the new kernel    \n";
+  print "other arrangements for your system to boot the new kernel.   \n";
   print "Please hit return to continue.                               \n";
   my $answer = <STDIN>;
   exit (0) unless defined $rootdevice;
