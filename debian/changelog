@@ -1,3 +1,13 @@
+kernel-package (3.47) unstable; urgency=low
+
+  * Added HAM modules to the module we know about, these were introduced
+    in 2.1.70.
+  * Added configure as a valid target to make-kpkg, so people can
+    make sure that edits to configuration files are not stomped over by
+    make-kpkg (most people can ignore this)
+
+ -- Manoj Srivastava <srivasta@debian.org>  Tue,  9 Dec 1997 23:27:04 -0600
+
 kernel-package (3.46) unstable; urgency=low
 
   * Because of new option rootcmd (for sudo and fakeroot and such), one
