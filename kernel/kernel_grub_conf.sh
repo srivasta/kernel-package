@@ -46,7 +46,7 @@ kernel_not_on_root_partition=''
 kernel_boot_options=''
 
 if [ -e $CONFIG_FILE ]; then
-    source $CONFIG_FILE
+    . $CONFIG_FILE
 fi
 
 if [ $# -ne 2 ]; then

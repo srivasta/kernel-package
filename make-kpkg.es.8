@@ -28,7 +28,7 @@
 .\" (c) 2003 Software in the Public Interest
 .\" Esta traducción ha sido realizada por Rubén Porras Campo <nahoo@inicia.es>
 .\" Está basada en la página de manual original:
-.\" versión 1.17 del CVS de
+.\" versión 1.18 del CVS de
 .\" /cvs/debian-doc/manpages/english/kernel-package/make-kpkg.8
 .\" Revisada por Rudy Godoy <rudy@kernel-panik.org>
 
@@ -55,7 +55,7 @@ como convertirse en superusuario, por ejemplo:
 make\-kpkg \-\-rootcmd fakeroot kernel_image
 .sp 1
 El paquete Debian se crea en el directorio padre al directorio donde se ejecute
-.B make\-kpkg.
+esta orden.
 .PP
 También, tenga en cuenta que algunas versiones de gcc no interaccionan bien con
 las fuentes del núcleo (gcc 2.95 tiene problemas compilando el núcleo sin la
@@ -362,9 +362,7 @@ a cualquier valor no nulo.
 Para evitar el aviso en tiempo de instalación, lea kernel\-img.conf(5), y añada
 una directiva
 .I warn_initrd 
-en ese fichero. Para evitar el aviso en tiempo de compilación, establezca la
-variable de entorno
-.B INITRD_OK.
+en ese fichero.
 .TP
 .B \-\-zimage
 Crea una imagen del núcleo del tipo zImage en vez de bzImage (predeterminada).
@@ -552,9 +550,11 @@ Este objetivo permite construir todos los módulos añadidos y paquetes muy
 dependientes de la versión del núcleo para la que han sido compilados al mismo
 tiempo que se genera la imagen del núcleo. Este objetivo espera encontrar los
 módulos o paquetes bajo /usr/src/modules, y, para todos los subdirectorios,
-cambia a /usr/src/modules/x, ejecuta
+cambia a MODULE_LOC/x (MODULE_LOC de forma predeterminada es
+.I /usr/src/modules
+), y ejecuta la regla
 .B kdist
-rule en el fichero local 
+en el fichero local 
 .I debian.rules.
 Este objetivo debe crear uno o varios paquetes
 .B Debian
@@ -569,12 +569,16 @@ los archivos de Debian.
 .TP
 .B modules_config
 Este objetivo permite configurar todos los paquetes debajo de
+.B MODULE_LOC,
+que de forma predeterminada es
 .B /usr/src/modules.
 Esto es útil si necesita modificar manualmente algunos aspectos de
 configuración, o si quiere compilar manualmente los módulos añadidos.
 .TP
 .B modules_image
 Este objetivo permite construir todos los paquetes debajo de
+.B MODULE_LOC,
+que de forma predeterminada es
 .B /usr/src/modules,
 pero no crea las fuentes o los ficheros diff, tampoco crea ni firma el fichero
 de cambios. Ésta es la única opción relacionada con los módulos que necesita si
@@ -587,6 +591,8 @@ especialmente si además se usa la opción
 .TP
 .B modules_clean
 Este objetivo permite limpiar todos los paquetes bajo
+.B MODULE_LOC,
+que de forma predeterminada es
 .B /usr/src/modules,
 debería de ser todo lo necesario para deshacer el efecto de cualquiera de los
 otros objetivos modules_.

@@ -27,7 +27,7 @@
 .\" (c) 2003 Software in the Public Interest
 .\" Esta traducción ha sido realizada por Rubén Porras <nahoo@inicia.es>
 .\" Está basada en la página de manual original:
-.\" versión 1.9 del CVS de
+.\" versión 1.10 del CVS de
 .\" /cvs/debian-doc/manpages/english/kernel-package/kernel-img.conf.5 
 .\" Revisada por Rudy Godoy <rudy@kernel-panik.org>
 
@@ -209,11 +209,11 @@ A diferencia de las otras variables hook, éste es para un script que se ejecuta
 durante el postinst de un paquete de documentación, de cabeceras, o fuente. El
 uso de esta variable en paquetes con cabeceras ahora está desaconsejado, en algún
 momento el script de postinst del paquete con las cabeceras sólo deberá ejecutar
-headers_postinst_hook.
+header_postinst_hook.
 Este script necesita dos argumentos, el primero es el
 .I nombre
-del paquete que se esta instalando (podría ser kernel\-source\-X.X.XX o
-kernel\-headers\-X.X.XX), y el segundo argumento es la
+del paquete que se esta instalando (kernel\-headers\-X.X.XX), y el segundo
+argumento es la
 .I versión
 del paquete que esta siendo instalado. Los errores en el script sólo producirán
 un mensaje de aviso.
@@ -359,7 +359,7 @@ cancelar la instalación si se detecta previamente un directorio
 existente. Por omisión no está establecido.
 .TP
 .B silent_loader
-Si está establecido, está opción hará que se omita la pregunta realizada antes
+Si está establecida, está opción hará que se omita la pregunta realizada antes
 de ejecutar el gestor de arranque durante el proceso de instalación. Esta opción
 no afecta a que el gestor de arranque sea o no ejecutado (lea
 .B do_bootloader
@@ -367,7 +367,7 @@ para entender como controlarlo, la ausencia de un fichero de configuración hará
 el proceso de instalación ameno e interactivo).
 .TP
 .B ignore_depmod_error
-Si está establecido, no pide confirmación para continuar después de un problema
+Si está establecida, no pide confirmación para continuar después de un problema
 con depmod en el script de post\-instalación. Esto facilita las instalaciones
 automatizadas, aunque puede enmascarar algún problema con la imagen del
 núcleo. De todas formas todavía se muestra un diagnóstico. 

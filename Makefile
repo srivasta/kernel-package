@@ -35,6 +35,9 @@ MAN8DIR    = $(prefix)/usr/share/man/man8
 ES_MAN1DIR = $(prefix)/usr/share/man/es/man1
 ES_MAN5DIR = $(prefix)/usr/share/man/es/man5
 ES_MAN8DIR = $(prefix)/usr/share/man/es/man8
+FR_MAN1DIR = $(prefix)/usr/share/man/fr/man1
+FR_MAN5DIR = $(prefix)/usr/share/man/fr/man5
+FR_MAN8DIR = $(prefix)/usr/share/man/fr/man8
 
 
 
@@ -65,6 +68,9 @@ install:
 	$(make_directory)  $(ES_MAN1DIR)
 	$(make_directory)  $(ES_MAN5DIR)
 	$(make_directory)  $(ES_MAN8DIR)
+	$(make_directory)  $(FR_MAN1DIR)
+	$(make_directory)  $(FR_MAN5DIR)
+	$(make_directory)  $(FR_MAN8DIR)
 	$(make_directory)  $(DOCDIR)
 	$(make_directory)  $(BASH_DIR)
 	$(make_directory)  $(prefix)/usr/bin
@@ -94,6 +100,12 @@ install:
 	$(install_file)    make-kpkg.es.8       	   $(ES_MAN1DIR)/make-kpkg.1
 	$(install_file)    kernel-packageconfig.es.8     \
                                                      $(ES_MAN8DIR)/kernel-packageconfig.8 
+	$(install_file)    kernel-pkg.conf.fr.5 	   $(FR_MAN5DIR)/kernel-pkg.conf.5 
+	$(install_file)    kernel-img.conf.fr.5 	   $(FR_MAN5DIR)/kernel-img.conf.5
+	$(install_file)    kernel-package.fr.5  	   $(FR_MAN5DIR)/kernel-package.5  
+	$(install_file)    make-kpkg.fr.8       	   $(FR_MAN1DIR)/make-kpkg.1
+	$(install_file)    kernel-packageconfig.fr.8     \
+                                                     $(FR_MAN8DIR)/kernel-packageconfig.8 
 	gzip -9fqr         $(prefix)/usr/share/man
 	$(install_file)    kernel-pkg.conf $(prefix)/etc/kernel-pkg.conf
 	$(install_program) kernel-packageconfig \

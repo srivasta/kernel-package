@@ -176,13 +176,14 @@ if ($initrd) {
   if (!$initrd_cmd) {
     print STDERR <<EOERROR;
 
-You are attempting to install an initrd kernel image (version $version)
-but you do not seem to have a mkinitrd command in the path. This will
-break the installation. I am aborting now.
+You are attempting to install an initrd kernel image (version
+$version) but you do not seem to have a mkinitrd command in the
+path. This will break the installation, unless initrd-tools are also
+being installed right now.
 
 EOERROR
   ;
-    die "Could not find mkinitrd in path.";
+    warn "Could not find mkinitrd in path.";
   }
 }
 

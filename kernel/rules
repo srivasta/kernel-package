@@ -216,6 +216,19 @@ ifeq ($(strip $(architecture)),arm)
   kelfimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
 endif
 
+##### PowerPC64
+ifeq ($(strip $(architecture)), powerpc64)
+  KERNEL_ARCH=ppc64
+  kimage := vmlinux
+  loader=NoLoader
+  target = $(kimage)
+  kimagesrc = vmlinux
+  kimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
+  DEBCONFIG= $(CONFDIR)/config.$(KPKG_SUBARCH)
+  kelfimagesrc = vmlinux
+  kelfimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
+endif
+
 ### PowerPC
 ifneq ($(strip $(filter ppc powerpc,$(architecture))),)
   ifeq ($(DEB_BUILD_ARCH),powerpc)
