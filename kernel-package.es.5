@@ -21,13 +21,13 @@
 .\" Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139,
 .\" USA.
 .\"
-.\" $Id: kernel-package.es.5,v 1.1 2003/06/05 20:45:52 srivasta Exp $
+.\" $Id: kernel-package.es.5,v 1.2 2003/06/09 19:15:21 srivasta Exp $
 .\"
 
 .\" (c) 2003 Software in the Public Interest
-.\" Esta traducción ha sido realizada por Rubén Porras Campo <nahoo@inicia.es>
-.\" Está basada en la página de manual original:
-.\" versión 1.1 del CVS de
+.\" Esta traducciÃ³n ha sido realizada por RubÃ©n Porras Campo <nahoo@inicia.es>
+.\" EstÃ¡ basada en la pÃ¡gina de manual original:
+.\" versiÃ³n 1.1 del CVS de
 .\" /cvs/debian-doc/manpages/english/kernel-package/kernel-package.5
 .\" Revisada por Rudy Godoy <rudy@kernel-panik.org>
 
@@ -35,78 +35,78 @@
 .\" NAME should be all caps, SECTION should be 1-8, maybe w/ subsection
 .\" other parms are allowed: see man(7), man(1)
 .SH NOMBRE
-kernel\-package \- Sistema para crear paquetes relacionados con el núcleo.
-.SH "DESCRIPCIÓN"
+kernel\-package \- Sistema para crear paquetes relacionados con el nÃºcleo.
+.SH "DESCRIPCIÃ“N"
 El paquete 
 .B kernel-package
-nació con el objetivo de automatizar lo pasos rutinarios necesarios para
-compilar e instalar un núcleo personalizado. Si busca instrucciones de uso de
+naciÃ³ con el objetivo de automatizar lo pasos rutinarios necesarios para
+compilar e instalar un nÃºcleo personalizado. Si busca instrucciones de uso de
 .B kernel-package,
 consulte
 .B make-kpkg (1).
-Las instrucciones de configuración se encuentran en
+Las instrucciones de configuraciÃ³n se encuentran en
 .B kernel-pkg.conf(5).
 .SH "Ventajas de usar kernel-package"
 .RS
 .TP 
 .B i) Conveniencia
-Yo compilaba los núcleos manualmente, esto requería seguir una serie de pasos en
-orden, kernel-package se escribió para automatizar estos pasos (ahora el programa
+Yo compilaba los nÃºcleos manualmente, esto requerÃ­a seguir una serie de pasos en
+orden, kernel-package se escribiÃ³ para automatizar estos pasos (ahora el programa
 ha superado este objetivo, pero en esencia, esto es lo que hace). Especialmente
 importante para novatos:
 .B make-kpkg
-realiza todos los pasos necesarios para compilar el núcleo, y la instalación de
-núcleos es instantánea.
+realiza todos los pasos necesarios para compilar el nÃºcleo, y la instalaciÃ³n de
+nÃºcleos es instantÃ¡nea.
 .TP
-.B ii) Soporte para múltiples imágenes
-Permite mantener varias versiones de imágenes del núcleo sin ninguna dificultad.
+.B ii) Soporte para mÃºltiples imÃ¡genes
+Permite mantener varias versiones de imÃ¡genes del nÃºcleo sin ninguna dificultad.
 .TP
-.B iii) Múltiples sabores de la misma versión del núcleo
-Permite mantener varios sabores de la misma versión del núcleo (puede tener una
-versión 2.0.36 estable y una 2.0.36 parcheada con los últimos controladores sin
-necesidad de preocuparse de contaminar los módulos en
+.B iii) MÃºltiples sabores de la misma versiÃ³n del nÃºcleo
+Permite mantener varios sabores de la misma versiÃ³n del nÃºcleo (puede tener una
+versiÃ³n 2.0.36 estable y una 2.0.36 parcheada con los Ãºltimos controladores sin
+necesidad de preocuparse de contaminar los mÃ³dulos en
 .I /lib/modules).
 .TP
-.B iv) Comportamientos por omisión
+.B iv) Comportamientos por omisiÃ³n
 Sabe que algunas arquitecturas no tienen vmlinuz (usan vmlinux en su lugar),
 otras usan zImage en vez de bzImage, cuida de generar el objetivo apropiado y
 de mover los ficheros al sitio correcto.
 .TP
-.B v) Enganches de módulos
-Algunos otros paquetes para módulos del núcleo están enganchados en 
+.B v) Enganches de mÃ³dulos
+Algunos otros paquetes para mÃ³dulos del nÃºcleo estÃ¡n enganchados en 
 .B kernel-package,
-uno puede compilar sin precauciones, por ejemplo, los módulos
+uno puede compilar sin precauciones, por ejemplo, los mÃ³dulos
 .B pcmcia 
-al mismo tiempo que compila el núcleo, y estar seguro de que los módulos
+al mismo tiempo que compila el nÃºcleo, y estar seguro de que los mÃ³dulos
 compilados son compatibles.
 .TP
 .B vi) Soporte para dpkg
-Permite usar el sistema de gestión de paquetes para instalar los núcleos.
+Permite usar el sistema de gestiÃ³n de paquetes para instalar los nÃºcleos.
 make-kpkg crea un fichero .deb que posteriormente dpkg puede instalar por usted.
-Esto facilita la instalación de otros paquetes que dependen del núcleo.
+Esto facilita la instalaciÃ³n de otros paquetes que dependen del nÃºcleo.
 .TP
-.B vii) Seguir la configuración del núcleo
-Guarda la configuración de cada imagen del núcleo en
+.B vii) Seguir la configuraciÃ³n del nÃºcleo
+Guarda la configuraciÃ³n de cada imagen del nÃºcleo en
 .I /boot,
-ésta es parte del paquete que contiene la imagen, debido a esto la imagen del
-núcleo y su fichero de configuración siempre están juntos.
+Ã©sta es parte del paquete que contiene la imagen, debido a esto la imagen del
+nÃºcleo y su fichero de configuraciÃ³n siempre estÃ¡n juntos.
 .TP
-.B viii) Múltiples ficheros de configuración
-Permite especificar un directorio con ficheros de configuración, con ficheros de
-configuración separados para cada sub-arquitectura (incluso permite distintos
-ficheros de configuración para i386, i486, etc). Es realmente útil para
-aquellos que necesiten compilar núcleos para una variedad de arquitecturas.
+.B viii) MÃºltiples ficheros de configuraciÃ³n
+Permite especificar un directorio con ficheros de configuraciÃ³n, con ficheros de
+configuraciÃ³n separados para cada sub-arquitectura (incluso permite distintos
+ficheros de configuraciÃ³n para i386, i486, etc). Es realmente Ãºtil para
+aquellos que necesiten compilar nÃºcleos para una variedad de arquitecturas.
 .TP
-.B ix) Paquetes .deb auxiliares del núcleo
+.B ix) Paquetes .deb auxiliares del nÃºcleo
 Permite crear un paquete .deb con las cabeceras, o las fuentes, de esta forma
 pueden gestionarse mediante el sistema de paquetes (algunos paquetes dependen de
 esta habilidad).
 .TP
 .B x) Servicios de script para el desarrollador
-Puesto que el paquete con la imagen del núcleo es un paquete Debian en toda
-regla, éste incluye scripts del encargado del paquete, los cuales se ocuparán
-de ofrecer crear un disco de arranque, manipular los enlaces simbólicos en / de
-tal forma que los scripts del gestor de arranque puedan ser estáticos (sólo
+Puesto que el paquete con la imagen del nÃºcleo es un paquete Debian en toda
+regla, Ã©ste incluye scripts del encargado del paquete, los cuales se ocuparÃ¡n
+de ofrecer crear un disco de arranque, manipular los enlaces simbÃ³licos en / de
+tal forma que los scripts del gestor de arranque puedan ser estÃ¡ticos (sÃ³lo
 tienen que referirse al enlace en vez de al fichero real, los nombres de los
 enlaces no cambian con las versiones, pero si los ficheros reales con la imagen).
 .TP
@@ -114,42 +114,42 @@ enlaces no cambian con las versiones, pero si los ficheros reales con la imagen)
 Soporta varias arquitecturas que han florecido bajo m68k y power-PC.
 .TP
 .B xii) Soporte para kernel-patch
-Soporte para, opcionalmente aplicar parches al núcleo provistos como un
-fichero .deb de kernel-patch, y construir el núcleo parcheado de forma
-automática, mientras se mantiene un árbol con las fuentes del núcleo sin parches.
+Soporte para, opcionalmente aplicar parches al nÃºcleo provistos como un
+fichero .deb de kernel-patch, y construir el nÃºcleo parcheado de forma
+automÃ¡tica, mientras se mantiene un Ã¡rbol con las fuentes del nÃºcleo sin parches.
 .TP
-.B xiii) Imágenes de núcleo portables
-Permite compilar un núcleo para otro ordenador, por ejemplo usando un ordenador
-rápido para realizar la instalación en uno lento. Los módulos se incluyen en
+.B xiii) ImÃ¡genes de nÃºcleo portables
+Permite compilar un nÃºcleo para otro ordenador, por ejemplo usando un ordenador
+rÃ¡pido para realizar la instalaciÃ³n en uno lento. Los mÃ³dulos se incluyen en
 el .deb, de esta forma se evita tener que manejarlos manualmente.
 .TP
-.B xiv) Permite personalizar la instalación en el ordenador donde se instala
-El script de postinst mira en el fichero de configuración de la máquina donde va
-a ser instalado (no en la máquina donde se compiló) y permite al administrador
-local decidir respecto a los enlaces simbólicos, si debe de ejecutar el gestor
+.B xiv) Permite personalizar la instalaciÃ³n en el ordenador donde se instala
+El script de postinst mira en el fichero de configuraciÃ³n de la mÃ¡quina donde va
+a ser instalado (no en la mÃ¡quina donde se compilÃ³) y permite al administrador
+local decidir respecto a los enlaces simbÃ³licos, si debe de ejecutar el gestor
 de arranque, o si desea crear un disquete de arranque.
 .TP
-.B  xv) Enganches de ejecución
-Los scripts de postinst y postrm permiten al administrador local añadir un
-script a los enganches de ejecución, esto puede permitir, entre otras cosas, que
-los usuarios de grub añadan y eliminen la sección con la imagen del núcleo del
-menú de grub (se encuentran scripts de ejemplo en el paquete).
+.B  xv) Enganches de ejecuciÃ³n
+Los scripts de postinst y postrm permiten al administrador local aÃ±adir un
+script a los enganches de ejecuciÃ³n, esto puede permitir, entre otras cosas, que
+los usuarios de grub aÃ±adan y eliminen la secciÃ³n con la imagen del nÃºcleo del
+menÃº de grub (se encuentran scripts de ejemplo en el paquete).
 .TP
-.B xvi) Sufijos descriptivos a la versión del núcleo
-Se puede añadir en línea de órdenes, o bien estableciendo una variable de
-entorno. De esta forma, si tu núcleo se llama kernel-image-2.4.1Marta.Casa es
-realmente difícil que sea sobreescrito por el núcleo 2.4.1 oficial, ya que no
-son la misma versión.
+.B xvi) Sufijos descriptivos a la versiÃ³n del nÃºcleo
+Se puede aÃ±adir en lÃ­nea de Ã³rdenes, o bien estableciendo una variable de
+entorno. De esta forma, si tu nÃºcleo se llama kernel-image-2.4.1Marta.Casa es
+realmente difÃ­cil que sea sobreescrito por el nÃºcleo 2.4.1 oficial, ya que no
+son la misma versiÃ³n.
 .RE
 .SH "Desventajas de usar make-kpkg"
 .TP
-.B i) Automatización.
-Es una forma fácil de compilar el núcleo, no entra en detalles, hay gente que
-disfruta haciendo las cosas de una forma más realista.
+.B i) AutomatizaciÃ³n.
+Es una forma fÃ¡cil de compilar el nÃºcleo, no entra en detalles, hay gente que
+disfruta haciendo las cosas de una forma mÃ¡s realista.
 .TP
 .B ii) No es tradicional
-No se hace de este modo fuera del mundo de Debian. Rompe la tradición. (Esto ya
-se ha comentado, sin embargo rápidamente se está convirtiendo en una tradición
+No se hace de este modo fuera del mundo de Debian. Rompe la tradiciÃ³n. (Esto ya
+se ha comentado, sin embargo rÃ¡pidamente se estÃ¡ convirtiendo en una tradiciÃ³n
 dentro de Debian).
 .TP
 .B  iii) Necesita permisos de superusuario
@@ -159,19 +159,19 @@ Fuerza a usar
 .B sudo
 , 
 .B super 
-o a ser superusuario para crear el fichero .deb con la imagen del núcleo (esto
-no es tan malo como solía ser antes de
+o a ser superusuario para crear el fichero .deb con la imagen del nÃºcleo (esto
+no es tan malo como solÃ­a ser antes de
 .B fakeroot)
 .RE
 .SH FICHEROS
 .I /etc/kernel-pkg.conf.
 .I /etc/kernel-img.conf.
-.SH "VÉASE TAMBIÉN"
+.SH "VÃ‰ASE TAMBIÃ‰N"
 .BR make-kpkg (1),
 .BR make (1),
-.B La página del manual de GNU Make.
+.B La pÃ¡gina del manual de GNU Make.
 .SH "FALLOS"
 No tiene fallos. Cualquier cosa que se lo parezca es un delirio, de verdad.
 .SH AUTOR
-Esta página del manual fue escrita por Manoj Srivastava <srivasta@debian.org>,
+Esta pÃ¡gina del manual fue escrita por Manoj Srivastava <srivasta@debian.org>,
 para el sistema Debian GNU/Linux.

@@ -21,13 +21,13 @@
 .\" Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139,
 .\" USA.
 .\"
-.\" $Id: kernel-img.conf.es.5,v 1.1 2003/06/05 20:45:52 srivasta Exp $
+.\" $Id: kernel-img.conf.es.5,v 1.2 2003/06/09 19:15:21 srivasta Exp $
 .\"
 
 .\" (c) 2003 Software in the Public Interest
-.\" Esta traducciÛn ha sido realizada por RubÈn Porras <nahoo@inicia.es>
-.\" Est· basada en la p·gina de manual original:
-.\" versiÛn 1.2 del CVS de
+.\" Esta traducci√≥n ha sido realizada por Rub√©n Porras <nahoo@inicia.es>
+.\" Est√° basada en la p√°gina de manual original:
+.\" versi√≥n 1.2 del CVS de
 .\" /cvs/debian-doc/manpages/english/kernel-package/kernel-img.conf.5 
 .\" Revisada por Rudy Godoy <rudy@kernel-panik.org>
 
@@ -35,16 +35,16 @@
 .\" NAME should be all caps, SECTION should be 1-8, maybe w/ subsection
 .\" other parms are allowed: see man(7), man(1)
 .SH NOMBRE
-kernel\-img.conf \- fichero de configuraciÛn global para paquetes con
-im·genes del n˙cleo
+kernel\-img.conf \- fichero de configuraci√≥n global para paquetes con
+im√°genes del n√∫cleo
 .SH SINOPSIS
 .I /etc/kernel\-img.conf
-.SH "DESCRIPCI”N"
+.SH "DESCRIPCI√ìN"
 El fichero 
 .I /etc/kernel\-img.conf
-es un simple fichero que se consulta durante el proceso de post-instalaciÛn de la
-imagen del n˙cleo y que permite personalizar localmente algunos aspectos de la
-instalaciÛn, modificando las opciones predeterminadas de la propia imagen.
+es un simple fichero que se consulta durante el proceso de post-instalaci√≥n de la
+imagen del n√∫cleo y que permite personalizar localmente algunos aspectos de la
+instalaci√≥n, modificando las opciones predeterminadas de la propia imagen.
 .PP
 El formato de los valores es una simple pareja
 .B VAR = VALOR. 
@@ -52,53 +52,53 @@ Los valores booleanos han de especificarse como
 .I Yes, True, 1,
 y
 .I No, False, 0,
-teniendo en cuenta las may˙sculas.
-Este fichero se crea autom·ticamente por el script de instalaciÛn si no existe,
-al contrario que con el enlace simbÛlico
+teniendo en cuenta las may√∫sculas.
+Este fichero se crea autom√°ticamente por el script de instalaci√≥n si no existe,
+al contrario que con el enlace simb√≥lico
 .I /vmlinuz.
-El script pregunta al usuario si se debe de crear el enlace simbÛlico y guarda la
+El script pregunta al usuario si se debe de crear el enlace simb√≥lico y guarda la
 respuesta en
 .I /etc/kernel\-img.conf
 .PP
 En este momento, las variables modificables por el usuario son:
 .TP
 .B link_in_boot 
-Si es Yes en enlace simbÛlico con la imagen llamado
+Si es Yes en enlace simb√≥lico con la imagen llamado
 .I vmlinuz 
-se crear· en 
+se crear√° en 
 .I /boot 
 en vez de en
 .I /.  
 El nombre antiguo y confuso image_in_boot es desaconsejado, ya que lo que
-se reubica normalmente es el enlace simbÛlico.
-Por omisiÛn es No.
+se reubica normalmente es el enlace simb√≥lico.
+Por omisi√≥n es No.
 .TP
 .B do_symlinks
-Por omisiÛn, el script de post-instalaciÛn de la imagen del n˙cleo crea o
-actualiza los enlaces simbÛlicos
+Por omisi√≥n, el script de post-instalaci√≥n de la imagen del n√∫cleo crea o
+actualiza los enlaces simb√≥licos
 .I /vmlinuz
 y 
 .I /vmlinuz.old.
 Esto es cierto si ya existe un enlace
 .I /vmlinuz
-, sin embargo, en ausencia de Èste, el script busca el fichero de configuraciÛn.
-Si no existe, el script de configuraciÛn pregunta al usuario si desea crear el
-enlace simbÛlico, y guarda la respuesta en el fichero
+, sin embargo, en ausencia de √©ste, el script busca el fichero de configuraci√≥n.
+Si no existe, el script de configuraci√≥n pregunta al usuario si desea crear el
+enlace simb√≥lico, y guarda la respuesta en el fichero
 .I /etc/kernel-img.conf
-reciÈn creado.
-Si el fichero de configuraciÛn ya existe, y esta opciÛn est· puesta a NO, nunca
-se crea ning˙n enlace. Esto es para aquellos que no quieran tener enlaces
-simbÛlicos molestando en su directorio / . Por omisiÛn es Yes.
+reci√©n creado.
+Si el fichero de configuraci√≥n ya existe, y esta opci√≥n est√° puesta a NO, nunca
+se crea ning√∫n enlace. Esto es para aquellos que no quieran tener enlaces
+simb√≥licos molestando en su directorio / . Por omisi√≥n es Yes.
 .TP
 .B minimal_swap
-Por omisiÛn, si el enlace simbÛlico /vmlinuz no apunta a una imagen que es la
+Por omisi√≥n, si el enlace simb√≥lico /vmlinuz no apunta a una imagen que es la
 misma que la imagen instalada, el postinst mueve /vmlinuz a /vmlinuz.old, y crea
-un enlace simbÛlico a la imagen del n˙cleo en /vmlinuz (la excepciÛn es para
-prevenir que /vmlinuz y /vmlinuz.old apunten a la misma imagen del n˙cleo --
+un enlace simb√≥lico a la imagen del n√∫cleo en /vmlinuz (la excepci√≥n es para
+prevenir que /vmlinuz y /vmlinuz.old apunten a la misma imagen del n√∫cleo --
 potencialmente desastroso si la imagen actual es defectuosa o le falta
-algo). Sin embargo, si la opciÛn est· habilitada, no se realiza ninguna acciÛn si
-/vmlinuz.old apunta a la imagen actualmente instalada (por omisiÛn los enlaces
-simbÛlicos son intercambiados). Por omisiÛn tiene el valor de No.
+algo). Sin embargo, si la opci√≥n est√° habilitada, no se realiza ninguna acci√≥n si
+/vmlinuz.old apunta a la imagen actualmente instalada (por omisi√≥n los enlaces
+simb√≥licos son intercambiados). Por omisi√≥n tiene el valor de No.
 .TP
 .B no_symlinks
 Determina si se usan los enlaces al fichero con la
@@ -110,19 +110,19 @@ Puede usarse con
 Si es Yes, la imagen real es colocada en vmlinuz (en vez de en
 /boot/vmlinuz-X.X.XX). Si usa link_in_boot junto con esto, se mueve
 /boot/vmlinuz-X.X.XX a /boot/vmlinuz. El vmlinuz previo se mueve
-incondicionalmente a vmlinuz.old. (Normalmente, esto sÛlo se hace si la versiÛn
+incondicionalmente a vmlinuz.old. (Normalmente, esto s√≥lo se hace si la versi√≥n
 de la nueva imagen es diferente de la anterior). Esto le restringe a dos
-im·genes, a menos que tome acciones adicionales y guarde copias de im·genes
+im√°genes, a menos que tome acciones adicionales y guarde copias de im√°genes
 anteriores.
 Esto es para aquellos que tienen
 .I /boot
-en un sistema que no usa los enlaces simbÛlicos (digamos, que usan loadlin
+en un sistema que no usa los enlaces simb√≥licos (digamos, que usan loadlin
 como gestor de arranque). Esto es una chapuza.
-Por omisiÛn tiene el valor de No. 
+Por omisi√≥n tiene el valor de No. 
 .TP
 .B reverse_symlinks
-Determina si se usan enlaces simbÛlico invertidos (esto es, el fichero real es
-el que no tiene n˙mero de versiÛn, la versiÛn numerada es el enlace) al fichero
+Determina si se usan enlaces simb√≥lico invertidos (esto es, el fichero real es
+el que no tiene n√∫mero de versi√≥n, la versi√≥n numerada es el enlace) al fichero
 con la 
 .I imagen.
 Puede ser modificado mediante la variable de entorno
@@ -134,80 +134,80 @@ Se puede usar junto con
 Igual que
 .I no_symlinks, 
 excepto porque /boot/vmlinuz-X.XX es enlazado con la nueva imagen real,
-vmlinuz. Esto tambiÈn le restringe a dos im·genes a menos que tome alguna acciÛn
+vmlinuz. Esto tambi√©n le restringe a dos im√°genes a menos que tome alguna acci√≥n
 adicional. Los enlaces anteriores quedan colgando. Esto es para aquellos con
 .I /boot
-en umsdos, y no pueden ver el enlace en dos, pero quieren saber el n˙mero de la
-versiÛn cuando estÈn en Linux. Esto es una chapuza.
-Por omisiÛn tiene el valor de No.
+en umsdos, y no pueden ver el enlace en dos, pero quieren saber el n√∫mero de la
+versi√≥n cuando est√©n en Linux. Esto es una chapuza.
+Por omisi√≥n tiene el valor de No.
 .TP
 .B image_dest 
-Si quiere que el enlace simbÛlico (o imagen, si 
+Si quiere que el enlace simb√≥lico (o imagen, si 
 .B move_image 
-est· establecida) se guarde en alg˙n sitio distinto de
+est√° establecida) se guarde en alg√∫n sitio distinto de
 .I /
 establezca esta variable al directorio donde quiera poner el enlace. Dese cuenta
 que no es una variable booleana. Puede ser de ayuda para usuarios de
 .B loadlin
-, que pueden establecer Èsta y
+, que pueden establecer √©sta y
 .B move_image. 
-Por omisiÛn es
+Por omisi√≥n es
 .I /.
 Se puede usar con todas la opciones anteriores excepto con
 .B link_in_boot (image_in_boot),
-porque no tendrÌa sentido. (Si ambas
+porque no tendr√≠a sentido. (Si ambas
 .B image_dest 
 y 
 .B link_in_boot (image_in_boot)
-est·n establecidas, predomina
+est√°n establecidas, predomina
 .B link_in_boot (image_in_boot)).
 .TP
 .B postinst_hook 
 Establezca esta variable apuntando a un script que debe ser ejecutado durante la
-instalaciÛn despuÈs de que se hayan creado todos los enlaces simbÛlicos, pero
+instalaci√≥n despu√©s de que se hayan creado todos los enlaces simb√≥licos, pero
 antes de invocar el gestor de arranque u ofrecer crear un disquete de
 arranque. Este script debe invocarse con dos argumentos, el primero es la
-.I versiÛn
-de la imagen del n˙cleo, el segundo es la
-.I localizaciÛn
-de la imagen del n˙cleo. Los errores en el script sÛlo producir·n un mensaje de
+.I versi√≥n
+de la imagen del n√∫cleo, el segundo es la
+.I localizaci√≥n
+de la imagen del n√∫cleo. Los errores en el script s√≥lo producir√°n un mensaje de
 aviso. Un script de ejemplo para usuarios de grub se puede encontrar
 en /usr/share/doc/kernel-package/.
 .TP
 .B postrm_hook 
-Establezca esta variable apuntando a un script que debe ser ejecutado despuÈs de
-que se haya eliminado la imagen y despuÈs de que se hayan realizado todas las
+Establezca esta variable apuntando a un script que debe ser ejecutado despu√©s de
+que se haya eliminado la imagen y despu√©s de que se hayan realizado todas las
 acciones. Este script debe invocarse con dos argumentos, el primero es la
-.I versiÛn
-de la imagen del n˙cleo, el segundo es la
-.I localizaciÛn
-de la imagen del n˙cleo. Los errores en el script sÛlo producir·n un mensaje de
+.I versi√≥n
+de la imagen del n√∫cleo, el segundo es la
+.I localizaci√≥n
+de la imagen del n√∫cleo. Los errores en el script s√≥lo producir√°n un mensaje de
 aviso.
 .TP
 .B preinst_hook 
-Establezca esta variable apuntando a un script que debe ser ejecutado despuÈs de
+Establezca esta variable apuntando a un script que debe ser ejecutado despu√©s de
 desempaquetar el paquete, puede usarse para comprobaciones adicionales. Este
 script debe invocarse con dos argumentos, el primero es la
-.I versiÛn
-de la imagen del n˙cleo, el segundo es la
-.I localizaciÛn
-de la imagen del n˙cleo.
+.I versi√≥n
+de la imagen del n√∫cleo, el segundo es la
+.I localizaci√≥n
+de la imagen del n√∫cleo.
 .TP
 .B prerm_hook 
-Establezca esta variable apuntando a un script que debe de ser ejecutado despuÈs
+Establezca esta variable apuntando a un script que debe de ser ejecutado despu√©s
 que los ficheros del paquete hayan sido eliminados (de este modo se
-puede eliminar cualquier fichero aÒadido). Este script debe invocarse con dos
+puede eliminar cualquier fichero a√±adido). Este script debe invocarse con dos
 argumentos, el primero es la
-.I versiÛn
-de la imagen del n˙cleo, el segundo es la
-.I localizaciÛn
-de la imagen del n˙cleo. Los errores en el script sÛlo producir·n un mensaje de
+.I versi√≥n
+de la imagen del n√∫cleo, el segundo es la
+.I localizaci√≥n
+de la imagen del n√∫cleo. Los errores en el script s√≥lo producir√°n un mensaje de
 aviso.
 .TP
 .B move_image 
-En vez de crear el enlace simbÛlico a (o, si 
+En vez de crear el enlace simb√≥lico a (o, si 
 .B reverse_symlinks 
-est· establecida, desde)
+est√° establecida, desde)
 .B image_dest,
 La imagen se mueve desde
 .I /boot
@@ -215,17 +215,17 @@ a
 .B image_dest.
 Si 
 .B reverse_symlinks 
-est· establecida
+est√° establecida
 .I /boot
-contendr· un enlace simbÛlico a la imagen real. 
-Esta opciÛn puede ser ˙til para aquellos que usen loadlin, y que quiz· necesiten
-mover la imagen a una particiÛn diferente, de dos.
-Por omisiÛn esta variable est· sin establecer.
+contendr√° un enlace simb√≥lico a la imagen real. 
+Esta opci√≥n puede ser √∫til para aquellos que usen loadlin, y que quiz√° necesiten
+mover la imagen a una partici√≥n diferente, de dos.
+Por omisi√≥n esta variable est√° sin establecer.
 .TP
 .B clobber_modules
-Si est· establecida, el preinst tratar· de eliminar /lib/modules/version sin
-comunicarlo si es la misma versiÛn que la de la imagen siendo instalada. Uselo
-bajo su responsabilidad. Por omisiÛn esta variable est· sin establecer.
+Si est√° establecida, el preinst tratar√° de eliminar /lib/modules/version sin
+comunicarlo si es la misma versi√≥n que la de la imagen siendo instalada. Uselo
+bajo su responsabilidad. Por omisi√≥n esta variable est√° sin establecer.
 .TP
 .B do_boot_enable
 Si es NO, deshabilita cualquier intento de crear disquetes de arranque, ejecutar
@@ -236,89 +236,89 @@ y
 .B do_bootloader
 a NO implica establecer
 .B do_boot_enable 
-a NO. Por omisiÛn es Yes.
+a NO. Por omisi√≥n es Yes.
 .TP
 .B do_bootfloppy
 Si es NO, hace que el postinst no cree un disquete de arranque y tampoco
-pregunte acerca de ello. El gestor de arranque todavÌa ser· ejecutado. Esto
-reducir· la interacciÛn de postinst. (TodavÌa pregunta antes de dar formato a
+pregunte acerca de ello. El gestor de arranque todav√≠a ser√° ejecutado. Esto
+reducir√° la interacci√≥n de postinst. (Todav√≠a pregunta antes de dar formato a
 .I /dev/fd0) 
-Por omisiÛn es Yes.
+Por omisi√≥n es Yes.
 .TP
 .B do_bootloader
-Si es NO, hace que el postinst no ejecute el gestor de arranque. TodavÌa se
-preguntar· al usuario si desea crear un disquete de arranque a menos que
+Si es NO, hace que el postinst no ejecute el gestor de arranque. Todav√≠a se
+preguntar√° al usuario si desea crear un disquete de arranque a menos que
 .B do_bootfloppy
-tambiÈn estÈ a NO. Por omisiÛn es Yes.
+tambi√©n est√© a NO. Por omisi√≥n es Yes.
 .TP
 .B relative_links
-Si es Yes, el script de postinst de la imagen del n˙cleo tomar· medidas
-adicionales para que el enlace simbÛlico sea relativo. Normalmente el enlace es
-relativo sÛlo si es relativamente f·cil saber que el enlace relativo
-funcionar·. Por omisiÛn es No.
+Si es Yes, el script de postinst de la imagen del n√∫cleo tomar√° medidas
+adicionales para que el enlace simb√≥lico sea relativo. Normalmente el enlace es
+relativo s√≥lo si es relativamente f√°cil saber que el enlace relativo
+funcionar√°. Por omisi√≥n es No.
 .TP
 .B do_initrd
 Si es YES el script de postinst de
 .I kernel-image
-no avisar· de que est· instalando un n˙cleo que usa initrd. Esto asume que ha
+no avisar√° de que est√° instalando un n√∫cleo que usa initrd. Esto asume que ha
 configurado correctamente su gestor de arranque para que arranque la imagen
-initrd. Por omisiÛn es No. Esta opciÛn est· desaconsejada en favor de la opciÛn
-m·s descriptiva
+initrd. Por omisi√≥n es No. Esta opci√≥n est√° desaconsejada en favor de la opci√≥n
+m√°s descriptiva
 .B warn_initrd
-(dese cuenta que el sentido de la opciÛn es el contrario).
+(dese cuenta que el sentido de la opci√≥n es el contrario).
 .TP
 .B warn_initrd
 Si es NO el script de postinst de
 .I kernel-image
-no avisar· de que est· instalando un n˙cleo que usa intrd. Esto asume que ha
+no avisar√° de que est√° instalando un n√∫cleo que usa intrd. Esto asume que ha
 configurado correctamente su gestor de arranque para que arranque la imagen
-initrd. Esta opciÛn se prefiere respecto a
+initrd. Esta opci√≥n se prefiere respecto a
 .B do_initrd,
 ya que lo que se previene son los
 .I avisos.
-Por omisiÛn es Yes.
+Por omisi√≥n es Yes.
 .TP
 .B use_hard_links
-Esta opciÛn es para aquellos que no puedan usar enlaces simbÛlicos (por ejemplo,
-si el gestor de arranque no los soporta). Si es YES, esto har· que el postinst
-de la imagen del n˙cleo use enlaces duros en vez de los enlaces simbÛlicos para
-los ficheros /vmlinuz y /vmlinuz.old, manejados autom·ticamente. He tratado de
+Esta opci√≥n es para aquellos que no puedan usar enlaces simb√≥licos (por ejemplo,
+si el gestor de arranque no los soporta). Si es YES, esto har√° que el postinst
+de la imagen del n√∫cleo use enlaces duros en vez de los enlaces simb√≥licos para
+los ficheros /vmlinuz y /vmlinuz.old, manejados autom√°ticamente. He tratado de
 que sea compatible con
 .B move_image
 y
 .B reverse_symlinks
-PrecauciÛn: Es trabajo del usuario final asegurarse de que el directorio
+Precauci√≥n: Es trabajo del usuario final asegurarse de que el directorio
 .B image_dest
 y el lugar de la imagen (normalmente /boot) se encuentran en el mismo sistema de
 ficheros (ya que no se pueden crear enlaces duros entre sistemas de ficheros).
-.B Est· avisado.
+.B Est√° avisado.
 .TP
 .B silent_modules
-Est· opciÛn es para aquellos que se sienten molestos cuando se les avisa de
-mÛdulos existentes en el directorio
+Est√° opci√≥n es para aquellos que se sienten molestos cuando se les avisa de
+m√≥dulos existentes en el directorio
 .TT /lib/modules/$version.
 Este directorio probablemente pertenezca a un paquete 
 .TT kernel-image-$version
-viejo o que ya no existe, en cuyo caso pueden aparecer problemas con mÛdulos
+viejo o que ya no existe, en cuyo caso pueden aparecer problemas con m√≥dulos
 que hayan quedado en ese directorio, o puede que el directorio exista
-legÌtimamente porque se haya instalado un paquete independiente con mÛdulos
-para la misma versiÛn del n˙cleo. En este ˙ltimo caso la existencia del
-directorio es totalmente benigna. Si establece esta variable, nunca m·s podr·
-cancelar la instalaciÛn si se detecta previamente un directorio
+leg√≠timamente porque se haya instalado un paquete independiente con m√≥dulos
+para la misma versi√≥n del n√∫cleo. En este √∫ltimo caso la existencia del
+directorio es totalmente benigna. Si establece esta variable, nunca m√°s podr√°
+cancelar la instalaci√≥n si se detecta previamente un directorio
 .TT /lib/modules/$version
-existente. Por omisiÛn no est· establecido.
+existente. Por omisi√≥n no est√° establecido.
 .TP
 .B silent_loader
-Si est· establecido, est· opciÛn har· que se omita la pregunta realizada antes
-de ejecutar el gestor de arranque durante el proceso de instalaciÛn. Esta opciÛn
+Si est√° establecido, est√° opci√≥n har√° que se omita la pregunta realizada antes
+de ejecutar el gestor de arranque durante el proceso de instalaci√≥n. Esta opci√≥n
 no afecta a que el gestor de arranque sea o no ejecutado (lea
 .B do_bootloader
-para entender como controlarlo, la ausencia de un fichero de configuraciÛn har·
-el proceso de instalaciÛn ameno e interactivo).
+para entender como controlarlo, la ausencia de un fichero de configuraci√≥n har√°
+el proceso de instalaci√≥n ameno e interactivo).
 .SH FICHEROS
 El fichero descrito en este documento es
 .I /etc/kernel-img.conf.
-.SH "V…ASE TAMBI…N"
+.SH "V√âASE TAMBI√âN"
 .BR make-kpkg (1),
 .BR kernel-pkg.conf (5),
 .BR make (1),
@@ -326,5 +326,5 @@ El fichero descrito en este documento es
 .SH FALLOS
 No tiene fallos. Cualquier cosa que se lo parezca es un delirio, de verdad.
 .SH AUTOR
-Esta p·gina del manual fue escrita por Manoj Srivastava <srivasta@debian.org>,
+Esta p√°gina del manual fue escrita por Manoj Srivastava <srivasta@debian.org>,
 para el sistema Debian GNU/Linux.

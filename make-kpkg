@@ -14,7 +14,7 @@
 #
 #
 #
-#    $Id: make-kpkg,v 1.79 2003/04/14 18:23:43 srivasta Exp $
+#    $Id: make-kpkg,v 1.80 2003/06/09 19:15:21 srivasta Exp $
 #
 require 5.002;
 use strict;
@@ -29,7 +29,7 @@ make-kpkg - build Debian kernel packages from Linux kernel sources.
 ($main::MYNAME     = $main::0) =~ s|.*/||;
 $main::Author      = "Manoj Srivastava";
 $main::AuthorMail  = "srivasta\@debian.org";
-$main::Version     = '$Revision: 1.79 $ ';
+$main::Version     = '$Revision: 1.80 $ ';
 
 my $added_modules='';
 my $added_patches='';
@@ -90,7 +90,7 @@ my %option_ctl = ("help"            	=> \$help_opt,
 =head1 DESCRIPTION
 
 This manual page explains the  Debian  B<make-kpkg>  utility,
-which  is  used  to create the kernel related Debian pack­
+which  is  used  to create the kernel related Debian packÂ­
 ages. This utility needs to be run from a top level  Linux
 kernel source directory. 
 

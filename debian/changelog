@@ -1,3 +1,11 @@
+kernel-package (8.040) unstable; urgency=low
+
+  * Removed latin1 chars from this changelog. Now we are all utf-8 cmopatible. 
+  * Got a new rules file from Ben Collins that cleaned out the sparc
+    section, and gave it new default names and all.       closes: Bug#196752
+
+ -- Manoj Srivastava <srivasta@debian.org>  Mon,  9 Jun 2003 14:11:54 -0500
+
 kernel-package (8.039) unstable; urgency=low
 
   * Added documentation (including MAKEFLAGS stuff)
@@ -74,7 +82,7 @@ kernel-package (8.030) unstable; urgency=low
 
 kernel-package (8.029) unstable; urgency=low
 
-  * A whole bunch of typo fixes from RubÅÈn Porras 
+  * A whole bunch of typo fixes from Rub¬Å√©n Porras 
                                      closes: Bug#189556, Bug#189557, Bug#189558
 
  -- Manoj Srivastava <srivasta@debian.org>  Fri, 18 Apr 2003 15:48:58 -0500
@@ -1038,7 +1046,7 @@ kernel-package (7.45) unstable; urgency=low
   * Added the official README.Debian file to the image and headers
     packages as well.                                    closes: Bug#101332
   * hppa changes from Paul Bame <bame@debian.org> 
-  * APUS changes from  Michel Dé‰nzer <michdaen@iiic.ethz.ch>
+  * APUS changes from  Michel D¬é√§nzer <michdaen@iiic.ethz.ch>
   * Added a message in the image preiinst, triggered only if the image is
     an initrd image _and_ has lilo as the default bootloader, which tells
     people how to configure lilo for initrd images. 

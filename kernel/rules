@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Mon May  5 12:27:56 2003
+## Last Modified On : Mon Jun  9 10:09:00 2003
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 565
+## Update Count	    : 566
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.205 2003/06/05 20:45:14 srivasta Exp $
+## $Id: rules,v 1.206 2003/06/09 19:15:22 srivasta Exp $
 ###############################################################################
 
 ifdef KPKG_ARCH
@@ -318,44 +318,21 @@ DEBCONFIG = $(CONFDIR)/config.alpha
 endif
 
 
-ifeq ($(strip $(architecture)),sparc64)
-kimage := vmlinuz
-loaderdep=silo
-loader=silo
-loaderdoc=SiloDefault
-target = vmlinux
-NEED_DIRECT_GZIP_IMAGE=YES
-kimagesrc = vmlinux
-kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
-DEBCONFIG = $(CONFDIR)/config.sparc
-KERNEL_ARCH=sparc64
-ARCH_IN_NAME=YES
-KPKG_SUBARCH=sun4u
-endif
-
 ifeq ($(strip $(architecture)),sparc)
 kimage := vmlinuz
-loaderdep=silo
-loader=silo
+loaderdep = silo
+loader = silo
 loaderdoc=SiloDefault
-
-
-NEED_DIRECT_GZIP_IMAGE=YES
+NEED_DIRECT_GZIP_IMAGE = YES
 kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
 DEBCONFIG = $(CONFDIR)/config.sparc
+ARCH_IN_NAME = YES
 
-# make-kpkg --subarch=sun4u binary-arch
-# to generate UltraSparc kernel packages.
-ifeq ($(KPKG_SUBARCH),sun4u)
-KERNEL_ARCH=sparc64
-ARCH_IN_NAME=YES
+KERNEL_ARCH = $(strip $(shell uname -m))
+ifeq ($(KERNEL_ARCH),sparc)
+KPKG_SUBARCH = sparc32
 else
-machine = $(shell uname -m)
-ifeq ($(strip $(machine)),sparc64)
-KPKG_SUBARCH=sun4u
-KERNEL_ARCH=sparc64
-ARCH_IN_NAME=YES
-endif
+KPKG_SUBARCH = sparc64
 endif
 
 ifneq ($(shell if [ $(VERSION) -ge 2 -a $(PATCHLEVEL) -ge 5 -a  \
