@@ -58,7 +58,7 @@ Architecture: all
 Section: doc
 Priority: optional
 Suggests: kernel-image-=V
-Description: Linux kernel s[ecific documentation.
+Description: Linux kernel specific documentation.
  This package provides The various readme's in the kernel
  Documentation/ subdirectory: these typically contain kernel-specific
  installation notes for some drivers for example. See
