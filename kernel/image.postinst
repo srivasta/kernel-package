@@ -12,7 +12,7 @@
 # HISTORY          : 
 # Description      : 
 # 
-#    $Id: image.postinst,v 1.4 1997/07/29 23:08:44 srivasta Exp $
+#    $Id: image.postinst,v 1.5 1997/08/04 18:09:24 srivasta Exp $
 #
 
 # 
@@ -24,6 +24,8 @@ my $image_in_boot = "=B";	# Should be empty, mostly
 my $no_symlink = "=S";		# Should be empty, mostly
 my $reverse_symlink = "=R";	# Should be empty, mostly
 
+# This should not point to /tmp, because of security risks.
+my $temp_file_name = "/var/log/lilo_log.$$";
 
 #known variables
 my @boilerplate = ();
@@ -57,85 +59,43 @@ if (-l 'vmlinuz' && !($no_symlink || $reverse_symlink)) {
     # don't clobber vmlinuz.old quite yet
     rename("vmlinuz", "vmlinuz.$$") || 
       die "failed to move " . $imagedir . "vmlinuz:$!";
-    if (!rename("System.map", "System.$$")) {
-      rename("vmlinuz.$$", "vmlinuz");
-      die "Error renaming " . $imagedir . "System.map";
-    }
 
     if (! symlink($realimageloc . "vmlinuz-$version", "vmlinuz")) {
       rename("vmlinuz.$$", "vmlinuz");
-      rename("System.$$",  "System.map");
       die("Failed to symbolic-link /boot/vmlinuz-$version to "
 	  . $imagedir . "vmlinuz .\n"); 
     }
     
-    if ( symlink($realimageloc . "System.map-$version", "System.map") < 0 ) {
-      rename("vmlinuz.$$", "vmlinuz");
-      rename("System.$$", "System.map");
-      die("Failed to sym-link /boot/System.map-$version to "
-	  . $imagedir . "System.map.\n"); 
-    }
-
-    # Ok, now we may clobber the previous .old files
+    # Ok, now we may clobber the previous .old file
     rename("vmlinuz.$$", "vmlinuz.old");
-    rename("System.$$", "System.old");
   }
 }
 elsif ($no_symlink) {		# Maybe /boot is on a dos system?
   rename("vmlinuz", "vmlinuz.$$") || 
       die "failed to move " . $imagedir . "vmlinuz:$!";
-  if (!rename("System.map", "System.$$")) {
-    rename("vmlinuz.$$", "vmlinuz");
-    die "Error renaming " . $imagedir . "System.map";
-  }
   if (! rename($realimageloc . "vmlinuz-$version", "vmlinuz")) {
     rename("vmlinuz.$$", "vmlinuz");
-    rename("System.$$",  "System.map");
     die("Failed to move /boot/vmlinuz-$version to "
 	. $imagedir . "vmlinuz .\n"); 
   }
   
-  if (! rename($realimageloc . "System.map-$version", "System.map")) {
-    rename("vmlinuz", $realimageloc . "vmlinuz-$version");
-    rename("vmlinuz.$$", "vmlinuz");
-    rename("System.$$", "System.map");
-    die("Failed to move /boot/System.map-$version to "
-	. $imagedir . "System.map.\n"); 
-  }
   # Ok, now we may clobber the previous .old files
   rename("vmlinuz.$$", "vmlinuz.old");
-  rename("System.$$", "System.old");
 } 
 elsif ($reverse_symlink) {		# Maybe /boot is on a dos system?
   rename("vmlinuz", "vmlinuz.$$") || 
       die "failed to move " . $imagedir . "vmlinuz:$!";
-  if (!rename("System.map", "System.$$")) {
-    rename("vmlinuz.$$", "vmlinuz");
-    die "Error renaming " . $imagedir . "System.map";
-  }
   if (! rename($realimageloc . "vmlinuz-$version", "vmlinuz")) {
     rename("vmlinuz.$$", "vmlinuz");
-    rename("System.$$",  "System.map");
     die("Failed to move /boot/vmlinuz-$version to "
 	. $imagedir . "vmlinuz .\n"); 
   }
   
-  if (! rename($realimageloc . "System.map-$version", "System.map")) {
-    rename("vmlinuz", $realimageloc . "vmlinuz-$version");
-    rename("vmlinuz.$$", "vmlinuz");
-    rename("System.$$", "System.map");
-    die("Failed to move /boot/System.map-$version to "
-	. $imagedir . "System.map.\n"); 
-  }
   if (! symlink("vmlinuz", $realimageloc . "vmlinuz-$version")) {
     warn "Could not symlink vmlinuz to vmlinuz-$version :$!";
   }
-  if (! symlink("System.map", $realimageloc . "System.map-$version")) {
-    warn "Could not symlink System.map to System.map-$version :$!";
-  }
   # Ok, now we may clobber the previous .old files
   rename("vmlinuz.$$", "vmlinuz.old");
-  rename("System.$$", "System.old");
 } 
 
 
@@ -516,7 +476,8 @@ sub make_liloconf {
 sub run_lilo (){
   my $ret;
   print "Testing lilo.conf ... \n";
-  $ret = system("/sbin/lilo -t >/tmp/lilo_log.$$");
+  unlink $temp_file_name;                        # security
+  $ret = system("/sbin/lilo -t >$temp_file_name");
   if ($ret) {
     my $ans;
     print "There was an error with running lilo in test mode, a log is \n";
@@ -532,13 +493,13 @@ sub run_lilo (){
   if ($ret) {
     my $ans;
     print "There was an error with running lilo, a log file is \n";
-    print "available in file /tmp/lilo_log.$$.  Please edit /etc/lilo.conf\n";
+    print "available in file $temp_file_name.  Please edit /etc/lilo.conf\n";
     print "manually and re-run lilo, or make other arrangements to boot \n";
     print "your machine. \n\t Please hit return to continue";
     $ans = <STDIN>;
     return $ret;
   }
-  unlink "/tmp/lilo_log.$$";
+  unlink $temp_file_name;                        
   print "Installation successful.\n";
   return 0;
 }
