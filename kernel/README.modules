@@ -151,7 +151,36 @@ MODULE Packaging hints
 
         make-kpkg arranges to cd into each modules top directory,
  $(MODULE_LOC:-/usr/src/modules)/<mod-name>/, and runs ./debian/rules
- <target>.  Additionally, the following information is provided in the
+ <target>.
+
+	 Starting with kernel version 2.6.X, the build process is
+ for third party modules has been modified; now modules are expected
+ to build in hte kenrel sources dir, and you set the SUBDIR arg to
+ point to the source for the module itself. This arranges for the
+ kernel makefiles to do all the boilerplate work of building/running
+ modpost, dependencies, et cetera.  Here's the "new" way of building a
+ kernel module (both as used by alsa-source and as recommended by the
+ kbuild maintainer):
+                                                                                
+ ifdef NEW_KBUILD                                                               
+         $(MAKE) -C $(CONFIG_SND_KERNELDIR) SUBDIRS=$(MAINSRCDIR)/kbuild modules
+ else                                
+
+	The problem is that unless the module passes in the same
+ EXTRAVERSION=XYZ argument that the main kernel build process did,
+ include/linux/version.h shall be regenerated, with a different value
+ now than when the kernel was compiled. The only way to avoid this is
+ to make sure the module passes EXTRAVERSION also; the 2.6 kernel
+ makefile is very enthusiastic about making sure version.h is up to
+ date.
+
+	So, make-kpkg now passes a new parameter, KPKG_EXTRAV_ARG, to
+ the module; the value is either empty, or a string like
+  "EXTRAVERSION=X.Y.Z". The idea is that you can call 
+     $(MAKE) $(KPKG_EXTRAV_ARG) ... 
+ and have the same version.h info as the main kernel image does.
+
+ 	Additionally, the following information is provided in the
  environment:
  a) KVERS  Contains the kernel version
  b) KSRC   Contains the location of the kernel sources 
@@ -192,6 +221,8 @@ MODULE Packaging hints
       with -j since it does not know if that is safe; it is up to
       module maintainers to see if this parallel compilation setting
       may be used.
+   p) KPKG_EXTRAV_ARG A string. It is either empty, or contains a
+      directive to set the EXTRAVERSION variable.
 
 	Have fun,
 

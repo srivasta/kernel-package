@@ -5,9 +5,9 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Thu Feb  5 13:47:54 2004
+## Last Modified On : Wed Feb 18 17:57:02 2004
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count	    : 658
+## Update Count	    : 659
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
@@ -2019,6 +2019,7 @@ endif
                              KMAINT="$(pgp)" KEMAIL="$(email)"      \
                              KPKG_DEST_DIR="$(KPKG_DEST_DIR)"       \
                              KPKG_MAINTAINER="$(maintainer)"        \
+                             KPKG_EXTRAV_ARG="$(EXTRAV_ARG)"        \
                              KDREV="$(debian)" kdist_image; then    \
                   echo "Module $$module processed fine";            \
               else                                                  \
@@ -2047,6 +2048,7 @@ endif
                              KPKG_DEST_DIR="$(KPKG_DEST_DIR)"       \
                              KPKG_MAINTAINER="$(maintainer)"        \
                              ARCH=$(KERNEL_ARCH)                    \
+                             KPKG_EXTRAV_ARG="$(EXTRAV_ARG)"        \
                              KDREV="$(debian)" kdist; then          \
                   echo "Module $$module processed fine";            \
               else                                                  \
@@ -2075,6 +2077,7 @@ endif
                              KPKG_DEST_DIR="$(KPKG_DEST_DIR)"       \
                              KPKG_MAINTAINER="$(maintainer)"        \
                              ARCH=$(KERNEL_ARCH)                    \
+                             KPKG_EXTRAV_ARG="$(EXTRAV_ARG)"        \
                              KDREV="$(debian)" kdist_configure; then\
                   echo "Module $$module configured fine";           \
               else                                                  \
@@ -2099,6 +2102,7 @@ else
                              KPKG_DEST_DIR="$(KPKG_DEST_DIR)"       \
                              KPKG_MAINTAINER="$(maintainer)"        \
                              ARCH=$(KERNEL_ARCH)                    \
+                             KPKG_EXTRAV_ARG="$(EXTRAV_ARG)"        \
                              KDREV="$(debian)" kdist_clean; then    \
                   echo "Module $$module cleaned";                   \
               else                                                  \
