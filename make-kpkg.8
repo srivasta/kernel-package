@@ -22,7 +22,7 @@
 .\" USA.
 .\"
 .\"
-.\"    $Id: make-kpkg.8,v 1.52 2002/02/22 20:06:04 srivasta Exp $
+.\"    $Id: make-kpkg.8,v 1.53 2002/03/27 03:26:51 srivasta Exp $
 .\"
 .TH MAKE\-KPKG 1 "May 2 1997" "Debian" "Debian GNU/Linux manual"
 .SH NAME
@@ -183,10 +183,12 @@ patches to the kernel sources. This requires the
 configuration option to be set to YES  (this, in turn, can be
 overridden by the environment variable
 .B PATCH_THE_KERNEL
-). Unlike the treatment of the
-modules, you may only give the patch name (not the full path name of
-the patch file).  It shall be applied during the configure phase (and
-removed in the clean phase) if it can be found in the directories
+). 
+.PP
+Unlike the treatment of the modules, you may only give the patch name
+(not the full path name of the patch file).  It shall be applied
+during the configure phase (and removed in the clean phase) if it can
+be found in the directories
 .B ALL_PATCH_DIR/{apply,unpatch}/, 
 which defaults to a subdirectory of
 .I /usr/src/kernel-patches/.  
@@ -199,6 +201,20 @@ to YES).  Please note that the patches are uninstalled from the source
 when you run the clean target.  This cleanup can be prevented by
 setting the env variable 
 .B NO_UNPATCH_BY_DEFAULT
+.PP
+Some times it would be convenient to have the patches applied when
+one asks for specific patches using this option, without also having
+to explicitly set the envirnonment variable. Since setting the
+environment variable 
+.B PATCH_THE_KERNEL
+to YES could be dangerous, (for in that case all patches may be
+installed when you want none, and did not specify the applied_pacthes
+option), You may also set the variable PATCH_THE_KERNEL to
+.I AUTO,
+in which case PATCH_THE_KERNEL shall be set to YES for you when you 
+invoke 
+.BR \-\-added-patches\ foo, 
+but not otherwise.  
 .TP
 .BR \-\-arch\ foo
 This is useful for setting the architecture when you are cross

@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Thu Mar 21 11:07:18 2002
+## Last Modified On : Tue Mar 26 21:04:15 2002
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 522
+## Update Count	    : 523
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.165 2002/03/23 17:39:35 srivasta Exp $
+## $Id: rules,v 1.166 2002/03/27 03:26:51 srivasta Exp $
 ###############################################################################
 
 ifdef KPKG_ARCH
@@ -726,6 +726,11 @@ endif
 
 ifneq ($(strip $(PATCH_THE_KERNEL)),)
 patch_the_kernel = $(PATCH_THE_KERNEL)
+ifneq ($(strip $(KPKG_SELECTED_PATCHES)),)
+ifeq ($(strip $(patch_the_kernel)),AUTO)
+patch_the_kernel = YES
+endif
+endif
 endif
 
 ifneq ($(strip $(CONFIG_TARGET)),)

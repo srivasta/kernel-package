@@ -1,3 +1,13 @@
+kernel-package (7.103) unstable; urgency=low
+
+  * Added the potential value AUTO for PATCH_THE_KERNEL, which is useful
+    when you want the patches applied whenever you set
+    --applied-patches. One would not want to set the variable to YES,
+    since that would apply all patches willy nilly when you did not use
+    the --applied-pacthes option.                            closes: Bug#140047
+
+ -- Manoj Srivastava <srivasta@debian.org>  Tue, 26 Mar 2002 21:23:49 -0600
+
 kernel-package (7.102) unstable; urgency=low
 
   * revert the last change, since rebuilding the kernel-image may well be
