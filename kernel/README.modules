@@ -14,15 +14,17 @@
  provides some mechanisms to do so for co-operating add-on modules. 
 
 	In order for this to work, the add on modules must appear in
- a standard location, choosen to be /usr/src/modules/<mod-name>/, and
- must arrange to be manipulated by the kernel-package mechanisms.
+ a standard location, choosen to be $(MODULE_LOC)/<mod-name>/
+ (MODULE_LOC defaults to /usr/src/modules, and can be set either on in
+ the environment or the configuration file), and must arrange to be
+ manipulated by the kernel-package mechanisms.
 
 USER INSTRUCTIONS
 ==== ============
 
-     1)   Ensure that the module source tree is in a subdirectory of the
-          /usr/src/modules directory.  Use a symbolic link to the actual
-          source tree if you must.  
+     1)   Ensure that the module source tree is in a subdirectory of
+          the $(MODULE_LOC)[/usr/src/modules] directory.  Use a
+          symbolic link to the actual source tree if you must.
 
      2)   As root, go to the the base of the kernel source tree (usually
           the /usr/src/linux directory).  If you are building a kernel that
@@ -49,7 +51,7 @@ USER INSTRUCTIONS
           /usr/doc/kernel-package/README.gz for more information on
           revision numbers.
 
-     3)   To build the PCMCIA modules, execute:
+     3)   To build the actual module packages, execute:
                make-kpkg --revision number modules_image
           where number is the same revision number used to build the
           kernel-image package in the previous step. This will generate a
