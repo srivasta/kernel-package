@@ -21,7 +21,7 @@
 .\" Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139,
 .\" USA.
 .\"
-.\" $Id: kernel-pkg.conf.5,v 1.34 2002/11/06 09:07:45 srivasta Exp $
+.\" $Id: kernel-pkg.conf.5,v 1.35 2003/04/18 20:50:33 srivasta Exp $
 .\"
 .TH KERNEL\-PKG.CONF 5 "Jan  7 1997" "Debian" "Debian GNU/Linux manual" 
 .\" NAME should be all caps, SECTION should be 1-8, maybe w/ subsection
@@ -72,7 +72,7 @@ Can be overridden by the environment variable
 .TP
 .B pgp           
 Name to search for in the pgp database 
-.BI iff
+.BI if
 separate modules (like pcmcia etc) are being built in
 .IR /usr/src/modules/.
 Can be overridden by the environment variable 
@@ -98,11 +98,11 @@ Defaults to
 (Optional)
 .TP
 .B debian_revision_mandatory
-Normally unset. Ifthis, or the environment variable
+Normally unset. If this, or the environment variable
 .B DEBIAN_REVISION_MANDATORY
 are set, then not providing a debian revision results in an error (and 
 .B make-kpkg
-shall not provide a default vvalue of 1.0.0.Custom)
+shall not provide a default value of 1.0.0.Custom)
 .TP
 .B link_in_boot
 Set to True if you want the symbolic link to the kernel image, namely, 
@@ -265,7 +265,7 @@ unwanted architectures).
 .B header_clean_hook
 Set to point to an executable, this shall cause that executable to run
 from the top level of the kernel headers before the headers are
-packaged This has no effect on anything other than the sources that
+packaged. This has no effect on anything other than the sources that
 are being packaged -- if the script operates on the current directory
 and its children, the original source tree should remain intact. This
 is to facilitate massaging of the kernel headers that are packaged
@@ -312,7 +312,7 @@ overrides this.
 .TP
 .B CONCURRENCY_LEVEL
 If defined, this variable sets the concurrency level of make used to
-compile the kenel and the modules set using 
+compile the kernel and the modules set using 
 .I -j
 flags to the sub make in the 
 .B build

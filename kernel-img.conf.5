@@ -21,7 +21,7 @@
 .\" Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139,
 .\" USA.
 .\"
-.\" $Id: kernel-img.conf.5,v 1.19 2002/09/01 01:15:03 srivasta Exp $
+.\" $Id: kernel-img.conf.5,v 1.20 2003/04/18 20:50:33 srivasta Exp $
 .\"
 .TH KERNEL\-IMG.CONF 5 "Mar 21 2000" "Debian" "Debian GNU/Linux manual" 
 .\" NAME should be all caps, SECTION should be 1-8, maybe w/ subsection
@@ -293,8 +293,8 @@ and
 Caveat: It is up to the end user to ensure that the 
 .B image_dest
 directory and the location of the image (nominally /boot) live on the
-same file system (since one can't make hard links scross file
-systems. 
+same file system (since one can't make hard links across file
+systems). 
 .B You have been warned.
 .TP
 .B silent_modules
@@ -303,9 +303,9 @@ being warned about preexisting modules directory
 .TT /lib/modules/$version
 That directory may belong to an old or defunct 
 .TT kernel-image-$version 
-package, in which case problems may arise with lefover modules in that
+package, in which case problems may arise with leftover modules in that
 dir tree, or the directory may legitimately exist due to a independent
-modules paqckage being installed for this kernel version that has
+modules package being installed for this kernel version that has
 already been unpacked.  In this latter case the existence of the
 directory is benign.  If you set this varable, you shall no longer be
 given a chance to abort if a preexisting modules directory 

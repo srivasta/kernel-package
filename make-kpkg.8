@@ -22,7 +22,7 @@
 .\" USA.
 .\"
 .\"
-.\"    $Id: make-kpkg.8,v 1.73 2003/03/22 18:59:09 srivasta Exp $
+.\"    $Id: make-kpkg.8,v 1.74 2003/04/18 20:50:33 srivasta Exp $
 .\"
 .TH MAKE\-KPKG 1 "Nov 14 2002" "Debian" "Debian GNU/Linux manual"
 .SH NAME
@@ -206,7 +206,7 @@ the file can be found in the directories
 then the file
 .B ALL_PATCH_DIR/apply/<patch_name>
 shall be executed in turn during the configure phase (and presumably
-this applies the patch. Correspondingly, the file
+this applies the patch). Correspondingly, the file
 .B ALL_PATCH_DIR/unpatch/<patch_name> 
 shall be executed in the clean phase.  
 The default is that all patches are applied by running all the
@@ -247,7 +247,7 @@ shall be called on that directory just before the kernel image package is
 built. The location of the root of the image package being built shall
 be passed in the environment variable 
 .B IMAGE_TOP,
-and the kernel versions is passed i through the environment variable
+and the kernel versions is passed in through the environment variable
 .B version.
 This is a way for the patch to insert any additional files into
 the image, for example.
@@ -404,7 +404,7 @@ and
 .TP
 .B kernel_source
 This target produces a debianised package of the Linux kernel sources.
-if the environment variable 
+If the environment variable 
 .B SOURCE_CLEAN_HOOK
 points to an executable, then that executable shall be run from the
 temporary (top) directory of the kernel sources just before packaging it,
@@ -455,8 +455,8 @@ shall be called on that directory just before the kernel image package is
 built. The location of the root of the image package being built shall
 be passed in the environment variable 
 .B IMAGE_TOP,
-and the kernel versions is passed i through the environment variable
-.B version.
+and the kernel versions is passed in through the environment variable
+.B version
 for all these scripts.
 .IP
 On initial installation, the image package updates symbolic links in
