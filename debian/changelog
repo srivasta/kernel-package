@@ -1,3 +1,12 @@
+kernel-package (3.54) unstable; urgency=low
+
+  * Fixed rootcmd typos in make-kpkg. fixes: Bug#17618
+  * Redid the Headers README file
+  * Added a rationale to the LinkPolicy document. So far, it detailed
+    *what* Debian did. Now, it also says *why* we do it.
+
+ -- Manoj Srivastava <srivasta@debian.org>  Thu, 29 Jan 1998 19:13:58 -0600
+
 kernel-package (3.53) unstable; urgency=low
 
   * Fixed a typo where we tried to dd /vmlinuz-2.0.32 rather than the
