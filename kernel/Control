@@ -41,7 +41,7 @@ Architecture: =A
 Section: base
 Priority: optional
 Provides: kernel-image
-Suggests: lilo (>= 19.1), fdutils, kernel-doc-=V
+Suggests: =L, fdutils, kernel-doc-=V
 Description: Linux kernel binary image.
  This package contains the Linux kernel image, the System.map file,
  and the modules built by the packager.  It also contains scripts that
