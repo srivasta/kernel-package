@@ -1,3 +1,10 @@
+kernel-package (8.032) unstable; urgency=low
+
+  * Make the compilation abort if no valid patches were found (since this
+    is likely to be a typo of some sort).                    closes: Bug#191003
+
+ -- Manoj Srivastava <srivasta@debian.org>  Sun, 27 Apr 2003 18:54:21 -0500
+
 kernel-package (8.031) unstable; urgency=medium
 
   * Fix a problem with stamp-kernel-configure for 2.5 kernel

@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.199 2003/04/27 19:18:45 srivasta Exp $
+## $Id: rules,v 1.200 2003/04/27 23:54:34 srivasta Exp $
 ###############################################################################
 
 ifdef KPKG_ARCH
@@ -982,6 +982,10 @@ valid_patches = $(shell for name in $(canonical_patches); do                  \
                             fi;                                               \
                         done)
 
+ifeq ($(strip $(valid_patches)),)
+$(error Could not find patch scripts for $(canonical_patches))
+endif
+
 canonical_unpatches = $(shell new="";                                         \
                               for name in $(canonical_patches); do            \
                                   new="$$name $$new";                         \
@@ -1003,6 +1007,9 @@ valid_unpatches = $(shell for name in $(canonical_unpatches); do              \
                                echo $(ALL_PATCH_UNPATCH)/$$name;              \
                             fi;                                               \
                         done)
+ifeq ($(strip $(valid_unpatches)),)
+$(error Could not find un-patch scripts for $(canonical_unpatches))
+endif
 
 
 endif
