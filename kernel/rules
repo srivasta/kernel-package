@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Mon May 11 01:42:27 1998
+## Last Modified On : Thu Jun 11 15:03:53 1998
 ## Last Machine Used: tiamat.datasync.com
-## Update Count	    : 276
+## Update Count	    : 281
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.39 1998/05/11 06:55:49 srivasta Exp $
+## $Id: rules,v 1.40 1998/06/11 20:29:08 srivasta Exp $
 ###############################################################################
 
 # The version of kernel-package this belongs to
@@ -58,7 +58,11 @@ else
 ifneq ($(strip $(filter sparc,$(architecture))),)
 kimage := vmlinux
 else
+ifneq ($(strip $(filter alpha,$(architecture))),)
+kimage := vmlinux.gz
+else
 kimage := bzImage
+endif
 endif
 endif
 
@@ -81,9 +85,15 @@ loaderdep=
 loader=lilo
 loaderdoc=
 else
+ifeq ($(strip $(architecture)),alpha)
+loaderdep=
+loader=milo
+loaderdoc=
+else
 loaderdep=lilo (>= 19.1)
 loader=lilo
 loaderdoc=LiloDefault
+endif
 endif
 endif
 endif
@@ -314,7 +324,11 @@ all build: configure
 # debian.config contains the current idea of what the image should
 # have.
 	-test -f stamp-configure || $(deb_rule) configure
+ifeq ($(strip $(architecture)),alpha)
+	$(MAKE) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) boot
+else
 	$(MAKE) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) $(kimage)
+endif
 ifdef MODULES_ENABLED
 	$(MAKE) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) modules
 endif
@@ -377,9 +391,9 @@ ifeq ($(strip $(patch_the_kernel)),YES)
 	-test -d $(DIR_PATCH_UNPATCH) && run-parts --verbose $(DIR_PATCH_UNPATCH)
 endif
 	rm -f $(FILES_TO_CLEAN) $(STAMPS_TO_CLEAN)
-	cp -pf .config config.precious
+	test -f .config && cp -pf .config config.precious
 	-test -f Makefile && $(MAKE) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) distclean
-	mv -f config.precious .config
+	test -f config.precious && mv -f config.precious .config
 	rm -rf $(DIRS_TO_CLEAN)
 	test -f stamp-building || test -f debian/official || rm -rf debian
 
@@ -417,9 +431,6 @@ stamp-source: configure
 	$(install_file) README \
 	         debian/tmp-source/usr/doc/$(package)/README
 	gzip -9qf debian/tmp-source/usr/doc/$(package)/README
-	$(install_file) $(DEBDIR)/Headers \
-	         debian/tmp-source/usr/doc/$(package)/Headers
-	gzip -9qf debian/tmp-source/usr/doc/$(package)/Headers
 	$(install_file) $(DEBDIR)/Flavours \
 	         debian/tmp-source/usr/doc/$(package)/Flavours
 	gzip -9qf debian/tmp-source/usr/doc/$(package)/Flavours
@@ -449,6 +460,8 @@ stamp-source: configure
 		 debian/tmp-source/usr/src/$(package)/README.Debian ; \
 	fi
 	$(install_file) .config debian/tmp-source/usr/src/$(package)/.config.save
+	(cd debian/tmp-source/usr/src/; tar zcf $(package).tar.gz $(package);\
+            rm -rf $(package);)
 	dpkg-gencontrol -p$(package) -Pdebian/tmp-source/
 	chown -R root.root debian/tmp-source
 	chmod -R og=rX debian/tmp-source
