@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.94 2000/04/30 08:14:35 srivasta Exp $
+## $Id: rules,v 1.95 2000/04/30 20:51:56 srivasta Exp $
 ###############################################################################
 
 #
@@ -70,8 +70,8 @@ endif
 
 KERNEL_ARCH:=$(architecture)
 DEBCONFIG = $(CONFDIR)/config
-IMAGE_DESTDIR=/boot
-INT_IMAGE_DESTDIR=debian/tmp-image$(IMAGE_DESTDIR)
+IMAGEDIR=/boot
+INT_IMAGE_DESTDIR=debian/tmp-image$(IMAGEDIR)
 
 ######################################################################
 ###          Architecture specific stuff                           ###
@@ -515,11 +515,51 @@ CONFIG_FILE := $(shell if test -e .config ; then \
                        else echo /dev/null ; \
                        fi)
 
+# Deal with modules issues
+
 # define MODULES_ENABLED if appropriate
 ifneq ($(strip $(shell egrep ^[^\#]*CONFIG_MODULES $(CONFIG_FILE))),)
 MODULES_ENABLED := yes
 endif
 
+# accept both space separated list of modules, as well as comma
+# separated ones
+comma:= ,
+empty:=
+space:= $(empty) $(empty)
+valid_modules:=
+
+# See what modules we are talking about
+ifeq ($(strip $(MODULES_ENABLED)),yes)
+ifneq ($(strip $(SELECTED_MODULES)),)
+canonical_modules=$(subst $(comma),$(space),$(SELECTED_MODULES))
+else
+canonical_modules=$(shell find $(MODULE_LOC) -maxdepth 1 -type d -print |\
+			   egrep -v '^$(MODULE_LOC)$$')
+endif
+
+
+# Now, if we have any modules at all, they are in canonical_modules
+ifneq ($(strip $(canonical_modules)),)
+
+path_modules   :=$(filter     /%, $(canonical_modules))
+no_path_modules:=$(filter-out /%, $(canonical_modules))
+fleshed_out    :=$(foreach mod,$(no_path_modules),$(MODULE_LOC)/$(mod))
+
+# Hmmph. recreate the canonical modules; now ewverything has a full
+# path name.
+
+canonical_modules:=$(path_modules) $(fleshed_out)
+# test to see if the dir names are real
+valid_modules = $(shell for dir in $(canonical_modules); do \
+                            if [ -d $$dir ]; then           \
+                               echo $$dir;                  \
+                            fi;                             \
+                        done)
+
+
+endif
+endif
 
 # See if we are being run in the kernel directory
 IN_KERNEL_DIR := $(shell if test -d drivers -a -d kernel -a -d fs -a \
@@ -834,6 +874,12 @@ stamp-doc: debian
 	-gzip -9fqr debian/tmp-doc/usr/share/doc/$(d_package)
 	$(install_file) $(DEBDIR)/copyright.doc \
 		debian/tmp-doc/usr/share/doc/$(d_package)/copyright
+	sed -e 's/=P/$(d_package)/g' -e 's/=V/$(version)/g' \
+		$(DEBDIR)/include.postinst > debian/tmp-doc/DEBIAN/postinst
+	chmod 755 debian/tmp-doc/DEBIAN/postinst
+	sed -e 's/=P/$(d_package)/g' -e 's/=V/$(version)/g' \
+		$(DEBDIR)/include.prerm > debian/tmp-doc/DEBIAN/prerm
+	chmod 755 debian/tmp-doc/DEBIAN/prerm
 	dpkg-gencontrol -isp -p$(d_package) -Pdebian/tmp-doc/
 	chown -R root.root debian/tmp-doc
 	chmod -R og=rX debian/tmp-doc
@@ -855,18 +901,18 @@ kernel-image-deb:
 	test -f stamp-configure     || $(deb_rule) configure
 	test -f stamp-build         || $(deb_rule) build
 	$(make_directory) debian/tmp-image/DEBIAN
-	$(make_directory) debian/tmp-image/$(IMAGE_DESTDIR)
+	$(make_directory) debian/tmp-image/$(IMAGEDIR)
 	$(make_directory) debian/tmp-image/usr/share/doc/$(i_package)
 	sed -e 's/=V/$(version)/g'    -e 's/=B/$(image_in_boot)/g'   \
             -e 's/=S/$(no_symlink)/g' -e 's/=R/$(reverse_symlink)/g' \
             -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \
-            -e 's,=D,$(IMAGE_DESTDIR),g'                             \
+            -e 's,=D,$(IMAGEDIR),g'                             \
              $(DEBDIR)/image.postinst > debian/tmp-image/DEBIAN/postinst
 	chmod 755 debian/tmp-image/DEBIAN/postinst
 	sed -e 's/=V/$(version)/g'    -e 's/=B/$(image_in_boot)/g'   \
             -e 's/=S/$(no_symlink)/g' -e 's/=R/$(reverse_symlink)/g' \
             -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \
-            -e 's,=D,$(IMAGE_DESTDIR),g'                             \
+            -e 's,=D,$(IMAGEDIR),g'                             \
              $(DEBDIR)/image.postrm > debian/tmp-image/DEBIAN/postrm
 	chmod 755 debian/tmp-image/DEBIAN/postrm
 	sed -e 's/=V/$(version)/g'    -e 's/=L/$(loader)/g'          \
@@ -936,7 +982,7 @@ modules-image modules_image: configure
 ifndef MODULES_ENABLED
 	@echo Modules not configured, so not making modules_image
 else
-	-for module in $(MODULE_LOC)/* ; do                         \
+	-for module in $(valid_modules) ; do                        \
           if test -d  $$module; then                                \
 	    (cd $$module;                                           \
               if ./debian/rules KVERS="$(version)" KSRC="$(SRCTOP)" \
@@ -953,12 +999,12 @@ else
         done
 endif
 
-# generate the modules packages and sign them with dchanges
+# generate the modules packages and sign them
 modules: configure
 ifndef MODULES_ENABLED
 	@echo Modules not configured, so not making modules
 else
-	-for module in $(MODULE_LOC)/* ; do                         \
+	-for module in $(valid_modules) ; do                        \
           if test -d  $$module; then                                \
 	    (cd $$module;                                           \
               if ./debian/rules KVERS="$(version)" KSRC="$(SRCTOP)" \
@@ -975,13 +1021,14 @@ else
         done
 endif
 
+# configure the modules packages
 modules-config modules_config: configure
 ifndef MODULES_ENABLED
 	@echo Modules not configured, so not making modules_config
 else
-	-for module in $(MODULE_LOC)/* ; do \
-          if test -d  $$module; then \
-	    (cd $$module; \
+	-for module in $(valid_modules) ; do                        \
+          if test -d  $$module; then                                \
+	    (cd $$module;                                           \
               if ./debian/rules KVERS="$(version)" KSRC="$(SRCTOP)" \
                              KMAINT="$(pgp)" KEMAIL="$(email)"      \
                              KDREV="$(debian)" kdist_configure; then\
