@@ -12,8 +12,9 @@ kernel-package (8.005) unstable; urgency=low
     cramfs patch, enerally shipped with Debian supplied kernel sources,
     but not in the upstream sources.                         closes: Bug#149236
   * Make the patches unapply in reverse order                closes: Bug#151862
+  * Chomp mount output                           closes: Bug#156078, Bug#156025
 
- -- Manoj Srivastava <srivasta@debian.org>  Thu,  8 Aug 2002 22:38:41 -0500
+ -- Manoj Srivastava <srivasta@debian.org>  Sat, 10 Aug 2002 10:52:50 -0500
 
 kernel-package (8.004) unstable; urgency=low
 
