@@ -5,9 +5,9 @@
 # Created On       : Sun Jun 14 03:38:02 1998
 # Created On Node  : tiamat.datasync.com
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Sat Sep 27 17:44:56 2003
+# Last Modified On : Tue Oct  7 11:21:10 2003
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 52
+# Update Count     : 56
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
@@ -46,6 +46,7 @@ my $minimal_swap    = '';       # Do not swap symlinks
 my $ignore_depmod_err = '';	# normally we do not
 my $relink_build_link = 'YES';	# There is no harm in checking the link
 my $force_build_link = '';	# There is no harm in checking the link
+my $official_image    = "=OF";      # only true for official images
 
 
 my $Loader          = "NoLOADER"; # 
@@ -82,6 +83,12 @@ die "Pre inst Internal error. Aborting." unless $version;
 
 exit 0 if $ARGV[0] =~ /abort-upgrade/;
 exit 1 unless $ARGV[0] =~ /(install|upgrade)/;
+
+# Official images may silently upgrade
+if ($official_image =~ /^\s*YES\s*$/o
+    && $ARGV[0] =~ /upgrade/) {
+    $silent_modules = 'Yes';
+  }
 
 # remove multiple leading slashes; make sure there is at least one.
 $realimageloc  =~ s|^/*|/|o;

@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Mon Oct  6 11:20:49 2003
+## Last Modified On : Tue Oct  7 11:07:36 2003
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 616
+## Update Count	    : 618
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.226 2003/10/06 16:23:03 srivasta Exp $
+## $Id: rules,v 1.227 2003/10/07 16:24:20 srivasta Exp $
 ###############################################################################
 
 ifdef KPKG_ARCH
@@ -450,11 +450,20 @@ kimage := vmlinux
 loaderdep=arcboot
 loader=arcboot
 loaderdoc=
-target = boot
 NEED_DIRECT_GZIP_IMAGE=NO
 kimagesrc = $(strip vmlinux)
 kimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
 DEBCONFIG= $(CONFDIR)/config.$(KPKG_SUBARCH)
+
+ifneq ($(shell if [ $(VERSION) -ge 2 -a $(PATCHLEVEL) -ge 5 -a  \
+                    $(SUBLEVEL) -ge 41 ]; then echo new; \
+             elif [ $(VERSION) -ge 2 -a $(PATCHLEVEL) -ge 6 ]; then \
+                                         echo new; \
+             elif [ $(VERSION) -ge 3 ]; then echo new; fi),)
+       target    =
+else
+       target    = boot
+endif
 
 ifneq (,$(filter mips64%,$(KPKG_SUBARCH)))
   KERNEL_ARCH = mips64
@@ -470,7 +479,6 @@ kimage := vmlinux
 loaderdep=delo
 loader=delo
 loaderdoc=
-target = boot
 NEED_DIRECT_GZIP_IMAGE=NO
 kimagesrc = $(strip vmlinux)
 kimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
@@ -479,6 +487,16 @@ KERNEL_ARCH= mips
 #HAVE_COFF_IMAGE = YES
 #coffsrc = $(strip arch/$(KERNEL_ARCH)/boot/vmlinux.ecoff)
 #coffdest=$(INT_IMAGE_DESTDIR)/vmlinux.ecoff-$(version)
+
+ifneq ($(shell if [ $(VERSION) -ge 2 -a $(PATCHLEVEL) -ge 5 -a  \
+                    $(SUBLEVEL) -ge 41 ]; then echo new; \
+             elif [ $(VERSION) -ge 2 -a $(PATCHLEVEL) -ge 6 ]; then \
+                                         echo new; \
+             elif [ $(VERSION) -ge 3 ]; then echo new; fi),)
+       target    =
+else
+       target    = boot
+endif
 
 ifneq (,$(filter mips64el%,$(KPKG_SUBARCH)))
   KERNEL_ARCH = mips64
@@ -756,6 +774,8 @@ endif
 endif
 endif
 endif
+
+AM_OFFICIAL := $(shell if [ -f debian/official ]; then echo YES; fi )
 
 # Hmm. The version that we have computed *MUST* match the one that is in the
 # changelog.
@@ -1778,23 +1798,23 @@ endif
             -e 's/=S/$(no_symlink)/g' -e 's/=R/$(reverse_symlink)/g' \
             -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \
             -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'        \
-            -e 's@=M@$(MKIMAGE)@g'                                   \
+            -e 's@=M@$(MKIMAGE)@g'    -e 's/=OF/$(AM_OFFICIAL)/g'    \
              $(DEBDIR)/image.postinst > $(IMAGE_TOP)/DEBIAN/postinst
 	chmod 755 $(IMAGE_TOP)/DEBIAN/postinst
 	sed -e 's/=V/$(version)/g'    -e 's/=B/$(link_in_boot)/g'   \
             -e 's/=S/$(no_symlink)/g' -e 's/=R/$(reverse_symlink)/g' \
             -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \
             -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'        \
-            -e 's@=M@$(MKIMAGE)@g'                                   \
+            -e 's@=M@$(MKIMAGE)@g'    -e 's/=OF/$(AM_OFFICIAL)/g'    \
              $(DEBDIR)/image.postrm > $(IMAGE_TOP)/DEBIAN/postrm
 	chmod 755 $(IMAGE_TOP)/DEBIAN/postrm
 	sed -e 's/=V/$(version)/g'    -e 's/=L/$(loader)/g'          \
-	    -e 's/=I/$(INITRD)/g'                                    \
+	    -e 's/=I/$(INITRD)/g'     -e 's/=OF/$(AM_OFFICIAL)/g'    \
              -e 's@=M@$(MKIMAGE)@g'                                   \
 	             $(DEBDIR)/image.preinst > $(IMAGE_TOP)/DEBIAN/preinst
 	chmod 755 $(IMAGE_TOP)/DEBIAN/preinst
 	sed -e 's/=V/$(version)/g'    -e 's/=L/$(loader)/g'          \
-             -e 's@=M@$(MKIMAGE)@g'                                   \
+             -e 's@=M@$(MKIMAGE)@g'    -e 's/=OF/$(AM_OFFICIAL)/g'    \
 	             $(DEBDIR)/image.prerm > $(IMAGE_TOP)/DEBIAN/prerm
 	chmod 755 $(IMAGE_TOP)/DEBIAN/prerm
 	$(install_file) Documentation/Changes $(IMAGE_DOC)/

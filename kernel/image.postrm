@@ -5,14 +5,14 @@
 # Created On       : Sat May 15 11:05:13 1999
 # Created On Node  : glaurung.green-gryphon.com
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Sat Sep 27 17:46:09 2003
+# Last Modified On : Tue Oct  7 11:09:11 2003
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 30
+# Update Count     : 31
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
 # 
-#     $Id: image.postrm,v 1.30 2003/09/28 01:16:53 srivasta Exp $
+#     $Id: image.postrm,v 1.31 2003/10/07 16:24:20 srivasta Exp $
 #
 
 
@@ -47,6 +47,7 @@ my $minimal_swap      = '';       # Do not swap symlinks
 my $ignore_depmod_err = '';	# normally we do not
 my $relink_build_link = 'YES';	# There is no harm in checking the link
 my $force_build_link  = '';	# we shall not create a dangling link
+my $official_image    = "=OF";      # only true for official images
 
 my $Loader          = "NoLOADER"; # 
 $Loader             = "LILO"     if $loader =~ /^lilo/io;

@@ -5,15 +5,15 @@
 # Created On       : Fri May 17 03:28:59 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Sat Sep 27 17:45:43 2003
+# Last Modified On : Tue Oct  7 11:09:23 2003
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 66
+# Update Count     : 67
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
 # 
 #
-#    $Id: image.prerm,v 1.21 2003/09/28 01:16:53 srivasta Exp $
+#    $Id: image.prerm,v 1.22 2003/10/07 16:24:20 srivasta Exp $
 #
 # 
 #use strict;
@@ -44,6 +44,7 @@ my $minimal_swap    = '';       # Do not swap symlinks
 my $ignore_depmod_err = '';	# normally we do not
 my $relink_build_link = 'YES';	# There is no harm in checking the link
 my $force_build_link = '';	# There is no harm in checking the link
+my $official_image    = "=OF";      # only true for official images
 
 my $Loader          = "NoLOADER"; # 
 $Loader             = "LILO"     if $loader =~ /^lilo/io;

@@ -1,3 +1,20 @@
+kernel-package (8.066) unstable; urgency=low
+
+  * to default target for mips(el) changed between 2.4 and 2.5. Applied a
+    patch from Guido Guenther <agx@debian.org> to fix this.
+                                                       closes: Bug#214590
+  * Disable the "out of the way" warning in image.preinst
+    when these conditions are met:
+       1. This is an official kernel (perhaps a substitution in the preinst?)
+       2. This is an upgrade.
+    The reason is that when I make bug fix releases that do not change the
+    ABI, modules compiled for the previous kernel will continue to
+    work. Unfortunately, the users tend to be scared off by the "out of
+    the way" warning and end up aborting the install and filing a bug.
+    Made it so.                                        closes: Bug#214529
+
+ -- Manoj Srivastava <srivasta@debian.org>  Tue,  7 Oct 2003 11:23:43 -0500
+
 kernel-package (8.065) unstable; urgency=low
 
   * Added a HOWTO for installing 2.6 kernels on a Woody machine to the
