@@ -5,9 +5,9 @@
 # Created On       : Sun Jun 14 03:38:02 1998
 # Created On Node  : tiamat.datasync.com
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Sat Dec  1 12:13:10 2001
+# Last Modified On : Mon Feb 18 15:31:45 2002
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 42
+# Update Count     : 46
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
@@ -152,6 +152,19 @@ so, and you wish to get rid of this message, please put
   `do_initrd = Yes'
 in /etc/kernel-img.conf.
 EOF
+    if (-f "/etc/lilo.conf"){
+      my $ramdisk_found = 0;
+      open (CONF, "/etc/lilo.conf")  or warn "Can't open /etc/lilo.conf: $!";
+      while (<CONF>) {
+	chomp;
+	if (m/^(\s*ramdisk\s*=\s*0)/g) {
+	  print STDERR 
+	    "In addition, the line\n\t\"$1\"\nshould be removed or commented.";
+	  last;
+	}
+      }
+      close CONF;
+    }
     print STDERR "Do you want to stop now? [Y/n]";
     my $answer = <STDIN>;
     print STDERR "Ok, Aborting\n" unless $answer =~ /^n/i;
