@@ -22,7 +22,7 @@
 .\" USA.
 .\"
 .\"
-.\"    $Id: make-kpkg.8,v 1.14 1999/01/22 15:15:11 srivasta Exp $
+.\"    $Id: make-kpkg.8,v 1.15 1999/05/15 06:51:29 srivasta Exp $
 .\"
 .TH MAKE\-KPKG 8 "May 2 1997" "Debian" "Debian GNU/Linux manual"
 .SH NAME
@@ -76,6 +76,23 @@ stop, hyphen, and plus). Uppercase letter are also not permitted under
 the Policy for a new package. \fB\s-1NOTE\s0\fR: Hyphens are
 discouraged.  (Look at Chapters 4 and 5 of the Programmers manual for
 details).
+.TP
+.BR \-\-arch\ foo
+This is useful for setting the architecture when you are cross
+compiling. If you are not cross compiling, the architecture is
+determined automatically.
+.TP
+.BR \-\-cross_compile\ foo
+This is useful for setting the target string when you are cross
+compiling. 
+.TP
+.BR \-\-subarch\ foo
+Some architectures (the Alpha, and the m68k) require a different
+kernel for each subarchitecture. This option provides a way of
+specifying it as an argument to \fBmake-kpkg\fR. \fBPlease note\fR
+that additional 
+support for sub architectures may be required in the kernel sources to
+actually make this do anything.
 .TP
 .BR \-\-subarch\ foo
 Some architectures (the Alpha, and the m68k) require a different

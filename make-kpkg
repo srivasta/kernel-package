@@ -5,16 +5,16 @@
 # Created On       : Mon Jun 17 01:10:11 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Fri Jan 22 09:09:01 1999
-# Last Machine Used: tiamat.golden-gryphon.com
-# Update Count     : 120
+# Last Modified On : Sat May 15 00:28:27 1999
+# Last Machine Used: glaurung.green-gryphon.com
+# Update Count     : 123
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
 #
 #
 #
-#    $Id: make-kpkg,v 1.23 1999/01/22 15:32:24 srivasta Exp $
+#    $Id: make-kpkg,v 1.24 1999/05/15 06:51:29 srivasta Exp $
 #
 require 5.002;
 use strict;
@@ -29,11 +29,13 @@ make-kpkg - build Debian kernel packages from Linux kernel sources.
 ($main::MYNAME     = $main::0) =~ s|.*/||;
 $main::Author      = "Manoj Srivastava";
 $main::AuthorMail  = "srivasta\@debian.org";
-$main::Version     = '$Revision: 1.23 $ ';
+$main::Version     = '$Revision: 1.24 $ ';
 
 my $help_opt=0; 
 my $revision=0; 
 my $flavour=''; 
+my $arch='';
+my $cross_compile='';
 my $subarch='';
 my $signature="" ;
 my $targ_opt=0; 
@@ -43,17 +45,19 @@ my $bzimage;
 my $root_cmd; 
 my $arch_in_name=0;
 
-my %option_ctl = ("help"         => \$help_opt,
-		  "noexec"       => \$noexec,
-		  "revision=s"   => \$revision,
-		  "flavour=s"    => \$flavour,
-		  "subarch=s"    => \$subarch,
-		  "arch_in_name" => \$arch_in_name,
-		  "pgpsign=s"    => \$signature,
-		  "targets"      => \$targ_opt,
-		  "zimage"       => \$zimage,
-		  "rootcmd=s"    => \$root_cmd,
-		  "bzimage"      => \$bzimage
+my %option_ctl = ("help"            => \$help_opt,
+		  "noexec"          => \$noexec,
+		  "revision=s"      => \$revision,
+		  "flavour=s"       => \$flavour,
+                  "arch=s"          => \$arch,
+                  "cross_compile=s" => \$cross_compile,
+		  "subarch=s"       => \$subarch,
+		  "arch_in_name"    => \$arch_in_name,
+		  "pgpsign=s"       => \$signature,
+		  "targets"         => \$targ_opt,
+		  "zimage"          => \$zimage,
+		  "rootcmd=s"       => \$root_cmd,
+		  "bzimage"         => \$bzimage
 		 );
 
 =head1 SYNOPSIS
@@ -111,6 +115,35 @@ contain only alphanumerics and the characters - + . (full stop,
 hyphen, and plus). Uppercase letter are also not permitted under the
 Policy for a new package. B<NOTE>: Hyphens are discouraged.  (Look at
 Chapters 4 and  5 of the Programmers manual for details).
+
+
+=back
+
+=item B<--arch> foo
+
+=over 2
+
+Sets the Architecture. This is mostly useful when cross compiling.
+
+=back
+
+=item B<--cross_compile> foo
+
+=over 2
+
+Sets the target string. This is mostly useful when cross compiling.
+
+=back
+
+=item B<--subarch> foo
+
+=over 2
+
+Some architectures (the Alpha, and the m68k) require a different
+kernel for each subarchitecture. This option provides a way of
+specifying it as an argument to make-kpkg. Please note that additional
+support for sub architectures may be required in the kernel sources to
+actually make this do anything.
 
 
 =back
@@ -218,6 +251,8 @@ usage: $main::MYNAME [options] target [target ...]
                          have digit, no hyphen allowed)
  --flavour  foo        an additional kernel sub-version. ([-a-z.+0-9])
                          see /usr/doc/kernel-package/Flavours.gz
+ --arch     foo        architecture
+ --cross_compile       target string
  --subarch  bar        Set the sub arch for the image being compiled
                         (have to be on a compatible machine).
  --arch_in_name        Embedd the subarch in the image package name
@@ -530,6 +565,12 @@ EOERR1
       $flavour = "\L$flavour\E";
     }
     $command .= " FLAVOUR=$flavour ";
+  }
+  if ($arch){
+    $command .= " ARCH=$arch ";
+  }
+  if ($cross_compile){
+    $command .= " CROSS_COMPILE=$cross_compile ";
   }
   if ($subarch){
     $command .= " SUBARCH=$subarch ";

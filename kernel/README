@@ -1,5 +1,5 @@
 
-   $Id: README,v 1.21 1998/10/14 05:59:00 srivasta Exp $
+   $Id: README,v 1.22 1999/05/15 06:51:29 srivasta Exp $
 
 This is the Debian GNU/Linux prepackaged version of the Linux kernel.
 Linux was written by Linus Torvalds <Linus.Torvalds@cs.Helsinki.FI> and
@@ -377,9 +377,11 @@ There are two solutions that I know of:
 
 There some add on modules that hook into make-kpkg and the kernel
 sources so that they may be kept in synchrony woth the kernel you
-run. If you have such a mosule source package, for example,
+run. If you have such a module source package, for example,
 pcmcia-source, then please read README.modules as well. If you don't
-never mind.
+never mind. (The file is in /usr/doc/kernel-source-X.X.XX/. If you
+don't have kernsel-source packages installed [that's OK]. there is a
+copy in /usr/lib/kernel-package/README.modules).
 
 Have fun,
 

@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Mon Feb 22 00:18:06 1999
-## Last Machine Used: tiamat.golden-gryphon.com
-## Update Count	    : 386
+## Last Modified On : Sat May 15 00:13:05 1999
+## Last Machine Used: glaurung.green-gryphon.com
+## Update Count	    : 392
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.63 1999/02/22 07:17:36 srivasta Exp $
+## $Id: rules,v 1.64 1999/05/15 06:51:30 srivasta Exp $
 ###############################################################################
 
 # The version of kernel-package this belongs to
@@ -54,7 +54,17 @@ do_clean := YES
 
 
 # The default architecture (all if architecture independent)
-architecture:=$(shell dpkg --print-architecture)
+ifdef ARCH
+  architecture:=$(ARCH)
+  ifndef CROSS_COMPILE
+    KERNEL_CROSS:=$(ARCH)-linux-
+  else
+    KERNEL_CROSS:=$(CROSS_COMPILE)-
+  endif
+else
+  architecture:=$(shell dpkg --print-architecture)
+endif
+
 KERNEL_ARCH:=$(architecture)
 DEBCONFIG = $(CONFDIR)/config
 IMAGE_DESTDIR=/boot
@@ -133,7 +143,7 @@ ifneq ($(strip $(filter ppc powerpc,$(architecture))),)
 # sub archs can be CHRP, PowerMac, PReP
 GUESS_SUBARCH:=$(shell awk '/machine/ { print $$3}' /proc/cpuinfo)
 
-ifeq (,$(findstring $(SUBARCH),CHRP Power PReP pmac))
+ifeq (,$(findstring $(SUBARCH),chrp power prep CHRP Power PReP pmac))
 SUBARCH:=$(GUESS_SUBARCH)
 endif
 
@@ -143,7 +153,7 @@ kimage := zImage
 target = $(kimage)
 
 # PowerPCs use yet another loader: quik.
-ifeq ($(strip $(SUBARCH)),Power)
+ifneq (,$(findstring $(SUBARCH)),Power power)
 SUBARCH:=pmac
 endif
 ifeq ($(strip $(SUBARCH)),pmac)
@@ -158,14 +168,14 @@ coffdest=$(INT_IMAGE_DESTDIR)/vmlinux.coff-$(version)
 DEBCONFIG = $(CONFDIR)/config.powermac
 endif
 
-ifeq ($(strip $(SUBARCH)),CHRP)
+ifneq (,$(findstring $(SUBARCH)),CHRP chrp)
 SUBARCH:=chrp
 kimagesrc = arch/$(KERNEL_ARCH)/chrpboot/$(kimage)
 kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
 DEBCONFIG = $(CONFDIR)/config.chrp
 endif
 
-ifeq ($(strip $(SUBARCH)),PReP)
+ifneq (,$(findstring $(SUBARCH)),PReP prep)
 SUBARCH:=prep
 kimagesrc = arch/$(KERNEL_ARCH)/coffboot/$(kimage)
 kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
@@ -194,6 +204,11 @@ NEED_DIRECT_GZIP_IMAGE=YES
 kimagesrc = vmlinux
 kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
 DEBCONFIG = $(CONFDIR)/config.sparc
+# make-kpkg --subarch=sun4u --arch_in_name binary-arch
+# to generate UltraSparc kernel packages.
+ifeq ($(SUBARCH),sun4u)
+KERNEL_ARCH=sparc64
+endif
 endif
 
 
@@ -451,9 +466,11 @@ all build: configure
 # debian.config contains the current idea of what the image should
 # have.
 	-test -f stamp-configure || $(deb_rule) configure
-	$(MAKE) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) $(target)
+	$(MAKE) $(FLAV_ARG) ARCH=$(KERNEL_ARCH)	\
+	                    CROSS_COMPILE=$(KERNEL_CROSS) $(target)
 ifdef MODULES_ENABLED
-	$(MAKE) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) modules
+	$(MAKE) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) \
+	                    CROSS_COMPILE=$(KERNEL_CROSS) modules
 endif
 	touch stamp-build
 
@@ -493,9 +510,12 @@ endif
 	-test ! -f stamp-configure && \
 	  (test -f .config || \
                 $(install_file) $(DEBDIR)/config .config) \
-	  && $(MAKE) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) oldconfig \
-          && $(MAKE) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) dep \
-          && $(MAKE) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) clean && \
+	  && $(MAKE) $(FLAV_ARG) CROSS_COMPILE=$(KERNEL_CROSS) \
+                                 ARCH=$(KERNEL_ARCH) oldconfig \
+          && $(MAKE) $(FLAV_ARG) CROSS_COMPILE=$(KERNEL_CROSS) \
+                                 ARCH=$(KERNEL_ARCH) dep \
+          && $(MAKE) $(FLAV_ARG) CROSS_COMPILE=$(KERNEL_CROSS) \
+                                 ARCH=$(KERNEL_ARCH) clean && \
               touch stamp-configure
 
 .config:
@@ -630,7 +650,8 @@ stamp-headers: configure
             (cd debian/tmp-headers/usr/src/$(h_package); umask 000; tar xsf -)
 	(cd debian/tmp-headers/usr/src/$(h_package)/include; rm -f asm; \
 		ln -s asm-$(KERNEL_ARCH) asm)
-	dpkg-gencontrol -isp -p$(h_package) -Pdebian/tmp-headers/
+	dpkg-gencontrol -DArchitecture=$(KERNEL_ARCH) -isp \
+                        -p$(h_package) -Pdebian/tmp-headers/
 	chown -R root.root debian/tmp-headers
 	chmod -R og=rX debian/tmp-headers
 	dpkg --build debian/tmp-headers $(DEB_DEST)
@@ -724,7 +745,8 @@ endif
                         $(INT_IMAGE_DESTDIR)/System.map-$(version)
 	-test -f System.map &&  chmod 644 \
                         $(INT_IMAGE_DESTDIR)/System.map-$(version)
-	dpkg-gencontrol -isp -p$(i_package) -Pdebian/tmp-image/
+	dpkg-gencontrol -DArchitecture=$(KERNEL_ARCH) -isp \
+                        -p$(i_package) -Pdebian/tmp-image/
 	chown -R root.root debian/tmp-image
 	chmod -R og=rX debian/tmp-image
 	dpkg --build debian/tmp-image $(DEB_DEST)

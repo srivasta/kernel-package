@@ -1,3 +1,17 @@
+kernel-package (6.08) unstable; urgency=low
+
+  * Allow all lowercase subarch names for the power pc family (mostly for
+    the sake of people who specif the subarch on the command line).
+  * Add test and kernel arch change for ultrasparc (patch posted on the
+    debian-sparc list)
+  * explicitly mentioned where people can find README.modules. 
+    closes: Bug#36562
+  * Fix typo in rules file that would cause tar to clobber files. 
+    closes: Bug#37527
+  * Added patches to allow cross compiling kernels.closes: Bug#36863 
+
+ -- Manoj Srivastava <srivasta@debian.org>  Sat, 15 May 1999 01:50:59 -0500
+
 kernel-package (6.07) unstable; urgency=low
 
   * Changed ?= rules in the makefile, since there are reports that
