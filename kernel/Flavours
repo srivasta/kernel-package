@@ -36,6 +36,16 @@
  modules would be installed under /lib/modules/2.0.30-speed_hack,
  uname -r would report the version as 2.0.30-speed_hack.
 
+	One can edit /etc/init.d/syslogd (or however you start klogd)
+ like so (this is from the Debian init.d directory)
+----------------------------------------------------------------------
+#  Use KLOGD="-k /boot/System.map-$(uname -r)" to specify System.map
+#
+KLOGD="-k /boot/System.map-$(uname -r)"
+ ....
+   .... /sbin/klogd $KLOGD
+----------------------------------------------------------------------
+
 	The patch provided below is from the Makefile for 2.1.47
  kernel, and may not apply cleanly on other Makefiles. It is
  recommended that you use it purely as a guideline, and modify the
