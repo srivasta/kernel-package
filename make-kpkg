@@ -5,16 +5,16 @@
 # Created On       : Mon Jun 17 01:10:11 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Wed Feb  6 10:33:28 2002
+# Last Modified On : Thu Apr 25 09:25:32 2002
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 180
+# Update Count     : 181
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
 #
 #
 #
-#    $Id: make-kpkg,v 1.72 2002/04/12 20:03:33 srivasta Exp $
+#    $Id: make-kpkg,v 1.73 2002/04/25 14:28:40 srivasta Exp $
 #
 require 5.002;
 use strict;
@@ -29,7 +29,7 @@ make-kpkg - build Debian kernel packages from Linux kernel sources.
 ($main::MYNAME     = $main::0) =~ s|.*/||;
 $main::Author      = "Manoj Srivastava";
 $main::AuthorMail  = "srivasta\@debian.org";
-$main::Version     = '$Revision: 1.72 $ ';
+$main::Version     = '$Revision: 1.73 $ ';
 
 my $added_modules='';
 my $added_patches='';
@@ -745,11 +745,13 @@ EOERR1
       my $version = '';
       $line =~ m/\((\S+)\)/;
       $version = $1;
-      if ($revision && $version !~ m/$revision/) {
+      if ($revision && $version != $revision) {
 	print STDERR <<"EOMSG";
-I note that you are using the --revision flag with the value $revision.
+I note that you are using the --revision flag with the value 
+   $revision.
 However, the ./debian/changelog file exists, and has a different value
-$version.  I am confused by this discrepancy, and am halting.
+   $version.  
+I am confused by this discrepancy, and am halting.
 EOMSG
       ;
 	exit (2);

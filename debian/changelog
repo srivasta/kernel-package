@@ -1,3 +1,10 @@
+kernel-package (7.112) unstable; urgency=medium
+
+  * Use a simple string match, not a regexp match, when comparing
+    versions.                                                closes: But#144489
+
+ -- Manoj Srivastava <srivasta@debian.org>  Thu, 25 Apr 2002 09:28:01 -0500
+
 kernel-package (7.111) unstable; urgency=medium
 
   * Fix typo in the rules file                               closes: Bug#144301
