@@ -177,6 +177,11 @@ MODULE Packaging hints
                may be set in the config file, so if this variable
                exists, it incorporates and over rides the env vars
                UNSIGN_CHANGELOG, UNSIGN_SOURCE, and ROOT_CMD
+   o) CONCURRENCY_LEVEL The setting from the user passed in to pass to
+      make -j. kernel-package itself does not call the modules target
+      with -j since it does not know if that is safe; it is up to
+      module maintainers to see if this parallel compilation setting
+      may be used.
 
 	Please have a look at the sample files for creating a
  dependent modules package, sample.module.rules and

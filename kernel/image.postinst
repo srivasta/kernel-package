@@ -12,7 +12,7 @@
 # HISTORY          :
 # Description      :
 #
-#    $Id: image.postinst,v 1.113 2003/04/13 20:14:55 srivasta Exp $
+#    $Id: image.postinst,v 1.114 2003/04/20 04:37:51 srivasta Exp $
 #
 
 #
@@ -840,8 +840,8 @@ if (-e "/System.map" || -e "/System.old") {
 
  I can delete these symbolic links for you, if you wish.
 EOMAP
-
-  if (&ask_y("Would you like to delete the obsolete links now")){
+  ;
+  if ( &ask_y("Would you like to delete the obsolete links now" ) ) {
     unlink '/System.map' if -e '/System.map';
     unlink '/System.old' if -e '/System.old';
     print STFERR "Obsolete links removed.\n";
@@ -855,94 +855,6 @@ EOMAP
 my $linktarget;
 $linktarget = "../share/doc/kernel-image-$version";
 
-if (-d "/usr/doc") {
-  # Well, we still need to handle this, at least for the time being
-  if (-d "/usr/share/doc/kernel-image-$version") {
-    # So the new doc dir exists, goody
-    if (-l "/usr/doc/kernel-image-$version") {
-      unlink "/usr/doc/kernel-image-$version";
-    }
-    my $targetdir;
-    my $stargetdir;
-    if (-x '/bin/pwd') {
-      # Oooh. Moving away from $image_dest (which is normally /, but
-      # not always
-      chdir('/usr/doc/');
-      $targetdir=`/bin/pwd`;
-      chdir('/usr/share/doc/');
-      $stargetdir=`/bin/pwd`;
-
-      chdir('/usr/doc');
-      if (-d '../share/doc/') {
-	chdir('../share/doc/');
-	my $ltarget=`/bin/pwd`;
-	if ($ltarget ne $stargetdir) {
-	  $linktarget = "/usr/share/doc/kernel-image-$version";
-	}
-	else {
-	  $linktarget = "../share/doc/kernel-image-$version";
-	}
-      }
-      else {
-	$linktarget = "/usr/share/doc/kernel-image-$version";
-      }
-    }
-    # Make sure we are back where we want to be, in $image_dest[/]
-    chdir("$image_dest") or die "could not chdir to $image_dest:$!\n";
-
-    if ($targetdir ne $stargetdir) {
-      if (-d "/usr/doc/kernel-image-$version") {
-	print STDERR "Yikes! The old directory, /usr/doc/kernel-image-$version\n";
-	print STDERR "has not been removed! This is an error; attempting\n";
-	print STDERR "repairs";
-	if (-f "/usr/doc/kernel-image-$version/.dhelp") {
-	  unlink "/usr/doc/kernel-image-$version/.dhelp";
-	  rmdir "/usr/doc/kernel-image-$version";
-	}
-	if (-d "/usr/doc/kernel-image-$version") {
-	  print STDERR <<"EOFERRONE";
-Failed repairs. There are old files in /usr/doc/$package_name/ created
-by you or another script. I can copy them over to the new location
-/usr/share/doc/$package_name, if you wish, preserving your versions of
-the files.  No files shall be over written, instead, backup versions
-shall be created in /usr/share/doc/$package_name as needed.
-
-EOFERRONE
-  ;
-	  my $answer='';
-	  print "Shall I copy the files over [Yn]?";
-	  $answer=<STDIN>;
-	  if ($answer =~ /^n/i) {
-	    print "Not copying over, aborting\n";
-	    exit 1;
-	  }
-	  else {
-	    system "cp", "-a", "--backup=t",
-	    "/usr/doc/kernel-image-$version",
-	    "/usr/share/doc/kernel-image-$version/.." ||
-	      die "Error copying files over: $?";
-	    system "rm", "-rf", "/usr/doc/kernel-image-$version" ||
-	      die "Error removing old directory:$?";
-	  }
-	}
-      }
-      if (-e "/usr/doc/kernel-image-$version") {
-	print STDERR "/usr/doc/kernel-image-$version exists, but is not a directory\n";
-	if (-l "/usr/doc/kernel-image-$version") {
-	  print STDERR "It is a symbolic link. Overwriting\n";
-	  unlink "/usr/doc/kernel-image-$version";
-	  symlink $linktarget, "/usr/doc/kernel-image-$version";
-	}
-	else {
-	  print STDERR "This is an error. Aborting\n";
-	  exit 1;
-	}
-      }
-      # File unexists. Free to go ahead and create link
-      symlink $linktarget,  "/usr/doc/kernel-image-$version";
-    }
-  }
-}
 
 ## Run user hook script here, if any
 if (-x "$postinst_hook") {

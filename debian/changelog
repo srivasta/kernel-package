@@ -1,3 +1,12 @@
+kernel-package (8.030) unstable; urgency=low
+
+  * No longer install /usr/doc links for kernel images. Have
+    kernel-package now depend on perl, not perl5.            closes: Bug#189756
+  * Pass on CONCURRENCY_LEVEL in the environment for all modules to
+    use. Document it in README.modules.                      closes: Bug#189765
+
+ -- Manoj Srivastava <srivasta@debian.org>  Sat, 19 Apr 2003 23:37:13 -0500
+
 kernel-package (8.029) unstable; urgency=low
 
   * A whole bunch of typo fixes from RubÅÈn Porras 

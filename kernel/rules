@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.197 2003/04/14 09:09:05 srivasta Exp $
+## $Id: rules,v 1.198 2003/04/20 04:37:51 srivasta Exp $
 ###############################################################################
 
 ifdef KPKG_ARCH
@@ -1079,7 +1079,7 @@ export root_cmd FLAVOUR INT_SUBARCH APPEND_TO_VERSION UNSIGN_CHANGELOG  \
        DIR_PATCH_APPLY VERSIONED_PATCH_DIR VERSIONED_ALL_PATCH_UNPATCH  \
        VERSIONED_ALL_PATCH_APPLY VERSIONED_DIR_PATCH_UNPATCH            \
        VERSIONED_DIR_PATCH_APPLY KPKG_SELECTED_PATCHES                  \
-       KPKG_SELECTED_MODULES
+       KPKG_SELECTED_MODULES CONCURRENCY_LEVEL
 
 
 ifeq ($(strip $(IN_KERNEL_DIR)),)
