@@ -1,3 +1,10 @@
+kernel-package (6.04) unstable; urgency=low
+
+  * Tightened the reg exp fr determining the extraversion to ignore
+    whitespace. fixes: BUG#32457 
+
+ -- Manoj Srivastava <srivasta@debian.org>  Wed, 27 Jan 1999 02:14:33 -0600
+
 kernel-package (6.03) frozen unstable; urgency=high
 
   * This update fixes a release critical bug, and only includes bug fixes
