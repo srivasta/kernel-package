@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Mon Feb 16 16:42:18 1998
+## Last Modified On : Wed Feb 18 01:06:41 1998
 ## Last Machine Used: tiamat.datasync.com
-## Update Count	    : 223
+## Update Count	    : 224
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.26 1998/02/16 23:04:58 srivasta Exp $
+## $Id: rules,v 1.27 1998/02/18 07:08:48 srivasta Exp $
 ###############################################################################
 
 # The version of kernel-package this belongs to
@@ -331,25 +331,28 @@ stamp-source: configure
 	chmod 755 debian/tmp-source/DEBIAN/postrm
 	$(install_file) debian/changelog \
 	         debian/tmp-source/usr/doc/$(package)/changelog.debian
-	gzip -9f debian/tmp-source/usr/doc/$(package)/changelog.debian
+	gzip -9qf debian/tmp-source/usr/doc/$(package)/changelog.debian
 	$(install_file) $(DEBDIR)/LinkPolicy \
 	         debian/tmp-source/usr/doc/$(package)/LinkPolicy
-	gzip -9f debian/tmp-source/usr/doc/$(package)/LinkPolicy
+	gzip -9qf debian/tmp-source/usr/doc/$(package)/LinkPolicy
 	$(install_file) $(DEBDIR)/README \
 	         debian/tmp-source/usr/doc/$(package)/debian.README
-	gzip -9f debian/tmp-source/usr/doc/$(package)/debian.README
+	gzip -9qf debian/tmp-source/usr/doc/$(package)/debian.README
 	$(install_file) $(DEBDIR)/README.headers \
 	         debian/tmp-source/usr/doc/$(package)/README.headers
-	gzip -9f debian/tmp-source/usr/doc/$(package)/README.headers
+	gzip -9qf debian/tmp-source/usr/doc/$(package)/README.headers
 	$(install_file) README \
 	         debian/tmp-source/usr/doc/$(package)/README
-	gzip -9f debian/tmp-source/usr/doc/$(package)/README
+	gzip -9qf debian/tmp-source/usr/doc/$(package)/README
 	$(install_file) $(DEBDIR)/Headers \
 	         debian/tmp-source/usr/doc/$(package)/Headers
-	gzip -9f debian/tmp-source/usr/doc/$(package)/Headers
+	gzip -9qf debian/tmp-source/usr/doc/$(package)/Headers
 	$(install_file) $(DEBDIR)/Flavours \
 	         debian/tmp-source/usr/doc/$(package)/Flavours
-	gzip -9f debian/tmp-source/usr/doc/$(package)/Flavours
+	gzip -9qf debian/tmp-source/usr/doc/$(package)/Flavours
+	$(install_file) $(DEBDIR)/Rationale \
+	         debian/tmp-source/usr/doc/$(package)/Rationale
+	gzip -9qf debian/tmp-source/usr/doc/$(package)/Rationale
 	$(install_file) $(DEBDIR)/copyright.source \
 		debian/tmp-source/usr/doc/$(package)/copyright
 	echo "This was produced by kernel-package version $(kpkg_version)." > \
@@ -390,13 +393,13 @@ stamp-headers: configure
 		debian/tmp-headers/usr/doc/$(h_package)/copyright
 	$(install_file) debian/changelog \
 	         debian/tmp-headers/usr/doc/$(h_package)/changelog.debian
-	gzip -9f debian/tmp-headers/usr/doc/$(h_package)/changelog.debian
+	gzip -9qf debian/tmp-headers/usr/doc/$(h_package)/changelog.debian
 	$(install_file) $(DEBDIR)/LinkPolicy \
 	       debian/tmp-headers/usr/doc/$(h_package)/LinkPolicy
-	gzip -9f debian/tmp-headers/usr/doc/$(h_package)/LinkPolicy
+	gzip -9qf debian/tmp-headers/usr/doc/$(h_package)/LinkPolicy
 	$(install_file) $(DEBDIR)/README.headers \
 	         debian/tmp-headers/usr/doc/$(h_package)/debian.README
-	gzip -9f debian/tmp-headers/usr/doc/$(h_package)/debian.README
+	gzip -9qf debian/tmp-headers/usr/doc/$(h_package)/debian.README
 	echo "This was produced by kernel-package version $(kpkg_version)." > \
 	         debian/tmp-headers/usr/doc/$(h_package)/Buildinfo
 	-tar cf - include | \
@@ -466,15 +469,15 @@ endif
 	chmod 755 debian/tmp-image/DEBIAN/prerm
 	$(install_file) debian/changelog \
 	         debian/tmp-image/usr/doc/$(i_package)/changelog.debian
-	gzip -9f debian/tmp-image/usr/doc/$(i_package)/changelog.debian
+	gzip -9qf debian/tmp-image/usr/doc/$(i_package)/changelog.debian
 ifneq ($(strip $(architecture)),m68k)
 	$(install_file) $(DEBDIR)/LiloDefault \
 	         debian/tmp-image/usr/doc/$(i_package)/LiloDefault
-	gzip -9f debian/tmp-image/usr/doc/$(i_package)/LiloDefault
+	gzip -9qf debian/tmp-image/usr/doc/$(i_package)/LiloDefault
 endif
 	$(install_file) $(DEBDIR)/README.image \
 	         debian/tmp-image/usr/doc/$(i_package)/debian.README
-	gzip -9f debian/tmp-image/usr/doc/$(i_package)/debian.README
+	gzip -9qf debian/tmp-image/usr/doc/$(i_package)/debian.README
 	$(install_file) $(DEBDIR)/copyright.image \
 		debian/tmp-image/usr/doc/$(i_package)/copyright
 	echo "This was produced by kernel-package version $(kpkg_version)." > \

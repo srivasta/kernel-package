@@ -5,16 +5,16 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Mon Nov 10 10:21:58 1997
+## Last Modified On : Wed Feb 18 01:02:16 1998
 ## Last Machine Used: tiamat.datasync.com
-## Update Count	    : 120
+## Update Count	    : 121
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
 ##
 ###############################################################################
 
-#    $Id: rules,v 1.9 1997/11/10 16:46:49 srivasta Exp $
+#    $Id: rules,v 1.10 1998/02/18 07:08:46 srivasta Exp $
 
 
 # Please change the maintainer information, as well as the debian version
@@ -93,6 +93,7 @@ stamp-binary:
 	$(install_file)    kernel/Flavours $(DOCDIR)/Flavours
 	$(install_file)    Problems $(DOCDIR)/Problems
 	$(install_file)    Multi-Arch $(DOCDIR)/Multi-Arch
+	$(install_file)    Rationale $(DOCDIR)/Rationale
 	gzip -9fqr         $(DOCDIR)
 	$(install_file)    debian/copyright $(DOCDIR)/copyright
 	$(install_file)    kernel-pkg.conf.5 $(MAN5DIR)/kernel-pkg.conf.5
@@ -106,6 +107,7 @@ stamp-binary:
 	(cd kernel;        tar cf - * | \
            (cd             $(SRCTOP)/debian/tmp/usr/lib/$(package);\
                            tar xf -))
+	$(install_file)    Rationale $(SRCTOP)/debian/tmp/usr/lib/$(package)/
 	# Hack, tell the   rules file what version of kernel package it is
 	sed -e             's/=K=V/$(version)/' kernel/rules > \
                               $(SRCTOP)/debian/tmp/usr/lib/$(package)/rules
