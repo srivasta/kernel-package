@@ -1,4 +1,4 @@
-kernel-package (7.105) unstable; urgency=low
+kernel-package (7.105) unstable; urgency=medium
 
   * Fixed various typos in the kernel-doc package descriptions. 
                                                              closes: Bug#140709
