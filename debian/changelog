@@ -1,3 +1,11 @@
+kernel-package (8.048) unstable; urgency=low
+
+  * Fixed usage of chown root.root in the rules files.
+  * Also put the kernel-packageconfig spanish man page in the correct
+    place.                                            closes: Bug#204365
+
+ -- Manoj Srivastava <srivasta@debian.org>  Thu, 14 Aug 2003 12:15:05 -0500
+
 kernel-package (8.047) unstable; urgency=low
 
   * Since the sample module rules were horribly out of date, and had

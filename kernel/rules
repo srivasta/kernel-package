@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Mon Aug 11 14:33:21 2003
+## Last Modified On : Wed Aug 13 13:29:43 2003
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 580
+## Update Count	    : 585
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.215 2003/08/11 19:47:19 srivasta Exp $
+## $Id: rules,v 1.216 2003/08/14 17:15:52 srivasta Exp $
 ###############################################################################
 
 ifdef KPKG_ARCH
@@ -571,7 +571,7 @@ HEADER_SRC:= $(HEADER_TOP)/usr/src/$(h_package)
 
 FILES_TO_CLEAN  = modules/modversions.h modules/ksyms.ver debian/files \
                   conf.vars scripts/cramfs/cramfsck scripts/cramfs/mkcramfs \
-                  applied_patches
+                  applied_patches debian/buildinfo
 STAMPS_TO_CLEAN = stamp-build stamp-configure stamp-source stamp-image \
                   stamp-headers stamp-src stamp-diff stamp-doc \
                   stamp-buildpackage stamp-libc-kheaders stamp-debian \
@@ -1172,6 +1172,10 @@ ifdef MODULES_ENABLED
 	$(MAKE) $(do_parallel) $(EXTRAV_ARG) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) \
 	                    $(CROSS_ARG) modules
 endif
+	dpkg -l gcc perl dpkg 'libc*' binutils ldso make dpkg-dev |\
+         awk '$$1 == "ii" { printf("%s-%s\n", $$2, $$3) }'   > debian/buildinfo
+	@echo this was built on a machine with the kernel: >> debian/buildinfo
+	uname -a >> debian/buildinfo
 	echo done >  $@
 
 buildpackage: clean stamp-buildpackage
@@ -1494,13 +1498,13 @@ ifneq ($(strip $(source_clean_hook)),)
                test -x $(source_clean_hook) && $(source_clean_hook))
 endif
 	chmod -R og=rX $(SOURCE_TOP)
-	chown -R root.root $(SOURCE_TOP)
+	chown -R root:root $(SOURCE_TOP)
 	(cd $(SOURCE_TOP)/usr/src/; \
            tar $(TAR_COMPRESSION) -cf $(package).tar.$(TAR_SUFFIX) $(package);\
              rm -rf $(package);)
 	dpkg-gencontrol -isp -p$(package) -P$(SOURCE_TOP)/
 	chmod -R og=rX $(SOURCE_TOP)
-	chown -R root.root $(SOURCE_TOP)
+	chown -R root:root $(SOURCE_TOP)
 	dpkg --build $(SOURCE_TOP) $(DEB_DEST)
 	rm -f -r $(SOURCE_TOP)
 	echo done >  stamp-source
@@ -1573,7 +1577,7 @@ ifneq ($(strip $(header_clean_hook)),)
 endif
 	dpkg-gencontrol -DArchitecture=$(architecture) -isp \
                         -p$(h_package) -P$(HEADER_TOP)/
-	chown -R root.root $(HEADER_TOP)
+	chown -R root:root $(HEADER_TOP)
 	chmod -R og=rX $(HEADER_TOP)
 	dpkg --build $(HEADER_TOP) $(DEB_DEST)
 	rm -rf $(HEADER_TOP)
@@ -1626,7 +1630,7 @@ endif
 	chmod 755 $(DOC_TOP)/DEBIAN/postinst
 	dpkg-gencontrol -isp -p$(d_package) -P$(DOC_TOP)/
 	chmod -R og=rX $(DOC_TOP)
-	chown -R root.root $(DOC_TOP)
+	chown -R root:root $(DOC_TOP)
 	dpkg --build $(DOC_TOP) $(DEB_DEST)
 	rm -rf $(DOC_TOP)
 	echo done >  stamp-doc
@@ -1696,9 +1700,11 @@ endif
 	$(install_file) $(DEBDIR)/copyright.image $(IMAGE_DOC)/copyright
 	echo "This was produced by kernel-package version $(kpkg_version)." > \
 	         $(IMAGE_DOC)/Buildinfo
-	$(install_file) .config         $(INT_IMAGE_DESTDIR)/config-$(version)
-	$(install_file) conf.vars       $(IMAGE_DOC)/conf.vars
-	gzip -9qf                       $(IMAGE_DOC)/conf.vars
+	$(install_file) .config          $(INT_IMAGE_DESTDIR)/config-$(version)
+	$(install_file) conf.vars        $(IMAGE_DOC)/conf.vars
+	gzip -9qf                        $(IMAGE_DOC)/conf.vars
+	$(install_file) debian/buildinfo $(IMAGE_DOC)/buildinfo
+	gzip -9qf                        $(IMAGE_DOC)/buildinfo
 	if test -f debian/official -a -f debian/README.Debian ; then \
            $(install_file) debian/README.Debian  $(IMAGE_DOC)/README.Debian ; \
          gzip -9qf                               $(IMAGE_DOC)/README.Debian;\
@@ -1762,7 +1768,7 @@ endif
 	dpkg-gencontrol -DArchitecture=$(architecture) -isp                   \
                         -p$(i_package) -P$(IMAGE_TOP)/
 	chmod -R og=rX $(IMAGE_TOP)
-	chown -R root.root $(IMAGE_TOP)
+	chown -R root:root $(IMAGE_TOP)
 	dpkg --build $(IMAGE_TOP) $(DEB_DEST)
 	rm -f -r $(IMAGE_TOP)
 ifeq ($(strip $(do_clean)),YES)

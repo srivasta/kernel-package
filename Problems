@@ -1,5 +1,5 @@
 
-    $Id: Problems,v 1.15 2002/01/22 03:51:06 srivasta Exp $
+    $Id: Problems,v 1.16 2003/08/14 17:15:52 srivasta Exp $
 
  This is an (incomplete) list of problems that people have encountered
  in the past while using kernel-package. Please remember to configure
@@ -168,3 +168,15 @@ VFS: Cannot open root device "308" or 03:08
 	variety kernel image.  You need to go back and recompile the
 	kernel image, either including the root file system type as a
 	builtin, or adding a --initrd flag to the make-kpkg run.
+      p) Even when the kernel is built with a regular user using fakeroot, 
+         it fails with
+> install -p -d -o root -g root -m 755 debian/tmp-image/DEBIAN
+> install: cannot create directory `debian/tmp-image/DEBIAN': Permission
+> denied
+         since the ./debian/tmp-image directory is owned by root.root
+
+	It was actually due to the fact that (somehow) the XFS filesystem
+	didn't have restrict_chown set (see /proc/sys/fs/xfs/restrict_chown),
+	which was causing install to give away permissions on a directory
+	(lesson: fakeroot and xfs w/o restrict_chown=1 don't play together
+	nicely).
