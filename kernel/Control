@@ -64,7 +64,7 @@ Package: kernel-doc-=V
 Architecture: all
 Section: doc
 Priority: optional
-Suggests: kernel-image-=V
+Suggests: kernel-image-=V=SA
 Description: Linux kernel specific documentation.
  This package provides The various readme's in the kernel
  Documentation/ subdirectory: these typically contain kernel-specific
