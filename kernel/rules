@@ -5,9 +5,9 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Mon Apr 26 14:40:24 2004
+## Last Modified On : Mon Sep 27 15:38:11 2004
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count	    : 684
+## Update Count	    : 705
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
@@ -594,10 +594,16 @@ ifeq ($(strip $(architecture)),mipsel)
 endif
 
 ifeq ($(strip $(architecture)),um)
+  DEBCONFIG = $(CONFDIR)/config.um
   kimage := linux
   target = linux
+  kimagesrc  = $(strip linux)
+  kimagedest = $(INT_IMAGE_DESTDIR)/linux
   loaderdep=
   loaderdoc=
+  KERNEL_ARCH = um
+  architecture = i386
+  IMAGEDIR = /usr/bin
 endif
 ######################################################################
 ######################################################################
@@ -702,7 +708,11 @@ endif
 # The name of the package (for example, `emacs').
 package   := kernel-source-$(version)
 h_package := kernel-headers-$(version)
-i_package := kernel-image-$(version)$(INT_SUBARCH)
+ifeq ($(strip $(KERNEL_ARCH)),um)
+	i_package := kernel-uml-$(version)$(INT_SUBARCH)
+else
+	i_package := kernel-image-$(version)$(INT_SUBARCH)
+endif
 d_package := kernel-doc-$(version)
 l_package := libc-kheaders
 
@@ -1238,22 +1248,22 @@ valid_patches = $(shell if [ -n "$(VERSIONED_PATCH_DIR)" ] &&                \
                            [ -d $(ALL_PATCH_APPLY)  ]; then                   \
                               run-parts --test $(ALL_PATCH_APPLY);            \
                         fi)
-valid_unpatches = $(shell if [ -n "$(VERSIONED_PATCH_DIR)"       ]  &&            \
-                             [ -d $(VERSIONED_DIR_PATCH_UNPATCH) ]; then          \
+valid_unpatches = $(shell ( if [ -n "$(VERSIONED_PATCH_DIR)"       ]  &&          \
+                               [ -d $(VERSIONED_DIR_PATCH_UNPATCH) ]; then        \
                                  run-parts --test $(VERSIONED_DIR_PATCH_UNPATCH); \
-                           fi;                                                    \
-                           if [ -n "$(VERSIONED_ALL_PATCH_DIR)"    ]  &&          \
-                              [ -d $(VERSIONED_ALL_PATCH_UNPATCH)  ]; then        \
+                            fi;                                                   \
+                            if [ -n "$(VERSIONED_ALL_PATCH_DIR)"    ]  &&         \
+                               [ -d $(VERSIONED_ALL_PATCH_UNPATCH)  ]; then       \
                                  run-parts --test $(VERSIONED_ALL_PATCH_UNPATCH); \
-                           fi;                                                    \
-                           if [ -n "$(PATCH_DIR)"       ]  &&                     \
-                              [ -d $(DIR_PATCH_UNPATCH) ]; then                   \
+                            fi;                                                   \
+                            if [ -n "$(PATCH_DIR)"       ]  &&                    \
+                               [ -d $(DIR_PATCH_UNPATCH) ]; then                  \
                                  run-parts --test $(DIR_PATCH_UNPATCH);           \
-                           fi;                                                    \
-                          if [ -n "$(ALL_PATCH_DIR)"    ]  &&                     \
-                             [ -d $(ALL_PATCH_UNPATCH)  ]; then                   \
+                            fi;                                                   \
+                            if [ -n "$(ALL_PATCH_DIR)"    ]  &&                   \
+                               [ -d $(ALL_PATCH_UNPATCH)  ]; then                 \
                                 run-parts --test $(ALL_PATCH_UNPATCH);            \
-                          fi)
+                            fi) | tac)
 endif
 endif
 
@@ -1564,8 +1574,10 @@ ifeq ($(shell if [ $(VERSION) -ge 2 ] && [ $(PATCHLEVEL) -ge 5 ]; then \
 	$(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) \
                                  ARCH=$(KERNEL_ARCH) clean 
 else
+ifneq ($(strip $(KERNEL_ARCH)),um)
 	$(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) \
                                 ARCH=$(KERNEL_ARCH) prepare
+endif
 endif
 	echo done >  $@
 
@@ -1654,7 +1666,7 @@ else
 endif
 
 real_stamp_source:
-ifeq ($(strip $(architecture)),um)
+ifeq ($(strip $(KERNEL_ARCH)),um)
 	echo done >  stamp-source
 else
 ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
@@ -1754,7 +1766,7 @@ else
 endif
 
 real_stamp_headers:
-ifeq ($(strip $(architecture)),um)
+ifeq ($(strip $(KERNEL_ARCH)),um)
 	echo done >  stamp-headers
 else
 ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
@@ -1838,7 +1850,7 @@ else
 endif
 
 real_stamp_doc:
-ifeq ($(strip $(architecture)),um)
+ifeq ($(strip $(KERNEL_ARCH)),um)
 	echo done >  stamp-doc
 else
 ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
@@ -1922,6 +1934,7 @@ endif
 	$(make_directory) $(IMAGE_TOP)/DEBIAN
 	$(make_directory) $(IMAGE_TOP)/$(IMAGEDIR)
 	$(make_directory) $(IMAGE_DOC)
+ifneq ($(strip $(KERNEL_ARCH)),um)
 	sed -e 's/=V/$(version)/g'    -e 's/=B/$(link_in_boot)/g'   \
             -e 's/=S/$(no_symlink)/g' -e 's/=R/$(reverse_symlink)/g' \
             -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \
@@ -1946,6 +1959,9 @@ endif
              -e 's@=M@$(MKIMAGE)@g'    -e 's/=OF/$(AM_OFFICIAL)/g'    \
 	             $(DEBDIR)/image.prerm > $(IMAGE_TOP)/DEBIAN/prerm
 	chmod 755 $(IMAGE_TOP)/DEBIAN/prerm
+else
+	$(make_directory) $(IMAGE_TOP)/usr/share/kernel-uml/modules
+endif
 	$(install_file) Documentation/Changes $(IMAGE_DOC)/
 	gzip -9qf $(IMAGE_DOC)/Changes
 	$(install_file) debian/changelog        $(IMAGE_DOC)/changelog.Debian
@@ -1960,7 +1976,11 @@ endif
 	echo "This was produced by kernel-package version $(kpkg_version)." > \
 	           $(IMAGE_DOC)/Buildinfo
 	chmod 0644 $(IMAGE_DOC)/Buildinfo
+ifeq ($(strip $(KERNEL_ARCH)),um)
+	$(install_file) .config          $(IMAGE_DOC)/config
+else
 	$(install_file) .config          $(INT_IMAGE_DESTDIR)/config-$(version)
+endif
 	$(install_file) conf.vars        $(IMAGE_DOC)/conf.vars
 	gzip -9qf                        $(IMAGE_DOC)/conf.vars
 	$(install_file) debian/buildinfo $(IMAGE_DOC)/buildinfo
@@ -1994,14 +2014,32 @@ ifneq ($(strip $(KERNEL_CROSS)),)
 	mv System.precious System.map
 endif
 endif
-	-depmod -q -FSystem.map -b $(IMAGE_TOP) $(version)
+	test ! -e $(IMAGE_TOP)/lib/modules/$(version)/source ||
+	   mv $(IMAGE_TOP)/lib/modules/$(version)/source ./debian/source-link
+	test ! -e $(IMAGE_TOP)/lib/modules/$(version)/build ||
+	   mv $(IMAGE_TOP)/lib/modules/$(version)/build ./debian/build-link
+ifeq ($(strip $(KERNEL_ARCH)),um)
+	-depmod -q -FSystem.map -b $(IMAGE_TOP) \
+           $(version)-`sed q include/linux/version.h | sed s/\"//g | awk -F\- '{print $2}'`
+else
+	-depmod -q -FSystem.map -b $(IMAGE_TOP) $(version); 
+endif
+	test ! -e ./debian/source-link ||
+	   mv ./debian/source-link $(IMAGE_TOP)/lib/modules/$(version)/source 
+	test ! -e  ./debian/build-link ||
+	   mv  ./debian/build-link $(IMAGE_TOP)/lib/modules/$(version)/build
+
 endif
 ifeq ($(strip $(NEED_DIRECT_GZIP_IMAGE)),YES)
 	gzip -9vc $(kimagesrc) > $(kimagedest)
 else
 	cp $(kimagesrc) $(kimagedest)
 endif
-	chmod 644 $(kimagedest)
+ifeq ($(strip $(KERNEL_ARCH)),um)
+	chmod 755 $(kimagedest);				
+else							
+	chmod 644 $(kimagedest);
+endif
 ifeq ($(strip $(HAVE_COFF_IMAGE)),YES)
 	cp $(coffsrc)   $(coffdest)
 	chmod 644       $(coffdest)
@@ -2023,10 +2061,15 @@ endif
                         $(INT_IMAGE_DESTDIR)/patches-$(version)
 	test ! -s applied_patches || chmod 644                                 \
                         $(INT_IMAGE_DESTDIR)/patches-$(version)
-	test ! -f System.map ||  cp System.map                                 \
-                        $(INT_IMAGE_DESTDIR)/System.map-$(version)
-	test ! -f System.map ||  chmod 644                                     \
-                        $(INT_IMAGE_DESTDIR)/System.map-$(version)
+ifneq ($(strip $(KERNEL_ARCH)),um)
+	test ! -f System.map ||  cp System.map                         \
+                        $(INT_IMAGE_DESTDIR)/System.map-$(version);    \
+	test ! -f System.map ||  chmod 644                             \
+                        $(INT_IMAGE_DESTDIR)/System.map-$(version);    \
+else
+	mv $(INSTALL_MOD_PATH)/lib/modules/* $(IMAGE_TOP)/usr/share/kernel-uml/modules/ -v
+	rm -rf $(INSTALL_MOD_PATH)/lib
+endif
 	# For LKCD enabled kernels
 	test ! -f Kerntypes ||  cp Kerntypes                                   \
                         $(INT_IMAGE_DESTDIR)/Kerntypes-$(version)
@@ -2074,6 +2117,7 @@ endif
                              KPKG_DEST_DIR="$(KPKG_DEST_DIR)"       \
                              KPKG_MAINTAINER="$(maintainer)"        \
                              KPKG_EXTRAV_ARG="$(EXTRAV_ARG)"        \
+                             ARCH="$(KERNEL_ARCH)"                  \
                              KDREV="$(debian)" kdist_image; then    \
                   echo "Module $$module processed fine";            \
               else                                                  \
