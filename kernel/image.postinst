@@ -12,7 +12,7 @@
 # HISTORY          : 
 # Description      : 
 # 
-#    $Id: image.postinst,v 1.25 1998/11/25 07:45:45 srivasta Exp $
+#    $Id: image.postinst,v 1.26 1999/02/22 07:17:35 srivasta Exp $
 #
 
 # 
@@ -70,6 +70,9 @@ if (! $kimage) {		# Hmm. empty
 }
 elsif ($kimage =~ m/^b?zImage$/o) { # these produce vmlinuz
   $kimage = "vmlinuz"
+}
+elsif ($kimage =~ m/^Image$/o) {
+  my $nop = $kimage;
 }
 elsif ($kimage =~ m/^vmlinux$/o) {
   my $nop = $kimage;

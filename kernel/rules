@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Fri Jan 22 09:01:35 1999
+## Last Modified On : Mon Feb 22 00:18:06 1999
 ## Last Machine Used: tiamat.golden-gryphon.com
-## Update Count	    : 383
+## Update Count	    : 386
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.62 1999/02/01 07:11:22 srivasta Exp $
+## $Id: rules,v 1.63 1999/02/22 07:17:36 srivasta Exp $
 ###############################################################################
 
 # The version of kernel-package this belongs to
@@ -114,14 +114,14 @@ ifeq (,$(findstring $(SUBARCH),netwinder))
 SUBARCH:=$(GUESS_SUBARCH)
 endif
 
-kimage := vmlinux
+kimage := Image
 loaderdep=
 loader=nettrom
 loaderdoc=
-target = vmlinux
+target = Image
 NEED_DIRECT_GZIP_IMAGE=NO
-kimagesrc = vmlinux
-kimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
+kimagesrc = arch/$(KERNEL_ARCH)/boot/Image
+kimagedest = $(INT_IMAGE_DESTDIR)/Image-$(version)
 DEBCONFIG = $(CONFDIR)/config.arm
 ifeq ($(strip $(GUESS_SUBARCH)),netwinder)
         DEBCONFIG= $(CONFDIR)/config.netwinder
@@ -306,13 +306,22 @@ DIRS_TO_CLEAN   = debian/tmp-source debian/tmp-headers debian/tmp-image
 
 CONFLOC    :=/etc/kernel-pkg.conf
 LIBLOC     :=/usr/lib/kernel-package
-MODULE_LOC ?=/usr/src/modules
+
+ifeq ($(strip $(MODULE_LOC)),)
+MODULE_LOC =/usr/src/modules
+endif
 
 DEBDIR      = $(LIBLOC)
 DEBDIR_NAME = $(shell basename $(DEBDIR))
-CONFDIR     ?= $(DEBDIR)/Config
 
-PATCH_DIR        ?= /usr/src/kernel-patches/$(architecture)
+ifeq ($(strip $(CONFDIR)),)
+CONFDIR     = $(DEBDIR)/Config
+endif
+
+ifeq ($(strip $(PATCH_DIR)),)
+PATCH_DIR         = /usr/src/kernel-patches/$(architecture)
+endif
+
 DIR_PATCH_APPLY   = $(PATCH_DIR)/apply
 DIR_PATCH_UNPATCH = $(PATCH_DIR)/unpatch
 
@@ -578,7 +587,7 @@ stamp-source: configure
 	chmod -R og=rX debian/tmp-source
 	(cd debian/tmp-source/usr/src/; tar zcf $(package).tar.gz $(package);\
             rm -rf $(package);)
-	dpkg-gencontrol -p$(package) -Pdebian/tmp-source/
+	dpkg-gencontrol -isp -p$(package) -Pdebian/tmp-source/
 	chown -R root.root debian/tmp-source
 	chmod -R og=rX debian/tmp-source
 	dpkg --build debian/tmp-source $(DEB_DEST)
@@ -621,7 +630,7 @@ stamp-headers: configure
             (cd debian/tmp-headers/usr/src/$(h_package); umask 000; tar xsf -)
 	(cd debian/tmp-headers/usr/src/$(h_package)/include; rm -f asm; \
 		ln -s asm-$(KERNEL_ARCH) asm)
-	dpkg-gencontrol -p$(h_package) -Pdebian/tmp-headers/
+	dpkg-gencontrol -isp -p$(h_package) -Pdebian/tmp-headers/
 	chown -R root.root debian/tmp-headers
 	chmod -R og=rX debian/tmp-headers
 	dpkg --build debian/tmp-headers $(DEB_DEST)
@@ -648,7 +657,7 @@ stamp-doc: configure
 	-gzip -9fqr debian/tmp-doc/usr/doc/$(d_package)
 	$(install_file) $(DEBDIR)/copyright.doc \
 		debian/tmp-doc/usr/doc/$(d_package)/copyright
-	dpkg-gencontrol -p$(d_package) -Pdebian/tmp-doc/
+	dpkg-gencontrol -isp -p$(d_package) -Pdebian/tmp-doc/
 	chown -R root.root debian/tmp-doc
 	chmod -R og=rX debian/tmp-doc
 	dpkg --build debian/tmp-doc $(DEB_DEST)
@@ -715,7 +724,7 @@ endif
                         $(INT_IMAGE_DESTDIR)/System.map-$(version)
 	-test -f System.map &&  chmod 644 \
                         $(INT_IMAGE_DESTDIR)/System.map-$(version)
-	dpkg-gencontrol -p$(i_package) -Pdebian/tmp-image/
+	dpkg-gencontrol -isp -p$(i_package) -Pdebian/tmp-image/
 	chown -R root.root debian/tmp-image
 	chmod -R og=rX debian/tmp-image
 	dpkg --build debian/tmp-image $(DEB_DEST)
