@@ -6,8 +6,10 @@ kernel-package (7.11) unstable; urgency=low
     manipulate stuff independent of the current working directory. Either
     one of these would fix the problem that Igor Mozetic
     <igor.mozetic@uni-mb.si> has reported.
+  * Fixed the rules file to corect the misapplied patch for pmac. This
+    fixes bug # 63559
 
- -- Manoj Srivastava <srivasta@debian.org>  Fri, 19 May 2000 16:03:55 -0500
+ -- Manoj Srivastava <srivasta@debian.org>  Sat, 20 May 2000 16:00:30 -0500
 
 kernel-package (7.10) unstable; urgency=high
 

@@ -12,7 +12,7 @@
 # HISTORY          : 
 # Description      : 
 # 
-#    $Id: image.postinst,v 1.50 2000/05/20 20:19:19 srivasta Exp $
+#    $Id: image.postinst,v 1.51 2000/05/20 21:02:23 srivasta Exp $
 #
 
 # 
@@ -104,13 +104,13 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
   }
 }
 
-if (! -d "$image_dest") {
-  die "Expected Image Destination dir ($image_dest) to be a valid directory!\n";
-}
-
 if ($image_in_boot) {  
   $image_dest = "/$image_dir/"; 
   $image_dest =~ s|^/*|/|o; 
+}
+
+if (! -d "$image_dest") {
+  die "Expected Image Destination dir ($image_dest) to be a valid directory!\n";
 }
 
 # sanity
@@ -173,7 +173,7 @@ elsif (-l "$kimage") {
     # make sure we change this state of affairs
     $force_move = 1;
   }
-  # follow link target. (we are in $image_dest, which should be / normally
+  # follow link target. (we are in $image_dest, which should be / normally)
   if (!$force_move) {
     my $vmlinuz_target = readlink "$kimage";
     if (!defined($vmlinuz_target)) {
@@ -256,7 +256,7 @@ elsif (! -e "$kimage") {
     }
   }
 }
-elsif ($no_symlink) {		# Maybe /$image_dir is on a dos system?
+elsif ($no_symlink) {		# Maybe /$image_dest is on a dos system?
   if (-e "$kimage") {
     rename("$kimage", "$kimage.$$") || 
       die "failed to move " . $image_dest . "$kimage:$!";
@@ -273,7 +273,7 @@ elsif ($no_symlink) {		# Maybe /$image_dir is on a dos system?
   # Ok, now we may clobber the previous .old files
   if (-e "$kimage.$$") { rename("$kimage.$$", "$kimage.old");  }
 } 
-elsif ($reverse_symlink) {		# Maybe /$image_dir is on a dos system?
+elsif ($reverse_symlink) {		# Maybe /$image_dest is on a dos system?
   if (-e "$kimage") {
     rename("$kimage", "$kimage.$$") || 
       die "failed to move " . $image_dest . "$kimage:$!";
@@ -393,7 +393,7 @@ if (-d "/usr/doc") {
       }
     }
     # Make sure we are back where we want to be, in $image_dest[/]
-    chdir("$image_dest");
+    chdir("$image_dest") or die "could not chdir to $image_dest:$!\n";
     
     if ($targetdir ne $stargetdir) {
       if (-d "/usr/doc/kernel-image-$version") {

@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.96 2000/05/07 17:07:39 srivasta Exp $
+## $Id: rules,v 1.97 2000/05/20 21:02:23 srivasta Exp $
 ###############################################################################
 
 #
@@ -202,12 +202,12 @@ endif
 
 ifneq (,$(findstring $(SUBARCH),pmac))
 SUBARCH:=pmac
+target := zImage
 loaderdep=quik
 loader=quik
 loaderdoc=QuikDefault
 kimagesrc=vmlinux
 kimage := vmlinux
-target = $(kimage)
 kimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
 HAVE_COFF_IMAGE = YES
 coffsrc=arch/$(KERNEL_ARCH)/coffboot/vmlinux.coff
