@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Mon Aug  4 14:16:26 1997
+## Last Modified On : Mon Aug  4 17:43:04 1997
 ## Last Machine Used: tiamat.datasync.com
-## Update Count	    : 189
+## Update Count	    : 192
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.9 1997/08/04 19:17:27 srivasta Exp $
+## $Id: rules,v 1.10 1997/08/05 00:15:58 srivasta Exp $
 ###############################################################################
 
 # The version of kernel-package this belongs to
@@ -201,7 +201,7 @@ endif
 	touch stamp-build
 
 buildpackage: stamp-buildpackage
-stamp-buildpackage:
+stamp-buildpackage: configure
 	test -f stamp-configure || $(deb_rule) configure
 	echo 'Building Package' > stamp-building
 	dpkg-buildpackage -m"$(maintainer) <$(email)>"
@@ -249,7 +249,7 @@ binary-arch:  kernel_image
 
 
 kernel-source kernel_source: stamp-source
-stamp-source:
+stamp-source: configure
 	@test root = "`whoami`" || (echo need root priviledges; exit 1)
 	test -f stamp-configure || $(deb_rule) configure
 	rm -rf debian/tmp-source
@@ -302,7 +302,7 @@ stamp-source:
 	touch stamp-source
 
 kernel-headers kernel_headers: stamp-headers
-stamp-headers:
+stamp-headers: configure
 	@test root = "`whoami`" || (echo need root priviledges; exit 1)
 	test -f stamp-configure || $(deb_rule) configure
 	rm -rf debian/tmp-headers
@@ -340,7 +340,7 @@ stamp-headers:
 	touch stamp-headers
 
 kernel-doc kernel_doc: stamp-doc
-stamp-doc:
+stamp-doc: configure
 	@test root = "`whoami`" || (echo need root priviledges; exit 1)
 	test -f stamp-configure || $(deb_rule) configure
 	rm -rf            debian/tmp-doc
@@ -367,7 +367,7 @@ stamp-doc:
 	touch stamp-doc
 
 kernel-image kernel_image: stamp-image
-stamp-image:
+stamp-image: configure build
 	@test root = "`whoami`" || (echo need root priviledges; exit 1)
 	rm -f -r ./debian/tmp-image ./debian/tmp-image.deb
 	test -f stamp-configure || $(deb_rule) configure
