@@ -14,7 +14,7 @@
 ##
 ###############################################################################
 
-#    $Id: rules,v 1.7 1997/09/18 05:02:43 srivasta Exp $
+#    $Id: rules,v 1.8 1997/09/18 05:27:07 srivasta Exp $
 
 
 # Please change the maintainer information, as well as the debian version
@@ -86,7 +86,6 @@ stamp-binary:
 	$(make_directory)  $(MAN5DIR)
 	$(make_directory)  $(MAN8DIR)
 	$(make_directory)  $(DOCDIR)
-	$(make_directory)  debian/tmp/usr/doc/copyright
 	$(install_file)    debian/conffiles debian/tmp/DEBIAN/conffiles
 	$(install_program) debian/postinst debian/tmp/DEBIAN/postinst
 	$(install_file)    debian/changelog $(DOCDIR)/changelog

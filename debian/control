@@ -18,6 +18,6 @@ Description: Debian Linux kernel package build scripts.
  custom kernel (why else are you considering this package?), then you may
  need the package bin86 as well.  (This is not required on other platforms).
 Depends: perl (>= 5.002-8), dpkg (>= 1.4), dpkg-dev (>= 1.4.0.9)
-Recommends: libc-dev, gcc
+Recommends: libc-dev, gcc, debianutils
 Suggests: kernel-source
 Architecture: all

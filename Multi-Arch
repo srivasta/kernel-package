@@ -67,15 +67,31 @@ m68k Kernel maintainer:
        The patch package explodes into(example for m68k)
  /usr/src/kernel-patches/m68k/<patch name or number>
  /usr/src/kernel-patches/m68k/apply/<some name>
+ /usr/src/kernel-patches/m68k/unpatch/<some name>
 
-        The script <some name> should be something like
+	The advantage of using scripts is that patch writers can add
+ their own tests, based possibly on the kernel version or patchlevel,
+ or looking at other patches already installed, etc. /bin/run-parts
+ then can be run over the appropriate directory. The script <some
+ name> should be something like 
 ============================================================
 #! /bin/sh
 set -e
 PATCHNAME=<patch name or number>
+PATCHDIR=/usr/src/kernel-patches/$ARCHITECTURE
+
+if ! test -d kernel -a -d Documentation ; then
+    echo "Not in kernel top level directory. Exiting" >&2
+    exit 1
+fi
 
 ARCHITECTURE=`dpkg --print-installation-architecture`
-PATCHDIR=/usr/src/kernel-patches/$ARCHITECTURE
+VERSION=$(grep ^VERSION Makefile 2>/dev/null | \
+                 sed -e 's/[^0-9]*\([0-9]*\)/\1/')
+PATCHLEVEL=$( grep ^PATCHLEVEL Makefile 2>/dev/null | \
+                    sed -e 's/[^0-9]*\([0-9]*\)/\1/')
+SUBLEVEL=$(grep ^SUBLEVEL Makefile 2>/dev/null | \
+                  sed -e 's/[^0-9]*\([0-9]*\)/\1/')
 
 PATCH_VERSION=$(patch -v | head -1 | sed -e 's/[^0-9\.]//g')
 
@@ -84,11 +100,6 @@ then
     PATCH_OPTIONS= -l -s -z -p1  
 else
     PATCH_OPTIONS= -l -s -b -p1
-fi
-
-if ! test -d kernel -a -d Documentation ; then
-    echo "Not in kernel top level directory. Exiting" >&2
-    exit 1
 fi
 
 if test -f debian/APPLIED_$ARCHITECTURE_$PATCHNAME ; then
@@ -110,9 +121,20 @@ exit 0
 #! /bin/sh
 set -e
 PATCHNAME=<patch name or number>
+PATCHDIR=/usr/src/kernel-patches/$ARCHITECTURE
+
+if ! test -d kernel -a -d Documentation ; then
+    echo "Not in kernel top level directory. Exiting" >&2
+    exit 1
+fi
 
 ARCHITECTURE=`dpkg --print-installation-architecture`
-PATCHDIR=/usr/src/kernel-patches/$ARCHITECTURE
+VERSION=$(grep ^VERSION Makefile 2>/dev/null | \
+                 sed -e 's/[^0-9]*\([0-9]*\)/\1/')
+PATCHLEVEL=$( grep ^PATCHLEVEL Makefile 2>/dev/null | \
+                    sed -e 's/[^0-9]*\([0-9]*\)/\1/')
+SUBLEVEL=$(grep ^SUBLEVEL Makefile 2>/dev/null | \
+                  sed -e 's/[^0-9]*\([0-9]*\)/\1/')
 
 PATCH_VERSION=$(patch -v | head -1 | sed -e 's/[^0-9\.]//g')
 
@@ -121,11 +143,6 @@ then
     PATCH_OPTIONS= -l -s -z -p1  
 else
     PATCH_OPTIONS= -l -s -b -p1
-fi
-
-if ! test -d kernel -a -d Documentation ; then
-    echo "Not in kernel top level directory. Exiting" >&2
-    exit 1
 fi
 
 if ! test -f debian/APPLIED_$ARCHITECTURE_$PATCHNAME ; then
