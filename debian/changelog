@@ -1,3 +1,14 @@
+kernel-package (7.101) unstable; urgency=low
+
+  * It is supposed to be $(filter-out), not $(filler-out).   closes: Bug#139272
+  * Hmm. Make the modules tarhet depend on stamp-image, so make knows not
+    to try and build the modules packages is the kernel-image build
+    fails. It does mean though that you need a stamp-image file in the
+    diretory in order to build the modules -- not a biggie since building
+    modules fails anyway                                     closes: Bug#139276
+  
+ -- Manoj Srivastava <srivasta@debian.org>  Thu, 21 Mar 2002 09:52:23 -0600
+
 kernel-package (7.100) unstable; urgency=low
 
   * Hmm. There was a bug report that said kernel-package does not call
