@@ -1,3 +1,12 @@
+kernel-package (3.50) unstable; urgency=low
+
+  * Modified image.postinst to also cater to people on whose architecture
+    the image is not called vmlinuz but something else (like vmlinux, for
+    example). closes:Bug#16258
+  * Fixed two minor doc typos for make-kpkg. closes:Bug#16224
+
+ -- Manoj Srivastava <srivasta@debian.org>  Wed, 24 Dec 1997 13:07:21 -0600
+
 kernel-package (3.49) unstable; urgency=low
 
   * Made the postrm's also know about the kernel versrion, not just the
