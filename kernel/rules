@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.49 1998/09/08 22:02:07 srivasta Exp $
+## $Id: rules,v 1.50 1998/09/11 17:37:37 srivasta Exp $
 ###############################################################################
 
 # The version of kernel-package this belongs to
@@ -75,7 +75,7 @@ ifeq ($(strip $(architecture)),m68k)
 # m68k doesn't use lilo (atari lilo is alpha software; amiga lilo is
 # stable but unpackaged; mac lilo, who knows?).
 # sub archs can be Amiga, Atari, Mac
-GUESS_SUBARCH:=$(shell awk '/Model/ { print $2}' /proc/hardware)
+GUESS_SUBARCH:=$(shell awk '/Model/ { print $$2}' /proc/hardware)
 SUBARCH:=$(GUESS_SUBARCH)
 NEED_DIRECT_GZIP_IMAGE=YES
 kimage := zImage
@@ -113,7 +113,7 @@ endif
 ### ppc powerpc et al
 ifneq ($(strip $(filter ppc powerpc,$(architecture))),)
 # sub archs can be CHRP, PowerMac, PReP
-GUESS_SUBARCH:=$(shell awk '/machine/ { print $3}' /proc/cpuinfo)
+GUESS_SUBARCH:=$(shell awk '/machine/ { print $$3}' /proc/cpuinfo)
 SUBARCH:=$(GUESS_SUBARCH)
 KERNEL_ARCH:=ppc		#The only place we have needed to change
 kimage := zImage

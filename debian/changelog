@@ -1,3 +1,10 @@
+kernel-package (5.06) unstable; urgency=low
+
+  * Use tweo $ signs to protect shell variable in rules. Affected m68k and
+    powerpc archs.
+
+ -- Manoj Srivastava <srivasta@debian.org>  Fri, 11 Sep 1998 12:36:15 -0500
+
 kernel-package (5.05) unstable; urgency=low
 
   * Fix documentation about using the rootcmd option. closes: BUG#25566
