@@ -5,16 +5,16 @@
 # Created On       : Mon Jun 17 01:10:11 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Tue Jun  1 12:52:58 1999
+# Last Modified On : Wed Jun  2 17:08:24 1999
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 125
+# Update Count     : 127
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
 #
 #
 #
-#    $Id: make-kpkg,v 1.27 1999/06/01 18:05:56 srivasta Exp $
+#    $Id: make-kpkg,v 1.28 1999/06/02 22:20:44 srivasta Exp $
 #
 require 5.002;
 use strict;
@@ -29,7 +29,7 @@ make-kpkg - build Debian kernel packages from Linux kernel sources.
 ($main::MYNAME     = $main::0) =~ s|.*/||;
 $main::Author      = "Manoj Srivastava";
 $main::AuthorMail  = "srivasta\@debian.org";
-$main::Version     = '$Revision: 1.27 $ ';
+$main::Version     = '$Revision: 1.28 $ ';
 
 my $help_opt=0; 
 my $revision=0; 
@@ -557,10 +557,13 @@ EOERR1
   if ($revision){
     $command .= " DEBIAN_REVISION=$revision ";
 
-    if ($revision !~ m/^(\d+:)?[\w\.\+]+$/o)
+    if ($revision !~ m/^(\d+:)?[\-\w\.\+]+$/o)
       {
 	print STDERR " Error: The revision string may only contain\n";
 	print STDERR " alphanumerics and  the  characters  +  .\n";
+	print STDERR " If epochs are used, the colon : is also allowed\n";
+	print STDERR " Also, if Debian revions are used, the hyphen is\n";
+	print STDERR " allowed too\n"; 
 	print STDERR " The current value is: $revision\n";
 	print STDERR " Aborting.\n";
 	exit 1;
