@@ -1,3 +1,42 @@
+kernel-package (6.27) unstable; urgency=low
+
+  * Removed mention of psdatabase from the man page, since we stopped
+    updating that ages ago. closes: Bug#50965
+  * Fixed include.prerm to not remove libcgi docs. closes: Bug#50226
+  * Removed include.postrm, which should no longer be required. (I dobt if
+    anyoe really has a /usr/src/.linux-version registry in there,
+    anyway). closes: Bug#51361
+  * Stop and inform the users of there is any problems with the modules
+    command. closes: Bug#50513
+  * Added a few more taget dependencies for the target debian. This should
+    close a number of bugs. closes: Bug#47156, Bug#47503, Bug#48087, Bug#50928
+  * Added a concurrency level option to kernel-package, so that the
+    kernel-compile and the modules can be built with make -jN. Should
+    please the SMP folks out there. closes: Bug#50480
+  * Dixed the Multi-Arch document so that the patch and unpatch example
+    scripts do not wipe out stamp files. Also noted that the files in the
+    unpatch dir should probably be numbered in reverse order from the
+    files in the patch directory, so the unpatching is done in the
+    appropeiate order, All this courtesy of "David Huggins-Daines"
+    <dhd@eradicator.org> closes: Bug#47228
+  * The contents of /proc/hardware changed somehow between 2.0.36 and
+    2.2.10, making the subarchitecture determination break on m68k
+  * Determination of CONFDIR needs to be moved after
+    /etc/kernel-package.cfg is read (I think that's the problem - in any
+    case, this fixes the problem where make-kpkg wouldn't read the config
+    file from /usr/src/kernel-patches/<arch>), These lst two courtesy of
+    "David Huggins-Daines" <dhd@eradicator.org> closes: Bug#47232
+  * Fixed a typo in image.postinst that was preventing the lkernel image
+    from backing up older images with the same version. Thanks to the
+    analysis by seh@cnw.com (Steven E. Harris). closes: Bug#47766
+  * The sources are now in bzip2 format, if supported by tar at package
+    build time. closes: Bug#42137
+  * kernel-headers are not really arch independent. modified make-kpkg s
+    that the documentation reflects the truth. Patch by Joost Kooij
+    <kooij@pc47.mpn.cp.philips.com> closes: Bug#47930
+
+ -- Manoj Srivastava <srivasta@debian.org>  Tue, 30 Nov 1999 00:15:04 -0600
+
 kernel-package (6.26) unstable; urgency=low
 
   * make sure the ./debian directory exists before trying to build the

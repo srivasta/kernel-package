@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.79 1999/10/10 20:10:36 srivasta Exp $
+## $Id: rules,v 1.80 1999/11/30 06:15:38 srivasta Exp $
 ###############################################################################
 
 #
@@ -96,7 +96,7 @@ ifeq ($(strip $(architecture)),m68k)
 # sub archs can be Amiga, Atari, Mac
 GUESS_SUBARCH:=$(shell awk '/Model/ { print $$2}' /proc/hardware)
 
-ifeq (,$(findstring $(SUBARCH),Amiga Atari Mac))
+ifeq (,$(findstring $(SUBARCH),Amiga Atari Mac Macintosh))
 SUBARCH:=$(GUESS_SUBARCH)
 endif
 
@@ -115,6 +115,9 @@ ifeq ($(strip $(GUESS_SUBARCH)),Atari)
         DEBCONFIG= $(CONFDIR)/config.atari
 else
 ifeq ($(strip $(GUESS_SUBARCH)),Mac)
+        DEBCONFIG= $(CONFDIR)/config.mac
+endif
+ifeq ($(strip $(GUESS_SUBARCH)),Macintosh)
         DEBCONFIG= $(CONFDIR)/config.mac
 endif
 endif
@@ -365,7 +368,13 @@ DEBDIR      = $(LIBLOC)
 DEBDIR_NAME = $(shell basename $(DEBDIR))
 
 ifeq ($(strip $(PATCH_DIR)),)
-PATCH_DIR         = /usr/src/kernel-patches/$(architecture)
+PATCH_DIR         = $(shell if [ -d \
+/usr/src/kernel-patches/$(architecture)/$(VERSION).$(PATCHLEVEL).$(SUBLEVEL) \
+			       ]; then echo \
+/usr/src/kernel-patches/$(architecture)/$(VERSION).$(PATCHLEVEL).$(SUBLEVEL); \
+				  else echo \
+/usr/src/kernel-patches/$(architecture); \
+			    fi)
 endif
 
 ifeq ($(strip $(ALL_PATCH_DIR)),)
@@ -377,14 +386,6 @@ ALL_PATCH_UNPATCH = $(ALL_PATCH_DIR)/unpatch
 
 DIR_PATCH_APPLY   = $(PATCH_DIR)/apply
 DIR_PATCH_UNPATCH = $(PATCH_DIR)/unpatch
-
-ifeq ($(strip $(CONFDIR)),)
-ifeq ($(strip $(patch_the_kernel)),YES)
-CONFDIR     = $(PATCH_DIR)
-else
-CONFDIR     = $(DEBDIR)/Config
-endif
-endif
 
 # The destination of all .deb files
 # (suggested by Rob Browning <osiris@cs.utexas.edu>)
@@ -452,6 +453,18 @@ endif
 
 ifneq ($(strip $(CLEAN_SOURCE)),)
 do_clean = $(CLEAN_SOURCE)
+endif
+
+ifneq ($(strip $(CONCURRENCY_LEVEL)),)
+do_parallel = -j$(CONCURRENCY_LEVEL)
+endif
+
+ifeq ($(strip $(CONFDIR)),)
+ifeq ($(strip $(patch_the_kernel)),YES)
+CONFDIR     = $(PATCH_DIR)
+else
+CONFDIR     = $(DEBDIR)/Config
+endif
 endif
 
 # The file which has local configuration
@@ -575,9 +588,11 @@ endif
 		$(DEBDIR)/changelog > debian/changelog
 	-test ! -f debian/rules && \
 	   $(install_program) $(DEBDIR)/rules debian/rules
+	touch stamp-debian
 
-configure: stamp-configure
+configure: debian stamp-configure
 stamp-configure: .config
+	test -f stamp-debian || $(deb_rule) debian
 	-test ! -f stamp-configure && \
 	  (test -f .config || \
                 $(install_file) $(DEBDIR)/config .config) \
@@ -627,9 +642,6 @@ stamp-source: debian
 	sed -e 's/=P/$(package)/g' -e 's/=V/$(version)/g' \
 	    $(DEBDIR)/include.prerm > debian/tmp-source/DEBIAN/prerm
 	chmod 755 debian/tmp-source/DEBIAN/prerm
-	sed -e 's/=P/$(package)/g' -e 's/=V/$(version)/g' \
-		$(DEBDIR)/include.postrm > debian/tmp-source/DEBIAN/postrm
-	chmod 755 debian/tmp-source/DEBIAN/postrm
 	$(install_file) debian/changelog \
 	          debian/tmp-source/usr/share/doc/$(package)/changelog.Debian
 	gzip -9qf debian/tmp-source/usr/share/doc/$(package)/changelog.Debian
@@ -705,9 +717,6 @@ stamp-headers: configure
 	sed -e 's/=P/$(h_package)/g' -e 's/=V/$(version)/g' \
 		$(DEBDIR)/include.prerm > debian/tmp-headers/DEBIAN/prerm
 	chmod 755 debian/tmp-headers/DEBIAN/prerm
-	sed -e 's/=P/$(h_package)/g' -e 's/=V/$(version)/g' \
-		$(DEBDIR)/include.postrm > debian/tmp-headers/DEBIAN/postrm
-	chmod 755 debian/tmp-headers/DEBIAN/postrm
 	$(install_file) $(DEBDIR)/copyright.headers \
 		debian/tmp-headers/usr/share/doc/$(h_package)/copyright
 	$(install_file) debian/changelog \
@@ -767,7 +776,6 @@ kernel-image-deb:
 	rm -f -r ./debian/tmp-image ./debian/tmp-image.deb
 	test -f stamp-configure     || $(deb_rule) configure
 	test -f stamp-build         || $(deb_rule) build
-	test -f stamp-debian        || $(deb_rule) debian
 	$(make_directory) debian/tmp-image/DEBIAN
 	$(make_directory) debian/tmp-image/boot
 	$(make_directory) debian/tmp-image/usr/share/doc/$(i_package)
@@ -852,13 +860,20 @@ modules-image modules_image: configure
 ifndef MODULES_ENABLED
 	@echo Modules not configured, so not making modules_image
 else
-	-for module in $(MODULE_LOC)/* ; do \
-          if test -d  $$module; then \
-	    (cd $$module; \
-              ./debian/rules KVERS="$(version)" KSRC="$(SRCTOP)" \
-                             KMAINT="$(pgp)" KEMAIL="$(email)" \
-                             KDREV="$(debian)" kdist_image; ); \
-	  fi; \
+	-for module in $(MODULE_LOC)/* ; do                         \
+          if test -d  $$module; then                                \
+	    (cd $$module;                                           \
+              if ./debian/rules KVERS="$(version)" KSRC="$(SRCTOP)" \
+                             KMAINT="$(pgp)" KEMAIL="$(email)"      \
+                             KDREV="$(debian)" kdist_image; then    \
+                  echo "Module $$module processed fine";            \
+              else                                                  \
+                   echo "Module $$module failed.";                  \
+                   echo "Hit return to Continue";                   \
+		   read ans;                                        \
+              fi;                                                   \
+	     );                                                     \
+	  fi;                                                       \
         done
 endif
 
@@ -867,13 +882,20 @@ modules: configure
 ifndef MODULES_ENABLED
 	@echo Modules not configured, so not making modules
 else
-	-for module in $(MODULE_LOC)/* ; do \
-          if test -d  $$module; then \
-	    (cd $$module; \
-              ./debian/rules KVERS="$(version)" KSRC="$(SRCTOP)" \
-                             KMAINT="$(pgp)" KEMAIL="$(email)" \
-                             KDREV="$(debian)" kdist; ); \
-	  fi; \
+	-for module in $(MODULE_LOC)/* ; do                         \
+          if test -d  $$module; then                                \
+	    (cd $$module;                                           \
+              if ./debian/rules KVERS="$(version)" KSRC="$(SRCTOP)" \
+                             KMAINT="$(pgp)" KEMAIL="$(email)"      \
+                             KDREV="$(debian)" kdist; then          \
+                  echo "Module $$module processed fine";            \
+              else                                                  \
+                   echo "Module $$module failed.";                  \
+                   echo "Hit return to Continue?";                  \
+		   read ans;                                        \
+              fi;                                                   \
+	     );                                                     \
+	  fi;                                                       \
         done
 endif
 
@@ -884,10 +906,17 @@ else
 	-for module in $(MODULE_LOC)/* ; do \
           if test -d  $$module; then \
 	    (cd $$module; \
-              ./debian/rules KVERS="$(version)" KSRC="$(SRCTOP)" \
-                             KMAINT="$(pgp)" KEMAIL="$(email)" \
-                             KDREV="$(debian)" kdist_configure; ); \
-	  fi; \
+              if ./debian/rules KVERS="$(version)" KSRC="$(SRCTOP)" \
+                             KMAINT="$(pgp)" KEMAIL="$(email)"      \
+                             KDREV="$(debian)" kdist_configure; then\
+                  echo "Module $$module configured fine";           \
+              else                                                  \
+                   echo "Module $$module failed to configure";      \
+                   echo "Hit return to Continue?";                  \
+		   read ans;                                        \
+              fi;                                                   \
+	     );                                                     \
+	  fi;                                                       \
         done
 endif
 

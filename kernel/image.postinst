@@ -12,7 +12,7 @@
 # HISTORY          : 
 # Description      : 
 # 
-#    $Id: image.postinst,v 1.30 1999/10/09 04:43:28 srivasta Exp $
+#    $Id: image.postinst,v 1.31 1999/11/30 06:15:37 srivasta Exp $
 #
 
 # 
@@ -103,7 +103,7 @@ if (-l "$kimage") {
       warn "The link "  . $imagedir . "$kimage is a danglink link\n";
       $force_move = 1;
     }
-    elsif ("$vmlinuz_target" ne "$realimageloc" . "$kimage-$version") {
+    elsif ("$vmlinuz_target" eq "$realimageloc" . "$kimage-$version") {
       $force_move = 1;
     }
   }
