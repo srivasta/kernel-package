@@ -1,5 +1,5 @@
 
-    $Id: Problems,v 1.4 1997/10/22 07:47:57 srivasta Exp $
+    $Id: Problems,v 1.5 1997/12/01 19:52:02 srivasta Exp $
 
  This is an (incomplete) list of problems that people have encountered
  in the past while using kernel-package. Please remember to configure
@@ -95,3 +95,9 @@
        that when I wrote all the documentation. I have since upgraded
        the documentation; and you can add epochs to your custom kernel
        just as well as the upstream maintainers.
+
+     i) The build keeps erring out. It fails with the following:
+	objdump:  illegal option -- k
+
+
+	rm `which encaps`
