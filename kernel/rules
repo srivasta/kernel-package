@@ -5,9 +5,9 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Sat Mar 19 10:08:03 2005
+## Last Modified On : Sat Mar 19 23:09:13 2005
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count	    : 775
+## Update Count	    : 776
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
@@ -129,7 +129,7 @@ else
   KERNEL_CROSS:=$(CROSS_COMPILE)-
 endif
 
-KERNEL_CROSS:=$(shell echo $(KERNEL_CROSS) | sed -e 's,--$,-,')
+KERNEL_CROSS:=$(shell echo $(KERNEL_CROSS) | sed -e 's,--$$,-,')
 
 ifneq ($(strip $(KERNEL_CROSS)),)
   CROSS_ARG:=CROSS_COMPILE=$(KERNEL_CROSS)
