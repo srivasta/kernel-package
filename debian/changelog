@@ -1,3 +1,10 @@
+kernel-package (8.026) unstable; urgency=low
+
+  * ignore bind mounts in fstab.                             closes: Bug#186401
+  * Improved sparc rules from Ben Collins.                   closes: Bug#188406
+
+ -- Manoj Srivastava <srivasta@debian.org>  Sun, 13 Apr 2003 15:14:26 -0500
+
 kernel-package (8.025) unstable; urgency=low
 
   * Yike. typo fix.

@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Mon Mar 24 23:17:16 2003
+## Last Modified On : Sun Apr 13 15:07:27 2003
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 561
+## Update Count	    : 562
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.195 2003/03/25 05:17:50 srivasta Exp $
+## $Id: rules,v 1.196 2003/04/13 20:14:55 srivasta Exp $
 ###############################################################################
 
 ifdef KPKG_ARCH
@@ -339,18 +339,11 @@ loaderdep=silo
 loader=silo
 loaderdoc=SiloDefault
 
-target = vmlinux
-kimagesrc = vmlinux
-ifneq ($(shell if [ $(VERSION) -ge 2 -a $(PATCHLEVEL) -ge 5 -a $(SUBLEVEL) -ge 41 ];\
-                   then echo new; \
-                fi),)
-target = image
-kimagesrc = arch/sparc/boot/image
-endif
 
 NEED_DIRECT_GZIP_IMAGE=YES
 kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
 DEBCONFIG = $(CONFDIR)/config.sparc
+
 # make-kpkg --subarch=sun4u binary-arch
 # to generate UltraSparc kernel packages.
 ifeq ($(KPKG_SUBARCH),sun4u)
@@ -364,6 +357,16 @@ KERNEL_ARCH=sparc64
 ARCH_IN_NAME=YES
 endif
 endif
+
+ifneq ($(shell if [ $(VERSION) -ge 2 -a $(PATCHLEVEL) -ge 5 -a  \
+                    $(SUBLEVEL) -ge 41]; then echo new; fi),)
+       target    = image
+       kimagesrc = arch/$(KERNEL_ARCH)/boot/image
+else
+       target    = vmlinux
+       kimagesrc = vmlinux
+endif
+
 endif
 
 

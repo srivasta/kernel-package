@@ -12,7 +12,7 @@
 # HISTORY          :
 # Description      :
 #
-#    $Id: image.postinst,v 1.112 2003/03/06 23:04:20 srivasta Exp $
+#    $Id: image.postinst,v 1.113 2003/04/13 20:14:55 srivasta Exp $
 #
 
 #
@@ -1013,6 +1013,7 @@ while ( $line=<FSTAB> ) {
   }
 
   next unless $device =~ m|^/dev/|; #ignore NFS and proc systems
+
   next if $device =~ m|^/dev/fd|;   #ignore floppy drives
   next if $device =~ m|^/dev/pty|;  #ignore Pseudo-TTY masters
   next if $device =~ m|^/dev/tty|;  #ignore Pseudo-TTY slaves
@@ -1021,7 +1022,9 @@ while ( $line=<FSTAB> ) {
   next if $device =~ m|^/dev/vcs|;  #ignore Virtual console capture
 
   next if $filesystem =~ m|^none$|; #swap? in any case, do not run dd
-  next if $foption =~ m|noauto|; # look for any FS not mounted at bootup time
+  next if $type       =~ m|^none$|; #ignore unknown file types
+  next if $foption    =~ m|noauto|; #any FS not mounted at bootup time
+  next if $foption    =~ m|bind|;   #ignore bind mounts
 
   # Looking at linux/Documentation/devices.txt, We see that really we
   # should be looking for /dev/hd* (hard disk),  /dev/sd*. What about
