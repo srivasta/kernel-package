@@ -1,3 +1,21 @@
+kernel-package (8.9) unstable; urgency=low
+
+  * Improved documentation for SOURCE_CLEAN_HOOK.            closes: Bug#159799
+  * Allow removal of the kernel-image pointed to by /vmlinuz.
+    kernel-package has never done promotion of /vmlinuz.old to /vmlinuz,
+    and I am reluctant to start now (too many things can go wrong). In all
+    cases, the postrm warns when removing dangling symlinks (/vmlinuz,
+    /vmlinuz.old). Since there are diagnostics, and the human can take
+    action, I am closing this report.                        closes: Bug#157184
+  * Since the pcmcia maintainer has taken action this but report is now
+    moot. However, the one point to be addressed in the report is what
+    happens if the pcmcia-modules package is installed first; in that
+    case, the kernel-image preinst shall throw a hissy fit, since
+    /lib/modules/X.Y.ZZ/ dir shall exist, and make the human take
+    corrective action (or expect breakage).                  closes: Bug#147077
+
+ -- Manoj Srivastava <srivasta@debian.org>  Fri,  6 Sep 2002 00:10:04 -0500
+
 kernel-package (8.008) unstable; urgency=low
 
   * Hack ake-kpkg so that a clean command by itself always sets debian
