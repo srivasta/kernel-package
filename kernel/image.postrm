@@ -12,7 +12,7 @@
 # HISTORY          : 
 # Description      : 
 # 
-#     $Id: image.postrm,v 1.6 2001/04/24 08:09:19 srivasta Exp $
+#     $Id: image.postrm,v 1.7 2001/04/25 07:19:22 srivasta Exp $
 #
 
 
@@ -33,6 +33,7 @@ my $kimage          = "=K";	# Should be empty, mostly
 my $loader          = "=L";     # lilo, silo, quik, or nettrom
 my $image_dir       = "=D";     # where the image is located
 my $clobber_modules = '';       # target machine defined
+my $initrd          = "=I";     # initrd kernel
 
 my $Loader          = "LILO";
 $Loader             = "SILO"  if $loader =~ /silo/io;
@@ -117,34 +118,42 @@ elsif ($kimage =~ m/^Image$/o)    { my $nop = $kimage;}
 elsif ($kimage =~ m/^vmlinux$/o)  { my $nop = $kimage;}
 else                              {$kimage = "vmlinuz"} # default
 
-if (-l $image_dest . "$kimage") {
-  # There is a symbolic link
-  my $force_move = 0;
-  my $vmlinuz_target = readlink $image_dest . "$kimage";
-  if (!defined($vmlinuz_target)) {
-    # what, a dangling symlink?
-    warn "The link "  . $image_dest . "$kimage is a dangling link\n";
-    warn "Removing dangling sym link "  . $imagedir . "$kimage \n";
-    warn "Unless you used the optional flag in lilo, you may  \n";
-    warn " need to re-run lilo\n";
-    # Remove the dangling link
-    unlink $image_dest . $kimage;
+sub image_magic {
+  my $kimage = $_[0];
+  my $image_dest = $_[1];
+
+  if (-l $image_dest . "$kimage") {
+    # There is a symbolic link
+    my $force_move = 0;
+    my $vmlinuz_target = readlink $image_dest . "$kimage";
+    if (!defined($vmlinuz_target)) {
+      # what, a dangling symlink?
+      warn "The link "  . $image_dest . "$kimage is a dangling link\n";
+      warn "Removing dangling sym link "  . $imagedir . "$kimage \n";
+      warn "Unless you used the optional flag in lilo, you may  \n";
+      warn " need to re-run lilo\n";
+      # Remove the dangling link
+      unlink $image_dest . $kimage;
+    }
+  }
+  if (-l $image_dest . "$kimage.old") {
+    # There is a symbolic link
+    my $force_move = 0;
+    my $vmlinuz_target = readlink $image_dest . "$kimage" . ".old" ;
+    if (!defined($vmlinuz_target)) {
+      # what, a dangling symlink?
+      warn "The link "  . $image_dest . "$kimage" . ".old is a dangling link\n";
+      warn "Removing dangling sym link "  . $image_dest . "$kimage" . ".old \n";
+      warn "Unless you used the optional flag in lilo, you may  \n";
+      warn " need to re-run lilo\n";
+      # Remove the dangling link
+      unlink $image_dest . $kimage . ".old";
+    }
   }
 }
-if (-l $image_dest . "$kimage.old") {
-  # There is a symbolic link
-  my $force_move = 0;
-  my $vmlinuz_target = readlink $image_dest . "$kimage" . ".old" ;
-  if (!defined($vmlinuz_target)) {
-    # what, a dangling symlink?
-    warn "The link "  . $image_dest . "$kimage" . ".old is a dangling link\n";
-    warn "Removing dangling sym link "  . $image_dest . "$kimage" . ".old \n";
-    warn "Unless you used the optional flag in lilo, you may  \n";
-    warn " need to re-run lilo\n";
-    # Remove the dangling link
-    unlink $image_dest . $kimage . ".old";
-  }
-}
+
+image_magic($kimage, $image_dest);
+image_magic("initrd", $realimageloc) if $initrd;
 
 if (-f "/lib/modules/$version/modules.dep") {
   unlink "/lib/modules/$version/modules.dep";
@@ -157,6 +166,10 @@ if (-f "/lib/modules/$version/modules.pcimap") {
 }
 if (-f "/lib/modules/$version/modules.usbmap") {
   unlink "/lib/modules/$version/modules.usbmap";
+}
+
+if (-f $realimageloc . "initrd-$version") {
+  unlink $realimageloc . "initrd-$version";
 }
 if (-f "/lib/modules/$version/modules.parportmap") {
   unlink "/lib/modules/$version/modules.parportmap";

@@ -22,7 +22,7 @@
 .\" USA.
 .\"
 .\"
-.\"    $Id: make-kpkg.8,v 1.33 2001/02/04 18:28:28 srivasta Exp $
+.\"    $Id: make-kpkg.8,v 1.34 2001/04/25 07:19:21 srivasta Exp $
 .\"
 .TH MAKE\-KPKG 1 "May 2 1997" "Debian" "Debian GNU/Linux manual"
 .SH NAME
@@ -198,6 +198,26 @@ option to the
 .I make
 process so that commands are merely printed to the screen but not actually
 executed. This is very useful for debugging.
+.TP \-\-initrd
+If 
+.B make\-kpkg 
+is generating a 
+.I kernel-image 
+package, perform any actions
+necessary for a kernel loaded using 
+.B initrd.  
+This may include extra
+dependencies, and modifications to maintainer scripts.  It has no
+effect when 
+.B make\-kpkg is not making a 
+.I kernel-image 
+package. The same effect can be achieved by setting the environment
+variable
+.B INITRD
+to
+.I YES
+To avoid a warning at install time, please read kernel-img.conf(5),
+and add a do_initrd directive in that file.
 .TP
 .B \-\-zimage
 Makes a zImage kernel rather than a bzImage kernel (the default).

@@ -5,16 +5,16 @@
 # Created On       : Mon Jun 17 01:10:11 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Mon Jan 22 15:01:31 2001
+# Last Modified On : Wed Apr 25 02:08:12 2001
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 154
+# Update Count     : 159
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
 #
 #
 #
-#    $Id: make-kpkg,v 1.54 2001/04/24 08:09:18 srivasta Exp $
+#    $Id: make-kpkg,v 1.55 2001/04/25 07:19:21 srivasta Exp $
 #
 require 5.002;
 use strict;
@@ -29,7 +29,7 @@ make-kpkg - build Debian kernel packages from Linux kernel sources.
 ($main::MYNAME     = $main::0) =~ s|.*/||;
 $main::Author      = "Manoj Srivastava";
 $main::AuthorMail  = "srivasta\@debian.org";
-$main::Version     = '$Revision: 1.54 $ ';
+$main::Version     = '$Revision: 1.55 $ ';
 
 my $added_modules='';
 my $added_patches='';
@@ -43,6 +43,7 @@ my $flavour='';
 my $key_id='';
 my $help_opt=0;
 my $noexec; 
+my $initrd=0;
 my $revision=0;
 my $root_cmd;
 my $signature="" ;
@@ -54,6 +55,7 @@ my $zimage;
 
 my %option_ctl = ("help"            	=> \$help_opt,
 		  "noexec"          	=> \$noexec,
+		  "initrd"              => \$initrd,
 		  "revision=s"      	=> \$revision,
 		  "flavour=s"       	=> \$flavour,
 		  "added_modules=s" 	=> \$added_modules,
@@ -261,6 +263,17 @@ useful for debugging.
 
 =back
 
+=item B<--initrd>
+
+=over 2
+
+If make-kpkg is generating a kernel-image package, perform any actions
+necessary for a kernel loaded using initrd.  This may include extra
+dependencies, and modifications to maintainer scripts.  It has no
+effect when make-kpkg is not making a kernel-image package.
+
+=back
+
 =item B<--zimage>
 
 =over 2
@@ -342,6 +355,7 @@ usage: $main::MYNAME [options] target [target ...]
  --subarch  bar        Set the subarch for the image being compiled
                         (have to be on a compatible machine).
  --arch_in_name        Embed the subarch in the image package name
+ --initrd              Create a image package suitable for initrd  
  --pgpsign  name       An ID used to sign the changes file using pgp.
  --targets             Lists the known targets.
  --zimage              Create a kernel using zImage rather than bzImage
@@ -736,7 +750,7 @@ EOERR1
       my $ans = <STDIN>;
     }
     if (-f 'stamp-configure'){
-      print STDERR "Warning: The $revision option only has an effect during\n";
+      print STDERR "Warning: The revision option only has an effect during\n";
       print STDERR "the configure phase -- in other words, since the file\n";
       print STDERR "stamp-configure exists, this option has no effect.\n";
       print STDERR "Also, this option has no effect when compiling\n";
@@ -813,6 +827,9 @@ EOERR1
   }
   if ($noexec){
     $command .= " -n ";
+  }
+  if ($initrd) {
+    $command .= " INITRD=YES ";
   }
   if ($root_cmd){
      $command .= " ROOT_CMD=$root_cmd ";

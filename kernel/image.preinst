@@ -28,10 +28,12 @@ my $do_boot_enable  = "Yes";	# target machine defined
 my $do_bootfloppy   = "Yes";	# target machine defined
 my $do_bootloader   = "Yes";	# target machine defined
 my $move_image      = '';       # target machine defined
+my $do_initrd       = '';       # target machine defined
 my $kimage          = "=K";     # Should be empty, mostly
 my $loader          = "=L";     # lilo, silo, quik, or nettrom
 my $image_dir       = "=D";     # where the image is located
 my $clobber_modules = '';       # target machine defined
+my $initrd          = "=I";     # initrd kernel
 
 my $Loader          = "LILO";
 $Loader             = "SILO"  if $loader =~ /silo/io;
@@ -75,6 +77,7 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
       $image_in_boot   = "Yes" if /image_in_boot\s*=\s*(yes|true|1)\s*$/ig;
       $move_image      = "Yes" if /move_image\s*=\s*(yes|true|1)\s*$/ig;
       $clobber_modules = "Yes" if /clobber_modules\s*=\s*(yes|true|1)\s*$/ig;
+      $do_initrd       = "Yes" if /do_initrd\s*=\s*(yes|true|1)\s*$/ig;
 
       $image_dest      = "$1"  if /image_dest\s*=\s*(\S+)/ig;
       $image_dest      = "$1"  if /image_dest\s*=\s*(\S+)/ig;
@@ -88,6 +91,21 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
 # About to upgrade this package from version $2 TO THIS VERSION.
 # "prerm upgrade" has already been called for the old version of
 # this package.
+
+if ($initrd && !$do_initrd) {
+    print STDERR <<EOF;
+
+You are attempting to install an initrd kernel image (version $version)
+This will not work unless you have configured your boot loader to use
+initrd.
+
+To get rid of this message, put `do_initrd = Yes' in /etc/kernel-img.conf.
+EOF
+    print STDERR "Do you want to stop now? [Y/n]";
+    my $answer = <STDIN>;
+    print STDERR "Ok, Aborting\n" unless $answer =~ /^n/i;
+    exit 1 unless  $answer =~ /^n/i;
+}
 
 if (-d "/lib/modules/$version") {
 

@@ -1,3 +1,15 @@
+kernel-package (7.36) unstable; urgency=low
+
+  * Fixed a typo in make-kpkg; closes: Bug#92238
+  * Fixed a duplicate there in a warning in the ostinst, closes: Bug#92903
+  * re boot -> reboot. closes: Bug#93018
+  * Included the changes made for initrd kernel images from Herbert Xu
+    <herbert@gondor.apana.org.au>. closes: Bug#89593
+  * Documented the new initrd capabilities
+  * Added a suggestion for libncurses-dev for kernel-package. closes: Bug#94984
+
+ -- Manoj Srivastava <srivasta@debian.org>  Wed, 25 Apr 2001 01:58:54 -0500
+
 kernel-package (7.35) unstable; urgency=low
 
   * A whole bunch of spelling corrections and grammar changes, with many

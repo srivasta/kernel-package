@@ -5,14 +5,14 @@
 # Created On       : Sat Apr 27 05:55:26 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Tue Apr 24 03:00:52 2001
+# Last Modified On : Wed Apr 25 00:30:17 2001
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 196
+# Update Count     : 198
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
 # 
-#    $Id: image.postinst,v 1.62 2001/04/24 08:09:19 srivasta Exp $
+#    $Id: image.postinst,v 1.63 2001/04/25 07:19:22 srivasta Exp $
 #
 
 # 
@@ -33,6 +33,7 @@ my $loader          = "=L";     # lilo, silo, quik, or nettrom
 my $image_dir       = "=D";     # where the image is located
 my $clobber_modules = '';       # target machine defined
 my $relative_links  = "";       # target machine defined
+my $initrd          = "=I";     # initrd kernel
 
 my $Loader          = "LILO";
 $Loader             = "SILO"  if $loader =~ /silo/io;
@@ -236,208 +237,268 @@ sub spath {
   }
   return join ('/', @outdir);
 }
-
-
 ######################################################################
 ######################################################################
+############
 ######################################################################
 ######################################################################
 
-if ($move_image) {		# Maybe $image_dest is in on dos, or something?
-  if (-e "$kimage-$version") {	# we should be in dir /, normally
-    rename("$kimage-$version", "$kimage-$version.$$") || 
-      die "failed to move " . $image_dest . "$kimage:$!";
-  }
-  my $ret = system("mv -f " . $realimageloc . "$kimage-$version " . 
-		   " $kimage-$version");
-  if ($ret) {
-    die("Failed to move " . $realimageloc . "$kimage-$version to "
-	. $image_dest . "$kimage-$version.\n"); 
-  }
-  # Ok, now we may clobber the previous .old files
-  if (-e "$kimage-$version.$$") {
-    rename("$kimage-$version.$$", "$kimage-$version.old") || 
-      die "failed to move " . $image_dest . "$kimage:$!";
-  }
-  if ($reverse_symlink) {
-    my $Old = $image_dest;
-    if (test_relative ('Old Dir' => $Old, 'New Dir' => $realimageloc)) {
-      $Old   =~ s|^/*||o;
-    }
-    elsif ($relative_links) {
-      $Old = spath('Old' => "$Old", 'New' => "$realimageloc" );
-    }
-    symlink($Old . "$kimage-$version", 
-	    $realimageloc . "$kimage-$version")
-      || die("Failed to symbolic-link " . $image_dest . "$kimage-$version to "
-	     . $realimageloc . "$kimage-$version .\n");
-  }
-} 
-elsif (-l "$kimage") {
-  # There is a symbolic link
-  my $force_move = 0;
-  
-  if ($no_symlink || $reverse_symlink) {
-    # we do not want links, yet we have a symbolic link here!
-    warn "found a symbolic link in " . $image_dest . "$kimage \n" .
-      "even though no_symlink is defined\n" if $no_symlink;
-    warn "found a symbolic link in " . $image_dest . "$kimage \n" .
-      "even though reverse_symlink is defined\n" if $reverse_symlink;
-    # make sure we change this state of affairs
-    $force_move = 1;
-  }
-  # follow link target. (we are in $image_dest, which should be / normally)
-  if (!$force_move) {
-    my $vmlinuz_target = readlink "$kimage";
-    if (!defined($vmlinuz_target)) {
-      # what, a dangling symlink?
-      warn "The link "  . $image_dest . "$kimage is a dangling link\n";
-      $force_move = 1;
-    }
-    elsif ("$vmlinuz_target" ne "$realimageloc" . "$kimage-$version") {
-      $force_move = 1;
-    }
-  }
+sub image_magic {
+  my $kimage = $_[0];
+  my $image_dest = $_[1];
 
-  if ($force_move) {
-    # don't clobber $kimage.old quite yet
-    rename("$kimage", "$kimage.$$") || 
-      die "failed to move " . $image_dest . "$kimage:$!";
-    my $Old = $realimageloc;
-    my $cwd;
-    chomp($cwd=`pwd`);
-    if (test_relative ('Old Dir' => $Old, 'New Dir' => $cwd)) {
-      $Old   =~ s|^/*||o;
+  if ($move_image) {
+    # Maybe $image_dest is in on dos, or something?
+    if (-e "$kimage-$version") {
+      # we should be in dir /, normally
+      rename("$kimage-$version", "$kimage-$version.$$") || 
+	die "failed to move " . $image_dest . "$kimage:$!";
     }
-    elsif ($relative_links) {
-      $Old = spath('Old' => "$Old", 'New' => $cwd);
-    }
-    if (! symlink($Old . "$kimage-$version", "$kimage")) {
-      rename("$kimage.$$", "$kimage");
-      die("Failed to symbolic-link " . $realimageloc . "$kimage-$version to "
-	  . $image_dest . "$kimage .\n"); 
-    }
-    
-    # Ok, now we may clobber the previous .old file
-    rename("$kimage.$$", "$kimage.old");
-  }
-}
-elsif (! -e "$kimage") {
-  # Hmm. Pristine system? How can that be?
-  # Possibly they do not want a link here. (we should be in /
-  # here[$image_dest, really]
-  warn "$image_dest" . "$kimage does not exist. Installing from scratch, eh?\n";
-  warn "Or maybe you don't want a symbolic link here. Hmm? Lets See.\n";
-  if ($no_symlink) {
-    my $ret = system("cp -a --backup=t " . $realimageloc . "$kimage-$version "
-		     . " $kimage");
-    if ($ret) {
-      die("Failed to copy " . $realimageloc . "$kimage-$version to "
-	  . $image_dest . "$kimage .\n"); 
-    }
-  }
-  elsif ($reverse_symlink) {
-    my $ret = system("mv -f " . $realimageloc . "$kimage-$version "
-		     . "$kimage"); 
+    my $ret = system("mv -f " . $realimageloc . "$kimage-$version " . 
+		     " $kimage-$version");
     if ($ret) {
       die("Failed to move " . $realimageloc . "$kimage-$version to "
-	  . $image_dest . "$kimage .\n"); 
+	  . $image_dest . "$kimage-$version.\n"); 
     }
-  }
-  else {
-    if (! $have_conffile) {
-      my $answer='';
-      
-      print STDERR "I notice that you do not have $kimage symbolic\n";
-      print STDERR "link. I can create one for you, and it shall be\n";
-      print STDERR "updated by newer kernel image packages. This is \n";
-      print STDERR "useful if you use a boot loader like lilo.\n";
-      print STDERR "Do you want me to link " . $realimageloc . 
-	"$kimage-$version to $kimage?[Yn] ";
-      $answer=<STDIN>;
-      $do_symlink = "" if $answer =~ /n/i;
-      
-      if (open(CONF, ">$CONF_LOC")) {
-	print CONF "# Do not create symbolic links in /\n";
-	print CONF "Do_Symlinks = $do_symlink\n";
-	close CONF;
-      }
+    # Ok, now we may clobber the previous .old files
+    if (-e "$kimage-$version.$$") {
+      rename("$kimage-$version.$$", "$kimage-$version.old") || 
+	die "failed to move " . $image_dest . "$kimage:$!";
     }
-  }
-  if ($do_symlink =~ /Yes/i) {
     if ($reverse_symlink) {
       my $Old = $image_dest;
       if (test_relative ('Old Dir' => $Old, 'New Dir' => $realimageloc)) {
 	$Old   =~ s|^/*||o;
       }
       elsif ($relative_links) {
-	$Old = spath('Old' => "$Old", 'New' => $realimageloc);
+	$Old = spath('Old' => "$Old", 'New' => "$realimageloc" );
       }
-      symlink($Old . "$kimage", $realimageloc . "$kimage-$version")
-	|| die("Failed to symbolic-link " . $realimageloc
-	       . "$kimage-$version to " . $image_dest . "$kimage .\n");
+      symlink($Old . "$kimage-$version", 
+	      $realimageloc . "$kimage-$version")
+	|| die("Failed to symbolic-link " . $image_dest .
+	       "$kimage-$version to " . $realimageloc .
+	       "$kimage-$version .\n");
     }
-    else {
+  } 
+  elsif (-l "$kimage") {
+    # There is a symbolic link
+    my $force_move = 0;
+  
+    if ($no_symlink || $reverse_symlink) {
+      # we do not want links, yet we have a symbolic link here!
+      warn "found a symbolic link in " . $image_dest . "$kimage \n" .
+	"even though no_symlink is defined\n" if $no_symlink;
+      warn "found a symbolic link in " . $image_dest . "$kimage \n" .
+	"even though reverse_symlink is defined\n" if $reverse_symlink;
+      # make sure we change this state of affairs
+      $force_move = 1;
+    }
+    # follow link target. (we are in $image_dest, which should be / normally)
+    if (!$force_move) {
+      my $vmlinuz_target = readlink "$kimage";
+      if (!defined($vmlinuz_target)) {
+	# what, a dangling symlink?
+	warn "The link "  . $image_dest . "$kimage is a dangling link\n";
+	$force_move = 1;
+      }
+      elsif ("$vmlinuz_target" ne "$realimageloc" . "$kimage-$version") {
+	$force_move = 1;
+      }
+    }
+
+    if ($force_move) {
+      # don't clobber $kimage.old quite yet
+      rename("$kimage", "$kimage.$$") || 
+	die "failed to move " . $image_dest . "$kimage:$!";
       my $Old = $realimageloc;
-      if (test_relative ('Old Dir' => $Old, 'New Dir' => $image_dest)) {
+      my $cwd;
+      chomp($cwd=`pwd`);
+      if (test_relative ('Old Dir' => $Old, 'New Dir' => $cwd)) {
 	$Old   =~ s|^/*||o;
       }
       elsif ($relative_links) {
-	$Old = spath('Old' => "$Old", 'New' => $image_dest);
+	$Old = spath('Old' => "$Old", 'New' => $cwd);
       }
-      symlink($Old . "$kimage-$version", "$kimage") ||
-	die("Failed to symbolic-link " . $realimageloc
-	    . "$kimage-$version to "  . $image_dest . "$kimage .\n");
+      if (! symlink($Old . "$kimage-$version", "$kimage")) {
+	rename("$kimage.$$", "$kimage");
+	die("Failed to symbolic-link " . $realimageloc . "$kimage-$version to "
+	    . $image_dest . "$kimage .\n"); 
+      }
+    
+      # Ok, now we may clobber the previous .old file
+      rename("$kimage.$$", "$kimage.old");
     }
   }
+  elsif (! -e "$kimage") {
+    # Hmm. Pristine system? How can that be?
+    # Possibly they do not want a link here. (we should be in /
+    # here[$image_dest, really]
+    warn "$image_dest" .
+	 "$kimage does not exist. Installing from scratch, eh?\n";
+    warn "Or maybe you don't want a symbolic link here. Hmm? Lets See.\n";
+    if ($no_symlink) {
+      my $ret = system("cp -a --backup=t " . $realimageloc . "$kimage-$version "
+		       . " $kimage");
+      if ($ret) {
+	die("Failed to copy " . $realimageloc . "$kimage-$version to "
+	    . $image_dest . "$kimage .\n"); 
+      }
+    }
+    elsif ($reverse_symlink) {
+      my $ret = system("mv -f " . $realimageloc . "$kimage-$version "
+		       . "$kimage"); 
+      if ($ret) {
+	die("Failed to move " . $realimageloc . "$kimage-$version to "
+	    . $image_dest . "$kimage .\n"); 
+      }
+    }
+    else {
+      if (! $have_conffile) {
+	my $answer='';
+      
+	print STDERR "I notice that you do not have $kimage symbolic\n";
+	print STDERR "link. I can create one for you, and it shall be\n";
+	print STDERR "updated by newer kernel image packages. This is \n";
+	print STDERR "useful if you use a boot loader like lilo.\n";
+	print STDERR "Do you want me to link " . $realimageloc . 
+	  "$kimage-$version to $kimage?[Yn] ";
+	$answer=<STDIN>;
+	$do_symlink = "" if $answer =~ /n/i;
+      
+	if (open(CONF, ">$CONF_LOC")) {
+	  print CONF "# Do not create symbolic links in /\n";
+	  print CONF "Do_Symlinks = $do_symlink\n";
+	  close CONF;
+	}
+	$have_conffile = "Yes";
+      }
+    }
+    if ($do_symlink =~ /Yes/i) {
+      if ($reverse_symlink) {
+	my $Old = $image_dest;
+	if (test_relative ('Old Dir' => $Old, 'New Dir' => $realimageloc)) {
+	  $Old   =~ s|^/*||o;
+	}
+	elsif ($relative_links) {
+	  $Old = spath('Old' => "$Old", 'New' => $realimageloc);
+	}
+	symlink($Old . "$kimage", $realimageloc . "$kimage-$version")
+	  || die("Failed to symbolic-link " . $realimageloc
+		 . "$kimage-$version to " . $image_dest . "$kimage .\n");
+      }
+      else {
+	my $Old = $realimageloc;
+	if (test_relative ('Old Dir' => $Old, 'New Dir' => $image_dest)) {
+	  $Old   =~ s|^/*||o;
+	}
+	elsif ($relative_links) {
+	  $Old = spath('Old' => "$Old", 'New' => $image_dest);
+	}
+	symlink($Old . "$kimage-$version", "$kimage") ||
+	  die("Failed to symbolic-link " . $realimageloc
+	      . "$kimage-$version to "  . $image_dest . "$kimage .\n");
+      }
+    }
+  }
+  elsif ($no_symlink) {		# Maybe /$image_dest is on a dos system?
+    if (-e "$kimage") {
+      rename("$kimage", "$kimage.$$") || 
+	die "failed to move " . $image_dest . "$kimage:$!";
+    }
+    my $ret = system("cp -a --backup=t " . $realimageloc
+		     . "$kimage-$version " . "$kimage"); 
+  
+    if ($ret) {
+      if (-e "$kimage.$$") { rename("$kimage.$$", "$kimage"); }
+      die("Failed to copy " . $realimageloc . "$kimage-$version to "
+	  . $image_dest . "$kimage .\n"); 
+    }
+  
+    # Ok, now we may clobber the previous .old files
+    if (-e "$kimage.$$") { rename("$kimage.$$", "$kimage.old");  }
+  } 
+  elsif ($reverse_symlink) {		# Maybe /$image_dest is on a dos system?
+    if (-e "$kimage") {
+      rename("$kimage", "$kimage.$$") || 
+	die "failed to move " . $image_dest . "$kimage:$!";
+    }
+    my $ret = system("mv -f " . $realimageloc . "$kimage-$version "
+		     . $image_dest . "$kimage"); 
+    if ($ret) {
+      if (-e "$kimage.$$") {rename("$kimage.$$", "$kimage");}
+      die("Failed to move " . $realimageloc . "$kimage-$version to "
+	  . $image_dest . "$kimage .\n"); 
+    }
+  
+    my $old = $image_dest;
+    if (test_relative ('Old Dir' => $Old, 'New Dir' => $realimageloc)) {
+      $Old   =~ s|^/*||o;
+    }
+    elsif ($relative_links) {
+      $Old = spath('Old' => "$Old", 'New' => $realimageloc);
+    }
+    if (! symlink($Old . "$kimage", $realimageloc . "$kimage-$version")) {
+      warn "Could not symlink " . $image_dest .
+	   "$kimage to $kimage-$version :$!";
+    }
+    # Ok, now we may clobber the previous .old files
+    if (-e "$kimage.$$") { rename("$kimage.$$", "$kimage.old");}
+  } 
+  else {
+    # Hmm, no link in $image_dest
+    warn "Hmm, $kimage is not a link. Not changing it then.\n";
+  }
 }
-elsif ($no_symlink) {		# Maybe /$image_dest is on a dos system?
-  if (-e "$kimage") {
-    rename("$kimage", "$kimage.$$") || 
-      die "failed to move " . $image_dest . "$kimage:$!";
+
+
+######################################################################
+######################################################################
+######################################################################
+######################################################################
+
+if ( -f "/lib/modules/$version/modules.dep" ) {
+  my $running = '';
+  chop($running=`uname -r`);
+  if ($running eq $version) {
+    print STDERR <<"EOFERR";
+
+ You are attempting to install a kernel version that is the same as
+ the version you are currently running (version $running). The modules
+ list is quite likely to have been changed, and the modules dependency
+ file /lib/modules/$version/modules.dep needs to be re-built. It can
+ not be built correctly right now, since the module list for the
+ running kernel are likely to be different from the kernel installed. 
+ I am creating a new modules.dep file, but that may not be
+ correct. It shall be regenerated correctly at next reboot.
+
+ I repeat: you have to reboot in order for the modules file to be
+ created correctly. Until you reboot, it may be impossible to load
+ some modules. Reboot as soon as this install is finished (Do not
+ reboot right now, since you may not be able to boot back up until
+ installation is over, but boot immediately after). I can not stress
+ that too much. You need to reboot soon.
+
+EOFERR
+  ;
+    
+    my $answer='';
+    print "Please Hit return to continue.  ";
+    $answer=<STDIN>;
   }
-  my $ret = system("cp -a --backup=t " . $realimageloc
-		   . "$kimage-$version " . "$kimage"); 
-  
-  if ($ret) {
-    if (-e "$kimage.$$") { rename("$kimage.$$", "$kimage"); }
-    die("Failed to copy " . $realimageloc . "$kimage-$version to "
-	. $image_dest . "$kimage .\n"); 
-  }
-  
-  # Ok, now we may clobber the previous .old files
-  if (-e "$kimage.$$") { rename("$kimage.$$", "$kimage.old");  }
-} 
-elsif ($reverse_symlink) {		# Maybe /$image_dest is on a dos system?
-  if (-e "$kimage") {
-    rename("$kimage", "$kimage.$$") || 
-      die "failed to move " . $image_dest . "$kimage:$!";
-  }
-  my $ret = system("mv -f " . $realimageloc . "$kimage-$version "
-		   . $image_dest . "$kimage"); 
-  if ($ret) {
-    if (-e "$kimage.$$") {rename("$kimage.$$", "$kimage");}
-    die("Failed to move " . $realimageloc . "$kimage-$version to "
-	. $image_dest . "$kimage .\n"); 
-  }
-  
-  my $old = $image_dest;
-  if (test_relative ('Old Dir' => $Old, 'New Dir' => $realimageloc)) {
-    $Old   =~ s|^/*||o;
-  }
-  elsif ($relative_links) {
-    $Old = spath('Old' => "$Old", 'New' => $realimageloc);
-  }
-  if (! symlink($Old . "$kimage", $realimageloc . "$kimage-$version")) {
-    warn "Could not symlink " . $image_dest . "$kimage to $kimage-$version :$!";
-  }
-  # Ok, now we may clobber the previous .old files
-  if (-e "$kimage.$$") { rename("$kimage.$$", "$kimage.old");}
-} 
-else {
-  # Hmm, no link in $image_dest
-  warn "Hmm, $kimage is not a link. Not changing it then.\n";
 }
+
+system("depmod -a -F $realimageloc/System.map-$version $version");
+
+if ($initrd) {
+  my $ret = system("mkinitrd -o " . $realimageloc . "initrd-$version " . 
+		   "/lib/modules/$version");
+  die("Failed to create initrd image.\n") if $ret;
+  chdir($realimageloc) or die "could not chdir to $realimageloc:$!\n";
+  image_magic("initrd", $realimageloc) if $initrd;
+  chdir("$image_dest") or die "could not chdir to $image_dest:$!\n";
+}
+
+image_magic($kimage, $image_dest);
 
 # We used to have System.* files in / 
 if (-e "/System.map" || -e "/System.old") {
@@ -468,38 +529,6 @@ EOMAP
     print STFERR 
       "Ok, not deleting the files. Please remember to remove them manually.\n";
   }
-}
-
-if ( -f "/lib/modules/$version/modules.dep" ) {
-  my $running = '';
-  chop($running=`uname -r`);
-  if ($running eq $version) {
-    print STDERR <<"EOFERR";
-
- You are attempting to install a kernel version that is the same as
- the version you are currently running (version $running). The modules
- list is quite likely to have been changed, and the modules dependency
- file /lib/modules/$version/modules.dep needs to be re-built. It can
- not be built correctly right now, since the module list for the
- running kernel are likely to be different from the kernel installed. 
- I am creating a new modules.dep file, but that may not be
- correct. It shall be regenerated correctly at next reboot.
-
- I repeat: you have to reboot in order for the modules file to be
- created correctly. Until you reboot, it may be impossible to load
- some modules. Reboot as soon as this install is finished (Do not re
- boot right now, since you may not be able to boot back up until
- installation is over, but boot immediately after). I can not stress
- that too much. You need to reboot soon. 
-
-EOFERR
-  ;
-    
-    my $answer='';
-    print "Please Hit return to continue.  ";
-    $answer=<STDIN>;
-  }
-  system("depmod -a -F $realimageloc/System.map-$version $version");
 }
 
 my $linktarget;    
@@ -948,7 +977,7 @@ The first thing to determine is which floppy drive you wish to use.
 For most people, the default, which is the the default floppy drive,
 referred to as /dev/fd0, or A: would work.  Some people may want the
 second floppy drive which is drive 1, or /dev/fd1, or B:. 
-(Theoretically there there could be 8 floppy drives on a machine) If
+(Theoretically there could be 8 floppy drives on a machine) If
 in doubt, accept the default [0], which should work in most cases.
 
 EO_MSG_A
@@ -1140,6 +1169,9 @@ sub make_liloconf {
   if ($loader =~ /lilo/io) {
     print CONF "boot=".$bootdevice, "\n", "root=".$rootdevice, "\n", 
                @boilerplate;
+    if ($initrd) {
+      print CONF "initrd=".$realimageloc."initrd\n";
+    }
   }
   else {
     print CONF @silotemplate;

@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.115 2001/04/24 08:09:19 srivasta Exp $
+## $Id: rules,v 1.116 2001/04/25 07:19:22 srivasta Exp $
 ###############################################################################
 
 ifdef ARCH
@@ -643,6 +643,12 @@ ifneq ($(strip $(CONCURRENCY_LEVEL)),)
 do_parallel = -j$(CONCURRENCY_LEVEL)
 endif
 
+ifneq ($(strip $(INITRD)),)
+initrddep := initrd-tools (>= 0.1.1), # there is a space here
+else
+initrddep :=
+endif
+
 ifeq ($(strip $(CONFDIR)),)
 ifeq ($(strip $(patch_the_kernel)),YES)
 CONFDIR     = $(PATCH_DIR)
@@ -929,7 +935,7 @@ endif
                ! \( -f debian/official -a -f debian/control \) && \
 	   sed -e 's/=V/$(version)/g'        -e 's/=D/$(debian)/g' \
 	       -e 's/=A/$(architecture)/g'   -e 's/=SA/$(INT_SUBARCH)/g' \
-               -e 's/=L/$(int_loaderdep) /g'  \
+               -e 's/=L/$(int_loaderdep) /g' -e 's/=I/$(initrddep)/g' \
                -e 's/=CV/$(VERSION).$(PATCHLEVEL)/g' \
                -e 's/=M/$(maintainer) <$(email)>/g'  \
 		         $(CONTROL)> debian/control
@@ -1193,16 +1199,17 @@ kernel-image-deb:
 	sed -e 's/=V/$(version)/g'    -e 's/=B/$(image_in_boot)/g'   \
             -e 's/=S/$(no_symlink)/g' -e 's/=R/$(reverse_symlink)/g' \
             -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \
-            -e 's,=D,$(IMAGEDIR),g'                             \
+            -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'        \
              $(DEBDIR)/image.postinst > debian/tmp-image/DEBIAN/postinst
 	chmod 755 debian/tmp-image/DEBIAN/postinst
 	sed -e 's/=V/$(version)/g'    -e 's/=B/$(image_in_boot)/g'   \
             -e 's/=S/$(no_symlink)/g' -e 's/=R/$(reverse_symlink)/g' \
             -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \
-            -e 's,=D,$(IMAGEDIR),g'                             \
+            -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'        \
              $(DEBDIR)/image.postrm > debian/tmp-image/DEBIAN/postrm
 	chmod 755 debian/tmp-image/DEBIAN/postrm
 	sed -e 's/=V/$(version)/g'    -e 's/=L/$(loader)/g'          \
+	    -e 's/=I/$(INITRD)/g'                                    \
 	             $(DEBDIR)/image.preinst > debian/tmp-image/DEBIAN/preinst
 	chmod 755 debian/tmp-image/DEBIAN/preinst
 	sed -e 's/=V/$(version)/g'    -e 's/=L/$(loader)/g'          \

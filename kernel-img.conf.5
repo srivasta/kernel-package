@@ -21,7 +21,7 @@
 .\" Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139,
 .\" USA.
 .\"
-.\" $Id: kernel-img.conf.5,v 1.10 2001/04/24 08:09:18 srivasta Exp $
+.\" $Id: kernel-img.conf.5,v 1.11 2001/04/25 07:19:21 srivasta Exp $
 .\"
 .TH KERNEL\-IMG.CONF 5 "Mar 21 2000" "Debian" "Debian GNU/Linux manual" 
 .\" NAME should be all caps, SECTION should be 1-8, maybe w/ subsection
@@ -224,6 +224,13 @@ If set to yes, the kernel image postinst script shall go to extra
 ordinary lengths to ensure that the symbolic links are
 relative. Normally, the symbolic links are relative when it is easily
 determinable that relative links shall work. Defaults to No.
+.TP
+.B do_initrd
+Set to YES to prevent the
+.I kernel-image
+post installation script from issueing a warning when installing an
+intrd kernel. This assumes you have correctly set up your boot loader
+to be able to boot the initrd image.
 .SH FILES
 The file described here is
 .I /etc/kernel-img.conf.
