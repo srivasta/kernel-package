@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Tue Nov 13 01:53:11 2001
+## Last Modified On : Tue Nov 13 02:03:29 2001
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 501
+## Update Count	    : 503
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.147 2001/11/13 07:59:03 srivasta Exp $
+## $Id: rules,v 1.148 2001/11/13 08:03:34 srivasta Exp $
 ###############################################################################
 
 ifdef ARCH
@@ -1253,9 +1253,9 @@ real_stamp_source:
 	| (cd $(SOURCE_SRC); umask 000; tar xsf -)
 	(cd $(SOURCE_SRC); \
             $(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) distclean)
-	(cd $(SOURCE_SRC); \
-                        rm -f stamp-building $(STAMPS_TO_CLEAN))
-	(cd $(SOURCE_SRC)/include; rm -f asm scripts/cramfs ; )
+	(cd $(SOURCE_SRC);         rm -f stamp-building $(STAMPS_TO_CLEAN))
+	(cd $(SOURCE_SRC);         rm -f scripts/cramfs ; )
+	(cd $(SOURCE_SRC)/include; rm -f asm ; )
 	if test -f debian/official -a -f debian/README.Debian ; then \
            $(install_file) debian/README.Debian $(SOURCE_SRC)/README.Debian ; \
            $(install_file) debian/README.Debian $(SOURCE_DOC)/README.Debian ; \
