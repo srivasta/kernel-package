@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Thu Mar  5 16:49:49 1998
+## Last Modified On : Wed Mar 18 01:08:32 1998
 ## Last Machine Used: tiamat.datasync.com
-## Update Count	    : 234
+## Update Count	    : 236
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.29 1998/03/05 23:07:13 srivasta Exp $
+## $Id: rules,v 1.30 1998/03/18 07:15:37 srivasta Exp $
 ###############################################################################
 
 # The version of kernel-package this belongs to
@@ -154,6 +154,13 @@ else
 DEBCONFIG:= $(DEBDIR)/config
 endif
 
+ifeq ($(strip $(architecture)),powerpc)
+KERNEL_ARCH:=ppc
+else
+KERNEL_ARCH:=$(architecture)
+endif
+
+powerpc
 # The file which has local configuration
 CONFIG_FILE := $(shell if test -e .config ; then \
                            echo .config; \
@@ -264,9 +271,9 @@ all build: configure
 # debian.config contains the current idea of what the image should
 # have.
 	-test -f stamp-configure || $(deb_rule) configure
-	$(MAKE) ARCH=$(architecture) $(kimage)
+	$(MAKE) ARCH=$(KERNEL_ARCH) $(kimage)
 ifdef MODULES_ENABLED
-	$(MAKE) ARCH=$(architecture) modules
+	$(MAKE) ARCH=$(KERNEL_ARCH) modules
 endif
 	touch stamp-build
 
@@ -305,9 +312,9 @@ endif
 	-test ! -f stamp-configure && \
 	  (test -f .config || \
                 $(install_file) $(DEBDIR)/config .config) \
-	  && $(MAKE) ARCH=$(architecture) oldconfig \
-          && $(MAKE) ARCH=$(architecture) dep \
-          && $(MAKE) ARCH=$(architecture) clean && \
+	  && $(MAKE) ARCH=$(KERNEL_ARCH) oldconfig \
+          && $(MAKE) ARCH=$(KERNEL_ARCH) dep \
+          && $(MAKE) ARCH=$(KERNEL_ARCH) clean && \
               touch stamp-configure
 
 .config:
@@ -320,7 +327,7 @@ ifeq ($(strip $(patch_the_kernel)),YES)
 endif
 	rm -f $(FILES_TO_CLEAN) $(STAMPS_TO_CLEAN)
 	cp -pf .config config.precious
-	-test -f Makefile && $(MAKE) ARCH=$(architecture) distclean
+	-test -f Makefile && $(MAKE) ARCH=$(KERNEL_ARCH) distclean
 	mv -f config.precious .config
 	rm -rf $(DIRS_TO_CLEAN)
 	test -f stamp-building || test -f debian/official || rm -rf debian
@@ -377,7 +384,7 @@ stamp-source: configure
 	-tar cf - `echo * | sed -e 's/debian//g' -e 's/\.deb//g' ` \
 	| (cd debian/tmp-source/usr/src/$(package); umask 000; tar xsf -)
 	(cd debian/tmp-source/usr/src/$(package); \
-            $(MAKE) ARCH=$(architecture) distclean)
+            $(MAKE) ARCH=$(KERNEL_ARCH) distclean)
 	(cd debian/tmp-source/usr/src/$(package); \
                         rm -f stamp-building $(STAMPS_TO_CLEAN))
 	(cd debian/tmp-source/usr/src/$(package)/include; rm -f asm; \
@@ -580,7 +587,7 @@ endif
 	chmod -R og=rX debian/tmp-image
 	dpkg --build debian/tmp-image $(DEB_DEST)
 	rm -f -r debian/tmp-image
-	$(MAKE) ARCH=$(architecture) clean
+	$(MAKE) ARCH=$(KERNEL_ARCH) clean
 	rm -f stamp-build
 	touch stamp-image
 

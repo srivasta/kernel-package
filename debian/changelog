@@ -1,3 +1,14 @@
+kernel-package (4.01) frozen unstable; urgency=low
+
+  * In order to do cross sompilation, I was asked to export a variable
+    called ARCH which is set to the Debian architecture (dpkg
+    --print-architecture). Unfortunately. this breaks for PowerPc's, since
+    though Debian calls the architecture powerpc, the kernel knows it as
+    ppc. Things get very confused. This fix is essential for PowerPC
+    compilations. 
+
+ -- Manoj Srivastava <srivasta@debian.org>  Wed, 18 Mar 1998 01:14:04 -0600
+
 kernel-package (4.00) unstable; urgency=high
 
   * Fix a thinko in lilo run that could be a security hole.
