@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.198 2003/04/20 04:37:51 srivasta Exp $
+## $Id: rules,v 1.199 2003/04/27 19:18:45 srivasta Exp $
 ###############################################################################
 
 ifdef KPKG_ARCH
@@ -1272,9 +1272,12 @@ dummy_do_dep:
 stamp-kernel-configure: stamp-debian .config
 	$(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) \
                                  ARCH=$(KERNEL_ARCH) $(config_target) 	
+ifneq ($(shell if [ $(VERSION) -ge 2 -a $(PATCHLEVEL) -ge 5]; then \
+                  echo new;fi),)
 	+$(MAKE) -f ./debian/rules dummy_do_dep
 	$(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) \
                                  ARCH=$(KERNEL_ARCH) clean 
+endif
 	echo done >  $@
 
 configure: debian .config stamp-configure
