@@ -14,7 +14,7 @@
 #
 #
 #
-#    $Id: make-kpkg,v 1.15 1998/05/12 18:58:45 srivasta Exp $
+#    $Id: make-kpkg,v 1.16 1998/06/11 20:17:25 srivasta Exp $
 #
 require 5.002;
 use strict;
@@ -29,7 +29,7 @@ make-kpkg - build Debian kernel packages from Linux kernel sources.
 ($main::MYNAME     = $main::0) =~ s|.*/||;
 $main::Author      = "Manoj Srivastava";
 $main::AuthorMail  = "srivasta\@debian.org";
-$main::Version     = '$Revision: 1.15 $ ';
+$main::Version     = '$Revision: 1.16 $ ';
 
 my $help_opt=0; 
 my $revision=0; 
@@ -388,7 +388,7 @@ my $targets_help =<<EOTRGT;
 |     Targets                      |   Automatically builds                   |
 ===============================================================================
 | clean                            |                                          |
-| buildpackage                     | Builds the whole paclage                 |
+| buildpackage                     | Builds the whole package                 |
 | binary                           | Builds kernel_{source,headers,image,doc} |
 |       binary-indep               |                                          |
 |            kernel_source         |                                          |
