@@ -5,21 +5,22 @@
 # Created On       : Fri May 17 03:28:59 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Tue Jul 29 12:43:25 1997
+# Last Modified On : Thu Mar  5 14:15:10 1998
 # Last Machine Used: tiamat.datasync.com
-# Update Count     : 53
+# Update Count     : 56
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
 # 
 #
-#    $Id: image.prerm,v 1.4 1997/07/29 23:06:51 srivasta Exp $
+#    $Id: image.prerm,v 1.5 1998/03/05 22:52:48 srivasta Exp $
 #
 # 
 
 $|=1;
 # Predefined values:
-my $version = "=V";
+my $version = "=V";		# 
+my $loader  = "=L";		# lilo or silo
 
 # Variables used
 my $image='';
@@ -71,8 +72,8 @@ EOFERR
 
 chdir("/") or die "could not chdir to /:$!\n";
 
-if (-f "/etc/lilo.conf") { #I know, could be a link, but ..
-  open (LILO, "/etc/lilo.conf") || &success(); # this is not critical
+if (-f "/etc/$loader.conf") { #I know, could be a link, but ..
+  open (LILO, "/etc/$loader.conf") || &success(); # this is not critical
   while (<LILO>) {
     chop;
     s/\#.*//;			  # nix the comments
@@ -86,28 +87,28 @@ if (-f "/etc/lilo.conf") { #I know, could be a link, but ..
 	$WouldInvalidate |= $image =~ /vmlinuz-$version/;
       }
       else {
-	&success(); # invalid lilo.conf file
+	&success(); # invalid $loader.conf file
       }
     }
     else {
-      &success(); # invalid lilo.conf file
+      &success(); # invalid $loader.conf file
     }
   }
   close (LILO);
   if ($WouldInvalidate) {
     print STDERR <<"EOF";
 
- You have a valid /etc/lilo.conf file that mentions vmlinuz-$version.
+ You have a valid /etc/$loader.conf file that mentions vmlinuz-$version.
  Removing kernel-image-$version would invalidate that file. (you will
- have to edit /etc/lilo.conf to not refer to vmlinuz-$version and
- re-run lilo).
+ have to edit /etc/$loader.conf to not refer to vmlinuz-$version and
+ re-run $loader).
 
 EOF
   ;
     if (&ask("Are you sure you want to remove kernel-image-$version")) {
       print STDERR <<"EOG";
 
-Remember to edit /etc/lilo.conf and re-run lilo, or Make other
+Remember to edit /etc/$loader.conf and re-run $loader, or Make other
 arrangemnts to boot your machine.
 
 EOG

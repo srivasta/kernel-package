@@ -4,15 +4,15 @@
 # Author           : Manoj Srivastava ( srivasta@pilgrim.umass.edu ) 
 # Created On       : Sat Apr 27 05:55:26 1996
 # Created On Node  : melkor.pilgrim.umass.edu
-# Last Modified By : Manoj Srivasta
-# Last Modified On : Tue Feb 10 15:38:57 1998
+# Last Modified By : Manoj Srivastava
+# Last Modified On : Thu Mar  5 15:07:39 1998
 # Last Machine Used: tiamat.datasync.com
-# Update Count     : 70
+# Update Count     : 91
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
 # 
-#    $Id: image.postinst,v 1.13 1998/02/13 03:56:09 srivasta Exp $
+#    $Id: image.postinst,v 1.14 1998/03/05 22:56:50 srivasta Exp $
 #
 
 # 
@@ -24,9 +24,13 @@ my $image_in_boot   = "=B";	# Should be empty, mostly
 my $no_symlink      = "=S";	# Should be empty, mostly
 my $reverse_symlink = "=R";	# Should be empty, mostly
 my $kimage          = "=K";	# Should be empty, mostly
+my $loader          = "=L";     # lilo or silo
+
+my $Loader          = "LILO";
+$Loader             = "SILO"  if $loader =~ /silo/io;
 
 # This should not point to /tmp, because of security risks.
-my $temp_file_name = "/var/log/lilo_log.$$";
+my $temp_file_name = "/var/log/$loader" . "_log.$$";
 
 #known variables
 my @boilerplate = ();
@@ -132,6 +136,10 @@ elsif ($reverse_symlink) {		# Maybe /boot is on a dos system?
   # Ok, now we may clobber the previous .old files
   rename("$kimage.$$", "$kimage.old");
 } 
+else {
+  # Hmm, no link in /
+  warn "Hmm, $kimage is not a link. Not changing it then.\n";
+}
 
 # We used to have System.* files in / 
 if (-e "/System.map" || -e "/System.old") {
@@ -145,10 +153,10 @@ if (-e "/System.map" || -e "/System.old") {
 
  Actually, having the sumbolic link in / is technically detrimental
  (apart from cluttering up /); many programs, though looking in /boot,
- stll allow /Sytem.map to override. If you use LILO to choose between
- multiple kernels, then the /System.map symbolic link only applies to
- one such kernel, for all other choices the symbols loaded will be
- wrong. Not having the symbolic links at all prevents this.
+ still allow /System.map to override. If you use $Loader to choose
+ between multiple kernels, then the /System.map symbolic link only
+ applies to one such kernel, for all other choices the symbols loaded
+ will be wrong. Not having the symbolic links at all prevents this.
 
  I can delete these symbolic links for you, if you wish.
 EOMAP
@@ -233,7 +241,7 @@ while ( $line=<FSTAB> ) {
     $rootdevice = $device;
   }
   $islilo=`dd if=$device ibs=1 skip=2 count=4 2>/dev/null`;
-  if ($islilo =~ /LILO/o) {
+  if ($islilo =~ /$Loader/o) {
     $bootdevice = $device;
   }
   if (defined($rootdevice) && defined($bootdevice)) {
@@ -246,7 +254,7 @@ if (! defined($rootdevice)) {
   my $answer;
   print "Could not find where the current root file system is mounted!\n";
   print "Please make some arrangement for your system to boot the new \n";
-  print "kernel (like running LILO, loadlin, solo, or getting a boot  \n";
+  print "kernel (like running LILO, loadlin, SILO, or getting a boot  \n";
   print "floppy).                                                     \n"; 
   print "Please hit return to continue.                               \n";
   $answer = <STDIN>;
@@ -262,18 +270,21 @@ else {
 print "A new kernel image has been installed, and usually that means  \n";
 print "that some action has to be taken to make sure that the new     \n";
 print "kernel image is used next time the machine boots. Usually,     \n";
-print "this entails running a ``bootloader'' like grub, silo, loadlin,\n";
+print "this entails running a ``bootloader'' like grub, SILO, loadlin,\n";
 print "or LILO, or booting from a floppy.                           \n\n";
 
-if ( ! -x "/sbin/lilo" ) {
-  print "Hmm. LILO (LInux LOader), which is the only boot loader I    \n";
+if ( ! -x "/sbin/$loader" ) {
+  print "Hmm. $Loader";
+  printf " (LInux LOader)"                if $loader =~ /lilo/i;
+  printf " (Sparc Improved Linux lOader)" if $loader =~ /silo/i;
+  printf ", which is the boot loader I    \n";
   print "have additional help for, is not installed (it is, after all,\n";
-  print "just one of many optionss [and it is just an i386 binary]).  \n"; 
-  print "I am assuming you have made some  other arrangement for your \n";
-  print "system to boot the new kernel                                \n";
+  print "just one of many options. I am assuming you have made some   \n"; 
+  print "other arrangement for your system to boot the new kernel     \n";
   print "Please hit return to continue.                               \n";
   $answer = <STDIN>;
   exit (0) unless defined $rootdevice;
+  exit (0) if $loader =~ /silo/i; # No idea how to make non SILO floppies
 
   print "I can make a non-LILO diskette instead, but it won't be as useful.\n";
 
@@ -294,18 +305,31 @@ if ( ! -x "/sbin/lilo" ) {
     "read-only\n"
 );
 
+@silotemplate = (
+   "partition=$rootpartition\n",
+   "root=$rootdevice\n",
+   "timeout=100\n",
+   "image=" . $imagedir . "$kimage\n",
+   "\tlabel=Linux\n",
+   "\tread-only\n",
+   "other=1\n",
+   "\tbootblock=" . $rootpartition .  "/boot/old.b\n",
+   "\tlabel=oldsys\n"
+)
+
 print STDERR <<"EOMSG";
 A new kernel image has been installed. 
-LILO, the LInux LOader, sets up your system to boot Linux directly
-from your hard disk, without the need for a boot floppy.
+
+$Loader sets up your system to boot Linux directly from your hard
+disk, without the need for a boot floppy.
 
 WARNING
 If you are keeping another operating system or another version
-of Linux on a separate disk partition, you should not have LILO
-install a boot block now. Wait until you read the LILO documentation.
-That's because installing a boot block now might make the other
+of Linux on a separate disk partition, you should not have $Loader
+install a boot block now. Wait until you read the $Loader documentation.
+That is because installing a boot block now might make the other
 system un-bootable. If you only want to run this version of Linux,
-go ahead and install the boot block here. If it doesn't work, you
+go ahead and install the boot block here. If it does not work, you
 can still boot this system from a floppy.
 
 EOMSG
@@ -315,16 +339,16 @@ if (&ask("Would you like to create a boot floppy now")) {
   &makefloppy();
 }
 
-if (-T "/etc/lilo.conf") {
+if (-T "/etc/$loader.conf") {
   # Trust and use the existing lilo.conf.
-  print "You already have a LILO configuration in the file /etc/lilo.conf\n";
-  if ( &ask_y("Install a boot block using the existing /etc/lilo.conf") ) { 
-    my $ret = &run_lilo();
+  print "You already have a $Loader configuration in the file /etc/$loader.conf\n";
+  if ( &ask_y("Install a boot block using the existing /etc/$loader.conf") ) { 
+    my $ret; = &run_lilo();
     exit $ret;
   }
   else {
-    if (&ask("Wipe out your old LILO configuration and make a new one")){
-      rename("/etc/lilo.conf", "/etc/lilo.conf.OLD");
+    if (&ask("Wipe out your old $Loader configuration and make a new one")){
+      rename("/etc/$loader.conf", "/etc/$loader.conf.OLD");
     }
     else {
       exit (0);
@@ -335,12 +359,18 @@ if (! &ask_y("Do you wish to set up Linux to boot from the hard disk")) {
   exit (0);
 }
 
-print "You must do three things to make the Linux system boot from the\n";
-print "hard disk. Install a partition boot record, install a master boot\n";
-print "record, and set the partition active. You'll be asked to perform\n";
-print "each of these tasks. You may skip any or all of them, and perform\n";
-print "them manually later on.\n";
-print "\n";
+if ($loader =~ /lilo/io) {
+  print <<EOF;
+
+You must do three things to make the Linux system boot from the hard
+disk. Install a partition boot record, install a master boot record,
+and set the partition active. You will be asked to perform each of
+these tasks. You may skip any or all of them, and perform them
+manually later on
+EOF
+  ;
+  
+}
 
 # If we get this far, we need to make a new lilo conf, and run lilo
 &make_liloconf();
@@ -349,55 +379,65 @@ if (&ask_y("Install a partition boot block on partition $bootdevice")) {
   my $ret = &run_lilo();
   exit $ret if $ret;
 }
-print "\n";
-print "A master boot record is required to run the partition boot record.\n";
-if (-f "/boot/mbr.b") {
-  print "If you are already using a boot manager, and want to keep it,\n";
-  print "answer \"no\" to the following question. If you don't know\n";
-  print "what a boot manager is or whether you have one, answer \"yes\".\n";
-  if ( &ask_y("Install a master boot record (/boot/mbr.b) on $rootdisk")) {
-    my $ret = system("dd if=/boot/mbr.b of=$rootdisk bs=444 count=1");
+
+if ($loader =~ /lilo/io) {
+  print "\n";
+  print "A master boot record is required to run the partition boot record.\n";
+  if (-f "/boot/mbr.b") {
+    print "If you are already using a boot manager, and want to keep it,\n";
+    print "answer \"no\" to the following question. If you don't know\n";
+    print "what a boot manager is or whether you have one, answer \"yes\".\n";
+    if ( &ask_y("Install a master boot record (/boot/mbr.b) on $rootdisk")) {
+      my $ret = system("dd if=/boot/mbr.b of=$rootdisk bs=444 count=1");
+      if ($ret) {
+	print "There was a problem copying the master boot record.\n";
+	print "Please run \"dd if=/boot/mbr.b of=$rootdisk bs=444 count=1\"\n";
+	print "by hand. Please hit return to continue.\n";
+	my $ans = <STDIN>;
+      }
+    }
+  }
+  else {
+    print "However, you do not seem to have /boot/mbr.b, provided by the\n";
+    print "Debian package mbr.  I hope that your master boot record or \n";
+    print "boot manager does boot the active partition.  If not, you have\n";
+    print "to acquire the package mbr and install it. Please hit return to\n";
+    print "proceed.\n";
+    my $ans = <STDIN>;
+  }
+  print "\n";
+  print "The master boot record will boot the active partition.\n";
+  print "If you want your system to boot another operating system,\n";
+  print "such as DOS or Windows, by default, answer \"no\" to the following\n";
+  print "question. You may still use your boot manager or the master\n";
+  print "boot record to boot Linux. If you want the system to boot Linux.\n";
+  print "by default, answer \"yes\".\n";
+  if ( &ask_y("Make $rootdevice the active partition") ) {
+    my $ret = system("/sbin/activate $rootdisk $rootpartition");
     if ($ret) {
-      print "There was a problem copying the master boot record.\n";
-      print "Please run \"dd if=/boot/mbr.b of=$rootdisk bs=444 count=1\"\n";
-      print "by hand. Please hit return to continue.\n";
+      print "There was an error trying to activate $rootdevice.\n";
+      print "Please run \"/sbin/activate $rootdisk $rootpartition\"\n";
+      print "by hand. Please hit return to proceed.\n";
       my $ans = <STDIN>;
     }
   }
-}
-else {
-  print "However, you do not seem to have /boot/mbr.b, provided by the\n";
-  print "Debian package mbr.  I hope that your master boot record or \n";
-  print "boot manager does boot the active partition.  If not, you have\n";
-  print "to acquire the package mbr and install it. Please hit return to\n";
-  print "proceed.\n";
-  my $ans = <STDIN>;
-}
-print "\n";
-print "The master boot record will boot the active partition.\n";
-print "If you want your system to boot another operating system,\n";
-print "such as DOS or Windows, by default, answer \"no\" to the following\n";
-print "question. You may still use your boot manager or the master\n";
-print "boot record to boot Linux. If you want the system to boot Linux.\n";
-print "by default, answer \"yes\".\n";
-if ( &ask_y("Make $rootdevice the active partition") ) {
-  my $ret = system("/sbin/activate $rootdisk $rootpartition");
-  if ($ret) {
-    print "There was an error trying to activate $rootdevice.\n";
-    print "Please run \"/sbin/activate $rootdisk $rootpartition\"\n";
-    print "by hand. Please hit return to proceed.\n";
-    my $ans = <STDIN>;
+  else {
+    print "\n";
+    print "OK. If you installed the master boot record, and the partition\n";
+    print "boot record, you may boot Linux by holding down the shift key\n";
+    print "as the system boots, and then pressing the $rootpartition key\n";
+    print "when you see the \"1234F:\" prompt.\n";
+    print "";
+    print "For more information, see /usr/doc/mbr/README, and the files\n";
+    print "in the /usr/doc/$loader directory.\n";
   }
 }
 else {
-  print "\n";
-  print "OK. If you installed the master boot record, and the partition\n";
-  print "boot record, you may boot Linux by holding down the shift key\n";
-  print "as the system boots, and then pressing the $rootpartition key\n";
-  print "when you see the \"1234F:\" prompt.\n";
-  print "";
-  print "For more information, see /usr/doc/mbr/README, and the files\n";
-  print "in the /usr/doc/lilo directory.\n";
+  if (-f "/boot/old.b") {
+    print "SILO has overwritten the original boot loader and saved it under\n";
+    print "/boot/old.b.  You can boot your old system (if any) using the\n";
+    print "oldsys label at the SILO prompt.\n";
+  }
 }
 
 sub ask {
@@ -421,7 +461,7 @@ sub makefloppy {
   
   print <<EO_MSG_A;
 
-This process needs a formatted floppy Please note that an unformatted
+This process needs a formatted floppy. Please note that an unformatted
 floppy will cause this process to fail, and may well need a reboot to
 fix, and unfortunately, the system is not bootable yet.
 
@@ -519,17 +559,24 @@ EO_MSG_B
   while (! $done) {
   MKBOOT:{
       my $ret;
-      if ($no_symlink || $reverse_symlink) {
-	$ret = system '/bin/dd', "if=$imagedir" . "$kimage", "of=/dev/fd$drive";
+      if ($loader =~ /lilo/io) {
+	if ($no_symlink || $reverse_symlink) {
+	  $ret = 
+	    system '/bin/dd', "if=$imagedir" . "$kimage", "of=/dev/fd$drive";
+	}
+	else {
+	  $ret = 
+	    system '/bin/dd', "if=$realimageloc" . "$kimage-$version",  
+	    "of=/dev/fd$drive";
+	}
+	last MKBOOT if $ret;
+	$ret = system '/usr/sbin/rdev', "/dev/fd$drive", "$rootdevice";
+	last MKBOOT if $ret;
+	$ret = system '/usr/sbin/rdev', '-R', "/dev/fd$drive", '1';
       }
       else {
-	$ret = system '/bin/dd', "if=$realimageloc" . "$kimage-$version", 
-	              "of=/dev/fd$drive";
+	$ret = &silo_floppy( $drive );
       }
-      last MKBOOT if $ret;
-      $ret = system '/usr/sbin/rdev', "/dev/fd$drive", "$rootdevice";
-      last MKBOOT if $ret;
-      $ret = system '/usr/sbin/rdev', '-R', "/dev/fd$drive", '1';
       last MKBOOT if $ret;
       $done = 1;
       print "\n";
@@ -544,13 +591,57 @@ EO_MSG_B
       if (! &ask_y("Would you like to try again")) {
 	$done = 1;
       }
-      print "\n";
-      print "Insert a (formatted) floppy diskette into your boot drive\n";
-      print "/dev/fd$drive and press <Return> when ready:";
-      $answer=<STDIN>;
+      else {
+	# don't display the next message if no more tries
+	print "\n";
+	print "Insert a (formatted) floppy diskette into your boot drive\n";
+	print "/dev/fd$drive and press <Return> when ready:";
+	$answer=<STDIN>;
+      }
     }
   }
 }
+
+sub silo_floppy {
+  my $drive = shift;
+  my $mountpoint = "/var/lib/kernel.mntpoint.$$";
+  $ret = system '/sbin/mke2fs', "/dev/fd$drive";
+  return $ret if $ret;
+  $ret = mkdir $mountpoint, 0755;
+  return $ret if $ret;
+  $ret = system '/bin/mount', '-t', 'ext2', "/dev/fd$drive", $mountpoint;
+  do { rmdir $mountpoint; return $ret } if $ret;
+  do {
+    mkdir $mountpoint . "/boot", 0755;
+    last unless system '/bin/cp', '/boot/first.b', $mountpoint . '/boot';
+    last unless system '/bin/cp', '/boot/second.b', $mountpoint . '/boot';
+    if ($no_symlink || $reverse_symlink) {
+      $ret = system '/bin/cp', $imagedir . $kimage, $mountpoint . '/linux';
+    }
+    else {
+      $ret = system '/bin/cp', "$realimageloc" . "$kimage-$version",
+                       $mountpoint . '/linux';
+    }
+    last if $ret;
+    mkdir( $mountpoint . "/etc", 0755 ) || last;
+    open SILO, ">$mountpoint/etc/silo.conf" || last;
+    print SILO
+       "partition=1\n",
+       "root=/dev/fd$drive\n",
+       "read-write\n",
+       "timeout=100\n",        # 10s
+       "image=/linux\n",
+       "\tlabel=Linux\n",
+       "\tappend=root=$rootdevice\n";
+    close SILO;
+    $ret = system '/sbin/silo', '-r', $mountpoint;
+  };
+  system '/bin/umount', $mountpoint;
+  rmdir $mountpoint;
+  return $ret;
+}
+
+
 sub make_liloconf {
   # Create a lilo.conf if one doesn't exist.
   if (!defined($bootdevice)) {
@@ -560,36 +651,44 @@ sub make_liloconf {
     $bootdevice = $rootdevice;
   }
   
-  open(CONF, ">/etc/lilo.conf");
-  print CONF "boot=".$bootdevice, "\n", "root=".$rootdevice, "\n", 
-             @boilerplate;
+  open(CONF, ">/etc/$loader.conf");
+  if ($loader =~ /lilo/io) {
+    print CONF "boot=".$bootdevice, "\n", "root=".$rootdevice, "\n", 
+               @boilerplate;
+  }
+  else {
+    print CONF @silotemplate;
+  }
   close(CONF);
-  chmod("/etc/lilo.conf", 0644);
-  chown("/etc/lilo.conf", 0, 0);
+  chmod("/etc/$loader.conf", 0644);
+  chown("/etc/$loader.conf", 0, 0);
 }
 
 sub run_lilo (){
   my $ret;
-  print "Testing lilo.conf ... \n";
-  unlink $temp_file_name;                        # security
-  $ret = system("/sbin/lilo -t >$temp_file_name");
-  if ($ret) {
-    my $ans;
-    print "There was an error with running lilo in test mode, a log is \n";
-    print "available in file /tmp/lilo_log.$$.  Please edit /etc/lilo.conf\n";
-    print "manually and re-run lilo, or make other arrangements to boot \n";
-    print "your machine. \n\t Please hit return to continue";
-    $ans = <STDIN>;
-    return $ret;
+  if ($loader =~ /lilo/io) {
+    print "Testing lilo.conf ... \n";
+    unlink $temp_file_name;                        # security
+    $ret = system("/sbin/lilo -t >$temp_file_name");
+    if ($ret) {
+      my $ans;
+      print "There was an error with running $loader in test mode, a log is \n";
+      print "available in /tmp/$loader_log.$$. Please edit /etc/$loader.conf\n";
+      print "manually and re-run $loader, or make other arrangements to boot \n";
+      print "your machine. \n\t Please hit return to continue";
+      $ans = <STDIN>;
+      return $ret;
+    }
+    unlink "/tmp/$loader_log.$$";
+    print "Testing successful. Installing the partition boot sector... \n";
   }
-  unlink "/tmp/lilo_log.$$";
-  print "Testing successful. Installing the partition boot sector... \n";
-  $ret = system("/sbin/lilo >/tmp/lilo_log.$$");
+  
+  $ret = system("/sbin/$loader >/tmp/$loader_log.$$");
   if ($ret) {
     my $ans;
-    print "There was an error with running lilo, a log file is \n";
-    print "available in file $temp_file_name.  Please edit /etc/lilo.conf\n";
-    print "manually and re-run lilo, or make other arrangements to boot \n";
+    print "There was an error with running $loader, a log file is \n";
+    print "available in file $temp_file_name.  Please edit /etc/$loader.conf\n";
+    print "manually and re-run $loader, or make other arrangements to boot \n";
     print "your machine. \n\t Please hit return to continue";
     $ans = <STDIN>;
     return $ret;
@@ -598,4 +697,6 @@ sub run_lilo (){
   print "Installation successful.\n";
   return 0;
 }
+
+
 __END__
