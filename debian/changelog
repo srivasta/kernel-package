@@ -1,6 +1,7 @@
 kernel-package (6.25) unstable; urgency=high
 
-  * Fixed stupid little typos that made the package unusable. closes: Bug#46982
+  * Fixed stupid little typos that made the package unusable. 
+    closes: Bug#46982, Bug#46986
 
  -- Manoj Srivastava <srivasta@debian.org>  Fri,  8 Oct 1999 23:43:11 -0500
 
