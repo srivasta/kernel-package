@@ -5,16 +5,16 @@
 # Created On       : Mon Jun 17 01:10:11 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Sun Sep  6 22:39:38 1998
+# Last Modified On : Thu Sep 24 13:30:09 1998
 # Last Machine Used: tiamat.datasync.com
-# Update Count     : 106
+# Update Count     : 111
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
 #
 #
 #
-#    $Id: make-kpkg,v 1.19 1998/09/08 19:54:12 srivasta Exp $
+#    $Id: make-kpkg,v 1.20 1998/10/14 06:03:45 srivasta Exp $
 #
 require 5.002;
 use strict;
@@ -29,7 +29,7 @@ make-kpkg - build Debian kernel packages from Linux kernel sources.
 ($main::MYNAME     = $main::0) =~ s|.*/||;
 $main::Author      = "Manoj Srivastava";
 $main::AuthorMail  = "srivasta\@debian.org";
-$main::Version     = '$Revision: 1.19 $ ';
+$main::Version     = '$Revision: 1.20 $ ';
 
 my $help_opt=0; 
 my $revision=0; 
@@ -102,12 +102,13 @@ newer than the one installed on the system.
 
 =over 2
 
-Sets the kernel flavour to the argument B<number>. The flavour is 
-also appended to the package name. You need a patched Makefile to 
-make this work properly (see /usr/doc/kernel-package/Flavours.gz).
-It may contain only alphanumerics and the characters - + . (full 
-stop, hyphen, and plus). B<NOTE>: Hyphens are discouraged.  (Look
-at Chapter 5 of the Programmers manual for details). 
+Sets the kernel flavour to the argument B<number>. The flavour is also
+appended to the package name. You need a patched Makefile to make this
+work properly (see /usr/doc/kernel-package/Flavours.gz).  It may
+contain only alphanumerics and the characters - + . (full stop,
+hyphen, and plus). Uppercase letter are also not permitted under the
+Policy for a new package. B<NOTE>: Hyphens are discouraged.  (Look at
+Chapters 4 and  5 of the Programmers manual for details).
 
 
 =back
@@ -505,6 +506,12 @@ EOERR1
     $command .= " DEBIAN_REVISION=$revision ";
   }
   if ($flavour){
+    if ($flavour =~ m/[A-Z]){
+      print STDERR "Warning: Uppercase letters are not permitted in";
+      print STDERR "the flavour variable.";
+      print STDERR "Changing the Flavour from $flavour to \L$flavour\E";
+      $flavour = "\L$flavour\E";
+    }
     $command .= " FLAVOUR=$flavour ";
   }
   if ($subarch){
