@@ -1,3 +1,13 @@
+kernel-package (7.56) unstable; urgency=low
+
+  * an initial patch which at least prevents the generated postinst from
+    trying to run QUIK on a NewWorld pmac from Colin Walters
+    <walters@cis.ohio-state.edu>. 
+  * Additional patches that turn off boot floppy creation on powermac
+    harware altogether. These changes together              closes: Bug#100579
+
+ -- Manoj Srivastava <srivasta@debian.org>  Tue, 31 Jul 2001 01:43:41 -0500
+
 kernel-package (7.55) unstable; urgency=low
 
   * Fixed a typo in the grub example scripts.                closes: Bug#106387

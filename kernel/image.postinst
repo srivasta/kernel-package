@@ -5,14 +5,14 @@
 # Created On       : Sat Apr 27 05:55:26 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Wed Jul  4 11:15:13 2001
+# Last Modified On : Tue Jul 31 01:35:29 2001
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 200
+# Update Count     : 203
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
 #
-#    $Id: image.postinst,v 1.70 2001/07/13 18:10:26 srivasta Exp $
+#    $Id: image.postinst,v 1.71 2001/07/31 06:43:54 srivasta Exp $
 #
 
 #
@@ -44,9 +44,10 @@ my $postrm_hook     = '';       #Normally we do not
 my $package_name    = "kernel-image-$version";
 
 my $Loader          = "LILO";
-$Loader             = "SILO"  if $loader =~ /silo/io;
-$Loader             = "QUIK"  if $loader =~ /quik/io;
-$Loader             = "PALO"  if $loader =~ /palo/io;
+$Loader             = "SILO"     if $loader =~ /silo/io;
+$Loader             = "QUIK"     if $loader =~ /quik/io;
+$Loader             = "yaboot"   if $loader =~ /yaboot/io;
+$Loader             = "PALO"     if $loader =~ /palo/io;
 $Loader             = "NETTROM"  if $loader =~ /nettrom/io;
 $Loader             = "VMELILO"  if $loader =~ /vmelilo/io;
 
@@ -128,8 +129,11 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
   }
 }
 
-# no floppy disk support available for m68k VME
+# no floppy disk support available for m68k VME, and it is not very useful 
+# to make a boot floppy on PowerMac hardware at all.
 $do_bootfloppy = "" if $loader =~ /vmelilo/io;
+$do_bootfloppy = "" if $loader =~ /quik/io;
+$do_bootfloppy = "" if $loader =~ /yaboot/io;
 
 if ($image_in_boot) {
   $image_dest = "/$image_dir/";
@@ -712,6 +716,7 @@ if (-x "$postinst_hook") {
 exit (0) unless $do_boot_enable;	# Exit if explicitly asked to
 
 exit (0) if $loader =~ /silo/i; # SILO does not have to be executed.
+exit (0) if $loader =~ /yaboot/i; # yaboot does not have to be executed.
 exit (0) if $loader =~ /milo/i; # MILO does not have to be executed.
 exit (0) if $loader =~ /nettrom/i; # NETTROM does not have to be executed.
 
@@ -802,6 +807,7 @@ if ( ! -x "/sbin/$loader" ) {
   printf " (LInux LOader)"                if $loader =~ /^lilo/i;
   printf " (Sparc Improved Linux lOader)" if $loader =~ /silo/i;
   printf " (QUIK: PowerMac Boot Loader)"  if $loader =~ /quik/i;
+  printf " (yaboot: PowerMac Boot Loader)"  if $loader =~ /yaboot/i;
   printf " (PALO: PA-RISC Boot Loader)"  if $loader =~ /palo/i;
   printf " (VMELILO: m68k VME Boot Loader)" if $loader =~ /vmelilo/i;
   printf ", which is the boot loader I    \n";
@@ -813,6 +819,7 @@ if ( ! -x "/sbin/$loader" ) {
   exit (0) unless defined $rootdevice;
   exit (0) if $loader =~ /silo/i; # No idea how to make non SILO floppies
   exit (0) if $loader =~ /quik/i;
+  exit (0) if $loader =~ /yaboot/i;
   exit (0) if $loader =~ /palo/i; # No such thing as PALO floppies
   exit (0) if $loader =~ /vmelilo/i;
 

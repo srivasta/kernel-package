@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Tue Jul 24 12:12:55 2001
+## Last Modified On : Tue Jul 31 01:26:44 2001
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 484
+## Update Count	    : 485
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.128 2001/07/24 17:15:37 srivasta Exp $
+## $Id: rules,v 1.129 2001/07/31 06:43:54 srivasta Exp $
 ###############################################################################
 
 ifdef ARCH
@@ -230,9 +230,15 @@ endif
 ifneq (,$(findstring $(SUBARCH),pmac))
 SUBARCH:=pmac
 target := zImage
+ifneq (,$(shell grep NewWorld /proc/cpuinfo))
+loaderdep=yaboot
+loader=yaboot
+#loaderdoc=
+else
 loaderdep=quik
 loader=quik
 loaderdoc=QuikDefault
+endif
 kimagesrc = vmlinux
 kimage := vmlinux
 kimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
