@@ -1,3 +1,10 @@
+kernel-package (7.54) unstable; urgency=low
+
+  * Nope, that wasn't it. Despite testing it, I needed to test both the
+    official and the unofficial code paths. 
+
+ -- Manoj Srivastava <srivasta@debian.org>  Thu, 19 Jul 2001 10:23:45 -0500
+
 kernel-package (7.53) unstable; urgency=low
 
   * Out, out, damned spot -- will ye never go? Yet another attempt to fix
