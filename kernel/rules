@@ -5,9 +5,9 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Tue Mar  2 22:01:06 2004
+## Last Modified On : Tue Mar  2 22:30:26 2004
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count	    : 664
+## Update Count	    : 667
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
@@ -1458,6 +1458,13 @@ conf_vars:
 ifneq ($(strip $(iatv)),)
 	@echo "APPEND_TO_VERSION = $(iatv)"          >> .mak
 endif
+ifeq ($(strip $(patch_the_kernel)),YES)
+	@echo "KPKG_SELECTED_PATCHES = $(KPKG_SELECTED_PATCHES)" >> .mak
+endif
+ifeq ($(strip $(MODULES_ENABLED)),YES)
+	@echo "KPKG_SELECTED_MODULES = $(KPKG_SELECTED_MODULES)" >> .mak
+endif
+	@echo "Debian Revision  = $(debian)"        >> .mak
 	@echo "ARCH             = $(ARCH)"          >> .mak
 	@echo "KPKG_ARCH        = $(KPKG_ARCH)"     >> .mak
 	@echo "HOSTCC           = $(HOSTCC)"        >> .mak
