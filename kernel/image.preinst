@@ -308,6 +308,10 @@ if (-x "$preinst_hook") {
     system ("$preinst_hook", $version, $realimageloc . "$kimage-$version") &&
 	die "User hook script $preinst_hook failed";
 }
-
+if (-d "/etc/kernel/preinst.d") {
+  system ("run-parts", "-v", "--exit-on-error", "--arg=$version",
+          "/etc/kernel/preinst.d") &&
+            die "Failed to process /etc/kernel/preinst.d";
+}
 
 exit 0

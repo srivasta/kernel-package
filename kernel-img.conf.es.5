@@ -332,6 +332,11 @@ enlace a /usr/src/kernel\-headers\-X.Y.ZZ, sin importar que estén o no
 instalados. Por omisión está sin establecer, ya que no creamos enlaces colgantes
 de forma predeterminada.
 .TP
+.B relink_source_link
+Esta opción manipula el enlace al código fuente creado por los últimos núcleos.
+Si el enlace es un enlace colgante se elimina durante la instalación.
+Por omisión re-enlaza (elimina) el enlace «source» («YES»).
+.TP
 .B mkimage
 Debe ser una orden que produzca una imagen initrd dado un directorio. Se pasa a
 la opción

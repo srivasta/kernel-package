@@ -106,6 +106,12 @@ IMAGEDIR=/boot
 INT_IMAGE_DESTDIR=debian/tmp-image$(IMAGEDIR)
 
 
+comma:= ,
+empty:=
+space:= $(empty) $(empty)
+localversion_files := $(wildcard localversion*)
+
+
 VERSION =$(shell grep -E '^VERSION +=' Makefile 2>/dev/null | \
  sed -e 's/[^0-9]*\([0-9]*\)/\1/')
 PATCHLEVEL =$(shell grep -E '^PATCHLEVEL +=' Makefile 2>/dev/null | \
@@ -114,6 +120,12 @@ SUBLEVEL =$(shell grep -E '^SUBLEVEL +=' Makefile 2>/dev/null | \
  sed -e 's/[^0-9]*\([0-9]*\)/\1/')
 EXTRA_VERSION =$(shell grep -E '^EXTRAVERSION +=' Makefile 2>/dev/null | \
  sed -e 's/EXTRAVERSION *= *\([^ \t]*\)/\1/')
+LOCALVERSION = $(subst $(space),, $(shell cat /dev/null $(localversion_files)) \
+                 $(CONFIG_LOCALVERSION))
+
+
+
+
 HAVE_NEW_MODLIB =$(shell grep -E '\(INSTALL_MOD_PATH\)' Makefile 2>/dev/null )
 
 ifneq ($(strip $(EXTRA_VERSION)),)
@@ -670,7 +682,7 @@ UTS_RELEASE_VERSION=$(shell if [ -f include/linux/version.h ]; then             
                  else echo "" ;                                                         \
                  fi)
  
-version = $(VERSION).$(PATCHLEVEL).$(SUBLEVEL)$(EXTRAVERSION)$(iatv)$(INT_FLAV)
+version = $(VERSION).$(PATCHLEVEL).$(SUBLEVEL)$(EXTRAVERSION)$(iatv)$(INT_FLAV)$(LOCALVERSION)
 
 # See if we are being run in the kernel directory
 IN_KERNEL_DIR := $(shell if test -d drivers && test -d kernel && test -d fs && test                \
@@ -1115,9 +1127,6 @@ endif
 
 # accept both space separated list of modules, as well as comma
 # separated ones
-comma:= ,
-empty:=
-space:= $(empty) $(empty)
 valid_modules:=
 
 # See what modules we are talking about
@@ -1485,6 +1494,11 @@ stamp-debian:
 ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
 	@(echo "The changelog says we are creating $(saved_version), but I thought the version is $(version)"; exit 1)
 endif
+	# work around idiocy in recent kernel versions
+	test ! -e scripts/package/builddeb && \
+            mv -f scripts/package/builddeb scripts/package/builddeb.dist
+	test ! -e scripts/package/Makefile && \
+            mv -f scripts/package/Makefile scripts/package/Makefile.dist
 	@test -f $(DEBDIR)/rules || \
             echo Error: Could not find $(DEBDIR)/rules
 	-test ! -f stamp-debian && test ! -f debian/official && \
@@ -1638,6 +1652,11 @@ ifeq ($(strip $(NO_UNPATCH_BY_DEFAULT)),)
 	test ! -f stamp-patch || $(deb_rule) unpatch_now
 endif
 	-test -f stamp-building || test -f debian/official || rm -rf debian
+	# work around idiocy in recent kernel versions
+	test ! -e scripts/package/builddeb.dist && \
+            mv -f scripts/package/builddeb.dist scripts/package/builddeb
+	test ! -e scripts/package/Makefile.dist && \
+            mv -f scripts/package/Makefile.dist scripts/package/Makefile
 	rm -f $(FILES_TO_CLEAN) $(STAMPS_TO_CLEAN)
 	rm -rf $(DIRS_TO_CLEAN)
 

@@ -1005,6 +1005,11 @@ if (-x "$postinst_hook") {
 	warn "User hook script $postinst_hook failed";
 }
 
+if (-d "/etc/kernel/postinst.d") {
+  system ("run-parts", "-v", "--exit-on-error", "--arg=$version",
+          "/etc/kernel/postinst.d") &&
+            die "Failed to process /etc/kernel/postinst.d";
+}
 
 
 exit (0) unless $do_boot_enable;	# Exit if explicitly asked to

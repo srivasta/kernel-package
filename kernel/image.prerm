@@ -210,6 +210,11 @@ if (-x "$prerm_hook") {
   system ("$prerm_hook", $version, $realimageloc . "$kimage-$version") &&
 	    warn "User hook script $prerm_hook failed";
 }
+if (-d "/etc/kernel/prerm.d") {
+  system ("run-parts", "-v", "--exit-on-error", "--arg=$version",
+          "/etc/kernel/prerm.d") &&
+            die "Failed to process /etc/kernel/prerm.d";
+}
 
 # The rest is just us being nice to lilo users.
 

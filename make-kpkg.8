@@ -525,6 +525,28 @@ installed in its place (the variable minimal_swap in
 .I /etc/kernel\-img.conf
 further modifies this behaviour). No action is taken on upgrades.
 .IP
+Please see the documentation about hooks in
+.B kernel\-img.conf(5).
+These hooks are variables that can be pointed by hte local sysadmin to
+scripts that add or remove a line from the grub menu list at kernel
+image install and remove times. A sample script to add lines to a grub
+menu file is included in the directory
+.I /usr/share/doc/kernel\-package/.
+.IP
+Apart from hook variables that the local admin may set, there are a
+set of directories where packages, or the local admin, may drop in
+script files. The directories are
+.I /etc/kernel/preinst.d/,
+.I /etc/kernel/postinst.d/,
+.I /etc/kernel/prerm.d/,
+and 
+.I /etc/kernel/postrm.d/.
+If they exists, the kernel-image package shall run a 
+.B run-parts
+program over the directory, giving the version being installed or
+removed as an argument, in the corresponding phase of installation or
+removal. 
+.IP
 On installation, it also offers to run the Linux loader,
 .I LILO
 (or alternates like 
@@ -541,14 +563,6 @@ rates a special mention here, since grub may not need to be rerun
 after installing a kernel image, though an automated change to the
 menu list would be nice on install and removal of kernel image
 packages. 
-.IP
-Please see the documentation about hooks in
-.B kernel\-img.conf(5).
-These hooks are variables that can be pointed to scripts that add or
-remove  a line from the grub menu list at kernel image install and
-remove times. A sample script to add lines to a grub menu file is
-included in the directory 
-.I /usr/share/doc/kernel\-package/.
 .TP
 .B build
 This target, used by target
