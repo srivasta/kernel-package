@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Tue Apr 21 12:39:42 1998
+## Last Modified On : Mon Apr 27 13:54:05 1998
 ## Last Machine Used: tiamat.datasync.com
-## Update Count	    : 261
+## Update Count	    : 264
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.35 1998/04/21 17:39:54 srivasta Exp $
+## $Id: rules,v 1.36 1998/04/27 19:24:02 srivasta Exp $
 ###############################################################################
 
 # The version of kernel-package this belongs to
@@ -83,7 +83,7 @@ endif
 endif
 
 ifneq ($(strip $(loaderdep)),)
-int_loaderdep := "$(loaderdep), "
+int_loaderdep := $(loaderdep),
 else
 int_loaderdep :=
 endif
@@ -325,7 +325,7 @@ endif
 	-test ! -f stamp-configure && \
 	   sed -e 's/=V/$(version)/g'        -e 's/=D/$(debian)/g' \
 	       -e 's/=A/$(architecture)/g'   -e 's/=SA/$(INT_SUBARCH)/g' \
-               -e 's/=M/$(maintainer) <$(email)>/g' -e 's/=L/$(int_loaderdep)/g' \
+               -e 's/=M/$(maintainer) <$(email)>/g' -e 's/=L/$(int_loaderdep) /g' \
 		         $(DEBDIR)/Control > debian/control
 	-test ! -f stamp-configure && test ! -f debian/official && \
 	   sed -e 's/=V/$(version)/g' -e 's/=D/$(debian)/g' \
@@ -416,9 +416,14 @@ stamp-source: configure
                         rm -f stamp-building $(STAMPS_TO_CLEAN))
 	(cd debian/tmp-source/usr/src/$(package)/include; rm -f asm; \
 		ln -s asm-$(KERNEL_ARCH) asm)
-	sed -e 's/=V/$(version)/g' -e 's/=A/$(architecture)/g'\
-                 $(DEBDIR)/README.source > \
+	if test -f debian/official -a -f debian/README.Debian ; then \
+           $(install_file) debian/README.Debian ; \
 		debian/tmp-source/usr/src/$(package)/README.Debian
+	else \
+	    sed -e 's/=V/$(version)/g' -e 's/=A/$(architecture)/g' \
+                 $(DEBDIR)/README.source > \
+		 debian/tmp-source/usr/src/$(package)/README.Debian ; \
+	fi
 	$(install_file) .config debian/tmp-source/usr/src/$(package)/.config.save
 	dpkg-gencontrol -p$(package) -Pdebian/tmp-source/
 	chown -R root.root debian/tmp-source
