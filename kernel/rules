@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.110 2001/02/01 18:56:54 srivasta Exp $
+## $Id: rules,v 1.111 2001/02/01 19:42:36 srivasta Exp $
 ###############################################################################
 
 ifdef ARCH
@@ -416,7 +416,7 @@ endif
 
 ## This is the replacement for FLAVOUR
 ifneq ($(strip $(APPEND_TO_VERSION)),)
-iatv := $(strip $(APPEND_TO_VERSION)
+iatv := $(strip $(APPEND_TO_VERSION))
 EXTRAV_ARG := EXTRAVERSION=${EXTRA_VERSION}${iatv}
 else
 iatv :=
