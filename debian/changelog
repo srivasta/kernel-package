@@ -2,8 +2,12 @@ kernel-package (6.31) unstable; urgency=low
 
   * Never release a version without a full install test. There were typos
     in 6.30 which made it not work
-  
- -- Manoj Srivastava <srivasta@debian.org>  Thu, 27 Jan 2000 00:57:39 -0600
+  * Pulled back the support for HOSTCC and CC variables in make-kpkg,
+    since it caused all modules to fail. In fact, just setting CC=gcc
+    causes havoc. modules tested: alsa-source, lmsensors, and
+    others. Again, this is important. 
+
+ -- Manoj Srivastava <srivasta@debian.org>  Thu, 27 Jan 2000 03:07:27 -0600
 
 kernel-package (6.30) frozen unstable; urgency=low
 

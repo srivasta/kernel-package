@@ -14,7 +14,7 @@
 #
 #
 #
-#    $Id: make-kpkg,v 1.34 2000/01/27 05:57:15 srivasta Exp $
+#    $Id: make-kpkg,v 1.35 2000/01/27 09:08:34 srivasta Exp $
 #
 require 5.002;
 use strict;
@@ -29,7 +29,7 @@ make-kpkg - build Debian kernel packages from Linux kernel sources.
 ($main::MYNAME     = $main::0) =~ s|.*/||;
 $main::Author      = "Manoj Srivastava";
 $main::AuthorMail  = "srivasta\@debian.org";
-$main::Version     = '$Revision: 1.34 $ ';
+$main::Version     = '$Revision: 1.35 $ ';
 
 my $help_opt=0; 
 my $revision=0; 
@@ -684,12 +684,14 @@ EOERR1
   $cc .= " ";
   if ($cc eq ' ') { $cc = $cross_compile; $cc .= "gcc "; };
 
-  $cc .= "-D__KERNEL__ -I";
-  chomp($cc .= `pwd`);
-  $cc .= "/include";
+  #$cc .= " -D__KERNEL__ -I";
+  #chomp($cc .= `pwd`);
+  #$cc .= "/include";
 
-  $command .= " CC=\"$cc\" HOSTCC=\"$hostcc\"";
-  $command .= " $Targets";
+  # For some reason, this causes all modules to fail
+  #$command .= " CC=\"$cc\" HOSTCC=\"$hostcc\"";
+  $command .= " $Targets\n";
+  # print STDERR $command; 
   exec $command; 
 }
 
