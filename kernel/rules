@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Wed Jul 22 18:36:09 1998
+## Last Modified On : Tue Sep  8 14:32:50 1998
 ## Last Machine Used: tiamat.datasync.com
-## Update Count	    : 285
+## Update Count	    : 352
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.43 1998/07/23 06:20:08 srivasta Exp $
+## $Id: rules,v 1.44 1998/09/08 19:52:44 srivasta Exp $
 ###############################################################################
 
 # The version of kernel-package this belongs to
@@ -26,6 +26,7 @@ pgp=$(maintainer)
 # The Debian revision of the kernel packages (for example, `2').
 debian := 1.00
 
+#  Package specific stuff
 # decide if image is meant to be in /boot rather than /
 image_in_boot :=
 # Can we use symlinks?
@@ -48,55 +49,142 @@ make_libc_headers := NO
 # run make clean after build
 do_clean := YES
 
+
 # The default architecture (all if architecture independent)
 architecture:=$(shell dpkg --print-architecture)
+KERNEL_ARCH:=$(architecture)	#We may need to change this later
+DEBCONFIG = $(CONFDIR)/config
+IMAGE_DESTDIR=/boot
+INT_IMAGE_DESTDIR=debian/tmp-image$(IMAGE_DESTDIR)
+######################################################################
+###          Architecture specific stuff                           ###
+######################################################################
+# Each architecture has the following specified for it
+# (a) The kernel image type (i.e. zImage or bzImage)
+# (b) The dependency on a loader, if any
+# (c) The name of the loader
+# (d) The name of the documentation file for the loader
+# (e) The build target
+# (f) The location of the kernelimage source
+# (g) The location of the kernelimage destination
+# (h) The name of the arch specific configuration file
+# Some architectures has sub architectures
 
-# The kernel image type (i.e. zImage or bzImage)
-ifneq ($(strip $(filter m68k ppc powerpc,$(architecture))),)
-kimage := zImage
-else
-ifneq ($(strip $(filter sparc,$(architecture))),)
-kimage := vmlinux
-else
-ifneq ($(strip $(filter alpha,$(architecture))),)
-kimage := vmlinux.gz
-else
-kimage := bzImage
-endif
-endif
-endif
-
-# Sparcs use silo, not lilo. Try to accomodate them
-# PowerPCs use yet another loader: quik.
+### m68k
+ifeq ($(strip $(architecture)),m68k)
 # m68k doesn't use lilo (atari lilo is alpha software; amiga lilo is
 # stable but unpackaged; mac lilo, who knows?).
+# sub archs can be Amiga, Atari, Mac
+GUESS_SUBARCH:=$(shell awk '/Model/ { print $2}' /proc/hardware)
+SUBARCH:=$(GUESS_SUBARCH)
+NEED_DIRECT_GZIP_IMAGE=YES
+kimage := zImage
+loaderdep=
+loader=lilo
+loaderdoc=
+target = $(kimage)
+kimagesrc = vmlinux
+kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
+ifeq ($(strip $(GUESS_SUBARCH)),Amiga)
+        DEBCONFIG= $(CONFDIR)/config.amiga
+else
+ifeq ($(strip $(GUESS_SUBARCH)),Atari)
+        DEBCONFIG= $(CONFDIR)/config.atari
+else
+ifeq ($(strip $(GUESS_SUBARCH)),Mac)
+        DEBCONFIG= $(CONFDIR)/config.mac
+endif
+endif
+endif
+endif
+
 ifeq ($(strip $(architecture)),sparc)
+kimage := vmlinux
 loaderdep=silo
 loader=silo
 loaderdoc=SiloDefault
-else
-ifeq ($(strip $(architecture)),powerpc)
+target = $(kimage)
+NEED_DIRECT_GZIP_IMAGE=YES
+kimagesrc = vmlinux
+kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
+DEBCONFIG = $(CONFDIR)/config.sparc
+endif
+
+### ppc powerpc et al
+ifneq ($(strip $(filter ppc powerpc,$(architecture))),)
+# sub archs can be CHRP, PowerMac, PReP
+GUESS_SUBARCH:=$(shell awk '/machine/ { print $3}' /proc/cpuinfo)
+SUBARCH:=$(GUESS_SUBARCH)
+KERNEL_ARCH:=ppc		#The only place we have needed to change
+kimage := zImage
+target = $(kimage)
+
+# PowerPCs use yet another loader: quik.
+ifeq ($(strip $(PPC_SUBARCH)),PowerMac)
 loaderdep=quik
 loader=quik
 loaderdoc=QuikDefault
-else
-ifeq ($(strip $(architecture)),m68k)
-loaderdep=
-loader=lilo
-loaderdoc=
-else
+kimagesrc=vmlinux
+kimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
+HAVE_COFF_IMAGE = YES
+coffsrc=arch/$(KERNEL_ARCH)/coffboot/$(kimage)
+coffdest=$(INT_IMAGE_DESTDIR)/vmlinux.coff-$(version)
+DEBCONFIG = $(CONFDIR)/config.powermac
+endif
+
+ifeq ($(strip $(PPC_SUBARCH)),CHRP)
+kimagesrc = arch/$(KERNEL_ARCH)/chrpboot/$(kimage)
+kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
+DEBCONFIG = $(CONFDIR)/config.chrp
+endif
+
+ifeq ($(strip $(PPC_SUBARCH)),PReP)
+kimagesrc = arch/$(KERNEL_ARCH)/coffboot/$(kimage)
+kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
+DEBCONFIG = $(CONFDIR)/config.prep
+endif
+endif
+
 ifeq ($(strip $(architecture)),alpha)
+kimage := vmlinuz
 loaderdep=
 loader=milo
 loaderdoc=
-else
+target = boot
+kimagesrc = arch/$(KERNEL_ARCH)/boot/vmlinux.gz
+kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
+DEBCONFIG = $(CONFDIR)/config.alpha
+endif
+
+ifeq ($(strip $(architecture)),i386)
+# sub archs can be i386 i486 i586 i686
+GUESS_SUBARCH:=$(shell uname -m)
+kimage := bzImage
 loaderdep=lilo (>= 19.1)
 loader=lilo
 loaderdoc=LiloDefault
+target = $(kimage)
+kimagesrc = arch/$(KERNEL_ARCH)/boot/$(kimage)
+kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
+ifeq ($(strip $(GUESS_SUBARCH)),i386)
+        DEBCONFIG= $(CONFDIR)/config.i386
+else
+ifeq ($(strip $(GUESS_SUBARCH)),i486)
+        DEBCONFIG= $(CONFDIR)/config.i486
+else
+ifeq ($(strip $(GUESS_SUBARCH)),i586)
+        DEBCONFIG= $(CONFDIR)/config.i586
+else
+ifeq ($(strip $(GUESS_SUBARCH)),i686)
+        DEBCONFIG= $(CONFDIR)/config.i686
 endif
 endif
 endif
 endif
+endif
+
+######################################################################
+######################################################################
 
 ifneq ($(strip $(loaderdep)),)
 int_loaderdep := $(loaderdep),
@@ -105,7 +193,7 @@ int_loaderdep :=
 endif
 
 
-#  Package specific stuff
+
 # The following variable is used to simplify the process of making
 # diffs and orig targets, Please set it if AND ONLY IF no patches
 # have been applied to the upstream source, in other words, we have
@@ -121,6 +209,7 @@ PATCHLEVEL:=$(shell egrep '^PATCHLEVEL +=' Makefile 2>/dev/null | \
                     sed -e 's/[^0-9]*\([0-9]*\)/\1/')
 SUBLEVEL:=$(shell egrep '^SUBLEVEL +=' Makefile 2>/dev/null | \
                   sed -e 's/[^0-9]*\([0-9]*\)/\1/')
+HAVE_NEW_MODLIB:=$(shell egrep '\(INSTALL_MOD_PATH)\' Makefile 2>/dev/null )
 
 # If you want to have more than one kernel configuration per kernel
 # version, set FLAVOUR in the top level kernel Makefile *before*
@@ -147,17 +236,10 @@ endif
 version = $(VERSION).$(PATCHLEVEL).$(SUBLEVEL)$(INT_FLAV)
 
 # SUBARCH is used to distinguish Amiga, Atari, Macintosh, etc. kernels
-# for Debian/m68k.  If you need it (exteremely unlikely), set it in
-# the top level kernel Makefile *before* invoking make-kpg.  It only
-# affects the naming of the kernel-image as the source and doc
-# packages are architecture independent and the kernel-headers do not
-# vary from one sub-architecture to the next.
+# for Debian/m68k.  It only affects the naming of the kernel-image as
+# the source and doc packages are architecture independent and the
+# kernel-headers do not vary from one sub-architecture to the next.
 # Note: Debian/powerpc will eventually use SUBARCH too.
-
-ifneq ($(strip $(SUBARCH)),)
-SUBARCH:=$(shell grep ^SUBARCH Makefile 2>/dev/null | \
-                  perl -ple 's/SUBARCH[\s:=]+//g')
-endif
 
 ifneq ($(strip $(SUBARCH)),)
 INT_SUBARCH := -$(SUBARCH)
@@ -174,15 +256,19 @@ i_package := kernel-image-$(version)$(INT_SUBARCH)
 d_package := kernel-doc-$(version)
 l_package := libc-kheaders
 
-FILES_TO_CLEAN = modules/modversions.h modules/ksyms.ver debian/files
+FILES_TO_CLEAN  = modules/modversions.h modules/ksyms.ver debian/files
 STAMPS_TO_CLEAN = stamp-build stamp-configure stamp-source stamp-image \
                   stamp-headers stamp-src stamp-diff stamp-doc \
                   stamp-buildpackage stamp-libc-kheaders
-DIRS_TO_CLEAN  = debian/tmp-source debian/tmp-headers debian/tmp-image
+DIRS_TO_CLEAN   = debian/tmp-source debian/tmp-headers debian/tmp-image
 
-CONFLOC:=/etc/kernel-pkg.conf
-LIBLOC:=/usr/lib/kernel-package
-MODULE_LOC := /usr/src/modules
+CONFLOC    :=/etc/kernel-pkg.conf
+LIBLOC     :=/usr/lib/kernel-package
+MODULE_LOC :=/usr/src/modules
+
+DEBDIR      = $(LIBLOC)
+DEBDIR_NAME = $(shell basename $(DEBDIR))
+CONFDIR     = $(DEBDIR)/Config
 
 PATCH_DIR        := /usr/src/kernel-patches/$(architecture)
 DIR_PATCH_APPLY   = $(PATCH_DIR)/apply
@@ -191,35 +277,9 @@ DIR_PATCH_UNPATCH = $(PATCH_DIR)/unpatch
 # The destination of all .deb files
 # (suggested by Rob Browning <osiris@cs.utexas.edu>)
 DEB_DEST := ..
-
 SRCTOP := $(shell if [ "$$PWD" != "" ]; then echo $$PWD; else pwd; fi)
-DEBDIR := $(LIBLOC)
-DEBDIR_NAME:= $(shell basename $(DEBDIR))
+INSTALL_MOD_PATH=$(SRCTOP)/debian/tmp-image
 
-ifeq ($(strip $(architecture)),sparc)
-DEBCONFIG:= $(DEBDIR)/config.sparc
-else
-DEBCONFIG:= $(DEBDIR)/config
-endif
-
-ifeq ($(strip $(architecture)),powerpc)
-KERNEL_ARCH:=ppc
-else
-KERNEL_ARCH:=$(architecture)
-endif
-
-# The file which has local configuration
-CONFIG_FILE := $(shell if test -e .config ; then \
-                           echo .config; \
-                       elif test -e $(DEBDIR)/config ; then \
-                           echo $(DEBCONFIG); \
-                       else echo /dev/null ; \
-                       fi)
-
-# define MODULES_ENABLED if appropriate
-ifneq ($(strip $(shell egrep ^[^\#]*CONFIG_MODULES $(CONFIG_FILE))),)
-MODULES_ENABLED = yes
-endif
 
 install_file=    install -p    -o root -g root -m 644
 install_program= install -p    -o root -g root -m 755
@@ -266,10 +326,6 @@ ifneq ($(strip $(PATCH_THE_KERNEL)),)
 patch_the_kernel = $(PATCH_THE_KERNEL)
 endif
 
-ifneq ($(strip $(MAKE_LIBC_HEADERS)),)
-make_libc_headers = $(MAKE_LIBC_HEADERS)
-endif
-
 ifneq ($(strip $(ROOT_CMD)),)
 root_cmd = $(ROOT_CMD)
 endif
@@ -278,6 +334,24 @@ endif
 ifneq ($(strip $(CLEAN_SOURCE)),)
 do_clean = $(CLEAN_SOURCE)
 endif
+
+# The file which has local configuration
+CONFIG_FILE := $(shell if test -e .config ; then \
+                           echo .config; \
+                       elif test -e $(DEBCONFIG) ; then \
+                           echo $(DEBCONFIG); \
+                       elif test -e $(CONFDIR)/config ; then \
+                           echo $(CONFDIR)/config ; \
+                       elif test -e $(DEBDIR)/config ; then \
+                           echo $(DEBDIR)/config ; \
+                       else echo /dev/null ; \
+                       fi)
+
+# define MODULES_ENABLED if appropriate
+ifneq ($(strip $(shell egrep ^[^\#]*CONFIG_MODULES $(CONFIG_FILE))),)
+MODULES_ENABLED := yes
+endif
+
 
 # See if we are being run in the kernel directory
 IN_KERNEL_DIR := $(shell if test -d drivers -a -d kernel -a -d fs -a \
@@ -326,11 +400,7 @@ all build: configure
 # debian.config contains the current idea of what the image should
 # have.
 	-test -f stamp-configure || $(deb_rule) configure
-ifeq ($(strip $(architecture)),alpha)
-	$(MAKE) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) boot
-else
-	$(MAKE) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) $(kimage)
-endif
+	$(MAKE) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) $(target)
 ifdef MODULES_ENABLED
 	$(MAKE) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) modules
 endif
@@ -363,10 +433,6 @@ endif
                -e 's/=L/$(int_loaderdep) /g' \
                -e 's/=M/$(maintainer) <$(email)>/g'  \
 		         $(DEBDIR)/Control > debian/control
-ifeq ($(strip $(make_libc_headers)),YES)
-	-test ! -f stamp-configure && \
-	   cat $(DEBDIR)/Control.libc >> debian/control
-endif
 	-test ! -f stamp-configure && test ! -f debian/official && \
 	   sed -e 's/=V/$(version)/g' -e 's/=D/$(debian)/g' \
 	    -e 's/=A/$(architecture)/g' -e 's/=M/$(maintainer) <$(email)>/g' \
@@ -393,9 +459,9 @@ ifeq ($(strip $(patch_the_kernel)),YES)
 	-test -d $(DIR_PATCH_UNPATCH) && run-parts --verbose $(DIR_PATCH_UNPATCH)
 endif
 	rm -f $(FILES_TO_CLEAN) $(STAMPS_TO_CLEAN)
-	test -f .config && cp -pf .config config.precious
+	test ! -f .config || cp -pf .config config.precious
 	-test -f Makefile && $(MAKE) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) distclean
-	test -f config.precious && mv -f config.precious .config
+	test ! -f config.precious || mv -f config.precious .config
 	rm -rf $(DIRS_TO_CLEAN)
 	test -f stamp-building || test -f debian/official || rm -rf debian
 
@@ -549,20 +615,11 @@ stamp-image: configure build
 	test -f stamp-build || $(deb_rule) build
 	$(make_directory) debian/tmp-image/DEBIAN
 	$(make_directory) debian/tmp-image/boot
-ifdef MODULES_ENABLED
-	$(make_directory) debian/tmp-image/lib/modules/$(version)/cdrom
-	$(make_directory) debian/tmp-image/lib/modules/$(version)/fs
-	$(make_directory) debian/tmp-image/lib/modules/$(version)/ipv4
-	$(make_directory) debian/tmp-image/lib/modules/$(version)/ipv6
-	$(make_directory) debian/tmp-image/lib/modules/$(version)/misc
-	$(make_directory) debian/tmp-image/lib/modules/$(version)/net
-	$(make_directory) debian/tmp-image/lib/modules/$(version)/scsi
-	$(make_directory) debian/tmp-image/lib/modules/$(version)/block
-endif
 	$(make_directory) debian/tmp-image/usr/doc/$(i_package)
 	sed -e 's/=V/$(version)/g'    -e 's/=B/$(image_in_boot)/g'   \
             -e 's/=S/$(no_symlink)/g' -e 's/=R/$(reverse_symlink)/g' \
             -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \
+            -e 's/=D/$(IMAGE_DESTDIR)/g'                             \
              $(DEBDIR)/image.postinst > debian/tmp-image/DEBIAN/postinst
 	chmod 755 debian/tmp-image/DEBIAN/postinst
 	sed -e 's/=V/$(version)/g'    -e 's/=L/$(loader)/g'          \
@@ -586,93 +643,28 @@ endif
 		debian/tmp-image/usr/doc/$(i_package)/copyright
 	echo "This was produced by kernel-package version $(kpkg_version)." > \
 	         debian/tmp-image/usr/doc/$(i_package)/Buildinfo
+	$(install_file) .config $(INT_IMAGE_DESTDIR)/config-$(version)
 ifdef MODULES_ENABLED
-	cp modules/* debian/tmp-image/lib/modules/$(version)/misc
-	chmod 644 debian/tmp-image/lib/modules/$(version)/misc/*
-	(if [ -f modules/BLOCK_MODULES ] ; then \
-              cd debian/tmp-image/lib/modules/$(version)/misc; \
-	      for mod in `cat ./BLOCK_MODULES` ; do \
-                  if [ -f $$mod ]; then mv $$mod ../block; fi; \
-              done; \
-              mv ./BLOCK_MODULES ../../../../usr/doc/$(i_package)/; fi)
-	(if [ -f modules/CDROM_MODULES ] ; then \
-              cd debian/tmp-image/lib/modules/$(version)/misc; \
-	      for mod in `cat ./CDROM_MODULES` ; do \
-                  if [ -f $$mod ]; then mv $$mod ../cdrom; fi; \
-              done; \
-              mv ./CDROM_MODULES ../../../../usr/doc/$(i_package)/; fi)
-	(if [ -f modules/FS_MODULES ]; then \
-              cd debian/tmp-image/lib/modules/$(version)/misc; \
-	      for mod in `cat ./FS_MODULES` ; do \
-                  if [ -f $$mod ]; then mv $$mod ../fs; fi; \
-              done; \
-              mv ./FS_MODULES ../../../../usr/doc/$(i_package)/; fi)
-	(if [ -f modules/NLS_MODULES ]; then \
-              cd debian/tmp-image/lib/modules/$(version)/misc; \
-	      for mod in `cat ./NLS_MODULES` ; do \
-                  if [ -f $$mod ]; then mv $$mod ../fs; fi; \
-              done; \
-              mv ./NLS_MODULES ../../../../usr/doc/$(i_package)/; fi)
-	(if [ -f modules/NET_MODULES ]; then \
-              cd debian/tmp-image/lib/modules/$(version)/misc; \
-	      for mod in `cat ./NET_MODULES` ; do \
-                  if [ -f $$mod ]; then mv $$mod ../net; fi; \
-              done; \
-              mv ./NET_MODULES ../../../../usr/doc/$(i_package)/; fi)
-	(if [ -f modules/HAM_MODULES ]; then \
-              cd debian/tmp-image/lib/modules/$(version)/misc; \
-	      for mod in `cat ./HAM_MODULES` ; do \
-                  if [ -f $$mod ]; then mv $$mod ../net; fi; \
-              done; \
-              mv ./HAM_MODULES ../../../../usr/doc/$(i_package)/; fi)
-	(if [ -f modules/IPV4_MODULES ]; then \
-              cd debian/tmp-image/lib/modules/$(version)/misc; \
-	      for mod in `cat ./IPV4_MODULES` ; do \
-                  if [ -f $$mod ]; then mv $$mod ../ipv4; fi; \
-              done; \
-              mv ./IPV4_MODULES ../../../../usr/doc/$(i_package)/; fi)
-	(if [ -f modules/IPV6_MODULES ]; then \
-              cd debian/tmp-image/lib/modules/$(version)/misc; \
-	      for mod in `cat ./IPV6_MODULES` ; do \
-                  if [ -f $$mod ]; then mv $$mod ../ipv6; fi; \
-              done; \
-              mv ./IPV6_MODULES ../../../../usr/doc/$(i_package)/; fi)
-	(if [ -f modules/SCSI_MODULES ]; then \
-              cd debian/tmp-image/lib/modules/$(version)/misc; \
-	      for mod in `cat ./SCSI_MODULES` ; do \
-                  if [ -f $$mod ]; then mv $$mod ../scsi; fi; \
-              done; \
-              mv ./SCSI_MODULES ../../../../usr/doc/$(i_package)/; fi)
-	(if [ -f modules/NET_MISC_MODULES ]; then \
-	      cd debian/tmp-image/lib/modules/$(version)/misc; \
-	      for mod in `cat ./NET_MISC_MODULES` ; do \
-                  if [ -f $$mod ]; then mv $$mod ../net; fi; \
-              done; \
-	      mv ./NET_MISC_MODULES ../../../../usr/doc/$(i_package)/; fi)
-endif
-	$(install_file) .config \
-	         debian/tmp-image/boot/config-$(version)
-# SILO can boot gzip'ed kernel; m68k has vmlinuz, just the kernel makefiles
-# don't seem to realise it.
-#ifneq ($(strip $(architecture)),m68k)
-ifeq ($(strip $(filter m68k ppc powerpc,$(architecture))),)
-	cp arch/$(architecture)/boot/$(kimage) \
-                   debian/tmp-image/boot/vmlinuz-$(version)
-	chmod 644 debian/tmp-image/boot/vmlinuz-$(version)
+ifeq  ($(strip $(HAVE_NEW_MODLIB)),)
+	$(mod_inst_cmds)
 else
-ifneq ($(strip $(filter ppc powerpc,$(architecture))),)
-	cp arch/$(KERNEL_ARCH)/$(SUBARCH)/boot/$(kimage) \
-                   debian/tmp-image/boot/vmlinuz-$(version)
-	chmod 644 debian/tmp-image/boot/vmlinuz-$(version)
-else
-	gzip -9vc vmlinux > debian/tmp-image/boot/vmlinuz-$(version)
-	chmod 644 debian/tmp-image/boot/vmlinuz-$(version)
+	$(MAKE) INSTALL_MOD_PATH=$(INSTALL_MOD_PATH) modules_install
 endif
+endif
+ifeq ($(strip $(NEED_DIRECT_GZIP_IMAGE)),YES)
+	gzip -9vc $(kimagesrc) > $(kimagedest)
+else
+	cp $(kimagesrc) $(kimagedest)
+endif
+	chmod 644 $(kimagedest)
+ifeq ($(strip $(HAVE_COFF_IMAGE)),YES)
+	cp $(coffsrc)   $(coffdest)
+	chmod 644       $(coffdest)
 endif
 	-test -f System.map &&  cp System.map \
-                        debian/tmp-image/boot/System.map-$(version)
+                        $(INT_IMAGE_DESTDIR)/System.map-$(version)
 	-test -f System.map &&  chmod 644 \
-                        debian/tmp-image/boot/System.map-$(version)
+                        $(INT_IMAGE_DESTDIR)/System.map-$(version)
 	dpkg-gencontrol -p$(i_package) -Pdebian/tmp-image/
 	chown -R root.root debian/tmp-image
 	chmod -R og=rX debian/tmp-image
@@ -699,7 +691,8 @@ else
 	-for module in $(MODULE_LOC)/* ; do \
 	    (cd $$module; \
               ./debian/rules KVERS="$(version)" KSRC="$(SRCTOP)" \
-                             KMAINT="$(pgp)" kdist_image; ); \
+                             KMAINT="$(pgp)" KEMAIL="<$email>" \
+                             kdist_image; ); \
         done
 endif
 
@@ -711,7 +704,7 @@ else
 	-for module in $(MODULE_LOC)/* ; do \
 	    (cd $$module; \
               ./debian/rules KVERS="$(version)" KSRC="$(SRCTOP)" \
-                             KMAINT="$(pgp)" kdist; ); \
+                             KMAINT="$(pgp)" KEMAIL="<$email>" kdist; ); \
         done
 endif
 
@@ -722,7 +715,8 @@ else
 	-for module in $(MODULE_LOC)/* ; do \
 	    (cd $$module; \
               ./debian/rules KVERS="$(version)" KSRC="$(SRCTOP)" \
-                             KMAINT="$(pgp)" kdist_configure; ); \
+                             KMAINT="$(pgp)" KEMAIL="<$email>" \
+                             kdist_configure; ); \
         done
 endif
 
@@ -730,5 +724,34 @@ endif
 source diff:
 	@echo >&2 'source and diff are obsolete - use dpkg-source -b'; false
 
+define mod_inst_cmds
+        @( \
+        MODLIB=$(INSTALL_MOD_PATH)/lib/modules/$(VERSION).$(PATCHLEVEL).$(SUBLEVEL); \
+        cd modules; \
+        MODULES=""; \
+        inst_mod() { These="`cat $$1`"; MODULES="$$MODULES $$These"; \
+                mkdir -p $$MODLIB/$$2; cp $$These $$MODLIB/$$2; \
+                echo Installing modules under $$MODLIB/$$2; \
+        }; \
+        \
+        if [ -f BLOCK_MODULES ]; then inst_mod BLOCK_MODULES block; fi; \
+        if [ -f NET_MODULES   ]; then inst_mod NET_MODULES   net;   fi; \
+        if [ -f IPV4_MODULES  ]; then inst_mod IPV4_MODULES  ipv4;  fi; \
+        if [ -f IPV6_MODULES  ]; then inst_mod IPV6_MODULES  ipv6;  fi; \
+        if [ -f SCSI_MODULES  ]; then inst_mod SCSI_MODULES  scsi;  fi; \
+        if [ -f FS_MODULES    ]; then inst_mod FS_MODULES    fs;    fi; \
+        if [ -f NLS_MODULES   ]; then inst_mod NLS_MODULES   fs;    fi; \
+        if [ -f CDROM_MODULES ]; then inst_mod CDROM_MODULES cdrom; fi; \
+        if [ -f HAM_MODULES   ]; then inst_mod HAM_MODULES   net;   fi; \
+        if [ -f SOUND_MODULES ]; then inst_mod SOUND_MODULES sound; fi; \
+        if [ -f VIDEO_MODULES ]; then inst_mod VIDEO_MODULES video; fi; \
+        if [ -f FC4_MODULES   ]; then inst_mod FC4_MODULES   fc4;   fi; \
+        \
+        ls *.o > .allmods; \
+        echo $$MODULES | tr ' ' '\n' | sort | comm -23 .allmods - > .misc; \
+        if [ -s .misc ]; then inst_mod .misc misc; fi; \
+        rm -f .misc .allmods; \
+        )
+endef
 
 .PHONY: binary binary-arch binary-indep clean modules modules_image
