@@ -1,5 +1,16 @@
 kernel-source-=V (=D) unstable; urgency=low
 
+  * All kernel packages produced now list the version of kernel-package
+    used in the file /usr/doc/Buildinfo.
+  * The image prerm will allow you to remove an running kernel image and
+    hose your system. You will be warned. (under protest).
+  * Fixed typo in control file for kernel-doc description. This fixes
+    Bug#11568.
+
+ -- Manoj Srivastava <srivasta@debian.org>  Tue, 29 Jul 1997 17:47:41 -0500
+
+kernel-source-0.18 (1.01) unstable; urgency=low
+
   * No longer carries around an extra uncompressed kernel image, and does
     not anymore create /boot/psdatabase-X.X.XX. The psdatabase file does
     not seem to be required anymore.
