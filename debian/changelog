@@ -1,3 +1,13 @@
+kernel-package (8.022) unstable; urgency=low
+
+  * Mention CC and HOSTCC in the README files.
+  * Removed obsolete maintainer scripts, now that we no longer have to
+    maintain the /usr/doc symbolic links.
+  * revert the clean order since we now have non empty stamp files.
+  * Fixt the cut-and-paste typo in postinst re warn_initrd.      closes: 183539
+
+ -- Manoj Srivastava <srivasta@acm.org>  Thu,  6 Mar 2003 17:03:56 -0600
+
 kernel-package (8.021) unstable; urgency=low
 
   * Fixed type in man page                                   closes: Bug#180543

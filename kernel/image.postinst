@@ -1,18 +1,18 @@
 #! /usr/bin/perl
-#                              -*- Mode: Perl -*-
+#                              -*- Mode: Cperl -*-
 # debian.postinst ---
 # Author           : Manoj Srivastava ( srivasta@pilgrim.umass.edu )
 # Created On       : Sat Apr 27 05:55:26 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Fri Aug  9 09:40:24 2002
+# Last Modified On : Thu Mar  6 15:41:13 2003
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 241
+# Update Count     : 243
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
 #
-#    $Id: image.postinst,v 1.111 2002/09/01 01:15:04 srivasta Exp $
+#    $Id: image.postinst,v 1.112 2003/03/06 23:04:20 srivasta Exp $
 #
 
 #
@@ -136,7 +136,7 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
       $do_bootloader   = "Yes" if /do_bootloader\s*=\s*(yes|true|1)\s*$/ig;
       $relative_links  = "Yes" if /relative_links\s*=\s*(yes|true|1)\s*$/ig;
       $do_initrd       = "Yes" if /do_initrd\s*=\s*(yes|true|1)\s*$/ig;
-      $warn_initrd     = "Yes" if /do_initrd\s*=\s*(yes|true|1)\s*$/ig;
+      $warn_initrd     = "Yes" if /warn_initrd\s*=\s*(yes|true|1)\s*$/ig;
       $use_hard_links  = "Yes" if /use_hard_links\s*=\s*(yes|true|1)\s*$/ig;
       $silent_modules  = 'Yes' if /silent_modules\s*=\s*(yes|true|1)\s*$/ig;
       $silent_loader   = 'Yes' if /silent_loader\s*=\s*(yes|true|1)\s*$/ig;

@@ -1,20 +1,20 @@
-#! /usr/bin/perl
-#                              -*- Mode: Perl -*-
+#!/usr/bin/perl
+#                              -*- Mode: Cperl -*- 
 # debian.postinst ---
 # Author           : Manoj Srivastava ( srivasta@pilgrim.umass.edu )
 # Created On       : Sat Apr 27 05:42:43 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Tue Feb 29 00:12:01 2000
+# Last Modified On : Thu Mar  6 15:38:25 2003
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 33
+# Update Count     : 35
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
 #
 #
 #
-#    $Id: include.postinst,v 1.20 2002/01/11 06:47:15 srivasta Exp $
+#    $Id: include.postinst,v 1.21 2003/03/06 23:04:20 srivasta Exp $
 #
 
 
@@ -82,93 +82,6 @@ if ($stop_and_read) {
 
 my $linktarget;
 $linktarget = "../share/doc/$package";
-
-if (-d "/usr/doc") {
-  # Well, we still need to handle this, at least for the time being
-  if (-d "/usr/share/doc/$package") {
-    # So the new doc dir exists, goody
-    # handle faliure to remove symlinks
-    if (-l "/usr/doc/$package") {
-      unlink "/usr/doc/$package";
-    }
-    my $targetdir;
-    my $stargetdir;
-
-    if (-x '/bin/pwd') {
-      chdir('/usr/doc/');
-      $targetdir=`/bin/pwd`;
-      chdir('/usr/share/doc/');
-      $stargetdir=`/bin/pwd`;
-      chdir('/');
-
-      chdir('/usr/doc');
-      if (-f '../share/doc/') {
-	chdir('../share/doc/');
-	my $ltarget=`/bin/pwd`;
-	if ($ltarget ne $stargetdir) {
-	  $linktarget = "/usr/share/doc/$package";
-	}
-      }
-      else {
-	$linktarget = "/usr/share/doc/$package";
-      }
-    }
-    if ($targetdir ne $stargetdir) {
-      if (-d "/usr/doc/$package") {
-	print STDERR "Yikes! The old directory, /usr/doc/$package\n";
-	print STDERR "has not ben removed! This is an error; attempting\n";
-	print STDERR "repairs";
-	if (-f "/usr/doc/$package/.dhelp") {
-	  unlink "/usr/doc/$package/.dhelp";
-	  rmdir "/usr/doc/$package";
-	}
-
-	if (-d "/usr/doc/$package") {
-	  print STDERR <<"EOFERRONE";
-Failed repairs. There are old files in /usr/doc/$package_name/ created
-by you or another script. I can copy them over to the new location
-/usr/share/doc/$package_name, if you wish, preserving your versions of
-the files.  No files shall be over written, instead, backup versions
-shall be created in /usr/share/doc/$package_name as needed.
-
-EOFERRONE
-  ;
-	  my $answer='';
-	  print "Shall I copy the files over [Yn]?";
-	  $answer=<STDIN>;
-	  if ($answer =~ /^n/i) {
-	    print "Not copying over, aborting\n";
-	    exit 1;
-	  }
-	  else {
-	    system "cp", "-a", "--backup=t",
-	    "/usr/doc/$package",
-	    "/usr/share/doc/$package/.." ||
-	      die "Error copying files over: $?";
-	    system "rm", "-rf", "/usr/doc/$package" ||
-	      die "Error removing old directory:$?";
-	  }
-	}
-      }
-      if (-e "/usr/doc/$package") {
-	print STDERR "/usr/doc/$package exists, but is not a directory\n";
-	if (-l "/usr/doc/$package") {
-	  print STDERR "It is a symbolic link. Overwriting\n";
-	  unlink "/usr/doc/$package";
-	  symlink "../share/doc/$package",
-	  "/usr/doc/$package";
-	}
-	else {
-	  print STDERR "This is an error. Aborting\n";
-	  exit 1;
-	}
-      }
-      # File unexists. Free to go ahead and create link
-      symlink "../share/doc/$package",
-      "/usr/doc/$package";
-    }
-  }
-}
 
 
 if (-l 'linux') {
