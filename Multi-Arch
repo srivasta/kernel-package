@@ -69,6 +69,9 @@ m68k Kernel maintainer:
  /usr/src/kernel-patches/m68k/apply/<some name>
  /usr/src/kernel-patches/m68k/unpatch/<some name>
 
+	For patches that are architecture independent, the special
+ architecture all is used, as in /usr/src/kernel-patches/all/.
+
 	The advantage of using scripts is that patch writers can add
  their own tests, based possibly on the kernel version or patchlevel,
  or looking at other patches already installed, etc. /bin/run-parts

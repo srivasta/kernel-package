@@ -21,7 +21,7 @@
 .\" Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139,
 .\" USA.
 .\"
-.\" $Id: kernel-pkg.conf.5,v 1.12 1999/07/14 16:06:05 srivasta Exp $
+.\" $Id: kernel-pkg.conf.5,v 1.13 1999/08/19 07:16:47 srivasta Exp $
 .\"
 .TH KERNEL\-PKG.CONF 5 "Jan  7 1997" "Debian" "Debian GNU/Linux manual" 
 .\" NAME should be all caps, SECTION should be 1-8, maybe w/ subsection
@@ -166,8 +166,7 @@ process causes run-parts to be run over
 and (hopefully) reverses the process during clean by
 running run-parts over
 .I /usr/src/kernel-patches/$(architecture)/unpatch. 
-This
-is still evolving.
+The special architecture all is used for arch independent patches.
 .TP
 .B root_cmd 
 This should be set to a means of gaining super user  access (for
@@ -247,7 +246,13 @@ located. Defaults to
 Set this variable, either in the envoronment or in the config file, to
 point to the location where the add-on kernel patches are
 located. Defaults to
-.I /usr/src/kernel-patches/ARCHITEXTURE
+.I /usr/src/kernel-patches/ARCHITECTURE
+.TP
+.B ALL_PATCH_DIR 
+Set this variable, either in the envoronment or in the config file, to
+point to the location where the add-on arch independent kernel patches
+are located. Defaults to
+.I /usr/src/kernel-patches/all
 .PP
 The value of a variable can be set so:
 .IP a)
