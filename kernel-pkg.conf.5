@@ -250,6 +250,15 @@ Set to YES to install the uncompressed kernel ELF image along with the bootable
 compressed kernel image (vmlinuz).  This image is necessary for profiling
 kernel and userspace with oprofile (oprofile.sourceforge.net, i386 only).
 .TP 
+.B image_clean_hook
+Set to point to an executable, this shall cause that executable to run
+from the top level of the (temporary) kernel image tree before the
+kernel image is packaged. This has no effect on anything other than
+the image that is being packaged -- if the script operates on the
+current directory and its children, the original source tree should
+remain intact.  This is to facilitate massaging of the kernel image
+that is packaged.
+.TP 
 .B source_clean_hook
 Set to point to an executable, this shall cause that executable to run
 from the top level of the (temporary) kernel source tree before the

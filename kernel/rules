@@ -5,9 +5,9 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Wed Feb 16 01:45:12 2005
+## Last Modified On : Wed Feb 16 04:20:30 2005
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count	    : 764
+## Update Count	    : 767
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
@@ -1258,6 +1258,9 @@ endif
 ifneq ($(strip $(DOC_CLEAN_HOOK)),)
 doc_clean_hook=$(DOC_CLEAN_HOOK)
 endif
+ifneq ($(strip $(IMAGE_CLEAN_HOOK)),)
+image_clean_hook=$(IMAGE_CLEAN_HOOK)
+endif
 
 ifneq ($(strip $(INITRD)),)
 initrddep := initrd-tools (>= 0.1.48), # there is a space here
@@ -2303,6 +2306,10 @@ endif
 		IMAGE_TOP=$(IMAGE_TOP) STEM=$(INT_STEM) version=$(version)    \
 			debian/post-install;                                  \
 	fi
+ifneq ($(strip $(image_clean_hook)),)
+	(cd $(IMAGE_TOP);              \
+               test -x $(image_clean_hook) && $(image_clean_hook))
+endif
 	test ! -s applied_patches || cp applied_patches                        \
                         $(INT_IMAGE_DESTDIR)/patches-$(version)
 	test ! -s applied_patches || chmod 644                                 \
