@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Mon Jan 22 14:32:29 2001
+## Last Modified On : Sun Feb  4 12:25:14 2001
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 456
+## Update Count	    : 457
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.111 2001/02/01 19:42:36 srivasta Exp $
+## $Id: rules,v 1.112 2001/02/04 18:25:38 srivasta Exp $
 ###############################################################################
 
 ifdef ARCH
@@ -381,13 +381,13 @@ endif
 NO_SRC_CHANGES = yes
 
 VERSION:=$(shell egrep '^VERSION +=' Makefile 2>/dev/null | \
-                 sed -e 's/[^0-9]*\([0-9]*\)/\1/')
+                 perl -pe 's/^\D*(\d*)/$1/')
 PATCHLEVEL:=$(shell egrep '^PATCHLEVEL +=' Makefile 2>/dev/null | \
-                    sed -e 's/[^0-9]*\([0-9]*\)/\1/')
+                 perl -pe 's/^\D*(\d*)/$1/')
 SUBLEVEL:=$(shell egrep '^SUBLEVEL +=' Makefile 2>/dev/null | \
-                  sed -e 's/[^0-9]*\([0-9]*\)/\1/')
+                   perl -pe 's/^\D*(\d*)/$1/')
 EXTRA_VERSION:=$(shell egrep '^EXTRAVERSION +=' Makefile 2>/dev/null | \
-                 sed -e 's/EXTRAVERSION[\t ]*=[\t ]*\(.*\)/\1/')
+                 perl -pe 's/EXTRAVERSION\s*=\s*(\S+)/$1/')
 EXTRAVERSION:=$(strip $(EXTRA_VERSION))
 HAVE_NEW_MODLIB:=$(shell egrep '\(INSTALL_MOD_PATH\)' Makefile 2>/dev/null )
 
@@ -1156,6 +1156,9 @@ kernel-image-deb:
 	sed -e 's/=V/$(version)/g'    -e 's/=L/$(loader)/g'          \
 	             $(DEBDIR)/image.prerm > debian/tmp-image/DEBIAN/prerm
 	chmod 755 debian/tmp-image/DEBIAN/prerm
+	$(install_file) Docuementation/Changes \
+	         debian/tmp-image/usr/share/doc/$(i_package)/
+	gzip -9qf debian/tmp-image/usr/share/doc/$(i_package)/Changes 
 	$(install_file) debian/changelog \
 	         debian/tmp-image/usr/share/doc/$(i_package)/changelog.Debian
 	gzip -9qf debian/tmp-image/usr/share/doc/$(i_package)/changelog.Debian
