@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Sun Feb  4 13:32:44 2001
+## Last Modified On : Tue Feb  6 09:48:22 2001
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 464
+## Update Count	    : 465
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.113 2001/02/04 19:33:47 srivasta Exp $
+## $Id: rules,v 1.114 2001/02/06 15:54:21 srivasta Exp $
 ###############################################################################
 
 ifdef ARCH
@@ -1156,7 +1156,7 @@ kernel-image-deb:
 	sed -e 's/=V/$(version)/g'    -e 's/=L/$(loader)/g'          \
 	             $(DEBDIR)/image.prerm > debian/tmp-image/DEBIAN/prerm
 	chmod 755 debian/tmp-image/DEBIAN/prerm
-	$(install_file) Docuementation/Changes \
+	$(install_file) Documentation/Changes \
 	         debian/tmp-image/usr/share/doc/$(i_package)/
 	gzip -9qf debian/tmp-image/usr/share/doc/$(i_package)/Changes 
 	$(install_file) debian/changelog \

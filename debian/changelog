@@ -1,3 +1,11 @@
+kernel-package (7.34) unstable; urgency=medium
+
+  * It is spelled Documentation, not Docuementation. 
+  * Added more documentation on Flavours (making it deprecated and
+    obsolete). The addition of --append_to_version closes: Bug#74148
+
+ -- Manoj Srivastava <srivasta@debian.org>  Tue,  6 Feb 2001 09:54:00 -0600
+
 kernel-package (7.33) unstable; urgency=low
 
   * There was a bug in the sed exporession that chopped off the first line
