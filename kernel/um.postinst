@@ -5,9 +5,9 @@
 # Created On       : Fri Nov 14 11:25:07 2003
 # Created On Node  : glaurung.green-gryphon.com
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Fri Oct  1 15:40:49 2004
+# Last Modified On : Fri Oct  1 16:16:00 2004
 # Last Machine Used: glaurung.internal.golden-gryphon.com
-# Update Count     : 33
+# Update Count     : 35
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
@@ -189,15 +189,16 @@ case "$1" in
       # We're being installed by an ancient dpkg which doesn't remember
       # which version was most recently configured, or even whether
       # there is a most recently configured version.
-
+	: echo nop
     elif test -z "$2" -o "$2" = "<unknown>"; then
       # The package has not ever been configured on this system, or was
       # purged since it was last configured.
-      :
+      : echo nop
 
     else
       # Version $2 is the most recently configured version of this
       # package.
+	: echo nop
     fi 
     ;;
   abort-upgrade)
