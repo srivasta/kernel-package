@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Mon Apr 27 13:54:05 1998
+## Last Modified On : Fri May  1 14:22:36 1998
 ## Last Machine Used: tiamat.datasync.com
-## Update Count	    : 264
+## Update Count	    : 266
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.36 1998/04/27 19:24:02 srivasta Exp $
+## $Id: rules,v 1.37 1998/05/01 19:25:01 srivasta Exp $
 ###############################################################################
 
 # The version of kernel-package this belongs to
@@ -379,8 +379,8 @@ stamp-source: configure
 		$(DEBDIR)/include.postrm > debian/tmp-source/DEBIAN/postrm
 	chmod 755 debian/tmp-source/DEBIAN/postrm
 	$(install_file) debian/changelog \
-	         debian/tmp-source/usr/doc/$(package)/changelog.debian
-	gzip -9qf debian/tmp-source/usr/doc/$(package)/changelog.debian
+	         debian/tmp-source/usr/doc/$(package)/changelog.Debian
+	gzip -9qf debian/tmp-source/usr/doc/$(package)/changelog.Debian
 	$(install_file) $(DEBDIR)/LinkPolicy \
 	         debian/tmp-source/usr/doc/$(package)/LinkPolicy
 	gzip -9qf debian/tmp-source/usr/doc/$(package)/LinkPolicy
@@ -417,7 +417,7 @@ stamp-source: configure
 	(cd debian/tmp-source/usr/src/$(package)/include; rm -f asm; \
 		ln -s asm-$(KERNEL_ARCH) asm)
 	if test -f debian/official -a -f debian/README.Debian ; then \
-           $(install_file) debian/README.Debian ; \
+           $(install_file) debian/README.Debian \
 		debian/tmp-source/usr/src/$(package)/README.Debian
 	else \
 	    sed -e 's/=V/$(version)/g' -e 's/=A/$(architecture)/g' \
@@ -441,7 +441,7 @@ stamp-libc-kheaders: configure
 	$(make_directory)          debian/tmp-kheaders/usr/include
 	$(make_directory)          debian/tmp-kheaders/usr/doc/$(l_package)
 	$(install_file)            debian/changelog \
-	         debian/tmp-kheaders/usr/doc/$(l_package)/changelog.debian
+	         debian/tmp-kheaders/usr/doc/$(l_package)/changelog.Debian
 	$(install_file)            $(DEBDIR)/README.headers \
 	         debian/tmp-kheaders/usr/doc/$(l_package)/README.debian
 	echo "This was produced by kernel-package version $(kpkg_version)." > \
@@ -477,8 +477,8 @@ stamp-headers: configure
 	$(install_file) $(DEBDIR)/copyright.headers \
 		debian/tmp-headers/usr/doc/$(h_package)/copyright
 	$(install_file) debian/changelog \
-	         debian/tmp-headers/usr/doc/$(h_package)/changelog.debian
-	gzip -9qf debian/tmp-headers/usr/doc/$(h_package)/changelog.debian
+	         debian/tmp-headers/usr/doc/$(h_package)/changelog.Debian
+	gzip -9qf debian/tmp-headers/usr/doc/$(h_package)/changelog.Debian
 	$(install_file) $(DEBDIR)/LinkPolicy \
 	       debian/tmp-headers/usr/doc/$(h_package)/LinkPolicy
 	gzip -9qf debian/tmp-headers/usr/doc/$(h_package)/LinkPolicy
@@ -506,7 +506,7 @@ stamp-doc: configure
 	$(make_directory) debian/tmp-doc/DEBIAN
 	$(make_directory) debian/tmp-doc/usr/doc/$(d_package)
 	$(install_file) debian/changelog \
-	         debian/tmp-doc/usr/doc/$(d_package)/changelog.debian
+	         debian/tmp-doc/usr/doc/$(d_package)/changelog.Debian
 	$(install_file) $(DEBDIR)/LinkPolicy \
 	       debian/tmp-doc/usr/doc/$(d_package)/LinkPolicy.Debian
 	$(install_file) $(DEBDIR)/README.doc \
@@ -553,8 +553,8 @@ endif
 	             $(DEBDIR)/image.prerm > debian/tmp-image/DEBIAN/prerm
 	chmod 755 debian/tmp-image/DEBIAN/prerm
 	$(install_file) debian/changelog \
-	         debian/tmp-image/usr/doc/$(i_package)/changelog.debian
-	gzip -9qf debian/tmp-image/usr/doc/$(i_package)/changelog.debian
+	         debian/tmp-image/usr/doc/$(i_package)/changelog.Debian
+	gzip -9qf debian/tmp-image/usr/doc/$(i_package)/changelog.Debian
 ifneq ($(strip $(architecture)),m68k)
 	$(install_file) $(DEBDIR)/$(loaderdoc) \
 	         debian/tmp-image/usr/doc/$(i_package)/$(loaderdoc)
