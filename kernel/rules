@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Mon Apr 22 08:25:18 2002
+## Last Modified On : Thu Apr 25 01:23:24 2002
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 530
+## Update Count	    : 531
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.174 2002/04/22 13:31:18 srivasta Exp $
+## $Id: rules,v 1.175 2002/04/25 07:29:25 srivasta Exp $
 ###############################################################################
 
 ifdef KPKG_ARCH
@@ -1193,7 +1193,7 @@ endif
 
 clean:
 	@test $$(id -u) -eq 0 -o "X$(int_get_root)" != "X" || \
-		(echo "You may need root priviledges - some parts may fail")
+		(echo "You may need root privileges - some parts may fail")
 	@test $$(id -u) -ne 0 && $(int_get_root) $(deb_rule) real_stamp_clean \
                 || true
 	@test $$(id -u) -eq 0 &&                 $(deb_rule) real_stamp_clean \
@@ -1268,7 +1268,7 @@ binary-arch:  kernel_image  kernel_headers
 kernel-source kernel_source: stamp-source
 stamp-source: stamp-debian
 	@test $$(id -u) -eq 0 -o "X$(int_get_root)" != "X" || \
-		(echo need root priviledges; exit 1)
+		(echo need root privileges; exit 1)
 	@test $$(id -u) -ne 0 && $(int_get_root) $(deb_rule) real_stamp_source\
                 || true
 	@test $$(id -u) -eq 0 &&                 $(deb_rule) real_stamp_source\
@@ -1353,7 +1353,7 @@ stamp-libc-kheaders: configure
 kernel-headers kernel_headers: stamp-headers
 stamp-headers: configure
 	@test $$(id -u) -eq 0 -o "X$(int_get_root)" != "X" || \
-		(echo need root priviledges; exit 1)
+		(echo need root privileges; exit 1)
 	@test $$(id -u) -ne 0 && \
                                 $(int_get_root) $(deb_rule) real_stamp_headers\
                 || true
@@ -1411,7 +1411,7 @@ endif
 kernel-doc kernel_doc: stamp-doc
 stamp-doc: stamp-debian
 	@test $$(id -u) -eq 0  -o "X$(int_get_root)" != "X" || \
-		(echo need root priviledges; exit 1)
+		(echo need root privileges; exit 1)
 	@test $$(id -u) -ne 0 && $(int_get_root) $(deb_rule) real_stamp_doc\
                 || true
 	@test $$(id -u) -eq 0 &&                 $(deb_rule) real_stamp_doc\
@@ -1460,7 +1460,7 @@ stamp-image: configure build kernel-image-deb
 # user name (as opposed to root@...)
 kernel-image-deb:
 	@test $$(id -u) -eq 0  -o "X$(int_get_root)" != "X" || \
-		 (echo need root priviledges; exit 1)
+		 (echo need root privileges; exit 1)
 	@test $$(id -u) -ne 0 && $(int_get_root) $(deb_rule) real_stamp_image\
                 || true
 	@test $$(id -u) -eq 0 &&                 $(deb_rule) real_stamp_image\

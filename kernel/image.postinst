@@ -5,14 +5,14 @@
 # Created On       : Sat Apr 27 05:55:26 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Tue Apr 23 01:59:25 2002
+# Last Modified On : Thu Apr 25 01:43:23 2002
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 235
+# Update Count     : 236
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
 #
-#    $Id: image.postinst,v 1.105 2002/04/23 07:00:55 srivasta Exp $
+#    $Id: image.postinst,v 1.106 2002/04/25 07:29:25 srivasta Exp $
 #
 
 #
@@ -1310,8 +1310,8 @@ if ($loader =~ /^lilo/io) {
     }
   }
   else {
-    print "However, you do not seem to have /boot/mbr.b, provided by the\n";
-    print "Debian package mbr.  I hope that your master boot record or \n";
+    print "However, you do not have /boot/mbr.b, a common location of a \n";
+    print "backup copy of the mbr.  I hope that your master boot record or \n";
     print "boot manager does boot the active partition.  If not, you have\n";
     print "to acquire the package mbr and install it. Please hit return to\n";
     print "proceed.\n";
