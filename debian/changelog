@@ -1,3 +1,10 @@
+kernel-package (7.52) unstable; urgency=low
+
+  * Added append_to_version back to make-kpkg. It had mysteriously
+    disappeared.                                             closes: Bug#105270
+
+ -- Manoj Srivastava <srivasta@debian.org>  Tue, 17 Jul 2001 21:33:49 -0500
+
 kernel-package (7.51) unstable; urgency=low
 
   * Brown paper bag time. I was installing the readme file in

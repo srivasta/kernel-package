@@ -14,7 +14,7 @@
 #
 #
 #
-#    $Id: make-kpkg,v 1.59 2001/07/12 14:43:54 srivasta Exp $
+#    $Id: make-kpkg,v 1.60 2001/07/18 02:34:18 srivasta Exp $
 #
 require 5.002;
 use strict;
@@ -29,7 +29,7 @@ make-kpkg - build Debian kernel packages from Linux kernel sources.
 ($main::MYNAME     = $main::0) =~ s|.*/||;
 $main::Author      = "Manoj Srivastava";
 $main::AuthorMail  = "srivasta\@debian.org";
-$main::Version     = '$Revision: 1.59 $ ';
+$main::Version     = '$Revision: 1.60 $ ';
 
 my $added_modules='';
 my $added_patches='';
@@ -63,6 +63,7 @@ my %option_ctl = ("help"            	=> \$help_opt,
 		  "added-patches=s" 	=> \$added_patches,
 		  "added_patches=s" 	=> \$added_patches,
 		  "append-to-version=s" => \$append_to_version,
+		  "append_to_version=s" => \$append_to_version,
                   "arch=s"          	=> \$arch,
                   "config=s"        	=> \$config_target,
                   "cross_compile=s" 	=> \$cross_compile,
