@@ -3,7 +3,10 @@ kernel-package (7.76) unstable; urgency=low
   * make the append-to-version and version.h warning be optionally turned
     off with an env var.                                     closes: Bug#122222
   * Fix the kernel_source target                             closes: Bug#126047
-
+  * Fix mips/mipsel images in the rules file                 closes: Bug#123895
+  * Include patch for s390                                   closes: Bug#123665
+  * Apply spelling fixes to man page                         closes: Bug#122930
+  
  -- Manoj Srivastava <srivasta@debian.org>  Fri, 21 Dec 2001 15:27:36 -0600
 
 kernel-package (7.75) unstable; urgency=low

@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.150 2001/12/21 21:27:54 srivasta Exp $
+## $Id: rules,v 1.151 2001/12/21 21:46:30 srivasta Exp $
 ###############################################################################
 
 ifdef ARCH
@@ -395,11 +395,11 @@ endif
 
 ##### mips
 ifeq ($(strip $(architecture)),mips)
-kimage := boot
+kimage := vmlinux
 loaderdep=
 loader=
 loaderdoc=
-target = $(kimage)
+target = boot
 NEED_DIRECT_GZIP_IMAGE=NO
 kimagesrc = $(strip arch/$(KERNEL_ARCH)/boot/vmlinux.ecoff)
 kimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
@@ -408,11 +408,11 @@ endif
 
 ##### mipsel
 ifeq ($(strip $(architecture)),mipsel)
-kimage := boot
+kimage := vmlinux
 loaderdep=
 loader=
 loaderdoc=
-target = $(kimage)
+target = boot
 NEED_DIRECT_GZIP_IMAGE=NO
 kimagesrc = $(strip arch/$(KERNEL_ARCH)/boot/vmlinux.ecoff)
 kimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)

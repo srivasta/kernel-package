@@ -21,7 +21,7 @@
 .\" Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139,
 .\" USA.
 .\"
-.\" $Id: kernel-package.5,v 1.5 2001/07/06 19:53:01 srivasta Exp $
+.\" $Id: kernel-package.5,v 1.6 2001/12/21 21:46:29 srivasta Exp $
 .\"
 .TH KERNEL\-PACKAGE 5 "May  25 1999" "Debian" "Debian GNU/Linux manual" 
 .\" NAME should be all caps, SECTION should be 1-8, maybe w/ subsection
@@ -60,7 +60,7 @@ It has a facility for you to keep multiple flavours of the
 same kernel version on your machine (you could have a stable
 2.0.36 version, and a 2.0.36 version patched with the latest
 drivers, and not worry about contaminating the modules in
-.I /lib/modules)
+.I /lib/modules).
 .TP
 .B iv) Built in defaults
 It knows that some architectures do not have vmlinuz (using
@@ -99,7 +99,7 @@ need to compile kernels for a variety of sub architectures.
 It allows to create a package with the headers, or the sources, also
 as a deb file, and enables the package management system to keep track
 of those (and there are packages that depend on the package management
-system being aware of these packages)
+system being aware of these packages).
 .TP
 .B x) Maintainer script services
 Since the kernel image package is a full fledged Debian package, it
@@ -108,7 +108,7 @@ offering to make a boot disk, manipulating symbolic links in / so that
 you can make boot loader scripts static (just refer to the symbolic
 links, rather than the real image files; the names of the symbolic
 links do not change, but the kernel image file names change with the
-version)
+version).
 .TP
 .B xi) Sub architecture support
 There is support for the multitudinous sub architectures that have
@@ -117,13 +117,13 @@ blossomed under the umbrella of the m68k and power-PC architectures.
 .B xii) kernel-patch support
 There is support there for optionally applying patches to the kernel
 provided as a kernel-patch .deb file, and building a patched kernel
-auto-magically, and still retain an UN-patched kernel source tree
+auto-magically, and still retain an UN-patched kernel source tree.
 .TP
 .B xiii) Portable kernel images
 Allows one to compile a kernel for another computer, for example using
 a fast machine to compile the kernel for installation on a slower
-machine. This is really nice since the modules are all included in the
-.deb; and one does not have to deal with modules manually.
+machine. This is really nice since the modules are all included in
+the .deb; and one does not have to deal with modules manually.
 .TP
 .B xiv) Customizations on the target host
 The postinst looks at a configuration file on the installation machine
@@ -154,7 +154,7 @@ people who like being close to the bare metal.
 .B ii) Non traditional
 This is not how it is done in the non-Debian world. This flouts
 tradition. (It has been pointed out, though, that this is fast
-becoming Debian tradition)
+becoming Debian tradition).
 .TP
 .B  iii) Needs superuser
 It forces you to use 
