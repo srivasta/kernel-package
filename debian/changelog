@@ -5,12 +5,15 @@ kernel-package (7.02) frozen unstable; urgency=low
     when upgrading from slink. 
   * Added a simple check on upppercase chars in the version
     string. closes: Bug#61213
+  * Made the dependency in kernel-source packagesbe for libncurses-dev |
+    ncurses-dev, since the latter is being phased out. This is an
+    important fix.
   * The changes added in 7.00 are required to be in potato. The changes
     were: Allow the official kernel-* package maintainer some leeway in
     providing official control files (just like they can provide their own
     changelog files now).
 
- -- Manoj Srivastava <srivasta@debian.org>  Thu, 30 Mar 2000 10:15:12 -0600
+ -- Manoj Srivastava <srivasta@debian.org>  Thu, 30 Mar 2000 10:19:28 -0600
 
 kernel-package (7.01) unstable; urgency=low
 
