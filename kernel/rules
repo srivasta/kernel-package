@@ -5,9 +5,9 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Mon Oct 25 01:42:22 2004
+## Last Modified On : Wed Dec  8 02:06:42 2004
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count	    : 727
+## Update Count	    : 730
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
@@ -1589,7 +1589,7 @@ ifneq ($(strip $(shell grep -E ^[^\#]*CONFIG_MODULES $(CONFIG_FILE))),)
 	                    $(CROSS_ARG) modules
 endif
 	COLUMNS=150 dpkg -l 'gcc*' perl dpkg 'libc6*' binutils ldso make dpkg-dev |\
-         awk '$$1 == "ii" { printf("%s-%s\n", $$2, $$3) }'   > debian/buildinfo
+         awk '$$1 ~ /[hi]i/ { printf("%s-%s\n", $$2, $$3) }'   > debian/buildinfo
 	@echo this was built on a machine with the kernel: >> debian/buildinfo
 	uname -a >> debian/buildinfo
 	echo using the compiler: >> debian/buildinfo
@@ -1599,13 +1599,13 @@ ifneq ($(strip $(shell test -f version.Debian && cat version.Debian)),)
 	echo kernel source package used: >> debian/buildinfo
 	COLUMNS=150 dpkg -l kernel-source-$(shell test -f version.Debian &&               \
                                               cat version.Debian | sed -e 's/-.*$$//') |  \
-	 awk '$$1 == "ii" { printf("%s-%s\n", $$2, $$3) }' >> debian/buildinfo
+	 awk '$$1 ~ /[hi]i/ { printf("%s-%s\n", $$2, $$3) }' >> debian/buildinfo
 endif
 	echo applied kernel patches: >> debian/buildinfo
 ifneq ($(strip $(valid_patches)),)
 	COLUMNS=150 dpkg -l $(shell echo $(valid_patches) | tr ' ' '\n' |                 \
                               sed -ne 's/^.*\/\(.*\)/kernel-patch-\1/p') |                \
-	      awk '$$1 == "ii" { printf("%s-%s\n", $$2, $$3) }' >> debian/buildinfo
+	      awk '$$1 ~ /[hi]i/  { printf("%s-%s\n", $$2, $$3) }' >> debian/buildinfo
 endif
 	echo done >  $@
 

@@ -272,6 +272,12 @@ and the kernel versions is passed in through the environment variable
 .B version.
 This is a way for the patch to insert any additional files into
 the image, for example.
+.IP
+Some of the patch packages also pay attention to other environment
+variables, and these are documented in the appropriate doc directory
+(for example, you should look at
+.I /usr/share/doc/kernel-patch-foo/README-kernelpatch.Debian
+for patch foo for additional information).
 .TP
 .BR \-\-arch\ foo
 This is useful for setting the architecture when you are cross
@@ -420,14 +426,16 @@ the form option=value; for details these and other variant forms
 supported, please read man Getopt::Long (3perl).
 .TP
 .B CONCURRENCY_LEVEL
-If defined, this variable sets the concurrency level of make used to
-compile the kernel and the modules set using 
+If defined, this environment variable sets the concurrency level of
+make used to compile the kernel and the modules set using
 .I -j
 flags to the sub make in the 
 .B build
 target of 
 .B make\-kpkg.
-Should be a (small) integer, if used.
+Should be a (small) integer, if used. You can get the current number
+of CPUs using the command:
+ "grep -c '^processor' /proc/cpuinfo"
 .SH TARGETS
 .TP
 .B clean
