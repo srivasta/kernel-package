@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Wed Aug 13 13:29:43 2003
+## Last Modified On : Fri Aug 22 11:43:16 2003
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 585
+## Update Count	    : 589
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.216 2003/08/14 17:15:52 srivasta Exp $
+## $Id: rules,v 1.217 2003/08/22 17:19:26 srivasta Exp $
 ###############################################################################
 
 ifdef KPKG_ARCH
@@ -679,6 +679,15 @@ ifneq ($(strip $(install_vmlinux)),)
 int_install_vmlinux:=$(install_vmlinux)
 endif
  
+ifneq ($(strip $(KPKG_SRC_FOLLOW_SYMLINK)),)
+int_follow_symlinks_in_src=YES
+else
+ifneq ($(strip $(follow_symlinks_in_src)),)
+int_follow_symlinks_in_src=YES
+endif
+endif
+
+
 
 
 
@@ -1473,14 +1482,20 @@ endif
 	$(install_file) $(DEBDIR)/copyright.source $(SOURCE_DOC)/copyright
 	echo "This was produced by kernel-package version $(kpkg_version)." > \
 	         $(SOURCE_DOC)/Buildinfo
+ifneq ($(strip $(int_follow_symlinks_in_src)),)
+	-tar cfh - `echo * | sed -e 's/ debian//g' -e 's/\.deb//g' ` \
+	| (cd $(SOURCE_SRC); umask 000; tar xsf -)
+	(cd $(SOURCE_SRC)/include; rm -rf asm ; )
+else
 	-tar cf - `echo * | sed -e 's/ debian//g' -e 's/\.deb//g' ` \
 	| (cd $(SOURCE_SRC); umask 000; tar xsf -)
+	(cd $(SOURCE_SRC)/include; rm -f asm ; )
+endif
 	(cd $(SOURCE_SRC); \
             $(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) distclean)
 	(cd $(SOURCE_SRC);         rm -f stamp-building $(STAMPS_TO_CLEAN))
 	(cd $(SOURCE_SRC);         \
          [ ! -d scripts/cramfs ]   || make -C scripts/cramfs distclean ; )
-	(cd $(SOURCE_SRC)/include; rm -f asm ; )
 	if test -f debian/official -a -f debian/README.Debian ; then \
            $(install_file) debian/README.Debian $(SOURCE_SRC)/README.Debian ; \
            $(install_file) debian/README.Debian $(SOURCE_DOC)/README.Debian ; \
@@ -1568,8 +1583,13 @@ endif
 	echo "This was produced by kernel-package version $(kpkg_version)." > \
 	         $(HEADER_DOC)/Buildinfo
 	$(install_file) Makefile       $(HEADER_SRC)
+ifneq ($(strip $(int_follow_symlinks_in_src)),)
+	-tar cfh - include |        (cd $(HEADER_SRC); umask 000; tar xsf -)
+	(cd $(HEADER_SRC)/include; rm -rf asm; ln -s asm-$(KERNEL_ARCH) asm)
+else
 	-tar cf - include |        (cd $(HEADER_SRC); umask 000; tar xsf -)
 	(cd $(HEADER_SRC)/include; rm -f asm; ln -s asm-$(KERNEL_ARCH) asm)
+endif
 	$(install_file) .config  	        $(HEADER_SRC)/.config
 ifneq ($(strip $(header_clean_hook)),)
 	(cd $(HEADER_SRC);              \

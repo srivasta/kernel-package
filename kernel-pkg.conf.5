@@ -21,7 +21,7 @@
 .\" Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139,
 .\" USA.
 .\"
-.\" $Id: kernel-pkg.conf.5,v 1.35 2003/04/18 20:50:33 srivasta Exp $
+.\" $Id: kernel-pkg.conf.5,v 1.36 2003/08/22 17:19:26 srivasta Exp $
 .\"
 .TH KERNEL\-PKG.CONF 5 "Jan  7 1997" "Debian" "Debian GNU/Linux manual" 
 .\" NAME should be all caps, SECTION should be 1-8, maybe w/ subsection
@@ -293,6 +293,16 @@ environment variable
 .B EXTRA_DOCS
 overrides this, and would most likely be how extra documentation is
 specified. 
+.TP
+.B kpkg_follow_symlinks_in_src
+This option is especially useful for people who use symlinc farms to
+compile kernels. With this option, kernel-source and kernel-header
+packages shall not be just full of dangling symlinks, instead, the
+symbolic links shall be followed. Please note that any symbolic links
+in the kernel sources woudl be flattened as well.  The environment
+variable 
+.B KPKG_FOLLOW_SYMLINKS_IN_SRC
+overrides this.
 .TP
 .B make_libc_headers
 This is meant to be used by the 

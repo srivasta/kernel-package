@@ -1,3 +1,15 @@
+kernel-package (8.049) unstable; urgency=low
+
+  * In the spanish man pages, it is make-kpkg.1, not make-kpkg.8. Fixed.
+  * Added a new config file option kpkg_follow_symlinks_in_src, and hte
+    corresponding ENV variable, KPKG_FOLLOW_SYMLINKS_IN_SRC, for people
+    who use symlink farms to compile kernels and also want to package
+    kernel-source and kernel-headers packages.
+  * Added a new section in the README file titled "MODULES_LOC, symlink
+    farming, and more". 
+
+ -- Manoj Srivastava <srivasta@debian.org>  Fri, 22 Aug 2003 12:18:22 -0500
+
 kernel-package (8.048) unstable; urgency=low
 
   * Fixed usage of chown root.root in the rules files.

@@ -1,5 +1,5 @@
 
-    $Id: README,v 1.62 2003/07/30 22:28:52 srivasta Exp $
+    $Id: README,v 1.63 2003/08/22 17:19:26 srivasta Exp $
 
 This is the Debian GNU/Linux packaging scripts for the Linux kernel. 
 This package has been put together by Manoj Srivastava <srivasta@debian.org>.
@@ -86,6 +86,8 @@ Phase THREE: Install the kernel image on one or more machines
  questions introduced by the patches. (Also look at the
  --added_patches command line option to selectively apply some patches
  in conjunction with patch_the_kernel)
+
+
 
 Getting the kernel source
 ------- --- ------ ------
@@ -424,6 +426,17 @@ install_vmlinux  Set to YES to install the uncompressed kernel
 		 userspace with oprofile (oprofile.sourceforge.net,
 		 i386 only).
 
+kpkg_follow_symlinks_in_src
+              This option is especially useful for people who use
+              symlinc farms to compile kernels. With this option,
+              kernel-source and kernel-header packages shall not be
+              just full of dangling symlinks, instead, the symbolic
+              links shall be followed. Please note that any symbolic
+              links in the kernel sources woudl be flattened as well.
+              The environment variable KPKG_FOLLOW_SYMLINKS_IN_SRC
+              overrides this. Symlink farming is described below.
+            
+
 make_libc_headers  This is meant to be used by the libc6 maintainer,
                    when he compiles libc6, to also package up the
                    corresponding headers. DO NOT SET THIS as a
@@ -698,6 +711,72 @@ in /). For instance, you could:
 
         So you don't have the image taking up space, but still leave a
 target for the /vmlinuz symlink.
+
+ MODULES_LOC, SYMLINK FARMING, AND MORE
+ ============ ======= ======== === ====
+
+Oh, a quick recipe for people who want to build kernel-module
+packages, and don't want to be root to do so (the following assumes
+/usr/local/src/kernel is an appropriate location to build kernels):
+
+###############################################################################
+# % sudo echo 'MODULE_LOC=/usr/local/src/kernel/modules' \                    #
+#                                             >> /etc/kernel-pkg.conf         #
+# % sudo echo 'debian := 5:501c' >> /etc/kernel-pkg.conf                      #
+# % sudo mkdir -p /usr/local/src/kernel/modules                               #
+# % sudo chown -R $(id -n -u) /usr/local/src/kernel/                          #
+# % sudo aptitude install cryptoapi-core cryptoloop # for example             #
+#                                                                             #
+#         Now, we no longer need to be root                                   #
+#                                                                             #
+# % cd /usr/local/src/kernel/                                                 #
+# % wget ftp://ftp.us.kernel.org/pub/linux/kernel/v2.4/linux-2.4.21.tar.bz2   #
+# % tar zvvfx /usr/src/cryptoapi-core.tar.gz                                  #
+# % tar zvvfx /usr/src/cryptoloop.tar.gz                                      #
+# % tar jvvfx linux-2.4.21.tar.bz2                                            #
+# % mkdir 2.4.21                                                              #
+# % cd 2.4.21                                                                 #
+# % lndir ../linux-2.4.21                                                     #
+# % cp /boot/config-2.4.20 .config                                            #
+# % make-kpkg --rootcmd fakeroot --append-to-version -cryptoloop kernel_image #
+# % fakeroot make-kpkg --append-to-version -cryptoloop modules_image          #
+###############################################################################
+
+	The above also demonstrates a technique called symlink farming. I like
+ to upgrade between kernel version using patches from
+ ftp.us.kernel.org; so I need to keep a source tree in as near a
+ pristine state as I can. Once I have
+ /usr/local/src/kernel/linux-2.4.20, say, I do this:
+#########################################################################
+#  last_version=2.4.18                        # I never went for 2.4.19 #
+#  for machine in kallissin ember smaug scatha glaurung, tiamat ;do     #
+#    mkdir $machine                                                     #
+#    scp $machine:/boot/config-$last_version $machine/.config           #
+#    cd $machine                                                        #
+#    lndir ../linux-2.4.20                                              #
+#    cd ..                                                              #
+#  done                                                                 #
+#                                                                       #
+#  for machine in kallissin ember smaug scatha glaurung, tiamat ;do     #
+#    if [ -f . configdirs/$machine ]; then                              #
+#      . configdirs/$machine                                            #
+#      # $patches is now either empty, or it has --added-patches=a,b    #
+#    fi                                                                 #
+#    cd $machine                                                        #
+#    make-kpkg --rootcmd fakeroot --append-to-version $machine \        #
+#        $patches $modules kernel_image                                 #
+#    if [ "X$modules" != "X" ]; then                                    #
+#       fakeroot make-kpkg  --append-to-version $machine \              #
+#            $patches $modules modules_image                            #
+#    fi                                                                 #
+#    make-kpkg clean                                                    #
+#  done                                                                 #
+#########################################################################
+
+        See? Each lndir directory only has files that were patched, or
+ object files; and the ../linux-2.4.20 is pristine, ready to be
+ patched up to 2.4.21.
+
 
 Recompiling a kernel image
 ----------- - ------ -----
