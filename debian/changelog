@@ -2,6 +2,11 @@ kernel-package (3.56) unstable; urgency=low
 
   * Mentioned in the copyright file that the GPL and Artistic licences are
     available on the file system.
+  * Ensure that the /usr/src/linux and /usr/src/linux-<version> links
+    always exist, no matter what. Apparently, upgrading from
+    kernel-source-2.0.32_2.0.32-1 to kernel-source-2.0.32_2.0.32-3 does
+    not create /usr/src/linux-<version>, which breaks libc6-dev.
+  * Toned down the language about LILO, so as not to startle new sparc users
 
  --
 
