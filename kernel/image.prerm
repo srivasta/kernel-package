@@ -5,15 +5,15 @@
 # Created On       : Fri May 17 03:28:59 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Fri Jun 12 10:56:01 1998
+# Last Modified On : Tue Oct 13 12:14:06 1998
 # Last Machine Used: tiamat.datasync.com
-# Update Count     : 57
+# Update Count     : 58
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
 # 
 #
-#    $Id: image.prerm,v 1.6 1998/07/14 21:31:38 srivasta Exp $
+#    $Id: image.prerm,v 1.7 1998/10/14 05:59:00 srivasta Exp $
 #
 # 
 
@@ -113,7 +113,7 @@ EOF
       print STDERR <<"EOG";
 
 Remember to edit /etc/$loader.conf and re-run $loader, or Make other
-arrangemnts to boot your machine.
+arrangements to boot your machine.
 
 EOG
 ;

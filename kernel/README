@@ -1,5 +1,5 @@
 
-   $Id: README,v 1.20 1998/09/08 19:47:46 srivasta Exp $
+   $Id: README,v 1.21 1998/10/14 05:59:00 srivasta Exp $
 
 This is the Debian GNU/Linux prepackaged version of the Linux kernel.
 Linux was written by Linus Torvalds <Linus.Torvalds@cs.Helsinki.FI> and
@@ -62,14 +62,42 @@ in section misc.
 3% make-kpkg clean
 4% fakeroot make-kpkg --revision=custom.1.0 kernel_image 
 5# dpkg -i ../kernel-image-X.XXX_1.0_<arch>.deb
-6% shutdown -r now # If and only if LILO worked or you have a means of
+6# shutdown -r now # If and only if LILO worked or you have a means of
                    # booting the new kernel. YOU HAVE BEEN WARNED!!
 
  With the addition of fakeroot ( a really nice program, I recommend
  it) Steps 1 to 4 can be carried out as a non root user. Step 5 does
  require root privileges.  
 
- Detailed instructions
+
+Unpacking kernel sources:
+-------------------------
+
+Some of the suggestions about where to unpack the kernel packages are
+a) /tmp/linux
+b) /var/tmp/linux
+c) /usr/local/src/<whatever>
+d) /usr/src/linux-X.X.XX; where X.X.XX is the version number of the
+   kernel. Remember to re-link /usr/src/linux to point to this
+   directory, like: (cd /usr/src; rm linux; ln -s linux-X.X.XX) 
+
+In any case, choose a partition that has a large amount of free space,
+since recent kernels, unpacked, run to about 23MB, and you need more
+than double that in order to create kernel-image, kernel-source, and
+the tar file (that is, if you choose to build everything together with
+the dist target in debian.rules -- say if you want, for whatever
+reason, to run dchanges on the files created). I needed nearly 60MB to
+create the full spectrum of packages for version 1.99.7 (and doubtless
+this size will go up in the future).
+
+Now, cd linux (wherever you have created the kernel sources).
+
+Versions and revisions
+---------------------
+
+The version number is deduced from the kernel Makefile directly. to
+ensure that the version numbers are in sync(1), so you don't have to
+worry about that.
 
 Then, remember to change the revision number (using the --revision
 option of make-kpkg).  It has been suggested that you renumber the
@@ -83,11 +111,11 @@ has certain constraints:
 a) It only has an effect during the configure phase (in other words, if a
    file called stamp-configure exists, this option has no effect -- run
    make-kpkg clean or manually remove stamp-configure for it to have an
-   effect).. So, if you re-run make-kpkg with a different revision number,
+   effect). So, if you re-run make-kpkg with a different revision number,
    you have to reconfigure the kernel. 
 b) It may contain only alphanumerics and the characters + . (full stop,
    and plus) and should contain a digit.  NOTE: No hyphens allowed. (Look
-   at Chapter 5 of the Programmers manual for details) Optionally, you
+   at Chapter 5 of the Programmers manual for details). Optionally, you
    may prepend the revision with a digit followed by a colon (:); this
    shall put your revision into a new epoch; (which makes older dpkg very
    confused), more on this later.
@@ -137,17 +165,17 @@ has entered the garden of eden, and we must forever use epochs to
 guard against forced upgrades.
 
 So, try using an epoch for your custom packages: 
-  fakeroot make-kpkg --revision=3:custom-1.0 kernel_image
+  fakeroot make-kpkg --revision=3:custom.1.0 kernel_image
 
 And the next time when you build a kernel, because you just bought a new
 sound card or you discovered that you suddenly want masquerading in your
 kernel enabled, you'll type: 
-  fakeroot make-kpkg --revision=3:custom-2 kernel_image
+  fakeroot make-kpkg --revision=3:custom.2.0 kernel_image
 
 When make-kpkg is finished, you'll have 
 kernel-image-2.0.29_custom.1.0_i386.deb and all it takes now is to
 install the package (as root):
-#  dpkg -i kernel-image-2.0.29_custom.1.0_i386.deb
+# dpkg -i kernel-image-2.0.29_custom.1.0_i386.deb
 
 This will install the kernel, the modules, the map file and do some other
 administrativia and finally it will ask you if you want to make a
@@ -182,11 +210,6 @@ snippet included during the kernel packages build process, and hence
 you may put any legal Makefile directive in that file (just make very
 sure you know what you are doing ;-).
 
-The version number is deduced from the kernel Makefile directly. to
-ensure that the version numbers are in sync(1), so you don't have to
-worry about that.
-
-
 	At the moment, the user modifiable variables supported are:
 maintainer:	Local kernel-* package maintainer
 email:          The email address of that person.
@@ -220,7 +243,7 @@ reverse_symlink Mutually exclusive to no_symlink. Can be used with
                 images unless further action is taken. The older
                 symlinks are left dangling. This is for people with
                 boot on umsdos, and who can't see the link in dos, but
-                do want to know the iage version when in Linux. 
+                do want to know the image version when in Linux. 
                 This is a Hack.
 patch_the_kernel This is an experts only variable. If set to YES (ENV
                  variable PATCH_THE_KERNEL overrides this), the build
@@ -272,7 +295,7 @@ available on the boot disks.  The kernel image package produced will
 offer you a chance to create a boot disk, or to run LILO, but the
 default is not to do either, and you may choose to ignore these
 friendly overtures by the postinst.
- 
+
 If you want a custom kernel, you may generate a config file by any of
 these methods (just follow the directions).
 % make config          # Boring old tty based method
@@ -296,11 +319,12 @@ To create a source or header package, run
 Note: You only need one of these.
 
 Similarly, the documentation package is built by:
-% make-kpkg --revision=custom.1.0 kernel_doc
+% fakeroot make-kpkg --revision=custom.1.0 kernel_doc
 
 Or if you want to generate the whole package, 
-% make-kpkg --rootcmd fakeroot --revision=custom.1.0  \
+% fakeroot make-kpkg --revision=custom.1.0 \
             --pgpsign="Your pgp ID" buildpackage
+Note that this needs a pgp key.
 
 A note on LILO: the kernel-image install-scripts arrange to have
 /vmlinuz and /vmlinuz.old point to the latest kernel image and the
@@ -318,13 +342,44 @@ does not mean to ignore loadlin, you can use the generated
 kernel-image just as easily (simply ignore the fol-de-rol with symlinks
 in /). for instance, you could:
 
- [1]# dpkg -BRGiE kernel-image-X.X.XX, #(need to be root)
+ [1]# dpkg -BRGiE kernel-image-X.X.XX, # need to be root
         and then
  [2]% cp /boot/vmlinuz-X.X.XX <place where loadlin needs image>
  [3]% echo '' > /boot/vmlinuz-X.X.XX
 
         So you don't have the image taking up space, but still leave a
 target for the /vmlinuz symlink.
+
+Tecras and other notebooks 
+--------------------------
+	  (Many thanks to Philip Hands <phil@hands.com> and
+           Avery Pennarun <apenwarr@worldvisions.ca> for this explanation)
+
+Tecras and other notebooks, and some PCs have a problem where they
+fail to flush the cache when switching on the a20 gate (IIRC), which
+is provoked by bzImage kernels, but not by zimage kernels. 
+
+bzImage files are actually "big zImage" not "bzipped Image".  bzImage
+kernels can be as large as you like, but because they need to decompress
+into extended memory, they aggravate this problem.  zImage kernels just
+compress into conventional memory, so they never need to touch the a20 gate,
+but they hit the 640k limit.
+
+There are two solutions that I know of:
+
+  1) apply a patch, which flushes the cache.  Unfortunately this
+     causes other machines to crash so is not universally applicable
+     (hence the tecra disks being segragated from the mainstream)
+
+  2) build a zimage, rather than bzimage kernel.  This seems to get
+     round the problem. use the --zimage option to make-kpkg, or even
+     set this as the default in /etc/kernel-pkg.conf.
+
+There some add on modules that hook into make-kpkg and the kernel
+sources so that they may be kept in synchrony woth the kernel you
+run. If you have such a mosule source package, for example,
+pcmcia-source, then please read README.modules as well. If you don't
+never mind.
 
 Have fun,
 

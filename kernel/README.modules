@@ -1,0 +1,62 @@
+
+		Add on modules and the kernel-package
+                === == ======= === === ==============
+
+	There are a number of add-on modules (that is, kernel modules
+ are are developed apart fromt he Linux kernel and do not appear in
+ the mainstream kernel sources). Notables, at the time of writing, are
+ the pcmcia-cs and and the alsa sound modules.
+
+	Most of these modules need to be compiled for each kernel
+ version; they are very dependent on kernel structures. It was
+ suggested that it would be nice to be able to build the add-on
+ modules whenever one created a new kernel, and kernel-package
+ provides some mechanisms to do so for co-operating add-on modules. 
+
+	In order for this to work, the add on modules must appear in
+ a standard location, choosen to be /usr/src/modules/<mod-name>/, and
+ must arrange to be manipulated by the kernel-package mechanisms.
+
+USER INSTRUCTIONS
+==== ============
+
+
+        kernel-package provides for three targets for the use of
+ atand-alone kernel modules packages.
+
+	The special targets to give to make-kpkg are:
+ a) modules-image modules_image:   only generate module binary packages
+ b) modules:                       generate the modules packages and
+                                   sign them with dchanges (this
+                                   creates the sorce and diff packages
+                                   as well)
+ c) modules-config modules_config: only configure the module
+
+	
+	So, add to the 
+4% fakeroot make-kpkg --revision=custom.1.0 kernel_image 
+4a% fakeroot make-kpkg --revision=custom.1.0 modules_image,
+        and remember to install the modules (after you have installed
+ the kernel-image) by saying 
+5# dpkg -i ../kernel-image-X.XXX_1.0_<arch>.deb
+5a# dpkg -i /usr/src/modules/<mode-name>-<version>.deb
+	
+MODULE Packaging hints
+====== ========= =====
+
+        make-kpkg arranges to cd into each modules top directory,
+ /usr/src/modules/<mod-name>/, and runs ./debian/rules <target>. 
+ Additionally, the following information is provided in the
+ environment:
+ a) KVERS  Contains the kernel version
+ b) KSRC   Contains the location of the kernel sources 
+ c) KMAINT Contains the Name of the maintainer to pass to PGP
+ d) KEMAIL Caontains the email address of the maintainer
+
+	Have fun,
+
+	manoj
+-- 
+Manoj Srivastava  <srivasta@acm.org> <http://www.datasync.com/%7Esrivasta/>
+Key C7261095 fingerprint = CB D9 F4 12 68 07 E4 05  CC 2D 27 12 1D F5 E8 6E
+

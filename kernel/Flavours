@@ -34,7 +34,9 @@
  patch is provided below) to read, say, "FLAVOUR := speed_hack", and
  the kernel would be installed as /boot/vmlinuz-2.0.30-speed_hack, the
  modules would be installed under /lib/modules/2.0.30-speed_hack,
- uname -r would report the version as 2.0.30-speed_hack.
+ uname -r would report the version as 2.0.30-speed_hack. Note: Debian
+ users should keep the Flavour lower case, in order to comply with
+ Debian package naming conventions.
 
 	There is a patch appended to the bottom of this message that
  would allow klogd to discover the new System.map file, and to not
