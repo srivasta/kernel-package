@@ -5,9 +5,9 @@
 # Created On       : Fri Nov 14 12:16:39 2003
 # Created On Node  : glaurung.green-gryphon.com
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Fri Oct  1 15:43:54 2004
+# Last Modified On : Fri Oct  1 16:59:09 2004
 # Last Machine Used: glaurung.internal.golden-gryphon.com
-# Update Count     : 10
+# Update Count     : 12
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
@@ -34,17 +34,16 @@
 set -e
 
 # Predefined values:
-version= "=V";
-link_in_boot= "=B";   # Should be empty, mostly
-no_symlink= "=S";   # Should be empty, mostly
-reverse_symlink= "=R";   # Should be empty, mostly
-kimage= "=K";   # Should be empty, mostly
-loader= "=L";   # lilo, silo, quik, palo, vmelilo, nettrom, arcboot or delo
-image_dir= "=D";        # where the image is located
-initrd= "=I";        # initrd kernel
-mkimage= "=M";        # command to generate the initrd image
-official_image= "=OF";      # only true for official images
-arch= "=A";  #  should be same as dpkg --print-installation-architecture
+version="=V";
+link_in_boot="=B";   # Should be empty, mostly
+no_symlink="=S";   # Should be empty, mostly
+reverse_symlink="=R";   # Should be empty, mostly
+kimage="=K";   # Should be empty, mostly
+loader="=L";   # lilo, silo, quik, palo, vmelilo, nettrom, arcboot or delo
+image_dir="=D";        # where the image is located
+initrd="=I";        # initrd kernel
+mkimage="=M";        # command to generate the initrd image
+official_image="=OF";      # only true for official images
 
 package_name="kernel-uml-$version";
 
