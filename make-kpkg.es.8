@@ -28,7 +28,7 @@
 .\" (c) 2003 Software in the Public Interest
 .\" Esta traducción ha sido realizada por Rubén Porras Campo <nahoo@inicia.es>
 .\" Está basada en la página de manual original:
-.\" versión 1.20 del CVS de
+.\" versión 1.21 del CVS de
 .\" /cvs/debian-doc/manpages/english/kernel-package/make-kpkg.8
 .\" Revisada por Rudy Godoy <rudy@kernel-panik.org>
 
@@ -354,13 +354,14 @@ está generando un paquete del tipo
 , realizará cualquier acción necesaria para que el núcleo se pueda cargar usando
 .B initrd.  
 .B NOTA:
-esto requiere un parche, que no es estándar, cramfs de initrd a las fuentes del
-núcleo, (a menos que la configuración del mkinitrd haya sido modificada para usar
-cramfs) o se generará una imagen del núcleo imposible de arrancar. El parche
-normalmente se encuentra en las fuentes del núcleo proporcionadas por Debian,
-pero no se encuentra en las fuentes originales del núcleo. Esta opción puede
-implicar dependencias extra y modificaciones en los scripts del encargado del
-paquete. No tiene efecto cuando 
+en los núcleos antiguos, esto requiere un parche, que no es estándar, cramfs de
+initrd a las fuentes del núcleo, (a menos que la configuración del mkinitrd haya
+sido modificada para no usar cramfs) o se generará una imagen del núcleo
+imposible de arrancar. El parche normalmente se encontraba en las fuentes del
+núcleo proporcionadas por Debian. Algunas arquitecturas todavía necesitan
+parches para arreglar problemas con cramfs. Esta opción puede implicar
+dependencias extra y modificaciones en los scripts del encargado del paquete. No
+tiene efecto cuando 
 .B make\-kpkg no está generando un paquete 
 .I kernel\-image.
 El mismo efecto se puede conseguir estableciendo la
@@ -542,12 +543,17 @@ pueden colocar scripts. Los directorios son
 .I /etc/kernel/preinst.d/,
 .I /etc/kernel/postinst.d/,
 .I /etc/kernel/prerm.d/,
-y
 .I /etc/kernel/postrm.d/.
+y
+.I /etc/kernel/preinst.d/<VERSIÓN>/,
+.I /etc/kernel/postinst.d/<VERSIÓN>/,
+.I /etc/kernel/prerm.d/<VERSIÓN>/,
+.I /etc/kernel/postrm.d/<VERSIÓN>/.
 Si existen, el paquete kernel-image ejecutará
 .B run-parts
-sobre los directorios, usando la versión a instalar o eliminar como argumento,
-en la fase correspondiente de la instalación o desinstalación.
+sobre los directorios (incluyendo los que tengan un número de versión), usando
+la versión a instalar o eliminar como argumento, en la fase correspondiente de
+la instalación o desinstalación.
 .IP
 Durante la instalación, también ofrece ejecutar
 .I LILO
@@ -712,3 +718,5 @@ y la extensiva documentación en el directorio
 .SH AUTOR
 Esta página del manual fue escrita por Manoj Srivastava <srivasta@debian.org>,
 para el sistema Debian GNU/Linux.
+.SH TRADUCTOR
+Traducción de Rubén Porras Campo <debian\-l10n\-spanish@lists.debian.org>

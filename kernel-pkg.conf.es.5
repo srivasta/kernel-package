@@ -27,7 +27,7 @@
 .\" (c) 2003 Software in the Public Interest
 .\" Esta traducción ha sido realizada por Rubén Porras <nahoo@inicia.es>
 .\" Está basada en la página de manual original:
-.\" versión 1.6 del CVS de /cvs/debian-doc/manpages/english/kernel-package/
+.\" versión 1.8 del CVS de /cvs/debian-doc/manpages/english/kernel-package/
 .\" Revisada por Rudy Godoy <rudy@kernel-panik.org>
 
 .TH KERNEL\-PKG.CONF 5 "7 de junio de 1997" "Debian" "manual Debian GNU/Linux" 
@@ -111,7 +111,7 @@ están establecidas, entonces, la falta de una revisión de Debian causa un error 
 no proporcionará un valor por omisión de 10.0.0.Custom)
 .TP
 .B link_in_boot
-Pongalo a True si quiere el enlace simbólico a la imagen del núcleo, llamado
+Póngalo a True si quiere el enlace simbólico a la imagen del núcleo, llamado
 .I vmlinuz 
 en 
 .I /boot 
@@ -216,12 +216,12 @@ que
 .B dpkg\-buildpackages' 
 necesita usando la opción \-r. La variable de entorno 
 .B ROOT_CMD
-lo modifica. La variable de entorno
+lo modifica. Use la variable de entorno
 .B UNSIGN_SOURCE
-añade a esta orden una opción para que dpkg\-buildpackage no firme las fuentes,
-similarmente, la variable de entorno
+para pasar una opción a dpkg\-buildpackage para que éste no firme las fuentes,
+del mismo modo, use la variable de entorno
 .B UNSIGN_CHANGELOG 
-añade a esta orden una opción para que dpkg\-buildpackage no firme el fichero de
+para pasar una opción a dpkg\-buildpackage para que no firme el fichero de
 cambios. De nuevo, esta variable sólo es útil para el objetivo
 .I buildpackage. 
 Establezca la variable de entorno
