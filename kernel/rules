@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Tue Jul 29 14:52:17 1997
+## Last Modified On : Mon Aug  4 12:44:47 1997
 ## Last Machine Used: tiamat.datasync.com
-## Update Count	    : 182
+## Update Count	    : 185
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.6 1997/07/29 23:05:01 srivasta Exp $
+## $Id: rules,v 1.7 1997/08/04 18:10:06 srivasta Exp $
 ###############################################################################
 
 # The version of kernel-package this belongs to
@@ -70,7 +70,21 @@ PATCHLEVEL:=$(shell grep ^PATCHLEVEL Makefile 2>/dev/null | \
 SUBLEVEL:=$(shell grep ^SUBLEVEL Makefile 2>/dev/null | \
                   sed -e 's/[^0-9]*\([0-9]*\)/\1/')
 
-version = $(VERSION).$(PATCHLEVEL).$(SUBLEVEL)
+# If you want to have more than one kernel configuration per kernel
+# version, set FLAVOUR in the top level kernel Makefile *before*
+# invoking make-kpkg -- it will be appended to UTS_RELEASE in
+# version.h (separated by a hyphen)
+
+FLAVOUR:=$(shell grep ^SUBLEVEL Makefile 2>/dev/null | \
+                  sed -e 's/[ ]*\([^ ]+\)/\1/')
+
+ifneq ($(strip $(FLAVOUR)),)
+INT_FLAV := -$(FLAVOUR)
+else
+INT_FLAV :=
+endif
+
+version = $(VERSION).$(PATCHLEVEL).$(SUBLEVEL)$(INT_FLAV)
 
 # The name of the package (for example, `emacs').
 package = kernel-source-$(version)
@@ -265,6 +279,9 @@ stamp-source:
 	$(install_file) $(DEBDIR)/Headers \
 	         debian/tmp-source/usr/doc/$(package)/Headers
 	gzip -9f debian/tmp-source/usr/doc/$(package)/Headers
+	$(install_file) $(DEBDIR)/Flavours \
+	         debian/tmp-source/usr/doc/$(package)/Flavours
+	gzip -9f debian/tmp-source/usr/doc/$(package)/Flavours
 	echo "This was produced by kernel-package version $(kpkg_version)." > \
 	         debian/tmp-source/usr/doc/$(package)/Buildinfo
 	(cd debian/tmp-source/usr/doc/$(package); \
