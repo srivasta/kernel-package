@@ -1,5 +1,5 @@
 
-   $Id: README,v 1.34 2000/04/30 20:51:56 srivasta Exp $
+   $Id: README,v 1.35 2000/05/07 17:07:39 srivasta Exp $
 
 This is the Debian GNU/Linux prepackaged version of the Linux kernel.
 Linux was written by Linus Torvalds <Linus.Torvalds@cs.Helsinki.FI> and
@@ -266,7 +266,7 @@ image_in_boot:	Set to True if you want the kernel image symlink (vmlinuz)
 kimage:		The kernel image type (i.e. zImage or bzImage). Can be
 		set from the environment variable IMAGE_TYPE. Defaults
 		to bzImage.
-no_symlink      Mutually exclusive to reverse_symlink. Can be used with
+no_symlinks      Mutually exclusive to reverse_symlink. Can be used with
                 image_in_boot. The image is placed in vmlinuz (instead
                 of /boot/vmlinuz-X.X.XX). The old vmlinuz is moved to
                 vmlinuz.old unconditionally. (Normally, that is only
@@ -276,8 +276,8 @@ no_symlink      Mutually exclusive to reverse_symlink. Can be used with
                 images. This is for people who have boot on a system
                 that does not use symlinks (and say, they use loadlin)
                 This is a Hack.
-reverse_symlink Mutually exclusive to no_symlink. Can be used with
-                image_in_boot. Just like no_symlink, except that the
+reverse_symlink Mutually exclusive to no_symlinks. Can be used with
+                image_in_boot. Just like no_symlinks, except that the
                 /boot/vmlinuz-X.XX is symlinked to the real new
                 image, vmlinuz. This too restricts you to just two
                 images unless further action is taken. The older
@@ -350,7 +350,7 @@ does not exist, and neither does the symbolic link /vmlinuz.  The
 script asks the user whether the symbolic link should be created, and
 stashes the answer into /etc/kernel-img.conf
 
-no_symlink      Mutually exclusive to reverse_symlink. Can be used with
+no_symlinks      Mutually exclusive to reverse_symlink. Can be used with
                 image_in_boot. The image is placed in vmlinuz (instead
                 of /boot/vmlinuz-X.X.XX). The old vmlinuz is moved to
                 vmlinuz.old unconditionally. (Normally, that is only
@@ -360,8 +360,8 @@ no_symlink      Mutually exclusive to reverse_symlink. Can be used with
                 images. This is for people who have boot on a system
                 that does not use symlinks (and say, they use loadlin)
                 This is a Hack.
-reverse_symlink Mutually exclusive to no_symlink. Can be used with
-                image_in_boot. Just like no_symlink, except that the
+reverse_symlink Mutually exclusive to no_symlinks. Can be used with
+                image_in_boot. Just like no_symlinks, except that the
                 /boot/vmlinuz-X.XX is symlinked to the real new
                 image, vmlinuz. This too restricts you to just two
                 images unless further action is taken. The older
@@ -412,6 +412,27 @@ clobber_modules
               /lib/modules/version out of the way if  it  is  the
               same  version  as the image being installed. Use at
               your own risk.  This variable is unset by  default.
+
+do_boot_enable
+              If set to NO, this short circuits all attempts to create
+              boot floppies, run lilo, etc. This has the additional
+              side effect that the postinst is silent. Setting both
+              do_bootfloppy and do_bootloader to NO implies setting
+              do_boot_enable to NO. Defaults to Yes.
+
+do_bootfloppy
+              If set to NO, this prevents the postinst from asking
+              questions about creating a boot floppy. and no boot
+              floppy is created. The boot loader shall still be run.
+              This may cut down on the interaction the postinst has.
+              (It still prompts before formatting /dev/fd0) Defaults
+              to Yes.
+do_bootloader
+              If set to NO, this prevents the postinst from running
+              the boot loader. The user may still be asked to create a
+              floppy, unless do_bootfloppy is also set to NO. Defaults
+              to Yes.
+
 Please see kernel-img.conf (5).
 
 

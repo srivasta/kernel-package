@@ -1,3 +1,26 @@
+kernel-package (7.08) unstable; urgency=low
+
+  * Added a space after a question the postinst asks.
+  * Added a spacs after --backup=t while copying. This would cause things
+    to break otherwise. 
+  * Added a / in the error message when no_symlinks is on.
+  * Fix the README to talk about no_symlinks, and not no_symlink. 
+    fixes Bug # 63606
+  * Added three more directives for kernel-imge.conf, namely,
+    do_boot_enable, do_bootfloppy, and do_bootloader. All default to YES.
+    closes: Bug#63607
+  * Added a check in the makefloppy routine to make sure the image we are
+    trying to write exists. This closes: Bug#63558
+  * Capture the stderr too when testing the bootloaders. This fixes Bug
+    63599 
+  *  Fixed PPC setup to handle new powermacs. This was a (grave) RC
+    bug. This fixes Bug# 63559
+  * Added checks and guards to ensue that 63558 would be caught and more
+    information provided. Insufficient data as yet to figure out what is
+    causing it. 
+
+ -- Manoj Srivastava <srivasta@debian.org>  Sun,  7 May 2000 12:07:08 -0500
+
 kernel-package (7.07) unstable; urgency=low
 
   * Fix a (cosmetic) bug in the preinst that printed a message in the

@@ -12,7 +12,7 @@
 # HISTORY          : 
 # Description      : 
 # 
-#    $Id: image.postinst,v 1.47 2000/05/03 06:52:56 srivasta Exp $
+#    $Id: image.postinst,v 1.48 2000/05/07 17:07:39 srivasta Exp $
 #
 
 # 
@@ -24,6 +24,8 @@ my $image_in_boot   = "=B";	# Should be empty, mostly
 my $no_symlink      = "=S";	# Should be empty, mostly
 my $reverse_symlink = "=R";	# Should be empty, mostly
 my $do_symlinks     = "Yes";	# target machine defined
+my $do_boot_enable  = "Yes";	# target machine defined
+my $do_bootfloppy   = "Yes";	# target machine defined
 my $move_image      = '';       # target machine defined
 my $kimage          = "=K";	# Should be empty, mostly
 my $loader          = "=L";     # lilo, silo, quik, or nettrom
@@ -68,6 +70,9 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
       $image_in_boot   = "" if /image_in_boot\s*=\s*(no|false|0)\s*$/ig;
       $move_image      = "" if /move_image\s*=\s*(no|false|0)\s*$/ig;
       $clobber_modules = '' if /clobber_modules\s*=\s*(no|false|0)\s*$/ig;
+      $do_boot_enable  = '' if /do_boot_enable\s*=\s*(no|false|0)\s*$/ig;
+      $do_bootfloppy   = '' if /do_bootfloppy\s*=\s*(no|false|0)\s*$/ig;
+      $do_bootloader   = '' if /do_bootloader\s*=\s*(no|false|0)\s*$/ig;
 
 
       $do_symlink      = "Yes" if /do_symlinks\s*=\s*(yes|true|1)\s*$/ig;
@@ -76,6 +81,9 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
       $image_in_boot   = "Yes" if /image_in_boot\s*=\s*(yes|true|1)\s*$/ig;
       $move_image      = "Yes" if /move_image\s*=\s*(yes|true|1)\s*$/ig;
       $clobber_modules = "Yes" if /clobber_modules\s*=\s*(yes|true|1)\s*$/ig;
+      $do_boot_enable  = "Yes" if /do_boot_enable\s*=\s*(yes|true|1)\s*$/ig;
+      $do_bootfloppy   = "Yes" if /do_bootfloppy\s*=\s*(yes|true|1)\s*$/ig;
+      $do_bootloader   = "Yes" if /do_bootloader\s*=\s*(yes|true|1)\s*$/ig;
 
       $image_dest      = "$1"  if /image_dest\s*=\s*(\S+)/ig;
     }
@@ -103,6 +111,10 @@ if ($image_in_boot) {
   $realimageloc = "";
 }
 
+# sanity
+if (!($do_bootfloppy || $do_bootloader)) {
+  $do_boot_enable = '';
+}
 
 # most of our work is done in $image_dest
 chdir("$image_dest") or die "could not chdir to $image_dest:$!\n";
@@ -225,7 +237,7 @@ elsif (! -e "$kimage") {
       print STDERR "updated by newer kernel image packages. This is \n";
       print STDERR "useful if you use a boot loader like lilo.\n";
       print STDERR "Do you want me to link " . $realimageloc . 
-	"$kimage-$version to $kimage?[Yn]";
+	"$kimage-$version to $kimage?[Yn] ";
       $answer=<STDIN>;
       $do_symlink = "" if $answer =~ /n/i;
       
@@ -254,13 +266,13 @@ elsif ($no_symlink) {		# Maybe /$image_dir is on a dos system?
     rename("$kimage", "$kimage.$$") || 
       die "failed to move " . $image_dest . "$kimage:$!";
   }
-  my $ret = system("cp -a --backup=t" . $realimageloc
+  my $ret = system("cp -a --backup=t " . $realimageloc
 		   . "$kimage-$version " . "$kimage"); 
   
   if ($ret) {
     if (-e "$kimage.$$") { rename("$kimage.$$", "$kimage"); }
     die("Failed to copy /$image_dir/$kimage-$version to "
-	. $image_dest . "$kimage .\n"); 
+	. $image_dest . "/$kimage .\n"); 
   }
   
   # Ok, now we may clobber the previous .old files
@@ -437,6 +449,7 @@ EOFERRONE
   }
 }
 
+exit (0) unless $do_boot_enable;	# Exit if explicitly asked to
 
 exit (0) if $loader =~ /silo/i; # SILO does not have to be executed.
 exit (0) if $loader =~ /milo/i; # MILO does not have to be executed.
@@ -537,10 +550,12 @@ if ( ! -x "/sbin/$loader" ) {
   exit (0) if $loader =~ /silo/i; # No idea how to make non SILO floppies
   exit (0) if $loader =~ /quik/i;
 
-  print "I can make a non-LILO diskette instead, but it won't be as useful.\n";
-
-  if (&ask_y("Would you like to create a boot floppy now")) {
-    &makefloppy();
+  if ($do_bootfloppy) {
+    print "I can make a non-LILO diskette instead, but it won't be as useful.\n";
+    
+    if (&ask_y("Would you like to create a boot floppy now")) {
+      &makefloppy();
+    }
   }
   exit(0);
 }
@@ -598,10 +613,14 @@ can still boot this system from a floppy.
 
 EOMSG
 ;
-
-if (&ask("Would you like to create a boot floppy now")) {
-  &makefloppy();
+if ($do_bootfloppy) {
+  if (&ask("Would you like to create a boot floppy now")) {
+    &makefloppy();
+  }
 }
+
+exit 0 unless $do_bootloader;
+
 
 if (-T "/etc/$loader.conf") {
   # Trust and use the existing lilo.conf.
@@ -723,6 +742,8 @@ sub makefloppy {
   my $answer;
   my $done = 0;
   my $drive = 0;
+
+  return unless $do_bootfloppy;
   
   print <<EO_MSG_A;
 
@@ -824,20 +845,34 @@ EO_MSG_B
   while (! $done) {
   MKBOOT:{
       my $ret;
+      
       if ($loader =~ /lilo/io) {
+	my $imageloc = '';
+	
 	if ($no_symlink || $reverse_symlink) {
-	  $ret = 
-	    system '/bin/dd', "if=$image_dest" . "$kimage", "of=/dev/fd$drive";
+	  $imageloc = $image_dest . $kimage;	  
 	}
 	else {
-	  $ret = 
-	    system '/bin/dd', "if=$realimageloc" . "$kimage-$version",  
-	    "of=/dev/fd$drive";
+	  $imageloc = $realimageloc . "$kimage-$version";
 	}
-	last MKBOOT if $ret;
-	$ret = system '/usr/sbin/rdev', "/dev/fd$drive", "$rootdevice";
-	last MKBOOT if $ret;
-	$ret = system '/usr/sbin/rdev', '-R', "/dev/fd$drive", '1';
+	if (-e "$imageloc") {
+	  $ret = system '/bin/dd', "if=$imageloc", "of=/dev/fd$drive";
+	  last MKBOOT if $ret;
+	  $ret = system '/usr/sbin/rdev', "/dev/fd$drive", "$rootdevice";
+	  last MKBOOT if $ret;
+	  $ret = system '/usr/sbin/rdev', '-R', "/dev/fd$drive", '1';
+	}
+	else {
+	  print STDERR "Ulp!. I couldn't find the image where I expected\n";
+	  print STDERR "it to be, namely, $imageloc\n";
+	  print STDERR "You shall have to create the floppy manually, I'm\n";
+	  print STDERR "afraid, using commands like\n";
+	  print STDERR "\tdd if=/path/to/$kimage-$version of=/dev/fd$drive\n";
+	  print STDERR "\trdev /dev/fd$drive $rootdevice\n";
+	  print STDERR "\trdev -R /dev/fd$drive 1\n";
+	  print STDERR "Aborting\n";
+	  return;
+	}
       }
       else {
 	$ret = &silo_floppy( $drive );
@@ -934,7 +969,7 @@ sub run_lilo (){
   if ($loader =~ /lilo/io) {
     print "Testing lilo.conf ... \n";
     unlink $temp_file_name;                        # security
-    $ret = system("/sbin/lilo -t >$temp_file_name");
+    $ret = system("/sbin/lilo -t >$temp_file_name 2>&1");
     if ($ret) {
       my $ans;
       print "There was an error with running $loader in test mode, a log is \n";
@@ -948,7 +983,7 @@ sub run_lilo (){
     print "Testing successful. Installing the partition boot sector... \n";
   }
   
-  $ret = system("/sbin/$loader >$temp_file_name");
+  $ret = system("/sbin/$loader >$temp_file_name 2>&1");
   if ($ret) {
     my $ans;
     print "There was an error with running $loader, a log file is \n";

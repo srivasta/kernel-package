@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.95 2000/04/30 20:51:56 srivasta Exp $
+## $Id: rules,v 1.96 2000/05/07 17:07:39 srivasta Exp $
 ###############################################################################
 
 #
@@ -147,17 +147,24 @@ endif
 ### PowerPC
 ifneq ($(strip $(filter ppc powerpc,$(architecture))),)
 GUESS_SUBARCH:=$(shell awk '/machine/ { print $$3}' /proc/cpuinfo)
+ifneq (,$(findstring Power,$(GUESS_SUBARCH)))
+GUESS_SUBARCH:=pmac
+else
+ifneq (,$(findstring iMac,$(GUESS_SUBARCH)))
+GUESS_SUBARCH:=pmac
+endif
+endif
 
-ifeq (,$(findstring $(SUBARCH),apus bbox chrp mbx pmac prep APUs BBOX CHRP MBX Power PReP ))
+ifeq (,$(findstring $(SUBARCH),apus bbox chrp mbx pmac prep APUs BBOX CHRP MBX PReP ))
 SUBARCH:=$(GUESS_SUBARCH)
 endif
 
 KERNEL_ARCH:=ppc
-kimage := zImage
-target = $(kimage)
 
 ifneq (,$(findstring $(SUBARCH),APUs apus Amiga))
 SUBARCH:=apus
+kimage := zImage
+target = $(kimage)
 kimagesrc = arch/$(KERNEL_ARCH)/boot/$(kimage)
 kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
 DEBCONFIG = $(CONFDIR)/config.apus
@@ -165,7 +172,9 @@ endif
 
 ifneq (,$(findstring $(SUBARCH),BBOX bbox))
 SUBARCH:=bbox
-kimagesrc = arch/$(KERNEL_ARCH)/boot/$(kimage))
+kimage := zImage
+target = $(kimage)
+kimagesrc = arch/$(KERNEL_ARCH)/boot/$(kimage)
 kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
 DEBCONFIG = $(CONFDIR)/config.bbox
 endif
@@ -175,6 +184,8 @@ SUBARCH:=chrp
 loaderdep=quik
 loader=quik
 loaderdoc=QuikDefault
+kimage := zImage
+target = $(kimage)
 kimagesrc = arch/$(KERNEL_ARCH)/chrpboot/$(kimage)
 kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
 DEBCONFIG = $(CONFDIR)/config.chrp
@@ -182,26 +193,32 @@ endif
 
 ifneq (,$(findstring $(SUBARCH),MBX mbx))
 SUBARCH:=mbx
+kimage := zImage
+target = $(kimage)
 kimagesrc = arch/$(KERNEL_ARCH)/boot/$(kimage))
 kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
 DEBCONFIG = $(CONFDIR)/config.mbx
 endif
 
-ifneq (,$(findstring $(SUBARCH),Power pmac))
+ifneq (,$(findstring $(SUBARCH),pmac))
 SUBARCH:=pmac
 loaderdep=quik
 loader=quik
 loaderdoc=QuikDefault
 kimagesrc=vmlinux
+kimage := vmlinux
+target = $(kimage)
 kimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
 HAVE_COFF_IMAGE = YES
-coffsrc=arch/$(KERNEL_ARCH)/coffboot/$(kimage)
+coffsrc=arch/$(KERNEL_ARCH)/coffboot/vmlinux.coff
 coffdest=$(INT_IMAGE_DESTDIR)/vmlinux.coff-$(version)
 DEBCONFIG = $(CONFDIR)/config.pmac
 endif
 
 ifneq (,$(findstring $(SUBARCH),PReP prep))
 SUBARCH:=prep
+kimage := zImage
+target = $(kimage)
 kimagesrc = arch/$(KERNEL_ARCH)/boot/$(kimage)
 kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
 DEBCONFIG = $(CONFDIR)/config.prep
