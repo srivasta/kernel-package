@@ -5,14 +5,14 @@
 # Created On       : Sat May 15 11:05:13 1999
 # Created On Node  : glaurung.green-gryphon.com
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Sat May 15 11:14:24 1999
+# Last Modified On : Wed Jun  2 17:04:48 1999
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 4
+# Update Count     : 5
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
 # 
-#     $Id: image.postrm,v 1.1 1999/05/15 16:27:50 srivasta Exp $
+#     $Id: image.postrm,v 1.2 1999/06/02 22:21:29 srivasta Exp $
 #
 
 
@@ -108,6 +108,6 @@ if (-l "$kimage.old") {
   }
 }
 
-return 0;
+exit 0;
 
 __END__
