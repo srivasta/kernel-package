@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Mon Nov  9 18:03:29 1998
+## Last Modified On : Wed Nov 25 01:38:07 1998
 ## Last Machine Used: tiamat.datasync.com
-## Update Count	    : 373
+## Update Count	    : 376
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.57 1998/11/10 00:13:32 srivasta Exp $
+## $Id: rules,v 1.58 1998/11/25 07:43:41 srivasta Exp $
 ###############################################################################
 
 # The version of kernel-package this belongs to
@@ -100,6 +100,28 @@ ifeq ($(strip $(GUESS_SUBARCH)),Mac)
         DEBCONFIG= $(CONFDIR)/config.mac
 endif
 endif
+endif
+endif
+
+### ARM
+ifeq ($(strip $(architecture)),arm)
+GUESS_SUBARCH:='netwinder'
+
+ifeq (,$(findstring $(SUBARCH),netwinder))
+SUBARCH:=$(GUESS_SUBARCH)
+endif
+
+kimage := vmlinux
+loaderdep=
+loader=nettrom
+loaderdoc=
+target = vmlinux
+NEED_DIRECT_GZIP_IMAGE=NO
+kimagesrc = vmlinux
+kimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
+DEBCONFIG = $(CONFDIR)/config.arm
+ifeq ($(strip $(GUESS_SUBARCH)),netwinder)
+        DEBCONFIG= $(CONFDIR)/config.netwinder
 endif
 endif
 
@@ -706,10 +728,12 @@ ifndef MODULES_ENABLED
 	@echo Modules not configured, so not making modules_image
 else
 	-for module in $(MODULE_LOC)/* ; do \
+          if test -d  $$module; then \
 	    (cd $$module; \
               ./debian/rules KVERS="$(version)" KSRC="$(SRCTOP)" \
                              KMAINT="$(pgp)" KEMAIL="$(email)" \
                              KDREV="$(debian)" kdist_image; ); \
+	  fi; \
         done
 endif
 
@@ -719,10 +743,12 @@ ifndef MODULES_ENABLED
 	@echo Modules not configured, so not making modules
 else
 	-for module in $(MODULE_LOC)/* ; do \
+          if test -d  $$module; then \
 	    (cd $$module; \
               ./debian/rules KVERS="$(version)" KSRC="$(SRCTOP)" \
                              KMAINT="$(pgp)" KEMAIL="$(email)" \
                              KDREV="$(debian)" kdist; ); \
+	  fi; \
         done
 endif
 
@@ -731,10 +757,12 @@ ifndef MODULES_ENABLED
 	@echo Modules not configured, so not making modules_config
 else
 	-for module in $(MODULE_LOC)/* ; do \
+          if test -d  $$module; then \
 	    (cd $$module; \
               ./debian/rules KVERS="$(version)" KSRC="$(SRCTOP)" \
                              KMAINT="$(pgp)" KEMAIL="$(email)" \
                              KDREV="$(debian)" kdist_configure; ); \
+	  fi; \
         done
 endif
 
