@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Sat May  5 00:57:58 2001
+## Last Modified On : Thu May 10 09:03:36 2001
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 474
+## Update Count	    : 475
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.118 2001/05/05 06:00:08 srivasta Exp $
+## $Id: rules,v 1.119 2001/05/10 14:13:38 srivasta Exp $
 ###############################################################################
 
 ifdef ARCH
@@ -814,7 +814,7 @@ $(error Error. The version number $(strip $(version)) is not all \
 endif
 
 # export variables
-export root_cmd FLAVOUR INT_SUBARCH APPEND_TO_VERSION UNSIGN_CHANGELOG  UNSIGN_SOURCE ROOT_CMD MODULE_LOC
+export root_cmd FLAVOUR INT_SUBARCH APPEND_TO_VERSION UNSIGN_CHANGELOG  UNSIGN_SOURCE ROOT_CMD MODULE_LOC EXTRAVERSION
 
 
 ifeq ($(strip $(IN_KERNEL_DIR)),)

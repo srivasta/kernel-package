@@ -1,3 +1,12 @@
+kernel-package (7.41) unstable; urgency=low
+
+  * Also export EXTRAVERSION. This is useful if EXTRAVERSION was deduced
+    from a APPEND_TO_VERSION variable. closes: Bug#96784
+  * Changed the long description to be slightly more coherent.
+    closes: Bug#96822
+
+ -- Manoj Srivastava <srivasta@debian.org>  Thu, 10 May 2001 09:13:30 -0500
+
 kernel-package (7.40) unstable; urgency=low
 
   * make sure that if the rules file did not interpolat the =I in the
