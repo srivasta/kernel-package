@@ -1,3 +1,11 @@
+kernel-package (4.11) frozen unstable; urgency=low
+
+  * Clarified the rootcommand usage in the error message when make-kpkg
+    thinks that the rootcmd options has been invoked in vain.
+  * This should also go into frozen. 
+
+ -- Manoj Srivastava <srivasta@debian.org>  Tue, 12 May 1998 13:57:58 -0500
+
 kernel-package (4.10) unstable; urgency=low
 
   * Only put libc-kheaders in the control file is asked. I think this is
