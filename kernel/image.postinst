@@ -12,7 +12,7 @@
 # HISTORY          :
 # Description      :
 #
-#    $Id: image.postinst,v 1.117 2003/05/13 07:11:39 srivasta Exp $
+#    $Id: image.postinst,v 1.118 2003/07/11 07:21:55 srivasta Exp $
 #
 
 #
@@ -351,12 +351,14 @@ sub really_move_image {
   }
 }
 
+# This routine is responsible for setting up the symbolic links.
 sub image_magic {
-  my $kimage = $_[0];
-  my $image_dest = $_[1];
+  my $kimage = $_[0];	# Nmae of the symbolic link
+  my $image_dest = $_[1];	# The directory the links goes into
 
-  # Well, in any case, if the destination is a directory, we should do
-  # nothing, except throw a diagnostic.
+  # Well, in any case, if the destination (the symlink we are trying
+  # to create) is a directory, we should do nothing, except throw a
+  # diagnostic.
   if (-d "$kimage" ) {
     die ("Hmm. $kimage is a directory, which I did not expect.  I am\n" .
 	 "trying to create a symbolic link with that name linked to \n" .
@@ -388,6 +390,7 @@ sub image_magic {
 	}
       else
 	{
+	  # OK. We found symlink, and we should have a symlink here.
 	  my $vmlinuz_target = readlink "$kimage";
 	  my $target = CanonicalizePath("$realimageloc" . "$kimage-$version");
 
@@ -397,7 +400,7 @@ sub image_magic {
 	      $force_move = 1;
 	    }
 	  else
-	    {
+	    {			# Found where the link points to
 	      my $cwd;
 	      chomp ($cwd=`pwd`);
 	      if ($vmlinuz_target !~ m|^/|o)
@@ -768,7 +771,7 @@ if ($initrd) {
   die("Failed to create initrd image.\n") if $ret;
 
   if (! defined $ARGV[1] || ! $ARGV[1] || $ARGV[1] =~ m/<unknown>/og) {
-    image_magic("initrd.img", $realimageloc) if $initrd;
+    image_magic("initrd.img", $image_dest) if $initrd;
   }
   else {
     print STDERR "Not touching initrd symlinks since we are being reinstalled ($ARGV[1])\n";

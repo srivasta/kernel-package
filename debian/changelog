@@ -1,3 +1,12 @@
+kernel-package (8.042) unstable; urgency=low
+
+  * Remove stamps late in the game, so unpatching has a chance to actually
+    work.                                                closes: Bug#200695
+  * Tweak the initrd symlink creation; perhaps this iteration would fix
+    the related Bug#200512.
+
+ -- Manoj Srivastava <srivasta@debian.org>  Fri, 11 Jul 2003 02:21:37 -0500
+
 kernel-package (8.041) unstable; urgency=low
 
   * Added clarifying text to the howto from Peter Hugosson-Miller and Doug
