@@ -5,9 +5,9 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Wed Dec 10 23:55:54 2003
-## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 653
+## Last Modified On : Sun Jan 11 11:54:53 2004
+## Last Machine Used: glaurung.internal.golden-gryphon.com
+## Update Count	    : 655
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
@@ -118,7 +118,7 @@ HAVE_NEW_MODLIB =$(shell egrep '\(INSTALL_MOD_PATH\)' Makefile 2>/dev/null )
 
 ifneq ($(strip $(EXTRA_VERSION)),)
 HAS_ILLEGAL_EXTRA_VERSION =$(shell                         \
-    perl -e '$$i="$(EXTRA_VERSION)"; $$i !~ m/^[a-z\d\.\-\+]+$$/o && print YES;')
+    perl -e '$$i="$(EXTRA_VERSION)"; $$i !~ m/^[a-z\.\-\+][a-z\d\.\-\+]*$$/o && print YES;')
   ifneq ($(strip $(HAS_ILLEGAL_EXTRA_VERSION)),)
     $(error Error: The EXTRAVERSION may only contain lowercase alphanumerics \
  and  the  characters  - +  . The current value is: $(EXTRA_VERSION). Aborting.)
@@ -1048,7 +1048,7 @@ canonical_modules=$(subst $(comma),$(space),$(KPKG_SELECTED_MODULES))
 else
 canonical_modules=$(shell test -e $(MODULE_LOC) && \
                        find $(MODULE_LOC) -follow -maxdepth 1 -type d -print |\
-			   egrep -v '^$(MODULE_LOC)$$')
+			   egrep -v '^$(MODULE_LOC)/$$')
 endif
 
 

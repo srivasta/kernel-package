@@ -349,7 +349,10 @@ effect when
 package. The same effect can be achieved by setting the environment
 variable
 .B INITRD
-to any non empty value.
+to any non empty value. This option results in a warning, to avoid the
+warning set the environment variable
+.B INITRD_OK
+to a non empty value.
 To avoid a warning at install time, please read kernel-img.conf(5),
 and add a 
 .I warn_initrd 
