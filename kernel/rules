@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Sat Aug  2 17:54:19 2003
+## Last Modified On : Sun Aug 10 11:49:27 2003
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 578
+## Update Count	    : 579
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.213 2003/08/10 09:16:48 srivasta Exp $
+## $Id: rules,v 1.214 2003/08/10 16:52:01 srivasta Exp $
 ###############################################################################
 
 ifdef KPKG_ARCH
@@ -1658,7 +1658,7 @@ ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
 	@(echo "The changelog says we are creating $(saved_version), but I thought the version is $(version)"; exit 1)
 endif
 ifneq ($(strip $(UTS_RELEASE_VERSION)),$(strip $(version)))
-	@(echo The UTS Release version in include/linux/version.h $(UTS_RELEASE_VERSION) does not match current version $(version), reconfiguring)
+	@echo "The UTS Release version in include/linux/version.h $(UTS_RELEASE_VERSION) does not match current version $(version), reconfiguring."
 	touch Makefile
 endif
 	rm -f -r ./$(IMAGE_TOP) ./$(IMAGE_TOP).deb

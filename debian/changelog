@@ -1,3 +1,10 @@
+kernel-package (8.046) unstable; urgency=low
+
+  * Man, the missing quotes thing does not want to go away. And testing at
+    4 am does not work out. Yet another place quotes were missing.
+
+ -- Manoj Srivastava <srivasta@debian.org>  Sun, 10 Aug 2003 11:51:42 -0500
+
 kernel-package (8.045) unstable; urgency=low
 
   * Fix missing double quotes in the rules file. I don't know how this
