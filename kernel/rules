@@ -5,9 +5,9 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Fri Feb 11 12:19:48 2005
+## Last Modified On : Mon Feb 14 18:04:34 2005
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count	    : 759
+## Update Count	    : 761
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
@@ -157,11 +157,11 @@ deb_rule = $(MAKE) -f $(DEBDIR)/rules
 
 # Could have used :=, but some patches do seem to patch the
 # Makefile. perhaps deferring the rule makes that better
-VERSION      =$(shell $(MAKE) -sf $(DEBDIR)/kernel_version.mk debian_VERSION)
-PATCHLEVEL   =$(shell $(MAKE) -sf $(DEBDIR)/kernel_version.mk debian_PATCHLEVEL)
-SUBLEVEL     =$(shell $(MAKE) -sf $(DEBDIR)/kernel_version.mk debian_SUBLEVEL)
-EXTRA_VERSION=$(shell $(MAKE) -sf $(DEBDIR)/kernel_version.mk debian_EXTRAVERSION)
-LOCALVERSION =$(shell $(MAKE) -sf $(DEBDIR)/kernel_version.mk debian_LOCALVERSION)
+VERSION      :=$(shell $(MAKE) -sf $(DEBDIR)/kernel_version.mk debian_VERSION)
+PATCHLEVEL   :=$(shell $(MAKE) -sf $(DEBDIR)/kernel_version.mk debian_PATCHLEVEL)
+SUBLEVEL     :=$(shell $(MAKE) -sf $(DEBDIR)/kernel_version.mk debian_SUBLEVEL)
+EXTRA_VERSION:=$(shell $(MAKE) -sf $(DEBDIR)/kernel_version.mk debian_EXTRAVERSION)
+LOCALVERSION :=$(shell $(MAKE) -sf $(DEBDIR)/kernel_version.mk debian_LOCALVERSION)
 
 
 
@@ -893,7 +893,7 @@ INT_SUBARCH := -$(KPKG_SUBARCH)
 endif
 endif
 
-# The name of the package (for example, `emacs').
+# The name of the package (for example, 'emacs').
 package   := $(INT_STEM)-source-$(version)
 h_package := $(INT_STEM)-headers-$(version)
 ifeq ($(strip $(KERNEL_ARCH)),um)
@@ -1150,7 +1150,7 @@ config_target := $(CONFIG_TARGET)
 have_new_config_target := YES
 endif
 
-# If config_target doesn't end in `config' then reset it to `oldconfig'.
+# If config_target doesn't end in 'config' then reset it to 'oldconfig'.
 ifneq ($(patsubst %config,config,$(strip $(config_target))),config)
 config_target := oldconfig
 have_new_config_target :=
@@ -1889,11 +1889,11 @@ endif
 	echo "This was produced by kernel-package version $(kpkg_version)." > \
 	         $(SOURCE_DOC)/Buildinfo
 ifneq ($(strip $(int_follow_symlinks_in_src)),)
-	-tar cfh - `echo * | sed -e 's/ debian//g' -e 's/\.deb//g' ` \
+	-tar cfh - $$(echo * | sed -e 's/ debian//g' -e 's/\.deb//g' ) \
 	| (cd $(SOURCE_SRC); umask 000; tar xpsf -)
 	(cd $(SOURCE_SRC)/include; rm -rf asm ; )
 else
-	-tar cf - `echo * | sed -e 's/ debian//g' -e 's/\.deb//g' ` \
+	-tar cf - $$(echo * | sed -e 's/ debian//g' -e 's/\.deb//g' ) \
 	| (cd $(SOURCE_SRC); umask 000; tar xspf -)
 	(cd $(SOURCE_SRC)/include; rm -f asm ; )
 endif
@@ -2260,7 +2260,7 @@ endif
 	   mv $(IMAGE_TOP)/lib/modules/$(version)/build ./debian/build-link
 ifeq ($(strip $(KERNEL_ARCH)),um)
 	-depmod -q -FSystem.map -b $(IMAGE_TOP) \
-           $(version)-`sed q include/linux/version.h | sed s/\"//g | awk -F\- '{print $$2}'`
+           $(version)-$$(sed q include/linux/version.h | sed s/\"//g | awk -F\- '{print $$2}')
 else
 ifeq ($(DEB_BUILD_GNU_TYPE),$(DEB_HOST_GNU_TYPE))
 	-depmod -q -FSystem.map -b $(IMAGE_TOP) $(version);
@@ -2480,7 +2480,7 @@ define mod_inst_cmds
         MODLIB=$(INSTALL_MOD_PATH)/lib/modules/$(version);           \
         cd modules;                                                  \
         MODULES="";                                                  \
-        inst_mod() { These="`cat $$1`"; MODULES="$$MODULES $$These"; \
+        inst_mod() { These="$$(cat $$1)"; MODULES="$$MODULES $$These"; \
                 mkdir -p $$MODLIB/$$2; cp $$These $$MODLIB/$$2;               \
                 echo Installing modules under $$MODLIB/$$2; \
         }; \
