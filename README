@@ -1,5 +1,5 @@
 
-    $Id: README,v 1.43 2001/07/11 21:27:30 srivasta Exp $
+    $Id: README,v 1.44 2001/07/11 21:37:52 srivasta Exp $
 
 This is the Debian GNU/Linux packaging scripts for the Linux kernel. 
 This package has been put together by Manoj Srivastava <srivasta@debian.org>.
@@ -261,7 +261,7 @@ kimage		The kernel image type (i.e. zImage or bzImage). Can be
 		set from the environment variable IMAGE_TYPE. Defaults
 		to bzImage.
 
-no_symlinks     Mutually exclusive to reverse_symlink. Can be used with
+no_symlinks     Mutually exclusive to reverse_symlinks Can be used with
                 image_in_boot. The image is placed in vmlinuz (instead
                 of /boot/vmlinuz-X.X.XX). The old vmlinuz is moved to
                 vmlinuz.old unconditionally. (Normally, that is only
@@ -356,7 +356,7 @@ does not exist, and neither does the symbolic link /vmlinuz.  The
 script asks the user whether the symbolic link should be created, and
 stashes the answer into /etc/kernel-img.conf
 
-no_symlinks     Mutually exclusive to reverse_symlink. Can be used with
+no_symlinks     Mutually exclusive to reverse_symlinks Can be used with
                 image_in_boot. The image is placed in vmlinuz (instead
                 of /boot/vmlinuz-X.X.XX). The old vmlinuz is moved to
                 vmlinuz.old unconditionally. (Normally, that is only

@@ -1,5 +1,5 @@
 
-   $Id: README,v 1.44 2001/05/12 18:55:52 srivasta Exp $
+   $Id: README,v 1.45 2001/07/11 21:37:53 srivasta Exp $
 
 This is the Debian GNU/Linux prepackaged version of the Linux kernel.
 Linux was written by Linus Torvalds <Linus.Torvalds@cs.Helsinki.FI> and
@@ -281,7 +281,7 @@ kimage		The kernel image type (i.e. zImage or bzImage). Can be
 		set from the environment variable IMAGE_TYPE. Defaults
 		to bzImage.
 
-no_symlinks     Mutually exclusive to reverse_symlink. Can be used with
+no_symlinks     Mutually exclusive to reverse_symlinks Can be used with
                 image_in_boot. The image is placed in vmlinuz (instead
                 of /boot/vmlinuz-X.X.XX). The old vmlinuz is moved to
                 vmlinuz.old unconditionally. (Normally, that is only
@@ -292,7 +292,7 @@ no_symlinks     Mutually exclusive to reverse_symlink. Can be used with
                 that does not use symlinks (and say, they use loadlin)
                 This is a Hack.
 
-reverse_symlink Mutually exclusive to no_symlinks. Can be used with
+reverse_symlinks exclusive to no_symlinks. Can be used with
                 image_in_boot. Just like no_symlinks, except that the
                 /boot/vmlinuz-X.XX is symlinked to the real new
                 image, vmlinuz. This too restricts you to just two
@@ -376,7 +376,7 @@ does not exist, and neither does the symbolic link /vmlinuz.  The
 script asks the user whether the symbolic link should be created, and
 stashes the answer into /etc/kernel-img.conf
 
-no_symlinks     Mutually exclusive to reverse_symlink. Can be used with
+no_symlinks     Mutually exclusive to reverse_symlinks Can be used with
                 image_in_boot. The image is placed in vmlinuz (instead
                 of /boot/vmlinuz-X.X.XX). The old vmlinuz is moved to
                 vmlinuz.old unconditionally. (Normally, that is only
@@ -387,7 +387,7 @@ no_symlinks     Mutually exclusive to reverse_symlink. Can be used with
                 that does not use symlinks (and say, they use loadlin)
                 This is a Hack.
 
-reverse_symlink Mutually exclusive to no_symlinks. Can be used with
+reverse_symlinks exclusive to no_symlinks. Can be used with
                 image_in_boot. Just like no_symlinks, except that the
                 /boot/vmlinuz-X.XX is symlinked to the real new
                 image, vmlinuz. This too restricts you to just two
@@ -397,7 +397,7 @@ reverse_symlink Mutually exclusive to no_symlinks. Can be used with
                 do want to know the image version when in Linux. 
                 This is a Hack.
 
-do_symlink    By  default,  the  kernel  image  post installation
+do_symlinks  default,  the  kernel  image  post installation
               script shall create or update the /vmlinuz and
               /vmlinuz.old symbolic links.  This is true if a /vmlinuz
               link already exists, however, in absence of /vmlinuz,
