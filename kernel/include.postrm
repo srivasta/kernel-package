@@ -4,15 +4,18 @@
 # Author           : Manoj Srivastava ( srivasta@pilgrim.umass.edu )
 # Created On       : Sat Apr 27 05:44:16 1996
 # Created On Node  : melkor.pilgrim.umass.edu
-# Last Modified By : root
-# Last Modified On : Thu Jun 13 08:40:48 1996
-# Last Machine Used: melkor.pilgrim.umass.edu
-# Update Count     : 10
+# Last Modified By : Manoj Srivastava
+# Last Modified On : Mon Jun  2 15:14:12 1997
+# Last Machine Used: tiamat.datasync.com
+# Update Count     : 11
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
 # 
 # 
+#
+#    $Id: include.postrm,v 1.2 1997/06/03 03:33:19 srivasta Exp $
+#
 
 
 $|=1;

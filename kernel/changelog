@@ -1,5 +1,14 @@
 kernel-source-=V (=D) unstable; urgency=low
 
+  * Added patches to support m68k from "Frank Neumann"
+    <Frank.Neumann@Informatik.Uni-Oldenburg.DE>.
+  * Added patched to support sparcs from Eric Delaunay
+    <delaunay@lix.polytechnique.fr> 
+
+ -- Manoj Srivastava <srivasta@debian.org>  Mon,  2 Jun 1997 15:17:59 -0500
+
+kernel-source-0.16 (1.01) unstable; urgency=low
+
   * Moved config to /boot, where it arguably should have gone to in the
     first place. The /boot directory contains other information pertinent 
     to the kernel, such as the System.map file, and the psdatabase.  The 

@@ -1,3 +1,6 @@
+
+    $Id: copyright,v 1.2 1997/06/03 02:50:30 srivasta Exp $
+
 This is the Debian Linux packaging scripts for the Linux kernel.  This
 package has been written and maintained by 
 Manoj Srivastava <srivasta@debian.org>.

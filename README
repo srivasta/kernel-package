@@ -1,3 +1,6 @@
+
+    $Id: README,v 1.2 1997/06/03 00:22:18 srivasta Exp $
+
 This is the Debian Linux packaging scripts for the Linux kernel. 
 This package has been put together by Manoj Srivastava <srivasta@debian.org>.
 

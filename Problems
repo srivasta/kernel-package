@@ -1,3 +1,6 @@
+
+    $Id: Problems,v 1.2 1997/06/03 00:22:07 srivasta Exp $
+
  This is an (incomplete) list of problems that people have encountered
  in the past while using kernel-package. Please remember to configure
  the kernel for your machine using make menuconfig, and to clean the

@@ -1,3 +1,6 @@
+
+  $Id: LiloDefault,v 1.2 1997/06/03 03:23:23 srivasta Exp $
+
 If the post install script finds lilo on the system (/sbin/lilo),
 it checks to see if there already exists a configuration file
 /etc/lilo.conf. If not, a boilerplate lilo configuration file that 

@@ -5,13 +5,16 @@
 # Created On       : Sat Apr 27 05:55:26 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Mon Mar 31 00:36:38 1997
+# Last Modified On : Mon Jun  2 15:12:37 1997
 # Last Machine Used: tiamat.datasync.com
-# Update Count     : 46
+# Update Count     : 47
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
 # 
+#    $Id: image.postinst,v 1.2 1997/06/03 03:33:18 srivasta Exp $
+#
+
 # 
 # use strict; #for debugging
 $|=1;

@@ -1,3 +1,6 @@
+
+    $Id: Copyright,v 1.2 1997/06/03 00:21:56 srivasta Exp $
+
 This is the Debian GNU/Linux prepackaged version of the HTML
 validation CGI package html-check, written and maintained by 
 Manoj Srivastava <srivasta@debian.org> 

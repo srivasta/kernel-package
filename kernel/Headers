@@ -1,3 +1,6 @@
+
+    $Id: Headers,v 1.2 1997/06/03 03:23:16 srivasta Exp $
+
  This package contains the Linux kernel header files (also contained
  in libc5-dev packages). 
 

@@ -1,3 +1,6 @@
+
+   $Id: LinkPolicy,v 1.2 1997/06/03 03:23:28 srivasta Exp $
+
 This is an proposal for packages providing kernel sources, headers,
 and image, which attempts to make it possible to have multiple
 versions of the kernel headers/source/image on the system
