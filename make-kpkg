@@ -5,16 +5,16 @@
 # Created On       : Mon Jun 17 01:10:11 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Mon Jul 10 00:55:40 2000
+# Last Modified On : Fri Jul 28 01:24:52 2000
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 140
+# Update Count     : 145
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
 #
 #
 #
-#    $Id: make-kpkg,v 1.42 2000/07/10 06:25:17 srivasta Exp $
+#    $Id: make-kpkg,v 1.43 2000/07/28 06:48:38 srivasta Exp $
 #
 require 5.002;
 use strict;
@@ -29,12 +29,13 @@ make-kpkg - build Debian kernel packages from Linux kernel sources.
 ($main::MYNAME     = $main::0) =~ s|.*/||;
 $main::Author      = "Manoj Srivastava";
 $main::AuthorMail  = "srivasta\@debian.org";
-$main::Version     = '$Revision: 1.42 $ ';
+$main::Version     = '$Revision: 1.43 $ ';
 
 my $help_opt=0; 
 my $revision=0; 
 my $flavour=''; 
 my $added_modules='';
+my $added_patches='';
 my $arch='';
 my $cross_compile='';
 my $config_target='oldconfig';
@@ -54,6 +55,7 @@ my %option_ctl = ("help"            => \$help_opt,
 		  "revision=s"      => \$revision,
 		  "flavour=s"       => \$flavour,
 		  "added_modules=s" => \$added_modules,
+		  "added_patches=s" => \$added_patches,
                   "arch=s"          => \$arch,
                   "config=s"        => \$config_target,
                   "cross_compile=s" => \$cross_compile,
@@ -140,6 +142,22 @@ names of the directory the modules reside in, or just the module name
 if it can be found in C<MODULE_LOC>, which defaults to /usr/src/modules.
 The default is that all modules in  C<MODULE_LOC> are compiled when
 the modules_blah targets are invoked.
+
+=back
+
+=item B<--added_patches> foo
+
+=over 2
+
+The argument should be a comma or space separated list of additional
+patches to the kernel sources. Unlike the treatment of the modules,
+you may only give the patch name (not the full path name of the patch
+file).  It shall be applied during the configure phase (and removed in
+the clean phase) if it can be found in the directories
+C<ALL_PATCH_DIR/{apply,unpatch}/>, which defaults to a subdirectory of
+/usr/src/kernel-patches/.  The default is that all patches are applied
+if requested (By setting the env variable C<PATCH_THE_KERNEL>)
+
 =back
 
 =item B<--arch> foo

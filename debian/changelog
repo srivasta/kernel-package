@@ -1,3 +1,15 @@
+kernel-package (7.15) unstable; urgency=low
+
+  * Fixed up the sample kernel moules rules and control file
+    examples. Hopefully, this is closer to being useable. I also dealt
+    with the issue of epochs explicitly in these sample files. 
+    closes: Bug#67150
+  * There was a feature request; namely, the ability to select a set of
+    patches to apply, instead of the current all or nothing schema. This
+    is an initial implementation. Please test. 
+
+ -- Manoj Srivastava <srivasta@debian.org>  Wed, 26 Jul 2000 21:41:58 -0500
+
 kernel-package (7.14) unstable; urgency=high
 
   * Fixed a bug in the image postinst where we were not chompingb the

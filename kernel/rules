@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Mon Jul 10 01:02:22 2000
+## Last Modified On : Fri Jul 28 01:13:16 2000
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 431
+## Update Count	    : 442
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.98 2000/07/10 06:25:19 srivasta Exp $
+## $Id: rules,v 1.99 2000/07/28 06:48:39 srivasta Exp $
 ###############################################################################
 
 #
@@ -577,11 +577,13 @@ endif
 # Now, if we have any modules at all, they are in canonical_modules
 ifneq ($(strip $(canonical_modules)),)
 
+# modules can have the full path, or just the name of the module. We
+# make all the modules ahve absolute paths by fleshing them out.
 path_modules   :=$(filter     /%, $(canonical_modules))
 no_path_modules:=$(filter-out /%, $(canonical_modules))
 fleshed_out    :=$(foreach mod,$(no_path_modules),$(MODULE_LOC)/$(mod))
 
-# Hmmph. recreate the canonical modules; now ewverything has a full
+# Hmmph. recreate the canonical modules; now everything has a full
 # path name.
 
 canonical_modules:=$(path_modules) $(fleshed_out)
@@ -595,6 +597,39 @@ valid_modules = $(shell for dir in $(canonical_modules); do \
 
 endif
 endif
+
+ifeq ($(strip $(patch_the_kernel)),YES)
+
+# Well then. Let us see if we want to select the patches we apply.
+ifneq ($(strip $(SELECTED_PATCHES)),)
+canonical_patches=$(subst $(comma),$(space),$(SELECTED_MODULES))
+
+ifneq ($(strip $(canonical_patches)),)
+# test to see if the patches exist
+valid_patches = $(shell for name in $(canonical_patches); do                 \
+                            if [ -x $(DIR_PATCH_APPLY)/$$(name) -a           \
+                                 -x $(DIR_PATCH_UNPATCH)/$$(name) ]; then    \
+                               echo $(DIR_PATCH_APPLY)/$$name;               \
+                            elsif [ -x $(ALL_PATCH_APPLY)/$$(name) -a        \
+                                    -x $(ALL_PATCH_UNPATCH)/$$(name) ]; then \
+                               echo $(DIR_PATCH_APPLY)/$$name;               \
+                            fi;                                              \
+                        done)
+valid_unpatches = $(shell for name in $(canonical_patches); do               \
+                            if [ -x $(DIR_PATCH_APPLY)/$$(name) -a           \
+                                 -x $(DIR_PATCH_UNPATCH)/$$(name) ]; then    \
+                               echo $(DIR_PATCH_UNPATCH)/$$name;             \
+                            elsif [ -x $(ALL_PATCH_APPLY)/$$(name) -a        \
+                                    -x $(ALL_PATCH_UNPATCH)/$$(name) ]; then \
+                               echo $(DIR_PATCH_UNPATCH)/$$name;             \
+                            fi;                                              \
+                        done)
+
+
+endif
+endif
+endif
+
 
 # See if we are being run in the kernel directory
 IN_KERNEL_DIR := $(shell if test -d drivers -a -d kernel -a -d fs -a \
@@ -692,6 +727,19 @@ stamp-debian:
 	-test ! -f stamp-debian && test ! -f debian/official && \
 	      rm -rf debian && $(make_directory) debian
 ifeq ($(strip $(patch_the_kernel)),YES)
+ifneq ($(strip $(valid_patches)),)
+	-for patch in $(valid_patches) ; do            \
+          if test -x  $$patch; then                    \
+              if $$patch; then                         \
+                  echo "Patch $$patch processed fine"; \
+              else                                     \
+                   echo "Patch $$patch  failed.";      \
+                   echo "Hit return to Continue";      \
+		   read ans;                           \
+              fi;                                      \
+	  fi;                                          \
+        done
+else
 	if [ -d $(DIR_PATCH_APPLY) ]; then \
             run-parts --verbose $(DIR_PATCH_APPLY); \
         else \
@@ -702,6 +750,7 @@ ifeq ($(strip $(patch_the_kernel)),YES)
         else \
 	    true; \
 	fi
+endif
 endif
 	-test ! -f stamp-debian -a \
                ! \( -f debian/official -a -f debian/control \) && \
@@ -748,6 +797,19 @@ endif
 
 clean:
 ifeq ($(strip $(patch_the_kernel)),YES)
+ifneq ($(strip $(valid_unpatches)),)
+	-for patch in $(valid_unpatches) ; do              \
+          if test -x  $$patch; then                        \
+              if $$patch; then                             \
+                  echo "Removed Patch $$patch ";           \
+              else                                         \
+                   echo "Patch $$patch  failed.";          \
+                   echo "Hit return to Continue";          \
+		   read ans;                               \
+              fi;                                          \
+	  fi;                                              \
+        done
+else
 	if [ -d $(DIR_PATCH_UNPATCH) ]; then \
             run-parts --verbose $(DIR_PATCH_UNPATCH); \
         else \
@@ -758,6 +820,7 @@ ifeq ($(strip $(patch_the_kernel)),YES)
         else \
 	    true; \
 	fi
+endif
 endif
 	rm -f $(FILES_TO_CLEAN) $(STAMPS_TO_CLEAN)
 	test ! -f .config || cp -pf .config config.precious
@@ -1002,8 +1065,8 @@ endif
 	rm -f -r debian/tmp-image
 ifeq ($(strip $(do_clean)),YES)
 	$(MAKE) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) clean
-endif
 	rm -f stamp-build
+endif
 	touch stamp-image
 
 # This endif is for HAVE_VALID_PACKAGE_VERSION

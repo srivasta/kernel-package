@@ -1,5 +1,5 @@
 
-    $Id: README,v 1.35 2000/07/10 06:25:17 srivasta Exp $
+    $Id: README,v 1.36 2000/07/28 06:48:38 srivasta Exp $
 
 This is the Debian GNU/Linux packaging scripts for the Linux kernel. 
 This package has been put together by Manoj Srivastava <srivasta@debian.org>.
@@ -65,7 +65,9 @@ Phase THREE: Install the kernel image on one or more machines
  command-line of step 4 (or perhaps use `xconfig' or `config' in place
  of `menuconfig').  This way, patching the kernel happens before
  menuconfig (or whichever), and you'll get better defaults for any
- questions introduced by the patches.
+ questions introduced by the patches. (Also look at the
+ --added_patches command line option to selectively apply some patches
+ in conjunction with patch_the_kernel)
 
 Unpacking kernel sources:
 -------------------------
@@ -284,7 +286,9 @@ patch_the_kernel This is an experts only variable. If set to YES (ENV
                  running run-parts over
                  /usr/src/kernel-patches/$(architecture)/unpatch. The
                  special architecture all is used for arch independent
-                 patches. 
+                 patches. You may use the --added_patches command line
+                 in conjunction with this variable to selective apply
+                 only some patches from that directory.
 root_cmd         This should be set to a means of gaining super user
                  access (for example, `sudo' or `fakeroot') as needed
                  by dpkg-buildpackages's -r option. This is only
