@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Tue Apr 21 12:34:21 1998
+## Last Modified On : Tue Apr 21 12:39:42 1998
 ## Last Machine Used: tiamat.datasync.com
-## Update Count	    : 260
+## Update Count	    : 261
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.34 1998/04/21 17:34:29 srivasta Exp $
+## $Id: rules,v 1.35 1998/04/21 17:39:54 srivasta Exp $
 ###############################################################################
 
 # The version of kernel-package this belongs to
@@ -438,7 +438,7 @@ stamp-libc-kheaders: configure
 	$(install_file)            debian/changelog \
 	         debian/tmp-kheaders/usr/doc/$(l_package)/changelog.debian
 	$(install_file)            $(DEBDIR)/README.headers \
-	         debian/tmp-kheaders/usr/doc/$(l_package)/debian.README
+	         debian/tmp-kheaders/usr/doc/$(l_package)/README.debian
 	echo "This was produced by kernel-package version $(kpkg_version)." > \
 	         debian/tmp-kheaders/usr/doc/$(l_package)/Buildinfo
 	(cd include;               tar cf - linux asm-$(KERNEL_ARCH) ) | \
