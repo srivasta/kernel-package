@@ -4,7 +4,7 @@ kernel-package (3.53) unstable; urgency=low
     correct /boot/vmlinuz-2.0.32 in image.postinst. How come this glaring
     an error has gone unreported until now?
 
- -- Manoj Srivasta <srivasta@debian.org>  Fri, 23 Jan 1998 14:36:34 -0600
+ -- Manoj Srivastava <srivasta@debian.org>  Fri, 23 Jan 1998 14:36:34 -0600
 
 kernel-package (3.52) unstable; urgency=low
 
