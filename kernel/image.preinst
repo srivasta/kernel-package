@@ -37,7 +37,7 @@ case "$1" in
     if [ -d /lib/modules/$version ]; then
 	echo >&2 "You are attempting to install a kernel image(version $version)"
 	echo >&2 "However, the directory /lib/modules/$version still exists."
-	echo >&2 "If you have delected some modules, this could be a bad thing."
+	echo >&2 "If you have deselected some modules, this could be bad."
 	echo >&2 ""
 	echo >&2 "This is your last chance to abort the installation of this"
 	echo >&2 "kernel image (nothing has been changed yet). "
