@@ -19,7 +19,7 @@
 #                          sed 's/^Version: *//')
 #
 
-#    $Id: rules,v 1.15 1999/07/14 15:28:07 srivasta Exp $
+#    $Id: rules,v 1.16 1999/07/14 15:29:04 srivasta Exp $
 
 
 # Please change the maintainer information, as well as the debian version
@@ -108,7 +108,7 @@ stamp-binary:
 	$(install_file)    kernel-package.5  	   $(MAN5DIR)/kernel-package.5
 	$(install_file)    make-kpkg.8       	   $(MAN1DIR)/make-kpkg.1
 	$(install_file)    kernel-packageconfig.8  $(MAN8DIR)/
-	gzip -9fqr         debian/tmp/share/usr/man
+	gzip -9fqr         debian/tmp/usr/share/man
 	$(install_file)    kernel-pkg.conf debian/tmp/etc/kernel-pkg.conf
 	$(install_program) kernel-packageconfig \
 		           debian/tmp/usr/sbin/kernel-packageconfig
