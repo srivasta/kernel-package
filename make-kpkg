@@ -5,16 +5,16 @@
 # Created On       : Mon Jun 17 01:10:11 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Tue May 12 13:57:14 1998
+# Last Modified On : Tue Jul 14 15:07:43 1998
 # Last Machine Used: tiamat.datasync.com
-# Update Count     : 103
+# Update Count     : 104
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
 #
 #
 #
-#    $Id: make-kpkg,v 1.16 1998/06/11 20:17:25 srivasta Exp $
+#    $Id: make-kpkg,v 1.17 1998/07/14 21:09:49 srivasta Exp $
 #
 require 5.002;
 use strict;
@@ -29,11 +29,12 @@ make-kpkg - build Debian kernel packages from Linux kernel sources.
 ($main::MYNAME     = $main::0) =~ s|.*/||;
 $main::Author      = "Manoj Srivastava";
 $main::AuthorMail  = "srivasta\@debian.org";
-$main::Version     = '$Revision: 1.16 $ ';
+$main::Version     = '$Revision: 1.17 $ ';
 
 my $help_opt=0; 
 my $revision=0; 
 my $flavour=''; 
+my $subarch='';
 my $signature="" ;
 my $targ_opt=0; 
 my $noexec; 
@@ -45,6 +46,7 @@ my %option_ctl = ("help"       => \$help_opt,
 		  "noexec"     => \$noexec,
 		  "revision=s" => \$revision,
 		  "flavour=s"  => \$flavour,
+		  "subarch=s"  => \$subarch,
 		  "pgpsign=s"  => \$signature,
 		  "targets"    => \$targ_opt,
 		  "zimage"     => \$zimage,
@@ -106,6 +108,19 @@ make this work propperly (see /usr/doc/kernel-package/FLAVOURS.gz).
 It may contain only alphanumerics and the characters - + . (full 
 stop, hyphen, and plus). B<NOTE>: Hyphens are discouraged.  (Look
 at Chapter 5 of the Programmers manual for details). 
+
+
+=back
+
+=item B<--subarch> foo
+
+=over 2
+
+Some architectures (the Alpha, and the m68k) require a different
+kernel for each subarchitecture. This option provides a way of
+specifying it as an argument to make-kpkg. Please note that additional
+support for sub architectures may be required in the kernel sources to
+actually make this do anything.
 
 
 =back
@@ -491,6 +506,9 @@ EOERR1
   }
   if ($flavour){
     $command .= " FLAVOUR=$flavour ";
+  }
+  if ($subarch){
+    $command .= " SUBARCH=$subarch ";
   }
   if ($noexec){
     $command .= " -n ";

@@ -22,7 +22,7 @@
 .\" USA.
 .\"
 .\"
-.\"    $Id: make-kpkg.8,v 1.10 1998/06/11 20:22:03 srivasta Exp $
+.\"    $Id: make-kpkg.8,v 1.11 1998/07/14 21:17:32 srivasta Exp $
 .\"
 .TH MAKE\-KPKG 8 "May 2 1997" "Debian" "Debian GNU/Linux manual"
 .SH NAME
@@ -74,6 +74,14 @@ make this work propperly (see /usr/doc/kernel-package/\s-1FLAVOURS\s0.gz).
 It may contain only alphanumerics and the characters \- + . (full 
 stop, hyphen, and plus). \fB\s-1NOTE\s0\fR: Hyphens are discouraged.  (Look
 at Chapter 5 of the Programmers manual for details). 
+.TP
+.BR \-\-subarch\ foo
+Some architectures (the Alpha, and the m68k) require a different
+kernel for each subarchitecture. This option provides a way of
+specifying it as an argument to \fBmake-kpkg\fR. \fBPlease note\fR
+that additional 
+support for sub architectures may be required in the kernel sources to
+actually make this do anything.
 .TP
 .BR \-\-pgpsign " name"
 Set the string used to sign the 
