@@ -5,16 +5,16 @@
 # Created On       : Mon Jun 17 01:10:11 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Tue Dec  9 23:22:39 1997
+# Last Modified On : Wed Dec 24 13:06:38 1997
 # Last Machine Used: tiamat.datasync.com
-# Update Count     : 90
+# Update Count     : 91
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
 #
 #
 #
-#    $Id: make-kpkg,v 1.7 1997/12/10 05:29:31 srivasta Exp $
+#    $Id: make-kpkg,v 1.8 1997/12/24 19:08:29 srivasta Exp $
 #
 require 5.002;
 use strict;
@@ -29,7 +29,7 @@ make-kpkg - build Debian kernel packages from Linux kernel sources.
 ($main::MYNAME     = $main::0) =~ s|.*/||;
 $main::Author      = "Manoj Srivastava";
 $main::AuthorMail  = "srivasta\@debian.org";
-$main::Version     = '$Revision: 1.7 $ ';
+$main::Version     = '$Revision: 1.8 $ ';
 
 my $help_opt=0; 
 my $revision=0; 
@@ -141,7 +141,7 @@ on sites where the default is zIm age kernels.
 
 =over 2
 
-The command that provides a means of gaining super user ccess (for
+The command that provides a means of gaining super user access (for
 example, `sudo' or `fakeroot') as needed by dpkg-buildpackages's -r
 option. This is only relevant for the buildpackage target.
 
