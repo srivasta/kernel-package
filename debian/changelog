@@ -1,3 +1,14 @@
+kernel-package (7.04) frozen unstable; urgency=low
+
+  * Make sure that version specific kernel-patch subdirectories are
+    supported for the all directory as well (they were supported for arch
+    specific patches already). closes: Bug#61915
+  * Fixed misplaced backslash (it was one char off)  - bad if a patch
+    changes the location the kernel will search for its modules!  This is
+    RC for powerpc kernel images. closes: Bug#62015
+
+ -- Manoj Srivastava <srivasta@debian.org>  Sun,  9 Apr 2000 13:05:07 -0500
+
 kernel-package (7.03) frozen unstable; urgency=low
 
   * Aaargh. A single space got inserted into thepostinst after my

@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Mon Mar 20 11:25:13 2000
+## Last Modified On : Sun Apr  9 13:24:35 2000
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 426
+## Update Count	    : 428
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.92 2000/03/30 16:17:29 srivasta Exp $
+## $Id: rules,v 1.93 2000/04/09 18:25:58 srivasta Exp $
 ###############################################################################
 
 #
@@ -296,7 +296,7 @@ SUBLEVEL:=$(shell egrep '^SUBLEVEL +=' Makefile 2>/dev/null | \
 EXTRA_VERSION:=$(shell egrep '^EXTRAVERSION +=' Makefile 2>/dev/null | \
                  sed -e 's/EXTRAVERSION[\t ]*=[\t ]*\(.*\)/\1/')
 EXTRAVERSION:=$(strip $(EXTRA_VERSION))
-HAVE_NEW_MODLIB:=$(shell egrep '\(INSTALL_MOD_PATH)\' Makefile 2>/dev/null )
+HAVE_NEW_MODLIB:=$(shell egrep '\(INSTALL_MOD_PATH\)' Makefile 2>/dev/null )
 
 # If you want to have more than one kernel configuration per kernel
 # version, set FLAVOUR in the top level kernel Makefile *before*
@@ -373,7 +373,13 @@ PATCH_DIR         = $(shell if [ -d \
 endif
 
 ifeq ($(strip $(ALL_PATCH_DIR)),)
-ALL_PATCH_DIR         = /usr/src/kernel-patches/all
+ALL_PATCH_DIR         = $(shell if [ -d \
+/usr/src/kernel-patches/all/$(VERSION).$(PATCHLEVEL).$(SUBLEVEL) \
+			       ]; then echo \
+/usr/src/kernel-patches/all/$(VERSION).$(PATCHLEVEL).$(SUBLEVEL); \
+				  else echo \
+/usr/src/kernel-patches/all; \
+			    fi)
 endif
 
 ALL_PATCH_APPLY   = $(ALL_PATCH_DIR)/apply
