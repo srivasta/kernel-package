@@ -1,3 +1,11 @@
+kernel-package (7.49) unstable; urgency=low
+
+  * Made the append-to-version warning less ominous, since it is entirly
+    resonable that people can encounter the circumstances that can trigger
+    it while building stand alone modules.                   closes: Bug#104362
+
+ -- Manoj Srivastava <srivasta@debian.org>  Thu, 12 Jul 2001 09:39:49 -0500
+
 kernel-package (7.48) unstable; urgency=low
 
   * Fixed the location of the apus kernel image, hopefully this works

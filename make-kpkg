@@ -14,7 +14,7 @@
 #
 #
 #
-#    $Id: make-kpkg,v 1.58 2001/07/05 04:21:26 srivasta Exp $
+#    $Id: make-kpkg,v 1.59 2001/07/12 14:43:54 srivasta Exp $
 #
 require 5.002;
 use strict;
@@ -29,7 +29,7 @@ make-kpkg - build Debian kernel packages from Linux kernel sources.
 ($main::MYNAME     = $main::0) =~ s|.*/||;
 $main::Author      = "Manoj Srivastava";
 $main::AuthorMail  = "srivasta\@debian.org";
-$main::Version     = '$Revision: 1.58 $ ';
+$main::Version     = '$Revision: 1.59 $ ';
 
 my $added_modules='';
 my $added_patches='';
@@ -840,13 +840,15 @@ EOERR1
       exit 1;
     }
     if (-f "include/linux/version.h" ) {
-      print STDERR "Error: The file include/linux/version.h exists\n";
-      print STDERR "The chances are that it does not contain the appended\n";
-      print STDERR "version $append_to_version\n";
+      print STDERR "Warning: The file include/linux/version.h exists\n";
+      print STDERR "If you did not run make-kpkg clean after configuring\n";
+      print STDERR "the kernel with make (menu|x)?config, the chances\n";
+      print STDERR "are that it does not contain the appended version:\n";
+      print STDERR "\t\t\t\"$append_to_version\"\n";
       print STDERR "If that is the case (or if you are not sure), I \n";
       print STDERR "strongly recommend that you abort now. By default,\n";
-      print STDERR "though, I assume you know what you are doing\n";
-      print STDERR "Should I abort[Ny]?\n";
+      print STDERR "though, I assume you know what you are doing, and I \n";
+      print STDERR "apologize for being so annoying. Should I abort[Ny]?\n";
       my $ans = <STDIN>;
       if ($ans =~ m/^\s*[Yy]g/) {
 	print STDERR " Aborting.\n";
