@@ -1,5 +1,29 @@
 kernel-source-=V (=D) unstable; urgency=low
 
+  * Added SUBARCH, which is used to distinguish Amiga, Atari, Macintosh,
+    etc. kernels for Debian/m68k, and may well be required for the alpha,
+    from what I hear. Unlike the FLAVOURS variable, which affects
+    everything it can lay its grubby hands on (kernel image, headers,
+    source, doc package versiosn, and where the modules are looked for
+    unde /lib/modules), this only affects the naming of the kernel-image
+    as the source and doc packages are architecture independent and the
+    kernel-headers do not vary from one sub-architecture to the
+    next. These changes are coutesy of James Troup <J.J.Troup@scm.brad.ac.uk>
+
+ -- Manoj Srivastava <srivasta@debian.org>  Mon, 16 Feb 1998 16:47:08 -0600
+
+kernel-source-0.31 (1.01) unstable; urgency=low
+
+  * Ensure that the /usr/src/linux and /usr/src/linux-<version> links
+    always exist, no matter what. Apparently, upgrading from
+    kernel-source-2.0.32_2.0.32-1 to kernel-source-2.0.32_2.0.32-3 does
+    not create /usr/src/linux-<version>, which breaks libc6-dev.
+  * Toned down the language about LILO, so as not to startle new sparc users
+
+ -- Manoj Srivastava <srivasta@debian.org>  Thu, 12 Feb 1998 21:56:50 -0600
+
+kernel-source-0.31 (1.01) unstable; urgency=low
+
   * Added ARCH to make called, this allows for cross compiling kernels
     (added on a request by  James Troup <J.J.Troup@scm.brad.ac.uk>)
   * Make kernel-headers arch: any, so we can indeed have different headers
@@ -8,8 +32,6 @@ kernel-source-=V (=D) unstable; urgency=low
     file. AFAIK m68k still uses zImage.
   * Improvements to /usr/doc/kernel-patch/MultiArch.gz, based on
     suggestions by James Troup <J.J.Troup@scm.brad.ac.uk>/
-  * Upgraded to standards version 2.4.0.0
-  * Fixed old FSF address in copyright file.
 
  -- Manoj Srivastava <srivasta@debian.org>  Mon,  9 Feb 1998 17:11:05 -0600
 

@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Mon Feb  9 16:55:23 1998
+## Last Modified On : Mon Feb 16 16:42:18 1998
 ## Last Machine Used: tiamat.datasync.com
-## Update Count	    : 217
+## Update Count	    : 223
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.25 1998/02/09 23:32:37 srivasta Exp $
+## $Id: rules,v 1.26 1998/02/16 23:04:58 srivasta Exp $
 ###############################################################################
 
 # The version of kernel-package this belongs to
@@ -77,7 +77,9 @@ SUBLEVEL:=$(shell grep ^SUBLEVEL Makefile 2>/dev/null | \
 # If you want to have more than one kernel configuration per kernel
 # version, set FLAVOUR in the top level kernel Makefile *before*
 # invoking make-kpkg -- it will be appended to UTS_RELEASE in
-# version.h (separated by a hyphen)
+# version.h (separated by a hyphen). This affects everything -- the
+# names and versions of the image, source, headers, and doc packages,
+# and where the modules are searched for in /lib/modules.
 
 FLAVOUR:=$(shell grep ^FLAVOUR Makefile 2>/dev/null | \
                   perl -ple 's/FLAVOUR[\s:=]+//g')
@@ -90,10 +92,28 @@ endif
 
 version = $(VERSION).$(PATCHLEVEL).$(SUBLEVEL)$(INT_FLAV)
 
+# SUBARCH is used to distinguish Amiga, Atari, Macintosh, etc. kernels
+# for Debian/m68k.  If you need it (exteremely unlikely), set it in
+# the top level kernel Makefile *before* invoking make-kpg.  It only
+# affects the naming of the kernel-image as the source and doc
+# packages are architecture independent and the kernel-headers do not
+# vary from one sub-architecture to the next.
+
+SUBARCH:=$(shell grep ^SUBARCH Makefile 2>/dev/null | \
+                  perl -ple 's/SUBARCH[\s:=]+//g')
+
+ifneq ($(strip $(SUBARCH)),)
+INT_SUBARCH := -$(SUBARCH)
+else
+INT_SUBARCH :=
+endif
+
+
+
 # The name of the package (for example, `emacs').
 package = kernel-source-$(version)
 h_package = kernel-headers-$(version)
-i_package = kernel-image-$(version)
+i_package = kernel-image-$(version)$(INT_SUBARCH)
 d_package = kernel-doc-$(version)
 
 FILES_TO_CLEAN = modules/modversions.h modules/ksyms.ver debian/files
@@ -257,9 +277,10 @@ endif
 	-test ! -f stamp-configure && test ! -f debian/official && \
 	      rm -rf debian && $(make_directory) debian
 	-test ! -f stamp-configure && \
-	   sed -e 's/=V/$(version)/g' -e 's/=D/$(debian)/g' \
-	    -e 's/=A/$(architecture)/g' -e 's/=M/$(maintainer) <$(email)>/g' \
-		$(DEBDIR)/Control > debian/control
+	   sed -e 's/=V/$(version)/g'        -e 's/=D/$(debian)/g' \
+	       -e 's/=A/$(architecture)/g'   -e 's/=SA/$(INT_SUBARCH)/g' \
+               -e 's/=M/$(maintainer) <$(email)>/g' \
+		         $(DEBDIR)/Control > debian/control
 	-test ! -f stamp-configure && test ! -f debian/official && \
 	   sed -e 's/=V/$(version)/g' -e 's/=D/$(debian)/g' \
 	    -e 's/=A/$(architecture)/g' -e 's/=M/$(maintainer) <$(email)>/g' \
@@ -344,7 +365,7 @@ stamp-source: configure
 	(cd debian/tmp-source/usr/src/$(package)/include; rm -f asm; \
 		ln -s asm-$(architecture) asm)
 	$(install_file) .config debian/tmp-source/usr/src/$(package)/.config
-	dpkg-gencontrol -pkernel-source-$(version) -Pdebian/tmp-source/
+	dpkg-gencontrol -p$(package) -Pdebian/tmp-source/
 	chown -R root.root debian/tmp-source
 	chmod -R og=rX debian/tmp-source
 	dpkg --build debian/tmp-source $(DEB_DEST)
@@ -382,7 +403,7 @@ stamp-headers: configure
             (cd debian/tmp-headers/usr/src/$(h_package); umask 000; tar xsf -)
 	(cd debian/tmp-headers/usr/src/$(h_package)/include; rm -f asm; \
 		ln -s asm-$(architecture) asm)
-	dpkg-gencontrol -pkernel-headers-$(version) -Pdebian/tmp-headers/
+	dpkg-gencontrol -p$(h_package) -Pdebian/tmp-headers/
 	chown -R root.root debian/tmp-headers
 	chmod -R og=rX debian/tmp-headers
 	dpkg --build debian/tmp-headers $(DEB_DEST)
@@ -409,7 +430,7 @@ stamp-doc: configure
 	-gzip -9fqr debian/tmp-doc/usr/doc/$(d_package)
 	$(install_file) $(DEBDIR)/copyright.doc \
 		debian/tmp-doc/usr/doc/$(d_package)/copyright
-	dpkg-gencontrol -pkernel-doc-$(version) -Pdebian/tmp-doc/
+	dpkg-gencontrol -p$(d_package) -Pdebian/tmp-doc/
 	chown -R root.root debian/tmp-doc
 	chmod -R og=rX debian/tmp-doc
 	dpkg --build debian/tmp-doc $(DEB_DEST)
@@ -524,8 +545,9 @@ ifdef MODULES_ENABLED
 endif
 	$(install_file) .config \
 	         debian/tmp-image/boot/config-$(version)
-# sparc has no vmlinuz
-ifeq ($(strip $(filter sparc,$(architecture))),)
+# sparc has no vmlinuz; m68k has vmlinuz, just the kernel makefiles
+# don't seem to realise it.
+ifeq ($(strip $(filter m68k sparc,$(architecture))),)
 	cp arch/$(architecture)/boot/$(kimage) \
                    debian/tmp-image/boot/vmlinuz-$(version)
 	chmod 644 debian/tmp-image/boot/vmlinuz-$(version)
@@ -534,9 +556,13 @@ ifeq ($(strip $(architecture)),sparc)
 	elftoaout vmlinux -o debian/tmp-image/boot/vmlinux-$(version)
 	chmod 644 debian/tmp-image/boot/vmlinux-$(version)
 endif
+ifeq ($(strip $(architecture)),m68k)
+	gzip -9vc vmlinux > debian/tmp-image/boot/vmlinuz-$(version)
+	chmod 644 debian/tmp-image/boot/vmlinuz-$(version)
+endif
 	cp System.map debian/tmp-image/boot/System.map-$(version)
 	chmod 644 debian/tmp-image/boot/System.map-$(version)
-	dpkg-gencontrol -pkernel-image-$(version) -Pdebian/tmp-image/
+	dpkg-gencontrol -p$(i_package) -Pdebian/tmp-image/
 	chown -R root.root debian/tmp-image
 	chmod -R og=rX debian/tmp-image
 	dpkg --build debian/tmp-image $(DEB_DEST)

@@ -36,7 +36,7 @@ Description: Linux kernel source.
  interface. Also, on intel platforms, you may wish to get bin86 (if
  you wish to compile the kernel sources, that is.)
 
-Package: kernel-image-=V
+Package: kernel-image-=V=SA
 Architecture: =A
 Section: base
 Priority: optional
