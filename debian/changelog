@@ -1,3 +1,15 @@
+kernel-package (3.46) unstable; urgency=low
+
+  * Because of new option rootcmd (for sudo and fakeroot and such), one
+    can't just use -r as a shortcut for -revision (since it is now
+    ambiguous). Fixed README to reflect this. closes:Bug#15016
+  * Added documentation of rootcmd to the help message (make-kpkg
+    -h). This, along with the above, closes:Bug#15078
+  * Fixed a type in a rules command (negated test). This closes:Bug#15276 
+  * Added documentation about problems with encaps to the problems file. 
+
+ -- Manoj Srivastava <srivasta@debian.org>  Mon,  1 Dec 1997 13:54:20 -0600
+
 kernel-package (3.45) unstable; urgency=low
 
   * Ignore unmounted devices while looking for a root file system. Much
