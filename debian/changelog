@@ -1,3 +1,14 @@
+kernel-package (4.09) frozen unstable; urgency=low
+
+  * Add a missing end of line \ in the kernel rules file
+  * Added make-kpkg support for kernel Flavours. Reported by Rainer
+    Clasen. closes: Bug#21694
+  * Added a config file option do_clean, and an env variable CLEAN_SOURCE
+    to control whether the sorce dir is cleaned after a kernel build. 
+    closes: Bug#22219
+
+ -- Manoj Srivastava <srivasta@debian.org>  Fri,  8 May 1998 04:38:57 -0500
+
 kernel-package (4.08) frozen unstable; urgency=low
 
   * Made the reboot now message mention that one should probably wait
