@@ -3,7 +3,9 @@ kernel-package (7.88) unstable; urgency=low
   * ramdisk = 0 settings in lilo.conf prevent initrds from working
     (duh). Despite feeling of unease abot creeping featuritis, I have
     added this to the preinst check that image packages perform if you
-    are installing an initrd image.                          closes: Bug#134556
+    are installing an initrd image. Adding complexity to the maintainer
+    scripts make it more likely to have bugs, and I don't really think
+    kernel image packages should be lilo lints.              closes: Bug#134556
 
  -- Manoj Srivastava <srivasta@debian.org>  Mon, 18 Feb 2002 15:36:43 -0600
 
