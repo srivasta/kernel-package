@@ -21,7 +21,7 @@ Section: devel
 Priority: optional
 Provides: kernel-source
 Depends: binutils | gas
-Recommends: libc-dev, gcc
+Recommends: libc-dev, gcc, make
 Suggests: ncurses-dev, tk-dev
 Description: Linux kernel source.
  This package provides the source code for the Linux kernel, as well
