@@ -33,7 +33,11 @@
         track of the kernels created. Using make-kpkg creates a .deb
         file, and dpkg can track it for you. This facilitates the task
         of other packages that depend on the kernel packages.
-   vii) It allows to create a package with the headers, or the
+   vii) It keeps track of the configuration file for each kernel image
+        in /boot, which is part of the image package, and hence is
+        the kernel image and the configuration file are always
+        together.
+  viii) It allows to create a package with the headers, or the
         sources, also as a deb file, and enables the package
         management system to keep track of those (and there are
         packages that depend on the package management system being
