@@ -1,3 +1,11 @@
+kernel-package (6.42) unstable; urgency=low
+
+  * Fixed suggests line to accept either libncurses-dev or
+    ncurses-dev. The latter is obsolete, and present for backwards
+    compatibility. closes: Bug#57077
+
+ -- Manoj Srivastava <srivasta@debian.org>  Wed, 15 Mar 2000 09:14:00 -0600
+
 kernel-package (6.41) unstable; urgency=low
 
   * Added the version number of the kernel to both the short and the long
