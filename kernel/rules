@@ -5,9 +5,9 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Tue Mar  1 10:52:17 2005
+## Last Modified On : Thu Mar 17 02:05:24 2005
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count	    : 771
+## Update Count	    : 774
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
@@ -48,8 +48,8 @@ export DEB_BUILD_GNU_SYSTEM:= $(shell $(DPKG_ARCH) $(ha) -qDEB_BUILD_GNU_SYSTEM)
 kpkg_version := =K=V
 
 # The maintainer information.
-maintainer = Herbert Xu
-email= herbert@greathan.apana.org.au
+maintainer = Debian Kernel Team                                                
+email= debian-kernel@lists.debian.org  
 
 pgp=$(maintainer)
 
@@ -69,7 +69,15 @@ endif
 DEBDIR      = $(LIBLOC)
 DEBDIR_NAME = $(shell basename $(DEBDIR))
 
-
+DEBIAN_FILES = kernel_version.mk config kpkg-vercheck Control Control.bin86 rules \
+               README README.grub README.headers README.tecra README.modules      \
+               sample.module.control Flavours Rationale copyright.source          \
+               README.Debian src.postinst README.source include.postinst          \
+               copyright.headers README.headers README.doc copyright.doc          \
+               src.postinst image.postinst image.postrm image.preinst image.prerm \
+               xen.postinst xen.prerm um.postinst um.prerm linux.1 $(loaderdoc)   \
+               README.image copyright.image
+DEBIAN_DIRS  = Config
 
 #  Package specific stuff
 # decide if image is meant to be in /boot rather than /
@@ -121,6 +129,8 @@ else
   KERNEL_CROSS:=$(CROSS_COMPILE)-
 endif
 
+KERNEL_CROSS:=$(shell echo $(KERNEL_CROSS) | sed -e 's,--$,-,')
+
 ifneq ($(strip $(KERNEL_CROSS)),)
   CROSS_ARG:=CROSS_COMPILE=$(KERNEL_CROSS)
 endif
@@ -157,11 +167,11 @@ deb_rule = $(MAKE) -f $(DEBDIR)/rules
 
 # Could have used :=, but some patches do seem to patch the
 # Makefile. perhaps deferring the rule makes that better
-VERSION      :=$(shell $(MAKE) --no-print-directory -sf $(DEBDIR)/kernel_version.mk debian_VERSION)
-PATCHLEVEL   :=$(shell $(MAKE) --no-print-directory -sf $(DEBDIR)/kernel_version.mk debian_PATCHLEVEL)
-SUBLEVEL     :=$(shell $(MAKE) --no-print-directory -sf $(DEBDIR)/kernel_version.mk debian_SUBLEVEL)
-EXTRA_VERSION:=$(shell $(MAKE) --no-print-directory -sf $(DEBDIR)/kernel_version.mk debian_EXTRAVERSION)
-LOCALVERSION :=$(shell $(MAKE) --no-print-directory -sf $(DEBDIR)/kernel_version.mk debian_LOCALVERSION)
+VERSION      :=$(shell $(MAKE) $(CROSS_ARG) --no-print-directory -sf $(DEBDIR)/kernel_version.mk debian_VERSION)
+PATCHLEVEL   :=$(shell $(MAKE) $(CROSS_ARG) --no-print-directory -sf $(DEBDIR)/kernel_version.mk debian_PATCHLEVEL)
+SUBLEVEL     :=$(shell $(MAKE) $(CROSS_ARG) --no-print-directory -sf $(DEBDIR)/kernel_version.mk debian_SUBLEVEL)
+EXTRA_VERSION:=$(shell $(MAKE) $(CROSS_ARG) --no-print-directory -sf $(DEBDIR)/kernel_version.mk debian_EXTRAVERSION)
+LOCALVERSION :=$(shell $(MAKE) $(CROSS_ARG) --no-print-directory -sf $(DEBDIR)/kernel_version.mk debian_LOCALVERSION)
 
 
 
@@ -623,6 +633,9 @@ ifeq ($(strip $(architecture)),mips)
   ifeq (,$(kimage))
     kimage := vmlinux
   endif
+  ifeq (,$(kimagesrc))
+    kimagesrc := $(kimage)
+  endif
 
   NEED_DIRECT_GZIP_IMAGE = NO
   kimagesrc = $(kimage)
@@ -715,6 +728,20 @@ ifeq ($(strip $(architecture)),mipsel)
     KERNEL_ARCH = mips64
   endif
 endif
+
+##### m32r
+ifeq ($(strip $(architecture)),m32r)
+  KERNEL_ARCH := m32r
+  kimage := zImage
+  loaderdep=
+  loader=
+  loaderdoc=
+  target = $(kimage)
+  kimagesrc = $(strip arch/$(KERNEL_ARCH)/boot/$(kimage))
+  kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
+  DEBCONFIG= $(CONFDIR)/config.$(KPKG_SUBARCH)
+endif
+
 
 # usermode linux
 ifeq ($(strip $(architecture)),um)
@@ -1721,6 +1748,9 @@ endif
 		$(DEBDIR)/changelog > debian/changelog
 	-test ! -f debian/rules &&                                       \
 	   install -p -m 755 $(DEBDIR)/rules debian/rules
+	-test ! -f stamp-debian && test ! -f debian/official &&              \
+#	for file in $(DEBIAN_FILES); do cp -f  $(LIBLOC)/$$file ./debian/; done
+#	for dir  in $(DEBIAN_DIRS);  do cp -af $(LIBLOC)/$$dir  ./debian/; done
 	echo done >  $@
 
 conf.vars: Makefile .config
@@ -1813,7 +1843,7 @@ endif
 real_stamp_clean:
 	test ! -f .config || cp -pf .config config.precious
 	-test -f Makefile && \
-            $(MAKE) $(FLAV_ARG) $(EXTRAV_ARG) ARCH=$(KERNEL_ARCH) distclean
+            $(MAKE) $(FLAV_ARG) $(EXTRAV_ARG) $(CROSS_ARG) ARCH=$(KERNEL_ARCH) distclean
 	test ! -f config.precious || mv -f config.precious .config
 ifeq ($(strip $(patch_the_kernel)),YES)
 	$(deb_rule) unpatch_now
@@ -1915,7 +1945,7 @@ else
 endif
 	$(install_file) debian/changelog         $(SOURCE_SRC)/Debian.src.changelog
 	(cd $(SOURCE_SRC); \
-            $(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) distclean)
+            $(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) ARCH=$(KERNEL_ARCH) distclean)
 	(cd $(SOURCE_SRC);         rm -f stamp-building $(STAMPS_TO_CLEAN))
 	(cd $(SOURCE_SRC);         \
          [ ! -d scripts/cramfs ]   || make -C scripts/cramfs distclean ; )
@@ -2351,8 +2381,7 @@ endif
 	dpkg --build $(IMAGE_TOP) $(DEB_DEST)
 	rm -f -r $(IMAGE_TOP)
 ifeq ($(strip $(do_clean)),YES)
-	$(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) \
-                                clean
+	$(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) ARCH=$(KERNEL_ARCH) clean
 	rm -f stamp-build
 endif
 	echo done >  stamp-image
