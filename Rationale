@@ -66,6 +66,16 @@
 	installation on a slower machine. This is really nice since
 	the modules are all included in the .deb; and one does not
 	have to deal with modules manually.
+   xiv) The postinst looks at a configuration file on the installation
+        machine (as opposed to the machine that the image was compiled
+        on), and allows the local admin to decide on issues of
+        symbolic links, and whether the vbood loader stuff must be
+        run, and whether one wants to create a boot floppy or not. 
+    xv) The postinst and the postrm scripts allow the local admin on
+        the installation machine to add a script into run time hooks;
+        this can allow, amongst other things, grub users to add and
+        remove kernel image stanzas from the grub menu (example
+        scripts to do this are in the package).
 
 		   Disadvantages of using make-kpkg
 		   ------------- -- ----- ---------

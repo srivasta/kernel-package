@@ -28,7 +28,10 @@
 	The solution seems to be to add a FLAVOUR field to the end of
  UTS_RELEASE, which uname then reads properly. As of 2.1.47, this
  variable is used purely for output purposes (nothing seems to parse
- it). 
+ it). Oh, please note that the FLAVOUR field needs be all lowercase to
+ meet Debian policy; and the packaging tools may reject the kernel
+ image package unless the resulting package name is all lower case
+ (and the kernel image name is going to be kernel-image-VERSION-FLAVOUR).
 
 	This way, the user has to modify the kernel Makefile (an sample
  patch is provided below) to read, say, "FLAVOUR := speed_hack", and

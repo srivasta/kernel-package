@@ -5,16 +5,16 @@
 # Created On       : Mon Jun 17 01:10:11 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Fri Jan 19 11:44:29 2001
+# Last Modified On : Mon Jan 22 15:01:31 2001
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 149
+# Update Count     : 154
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
 #
 #
 #
-#    $Id: make-kpkg,v 1.48 2001/01/19 17:53:57 srivasta Exp $
+#    $Id: make-kpkg,v 1.49 2001/01/22 21:15:35 srivasta Exp $
 #
 require 5.002;
 use strict;
@@ -29,7 +29,7 @@ make-kpkg - build Debian kernel packages from Linux kernel sources.
 ($main::MYNAME     = $main::0) =~ s|.*/||;
 $main::Author      = "Manoj Srivastava";
 $main::AuthorMail  = "srivasta\@debian.org";
-$main::Version     = '$Revision: 1.48 $ ';
+$main::Version     = '$Revision: 1.49 $ ';
 
 my $help_opt=0; 
 my $revision=0; 
@@ -103,7 +103,7 @@ this option has no effect -- run make-kpkg clean or manually remove
 stamp-configure, and stamp-debian (and debian/official, if that
 exists) for it to have an effect). I suggest you run make-kpkg clean
 unless you know what you are doing. Secondly, it may contain only
-alphanumerics and the characters + . (full stop, and plus)
+B<lowercase> alphanumerics and the characters + . (full stop, and plus)
 and should contain a digit. B<NOTE>: No hyphens allowed. (Look at the
 Debian policy manual for details). Optionally, you may prepend the
 revision with a digit followed by a colon (:)
@@ -123,10 +123,10 @@ newer than the one installed on the system.
 Sets the kernel flavour to the argument B<number>. The flavour is also
 appended to the package name. You need a patched Makefile to make this
 work properly (see /usr/share/doc/kernel-package/Flavours.gz).  It may
-contain only alphanumerics and the characters - + . (full stop,
-hyphen, and plus). Uppercase letter are also not permitted under the
+contain only B<lowercase> alphanumerics and the characters - + . (full stop,
+hyphen, and plus). Uppercase letter are not permitted under the
 Policy for a new package. B<NOTE>: Hyphens are discouraged.  (Look at
-Chapters 4 and  5 of the Programmers manual for details).
+Chapters 4 of the Policy manual for details).
 
 
 =back
@@ -680,14 +680,15 @@ EOERR1
   my $command = "$rules_file ";
   if ($signature){
     $command .= "  PGP_SIGNATURE=$signature ";
-  } 
+  }
+
   if ($revision){
     $command .= " DEBIAN_REVISION=$revision ";
 
     if ($revision !~ m/^(\d+:)?[\w\.\+]+$/o)
       {
 	print STDERR " Error: The revision string may only contain\n";
-	print STDERR " alphanumerics and  the  characters  +  .\n";
+	print STDERR " lowercase alphanumerics and  the  characters  +  .\n";
 	print STDERR " If epochs are used, the colon : is also allowed\n";
 	print STDERR " The current value is: $revision\n";
 	print STDERR " Aborting.\n";
@@ -723,8 +724,13 @@ EOERR1
   }
   if ($flavour){
     if ($flavour =~ m/[A-Z]+/o){
-      print STDERR "Warning: Uppercase letters aredeprecated in";
-      print STDERR "the flavour variable. I have $flavour";
+      print STDERR "Error: Uppercase letters are not allowed in\n";
+      print STDERR "the flavour variable, since the flavour becomes\n";
+      print STDERR "part of the kernel-image name; and package names\n";
+      print STDERR "may only caontain lowercase aplha numerics. \n";
+      print STDERR "I have $flavour, which shall be dissaloowed by the\n";
+      print STDERR "packaging tools. Aborting.\n";
+      exit 1;
     }
     $command .= " FLAVOUR=$flavour ";
   }

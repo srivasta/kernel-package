@@ -1,3 +1,31 @@
+kernel-package (7.28) unstable; urgency=low
+
+  * Modified the make-kpkg man page to reflect the fact that --rootcmd
+    flag needs an argument. The examples and the run time help were
+    correct, which may explain why no one pointed this error out
+    before. closes: Bug#82939, Bug#82943
+  * We now check and dissallow all hyphens in revision string. The
+    software and the documentation was inconsistent as to the format of
+    the revision flag: the man page and the command line help insisted
+    that hyphens were not allowed; the README and the software itself
+    would allow hyphens, but no checks were then in place to ensure the
+    resulting version was legal. This caused problems at the tail end of a
+    fairly expensive kernel compile. I think I am going to standardize on
+    not allowing hyphens, cause then the checks already in place are
+    sufficient, and I think it is reasonable not to have debian revisions
+    for kernel-image-X.X.XX packages (in a way, these packages are really
+    Debian only). So, now you may no longer sneak in a hyphen and thus
+    debian revisions into the ekrnel-image versions (and thus it shall
+    remain unless there is a public outcry). closes: Bug#82034
+  * Added more verbose messages when we f;ag a revison as violating the
+    all lowercase requirements of Debian policy; you see, the FLavour and
+    extrav_version variables become part of the kernel-image package name
+    (the name is kernel-image-VERSION-FLAVOUR, where VERSION also contains
+    the EXTRA_VERSION var). Added checks to make-kpkg as well, and added
+    more docs in the check. closes: Bug#83169
+
+ -- Manoj Srivastava <srivasta@debian.org>  Mon, 22 Jan 2001 15:13:53 -0600
+
 kernel-package (7.27) unstable; urgency=low
 
   * For folks using grub, there are now postinst_hook and postrm_hook

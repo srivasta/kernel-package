@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Fri Jan 19 00:16:35 2001
+## Last Modified On : Mon Jan 22 14:32:29 2001
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 455
+## Update Count	    : 456
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.107 2001/01/19 06:24:22 srivasta Exp $
+## $Id: rules,v 1.108 2001/01/22 21:15:36 srivasta Exp $
 ###############################################################################
 
 ifdef ARCH
@@ -732,7 +732,10 @@ endif
 # Bug out if the version number id not all lowercase
 lc_version = $(shell echo $(version) | tr A-Z a-z)
 ifneq ($(strip $(version)),$(strip $(lc_version)))
-$(error Error. The version number $(strip $(version)) is not all lowercase)
+$(error Error. The version number $(strip $(version)) is not all \
+ lowercase. Since the version ends up in the package name of the \
+ kernel image package, this is a Debian policy violation, and \
+ the packaging system shall refuse to package the image. )
 endif
 
 
