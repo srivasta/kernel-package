@@ -1,8 +1,7 @@
 kernel-package (7.33) unstable; urgency=low
 
   * There was a bug in the sed exporession that chopped off the first line
-    of the extraversion if it started with a t (\t seems to match `t',
-    rather than a tab. Changed from sed to perl. closes: Bug#84698
+    of the extraversion if it started with a t  closes: Bug#84698
   * Added Documentation/Changes to /usr/doc/kernel-image. closes: Bug#84738
 
  -- Manoj Srivastava <srivasta@debian.org>  Sun,  4 Feb 2001 12:22:35 -0600

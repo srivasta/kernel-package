@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Sun Feb  4 12:25:14 2001
+## Last Modified On : Sun Feb  4 13:32:44 2001
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 457
+## Update Count	    : 464
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.112 2001/02/04 18:25:38 srivasta Exp $
+## $Id: rules,v 1.113 2001/02/04 19:33:47 srivasta Exp $
 ###############################################################################
 
 ifdef ARCH
@@ -380,16 +380,16 @@ endif
 # NO_SRC_CHANGES =
 NO_SRC_CHANGES = yes
 
-VERSION:=$(shell egrep '^VERSION +=' Makefile 2>/dev/null | \
-                 perl -pe 's/^\D*(\d*)/$1/')
-PATCHLEVEL:=$(shell egrep '^PATCHLEVEL +=' Makefile 2>/dev/null | \
-                 perl -pe 's/^\D*(\d*)/$1/')
-SUBLEVEL:=$(shell egrep '^SUBLEVEL +=' Makefile 2>/dev/null | \
-                   perl -pe 's/^\D*(\d*)/$1/')
-EXTRA_VERSION:=$(shell egrep '^EXTRAVERSION +=' Makefile 2>/dev/null | \
-                 perl -pe 's/EXTRAVERSION\s*=\s*(\S+)/$1/')
-EXTRAVERSION:=$(strip $(EXTRA_VERSION))
-HAVE_NEW_MODLIB:=$(shell egrep '\(INSTALL_MOD_PATH\)' Makefile 2>/dev/null )
+VERSION =$(shell egrep '^VERSION +=' Makefile 2>/dev/null | \
+ sed -e 's/[^0-9]*\([0-9]*\)/\1/')
+PATCHLEVEL =$(shell egrep '^PATCHLEVEL +=' Makefile 2>/dev/null | \
+ sed -e 's/[^0-9]*\([0-9]*\)/\1/')
+SUBLEVEL =$(shell egrep '^SUBLEVEL +=' Makefile 2>/dev/null | \
+ sed -e 's/[^0-9]*\([0-9]*\)/\1/')
+EXTRA_VERSION =$(shell egrep '^EXTRAVERSION +=' Makefile 2>/dev/null | \
+ sed -e 's/EXTRAVERSION *= *\([^ \t]*\)/\1/')
+EXTRAVERSION =$(strip $(EXTRA_VERSION))
+HAVE_NEW_MODLIB =$(shell egrep '\(INSTALL_MOD_PATH\)' Makefile 2>/dev/null )
 
 # NOTE: FLAVOUR is now obsolete
 # If you want to have more than one kernel configuration per kernel
