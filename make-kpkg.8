@@ -22,7 +22,7 @@
 .\" USA.
 .\"
 .\"
-.\"    $Id: make-kpkg.8,v 1.70 2003/02/06 19:32:20 srivasta Exp $
+.\"    $Id: make-kpkg.8,v 1.71 2003/02/10 06:10:52 srivasta Exp $
 .\"
 .TH MAKE\-KPKG 1 "Nov 14 2002" "Debian" "Debian GNU/Linux manual"
 .SH NAME
@@ -198,14 +198,20 @@ patches to the kernel sources. This automatically sets the
 .I patch_the_kernel
 configuration option to YES. 
 .IP
-Unlike the treatment of the modules, you may only give the patch name
-(not the full path name of the patch file).  It shall be applied
-during the configure phase (and removed in the clean phase) if it can
-be found in the directories
-.B ALL_PATCH_DIR/{apply,unpatch}/, 
-which defaults to a subdirectory of
-.I /usr/src/kernel-patches/.  
-The default is that all patches are applied
+Unlike the treatment of the modules, you may only give the patch file
+basename (not the full path name of the patch file).  For each file
+<patch_name> in the list, the following process is followed: If
+the file can be found in the directories
+.B ALL_PATCH_DIR/{apply,unpatch}/,
+then the file
+.B ALL_PATCH_DIR/apply/<patch_name>
+shall be executed in turn during the configure phase (and presumably
+this applies the patch. Correspondingly, the file
+.B ALL_PATCH_DIR/unpatch/<patch_name> 
+shall be executed in the clean phase.  
+The default is that all patches are applied by running all the
+executable files in 
+.B ALL_PATCH_DIR/apply/
 if requested (Either by setting the configuration option
 .B patch_the_kernel
 or the environment variable 
@@ -214,6 +220,11 @@ to YES).  Please note that the patches are UN-installed from the source
 when you run the clean target.  This cleanup can be prevented by
 setting the environment variable 
 .B NO_UNPATCH_BY_DEFAULT
+.IP
+In the above, 
+.B ALL_PATCH_DIR
+defaults to a subdirectory of
+.I /usr/src/kernel-patches/.
 .IP
 Some times it would be convenient to have the patches applied when
 one asks for specific patches using this option, without also having
