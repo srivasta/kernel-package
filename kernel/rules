@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.89 2000/02/29 06:27:15 srivasta Exp $
+## $Id: rules,v 1.90 2000/03/03 16:03:56 srivasta Exp $
 ###############################################################################
 
 #
@@ -868,9 +868,7 @@ ifdef MODULES_ENABLED
 ifeq  ($(strip $(HAVE_NEW_MODLIB)),)
 	$(mod_inst_cmds)
 else
-	# Dang. This kills flavours.
-	#$(MAKE) INSTALL_MOD_PATH=$(INSTALL_MOD_PATH) modules_install
-	$(mod_inst_cmds)
+	$(MAKE) INSTALL_MOD_PATH=$(INSTALL_MOD_PATH) modules_install
 endif
 endif
 ifeq ($(strip $(NEED_DIRECT_GZIP_IMAGE)),YES)
@@ -1021,6 +1019,13 @@ define mod_inst_cmds
 	if [ -f FC4_MODULES      ]; then inst_mod FC4_MODULES      fc4;   fi; \
 	if [ -f IRDA_MODULES     ]; then inst_mod IRDA_MODULES     net;   fi; \
         if [ -f USB_MODULES      ]; then inst_mod USB_MODULES      usb;   fi; \
+        if [ -f SK98LIN_MODULES  ]; then inst_mod SK98LIN_MODULES  net;   fi; \
+        if [ -f SKFP_MODULES     ]; then inst_mod SKFP_MODULES     net;   fi; \
+        if [ -f IEEE1394_MODULES ]; then inst_mod IEEE1394_MODULES ieee1394; fi;\
+        if [ -f PCMCIA_MODULES   ]; then inst_mod PCMCIA_MODULES pcmcia;   fi; \
+        if [ -f PCMCIA_NET_MODULES ]; then inst_mod PCMCIA_NET_MODULES pcmcia; fi; \
+        if [ -f PCMCIA_CHAR_MODULES ]; then inst_mod PCMCIA_CHAR_MODULES pcmcia; fi; \
+        if [ -f PCMCIA_SCSI_MODULES ]; then inst_mod PCMCIA_SCSI_MODULES pcmcia; fi; \
         \
         for f in *.o; do [ -r $$f ] && echo $$f; done > .allmods; \
         echo $$MODULES | tr ' ' '\n' | sort | comm -23 .allmods - > .misc; \

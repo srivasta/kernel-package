@@ -12,7 +12,7 @@
 # HISTORY          : 
 # Description      : 
 # 
-#    $Id: image.postinst,v 1.37 2000/02/29 06:50:57 srivasta Exp $
+#    $Id: image.postinst,v 1.38 2000/03/03 16:03:56 srivasta Exp $
 #
 
 # 
@@ -401,8 +401,8 @@ if ( ! -x "/sbin/$loader" ) {
   printf " (QUIK: PowerMac Boot Loader)"  if $loader =~ /quik/i;
   printf ", which is the boot loader I    \n";
   print "have additional help for, is not installed (it is, after all,\n";
-  print "just one of many options. I am assuming you have made some   \n"; 
-  print "other arrangement for your system to boot the new kernel     \n";
+  print "just one of many options). I am assuming you have made some  \n"; 
+  print "other arrangements for your system to boot the new kernel    \n";
   print "Please hit return to continue.                               \n";
   my $answer = <STDIN>;
   exit (0) unless defined $rootdevice;
