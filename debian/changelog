@@ -1,3 +1,10 @@
+kernel-package (7.69) unstable; urgency=medium
+
+  * Only complain about version mismatches on selected targets (read: not
+    on clean)                                                closes: Bug#114330
+
+ -- Manoj Srivastava <srivasta@debian.org>  Wed,  3 Oct 2001 11:50:30 -0500
+
 kernel-package (7.68) unstable; urgency=medium
 
   * Hmm, perhaps clean should not check for rootness. (If sudo was used,

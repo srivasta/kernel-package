@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Fri Sep 28 23:07:25 2001
+## Last Modified On : Wed Oct  3 11:44:32 2001
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 491
+## Update Count	    : 495
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.141 2001/10/02 16:15:12 srivasta Exp $
+## $Id: rules,v 1.142 2001/10/03 16:51:17 srivasta Exp $
 ###############################################################################
 
 ifdef ARCH
@@ -678,7 +678,7 @@ saved_version := $(shell if test -f debian/changelog; then \
                   fi; )
 ifneq ($(strip $(saved_version)),)
 ifneq ($(strip $(saved_version)),$(strip $(version)))
-$(error "The changelog says we are creating $(saved_version), but I thought the version is $(version)")
+HAVE_VERSION_MISMATCH=YES
 endif
 endif
 endif
@@ -1291,6 +1291,9 @@ stamp-headers: configure
                 || true
 
 real_stamp_headers:
+ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
+$(error "The changelog says we are creating $(saved_version), but I thought the version is $(version)")
+endif
 	test -f stamp-configure || $(deb_rule) configure
 	rm -rf $(HEADER_TOP)
 	$(make_directory) $(HEADER_TOP)/DEBIAN
@@ -1343,6 +1346,9 @@ stamp-doc: debian
                 || true
 
 real_stamp_doc:
+ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
+$(error "The changelog says we are creating $(saved_version), but I thought the version is $(version)")
+endif
 	test -f stamp-debian || $(deb_rule) debian
 	rm -rf            $(DOC_TOP)
 	$(make_directory) $(DOC_TOP)/DEBIAN
@@ -1389,6 +1395,9 @@ kernel-image-deb:
                 || true
 
 real_stamp_image:
+ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
+$(error "The changelog says we are creating $(saved_version), but I thought the version is $(version)")
+endif
 	rm -f -r ./$(IMAGE_TOP) ./$(IMAGE_TOP).deb
 	test -f stamp-configure     || $(deb_rule) configure
 	test -f stamp-build         || $(deb_rule) build
@@ -1494,6 +1503,9 @@ modules-image modules_image: configure
 ifndef MODULES_ENABLED
 	@echo Modules not configured, so not making modules_image
 else
+ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
+$(error "The changelog says we are creating $(saved_version), but I thought the version is $(version)")
+endif
 	-for module in $(valid_modules) ; do                        \
           if test -d  $$module; then                                \
 	    (cd $$module;                                           \
@@ -1516,6 +1528,9 @@ modules: configure
 ifndef MODULES_ENABLED
 	@echo Modules not configured, so not making modules
 else
+ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
+$(error "The changelog says we are creating $(saved_version), but I thought the version is $(version)")
+endif
 	-for module in $(valid_modules) ; do                        \
           if test -d  $$module; then                                \
 	    (cd $$module;                                           \
@@ -1538,6 +1553,9 @@ modules-config modules_config: configure
 ifndef MODULES_ENABLED
 	@echo Modules not configured, so not making modules_config
 else
+ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
+$(error "The changelog says we are creating $(saved_version), but I thought the version is $(version)")
+endif
 	-for module in $(valid_modules) ; do                        \
           if test -d  $$module; then                                \
 	    (cd $$module;                                           \
