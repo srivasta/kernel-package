@@ -5,14 +5,14 @@
 # Created On       : Sat Apr 27 05:55:26 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Fri Apr 12 21:09:52 2002
+# Last Modified On : Tue Apr 23 01:59:25 2002
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 234
+# Update Count     : 235
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
 #
-#    $Id: image.postinst,v 1.104 2002/04/21 22:37:50 srivasta Exp $
+#    $Id: image.postinst,v 1.105 2002/04/23 07:00:55 srivasta Exp $
 #
 
 #
@@ -982,6 +982,14 @@ while ( $line=<FSTAB> ) {
 
 #  ($device,$filesystem)=split(/[ \t]+/, $line);
   ($device,$filesystem,$ftype,$foption)=split(/[ \t]+/, $line);
+
+  if ($device =~ m/^(LABEL|UUID)=/) {
+    # Hmm. using labels in fstab.
+    $device = `mount -nfv $device 2>/dev/null`;
+    $device =~ s/ on\s+.*$//g;
+    next if $device =~ m|^\s*$|;
+  }
+
   next unless $device =~ m|^/dev/|; #ignore NFS and proc systems
   next if $device =~ m|^/dev/fd|;   #ignore floppy drives
   next if $device =~ m|^/dev/pty|;  #ignore Pseudo-TTY masters
@@ -997,13 +1005,6 @@ while ( $line=<FSTAB> ) {
   # should be looking for /dev/hd* (hard disk),  /dev/sd*. What about
   # metadisk devices? ram drives? I think I'll just leave this mess
   # well enough alone.
-
-  if ($device =~ m/^(LABEL|UUID)=/) {
-    # Hmm. using labels in fstab.
-    $device = `mount -nfv $device 2>/dev/null`;
-    $device =~ s/ on\s+.*$//g;
-    next if $device =~ m|^\s*$|;
-  }
 
   if ( $filesystem =~ m!^/$! ) {
     $rootdevice = $device;
