@@ -1,3 +1,9 @@
+kernel-package (8.027) unstable; urgency=low
+
+  * Fix sparc rules once again, to account for newer kernel versions
+
+ -- Manoj Srivastava <srivasta@debian.org>  Mon, 14 Apr 2003 04:07:44 -0500
+
 kernel-package (8.026) unstable; urgency=low
 
   * ignore bind mounts in fstab.                             closes: Bug#186401

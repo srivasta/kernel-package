@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.196 2003/04/13 20:14:55 srivasta Exp $
+## $Id: rules,v 1.197 2003/04/14 09:09:05 srivasta Exp $
 ###############################################################################
 
 ifdef KPKG_ARCH
@@ -359,7 +359,10 @@ endif
 endif
 
 ifneq ($(shell if [ $(VERSION) -ge 2 -a $(PATCHLEVEL) -ge 5 -a  \
-                    $(SUBLEVEL) -ge 41]; then echo new; fi),)
+                    $(SUBLEVEL) -ge 41]; then echo new; \
+             elif [ $(VERSION) -ge 2 -a $(PATCHLEVEL) -ge 6 ]; then \
+                                         echo new; \
+             elif [ $(VERSION) -ge 3 ]; then echo new; fi),)
        target    = image
        kimagesrc = arch/$(KERNEL_ARCH)/boot/image
 else
