@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.102 2000/09/27 18:34:15 srivasta Exp $
+## $Id: rules,v 1.103 2000/10/01 03:51:23 srivasta Exp $
 ###############################################################################
 
 ifdef ARCH
@@ -618,26 +618,26 @@ ifeq ($(strip $(patch_the_kernel)),YES)
 
 # Well then. Let us see if we want to select the patches we apply.
 ifneq ($(strip $(SELECTED_PATCHES)),)
-canonical_patches=$(subst $(comma),$(space),$(SELECTED_MODULES))
+canonical_patches=$(subst $(comma),$(space),$(SELECTED_PATCHES))
 
 ifneq ($(strip $(canonical_patches)),)
 # test to see if the patches exist
 valid_patches = $(shell for name in $(canonical_patches); do                 \
-                            if [ -x $(DIR_PATCH_APPLY)/$$(name) -a           \
-                                 -x $(DIR_PATCH_UNPATCH)/$$(name) ]; then    \
+                            if [ -x $(DIR_PATCH_APPLY)/$$name -a           \
+                                 -x $(DIR_PATCH_UNPATCH)/$$name ]; then    \
                                echo $(DIR_PATCH_APPLY)/$$name;               \
-                            elsif [ -x $(ALL_PATCH_APPLY)/$$(name) -a        \
-                                    -x $(ALL_PATCH_UNPATCH)/$$(name) ]; then \
-                               echo $(DIR_PATCH_APPLY)/$$name;               \
+                            elif [ -x $(ALL_PATCH_APPLY)/$$name -a        \
+                                    -x $(ALL_PATCH_UNPATCH)/$$name ]; then \
+                               echo $(ALL_PATCH_APPLY)/$$name;               \
                             fi;                                              \
                         done)
 valid_unpatches = $(shell for name in $(canonical_patches); do               \
-                            if [ -x $(DIR_PATCH_APPLY)/$$(name) -a           \
-                                 -x $(DIR_PATCH_UNPATCH)/$$(name) ]; then    \
+                            if [ -x $(DIR_PATCH_APPLY)/$$name -a           \
+                                 -x $(DIR_PATCH_UNPATCH)/$$name ]; then    \
                                echo $(DIR_PATCH_UNPATCH)/$$name;             \
-                            elsif [ -x $(ALL_PATCH_APPLY)/$$(name) -a        \
-                                    -x $(ALL_PATCH_UNPATCH)/$$(name) ]; then \
-                               echo $(DIR_PATCH_UNPATCH)/$$name;             \
+                            elif [ -x $(ALL_PATCH_APPLY)/$$name -a        \
+                                    -x $(ALL_PATCH_UNPATCH)/$$name ]; then \
+                               echo $(ALL_PATCH_UNPATCH)/$$name;             \
                             fi;                                              \
                         done)
 
