@@ -1,3 +1,11 @@
+kernel-package (5.12) unstable; urgency=low
+
+  * Add things to the changelog file for the sub packages. Also, fix a
+    trailing space problem from the rules file that affected the ppc
+    folks. closes: Bug#28535
+
+ -- Manoj Srivastava <srivasta@debian.org>  Wed, 28 Oct 1998 13:56:59 -0600
+
 kernel-package (5.11) frozen unstable; urgency=low
 
   * Fix the handling of config files.
