@@ -21,7 +21,7 @@
 .\" Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139,
 .\" USA.
 .\"
-.\" $Id: kernel-pkg.conf.5,v 1.31 2002/09/06 05:13:01 srivasta Exp $
+.\" $Id: kernel-pkg.conf.5,v 1.32 2002/09/13 05:01:05 srivasta Exp $
 .\"
 .TH KERNEL\-PKG.CONF 5 "Jan  7 1997" "Debian" "Debian GNU/Linux manual" 
 .\" NAME should be all caps, SECTION should be 1-8, maybe w/ subsection
@@ -247,13 +247,15 @@ overrides this.
 .TP 
 .B source_clean_hook
 Set to point to an executable, this shall cause that executable to run
-from the top level of the kernel source tree before the sources are
-packaged,
+from the top level of the (temporary) kernel source tree before the
+sources are packaged,
 .I ./debian/tmp-source/usr/src/kernel-source-X.X.XX. 
-This has no effect on anything other than the kernel sources
-that are being packaged. This is to facilitate massaging of the kernel
-sources that are packaged (for example, to remove version control
-directories, or to prune away unwanted architectures).
+This has no effect on anything other than the kernel sources that are
+being packaged -- if the script operates on the current directory and
+its children, the original source tree should remain intact. This is
+to facilitate massaging of the kernel sources that are packaged (for
+example, to remove version control directories, or to prune away
+unwanted architectures).
 .TP
 .B extra_docs
 This variable should be set to the path of any extra documentation

@@ -22,7 +22,7 @@
 .\" USA.
 .\"
 .\"
-.\"    $Id: make-kpkg.8,v 1.63 2002/09/06 05:13:01 srivasta Exp $
+.\"    $Id: make-kpkg.8,v 1.64 2002/09/13 05:01:05 srivasta Exp $
 .\"
 .TH MAKE\-KPKG 1 "May 2 1997" "Debian" "Debian GNU/Linux manual"
 .SH NAME
@@ -385,11 +385,15 @@ This target produces a debianised package of the Linux kernel sources.
 if the environment variable 
 .B SOURCE_CLEAN_HOOK
 points to an executable, then that executable shall be run from the
-top directory of the kernel sources just before packaging it,
+temporary (top) directory of the kernel sources just before packaging it,
 .I ./debian/tmp-source/usr/src/kernel-source-X.X.XX,
 so people may take any action they see fit (remove arch trees, prune
-version control directories, etc). This has no effect on anything
-other than the kernel sources that are being packaged.
+version control directories, 
+.I find . \-type d \-name CVS \-prune \-exec rm \-rf {} \\;
+etc). This has no effect on anything
+other than the kernel sources that are being packaged -- if the script
+operates on the current directory and its children, the original
+source tree should remain intact.
 .TP
 .B kernel_headers
 This target produces a Debian package containing the header files

@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Thu Aug  8 22:37:27 2002
+## Last Modified On : Thu Sep 12 12:25:04 2002
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 540
+## Update Count	    : 541
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.182 2002/09/01 01:15:04 srivasta Exp $
+## $Id: rules,v 1.183 2002/09/13 05:01:05 srivasta Exp $
 ###############################################################################
 
 ifdef KPKG_ARCH
@@ -695,6 +695,8 @@ saved_version := $(shell if test -f debian/changelog; then \
 ifneq ($(strip $(saved_version)),)
 ifneq ($(strip $(saved_version)),$(strip $(version)))
 HAVE_VERSION_MISMATCH=YES
+$(error The changelog says we are creating $(saved_version), but I thought the version is $(version))
+
 endif
 endif
 endif
@@ -1117,6 +1119,7 @@ else
             run-parts --verbose $(VERSIONED_DIR_PATCH_APPLY); \
 	    (cd $(VERSIONED_DIR_PATCH_APPLY); ls -1) >>       \
                                            applied_patches;   \
+        touch stamp-patch;                                    \
         else                                                  \
 	    true;                                             \
 	fi
@@ -1125,6 +1128,7 @@ else
             run-parts --verbose $(VERSIONED_ALL_PATCH_APPLY); \
 	    (cd $(VERSIONED_ALL_PATCH_APPLY); ls -1) >>       \
                                            applied_patches;   \
+        touch stamp-patch;                                    \
         else                                                  \
 	    true;                                             \
 	fi
@@ -1139,6 +1143,7 @@ else
              -d $(ALL_PATCH_APPLY)  ]; then                   \
             run-parts --verbose $(ALL_PATCH_APPLY);           \
 	    (cd $(ALL_PATCH_APPLY); ls -1) >> applied_patches;\
+        touch stamp-patch;                                    \
         else                                                  \
 	    true;                                             \
 	fi
@@ -1262,6 +1267,7 @@ ifneq ($(strip $(valid_unpatches)),)
               fi;                                          \
 	  fi;                                              \
         done
+	rm -f stamp-patch
 else
 	if [ -n "$(VERSIONED_PATCH_DIR)" -a                     \
              -d $(VERSIONED_DIR_PATCH_UNPATCH) ]; then          \

@@ -1,3 +1,14 @@
+kernel-package (8.010) unstable; urgency=low
+
+  * Warn early on version mismatch.                          closes: Bug#160460
+  * ensure that stamp-patch is added and removed at appropriate places. 
+                                                             closes: Bug#160219
+  * Changed the initrd relationship to be a dependency for an kernel image
+    that uses initrd, as opposed to a suggestion, since the tools are
+    really required.                                         closes: Bug#160276
+
+ -- Manoj Srivastava <srivasta@debian.org>  Fri, 13 Sep 2002 00:00:41 -0500
+
 kernel-package (8.009) unstable; urgency=low
 
   * Improved documentation for SOURCE_CLEAN_HOOK.            closes: Bug#159799
