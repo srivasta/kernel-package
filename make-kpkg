@@ -5,13 +5,16 @@
 # Created On       : Mon Jun 17 01:10:11 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Fri May  2 14:58:17 1997
+# Last Modified On : Mon Jun  2 15:22:09 1997
 # Last Machine Used: tiamat.datasync.com
-# Update Count     : 75
+# Update Count     : 76
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
 #
+#
+#
+#    $Id: make-kpkg,v 1.2 1997/06/03 03:41:33 srivasta Exp $
 #
 require 5.002;
 use strict;
@@ -26,7 +29,7 @@ make-kpkg - build Debian kernel packages from Linux kernel sources.
 ($main::MYNAME     = $main::0) =~ s|.*/||;
 $main::Author      = "Manoj Srivastava";
 $main::AuthorMail  = "srivasta\@debian.org";
-$main::Version     = "3.02";
+$main::Version     = '$Revision: 1.2 $';
 
 my $help_opt=0;
 my $revision=0;
