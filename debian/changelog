@@ -12,7 +12,7 @@ kernel-package (3.55) unstable; urgency=low
   * Fixed old FSF address in copyright file.
   * This fixes all known lintian warnings.
 
- -- Manoj Srivastava <srivasta@debian.org>  Mon,  9 Feb 1998 17:11:05 -0600
+ -- Manoj Srivastava <srivasta@debian.org>  Mon,  9 Feb 1998 17:34:02 -0600
 
 kernel-package (3.54) unstable; urgency=low
 
