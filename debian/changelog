@@ -1,3 +1,11 @@
+kernel-package (4.10) unstable; urgency=low
+
+  * Only put libc-kheaders in the control file is asked. I think this is
+    better in the long run than the solution suggested in Bug#22295. 
+    closes: Bug#22295
+
+ -- Manoj Srivastava <srivasta@debian.org>  Mon, 11 May 1998 01:56:11 -0500
+
 kernel-package (4.09) frozen unstable; urgency=low
 
   * Add a missing end of line \ in the kernel rules file
