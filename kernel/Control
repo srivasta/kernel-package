@@ -2,10 +2,10 @@ Source: kernel-source-=V
 Section: devel
 Priority: optional
 Maintainer:  =M
-Standards-Version: 2.1.3.0
+Standards-Version: 2.4.0.0
 
 Package: kernel-headers-=V
-Architecture: all
+Architecture: any
 Section: devel
 Priority: optional
 Provides: kernel-headers
