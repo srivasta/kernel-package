@@ -1,3 +1,9 @@
+kernel-package (5.11) frozen unstable; urgency=low
+
+  * Fix the handling of config files.
+
+ -- Manoj Srivastava <srivasta@debian.org>  Fri, 16 Oct 1998 13:54:35 -0500
+
 kernel-package (5.10) frozen unstable; urgency=medium
 
   * Add the variable KDREV to pass the debian revision to the modules
