@@ -12,7 +12,7 @@
 # HISTORY          : 
 # Description      : 
 # 
-#    $Id: image.postinst,v 1.44 2000/03/21 16:38:04 srivasta Exp $
+#    $Id: image.postinst,v 1.45 2000/04/03 16:17:20 srivasta Exp $
 #
 
 # 
@@ -112,7 +112,7 @@ else {				# Let this be the default as well
 
 my $loader_exec;
 ($loader_exec = $loader)  =~ s|.*/||;
-my ($loaderloc) = grep -x, map "$_/$loader_exec ", 
+my ($loaderloc) = grep -x, map "$_/$loader_exec", 
   map { length($_) ? $_ : "." }  split /:/, $ENV{PATH};
 
 
