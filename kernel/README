@@ -1,5 +1,5 @@
 
-   $Id: README,v 1.61 2003/05/05 18:04:31 srivasta Exp $
+   $Id: README,v 1.62 2003/06/05 20:45:14 srivasta Exp $
 
 This is the Debian GNU/Linux prepackaged version of the Linux kernel.
 Linux was written by Linus Torvalds <Linus.Torvalds@cs.Helsinki.FI> and
@@ -54,8 +54,10 @@ the flag '-fno-strict-aliasing'. This issue has been taken care of for
 recent kernels (2.2 and 2.4 series are fine) (I think you may have to
 edit the makefile for older kernels, or something).  You may control
 which version of gcc used in kernel compilation by setting the
-environment variables CC and HOSTCC (please see the top level kernel
-Makefile).
+Makefile variables CC and HOSTCC in the top level kernel Makefile. You
+can do this simply by 
+  % MAKEFLAGS="CC=gcc-3.2" make-kpkg ...
+(please see the top level kernel Makefile).
 
 Of course, pretty GUI front ends to kernel configuration require more
 packages, but they are not strictly essential (though quite nice really). 

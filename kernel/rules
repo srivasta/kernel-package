@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.204 2003/05/13 00:26:24 srivasta Exp $
+## $Id: rules,v 1.205 2003/06/05 20:45:14 srivasta Exp $
 ###############################################################################
 
 ifdef KPKG_ARCH
@@ -574,7 +574,7 @@ FILES_TO_CLEAN  = modules/modversions.h modules/ksyms.ver debian/files \
 STAMPS_TO_CLEAN = stamp-build stamp-configure stamp-source stamp-image \
                   stamp-headers stamp-src stamp-diff stamp-doc \
                   stamp-buildpackage stamp-libc-kheaders stamp-debian \
-                  stamp-patch
+                  stamp-patch stamp-kernel-configure
 DIRS_TO_CLEAN   = $(SOURCE_TOP) $(HEADER_TOP) $(IMAGE_TOP) $(DOC_TOP)
 
 CONFLOC    :=$(shell if test -f ~/.kernel-pkg.conf; then\

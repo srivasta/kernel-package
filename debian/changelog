@@ -1,3 +1,12 @@
+kernel-package (8.039) unstable; urgency=low
+
+  * Added documentation (including MAKEFLAGS stuff)
+  * Added spanish manual pages. Many thanks to Ruben Porras for providing
+    the translation.                                      closes: Bug#195434
+  * add stamp-kernel-configure to the list of stamps to clean up
+
+ -- Manoj Srivastava <srivasta@debian.org>  Thu,  5 Jun 2003 15:44:56 -0500
+
 kernel-package (8.038) unstable; urgency=low
 
   * rotate the initrd link even if the current image is not an initrd
