@@ -1,3 +1,22 @@
+kernel-package (5.02) unstable; urgency=low
+
+  * Changed the pre rm warning message while removing a image mentioned in
+    the boot loader config file to be more explicit. closes: BUG#23423
+  * Make sure that we do not try to install the loader docs or the
+    System.map if they do not exist. closes: BUG#23800
+  * use dpkg --print-installation-architecture in the post inst. 
+    closes: BUG#24207
+  * Added an preinst script for kernel images so that we do not overwrite
+    the modules file gratuitously.
+  * Added more documentation about kernel-package, as there were
+    complaints that it was not advertized at all. 
+  * Modified the README.headers file to reflect reality. 
+  * Added a subarch option to make-kpkg for the alpha people. 
+    closes: BUG#24147
+  * This version should compile on the alpha as well. closes: 23143
+
+ -- Manoj Srivastava <srivasta@debian.org>  Tue, 14 Jul 1998 16:08:00 -0500
+
 kernel-package (5.01) unstable; urgency=low
 
   * Added rudimentary support for the alpha. Please note that locations of
