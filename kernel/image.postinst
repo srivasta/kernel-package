@@ -5,14 +5,14 @@
 # Created On       : Sat Apr 27 05:55:26 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Thu Mar  5 15:07:39 1998
+# Last Modified On : Thu Mar  5 18:26:11 1998
 # Last Machine Used: tiamat.datasync.com
-# Update Count     : 91
+# Update Count     : 94
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
 # 
-#    $Id: image.postinst,v 1.14 1998/03/05 22:56:50 srivasta Exp $
+#    $Id: image.postinst,v 1.15 1998/03/06 00:28:41 srivasta Exp $
 #
 
 # 
@@ -315,7 +315,8 @@ if ( ! -x "/sbin/$loader" ) {
    "other=1\n",
    "\tbootblock=" . $rootpartition .  "/boot/old.b\n",
    "\tlabel=oldsys\n"
-)
+		);
+
 
 print STDERR <<"EOMSG";
 A new kernel image has been installed. 
@@ -341,9 +342,9 @@ if (&ask("Would you like to create a boot floppy now")) {
 
 if (-T "/etc/$loader.conf") {
   # Trust and use the existing lilo.conf.
-  print "You already have a $Loader configuration in the file /etc/$loader.conf\n";
+  print "You already have a $Loader configuration in /etc/$loader.conf\n";
   if ( &ask_y("Install a boot block using the existing /etc/$loader.conf") ) { 
-    my $ret; = &run_lilo();
+    my $ret = &run_lilo();
     exit $ret;
   }
   else {
@@ -355,6 +356,7 @@ if (-T "/etc/$loader.conf") {
     }
   }
 }
+
 if (! &ask_y("Do you wish to set up Linux to boot from the hard disk")) {
   exit (0);
 }
