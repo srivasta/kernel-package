@@ -1,3 +1,11 @@
+kernel-package (6.19) unstable; urgency=low
+
+  * In the postrm, change return 0 to exit 0. closes: Bug#38770
+  * Humpf. ANother version checker bug (I knew there was a reason I had
+    not implemented this before). closes: Bug#38771
+
+ -- Manoj Srivastava <srivasta@debian.org>  Wed,  2 Jun 1999 17:21:04 -0500
+
 kernel-package (6.18) unstable; urgency=low
 
   * Fixed the revioson checking reg exp to alos allow epochs. The check
