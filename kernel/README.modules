@@ -74,7 +74,7 @@ USER INSTRUCTIONS
           you have to copy the config file from the kernel-image to the
 	 kernel-source first. If you have the kernel-image installed, 
               cp /boot/config-X.X.XX /usr/src/kernel-source-X.X.XX/.config
-              make-kpkg --add-to-version <blah> configure
+              make-kpkg --add-to-version -<blah> configure
           Where blah is derived from the name of the kernel image
           kernel-image-X.X.XX-blah
 
