@@ -1715,7 +1715,7 @@ endif
 	(cd $(SOURCE_SRC);         rm -f stamp-building $(STAMPS_TO_CLEAN))
 	(cd $(SOURCE_SRC);         \
          [ ! -d scripts/cramfs ]   || make -C scripts/cramfs distclean ; )
-	if test -f debian/official  -f debian/README.Debian ; then \
+	if test -f debian/official && test -f debian/README.Debian ; then \
            $(install_file) debian/README.Debian $(SOURCE_SRC)/README.Debian ; \
            $(install_file) debian/README.Debian $(SOURCE_DOC)/README.Debian ; \
 	   gzip -9qf $(SOURCE_DOC)/README.Debian;\

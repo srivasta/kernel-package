@@ -5,9 +5,9 @@
 # Created On       : Sun Jun 14 03:38:02 1998
 # Created On Node  : tiamat.datasync.com
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Tue Mar  2 19:04:32 2004
+# Last Modified On : Sun Jun 20 00:30:33 2004
 # Last Machine Used: glaurung.internal.golden-gryphon.com
-# Update Count     : 61
+# Update Count     : 62
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
@@ -165,7 +165,7 @@ if (!$warn_initrd) {   $do_initrd   = "YES";}
 # "prerm upgrade" has already been called for the old version of
 # this package.
 
-# For some versions of kernel-package, we had tis warning in the
+# For some versions of kernel-package, we had this warning in the
 # postinst, but the rules did not really interpolate the value in.
 # Here is a sanity check.
 my $pattern = "=" . "I";

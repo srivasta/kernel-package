@@ -5,9 +5,9 @@
 # Created On       : Mon Jun 17 01:10:11 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Mon Apr 26 15:48:29 2004
+# Last Modified On : Sun Jun 20 00:28:32 2004
 # Last Machine Used: glaurung.internal.golden-gryphon.com
-# Update Count     : 219
+# Update Count     : 220
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
@@ -864,7 +864,7 @@ EOMSG
 	$command .= " DEBIAN_REVISION=$version ";
       }
       else {
-	$command .= " DEBIAN_REVISION=5:123.Custom ";
+	# $command .= " DEBIAN_REVISION=5:123.Custom ";
       }
     }
     else {
