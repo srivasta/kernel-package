@@ -5,16 +5,16 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Wed Feb 18 01:02:16 1998
+## Last Modified On : Fri Feb 27 16:27:10 1998
 ## Last Machine Used: tiamat.datasync.com
-## Update Count	    : 121
+## Update Count	    : 122
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
 ##
 ###############################################################################
 
-#    $Id: rules,v 1.10 1998/02/18 07:08:46 srivasta Exp $
+#    $Id: rules,v 1.11 1998/02/27 22:27:17 srivasta Exp $
 
 
 # Please change the maintainer information, as well as the debian version
@@ -53,9 +53,9 @@ MAN5DIR = debian/tmp/usr/man/man5
 MAN8DIR = debian/tmp/usr/man/man8
 
 # install commands
-install_file= install -p -o root -g root -m 644
-install_program= install -p -o root -g root -m 755
-make_directory= install -p -d -o root -g root -m 755
+install_file=    install -p    -o root -g root -m 644
+install_program= install -p    -o root -g root -m 755
+make_directory=  install -p -d -o root -g root -m 755
 
 
 all build:

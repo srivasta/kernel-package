@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Wed Feb 18 01:06:41 1998
+## Last Modified On : Fri Feb 27 16:28:57 1998
 ## Last Machine Used: tiamat.datasync.com
-## Update Count	    : 224
+## Update Count	    : 225
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.27 1998/02/18 07:08:48 srivasta Exp $
+## $Id: rules,v 1.28 1998/02/27 22:29:05 srivasta Exp $
 ###############################################################################
 
 # The version of kernel-package this belongs to
@@ -152,9 +152,9 @@ ifneq ($(strip $(shell egrep ^[^\#]*CONFIG_MODULES $(CONFIG_FILE))),)
 MODULES_ENABLED = yes
 endif
 
-install_file= install -m 644
-install_program= install -m 755
-make_directory= install -d -m 755
+install_file=    install -p    -o root -g root -m 644
+install_program= install -p    -o root -g root -m 755
+make_directory=  install -p -d -o root -g root -m 755
 deb_rule = $(MAKE) -f $(DEBDIR)/rules
 
 # Include any site specific overrides here.
