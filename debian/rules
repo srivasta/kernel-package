@@ -5,9 +5,9 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Fri Oct  8 05:30:31 1999
+## Last Modified On : Tue Feb  8 19:41:37 2000
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 125
+## Update Count	    : 126
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
@@ -19,7 +19,7 @@
 #                          sed 's/^Version: *//')
 #
 
-#    $Id: rules,v 1.21 2000/01/27 06:03:35 srivasta Exp $
+#    $Id: rules,v 1.22 2000/02/09 01:47:05 srivasta Exp $
 
 
 # Please change the maintainer information, as well as the debian version
@@ -122,7 +122,7 @@ stamp-binary:
 	# Hack, tell the   rules file what version of kernel package it is
 	sed -e             's/=K=V/$(version)/' kernel/rules > \
                               $(SRCTOP)/debian/tmp/usr/share/$(package)/rules
-	dpkg-gencontrol
+	dpkg-gencontrol -isp
 	chown -R root.root debian/tmp
 	dpkg --build       debian/tmp ..
 	touch              stamp-binary

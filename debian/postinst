@@ -30,6 +30,10 @@ case "$1" in
 	# Well, we still need to handle this, at least for the time being
 	if [   -d /usr/share/doc/$package_name ]; then
 	    # So the new doc dir exists, goody
+	    # Well, make sure that we do not get tripped up by the symlink
+	    if [ -L /usr/doc/$package_name ]; then
+		rm -f /usr/doc/$package_name
+	    fi
 	    if [ -d /usr/doc/$package_name ]; then
 		echo "Yikes! The old directory, /usr/doc/$package_name,"
 		echo "has not ben removed! This is an error; attempting"
@@ -49,7 +53,7 @@ shall be created in /usr/share/doc/$package_name as needed.
 Shall I copy the files over [Yn]?
 EOF
 		    read answer;
-		    case answer in
+		    case "$answer" in
 			[Nn]*)
 			    echo "Not copying over, aborting";
 			    exit 1;

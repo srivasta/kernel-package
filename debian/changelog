@@ -1,3 +1,14 @@
+kernel-package (6.36) unstable; urgency=low
+
+  * The postinst was vulnerable to being affected by symlinks (if, for
+    some reason, the prerm failed). This has happended for latex2html; and
+    created a grave bug. 
+  * There was a bug in the postinst in a case statement, that caused
+    installation to fail for certain situations.
+  * Also fixed an lintian warning
+
+ -- Manoj Srivastava <srivasta@debian.org>  Tue,  8 Feb 2000 19:42:09 -0600
+
 kernel-package (6.35) frozen unstable; urgency=low
 
   * Fix for the amiga branch (extra paren in patch). Problem pointed out
