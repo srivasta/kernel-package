@@ -1,5 +1,5 @@
 
-   $Id: README,v 1.62 2003/06/05 20:45:14 srivasta Exp $
+   $Id: README,v 1.63 2003/07/01 16:00:18 srivasta Exp $
 
 This is the Debian GNU/Linux prepackaged version of the Linux kernel.
 Linux was written by Linus Torvalds <Linus.Torvalds@cs.Helsinki.FI> and
@@ -176,6 +176,17 @@ revision number in such a way that a generic kernel image package will
 not override the custom package while using dselect (or dpkg
 -BOGiE). You may also do this on the fly by setting the
 DEBIAN_REVISION environmental variable.
+
+"--revision" affects the name of the Debian package itself but not the
+kernel name, so "uname -r" won't show the revision, and it will use
+the same modules as other revisions of the same version.
+
+If I may digress to talk about "--append-to-version",
+"--append-to-version=bla" affects the name of the Debian package
+itself, and also appends the append-to-version text to the kernel name
+AND to the modules directory name when dpkg installs the kernel, so
+this kernel will have its own set of modules, separate from the
+modules used by the default kernel with the same version.
 
 The revision number (the argument supplied after the --revision flag)
 has certain constraints: 

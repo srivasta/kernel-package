@@ -1,3 +1,13 @@
+kernel-package (8.041) unstable; urgency=low
+
+  * Added clarifying text to the howto from Peter Hugosson-Miller and Doug
+    MacFarlane about --revision and --append-to-version in the README files.
+  * Fix a typo in the help output.                        closes: Bug#199354
+  * Fix a image name mismatch that occurred while trying to install
+    netwinder kernel images.
+
+ -- Manoj Srivastava <srivasta@debian.org>  Tue,  1 Jul 2003 10:59:56 -0500
+
 kernel-package (8.040) unstable; urgency=low
 
   * Removed latin1 chars from this changelog. Now we are all utf-8 cmopatible. 

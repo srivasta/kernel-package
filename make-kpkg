@@ -5,16 +5,16 @@
 # Created On       : Mon Jun 17 01:10:11 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Mon Apr 14 13:19:56 2003
+# Last Modified On : Tue Jul  1 09:52:52 2003
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 187
+# Update Count     : 188
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
 #
 #
 #
-#    $Id: make-kpkg,v 1.80 2003/06/09 19:15:21 srivasta Exp $
+#    $Id: make-kpkg,v 1.81 2003/07/01 16:00:18 srivasta Exp $
 #
 require 5.002;
 use strict;
@@ -29,7 +29,7 @@ make-kpkg - build Debian kernel packages from Linux kernel sources.
 ($main::MYNAME     = $main::0) =~ s|.*/||;
 $main::Author      = "Manoj Srivastava";
 $main::AuthorMail  = "srivasta\@debian.org";
-$main::Version     = '$Revision: 1.80 $ ';
+$main::Version     = '$Revision: 1.81 $ ';
 
 my $added_modules='';
 my $added_patches='';
@@ -379,7 +379,7 @@ usage: $main::MYNAME [options] target [target ...]
  --append_to_version foo an additional kernel sub-version. ([-a-z.+0-9])
                          Does not require editing the kernel Makefile
                          over rides env var APPEND_TO_VERSION. 
-                         requires a make-kpg clean
+                         requires a make-kpkg clean
  --added-modules foo
  --added_modules foo   Comma/space separated list of add on modules
                        affected by the modules_<blah> targets
