@@ -5,9 +5,9 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Wed Oct 20 00:16:07 2004
+## Last Modified On : Mon Oct 25 01:42:22 2004
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count	    : 725
+## Update Count	    : 727
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
@@ -1774,7 +1774,7 @@ else
 endif
 
 real_stamp_source:
-ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
+ifneq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 	echo done >  stamp-source
 else
 ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
@@ -1874,7 +1874,7 @@ else
 endif
 
 real_stamp_headers:
-ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
+ifneq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 	echo done >  stamp-headers
 else
 ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
@@ -1963,7 +1963,7 @@ else
 endif
 
 real_stamp_doc:
-ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
+ifneq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 	echo done >  stamp-doc
 else
 ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
