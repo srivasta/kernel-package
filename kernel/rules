@@ -5,22 +5,19 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Fri May  2 14:07:35 1997
+## Last Modified On : Mon Jun  2 22:37:44 1997
 ## Last Machine Used: tiamat.datasync.com
-## Update Count	    : 165
+## Update Count	    : 175
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-##
+## $Id: rules,v 1.2 1997/06/03 03:47:53 srivasta Exp $
 ###############################################################################
 
 # Please change the maintainer information, as well as the debian version
 # below, espescially if you are uploading an official package)
 
 # The maintainer information.
-#maintainer := Manoj Srivastava
-#email := srivasta@debian.org
-
 maintainer = Herbert Xu
 email= herbert@greathan.apana.org.au
 
@@ -40,11 +37,11 @@ image_in_boot :=
 architecture:=$(shell dpkg --print-architecture)
 
 # The kernel image type (i.e. zImage or bzImage)
-ifeq ($(strip $(architecture)),ppc)
+ifneq ($(strip $(filter ppc powerpc,$(architecture))),)
 kimage := zImage
 else
-ifeq ($(strip $(architecture)),powerpc)
-kimage := zImage
+ifneq ($(strip $(filter m68k sparc,$(architecture))),)
+kimage := vmlinux
 else
 kimage := bzImage
 endif
@@ -406,12 +403,19 @@ ifdef MODULES_ENABLED
 endif
 	$(install_file) .config \
 	         debian/tmp-image/boot/config-$(version)
+# m68k and sparc have no vmlinuz
+ifeq ($(strip $(filter m68k sparc,$(architecture))),)
 	cp arch/$(architecture)/boot/$(kimage) \
                    debian/tmp-image/boot/vmlinuz-$(version)
+	chmod 644 debian/tmp-image/boot/vmlinuz-$(version)
+endif
+ifeq ($(strip $(architecture)),sparc)
+	elftoaout vmlinux -o debian/tmp-image/boot/vmlinux-$(version)
+else
 	cp vmlinux debian/tmp-image/boot/vmlinux-$(version)
+endif
 	cp System.map debian/tmp-image/boot/System.map-$(version)
-	chmod 644 debian/tmp-image/boot/vmlinuz-$(version) \
-                  debian/tmp-image/boot/vmlinux-$(version) \
+	chmod 644 debian/tmp-image/boot/vmlinux-$(version) \
                   debian/tmp-image/boot/System.map-$(version)
 	dpkg-gencontrol -pkernel-image-$(version) -Pdebian/tmp-image/
 	chown -R root.root debian/tmp-image
