@@ -9,8 +9,9 @@ kernel-package (3.52) unstable; urgency=low
   * Documented the fact that if you re-run make-kpkg with a different
     revision number, you have to reconfigure the kernel. 
     fixes: Bug#16968
+  * ignore obsolete fdformat in favour of superformat.
 
- -- Manoj Srivastava <srivasta@debian.org>  Wed, 21 Jan 1998 03:20:50 -0600
+ -- Manoj Srivastava <srivasta@debian.org>  Wed, 21 Jan 1998 03:27:35 -0600
 
 kernel-package (3.51) unstable; urgency=low
 
