@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Thu May 10 09:03:36 2001
+## Last Modified On : Sat May 12 13:46:19 2001
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 475
+## Update Count	    : 476
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.119 2001/05/10 14:13:38 srivasta Exp $
+## $Id: rules,v 1.120 2001/05/12 18:55:52 srivasta Exp $
 ###############################################################################
 
 ifdef ARCH
@@ -459,7 +459,11 @@ STAMPS_TO_CLEAN = stamp-build stamp-configure stamp-source stamp-image \
                   stamp-buildpackage stamp-libc-kheaders stamp-debian
 DIRS_TO_CLEAN   = debian/tmp-source debian/tmp-headers debian/tmp-image
 
-CONFLOC    :=/etc/kernel-pkg.conf
+CONFLOC    :=$(shell if test -f ~/.kernel-pkg.conf; then\
+                        echo ~/.kernel-pkg.conf; \
+                     else \
+                        echo /etc/kernel-pkg.conf; \
+                     fi)
 LIBLOC     :=/usr/share/kernel-package
 
 ifeq ($(strip $(MODULE_LOC)),)

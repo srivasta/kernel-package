@@ -22,7 +22,7 @@
 .\" USA.
 .\"
 .\"
-.\"    $Id: make-kpkg.8,v 1.36 2001/05/12 16:56:47 srivasta Exp $
+.\"    $Id: make-kpkg.8,v 1.37 2001/05/12 18:55:52 srivasta Exp $
 .\"
 .TH MAKE\-KPKG 1 "May 2 1997" "Debian" "Debian GNU/Linux manual"
 .SH NAME
@@ -188,7 +188,9 @@ file for any external modules in
 .IR /usr/src/modules/
 using PGP. This option will override the builtin default and the site
 wide customizations stored in the file
-.IR /etc/kernel-pkg.conf.
+.IR /etc/kernel-pkg.conf
+or
+.IR ~/.kernel-pkg.conf.
 .TP
 .BR \-\-config " target"
 Change the type of configure done from the default \f(CWoldconfig\fR.
@@ -404,15 +406,18 @@ Apart from the runtime options, the
 .I debian.rules
 file run by
 .B make\-kpkg
-also looks for site\-wide defaults in the file 
+also looks for a per user configuration file
+.I ~/.kernel-pkg.conf.
+Failing that, it looks for site\-wide defaults in the file 
 .I /etc/kernel-pkg.conf.
 The default configuration allows there to be a site wide override for
 the full name and email address of the person responsible for maintaining 
 the kernel packages on the site, but the 
 .I /etc/kernel-pkg.conf
-file is actually a 
-Makefile
-snippet, and any legal make directives may be included in there. 
+(or
+.I ~/.kernel-pkg.conf.
+) file is actually a Makefile snippet, and any legal make directives
+may be included in there.  
 .B Note:
 Caution is urged with this file, since you can totally change the way that the 
 make is run by suitably editing this file. Please look at

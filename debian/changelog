@@ -1,3 +1,10 @@
+kernel-package (7.43) unstable; urgency=low
+
+  * Added a local ~/.kernel-pkg.conf for per user configuration. 
+    closes: Bug#97267
+
+ -- Manoj Srivastava <srivasta@debian.org>  Sat, 12 May 2001 13:47:13 -0500
+
 kernel-package (7.42) unstable; urgency=low
 
   * Softened the stance about hyphens in revision strings that was adopted

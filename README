@@ -1,5 +1,5 @@
 
-    $Id: README,v 1.41 2001/04/29 16:02:44 srivasta Exp $
+    $Id: README,v 1.42 2001/05/12 18:55:52 srivasta Exp $
 
 This is the Debian GNU/Linux packaging scripts for the Linux kernel. 
 This package has been put together by Manoj Srivastava <srivasta@debian.org>.
@@ -225,10 +225,11 @@ level Makefile). Also, if recompiling and using a different flavour,
 one needs to do a make-kpkg clean in between compiles.
 
 You may also place long term directives (like your name and email
-address) in the file /etc/kernel-pkg.conf. Putting your name and
-address in that file is a good idea, to remind you that this is not an
-official package, unless, of course, you happen to be the maintainer
-(Hi Herbert). The file /etc/kernel-pkg.conf is actually a Makefile
+address) in the file /etc/kernel-pkg.conf. (or ~/.kernel-pk.conf)
+Putting your name and address in that file is a good idea, to remind
+you that this is not an official package, unless, of course, you
+happen to be the maintainer (Hi Herbert). The file
+/etc/kernel-pkg.conf (or ~/.kernel-pkg.conf) is actually a Makefile
 snippet included during the kernel packages build process, and hence
 you may put any legal Makefile directive in that file (just make very
 sure you know what you are doing ;-).
@@ -332,8 +333,8 @@ make_libc_headers  This is meant to be used by the libc6 maintainer,
 The value of a variable can be set so: 
   a) Defaults exist in the rules file. These are the values used if no
      customization is done.
-  b) Variables can be set in the config file /etc/kernel-pkg.conf. 
-     These values override the defaults.
+  b) Variables can be set in the config file /etc/kernel-pkg.conf (or
+     ~/.kernel-pkg.conf) These values override the defaults.
   c) Variables can also be set by setting a corresponding environment
      variable.  These values override the config file and the defaults.
   d) Using make-kpkg options, or, if using the rules file directly, on 
@@ -624,7 +625,7 @@ There are two solutions that I know of:
 
   2) Build a zImage, rather than bzImage kernel.  This seems to get
      round the problem. use the --zimage option to make-kpkg, or even
-     set this as the default in /etc/kernel-pkg.conf.
+     set this as the default in /etc/kernel-pkg.conf (or ~/.kernel-pkg.conf) .
 
 There some add-on modules that hook into make-kpkg and the kernel
 sources so that they may be kept in synchrony with the kernel you
