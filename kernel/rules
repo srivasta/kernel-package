@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.108 2001/01/22 21:15:36 srivasta Exp $
+## $Id: rules,v 1.109 2001/01/27 06:32:16 srivasta Exp $
 ###############################################################################
 
 ifdef ARCH
@@ -478,6 +478,8 @@ ifneq ($(strip $(KPKG_EMAIL)),)
 email=$(KPKG_EMAIL)
 endif
 
+# This should be a  name to feed the modules build for pgp signature,
+# since we the maintainer would be different there.
 ifneq ($(strip $(PGP_SIGNATURE)),)
 pgp=$(PGP_SIGNATURE)
 endif
@@ -567,7 +569,7 @@ use_saved_config = $(USE_SAVED_CONFIG)
 endif
 
 ifneq ($(strip $(ROOT_CMD)),)
-root_cmd := $(root_cmd) $(ROOT_CMD)
+root_cmd := $(root_cmd) -r$(strip $(ROOT_CMD))
 endif
 
 ifneq ($(strip $(UNSIGN_SOURCE)),)
@@ -798,7 +800,7 @@ stamp-buildpackage: configure
 	test -f stamp-configure || $(deb_rule) configure
 	echo 'Building Package' > stamp-building
 ifneq ($(strip $(root_cmd)),)
-	dpkg-buildpackage -r$(strip $(root_cmd)) -m"$(maintainer) <$(email)>"
+	dpkg-buildpackage $(strip $(root_cmd)) -m"$(maintainer) <$(email)>"
 else
 	dpkg-buildpackage -m"$(maintainer) <$(email)>"
 endif

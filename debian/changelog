@@ -1,3 +1,13 @@
+kernel-package (7.29) unstable; urgency=medium
+
+  * Finally fixed the --revision handling, thnaks to Diego Biurrun
+    <diego@biurrun.de>. 
+  * Fixed the problem which occurred when one specified either -uc or -us
+    without also specifying -r. Thanks go to Ruediger Kuhlmann
+    <uck4@rz.uni-karlsruhe.de>. 
+
+ -- Manoj Srivastava <srivasta@debian.org>  Sat, 27 Jan 2001 00:31:34 -0600
+
 kernel-package (7.28) unstable; urgency=low
 
   * Modified the make-kpkg man page to reflect the fact that --rootcmd

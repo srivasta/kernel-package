@@ -22,7 +22,7 @@
 .\" USA.
 .\"
 .\"
-.\"    $Id: make-kpkg.8,v 1.30 2001/01/22 21:15:35 srivasta Exp $
+.\"    $Id: make-kpkg.8,v 1.31 2001/01/27 06:32:16 srivasta Exp $
 .\"
 .TH MAKE\-KPKG 1 "May 2 1997" "Debian" "Debian GNU/Linux manual"
 .SH NAME
@@ -58,13 +58,13 @@ and
 for it to have an effect -- I strongly suggest you run
 .B make\-kpkg clean 
 unless you know what you are doing). 
-Additionally, official source package maintianers provide their own
+Additionally, official source package maintainers provide their own
 version numbers and data for the official uploads, and hence a number
 of things, including the
 .B Debian
 revision, is not modified by
 .B make-kpkg.
-If you happen to have an official sources, (that would mean that the
+If you happen to have an official source, (that would mean that the
 file 
 .I debian/official
 exists), and want to use your own revision number,
@@ -77,11 +77,10 @@ So, if you want to re\-run
 .B make\-kpkg 
 with a different revision number, you have to make sure you start with
 a clean slate.  Secondly, the version may contain only 
-.B lowercase
-alphanumerics and the characters + . - (full stop, hyphen, and plus)
+alphanumerics and the characters + . (full stop and plus)
 and must contain a digit. (Look at Chapter 4 of the Policy manual for
 details). Optionally, you may prepend the revision with a digit
-followed by a colon (:)
+followed by a colon (:).
 .TP
 .BR \-\-flavour\ foo
 Sets the kernel flavour to the argument \fBfoo\fR. The flavour is
@@ -125,7 +124,8 @@ which defaults to a subdirectory of
 .I /usr/src/kernel-patches/.  
 The default is that all patches are applied
 if requested (By setting the env variable 
-.B PATCH_THE_KERNEL)
+.B PATCH_THE_KERNEL
+to YES).
 .TP
 .BR \-\-arch\ foo
 This is useful for setting the architecture when you are cross
@@ -140,7 +140,7 @@ compiling.
 Some architectures (the Alpha, and the m68k) require a different
 kernel for each subarchitecture. This option provides a way of
 specifying it as an argument to \fBmake-kpkg\fR. \fBPlease note\fR
-that additional support for sub architectures may be required in the
+that additional support for subarchitectures may be required in the
 kernel sources to actually make this do anything.
 .TP
 .BR \-\-arch_in_name
@@ -193,7 +193,7 @@ sites where the default is zImage kernels.
 .TP
 .B \-\-rootcmd foo
 The command that provides a means of gaining super user access (for
-example, `sudo' or `fakeroot') as needed by dpkg-buildpackages's -r
+example, `sudo' or `fakeroot') as needed by dpkg-buildpackages' -r
 option. This is only relevant for the buildpackage target.
 .TP
 .B \-\-us
@@ -338,7 +338,7 @@ target. You may use this target to have the sources patched, and then
 manually run the configuration step.
 .TP
 .B libc\-kheaders
-This is a special target for the libc-dev maintainer, who can use ot
+This is a special target for the libc-dev maintainer, who can use it
 to create the headers package that libc needs. Please note that it is
 dangerous to create a libc-kheaders package that is different fomr the
 headers libc was compiled with; it is
@@ -364,7 +364,7 @@ Makefile
 snippet, and any legal make directives may be included in there. 
 .B Note:
 Caution is urged with this file, since you can totally change the way that the 
-make is run by suitable editing this file. Please look at
+make is run by suitably editing this file. Please look at
 .I /usr/share/doc/kernel-package/Problems.gz
 for a list of known problems while compiling kernel images. Extensive
 tutorial like documentation is also available in

@@ -14,7 +14,7 @@
 #
 #
 #
-#    $Id: make-kpkg,v 1.49 2001/01/22 21:15:35 srivasta Exp $
+#    $Id: make-kpkg,v 1.50 2001/01/27 06:32:16 srivasta Exp $
 #
 require 5.002;
 use strict;
@@ -29,26 +29,27 @@ make-kpkg - build Debian kernel packages from Linux kernel sources.
 ($main::MYNAME     = $main::0) =~ s|.*/||;
 $main::Author      = "Manoj Srivastava";
 $main::AuthorMail  = "srivasta\@debian.org";
-$main::Version     = '$Revision: 1.49 $ ';
+$main::Version     = '$Revision: 1.50 $ ';
 
-my $help_opt=0; 
-my $revision=0; 
-my $flavour=''; 
 my $added_modules='';
 my $added_patches='';
 my $arch='';
-my $cross_compile='';
-my $config_target='oldconfig';
-my $subarch='';
-my $signature="" ;
-my $targ_opt=0; 
-my $noexec; 
-my $zimage; 
-my $bzimage; 
-my $root_cmd; 
 my $arch_in_name=0;
-my $unsign_source='';
+my $bzimage;
+my $config_target='oldconfig';
+my $cross_compile='';
+my $flavour='';
+my $key_id='';
+my $help_opt=0;
+my $noexec; 
+my $revision=0;
+my $root_cmd;
+my $signature="" ;
+my $subarch='';
+my $targ_opt=0;
 my $unsign_changelog='';
+my $unsign_source='';
+my $zimage;
 
 my %option_ctl = ("help"            => \$help_opt,
 		  "noexec"          => \$noexec,
@@ -62,6 +63,7 @@ my %option_ctl = ("help"            => \$help_opt,
 		  "subarch=s"       => \$subarch,
 		  "arch_in_name"    => \$arch_in_name,
 		  "pgpsign=s"       => \$signature,
+		  "key_id=s"        => \$key_id,
 		  "targets"         => \$targ_opt,
 		  "zimage"          => \$zimage,
 		  "rootcmd=s"       => \$root_cmd,
@@ -103,13 +105,13 @@ this option has no effect -- run make-kpkg clean or manually remove
 stamp-configure, and stamp-debian (and debian/official, if that
 exists) for it to have an effect). I suggest you run make-kpkg clean
 unless you know what you are doing. Secondly, it may contain only
-B<lowercase> alphanumerics and the characters + . (full stop, and plus)
+alphanumerics and the characters + . (full stop, and plus)
 and should contain a digit. B<NOTE>: No hyphens allowed. (Look at the
 Debian policy manual for details). Optionally, you may prepend the
 revision with a digit followed by a colon (:)
 
 This is because  B<dpkg> imposes an ordering on version numbers,
-so that it can tell whether packages are being up or downgraded and
+so that it can tell whether packages are being up- or downgraded and
 so that dselect can tell whether a package it finds available is
 newer than the one installed on the system.
 
@@ -124,7 +126,7 @@ Sets the kernel flavour to the argument B<number>. The flavour is also
 appended to the package name. You need a patched Makefile to make this
 work properly (see /usr/share/doc/kernel-package/Flavours.gz).  It may
 contain only B<lowercase> alphanumerics and the characters - + . (full stop,
-hyphen, and plus). Uppercase letter are not permitted under the
+hyphen, and plus). Uppercase letters are not permitted under the
 Policy for a new package. B<NOTE>: Hyphens are discouraged.  (Look at
 Chapters 4 of the Policy manual for details).
 
@@ -156,7 +158,7 @@ file).  It shall be applied during the configure phase (and removed in
 the clean phase) if it can be found in the directories
 C<ALL_PATCH_DIR/{apply,unpatch}/>, which defaults to a subdirectory of
 /usr/src/kernel-patches/.  The default is that all patches are applied
-if requested (By setting the env variable C<PATCH_THE_KERNEL>)
+if requested (By setting the env variable C<PATCH_THE_KERNEL> to YES)
 
 =back
 
@@ -164,7 +166,7 @@ if requested (By setting the env variable C<PATCH_THE_KERNEL>)
 
 =over 2
 
-Sets the Architecture. This is mostly useful when cross compiling.
+Sets the architecture. This is mostly useful when cross compiling.
 
 =back
 
@@ -183,7 +185,7 @@ Sets the target string. This is mostly useful when cross compiling.
 Some architectures (the Alpha, and the m68k) require a different
 kernel for each subarchitecture. This option provides a way of
 specifying it as an argument to make-kpkg. Please note that additional
-support for sub architectures may be required in the kernel sources to
+support for subarchitectures may be required in the kernel sources to
 actually make this do anything.
 
 
@@ -211,6 +213,7 @@ default and the site wide customizations stored in the file
 I</etc/kernel-pkg.conf>.
 
 =back
+
 
 =item B<--config> I<target>
 
@@ -257,7 +260,7 @@ Useful for people having problems with bzImage kernels.
 =over 2
 
 Makes a bzImage kernel. Useful for people who  want a bzImage kernel
-on sites where the default is zIm age kernels.
+on sites where the default is zImage kernels.
 
 =back
 
@@ -265,8 +268,8 @@ on sites where the default is zIm age kernels.
 
 =over 2
 
-The command that provides a means of gaining super user access (for
-example, `sudo' or `fakeroot') as needed by dpkg-buildpackages's C<-r>
+The command that provides a means of gaining superuser access (for
+example, `sudo' or `fakeroot') as needed by dpkg-buildpackages' C<-r>
 option. This is only relevant for the buildpackage target.
 
 =back
@@ -318,18 +321,18 @@ usage: $main::MYNAME [options] target [target ...]
                         when patch_the_kernel is turned on
  --arch     foo        architecture
  --cross_compile       target string
- --subarch  bar        Set the sub arch for the image being compiled
+ --subarch  bar        Set the subarch for the image being compiled
                         (have to be on a compatible machine).
- --arch_in_name        Embedd the subarch in the image package name
- --pgpsign  name       A ID used to sign the changes file using pgp.
+ --arch_in_name        Embed the subarch in the image package name
+ --pgpsign  name       An ID used to sign the changes file using pgp.
  --targets             Lists the known targets.
  --zimage              Create a kernel using zImage rather than bzImage
  --bzimage             Create a kernel using bzImage (in case the site
                        wide default is zimage, as set in
                        /etc/kernel-pkg.conf) 
  --rootcmd method      A command that provides a means of gaining
-              	       super user ccess (for example, `sudo' or
-              	       `fakeroot') as needed by dpkg-buildpackages's
+              	       superuser ccess (for example, `sudo' or
+              	       `fakeroot') as needed by dpkg-buildpackages'
               	       -r option.  This is only relevant for the
               	       buildpackage target.
  --us                  This option is passed to dpkg-buildpackage, and
@@ -490,7 +493,7 @@ sign a changes file.
 =over 3
 
 
-This target allows you to clean the modukes directories.
+This target allows you to clean the modules directories.
 
 =back
 
@@ -499,7 +502,7 @@ This target allows you to clean the modukes directories.
 =over 3
 
 This target allows people to create the debian directory and create a
-configuration time stamp, so that any special edits to
+configuration timestamp, so that any special edits to
 configuration-generated files are not stomped over later.
 
 =back
@@ -652,10 +655,10 @@ sub main (){
     print STDERR <<EOERR;
 We do not seem to be in a top level linux kernel source directory
 tree. Since we are trying to make a kernel package, that does not make
-sense.  Please change directory to an top level linux kernel source
-directory, and try again. (If in case I am wrong, and this is indeed
-a top level linux kernel source directory, then I have gotten sadly
-out of date with current kernels, and you should upgrade kernel-package)
+sense.  Please change directory to a top level linux kernel source
+directory, and try again. (If I am wrong, and this is indeed a top
+level linux kernel source directory, then I have gotten sadly out of
+date with current kernels, and you should upgrade kernel-package)
 EOERR
   ;
     exit 1;
@@ -685,37 +688,44 @@ EOERR1
   if ($revision){
     $command .= " DEBIAN_REVISION=$revision ";
 
-    if ($revision !~ m/^(\d+:)?[\w\.\+]+$/o)
-      {
-	print STDERR " Error: The revision string may only contain\n";
-	print STDERR " lowercase alphanumerics and  the  characters  +  .\n";
-	print STDERR " If epochs are used, the colon : is also allowed\n";
-	print STDERR " The current value is: $revision\n";
-	print STDERR " Aborting.\n";
-	exit 1;
-      }
+    if ($revision !~ m/^(\d+:)?[a-zA-Z\d\.\+]+$/o) {
+      print STDERR " Error: The revision string may only contain\n";
+      print STDERR " alphanumerics and  the  characters  +  .\n";
+      print STDERR " If epochs are used, the colon : is also allowed\n";
+      print STDERR " The current value is: $revision\n";
+      print STDERR " Aborting.\n";
+      exit 1;
+    }
+
+    if ($revision !~ m/^(\d+:)?).*\d.*$ /){
+      print STDERR " Error: The revision string must contain digits, \n";
+      print STDERR " or else the package creation scripts complain\n";
+      print STDERR " The current value is: $revision\n";
+      print STDERR " Aborting.\n";
+      exit 1;
+    }
 
     if (-f 'debian/changelog' && -f 'debian/official') {
-      print STDERR "Warning: This appears to be an official package, \n"; 
-      print STDERR "which is special in the sense that it supplies its\n"; 
-      print STDERR "own details. The --revision options is ignored for\n"; 
-      print STDERR "official packages. Please remove debian/official,\n"; 
-      print STDERR "and run make-kpkg clean\n"; 
-      print STDERR "(or, if you know what you are doing,  manually remove\n"; 
-      print STDERR "stamp-debian, debian/changelog, debian/official, and\n"; 
-      print STDERR " stamp-configure) for it to have an effect\n"; 
+      print STDERR "Warning: This appears to be an official package,\n";
+      print STDERR "which is special in the sense that it supplies its\n";
+      print STDERR "own details. The --revision option is ignored for\n";
+      print STDERR "official packages. Please remove debian/official,\n";
+      print STDERR "and run make-kpkg clean\n";
+      print STDERR "(or, if you know what you are doing,  manually remove\n";
+      print STDERR "stamp-debian, debian/changelog, debian/official, and\n";
+      print STDERR "stamp-configure) for it to have an effect\n";
       print STDERR "Please hit return to continue\n";
       my $ans = <STDIN>;
     }
     if (-f 'stamp-configure'){
-      print STDERR "Warning: The $revision option only has an effect during\n"; 
-      print STDERR "the configure phase -- in other words, since the file\n"; 
-      print STDERR "stamp-configure exists, this option has no effect \n"; 
-      print STDERR "Also, this option has no effect when compiling the \n";
+      print STDERR "Warning: The $revision option only has an effect during\n";
+      print STDERR "the configure phase -- in other words, since the file\n";
+      print STDERR "stamp-configure exists, this option has no effect.\n";
+      print STDERR "Also, this option has no effect when compiling\n";
       print STDERR "any independent modules; the version from the last\n";
-      print STDERR "make-kpkg run when you compiled the kernel-image shall\n";
-      print STDERR "be used.\n";
-      print STDERR "run make-kpkg clean or  if you know what you are doing,\n"; 
+      print STDERR "make-kpkg run when you compiled the kernel-image\n";
+      print STDERR "shall be used.\n";
+      print STDERR "Run make-kpkg clean or  if you know what you are doing,\n";
       print STDERR "manually remove stamp-debian, stamp-configure and \n"; 
       print STDERR "debian/changelog for it to have an effect\n"; 
       print STDERR "Please hit return to continue\n";
@@ -727,8 +737,8 @@ EOERR1
       print STDERR "Error: Uppercase letters are not allowed in\n";
       print STDERR "the flavour variable, since the flavour becomes\n";
       print STDERR "part of the kernel-image name; and package names\n";
-      print STDERR "may only caontain lowercase aplha numerics. \n";
-      print STDERR "I have $flavour, which shall be dissaloowed by the\n";
+      print STDERR "may only cantain lowercase aplha numerics.\n";
+      print STDERR "I have $flavour, which shall be dissallowed by the\n";
       print STDERR "packaging tools. Aborting.\n";
       exit 1;
     }
@@ -810,7 +820,7 @@ maintaining the kernel packages on the site, but the
 I</etc/kernel-pkg.conf> file is actually a I<Makefile> snippet, and any
 legal make directives may be included in there.  B<Note>: Caution is
 urged with this file, since you can totally change the way that the
-make is run by suitable editing this file. Please look at
+make is run by suitably editing this file. Please look at
 I</usr/share/doc/kernel-package/Problems.gz> for a list of known
 problems while compiling kernel images.
 
@@ -828,7 +838,7 @@ directory I</usr/share/doc/kernel-package/>
 
 =head1 BUGS
 
-None Known so far.
+None known so far.
 
 =cut
 
