@@ -1,3 +1,11 @@
+kernel-package (7.72) unstable; urgency=low
+
+  * Fixed an example file in which I was using source, and insisted it was
+    POSIX, maligning the ash maintainer; oblivious to the fact that I was
+    reading details of ex(1), not sh(1). I do apologize.    closes: Bug#116200
+
+ -- Manoj Srivastava <srivasta@debian.org>  Mon, 12 Nov 2001 14:55:18 -0600
+
 kernel-package (7.71) unstable; urgency=low
 
   * exported all kinds of vars that give the location of kernel patches.

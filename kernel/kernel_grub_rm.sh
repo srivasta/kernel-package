@@ -24,7 +24,7 @@ grub_root_partition='(hd0,0)'             # the location of root filesystem.
 # kernel_boot_options="hdc=ide-scsi"    # any options come here.
 
 if [ -e $CONFIG_FILE ]; then
-    source $CONFIG_FILE
+    . $CONFIG_FILE
 fi
 
 if [ $# -ne 2 ]; then
