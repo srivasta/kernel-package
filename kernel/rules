@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Tue Sep  8 16:25:57 1998
+## Last Modified On : Tue Sep  8 16:37:14 1998
 ## Last Machine Used: tiamat.datasync.com
-## Update Count	    : 353
+## Update Count	    : 354
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.45 1998/09/08 21:26:25 srivasta Exp $
+## $Id: rules,v 1.46 1998/09/08 21:38:55 srivasta Exp $
 ###############################################################################
 
 # The version of kernel-package this belongs to
@@ -52,7 +52,7 @@ do_clean := YES
 
 # The default architecture (all if architecture independent)
 architecture:=$(shell dpkg --print-architecture)
-KERNEL_ARCH:=$(architecture)	#We may need to change this later
+KERNEL_ARCH:=$(strip $(architecture))	#We may need to change this later
 DEBCONFIG = $(CONFDIR)/config
 IMAGE_DESTDIR=/boot
 INT_IMAGE_DESTDIR=debian/tmp-image$(IMAGE_DESTDIR)
@@ -84,7 +84,7 @@ loader=lilo
 loaderdoc=
 target = $(kimage)
 kimagesrc = vmlinux
-kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
+kimagedest = $(strip $(INT_IMAGE_DESTDIR)/vmlinuz-$(version))
 ifeq ($(strip $(GUESS_SUBARCH)),Amiga)
         DEBCONFIG= $(CONFDIR)/config.amiga
 else
