@@ -435,7 +435,13 @@ current kernel configuration contained in the file
 .I .config,
 the file 
 .I include/linux/autoconf.h
-is not preserved.
+is not preserved. This target should not be combined with other
+targets, since 
+.B make-kpkg 
+reads in all data 
+.I before
+running any target, so the subsequent targets shall be run with the old
+data, which may not be what you want.
 .TP
 .B buildpackage
 This target runs the targets 
