@@ -4,9 +4,9 @@
 ## Created On       : Tue Nov 18 15:53:52 2003
 ## Created On Node  : glaurung.green-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Wed Dec 10 23:45:45 2003
-## Last Machine Used: glaurung.green-gryphon.com
-## Update Count     : 16
+## Last Modified On : Mon Feb 16 18:19:45 2004
+## Last Machine Used: glaurung.internal.golden-gryphon.com
+## Update Count     : 19
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : 
@@ -67,6 +67,9 @@ install:
 	$(make_directory)  $(ES_MAN8DIR)
 	$(make_directory)  $(DOCDIR)
 	$(make_directory)  $(BASH_DIR)
+	$(make_directory)  $(prefix)/usr/bin
+	$(make_directory)  $(prefix)/usr/sbin
+	$(make_directory)  $(prefix)/usr/share/$(package)
 	$(install_file)    debian/changelog             $(DOCDIR)/changelog
 	$(install_file)    README                       $(DOCDIR)/README
 	$(install_file)    kernel/Flavours              $(DOCDIR)/Flavours

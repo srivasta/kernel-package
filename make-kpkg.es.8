@@ -28,7 +28,8 @@
 .\" (c) 2003 Software in the Public Interest
 .\" Esta traducción ha sido realizada por Rubén Porras Campo <nahoo@inicia.es>
 .\" Está basada en la página de manual original:
-.\" versisn 8.079 de kernel-package
+.\" versión 1.12 del CVS de
+.\" /cvs/debian-doc/manpages/english/kernel-package/make-kpkg.8
 .\" Revisada por Rudy Godoy <rudy@kernel-panik.org>
 
 .TH MAKE\-KPKG 1 "14 noviembre de 2002" "Debian" "manual Debian GNU/Linux"
@@ -53,8 +54,22 @@ como convertirse en superusuario, por ejemplo:
 .ti +5
 make\-kpkg --rootcmd fakeroot kernel_image
 .sp 1
-El paquete Debian se crea en el directorio padre al directorio donde se ejecuta
+El paquete Debian se crea en el directorio padre al directorio donde se ejecute
 .B make\-kpkg.
+.PP
+También, tenga en cuenta que algunas versiones de gcc no interaccionan bien con
+las fuentes del núcleo (gcc 2.95 tiene problemas compilando el núcleo sin la
+opción
+.I '-fno-strict-aliasing' ).
+Este asunto ha sido cuidado en los núcleos recientes (las series 2.2 y 2.4
+están bien) (Creo que puede necesitar editar el Makefile para núcleos
+anteriores, o alguna otra cosa). Puede controlar que versión se usa para
+compilar el núcleo estableciendo las variables CC y HOSTCC en el Makefile
+principal del núcleo. Puede hacer esto simplemente con
+.PP
+  % MAKEFLAGS="CC=gcc-2.95" make-kpkg ...
+.PP
+(por favor, lea el Makefile principal para saber que variables pueden establecerse).
 .SH OPCIONES
 .B \-\-help
 Muestra el modo de uso.
@@ -340,7 +355,7 @@ paquete. No tiene efecto cuando
 El mismo efecto se puede conseguir estableciendo la
 variable de entorno
 .B INITRD
-a cualquier valor no nulo. Esta opcisn provoca un aviso, para evitar el aviso
+a cualquier valor no nulo. Esta opción provoca un aviso, para evitar el aviso
 establezca la variable de entorno
 .B INITRD_OK
 a cualquier valor no nulo.
@@ -389,14 +404,14 @@ opción=valor; para más detalles sobre ésta y otras variantes soportadas, lea la
 página del manual Getopt::Long (3perl).
 .TP
 .B CONCURRENCY_LEVEL
-Si esta definida, esta variable establece el nivel de concurrencia usado por
-make para compilar el nzcleo y el conjunto de msdulos, usando la opcisn
+Si está definida, esta variable establece el nivel de concurrencia usado por
+make para compilar el núcleo y el conjunto de módulos, usando la opción
 .I -j
 para el make del objetivo
 .B build
 de
 .B make-kpkg.
-Si se usa debe ser un entero (pequeqo).
+Si se usa debe ser un entero (pequeño).
 
 .SH OBJETIVOS
 .TP
