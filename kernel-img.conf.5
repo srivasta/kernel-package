@@ -21,7 +21,7 @@
 .\" Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139,
 .\" USA.
 .\"
-.\" $Id: kernel-img.conf.5,v 1.23 2003/09/08 10:43:52 srivasta Exp $
+.\" $Id: kernel-img.conf.5,v 1.24 2003/09/21 19:23:34 srivasta Exp $
 .\"
 .TH KERNEL\-IMG.CONF 5 "Mar 21 2000" "Debian" "Debian GNU/Linux manual" 
 .\" NAME should be all caps, SECTION should be 1-8, maybe w/ subsection
@@ -307,6 +307,21 @@ directory and the location of the image (nominally /boot) live on the
 same file system (since one can't make hard links across file
 systems). 
 .B You have been warned.
+.TP
+.B relink_build_link
+This option manipulates the build link created by recent kernels. If
+the link is a dangling link, and if a the corresponding kernel-headers
+appear to have been installed on the system, a new symlink shall be
+created to point to them. The default is to relink the build link
+(YES).
+.TP
+.B force_build_link
+This option manipulates the build link created by recent kernels. If
+the link is a dangling link, a new symlink shall be created to point
+to /usr/src/kernel-headers-X.Y.ZZ, whether they have been installed or
+not. The default is unset, we don't create potentially dangling
+symlinks by default.
+
 .TP
 .B silent_modules
 This option has been put in for the people who are vastly irritated on

@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.221 2003/09/01 17:09:15 srivasta Exp $
+## $Id: rules,v 1.222 2003/09/21 19:23:34 srivasta Exp $
 ###############################################################################
 
 ifdef KPKG_ARCH
@@ -1018,7 +1018,7 @@ canonical_patches=$(subst $(comma),$(space),$(KPKG_SELECTED_PATCHES))
 
 ifneq ($(strip $(canonical_patches)),)
 # test to see if the patches exist
-valid_patches = $(shell for name in $(canonical_patches); do                  \
+temp_valid_patches = $(shell for name in $(canonical_patches); do             \
                             if [ -x $(VERSIONED_DIR_PATCH_APPLY)/$$name -a    \
                                  -x $(VERSIONED_DIR_PATCH_UNPATCH)/$$name ];  \
                                then echo $(VERSIONED_DIR_PATCH_APPLY)/$$name; \
@@ -1031,12 +1031,24 @@ valid_patches = $(shell for name in $(canonical_patches); do                  \
                             elif [ -x $(ALL_PATCH_APPLY)/$$name -a            \
                                     -x $(ALL_PATCH_UNPATCH)/$$name ]; then    \
                                echo $(ALL_PATCH_APPLY)/$$name;                \
+                            else                                              \
+                               echo $$name.error;                             \
                             fi;                                               \
                         done)
+
+temp_patch_not_found = $(filter %.error, $(temp_valid_patches))
+patch_not_found = $(subst .error,,$(temp_patch_not_found))
+ifneq ($(strip $(patch_not_found)),)
+$(error Could not find patch for $(patch_not_found))
+endif
+
+valid_patches = $(filter-out %.error, $(temp_valid_patches))
 
 ifeq ($(strip $(valid_patches)),)
 $(error Could not find patch scripts for $(canonical_patches))
 endif
+
+
 
 canonical_unpatches = $(shell new="";                                         \
                               for name in $(canonical_patches); do            \
@@ -1044,7 +1056,7 @@ canonical_unpatches = $(shell new="";                                         \
                               done;                                           \
                               echo $$new;)
 
-valid_unpatches = $(shell for name in $(canonical_unpatches); do              \
+temp_valid_unpatches = $(shell for name in $(canonical_unpatches); do         \
                             if [ -x $(VERSIONED_DIR_PATCH_APPLY)/$$name -a    \
                                  -x $(VERSIONED_DIR_PATCH_UNPATCH)/$$name ];  \
                               then echo $(VERSIONED_DIR_PATCH_UNPATCH)/$$name;\
@@ -1057,8 +1069,18 @@ valid_unpatches = $(shell for name in $(canonical_unpatches); do              \
                             elif [ -x $(ALL_PATCH_APPLY)/$$name -a            \
                                     -x $(ALL_PATCH_UNPATCH)/$$name ]; then    \
                                echo $(ALL_PATCH_UNPATCH)/$$name;              \
+                            else                                              \
+                               echo $$name.error;                             \
                             fi;                                               \
                         done)
+temp_unpatch_not_found = $(filter %.error, $(temp_valid_unpatches))
+unpatch_not_found = $(subst .error,,$(temp_unpatch_not_found))
+ifneq ($(strip $(unpatch_not_found)),)
+$(error Could not find unpatch for $(unpatch_not_found))
+endif
+
+valid_unpatches = $(filter-out %.error, $(temp_valid_unpatches))
+
 ifeq ($(strip $(valid_unpatches)),)
 $(error Could not find un-patch scripts for $(canonical_unpatches))
 endif

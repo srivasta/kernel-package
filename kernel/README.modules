@@ -32,7 +32,10 @@ USER INSTRUCTIONS
           corresponds to the kernel-image package you have installed,
           and pointing the build system of the kernel headers -- some
           packaged modules packages provide an easy way to use the
-          kernel-headers packages)
+          kernel-headers packages, by allowing you to specify it like so:
+            [cd $MODULE_LOC/$module/;
+              ./debian/rules  KSRC=/usr/src/kernel-headers-X.Y.ZZ binary
+             ])
 
      3)   Make sure you have the versions of packages as recommended
           in the Documentation/Changes file. 
