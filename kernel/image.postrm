@@ -12,7 +12,7 @@
 # HISTORY          : 
 # Description      : 
 # 
-#     $Id: image.postrm,v 1.20 2002/04/12 20:03:33 srivasta Exp $
+#     $Id: image.postrm,v 1.21 2002/05/03 21:17:06 srivasta Exp $
 #
 
 
@@ -152,8 +152,11 @@ sub remove_sym_link {
   my $bad_image = $_[0];
 
   warn "Removing symbolic link $bad_image \n";
-  warn "Unless you used the optional flag in lilo, you may  \n";
-  warn " need to re-run $loader\n";
+  if ($loader =~ /lilo/i) 
+    {
+      warn "Unless you used the optional flag in lilo, \n";
+    }
+  warn " you may need to re-run $loader\n";
   # Remove the dangling link
   unlink "$bad_image";
 }

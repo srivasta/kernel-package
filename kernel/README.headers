@@ -1,13 +1,12 @@
 
-    $Id: README.headers,v 1.7 1998/07/14 21:18:38 srivasta Exp $
+    $Id: README.headers,v 1.8 2002/05/03 21:17:06 srivasta Exp $
 
  This is the Debian GNU/Linux prepackaged version of the Linux kernel
- headers. Linux was written by Linus Torvalds
- <Linus.Torvalds@cs.Helsinki.FI> and others.
+ headers. Linux was written by Linus Torvalds <torvalds@transmeta.com>
+ and others.
 
- This package was put together by Simon Shapiro <Shimon@i-Connect.Net>, from
- sources retrieved from directories under
- ftp.cs.helsinki.fi:/pub/Software/Linux/Kernel/
+
+ The kernel sources may be retrieved from ftp.us.kernel.org:/pub/linux/kernel/
 
  This package contains the Linux kernel header files. 
 

@@ -5,9 +5,9 @@
 # Created On       : Sun Jun 14 03:38:02 1998
 # Created On Node  : tiamat.datasync.com
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Fri Mar  1 16:16:34 2002
+# Last Modified On : Fri May  3 15:24:22 2002
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 48
+# Update Count     : 49
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
@@ -224,7 +224,7 @@ got unpacked before I did, then this is pretty benign.  Unfortunately,
 I can't tell the difference.
 
 If /lib/modules/$version belongs to a old install of
-kenel-image-$version, this is your last chance to abort the
+kenel-image-$version, then this is your last chance to abort the
 installation of this kernel image (nothing has been changed yet).
 
 If this directory is because of stand alone modules being installed

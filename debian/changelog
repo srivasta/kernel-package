@@ -1,3 +1,14 @@
+kernel-package (8.001) unstable; urgency=low
+
+  * Do not talk about lilo optional flags unless we are using lilo
+  * Added a "then" in a dialogue.                            closes: Bug#145720
+  * fix location of kernel sources.                          closes: Bug#145395
+  * Added a run-parts ./debian/image.d/ to allow patches to install
+    arbitary files (like /boot/Kerntypes-${KVERSION}) in the deb, or take
+    other action.                                            closes: Bug#145695
+
+ -- Manoj Srivastava <srivasta@debian.org>  Fri,  3 May 2002 16:10:28 -0500
+
 kernel-package (7.112) unstable; urgency=medium
 
   * Use a simple string match, not a regexp match, when comparing

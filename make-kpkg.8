@@ -22,7 +22,7 @@
 .\" USA.
 .\"
 .\"
-.\"    $Id: make-kpkg.8,v 1.54 2002/04/12 20:03:33 srivasta Exp $
+.\"    $Id: make-kpkg.8,v 1.55 2002/05/03 21:17:06 srivasta Exp $
 .\"
 .TH MAKE\-KPKG 1 "May 2 1997" "Debian" "Debian GNU/Linux manual"
 .SH NAME
@@ -215,6 +215,13 @@ in which case PATCH_THE_KERNEL shall be set to YES for you when you
 invoke 
 .BR \-\-added-patches\ foo, 
 but not otherwise.  
+Also, please note that if any patch installs a script in 
+.I ./debian/image.d/
+directory, 
+.B run-parts 
+shall be called on that dir just before the kernel image package is
+built. This is a way for the patch to issert any additional files into
+the image, for example.
 .TP
 .BR \-\-arch\ foo
 This is useful for setting the architecture when you are cross

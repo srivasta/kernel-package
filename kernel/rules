@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Thu Apr 25 01:23:24 2002
+## Last Modified On : Fri May  3 15:40:52 2002
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 531
+## Update Count	    : 532
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.175 2002/04/25 07:29:25 srivasta Exp $
+## $Id: rules,v 1.176 2002/05/03 21:17:06 srivasta Exp $
 ###############################################################################
 
 ifdef KPKG_ARCH
@@ -1333,6 +1333,9 @@ real_stamp_source:
            $(install_file) README.Debian $(SOURCE_DOC)/README.Debian.1st; \
 	   gzip -9qf                     $(SOURCE_DOC)/README.Debian.1st;\
 	fi
+	if test -d $(SRCTOP)/debian/image.d ; then \
+             run-parts --verbose $(SRCTOP)/debian/image.d ; \
+        fi
 	chmod -R og=rX $(SOURCE_TOP)
 	chown -R root.root $(SOURCE_TOP)
 	(cd $(SOURCE_TOP)/usr/src/; \
