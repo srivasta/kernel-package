@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Fri Oct  8 05:24:08 1999
+## Last Modified On : Sun Oct 10 15:06:38 1999
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 410
+## Update Count	    : 411
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.78 1999/10/09 04:43:28 srivasta Exp $
+## $Id: rules,v 1.79 1999/10/10 20:10:36 srivasta Exp $
 ###############################################################################
 
 #
@@ -763,10 +763,11 @@ stamp-image: configure build kernel-image-deb
 # seems to create a working .deb with a kernel that gives the correct
 # user name (as opposed to root@...)
 kernel-image-deb:
-	@test root = "`whoami`" || (echo need root priviledges; exit 1)
+	@test root = "`whoami`"     || (echo need root priviledges; exit 1)
 	rm -f -r ./debian/tmp-image ./debian/tmp-image.deb
-	test -f stamp-configure || $(deb_rule) configure
-	test -f stamp-build || $(deb_rule) build
+	test -f stamp-configure     || $(deb_rule) configure
+	test -f stamp-build         || $(deb_rule) build
+	test -f stamp-debian        || $(deb_rule) debian
 	$(make_directory) debian/tmp-image/DEBIAN
 	$(make_directory) debian/tmp-image/boot
 	$(make_directory) debian/tmp-image/usr/share/doc/$(i_package)

@@ -1,3 +1,10 @@
+kernel-package (6.26) unstable; urgency=low
+
+  * make sure the ./debian directory exists before trying to build the
+    image package. closes: Bug#47062, Bug#47054
+
+ -- Manoj Srivastava <srivasta@debian.org>  Sun, 10 Oct 1999 15:09:29 -0500
+
 kernel-package (6.25) unstable; urgency=high
 
   * Fixed stupid little typos that made the package unusable. 
