@@ -5,14 +5,14 @@
 # Created On       : Sat Apr 27 05:55:26 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Fri Sep 26 09:57:37 1997
+# Last Modified On : Fri Nov  7 18:07:49 1997
 # Last Machine Used: tiamat.datasync.com
-# Update Count     : 56
+# Update Count     : 57
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
 # 
-#    $Id: image.postinst,v 1.8 1997/10/22 07:47:59 srivasta Exp $
+#    $Id: image.postinst,v 1.9 1997/11/10 16:46:24 srivasta Exp $
 #
 
 # 
@@ -169,15 +169,30 @@ my $line = '';
 while ( $line=<FSTAB> ) {
   my $device;
   my $filesystem;
+  my $ftype;
+  my $foption;
   my $islilo;
 
   if ( $line =~ m/^\#/ ) {
     next;
   }
-  ($device,$filesystem)=split(/[ \t]+/, $line);
+#  ($device,$filesystem)=split(/[ \t]+/, $line);
+  ($device,$filesystem,$ftype,$foption)=split(/[ \t]+/, $line);
   next unless $device =~ m|^/dev/|; #ignore NFS and proc systems
   next if $device =~ m|^/dev/fd|;   #ignore floppy drives
+  next if $device =~ m|^/dev/pty|;  #ignore Pseudo-TTY masters
+  next if $device =~ m|^/dev/tty|;  #ignore Pseudo-TTY slaves
+  next if $device =~ m|^/dev/cu|;   #ignore obsolete device
+  next if $device =~ m|^/dev/lp|;   #ignore printers
+  next if $device =~ m|^/dev/vcs|;  #ignore Virtual console capture 
+
   next if $filesystem =~ m|^none$|; #swap? in any case, do not run dd
+  next if $foption =~ m|noauto|; # look for any FS not mounted at bootup time
+
+  # Looking at linux/Documentation/devices.txt, We see that really we
+  # should be looking for /dev/hd* (hard disk),  /dev/sd*. What about
+  # metadisk devices? ram drives? I think I'll just leave this mess
+  # well enough alone.
 
   if ( $filesystem =~ m!^/$! ) {
     $rootdevice = $device;
