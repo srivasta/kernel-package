@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Tue Dec 24 11:36:22 2002
+## Last Modified On : Wed Feb  5 18:27:47 2003
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 551
+## Update Count	    : 554
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.188 2002/12/24 17:41:46 srivasta Exp $
+## $Id: rules,v 1.189 2003/02/06 19:32:20 srivasta Exp $
 ###############################################################################
 
 ifdef KPKG_ARCH
@@ -59,7 +59,7 @@ reverse_symlink :=
 
 # Whether to look for and install kernel patches by default.
 # Be very careful if you do this.
-patch_the_kernel := NO
+patch_the_kernel := AUTO
 
 # do not create libc headers by default
 make_libc_headers := NO
@@ -326,7 +326,7 @@ kimagesrc = vmlinux
 kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
 DEBCONFIG = $(CONFDIR)/config.sparc
 KERNEL_ARCH=sparc64
-ARCH_IN_NAME=yes
+ARCH_IN_NAME=YES
 KPKG_SUBARCH=sun4u
 endif
 
@@ -338,7 +338,7 @@ loaderdoc=SiloDefault
 
 target = vmlinux
 kimagesrc = vmlinux
-ifneq ($(shell if [ $VERSION -ge 2 -a $PATCHLEVEL -ge 5 -a $SUBLEVEL -ge 41 ];\
+ifneq ($(shell if [ $(VERSION) -ge 2 -a $(PATCHLEVEL) -ge 5 -a $(SUBLEVEL) -ge 41 ];\
                    then echo new; \
                 fi),)
 target = image
@@ -352,13 +352,13 @@ DEBCONFIG = $(CONFDIR)/config.sparc
 # to generate UltraSparc kernel packages.
 ifeq ($(KPKG_SUBARCH),sun4u)
 KERNEL_ARCH=sparc64
-ARCH_IN_NAME=yes
+ARCH_IN_NAME=YES
 else
 machine = $(shell uname -m)
 ifeq ($(strip $(machine)),sparc64)
 KPKG_SUBARCH=sun4u
 KERNEL_ARCH=sparc64
-ARCH_IN_NAME=yes
+ARCH_IN_NAME=YES
 endif
 endif
 endif
@@ -478,7 +478,7 @@ endif
 # leave it empty
 
 # NO_SRC_CHANGES =
-NO_SRC_CHANGES = yes
+NO_SRC_CHANGES = YES
 
 
 # NOTE: FLAVOUR is now obsolete
@@ -757,14 +757,16 @@ patch_the_kernel = $(PATCH_THE_KERNEL)
 endif
 
 ifneq ($(strip $(KPKG_SELECTED_PATCHES)),)
-ifeq ($(strip $(patch_the_kernel)),AUTO)
+ifeq ($(strip $(patch_the_kernel)),NO)
+patch_the_kernel = NO
+else
 patch_the_kernel = YES
 endif
 endif
 
 ifneq ($(strip $(CONFIG_TARGET)),)
 config_target := $(CONFIG_TARGET)
-have_new_config_target := yes
+have_new_config_target := YES
 endif
 
 # If config_target doesn't end in `config' then reset it to `oldconfig'.
@@ -868,7 +870,11 @@ ifeq ($(strip $(CONFDIR)),)
 ifeq ($(strip $(patch_the_kernel)),YES)
 CONFDIR     = $(PATCH_DIR)
 else
+ifeq ($(strip $(patch_the_kernel)),yes)
+CONFDIR     = $(PATCH_DIR)
+else
 CONFDIR     = $(DEBDIR)/Config
+endif
 endif
 endif
 
@@ -892,7 +898,7 @@ CONFIG_FILE := $(shell if test -e .config ; then \
 
 # define MODULES_ENABLED if appropriate
 ifneq ($(strip $(shell egrep ^[^\#]*CONFIG_MODULES $(CONFIG_FILE))),)
-MODULES_ENABLED := yes
+MODULES_ENABLED := YES
 endif
 
 # accept both space separated list of modules, as well as comma
@@ -903,7 +909,7 @@ space:= $(empty) $(empty)
 valid_modules:=
 
 # See what modules we are talking about
-ifeq ($(strip $(MODULES_ENABLED)),yes)
+ifeq ($(strip $(MODULES_ENABLED)),YES)
 ifneq ($(strip $(KPKG_SELECTED_MODULES)),)
 canonical_modules=$(subst $(comma),$(space),$(KPKG_SELECTED_MODULES))
 else
@@ -1127,9 +1133,9 @@ endif
 	test -f stamp-configure || $(deb_rule) configure
 	echo 'Building Package' > stamp-building
 ifneq ($(strip $(root_cmd)),)
-	dpkg-buildpackage $(strip $(root_cmd)) -m"$(maintainer) <$(email)>"
+	dpkg-buildpackage $(strip $(root_cmd)) -m"$(maintainer) <$(email)>" -k"$(pgp)"
 else
-	dpkg-buildpackage -m"$(maintainer) <$(email)>"
+	dpkg-buildpackage -m"$(maintainer) <$(email)>" -k"$(pgp)"
 endif
 	rm -f stamp-building
 	touch stamp-buildpackage

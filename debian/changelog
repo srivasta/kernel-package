@@ -1,3 +1,13 @@
+kernel-package (8.019) unstable; urgency=low
+
+  * Pass the --pgpsign option to dpkg-buildpackage           closes: Bug#171124
+  * Fix typo in rules for sparc                  closes: Bug#175512, Bug#174327
+  * it is --rootcmd fakeroot, not -rfakeroot                 closes: Bug#177281
+  * Change the behaviour of the 'PATCH_THE_KERNEL option to AUTO
+                                                             closes: Bug#174216
+
+ -- Manoj Srivastava <srivasta@acm.org>  Thu,  6 Feb 2003 13:31:50 -0600
+
 kernel-package (8.018) unstable; urgency=low
 
   * Fix the sparc patch I added yesterday.
