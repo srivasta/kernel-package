@@ -55,7 +55,10 @@ USER INSTRUCTIONS
                make-kpkg --revision number modules_image
           where number is the same revision number used to build the
           kernel-image package in the previous step. This will generate a
-          pcmcia-modules-<kernel version> deb file in the parent directory.
+          pcmcia-modules-<kernel version> deb file in the parent
+          directory. (If you just want to build the modules, and have
+          not compiled the kernel [in other words, if you have skipped
+          step 3], please run make dep before running make-kpkg).
 
      4)   Install the two newly created deb files (you can use `dpkg -i
           file').

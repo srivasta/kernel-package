@@ -1,3 +1,13 @@
+kernel-package (7.09) unstable; urgency=low
+
+  * Added stuff to README.modules mentioning that make dep is a required
+    step before running make modules_image, if one wishes to skip building
+    the kernel image itself. 
+  * Added links to more documentation in the /usr/share/doc/kernel-package
+    directory. 
+
+ -- Manoj Srivastava <srivasta@debian.org>  Thu, 11 May 2000 04:20:11 -0500
+
 kernel-package (7.08) unstable; urgency=low
 
   * Added a space after a question the postinst asks.
