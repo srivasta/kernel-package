@@ -12,7 +12,7 @@
 # HISTORY          : 
 # Description      : 
 # 
-#     $Id: image.postrm,v 1.8 2001/07/05 04:21:26 srivasta Exp $
+#     $Id: image.postrm,v 1.9 2001/07/06 19:53:02 srivasta Exp $
 #
 
 
@@ -30,15 +30,18 @@ my $do_bootfloppy   = "Yes";	# target machine defined
 my $do_bootloader   = "Yes";	# target machine defined
 my $move_image      = '';       # target machine defined
 my $kimage          = "=K";	# Should be empty, mostly
-my $loader          = "=L";     # lilo, silo, quik, or nettrom
+my $loader          = "=L";     # lilo, silo, quik, palo, vmelilo, or nettrom
 my $image_dir       = "=D";     # where the image is located
 my $clobber_modules = '';       # target machine defined
 my $initrd          = "=I";     # initrd kernel
+my $use_hard_links  = '';       # hardlinks do not work across fs boundaries
 
 my $Loader          = "LILO";
 $Loader             = "SILO"  if $loader =~ /silo/io;
 $Loader             = "QUIK"  if $loader =~ /quik/io;
+$Loader             = "PALO"  if $loader =~ /palo/io;
 $Loader             = "NETTROM"  if $loader =~ /nettrom/io;
+$Loader             = "VMELILO"  if $loader =~ /vmelilo/io;
 
 if (! $image_dest) {
   $image_dest         = "boot"  
@@ -87,7 +90,10 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
       $clobber_modules = '' if /clobber_modules\s*=\s*(no|false|0)\s*$/ig;
       $do_boot_enable  = '' if /do_boot_enable\s*=\s*(no|false|0)\s*$/ig;
       $do_bootfloppy   = '' if /do_bootfloppy\s*=\s*(no|false|0)\s*$/ig;
+      $relative_links  = '' if /relative_links \s*=\s*(no|false|0)\s*$/ig;
       $do_bootloader   = '' if /do_bootloader\s*=\s*(no|false|0)\s*$/ig;
+      $do_initrd       = '' if /do_initrd\s*=\s*(no|false|0)\s*$/ig;
+      $use_hard_links  = '' if /use_hard_links\s*=\s*(no|false|0)\s*$/ig;
 
 
       $do_symlink      = "Yes" if /do_symlinks\s*=\s*(yes|true|1)\s*$/ig;
@@ -99,6 +105,9 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
       $do_boot_enable  = "Yes" if /do_boot_enable\s*=\s*(yes|true|1)\s*$/ig;
       $do_bootfloppy   = "Yes" if /do_bootfloppy\s*=\s*(yes|true|1)\s*$/ig;
       $do_bootloader   = "Yes" if /do_bootloader\s*=\s*(yes|true|1)\s*$/ig;
+      $relative_links  = "Yes" if /relative_links\s*=\s*(yes|true|1)\s*$/ig;
+      $do_initrd       = "Yes" if /do_initrd\s*=\s*(yes|true|1)\s*$/ig;
+      $use_hard_links  = "Yes" if /use_hard_links\s*=\s*(yes|true|1)\s*$/ig;
 
       $image_dest      = "$1"  if /image_dest\s*=\s*(\S+)/ig;
       $postinst_hook   = "$1"  if /postinst_hook\s*=\s*(\S+)/ig;
@@ -118,6 +127,9 @@ elsif ($kimage =~ m/^Image$/o)    { my $nop = $kimage;}
 elsif ($kimage =~ m/^vmlinux$/o)  { my $nop = $kimage;}
 else                              {$kimage = "vmlinuz"} # default
 
+
+# This removes dangling symlinks. What do we do about hard links? Surely a 
+# something with the nane $image_dest . "$kimage" ought not to be left behind? 
 sub image_magic {
   my $kimage = $_[0];
   my $image_dest = $_[1];
@@ -131,7 +143,7 @@ sub image_magic {
       warn "The link "  . $image_dest . "$kimage is a dangling link\n";
       warn "Removing dangling sym link "  . $imagedir . "$kimage \n";
       warn "Unless you used the optional flag in lilo, you may  \n";
-      warn " need to re-run lilo\n";
+      warn " need to re-run $loader\n";
       # Remove the dangling link
       unlink $image_dest . $kimage;
     }
@@ -145,7 +157,7 @@ sub image_magic {
       warn "The link "  . $image_dest . "$kimage" . ".old is a dangling link\n";
       warn "Removing dangling sym link "  . $image_dest . "$kimage" . ".old \n";
       warn "Unless you used the optional flag in lilo, you may  \n";
-      warn " need to re-run lilo\n";
+      warn " need to re-run $loader\n";
       # Remove the dangling link
       unlink $image_dest . $kimage . ".old";
     }

@@ -21,7 +21,7 @@
 .\" Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139,
 .\" USA.
 .\"
-.\" $Id: kernel-img.conf.5,v 1.11 2001/04/25 07:19:21 srivasta Exp $
+.\" $Id: kernel-img.conf.5,v 1.12 2001/07/06 19:53:01 srivasta Exp $
 .\"
 .TH KERNEL\-IMG.CONF 5 "Mar 21 2000" "Debian" "Debian GNU/Linux manual" 
 .\" NAME should be all caps, SECTION should be 1-8, maybe w/ subsection
@@ -231,11 +231,28 @@ Set to YES to prevent the
 post installation script from issueing a warning when installing an
 intrd kernel. This assumes you have correctly set up your boot loader
 to be able to boot the initrd image.
+.TP
+.B use_hard_links
+This option has been put in for the people who can't handle symbolic
+links (a boot loader that does not handle symbolic links, for
+example). If set to YES, this shall cause the kernel image  postinst
+to use hard link instead of symbolic links for the automatically
+handled /vmlinuz and /vmlinuz.old.  I have tried to make it compatible
+with 
+.B move_image
+and
+.B reverse_symlinks
+Caveat: It is up to the end user to ensure that the 
+.B image_dest
+directory and the location of the image (nominally /boot) live on the
+same file system (since one can't make hard links scross file
+systems. 
+.B You have been warned.
 .SH FILES
 The file described here is
 .I /etc/kernel-img.conf.
 .SH "SEE ALSO"
-.BR make-kpkg (8),
+.BR make-kpkg (1),
 .BR kernel-pkg.conf (5),
 .BR make (1),
 .B The GNU Make manual.

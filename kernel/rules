@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.122 2001/07/05 16:21:18 srivasta Exp $
+## $Id: rules,v 1.123 2001/07/06 19:53:02 srivasta Exp $
 ###############################################################################
 
 ifdef ARCH
@@ -105,37 +105,51 @@ INT_IMAGE_DESTDIR=debian/tmp-image$(IMAGEDIR)
 
 ### m68k
 ifeq ($(strip $(architecture)),m68k)
-# m68k doesn't use lilo (atari lilo is alpha software; amiga lilo is
-# stable but unpackaged; mac lilo, who knows?).
-# sub archs can be Amiga, Atari, Mac
-GUESS_SUBARCH:=$(shell awk '/Model/ { print $$2}' /proc/hardware)
 
-ifeq (,$(findstring $(SUBARCH),Amiga Atari Mac Macintosh))
-SUBARCH:=$(GUESS_SUBARCH)
+ifeq (,$(findstring /$(SUBARCH)/,/amiga/atari/mac/mvme147/mvme16x/bvme6000/))
+ GUESS_SUBARCH:=$(shell awk '/Model/ { print $$2}' /proc/hardware)
+ ifneq (,$(findstring Motorola,$(GUESS_SUBARCH)))
+  GUESS_SUBARCH:=$(shell awk '/Model/ { print $$3}' /proc/hardware)
+  ifneq (,$(findstring MVME147,$(GUESS_SUBARCH)))
+   SUBARCH:=mvme147
+  else
+   SUBARCH:=mvme16x
+  endif
+ else
+  ifneq (,$(findstring BVME,$(GUESS_SUBARCH)))
+   SUBARCH:=bvme6000
+  else
+   ifneq (,$(findstring Amiga,$(GUESS_SUBARCH)))
+    SUBARCH:=amiga
+   else
+    ifneq (,$(findstring Atari,$(GUESS_SUBARCH)))
+     SUBARCH:=atari
+    else
+     ifneq (,$(findstring Mac,$(GUESS_SUBARCH)))
+      SUBARCH:=mac
+     endif
+    endif
+   endif
+  endif
+ endif
 endif
 
-NEED_DIRECT_GZIP_IMAGE=YES
+NEED_DIRECT_GZIP_IMAGE=NO
 kimage := zImage
-loaderdep=
-loader=lilo
-loaderdoc=
 target = $(kimage)
-kimagesrc = vmlinux
+kimagesrc = vmlinux.gz
 kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
-ifeq ($(strip $(GUESS_SUBARCH)),Amiga)
-        DEBCONFIG= $(CONFDIR)/config.amiga
+DEBCONFIG = $(CONFDIR)/config.$(SUBARCH)
+ifneq (,$(findstring $(SUBARCH),mvme147 mvme16x bvme6000))
+ loaderdep=vmelilo
+ loader=vmelilo
+ loaderdoc=VmeliloDefault
 else
-ifeq ($(strip $(GUESS_SUBARCH)),Atari)
-        DEBCONFIG= $(CONFDIR)/config.atari
-else
-ifeq ($(strip $(GUESS_SUBARCH)),Mac)
-        DEBCONFIG= $(CONFDIR)/config.mac
+ loaderdep=
+ loader=lilo
+ loaderdoc=
 endif
-ifeq ($(strip $(GUESS_SUBARCH)),Macintosh)
-        DEBCONFIG= $(CONFDIR)/config.mac
-endif
-endif
-endif
+
 endif
 
 ### ARM
@@ -1009,7 +1023,7 @@ endif
 		            cp -pf $(DEBDIR)/config  .config) || \
 			true
 ifeq ($(strip $(have_new_config_target)),)
-	test -f .config || $(error Need an config file .config)
+	test -f .config || (echo "*** Need a config file .config" && false)
 endif
 # if $(have_new_config_target) is set, then we need not have a .config
 # file at this point

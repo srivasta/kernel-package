@@ -13,7 +13,7 @@
 # Description      : 
 # 
 #
-#    $Id: image.prerm,v 1.9 2000/07/10 06:25:19 srivasta Exp $
+#    $Id: image.prerm,v 1.10 2001/07/06 19:53:02 srivasta Exp $
 #
 # 
 
@@ -29,14 +29,18 @@ my $do_bootfloppy   = "Yes";	# target machine defined
 my $do_bootloader   = "Yes";	# target machine defined
 my $move_image      = '';       # target machine defined
 my $kimage          = "=K";	# Should be empty, mostly
-my $loader          = "=L";     # lilo, silo, quik, or nettrom
+my $loader          = "=L";     # lilo, silo, quik, palo, vmelilo, or nettrom
 my $image_dir       = "=D";     # where the image is located
 my $clobber_modules = '';       # target machine defined
+my $initrd          = "=I";     # initrd kernel
+my $use_hard_links  = '';       # hardlinks do not wirk across fs boundaries
 
 my $Loader          = "LILO";
 $Loader             = "SILO"  if $loader =~ /silo/io;
 $Loader             = "QUIK"  if $loader =~ /quik/io;
+$Loader             = "PALO"  if $loader =~ /palo/io;
 $Loader             = "NETTROM"  if $loader =~ /nettrom/io;
+$Loader             = "VMELILO"  if $loader =~ /vmelilo/io;
 
 
 

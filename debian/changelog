@@ -1,3 +1,21 @@
+kernel-package (7.47) unstable; urgency=low
+
+  * Make sure that all other man pages do not refer to make-kpkg(8)
+    anymore.                                                 closes: Bug#103696
+  * "Nick Holgate" <nick_h@bvmltd.co.uk> provided a patch the
+    * Tidied up m68k subarch guessing.
+    * Added m68k VME subarch support.
+    * Added vmelilo kernel image postinst support for m68k bvme6000 mvme147
+      and mvme16x subarches.
+    * Fixed problem checking for the existance of .config file in 'rules',
+      make would always abort with error even if .config file was found. 
+    * Also attached are up to the minute kernel configuration files as
+      used to build the official m68k kernel-image packages.
+  * Added a use_hard_links option to kernel-img.conf for people who use
+    boot loaders that can't follow symlinks.
+
+ -- Manoj Srivastava <srivasta@debian.org>  Fri,  6 Jul 2001 14:52:25 -0500
+
 kernel-package (7.46) unstable; urgency=low
 
   * Fixed typo in image.postinst

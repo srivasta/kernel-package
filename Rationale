@@ -68,7 +68,7 @@
    xiv) The postinst looks at a configuration file on the installation
         machine (as opposed to the machine that the image was compiled
         on), and allows the local admin to decide on issues of
-        symbolic links, and whether the vbood loader stuff must be
+        symbolic links, and whether the boot loader stuff must be
         run, and whether one wants to create a boot floppy or not. 
     xv) The postinst and the postrm scripts allow the local admin on
         the installation machine to add a script into runtime hooks;

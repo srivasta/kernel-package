@@ -30,15 +30,18 @@ my $do_bootloader   = "Yes";	# target machine defined
 my $move_image      = '';       # target machine defined
 my $do_initrd       = '';       # target machine defined
 my $kimage          = "=K";     # Should be empty, mostly
-my $loader          = "=L";     # lilo, silo, quik, or nettrom
+my $loader          = "=L";     # lilo, silo, quik, palo, vmelilo, or nettrom
 my $image_dir       = "=D";     # where the image is located
 my $clobber_modules = '';       # target machine defined
 my $initrd          = "=I";     # initrd kernel
+my $use_hard_links  = '';       # hardlinks do not wirk across fs boundaries
 
 my $Loader          = "LILO";
 $Loader             = "SILO"  if $loader =~ /silo/io;
 $Loader             = "QUIK"  if $loader =~ /quik/io;
+$Loader             = "PALO"  if $loader =~ /palo/io;
 $Loader             = "NETTROM"  if $loader =~ /nettrom/io;
+$Loader             = "VMELILO"  if $loader =~ /vmelilo/io;
 
 
 #known variables
@@ -70,6 +73,11 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
       $image_in_boot   = "" if /image_in_boot\s*=\s*(no|false|0)\s*$/ig;
       $move_image      = "" if /move_image\s*=\s*(no|false|0)\s*$/ig;
       $clobber_modules = '' if /clobber_modules\s*=\s*(no|false|0)\s*$/ig;
+      $do_boot_enable  = '' if /do_boot_enable\s*=\s*(no|false|0)\s*$/ig;
+      $do_bootfloppy   = '' if /do_bootfloppy\s*=\s*(no|false|0)\s*$/ig;
+      $do_bootloader   = '' if /do_bootloader\s*=\s*(no|false|0)\s*$/ig;
+      $do_initrd       = '' if /do_initrd\s*=\s*(no|false|0)\s*$/ig;
+      $use_hard_links  = '' if /use_hard_links\s*=\s*(no|false|0)\s*$/ig;
 
       $do_symlink      = "Yes" if /do_symlinks\s*=\s*(yes|true|1)\s*$/ig;
       $no_symlink      = "Yes" if /no_symlinks\s*=\s*(yes|true|1)\s*$/ig;
@@ -77,7 +85,11 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
       $image_in_boot   = "Yes" if /image_in_boot\s*=\s*(yes|true|1)\s*$/ig;
       $move_image      = "Yes" if /move_image\s*=\s*(yes|true|1)\s*$/ig;
       $clobber_modules = "Yes" if /clobber_modules\s*=\s*(yes|true|1)\s*$/ig;
+      $do_boot_enable  = "Yes" if /do_boot_enable\s*=\s*(yes|true|1)\s*$/ig;
+      $do_bootfloppy   = "Yes" if /do_bootfloppy\s*=\s*(yes|true|1)\s*$/ig;
+      $do_bootloader   = "Yes" if /do_bootloader\s*=\s*(yes|true|1)\s*$/ig;
       $do_initrd       = "Yes" if /do_initrd\s*=\s*(yes|true|1)\s*$/ig;
+      $use_hard_links  = "Yes" if /use_hard_links\s*=\s*(yes|true|1)\s*$/ig;
 
       $image_dest      = "$1"  if /image_dest\s*=\s*(\S+)/ig;
       $image_dest      = "$1"  if /image_dest\s*=\s*(\S+)/ig;
@@ -105,7 +117,7 @@ You are attempting to install an initrd kernel image (version $version)
 This will not work unless you have configured your boot loader to use
 initrd.
 EOF
-    if ($loader =~ m/lilo/i) {
+    if ($loader =~ m/^lilo/i) {
       print STDERR "As a reminder, in order to configure lilo, you need to\n";
       print STDERR "add an 'initrd=/boot/initrd' in your /etc/lilo.conf\n";
     }

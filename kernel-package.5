@@ -21,7 +21,7 @@
 .\" Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139,
 .\" USA.
 .\"
-.\" $Id: kernel-package.5,v 1.4 2001/04/29 16:02:44 srivasta Exp $
+.\" $Id: kernel-package.5,v 1.5 2001/07/06 19:53:01 srivasta Exp $
 .\"
 .TH KERNEL\-PACKAGE 5 "May  25 1999" "Debian" "Debian GNU/Linux manual" 
 .\" NAME should be all caps, SECTION should be 1-8, maybe w/ subsection
@@ -124,6 +124,26 @@ Allows one to compile a kernel for another computer, for example using
 a fast machine to compile the kernel for installation on a slower
 machine. This is really nice since the modules are all included in the
 .deb; and one does not have to deal with modules manually.
+.TP
+.B xiv) Customizations on the target host
+The postinst looks at a configuration file on the installation machine
+(as opposed to the machine that the image was compiled on), and allows
+the local admin to decide on issues of symbolic links, and whether the
+boot loader stuff must be run, and whether one wants to create a boot
+floppy or not.
+.TP
+.B  xv) runtime hooks
+The postinst and the postrm scripts allow the local admin on the
+installation machine to add a script into runtime hooks; this can
+allow, amongst other things, grub users to add and remove kernel image
+stanzas from the grub menu (example scripts to do this are in the
+package). 
+.TP
+.B xvi) Append descriptive bits to the kernel version
+One can append to the kernel version on the command line, or by
+setting an environment variable. So if your kernel is called
+kernel-image-2.4.1John.Home; it is unlikely to be overridden by the
+official 2.4.1 kernel, since they are not the same version.
 .RE
 .SH "Disadvantages of using make-kpkg"
 .TP
