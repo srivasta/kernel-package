@@ -1,5 +1,5 @@
 
-    $Id: Problems,v 1.14 2001/07/11 21:37:52 srivasta Exp $
+    $Id: Problems,v 1.15 2002/01/22 03:51:06 srivasta Exp $
 
  This is an (incomplete) list of problems that people have encountered
  in the past while using kernel-package. Please remember to configure
@@ -155,3 +155,16 @@ make[1]: *** No rule to make target `arch/i586/Makefile'.  Stop.
 
 	This is a result of having the env variable ARCH set when you do 
         not intend to cross compile the kernel.  Unsetting ARCH works fine.
+
+      o)  booting from the new kernel fails with 
+VFS: Cannot open root device "308" or 03:08
+          immediately followed by a kernel panic
+
+	The cause for this is either you have not compiled the file
+	system type of the root file system into the kernel, or you
+	have instructed yout boot loader to expect an initrd kernel
+	(this is required for running a recent official kernel image
+	package from Debian), and have installed a non-initrd garden
+	variety kernel image.  You need to go back and recompile the
+	kernel image, either including the root file system type as a
+	builtin, or adding a --initrd flag to the make-kpkg run.

@@ -22,7 +22,7 @@
 .\" USA.
 .\"
 .\"
-.\"    $Id: make-kpkg.8,v 1.47 2002/01/07 15:46:52 srivasta Exp $
+.\"    $Id: make-kpkg.8,v 1.48 2002/01/22 03:51:06 srivasta Exp $
 .\"
 .TH MAKE\-KPKG 1 "May 2 1997" "Debian" "Debian GNU/Linux manual"
 .SH NAME
@@ -360,10 +360,16 @@ file in the kernel source directory, a default configuration is
 provided similar to the one used to create the
 .B Debian
 boot\-floppies.  At install time, it updates symbolic links in the
-symlinkk destination directory (the root directory by default)
+symlink destination directory (the root directory by default)
 to point to the new kernel image in the image directory, which is
 nominally 
 .I /boot.
+If the symbolic link already points to the current kernel image, no
+action is taken.  If a prior symbolic link exists, it is rotated out
+with a suffix.old, and a new symbolic link, properly updated is
+installed in its place (the variable minimal_swap in 
+.I /etc/kernel-img.conf
+further modifies this behaviour).
 On installation, it also offers to run the Linux loader,
 .I LILO
 (or alternates like 

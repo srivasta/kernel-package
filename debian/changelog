@@ -1,3 +1,9 @@
+kernel-package (7.82) unstable; urgency=low
+
+  * Add the option minimal_swap,                             closes: Bug#128885
+
+ -- Manoj Srivastava <srivasta@debian.org>  Mon, 21 Jan 2002 21:50:28 -0600
+
 kernel-package (7.81) unstable; urgency=low
 
   * Hmm. The fix for Bug#126319 and Bug#126739 instead broke all kinds of

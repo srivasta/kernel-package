@@ -13,7 +13,7 @@
 # Description      : 
 # 
 #
-#    $Id: image.prerm,v 1.15 2001/09/10 16:49:08 srivasta Exp $
+#    $Id: image.prerm,v 1.16 2002/01/22 03:51:07 srivasta Exp $
 #
 # 
 #use strict;
@@ -37,6 +37,7 @@ my $initrd          = "=I";     # initrd kernel
 my $use_hard_links  = '';       # hardlinks do not wirk across fs boundaries
 my $postinst_hook   = '';       #Normally we do not
 my $postrm_hook     = '';       #Normally we do not
+my $minimal_swap    = '';       # Do not swap symlinks
 
 my $Loader          = "NoLOADER"; # 
 $Loader             = "LILO"     if $loader =~ /^lilo/io;

@@ -21,7 +21,7 @@
 .\" Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139,
 .\" USA.
 .\"
-.\" $Id: kernel-img.conf.5,v 1.15 2001/09/10 16:49:08 srivasta Exp $
+.\" $Id: kernel-img.conf.5,v 1.16 2002/01/22 03:51:06 srivasta Exp $
 .\"
 .TH KERNEL\-IMG.CONF 5 "Mar 21 2000" "Debian" "Debian GNU/Linux manual" 
 .\" NAME should be all caps, SECTION should be 1-8, maybe w/ subsection
@@ -80,6 +80,17 @@ If the configuration file already exists, and
 if this option is set to No, no symbolic link is ever created. This
 for people who have other means of booting their machines, and do not
 like the symbolic links cluttering up their / directory.  Defaults to Yes. 
+.TP
+.B minimal_swap
+By default, if the /vmlinuz symbolic link does not point to an image
+which is the same as the image being installed, the postinst moves
+/vmlinuz to /vmlinuz.old, and creates a symbolic link to the kernel
+image in /vmlinuz (the exception is to prevent both /vmlinuz and
+/vmlinuz.old from pointing to the current kernel image -- potentially
+disastrous if the current image is defective or lacking in any
+way). However, if this option is enabled, no action is taken if
+/vmlinuz.old points to the currently installed image (by default, the
+symbolic links are swapped).  Defaults to no.
 .TP
 .B no_symlinks
 Whether to use symlinks to the 
