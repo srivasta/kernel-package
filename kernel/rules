@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Mon Feb 18 09:03:46 2002
+## Last Modified On : Tue Mar 19 22:39:26 2002
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 517
+## Update Count	    : 518
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.161 2002/03/04 22:42:57 srivasta Exp $
+## $Id: rules,v 1.162 2002/03/20 04:39:44 srivasta Exp $
 ###############################################################################
 
 ifdef KPKG_ARCH
@@ -843,7 +843,8 @@ ifeq ($(strip $(MODULES_ENABLED)),yes)
 ifneq ($(strip $(KPKG_SELECTED_MODULES)),)
 canonical_modules=$(subst $(comma),$(space),$(KPKG_SELECTED_MODULES))
 else
-canonical_modules=$(shell find $(MODULE_LOC) -follow -maxdepth 1 -type d -print |\
+canonical_modules=$(shell test -e $(MODULE_LOC) && \
+                       find $(MODULE_LOC) -follow -maxdepth 1 -type d -print |\
 			   egrep -v '^$(MODULE_LOC)$$')
 endif
 
