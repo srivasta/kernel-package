@@ -1,3 +1,12 @@
+kernel-package (3.40) unstable; urgency=low
+
+  * Added the proposal for the new multi architecture support. Documented
+    the new variable patch_the_kernel and the ENV override.  
+  * Mentioned new behaviour of depmod and friends Re non .o files in
+    /lib/modules in the problems file.
+
+ -- Manoj Srivastava <srivasta@debian.org>  Thu, 18 Sep 1997 00:02:55 -0500
+
 kernel-package (3.39) unstable; urgency=low
 
   * Fixed handling of modules.dep in the image.postinst. We do not attempt
