@@ -5,9 +5,9 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Mon Feb 14 18:04:34 2005
+## Last Modified On : Wed Feb 16 01:45:12 2005
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count	    : 761
+## Update Count	    : 764
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
@@ -157,11 +157,11 @@ deb_rule = $(MAKE) -f $(DEBDIR)/rules
 
 # Could have used :=, but some patches do seem to patch the
 # Makefile. perhaps deferring the rule makes that better
-VERSION      :=$(shell $(MAKE) -sf $(DEBDIR)/kernel_version.mk debian_VERSION)
-PATCHLEVEL   :=$(shell $(MAKE) -sf $(DEBDIR)/kernel_version.mk debian_PATCHLEVEL)
-SUBLEVEL     :=$(shell $(MAKE) -sf $(DEBDIR)/kernel_version.mk debian_SUBLEVEL)
-EXTRA_VERSION:=$(shell $(MAKE) -sf $(DEBDIR)/kernel_version.mk debian_EXTRAVERSION)
-LOCALVERSION :=$(shell $(MAKE) -sf $(DEBDIR)/kernel_version.mk debian_LOCALVERSION)
+VERSION      :=$(shell $(MAKE) --no-print-directory -sf $(DEBDIR)/kernel_version.mk debian_VERSION)
+PATCHLEVEL   :=$(shell $(MAKE) --no-print-directory -sf $(DEBDIR)/kernel_version.mk debian_PATCHLEVEL)
+SUBLEVEL     :=$(shell $(MAKE) --no-print-directory -sf $(DEBDIR)/kernel_version.mk debian_SUBLEVEL)
+EXTRA_VERSION:=$(shell $(MAKE) --no-print-directory -sf $(DEBDIR)/kernel_version.mk debian_EXTRAVERSION)
+LOCALVERSION :=$(shell $(MAKE) --no-print-directory -sf $(DEBDIR)/kernel_version.mk debian_LOCALVERSION)
 
 
 
@@ -1666,7 +1666,7 @@ endif
             mv -f scripts/package/builddeb scripts/package/builddeb.dist
 	test ! -e scripts/package/Makefile || \
             (mv -f scripts/package/Makefile scripts/package/Makefile.dist && \
-               echo "# Dummy file " >  scripts/package/Makefile)
+               (echo "# Dummy file "; echo "help:") >  scripts/package/Makefile)
 	@test -f $(DEBDIR)/rules || \
             echo Error: Could not find $(DEBDIR)/rules
 	-test ! -f stamp-debian && test ! -f debian/official && \
@@ -1729,7 +1729,7 @@ endif
 	@echo "Debian Revision  = $(debian)"        >> .mak
 	@echo "KPKG_ARCH        = $(KPKG_ARCH)"        >> .mak
 # Fetch the rest of the information from the kernel's Makefile
-	@$(MAKE) -sf $(DEBDIR)/kernel_version.mk  ARCH=$(KERNEL_ARCH) \
+	@$(MAKE) --no-print-directory -sf $(DEBDIR)/kernel_version.mk  ARCH=$(KERNEL_ARCH) \
           $(CROSS_ARG) debian_conf_var              >> .mak
 	@echo "do_parallel      = $(do_parallel)"   >> .mak
 	@echo "fast_dep         = $(fast_dep)"      >> .mak
@@ -1737,7 +1737,7 @@ endif
 # Use the kernel's Makefile to calculate the TOPDIR.
 # TOPDIR is obsolete in 2.6 kernels, so the kernel_version.mk
 # will get us the right answer
-	@sed -e 's%$(shell $(MAKE) -sf $(DEBDIR)/kernel_version.mk debian_TOPDIR)%$$(TOPDIR)%g' .mak     > conf.vars
+	@sed -e 's%$(shell $(MAKE) --no-print-directory -sf $(DEBDIR)/kernel_version.mk debian_TOPDIR)%$$(TOPDIR)%g' .mak     > conf.vars
 	@rm -f .mak
 
 dummy_do_dep:
