@@ -21,47 +21,47 @@
 .\" Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139,
 .\" USA.
 .\"
-.\" $Id: kernel-pkg.conf.es.5,v 1.2 2003/06/09 19:15:21 srivasta Exp $
+.\" $Id: kernel-pkg.conf.es.5,v 1.3 2003/08/08 19:13:57 srivasta Exp $
 .\"
 
 .\" (c) 2003 Software in the Public Interest
-.\" Esta traducci√≥n ha sido realizada por Rub√©n Porras <nahoo@inicia.es>
-.\" Est√° basada en la p√°gina de manual original:
-.\" versi√≥n 1.3 del CVS de /cvs/debian-doc/manpages/english/kernel-package/
+.\" Esta traducciÛn ha sido realizada por RubÈn Porras <nahoo@inicia.es>
+.\" Est· basada en la p·gina de manual original:
+.\" versiÛn 1.3 del CVS de /cvs/debian-doc/manpages/english/kernel-package/
 .\" Revisada por Rudy Godoy <rudy@kernel-panik.org>
 
 .TH KERNEL\-PKG.CONF 5 "7 de junio de 1997" "Debian" "manual Debian GNU/Linux" 
 .\" NAME should be all caps, SECTION should be 1-8, maybe w/ subsection
 .\" other parms are allowed: see man(7), man(1)
 .SH NOMBRE
-kernel\-pkg.conf \- fichero de configuraci√≥n global del sistema para make\-kpkg
+kernel\-pkg.conf \- fichero de configuraciÛn global del sistema para make\-kpkg
 .SH SINOPSIS
 .I /etc/kernel\-pkg.conf
 o
 .I ~/.kernel\-pkg.conf
-.SH "DESCRIPCI√ìN"
+.SH "DESCRIPCI”N"
 El fichero 
 .I /etc/kernel\-pkg.conf
 o
 .I ~/.kernel\-pkg.conf
-actualmente es un peque√±o
+actualmente es un pequeÒo
 .BR Makefile
-incluido durante el proceso de construcci√≥n del n√∫cleo, debido a esto puede
-poner cualquier cosa permitida en este tipo de ficheros (simplemente est√© muy
-seguro acerca de lo que hace). Si existe la configuraci√≥n de usuario
+incluido durante el proceso de construcciÛn del n˙cleo, debido a esto puede
+poner cualquier cosa permitida en este tipo de ficheros (simplemente estÈ muy
+seguro acerca de lo que hace). Si existe la configuraciÛn de usuario
 .I ~/.kernel\-pkg.conf
-, se usa en favor del fichero de configuraci√≥n global
+, se usa en favor del fichero de configuraciÛn global
 .I /etc/kernel\-pkg.conf.
 .PP
 Todas las variables tienen valores razonables de forma predeterminada, pueden
-ser modificadas para una ejecuci√≥n o para un caso en concreto usando variables
+ser modificadas para una ejecuciÛn o para un caso en concreto usando variables
 de entorno. Algunas de las variables pueden ser modificadas con opciones de
 .B make\-kpkg.
 .PP
 En este momento, las variables modificables por el usuario son:
 .TP
 .B maintainer
-Encargado del paquete local kernel-*. Establecido en la instalaci√≥n por
+Encargado del paquete local kernel-*. Establecido en la instalaciÛn por
 .IR postinst.
 Puede ser modificado mediante la variable de entorno
 .B KPKG_MAINTAINER.
@@ -70,7 +70,7 @@ modo:
 maintainer = John O'\\''Brien. Si, es feo pero funciona.
 .TP
 .B email      
-La direcci√≥n de correo electr√≥nico del encargado. Establecido en la instalaci√≥n
+La direcciÛn de correo electrÛnico del encargado. Establecido en la instalaciÛn
 por
 .IR postinst.
 Puede ser modificado mediante la variable de entorno
@@ -79,39 +79,39 @@ Puede ser modificado mediante la variable de entorno
 .B pgp           
 Nombre a buscar en la base de datos pgp 
 .BI si
-construimos m√≥dulos separados (como pcmcia) en
+construimos mÛdulos separados (como pcmcia) en
 .IR /usr/src/modules/.
 Puede ser modificado mediante la variable de entorno
 .B PGP_SIGNATURE, 
-o (de nuevo) por la opci√≥n 
+o (de nuevo) por la opciÛn 
 .IR \-\-pgpsign
 de
 .B make-kpkg.
-Por omisi√≥n es 
+Por omisiÛn es 
 .I maintainer.
 (Opcional)
 .TP
 .B debian         
-La revisi√≥n de Debian del paquete con el n√∫cleo. Puede ser modificado mediante
+La revisiÛn de Debian del paquete con el n˙cleo. Puede ser modificado mediante
 la variable de entorno
 .B DEBIAN_REVISION, 
-o (de nuevo) por la opci√≥n 
+o (de nuevo) por la opciÛn 
 .IR \-\-revision
 de
 .B make-kpkg.
-Por omisi√≥n es 
+Por omisiÛn es 
 .I 1.0.0.Custom
 (Opcional)
 .TP
 .B debian_revision_mandatory
-Normalmente sin definir. Si √©sta o la variable de entorno
+Normalmente sin definir. Si Èsta o la variable de entorno
 .B DEBIAN_REVISION_MANDATORY
-est√°n establecidas, entonces, la falta de una revisi√≥n de Debian causa un error (y
+est·n establecidas, entonces, la falta de una revisiÛn de Debian causa un error (y
 .B make-kpkg
-no proporcionar√° un valor por omisi√≥n de 1.0.0.Custom)
+no proporcionar· un valor por omisiÛn de 1.0.0.Custom)
 .TP
 .B link_in_boot
-Pongalo a True si quiere el enlace simb√≥lico a la imagen del n√∫cleo, llamado
+Pongalo a True si quiere el enlace simbÛlico a la imagen del n˙cleo, llamado
 .I vmlinuz 
 en 
 .I /boot 
@@ -119,11 +119,11 @@ en vez de en el sitio predeterminado
 .I /.  
 Puede ser modificado mediante la variable de entorno
 .B LINK_IN_BOOT. 
-Por omisi√≥n est√° indeterminado.
+Por omisiÛn est· indeterminado.
 (Opcional)
 .TP
 .B kimage         
-El tipo de imagen del n√∫cleo (e.g. zImage o bzImage). Puede ser modificado mediante la variable de entorno 
+El tipo de imagen del n˙cleo (e.g. zImage o bzImage). Puede ser modificado mediante la variable de entorno 
 .B IMAGE_TYPE,  
 o (de nuevo) por las opciones
 .IR \-\-zimage
@@ -131,7 +131,7 @@ o
 .IR \-\-bzimage
 de
 .B make-kpkg.
-Por omisi√≥n es 
+Por omisiÛn es 
 .I bzImage.
 (Opcional)
 .TP
@@ -145,18 +145,18 @@ Mutuamente excluyente con
 Puede usarse con
 .I link_in_boot. 
 La imagen se coloca en vmlinuz (en vez de en /boot/vmlinuz-X.X.XX). El vmlinuz
-anterior se mueve a vmlinuz.old incondicionalmente. (Normalmente, s√≥lo se hace
-si la versi√≥n de la nueva imagen difiere de la anterior). Esto le restringe a
-dos im√°genes, a menos que usted tome medidas adicionales y guarde copias de
-im√°genes anteriores. Esto es para aquellos que tienen
+anterior se mueve a vmlinuz.old incondicionalmente. (Normalmente, sÛlo se hace
+si la versiÛn de la nueva imagen difiere de la anterior). Esto le restringe a
+dos im·genes, a menos que usted tome medidas adicionales y guarde copias de
+im·genes anteriores. Esto es para aquellos que tienen
 .I /boot
-en un sistema que no usa los enlaces simb√≥licos (y digamos, que usan loadlin
+en un sistema que no usa los enlaces simbÛlicos (y digamos, que usan loadlin
 como gestor de arranque). Esto es una chapuza.
-Por omisi√≥n est√° indefinido (opcional)
+Por omisiÛn est· indefinido (opcional)
 .TP
 .B reverse_symlinks
-Determina si se usan enlaces simb√≥licos invertidos (esto es, el fichero real es
-el que no tiene n√∫mero de versi√≥n, la versi√≥n numerada es el enlace) al fichero
+Determina si se usan enlaces simbÛlicos invertidos (esto es, el fichero real es
+el que no tiene n˙mero de versiÛn, la versiÛn numerada es el enlace) al fichero
 con la
 .I imagen.
 Puede ser modificado mediante la variable de entorno
@@ -168,17 +168,17 @@ Se puede usar junto con
 Igual que
 .I no_symlinks, 
 excepto porque /boot/vmlinuz-X.XX es enlazado con la nueva imagen real,
-vmlinuz. Esto tambi√©n le restringe a dos im√°genes a menos que tome alguna acci√≥n
+vmlinuz. Esto tambiÈn le restringe a dos im·genes a menos que tome alguna acciÛn
 adicional. Los enlaces anteriores quedan colgando. Esto es para aquellos con
 .I /boot
-en umsdos, y no pueden ver el enlace en dos, pero quieren saber el n√∫mero de la
-versi√≥n cuando est√©n en Linux. Esto es una chapuza.
-Por omisi√≥n est√° sin definir. (opcional)
+en umsdos, y no pueden ver el enlace en dos, pero quieren saber el n˙mero de la
+versiÛn cuando estÈn en Linux. Esto es una chapuza.
+Por omisiÛn est· sin definir. (opcional)
 .TP
 .B patch_the_kernel
-Esta variable es s√≥lo para expertos. Si es YES (la variable de entorno 
+Esta variable es sÛlo para expertos. Si es YES (la variable de entorno 
 .B PATCH_THE_KERNEL 
-lo modifica), el proceso de construcci√≥n hace que se ejecute sobre
+lo modifica), el proceso de construcciÛn hace que se ejecute sobre
 .I /usr/src/kernel-patches/$(architecture)/apply 
 y (afortunadamente) deshaga el proceso durante la fase de limpieza ejecutando
 run-parts sobre 
@@ -186,19 +186,19 @@ run-parts sobre
 La arquitectura especial all se usa para parches independientes de la arquitectura.
 .TP
 .B config_target
-Define el tipo de configuraci√≥n a usar. Por omisi√≥n es oldconfig, lo que est√°
-bien para configuraciones no interactivas (o m√≠nimamente interactivas). Si est√°
+Define el tipo de configuraciÛn a usar. Por omisiÛn es oldconfig, lo que est·
+bien para configuraciones no interactivas (o mÌnimamente interactivas). Si est·
 poniendo patch_the_kernel a YES y algunos de los parches cambian la
-configuraci√≥n disponible, entonces es posible que desee poner esto a otro valor
+configuraciÛn disponible, entonces es posible que desee poner esto a otro valor
 (como menuconfig o xconfig).
 (La variable de entorno
 .B CONFIG_TARGET
-modifica √©ste valor de configuraci√≥n).
+modifica Èste valor de configuraciÛn).
 Si el valor de config_target es otro distinto de config, oldconfig,
 menuconfig o xconfig se vuelve a poner a oldconfig.
 .TP
 .B use_saved_config
-√âsta variable es s√≥lo para expertos. Si es NO (la variable de entorno 
+…sta variable es sÛlo para expertos. Si es NO (la variable de entorno 
 .B USE_SAVED_CONFIG
 lo modifica), el fichero .config.save en el directorio principal es ignorado. 
 .TP
@@ -213,181 +213,181 @@ o
 .I`fakeroot')
 que 
 .B dpkg-buildpackages' 
-necesita usando la opci√≥n -r. La variable de entorno 
+necesita usando la opciÛn -r. La variable de entorno 
 .B ROOT_CMD
 lo modifica. La variable de entorno
 .B UNSIGN_SOURCE
-a√±ade a esta orden una opci√≥n para que dpkg-buildpackage no firme las fuentes,
+aÒade a esta orden una opciÛn para que dpkg-buildpackage no firme las fuentes,
 similarmente, la variable de entorno
 .B UNSIGN_CHANGELOG 
-a√±ade a esta orden una opci√≥n para que dpkg-buildpackage no firme el fichero de
-cambios. De nuevo, esta variable s√≥lo es √∫til para el objetivo
+aÒade a esta orden una opciÛn para que dpkg-buildpackage no firme el fichero de
+cambios. De nuevo, esta variable sÛlo es ˙til para el objetivo
 .I buildpackage. 
 Establezca la variable de entorno
 .B ROOT_CMD
-si s√≥lo desea construir la imagen del n√∫cleo, por ejemplo.
+si sÛlo desea construir la imagen del n˙cleo, por ejemplo.
 .TP
 .B delete_build_link
-Si es  YES, el enlace simb√≥lico a 
+Si es  YES, el enlace simbÛlico a 
 .I /lib/modules/$VERSION/build
-ser√° eliminado del paquete .deb resultante. La variable de entorno
+ser· eliminado del paquete .deb resultante. La variable de entorno
 .B DELETE_BUILD_LINK
 lo modifica. 
 .TP
 .B do_clean	
-Si es cualquier cosa menos YES, evita que se haga un make clean en el √°rbol de
-fuentes del n√∫cleo despu√©s de construir el paquete con la imagen. La variable de
+Si es cualquier cosa menos YES, evita que se haga un make clean en el ·rbol de
+fuentes del n˙cleo despuÈs de construir el paquete con la imagen. La variable de
 entorno 
 .B CLEAN_SOURCE
 lo modifica.
 .TP
 .B install_vmlinux
-Si es YES instalar√° la imagen ELF del n√∫cleo descomprimida junto con la imagen
+Si es YES instalar· la imagen ELF del n˙cleo descomprimida junto con la imagen
 arrancable y comprimida (vmlinuz). Esta imagen es necesaria para medir el
-rendimiento del n√∫cleo y usar userspace con oprofile (oprofile.sourceforge.net,
-s√≥lo i386).
+rendimiento del n˙cleo y usar userspace con oprofile (oprofile.sourceforge.net,
+sÛlo i386).
 .TP 
 .B source_clean_hook
-Si apunta a un ejecutable, este ser√° ejecutado desde el directorio principal de
-las fuentes (temporales) del n√∫cleo antes de que sean empaquetadas,
+Si apunta a un ejecutable, este ser· ejecutado desde el directorio principal de
+las fuentes (temporales) del n˙cleo antes de que sean empaquetadas,
 .I ./debian/tmp-source/usr/src/kernel-source-X.X.XX.
 No tiene efecto sobre otra cosa que no sean las fuentes empaquetadas -- si el
-script opera en el directorio actual y sus descendientes, el √°rbol de
-directorios con el c√≥digo fuente original no se ver√° modificado. Esto ayuda a
+script opera en el directorio actual y sus descendientes, el ·rbol de
+directorios con el cÛdigo fuente original no se ver· modificado. Esto ayuda a
 moldear las fuentes empaquetadas (por ejemplo, eliminar directorios de control
 de versiones, o eliminar arquitecturas).
 .TP 
 .B header_clean_hook
-Si apunta a un ejecutable, este ser√° ejecutado desde el directorio principal de
-las cabeceras del n√∫cleo antes de que sean empaquetadas. No tiene efecto sobre
+Si apunta a un ejecutable, este ser· ejecutado desde el directorio principal de
+las cabeceras del n˙cleo antes de que sean empaquetadas. No tiene efecto sobre
 otra cosa que no sean las fuentes empaquetadas -- si el script opera en el
-directorio actual y sus descendientes, el √°rbol de directorios con el c√≥digo
-fuente original no se ver√° modificado. Esto ayuda a moldear las fuentes
+directorio actual y sus descendientes, el ·rbol de directorios con el cÛdigo
+fuente original no se ver· modificado. Esto ayuda a moldear las fuentes
 empaquetadas (por ejemplo, eliminar directorios de control de versiones, o
 eliminar arquitecturas).
 .TP 
 .B doc_clean_hook
-Si apunta a un ejecutable, este ser√° ejecutado desde el directorio principal de
-la documentaci√≥n del n√∫cleo antes de que sea empaquetada. No tiene efecto sobre
-otra cosa que no sea la documentaci√≥n empaquetada -- si el script opera en el
-directorio actual y sus descendientes, el √°rbol de directorios con el c√≥digo
-fuente original no se ver√° modificado. Esto ayuda a moldear las fuentes
+Si apunta a un ejecutable, este ser· ejecutado desde el directorio principal de
+la documentaciÛn del n˙cleo antes de que sea empaquetada. No tiene efecto sobre
+otra cosa que no sea la documentaciÛn empaquetada -- si el script opera en el
+directorio actual y sus descendientes, el ·rbol de directorios con el cÛdigo
+fuente original no se ver· modificado. Esto ayuda a moldear las fuentes
 empaquetadas (por ejemplo, eliminar directorios de control de versiones, o
 eliminar arquitecturas).
 .TP
 .B extra_docs
-Esta variable debe de apuntar a la ruta donde se encuentra toda la documentaci√≥n
+Esta variable debe de apuntar a la ruta donde se encuentra toda la documentaciÛn
 extra que debe instalarse en el directorio
 .I /usr/share/doc/kernel-image-X.X.XX/ .
-No hay ninguna comprobaci√≥n de conflictos entre nombres, y los ficheros no
+No hay ninguna comprobaciÛn de conflictos entre nombres, y los ficheros no
 son comprimidos. Debido a esto, si desea que los ficheros sean comprimidos debe
 de comprimirlos y luego proporcionar la ruta al fichero comprimido. La variable de
 entorno
 .B EXTRA_DOCS
-lo modifica, es la forma m√°s habitual de empaquetar documentaci√≥n extra. 
+lo modifica, es la forma m·s habitual de empaquetar documentaciÛn extra. 
 .TP
 .B make_libc_headers
-Esta opci√≥n es para el encargado de
+Esta opciÛn es para el encargado de
 .I libc6 
 , cuando compila
 .I libc6, 
-para adem√°s empaquetar las cabeceras correspondientes.
+para adem·s empaquetar las cabeceras correspondientes.
 .B NO LO USE
-a menos que sepa lo que hace, una peque√±a equivocaci√≥n entre el paquete de
+a menos que sepa lo que hace, una pequeÒa equivocaciÛn entre el paquete de
 cabeceras y
 .I libc6 
-puede hacer que todo el c√≥digo compilado en su m√°quina sea inestable. Ha sido
+puede hacer que todo el cÛdigo compilado en su m·quina sea inestable. Ha sido
 avisado. La variable de entorno
 .B MAKE_LIBC_HEADERS
 lo modifica.
 .TP
 .B CONCURRENCY_LEVEL
 Si se define, esta variable establece el nivel de concurrencia usado para
-compilar el n√∫cleo y los m√≥dulos usando la opci√≥n
+compilar el n˙cleo y los mÛdulos usando la opciÛn
 .I -j
 en el subproceso make del objetivo
 .B build
 de
 .B make-kpkg.
-Si se usa, deber√≠a ser un entero (peque√±o).
+Si se usa, deberÌa ser un entero (pequeÒo).
 .TP
 .B ARCH_IN_NAME
 Si se define, esta variable hace que
 .B make-kpkg
-use un nombre extendido para la imagen del n√∫cleo empotrando la sub-arquitectura
+use un nombre extendido para la imagen del n˙cleo empotrando la sub-arquitectura
 en el nombre de la imagen, de este modo uno puede escribir un script que cree
-m√∫ltiples sub-arquitecturas, una detr√°s de la otra.
+m˙ltiples sub-arquitecturas, una detr·s de la otra.
 .B Note
 que solamente afecta al
 .I nombre
-del paquete, no afecta a la localizaci√≥n de los m√≥dulos y dem√°s.
+del paquete, no afecta a la localizaciÛn de los mÛdulos y dem·s.
 .TP
 .B CONFDIR
 Esta variable debe apuntar a un directorio que contenga ficheros
 .I .config
-espec√≠ficos de una arquitectura (consulte
+especÌficos de una arquitectura (consulte
 .I /usr/share/kernel-package/Config
-para ejemplos). √ötil para los que necesiten compilar para varias
-arquitecturas. Por omisi√≥n apunta a
+para ejemplos). ⁄til para los que necesiten compilar para varias
+arquitecturas. Por omisiÛn apunta a
 .I /usr/share/kernel-package/Config
 .TP
 .B IMAGEDIR
-Si quiere que la imagen se guarde en alg√∫n otro sitio distinto de
+Si quiere que la imagen se guarde en alg˙n otro sitio distinto de
 .I /boot
 establezca esta variable al directorio deseado. Puede ser de ayuda para los
 usuarios de
 .B loadlin.
-Por omisi√≥n es
+Por omisiÛn es
 .I /boot.
 .TP
 .B MODULE_LOC
 Establezca esta variables, bien en el entorno o bien en el fichero de
-configuraci√≥n al lugar donde se encuentren m√≥dulos adicionales. Por omisi√≥n
+configuraciÛn al lugar donde se encuentren mÛdulos adicionales. Por omisiÛn
 .I /usr/src/modules
 .TP
 .B CONFDIR
 Establezca esta variable, bien en el entorno o bien en el fichero de
-configuraci√≥n al lugar donde se encuentren los ficheros de configuraci√≥n del
-n√∫cleo. Por omisi√≥n
+configuraciÛn al lugar donde se encuentren los ficheros de configuraciÛn del
+n˙cleo. Por omisiÛn
 .I /usr/share/kernel-package/Config
 .TP
 .B PATCH_DIR 
 Establezca esta variable, bien en el entorno o bien en el fichero de
-configuraci√≥n al lugar donde se encuentren parches adicionales. Por omisi√≥n
+configuraciÛn al lugar donde se encuentren parches adicionales. Por omisiÛn
 .I /usr/src/kernel-patches/ARCHITECTURE
 .TP
 .B ALL_PATCH_DIR 
 Establezca esta variable, bien en el entorno o bien en el fichero de
-configuraci√≥n al lugar donde se encuentren parches independientes de la
-arquitectura adicionales. Por omisi√≥n
+configuraciÛn al lugar donde se encuentren parches independientes de la
+arquitectura adicionales. Por omisiÛn
 .I /usr/src/kernel-patches/all
 .PP
 El valor una variable puede establecerse de forma que:
 .IP a)
-Los valores predeterminados est√°n en el fichero rules. Se usan siempre que no
+Los valores predeterminados est·n en el fichero rules. Se usan siempre que no
 haya ninguna otra preferencia establecida.
 .IP b)
-Las variables pueden establecerse en el fichero de configuraci√≥n 
+Las variables pueden establecerse en el fichero de configuraciÛn 
 .I /etc/kernel-pkg.conf. 
 Estos valores modifican los predeterminados.
 .IP c)
-Las variables tambi√©n se pueden establecer con su correspondiente variable de
-entorno. Estos valores predominan sobre el fichero de configuraci√≥n y los
+Las variables tambiÈn se pueden establecer con su correspondiente variable de
+entorno. Estos valores predominan sobre el fichero de configuraciÛn y los
 valores predeterminados.
 .IP d)
 Usando las opciones de 
 .B make-kpkg 
-, o, si se usa directamente el fichero rules, en la l√≠nea de √≥rdenes 
+, o, si se usa directamente el fichero rules, en la lÌnea de Ûrdenes 
 .br
 .BI "# xxx/rules DEBIAN_REVISION=2.0a kernel_image"
 .br
-Esto predomina sobre todos los m√©todos descritos anteriormente.
+Esto predomina sobre todos los mÈtodos descritos anteriormente.
 .SH FICHEROS
 El fichero descrito en este documento es
 .I /etc/kernel-pkg.conf.
 o
 .I ~/.kernel-pkg.conf.
-.SH "V√âASE TAMBI√âN"
+.SH "V…ASE TAMBI…N"
 .BR make-kpkg (1),
 .BR kernel-img.conf (5),
 .BR make (1),
@@ -395,5 +395,5 @@ o
 .SH FALLOS
 No tiene fallos. Cualquier cosa que se lo parezca es un delirio, de verdad.
 .SH AUTOR
-Esta p√°gina del manual fue escrita por Manoj Srivastava <srivasta@debian.org>,
+Esta p·gina del manual fue escrita por Manoj Srivastava <srivasta@debian.org>,
 para el sistema Debian GNU/Linux.

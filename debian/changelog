@@ -1,3 +1,18 @@
+kernel-package (8.044) unstable; urgency=low
+
+  * This patch makes it possible to do things like --subarch=sparc64-smp,
+    and --subarch=sparc-myhacks, and the rules file will still know that
+    sparc64 == ARCH==sparc64, etc.                    closes: Bug#203936
+  * Test the UTS_RELEASE in include/linux/version.h, and touch the
+    Makefile if it does not match what we think the version is, so that
+    the version.h file shall be rebuilt.              closes: Bug#204592
+  * Add parentheses to fix bug cause by ! binding tightly in the check for
+    the existence of version.h added last upload.     closes: Bug#204173
+  * Fixed the name of spanish manpages. Reverted all pages to ISO-8859-1,
+    since otherwise the spanish characters are broken closes: Bug#204365
+
+ -- Manoj Srivastava <srivasta@debian.org>  Fri,  8 Aug 2003 14:13:44 -0500
+
 kernel-package (8.043) unstable; urgency=low
 
   * Changed rules to facilitate building 64 Bit kernels on spac32, and

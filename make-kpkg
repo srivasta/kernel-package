@@ -14,7 +14,7 @@
 #
 #
 #
-#    $Id: make-kpkg,v 1.83 2003/07/30 22:36:19 srivasta Exp $
+#    $Id: make-kpkg,v 1.84 2003/08/08 19:13:57 srivasta Exp $
 #
 require 5.002;
 use strict;
@@ -29,7 +29,7 @@ make-kpkg - build Debian kernel packages from Linux kernel sources.
 ($main::MYNAME     = $main::0) =~ s|.*/||;
 $main::Author      = "Manoj Srivastava";
 $main::AuthorMail  = "srivasta\@debian.org";
-$main::Version     = '$Revision: 1.83 $ ';
+$main::Version     = '$Revision: 1.84 $ ';
 
 my $added_modules='';
 my $added_patches='';
@@ -861,7 +861,7 @@ EOMSG
       exit 1;
     }
     if (-f "include/linux/version.h" && ! -f 'debian/official' && 
-	! $ENV{"VERSION_H_OK"} && ! $Targets =~ m/^\s*clean\s*$/ ) {
+	! $ENV{"VERSION_H_OK"} && ! ($Targets =~ m/^\s*clean\s*$/ )) {
       print STDERR "Warning: The file include/linux/version.h exists\n";
       print STDERR "If it was created just now by calling make-kpkg with\n";
       print STDERR "the --append_to_version option on a clean source tree,\n";
