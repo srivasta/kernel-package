@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.190 2003/03/04 16:54:43 srivasta Exp $
+## $Id: rules,v 1.191 2003/03/04 17:04:46 srivasta Exp $
 ###############################################################################
 
 ifdef KPKG_ARCH
@@ -198,6 +198,7 @@ NEED_DIRECT_GZIP_IMAGE=NO
 kimagesrc = arch/$(KERNEL_ARCH)/boot/zImage
 kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
 DEBCONFIG = $(CONFDIR)/config.arm
+endif
 endif
 
 ### PowerPC
