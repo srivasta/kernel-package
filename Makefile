@@ -4,9 +4,9 @@
 ## Created On       : Tue Nov 18 15:53:52 2003
 ## Created On Node  : glaurung.green-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Sun Dec  7 19:22:01 2003
+## Last Modified On : Wed Dec 10 23:45:45 2003
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count     : 14
+## Update Count     : 16
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : 
@@ -97,14 +97,15 @@ install:
 		           $(prefix)/usr/sbin/kernel-packageconfig
 	$(install_program) make-kpkg $(prefix)/usr/bin/make-kpkg
 	(cd kernel;        tar cf - * | \
-           (cd             $(prefix)/usr/share/$(package);\
-                           tar xf -))
+           (cd             $(prefix)/usr/share/$(package); umask 000;\
+                           tar xpf -))
 	find $(prefix)/usr/share/$(package) -type d -name .arch-ids -print0 | \
            xargs -0r rm -rf
 	$(install_file)    Rationale $(prefix)/usr/share/$(package)/
 # Hack, tell the   rules file what version of kernel package it is
 	sed -e             's/=K=V/$(version)/' kernel/rules > \
                               $(prefix)/usr/share/$(package)/rules
+	chmod  0755          $(prefix)/usr/share/$(package)/rules
 
 clean distclean:
 	@echo nothing to do for clean

@@ -5,9 +5,9 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Sun Dec  7 19:27:06 2003
+## Last Modified On : Wed Dec 10 23:55:54 2003
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 647
+## Update Count	    : 653
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
@@ -1495,16 +1495,13 @@ stamp-configure: stamp-debian .config conf.vars stamp-kernel-configure
 
 .config:
 ifneq ($(strip $(use_saved_config)),NO)
-	test -f .config || (test -f .config.save && \
-		            cp -pf .config.save .config) || \
-			true
+	test -f .config || test ! -f .config.save || \
+		            cp -pf .config.save .config
 endif
-	test -f .config || (test -f $(CONFIG_FILE) && \
-		            cp -pf $(CONFIG_FILE) .config) || \
-			true
-	test -f .config || (test -f $(DEBDIR)/config && \
-		            cp -pf $(DEBDIR)/config  .config) || \
-			true
+	test -f .config || test ! -f $(CONFIG_FILE) || \
+		            cp -pf $(CONFIG_FILE) .config
+	test -f .config || test ! -f $(DEBDIR)/config || \
+		            cp -pf $(DEBDIR)/config  .config
 ifeq ($(strip $(have_new_config_target)),)
 	test -f .config || (echo "*** Need a config file .config" && false)
 endif
@@ -1533,7 +1530,7 @@ ifeq ($(strip $(patch_the_kernel)),YES)
 	$(deb_rule) unpatch_now
 endif
 ifeq ($(strip $(NO_UNPATCH_BY_DEFAULT)),)
-	(test -f stamp-patch && $(deb_rule) unpatch_now) || true
+	test ! -f stamp-patch || $(deb_rule) unpatch_now
 endif
 	-test -f stamp-building || test -f debian/official || rm -rf debian
 	rm -f $(FILES_TO_CLEAN) $(STAMPS_TO_CLEAN)
@@ -1641,11 +1638,11 @@ endif
 	         $(SOURCE_DOC)/Buildinfo
 ifneq ($(strip $(int_follow_symlinks_in_src)),)
 	-tar cfh - `echo * | sed -e 's/ debian//g' -e 's/\.deb//g' ` \
-	| (cd $(SOURCE_SRC); umask 000; tar xsf -)
+	| (cd $(SOURCE_SRC); umask 000; tar xpsf -)
 	(cd $(SOURCE_SRC)/include; rm -rf asm ; )
 else
 	-tar cf - `echo * | sed -e 's/ debian//g' -e 's/\.deb//g' ` \
-	| (cd $(SOURCE_SRC); umask 000; tar xsf -)
+	| (cd $(SOURCE_SRC); umask 000; tar xspf -)
 	(cd $(SOURCE_SRC)/include; rm -f asm ; )
 endif
 	(cd $(SOURCE_SRC); \
@@ -1747,6 +1744,7 @@ endif
 	fi
 	echo "This was produced by kernel-package version $(kpkg_version)." > \
 	         $(HEADER_DOC)/Buildinfo
+	chmod 0644 $(HEADER_DOC)/Buildinfo
 	$(install_file) Makefile       $(HEADER_SRC)
 ifneq ($(strip $(int_follow_symlinks_in_src)),)
 	-tar cfh - include |        (cd $(HEADER_SRC); umask 000; tar xsf -)
@@ -1796,7 +1794,8 @@ endif
 	$(install_file) debian/changelog          $(DOC_DOC)/changelog
 	$(install_file) $(DEBDIR)/README.doc      $(DOC_DOC)/README.Debian
 	echo "This was produced by kernel-package version $(kpkg_version)." > \
-	         $(DOC_DOC)/Buildinfo
+	           $(DOC_DOC)/Buildinfo
+	chmod 0644 $(DOC_DOC)/Buildinfo
 	if test -f debian/official -a -f debian/README.Debian ; then \
            $(install_file) debian/README.Debian $(DOC_DOC)/README.Debian;\
 	fi
@@ -1892,7 +1891,8 @@ endif
 	gzip -9qf                               $(IMAGE_DOC)/debian.README
 	$(install_file) $(DEBDIR)/copyright.image $(IMAGE_DOC)/copyright
 	echo "This was produced by kernel-package version $(kpkg_version)." > \
-	         $(IMAGE_DOC)/Buildinfo
+	           $(IMAGE_DOC)/Buildinfo
+	chmod 0644 $(IMAGE_DOC)/Buildinfo
 	$(install_file) .config          $(INT_IMAGE_DESTDIR)/config-$(version)
 	$(install_file) conf.vars        $(IMAGE_DOC)/conf.vars
 	gzip -9qf                        $(IMAGE_DOC)/conf.vars
@@ -1948,13 +1948,13 @@ ifneq ($(strip $(kelfimagesrc)),)
 	chmod 644 $(kelfimagedest)
 endif
 endif
-	-test -s applied_patches && cp applied_patches                        \
+	test ! -s applied_patches || cp applied_patches                        \
                         $(INT_IMAGE_DESTDIR)/patches-$(version)
-	-test -s applied_patches && chmod 644                                 \
+	test ! -s applied_patches || chmod 644                                 \
                         $(INT_IMAGE_DESTDIR)/patches-$(version)
-	-test -f System.map &&  cp System.map                                 \
+	test ! -f System.map ||  cp System.map                                 \
                         $(INT_IMAGE_DESTDIR)/System.map-$(version)
-	-test -f System.map &&  chmod 644                                     \
+	test ! -f System.map ||  chmod 644                                     \
                         $(INT_IMAGE_DESTDIR)/System.map-$(version)
 ifeq ($(strip $(delete_build_link)),YES)
 	rm -f $(IMAGE_TOP)/lib/modules/$(version)/build
