@@ -134,14 +134,14 @@ MODULE MAINTAINER INSTRUCTIONS
         and remember to install the modules (after you have installed
  the kernel-image) by saying 
 5# dpkg -i ../kernel-image-X.XXX_1.0_<arch>.deb
-5a# dpkg -i /usr/src/modules/<mode-name>-<version>.deb
+5a# dpkg -i $(MODULE_LOC:-/usr/src/modules)/<mode-name>-<version>.deb
 	
 MODULE Packaging hints
 ====== ========= =====
 
         make-kpkg arranges to cd into each modules top directory,
- /usr/src/modules/<mod-name>/, and runs ./debian/rules <target>. 
- Additionally, the following information is provided in the
+ $(MODULE_LOC:-/usr/src/modules)/<mod-name>/, and runs ./debian/rules
+ <target>.  Additionally, the following information is provided in the
  environment:
  a) KVERS  Contains the kernel version
  b) KSRC   Contains the location of the kernel sources 

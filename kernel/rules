@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Wed Feb  5 18:27:47 2003
+## Last Modified On : Mon Feb 10 01:07:08 2003
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 554
+## Update Count	    : 555
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.189 2003/02/06 19:32:20 srivasta Exp $
+## $Id: rules,v 1.190 2003/03/04 16:54:43 srivasta Exp $
 ###############################################################################
 
 ifdef KPKG_ARCH
@@ -180,22 +180,24 @@ endif
 ifeq ($(strip $(architecture)),arm)
 GUESS_SUBARCH:='netwinder'
 
-ifeq (,$(findstring $(KPKG_SUBARCH),netwinder))
+ifneq (,$(findstring $(KPKG_SUBARCH),netwinder))
 KPKG_SUBARCH:=$(GUESS_SUBARCH)
-endif
-
-kimage := zImage
+kimage := Image
+target = Image
+kimagesrc = arch/$(KERNEL_ARCH)/boot/Image
+kimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
 loaderdep=
 loader=nettrom
 loaderdoc=
+NEED_DIRECT_GZIP_IMAGE=NO
+DEBCONFIG= $(CONFDIR)/config.netwinder
+else
+kimage := zImage
 target = zImage
 NEED_DIRECT_GZIP_IMAGE=NO
 kimagesrc = arch/$(KERNEL_ARCH)/boot/zImage
 kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
 DEBCONFIG = $(CONFDIR)/config.arm
-ifeq ($(strip $(GUESS_SUBARCH)),netwinder)
-        DEBCONFIG= $(CONFDIR)/config.netwinder
-endif
 endif
 
 ### PowerPC
@@ -760,7 +762,11 @@ ifneq ($(strip $(KPKG_SELECTED_PATCHES)),)
 ifeq ($(strip $(patch_the_kernel)),NO)
 patch_the_kernel = NO
 else
+ifeq ($(strip $(patch_the_kernel)),no)
+patch_the_kernel = NO
+else
 patch_the_kernel = YES
+endif
 endif
 endif
 
@@ -1123,7 +1129,7 @@ ifdef MODULES_ENABLED
 	$(MAKE) $(do_parallel) $(EXTRAV_ARG) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) \
 	                    $(CROSS_ARG) modules
 endif
-	touch stamp-build
+	echo done >  stamp-build
 
 buildpackage: stamp-buildpackage
 stamp-buildpackage: configure
@@ -1138,7 +1144,7 @@ else
 	dpkg-buildpackage -m"$(maintainer) <$(email)>" -k"$(pgp)"
 endif
 	rm -f stamp-building
-	touch stamp-buildpackage
+	echo done >  stamp-buildpackage
 
 # stamp-debian and stamp-configure used to be a single target. Now
 # they are split - the reason is that arch-indep packages need to be
@@ -1171,14 +1177,14 @@ ifneq ($(strip $(valid_patches)),)
               fi;                                      \
 	  fi;                                          \
         done
-	touch stamp-patch
+	echo done >  stamp-patch
 else
 	if [ -n "$(VERSIONED_PATCH_DIR)" -a                   \
              -d $(VERSIONED_DIR_PATCH_APPLY) ]; then          \
             run-parts --verbose $(VERSIONED_DIR_PATCH_APPLY); \
 	    (cd $(VERSIONED_DIR_PATCH_APPLY); ls -1) >>       \
                                            applied_patches;   \
-        touch stamp-patch;                                    \
+        echo done >  stamp-patch;                                    \
         else                                                  \
 	    true;                                             \
 	fi
@@ -1187,7 +1193,7 @@ else
             run-parts --verbose $(VERSIONED_ALL_PATCH_APPLY); \
 	    (cd $(VERSIONED_ALL_PATCH_APPLY); ls -1) >>       \
                                            applied_patches;   \
-        touch stamp-patch;                                    \
+        echo done >  stamp-patch;                                    \
         else                                                  \
 	    true;                                             \
 	fi
@@ -1202,7 +1208,7 @@ else
              -d $(ALL_PATCH_APPLY)  ]; then                   \
             run-parts --verbose $(ALL_PATCH_APPLY);           \
 	    (cd $(ALL_PATCH_APPLY); ls -1) >> applied_patches;\
-        touch stamp-patch;                                    \
+        echo done >  stamp-patch;                                    \
         else                                                  \
 	    true;                                             \
 	fi
@@ -1222,7 +1228,7 @@ endif
 		$(DEBDIR)/changelog > debian/changelog
 	-test ! -f debian/rules && \
 	   install -p -m 755 $(DEBDIR)/rules debian/rules
-	touch $@
+	echo done >  $@
 
 conf.vars:
 	@echo "VERSION          = $(VERSION)"        > .mak
@@ -1260,11 +1266,11 @@ stamp-kernel-configure: stamp-debian .config
 	+$(MAKE) -f ./debian/rules dummy_do_dep
 	$(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) \
                                  ARCH=$(KERNEL_ARCH) clean 
-	touch $@
+	echo done >  $@
 
 configure: debian .config stamp-configure
 stamp-configure: stamp-debian .config conf.vars stamp-kernel-configure
-	touch $@
+	echo done >  $@
 
 
 
@@ -1301,15 +1307,15 @@ endif
 # behaviour
 real_stamp_clean:
 	rm -f $(FILES_TO_CLEAN) $(STAMPS_TO_CLEAN)
-	test ! -f .config || cp -pf .config config.precious
-	-test -f Makefile && \
-            $(MAKE) $(FLAV_ARG) $(EXTRAV_ARG) ARCH=$(KERNEL_ARCH) distclean
 ifeq ($(strip $(patch_the_kernel)),YES)
 	$(deb_rule) unpatch_now
 endif
 ifeq ($(strip $(NO_UNPATCH_BY_DEFAULT)),)
 	(test -f stamp-patch && $(deb_rule) unpatch_now) || true
 endif
+	test ! -f .config || cp -pf .config config.precious
+	-test -f Makefile && \
+            $(MAKE) $(FLAV_ARG) $(EXTRAV_ARG) ARCH=$(KERNEL_ARCH) distclean
 	test ! -f config.precious || mv -f config.precious .config
 	rm -rf $(DIRS_TO_CLEAN)
 	-test -f stamp-building || test -f debian/official || rm -rf debian
@@ -1451,7 +1457,7 @@ endif
 	chown -R root.root $(SOURCE_TOP)
 	dpkg --build $(SOURCE_TOP) $(DEB_DEST)
 	rm -f -r $(SOURCE_TOP)
-	touch stamp-source
+	echo done >  stamp-source
 
 libc-kheaders libc_kheaders: stamp-libc-kheaders
 stamp-libc-kheaders: configure
@@ -1520,7 +1526,7 @@ endif
 	chmod -R og=rX $(HEADER_TOP)
 	dpkg --build $(HEADER_TOP) $(DEB_DEST)
 	rm -rf $(HEADER_TOP)
-	touch stamp-headers
+	echo done >  stamp-headers
 
 kernel-doc kernel_doc: stamp-doc
 stamp-doc: stamp-debian
@@ -1570,7 +1576,7 @@ endif
 	chown -R root.root $(DOC_TOP)
 	dpkg --build $(DOC_TOP) $(DEB_DEST)
 	rm -rf $(DOC_TOP)
-	touch stamp-doc
+	echo done >  stamp-doc
 
 kernel-image kernel_image: stamp-image
 stamp-image: configure build kernel-image-deb
@@ -1706,7 +1712,7 @@ ifeq ($(strip $(do_clean)),YES)
                                 clean
 	rm -f stamp-build
 endif
-	touch stamp-image
+	echo done >  stamp-image
 
 # This for STOP_FOR_BIN86
 endif

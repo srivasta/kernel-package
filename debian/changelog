@@ -1,3 +1,18 @@
+kernel-package (8.021) unstable; urgency=low
+
+  * Fixed type in man page                                   closes: Bug#180543
+  * Fixed typo in README                                     closes: Bug#181180
+  * Improvements to kernel_grub_conf.sh and kernel_grub_rm.sh thanks to
+    Gilles Sadowski. 
+  * patch for arm related images which makes Image for netwinders and
+    zImage for the rest from  Othmar Pasteka <pasteka@kabsi.at>
+  * Run dist clean _after_ unpatching, since distclean removes the stamp
+    files. Also, stamp files are not empty to start with now closes: Bug#182729
+  * s|/usr/src/modules/|$(MODULE_LOC:-/usr/src/modules/)| in a few places,
+    thanks to a suggestion by Helge Kreutzmann               closes: Bug#181181
+
+ -- Manoj Srivastava <srivasta@acm.org>  Tue,  4 Mar 2003 10:53:46 -0600
+
 kernel-package (8.020) unstable; urgency=low
 
   * Modified language in make-kpkg(1) to specify what one means when one
@@ -3137,6 +3152,4 @@ kernel-package (2.01) unstable; urgency=low
 
  -- Manoj Srivastava <srivasta@pilgrim.umass.edu>  
 
-Local variables:
-mode: debian-changelog
-End:
+
