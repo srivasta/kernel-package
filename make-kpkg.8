@@ -22,7 +22,7 @@
 .\" USA.
 .\"
 .\"
-.\"    $Id: make-kpkg.8,v 1.13 1998/10/14 06:04:06 srivasta Exp $
+.\"    $Id: make-kpkg.8,v 1.14 1999/01/22 15:15:11 srivasta Exp $
 .\"
 .TH MAKE\-KPKG 8 "May 2 1997" "Debian" "Debian GNU/Linux manual"
 .SH NAME
@@ -84,6 +84,16 @@ specifying it as an argument to \fBmake-kpkg\fR. \fBPlease note\fR
 that additional 
 support for sub architectures may be required in the kernel sources to
 actually make this do anything.
+.TP
+.BR \-\-arch_in_name
+This option uses an extended name for the kernel image package by
+embedding the subarchitecture in the image name, so one could write a
+script to create multiple subarchitectures one after the other. You
+may also do this by setting the environment variable 
+.B ARCH_IN_NAME. 
+\fBPlease note\fR that only the package
+.I name
+is affected, not modules locations etc.
 .TP
 .BR \-\-pgpsign " name"
 Set the string used to sign the 
@@ -281,7 +291,10 @@ snippet, and any legal make directives may be included in there.
 Caution is urged with this file, since you can totally change the way that the 
 make is run by suitable editing this file. Please look at
 .I /usr/doc/kernel-package/Problems.gz
-for a list of known problems while compiling kernel images.
+for a list of known problems while compiling kernel images. Extensive
+tutorial like documentation is also available in
+.I /usr/doc/kernel-package/README.gz
+and it is recommended that one read that before using this utility.
 .SH "SEE ALSO"
 .BR kernel-pkg.conf (5),
 .BR dpkg-deb (1),
@@ -289,7 +302,7 @@ for a list of known problems while compiling kernel images.
 .BR make (1),
 .BR The\ Programmers\ manual, 
 .BR The\ GNU\ Make\ manual,
-and the extensive documentation on the directory 
+and the extensive documentation in the directory 
 .B /usr/doc/kernel-package
 .SH AUTHOR
 This manual page was written by Manoj Srivastava <srivasta@debian.org>,

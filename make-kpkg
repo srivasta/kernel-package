@@ -5,16 +5,16 @@
 # Created On       : Mon Jun 17 01:10:11 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Wed Oct 14 15:54:09 1998
-# Last Machine Used: tiamat.datasync.com
-# Update Count     : 113
+# Last Modified On : Fri Jan 22 09:09:01 1999
+# Last Machine Used: tiamat.golden-gryphon.com
+# Update Count     : 120
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
 #
 #
 #
-#    $Id: make-kpkg,v 1.21 1998/10/14 21:30:27 srivasta Exp $
+#    $Id: make-kpkg,v 1.22 1999/01/22 15:14:11 srivasta Exp $
 #
 require 5.002;
 use strict;
@@ -29,7 +29,7 @@ make-kpkg - build Debian kernel packages from Linux kernel sources.
 ($main::MYNAME     = $main::0) =~ s|.*/||;
 $main::Author      = "Manoj Srivastava";
 $main::AuthorMail  = "srivasta\@debian.org";
-$main::Version     = '$Revision: 1.21 $ ';
+$main::Version     = '$Revision: 1.22 $ ';
 
 my $help_opt=0; 
 my $revision=0; 
@@ -41,17 +41,19 @@ my $noexec;
 my $zimage; 
 my $bzimage; 
 my $root_cmd; 
+my $arch_in_name=0;
 
-my %option_ctl = ("help"       => \$help_opt,
-		  "noexec"     => \$noexec,
-		  "revision=s" => \$revision,
-		  "flavour=s"  => \$flavour,
-		  "subarch=s"  => \$subarch,
-		  "pgpsign=s"  => \$signature,
-		  "targets"    => \$targ_opt,
-		  "zimage"     => \$zimage,
-		  "rootcmd=s"  => \$root_cmd,
-		  "bzimage"    => \$bzimage
+my %option_ctl = ("help"         => \$help_opt,
+		  "noexec"       => \$noexec,
+		  "revision=s"   => \$revision,
+		  "flavour=s"    => \$flavour,
+		  "subarch=s"    => \$subarch,
+		  "arch_in_name" => \$subinname,
+		  "pgpsign=s"    => \$signature,
+		  "targets"      => \$targ_opt,
+		  "zimage"       => \$zimage,
+		  "rootcmd=s"    => \$root_cmd,
+		  "bzimage"      => \$bzimage
 		 );
 
 =head1 SYNOPSIS
@@ -123,6 +125,18 @@ specifying it as an argument to make-kpkg. Please note that additional
 support for sub architectures may be required in the kernel sources to
 actually make this do anything.
 
+
+=back
+
+=item B<--arch_in_name> foo
+
+
+=over 2
+
+This option uses an extended name for the kernel image package by
+embedding the subarchitecture in the image name, so one could write a
+script to create multiple subarchitectures one after the other. You
+may also do this by setting the environment variable ARCH_IN_NAME. 
 
 =back
 
@@ -204,6 +218,9 @@ usage: $main::MYNAME [options] target [target ...]
                          have digit, no hyphen allowed)
  --flavour  foo        an additional kernel sub-version. ([-a-z.+0-9])
                          see /usr/doc/kernel-package/Flavours.gz
+ --subarch  bar        Set the sub arch for the image being compiled
+                        (have to be on a compatible machine).
+ --arch_in_name        Embedd the subarch in the image package name
  --pgpsign  name       A ID used to sign the changes file using pgp.
  --targets             Lists the known targets.
  --zimage              Create a kernel using zImage rather than bzImage
@@ -516,6 +533,9 @@ EOERR1
   }
   if ($subarch){
     $command .= " SUBARCH=$subarch ";
+  }
+  if ($arch_in_name){
+    $command .= " ARCH_IN_NAME=YES ";
   }
   if ($noexec){
     $command .= " -n ";
