@@ -1,3 +1,14 @@
+kernel-package (3.59) unstable; urgency=low
+
+  * Fixed README to also mention libc6-dev, and to remind people that some
+    of the dependencies mentioned may already be present on their
+    machines. closes: Bug#18306
+  * Fixed the copyright to refer to version 2 of the GPL.
+  * Added the rationale, and install it in kernel-package kernel source
+    packages. 
+
+ --
+
 kernel-package (3.58) unstable; urgency=low
 
   * Added SUBARCH, which is used to distinguish Amiga, Atari, Macintosh,
