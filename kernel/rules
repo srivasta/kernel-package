@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.170 2002/04/21 22:37:50 srivasta Exp $
+## $Id: rules,v 1.171 2002/04/22 00:26:17 srivasta Exp $
 ###############################################################################
 
 ifdef KPKG_ARCH
@@ -1071,7 +1071,8 @@ ifneq ($(strip $(valid_patches)),)
           if test -x  $$patch; then                    \
               if $$patch; then                         \
                   echo "Patch $$patch processed fine"; \
-		  echo "$$patch" >> applied_patches;   \
+		  echo $$patch | sed -e s,^$(shell dirname $$patch)/,,\
+                                 >> applied_patches;   \
               else                                     \
                    echo "Patch $$patch  failed.";      \
                    echo "Hit return to Continue";      \
