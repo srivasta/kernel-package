@@ -133,7 +133,13 @@ contain only
 .B  lowercase
 alphanumerics and the characters - + . (full stop, hyphen, and
 plus). Uppercase letters are not permitted under the Policy for a new
-package.  This over rides the environment variable
+package.  If the environment variable
+.B IGNORE_UPPERCASE_VERSION
+is set, make-kpkg shall lower case version numbers set in the Makefile
+or in the 
+.I localversion
+file. 
+This option over rides the environment variable
 .B APPEND_TO_VERSION
 Please  note  that you \fB\s-1must\s0\fR run a 
 .B make\-kpkg 
@@ -673,6 +679,7 @@ The following variables (documented above) affect
 .I MODULE_LOC
 .I INITRD_OK
 .I CONCURRENCY_LEVEL
+.I IGNORE_UPPERCASE_VERSION
 .SH FILES
 Apart from the runtime options, the 
 .I debian.rules

@@ -616,9 +616,22 @@ endif
 # usermode linux
 ifeq ($(strip $(architecture)),um)
   DEBCONFIG = $(CONFDIR)/config.um
-  kimage := linux
-  target = linux
-  kimagesrc  = $(strip linux)
+
+
+  ifneq ($(shell if [ $(VERSION)  -ge  2 ]  && [ $(PATCHLEVEL) -ge 6 ] &&    \
+                    [ $(SUBLEVEL) -ge 9 ]; then echo new;                   \
+               elif [ $(VERSION)  -ge  2 ]  && [ $(PATCHLEVEL) -ge r ]; then \
+                                            echo new;                        \
+               elif [ $(VERSION)  -ge  3 ]; then echo new; fi),)
+    target  = vmlinux
+    kimage := vmlinux	
+  else
+    target  = linux
+    kimage := linux	
+  endif
+
+
+  kimagesrc  = $(strip $(kimage))
   INT_IMAGE_DESTDIR=$(IMAGE_DOC)
   kimagedest = debian/tmp-image$(IMAGEDIR)/linux-$(version)
   loaderdep=
@@ -748,6 +761,25 @@ version=$(UTS_RELEASE_VERSION)
 debian :=$(IN_KERNEL_HEADERS)
 endif
 endif
+
+# Bug out if the version number id not all lowercase
+lc_version = $(shell echo $(version) | tr A-Z a-z)
+ifneq ($(strip $(version)),$(strip $(lc_version)))
+  ifeq ($(strip $(IGNORE_UPPERCASE_VERSION)),)
+    $(error Error. The version number $(strip $(version)) is not all \
+ lowercase. Since the version ends up in the package name of the \
+ kernel image package, this is a Debian policy violation, and \
+ the packaging system shall refuse to package the image. )
+  else
+    $(warn Error. The version number $(strip $(version)) is not all \
+ lowercase. Since the version ends up in the package name of the \
+ kernel image package, this is a Debian policy violation, and \
+ the packaging system shall refuse to package the image. Lower -casing version.)
+
+    version := $(lc_version)                                                     
+  endif
+endif
+
 
 
 # KPKG_SUBARCH is used to distinguish Amiga, Atari, Macintosh, etc. kernels
@@ -1399,15 +1431,6 @@ endif
 endif
 
 
-
-# Bug out if the version number id not all lowercase
-lc_version = $(shell echo $(version) | tr A-Z a-z)
-ifneq ($(strip $(version)),$(strip $(lc_version)))
-$(error Error. The version number $(strip $(version)) is not all \
- lowercase. Since the version ends up in the package name of the \
- kernel image package, this is a Debian policy violation, and \
- the packaging system shall refuse to package the image. )
-endif
 
 ifeq (,$(strip $(kimagedest)))
 $(error Error. I do not know where the kernel image goes to [kimagedest undefined]\
@@ -2132,9 +2155,6 @@ endif
                 $(CROSS_ARG) ARCH=$(KERNEL_ARCH) modules_install
 ifneq ($(strip $(KERNEL_CROSS)),)
 	mv System.precious System.map
-endif
-ifeq ($(strip $(architecture)),xen)
-	mv $(INSTALL_MOD_PATH)/lib/module/* $(INSTALL_MOD_PATH)/lib/module/$version
 endif
 endif
 	test ! -e $(IMAGE_TOP)/lib/modules/$(version)/source ||                        \
