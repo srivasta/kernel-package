@@ -21,7 +21,7 @@
 .\" Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139,
 .\" USA.
 .\"
-.\" $Id: kernel-pkg.conf.5,v 1.15 2000/01/26 09:43:52 srivasta Exp $
+.\" $Id: kernel-pkg.conf.5,v 1.16 2000/01/26 17:07:37 srivasta Exp $
 .\"
 .TH KERNEL\-PKG.CONF 5 "Jan  7 1997" "Debian" "Debian GNU/Linux manual" 
 .\" NAME should be all caps, SECTION should be 1-8, maybe w/ subsection
@@ -227,6 +227,17 @@ flags to the sub make in the
 target of 
 .B make-kpkg.
 Should be a (small) integer, if used.
+.TP
+.B ARCH_IN_NAME
+If defined, this variable causes 
+.B make-kpkg.
+to use an extended name for the kernel image package by embedding the
+subarchitecture  in the image name, so one could write a script to
+create multiple subarchitectures one after the  other. 
+.B Please note
+that  only  the package 
+.I name
+is  affected,  not modules locations etc.
 .TP
 .B CONFDIR
 This variable should be set to a directory which contains architecture

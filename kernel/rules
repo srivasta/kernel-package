@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Wed Jan 26 10:40:46 2000
+## Last Modified On : Wed Jan 26 10:57:40 2000
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 419
+## Update Count	    : 420
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.82 2000/01/26 16:46:52 srivasta Exp $
+## $Id: rules,v 1.83 2000/01/26 17:07:39 srivasta Exp $
 ###############################################################################
 
 #
@@ -562,10 +562,10 @@ stamp-build:
 # debian.config contains the current idea of what the image should
 # have.
 	-test -f stamp-configure || $(deb_rule) configure
-	$(MAKE) $(FLAV_ARG) ARCH=$(KERNEL_ARCH)	\
+	$(MAKE) $(do_parallel) $(FLAV_ARG) ARCH=$(KERNEL_ARCH)	\
 	                    CROSS_COMPILE=$(KERNEL_CROSS) $(target)
 ifdef MODULES_ENABLED
-	$(MAKE) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) \
+	$(MAKE) $(do_parallel) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) \
 	                    CROSS_COMPILE=$(KERNEL_CROSS) modules
 endif
 	touch stamp-build

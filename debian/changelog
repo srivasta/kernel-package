@@ -3,6 +3,7 @@ kernel-package (6.29) frozen unstable; urgency=low
   * Make sure we stop the build if removing a patch fails as well.
   * Make sure that the KDVERS var we pass to modules is the one that is
     actually used. **This is an important fix**
+  * Also document ARCH_IN_NAME in the kernel-pkg.5 man page
 
  -- Manoj Srivastava <srivasta@debian.org>  Wed, 26 Jan 2000 10:46:05 -0600
 
