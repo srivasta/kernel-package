@@ -5,24 +5,25 @@
 # Created On       : Sat Apr 27 05:55:26 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Fri Nov  7 18:07:49 1997
+# Last Modified On : Wed Dec 24 12:56:26 1997
 # Last Machine Used: tiamat.datasync.com
-# Update Count     : 57
+# Update Count     : 62
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
 # 
-#    $Id: image.postinst,v 1.9 1997/11/10 16:46:24 srivasta Exp $
+#    $Id: image.postinst,v 1.10 1997/12/24 19:13:48 srivasta Exp $
 #
 
 # 
 # use strict; #for debugging
 $|=1;
 # Predefined values:
-my $version = "=V";
-my $image_in_boot = "=B";	# Should be empty, mostly
-my $no_symlink = "=S";		# Should be empty, mostly
+my $version         = "=V";
+my $image_in_boot   = "=B";	# Should be empty, mostly
+my $no_symlink      = "=S";	# Should be empty, mostly
 my $reverse_symlink = "=R";	# Should be empty, mostly
+my $kimage          = "=K";	# Should be empty, mostly
 
 # This should not point to /tmp, because of security risks.
 my $temp_file_name = "/var/log/lilo_log.$$";
@@ -47,55 +48,70 @@ exit 0 unless $ARGV[0] =~ /configure/;
 # most of our work is done in $imagedir
 chdir("$imagedir") or die "could not chdir to $imagedir:$!\n";
 
+# Paranoid check to make sure thatthe correct value is put in there
+if (! $kimage) {		# Hmm. empty
+  $kimage = "vmlinuz"
+}
+elsif ($kimage =~ m/^b?zImage$/o) { # these produce vmlinuz
+  $kimage = "vmlinuz"
+}
+elsif ($kimage =~ m/^vmlinux$/o) {
+  my $nop = $kimage;
+  #
+}
+else {				# Let this be the default as well
+  $kimage = "vmlinuz"
+}
+
 # Test if we need to do anything in / at all. This test make us idempotent.
-if (! -e 'vmlinuz') {
-  die "$imagedir" . "vmlinuz does not exist. This is disastrous. Exiting\n";
+if (! -e "$kimage") {
+  die "$imagedir" . "$kimage does not exist. This is disastrous. Exiting\n";
 }
 # follow link target.
-if (-l 'vmlinuz' && !($no_symlink || $reverse_symlink)) {
-  my $vmlinuz_target = readlink 'vmlinuz';
+if (-l "$kimage" && !($no_symlink || $reverse_symlink)) {
+  my $vmlinuz_target = readlink "$kimage";
   if (! (defined($vmlinuz_target) && 
-	 "$vmlinuz_target" eq "$realimageloc" . "vmlinuz-$version")) {
-    # don't clobber vmlinuz.old quite yet
-    rename("vmlinuz", "vmlinuz.$$") || 
-      die "failed to move " . $imagedir . "vmlinuz:$!";
+	 "$vmlinuz_target" eq "$realimageloc" . "$kimage-$version")) {
+    # don't clobber $kimage.old quite yet
+    rename("$kimage", "$kimage.$$") || 
+      die "failed to move " . $imagedir . "$kimage:$!";
 
-    if (! symlink($realimageloc . "vmlinuz-$version", "vmlinuz")) {
-      rename("vmlinuz.$$", "vmlinuz");
-      die("Failed to symbolic-link /boot/vmlinuz-$version to "
-	  . $imagedir . "vmlinuz .\n"); 
+    if (! symlink($realimageloc . "$kimage-$version", "$kimage")) {
+      rename("$kimage.$$", "$kimage");
+      die("Failed to symbolic-link /boot/$kimage-$version to "
+	  . $imagedir . "$kimage .\n"); 
     }
     
     # Ok, now we may clobber the previous .old file
-    rename("vmlinuz.$$", "vmlinuz.old");
+    rename("$kimage.$$", "$kimage.old");
   }
 }
 elsif ($no_symlink) {		# Maybe /boot is on a dos system?
-  rename("vmlinuz", "vmlinuz.$$") || 
-      die "failed to move " . $imagedir . "vmlinuz:$!";
-  if (! rename($realimageloc . "vmlinuz-$version", "vmlinuz")) {
-    rename("vmlinuz.$$", "vmlinuz");
-    die("Failed to move /boot/vmlinuz-$version to "
-	. $imagedir . "vmlinuz .\n"); 
+  rename("$kimage", "$kimage.$$") || 
+      die "failed to move " . $imagedir . "$kimage:$!";
+  if (! rename($realimageloc . "$kimage-$version", "$kimage")) {
+    rename("$kimage.$$", "$kimage");
+    die("Failed to move /boot/$kimage-$version to "
+	. $imagedir . "$kimage .\n"); 
   }
   
   # Ok, now we may clobber the previous .old files
-  rename("vmlinuz.$$", "vmlinuz.old");
+  rename("$kimage.$$", "$kimage.old");
 } 
 elsif ($reverse_symlink) {		# Maybe /boot is on a dos system?
-  rename("vmlinuz", "vmlinuz.$$") || 
-      die "failed to move " . $imagedir . "vmlinuz:$!";
-  if (! rename($realimageloc . "vmlinuz-$version", "vmlinuz")) {
-    rename("vmlinuz.$$", "vmlinuz");
-    die("Failed to move /boot/vmlinuz-$version to "
-	. $imagedir . "vmlinuz .\n"); 
+  rename("$kimage", "$kimage.$$") || 
+      die "failed to move " . $imagedir . "$kimage:$!";
+  if (! rename($realimageloc . "$kimage-$version", "$kimage")) {
+    rename("$kimage.$$", "$kimage");
+    die("Failed to move /boot/$kimage-$version to "
+	. $imagedir . "$kimage .\n"); 
   }
   
-  if (! symlink("vmlinuz", $realimageloc . "vmlinuz-$version")) {
-    warn "Could not symlink vmlinuz to vmlinuz-$version :$!";
+  if (! symlink("$kimage", $realimageloc . "$kimage-$version")) {
+    warn "Could not symlink $kimage to $kimage-$version :$!";
   }
   # Ok, now we may clobber the previous .old files
-  rename("vmlinuz.$$", "vmlinuz.old");
+  rename("$kimage.$$", "$kimage.old");
 } 
 
 # We used to have System.* files in / 
@@ -243,7 +259,7 @@ if ( ! -x "/sbin/lilo" ) {
     "\nmap=/boot/map\n",
     "vga=normal\n",
     "delay=20\n",
-    "image=" . $imagedir . "vmlinuz\n",
+    "image=" . $imagedir . "$kimage\n",
     "label=Linux\n",
     "read-only\n"
 );
@@ -490,10 +506,10 @@ EO_MSG_B
   MKBOOT:{
       my $ret;
       if ($no_symlink || $reverse_symlink) {
-	$ret = system '/bin/dd', "if=$imagedir" . "vmlinuz", "of=/dev/fd$drive";
+	$ret = system '/bin/dd', "if=$imagedir" . "$kimage", "of=/dev/fd$drive";
       }
       else {
-	$ret = system '/bin/dd', "if=$imagedir" . "vmlinuz-$version", 
+	$ret = system '/bin/dd', "if=$imagedir" . "$kimage-$version", 
 	              "of=/dev/fd$drive";
       }
       last MKBOOT if $ret;
