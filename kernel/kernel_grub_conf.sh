@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 #                               -*- Mode: Sh -*- 
 # kernel_grub_conf.sh --- 
 # Author           : Junichi Uekawa <dancer@debian.org>

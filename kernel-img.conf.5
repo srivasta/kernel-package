@@ -206,7 +206,7 @@ warning message, but shall be otherwise ignored.
 Unlike the other hook variables, this is meant for a script run during
 the post inst of a docs, headers or a source package. Using this hook
 for the headers package is now being deprecated, at some point the
-headers post install script shall only run the headers_postinst_hook.
+headers post install script shall only run the header_postinst_hook.
 This script shall be called with two arguments, the first being the
 .I name
 of the package being installed (could be kernel\-source\-X.X.XX or
@@ -220,8 +220,7 @@ Unlike the other hook variables, this is meant for a script run during
 the post inst of a headers package only. This script
 shall be called with two arguments, the first being the
 .I name
-of the package being installed (could be kernel\-source\-X.X.XX or
-kernel\-headers\-X.X.XX), and the second argument being the
+of the package being installed (kernel\-headers\-X.X.XX), and the second argument being the
 .I version
 of the package being installed. Errors in the script shall produce a
 warning message, but shall be otherwise ignored. 
@@ -349,16 +348,16 @@ or
 .B silent_modules
 This option has been put in for the people who are vastly irritated on
 being warned about preexisting modules directory 
-.TT /lib/modules/$version
+.I /lib/modules/$version
 That directory may belong to an old or defunct 
-.TT kernel\-image\-$version 
+.I kernel\-image\-$version 
 package, in which case problems may arise with leftover modules in that
 dir tree, or the directory may legitimately exist due to a independent
 modules package being installed for this kernel version that has
 already been unpacked.  In this latter case the existence of the
 directory is benign.  If you set this varable, you shall no longer be
 given a chance to abort if a preexisting modules directory 
-.TT /lib/modules/$version
+.I /lib/modules/$version
 is detected.  This is unset be default.
 .TP
 .B silent_loader

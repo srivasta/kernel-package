@@ -48,19 +48,19 @@ fi
 
 ls -t vmlinuz-*   > $outfile
 
-STD="$(head -1 $outfile |           sed 's/vmlinuz-//')" 
-OLD="$(head -2 $outfile | tail -1 | sed 's/vmlinuz-//')" 
+STD="$(head -n 1 $outfile |             sed 's/vmlinuz-//')" 
+OLD="$(head -n 2 $outfile | tail -n 1 | sed 's/vmlinuz-//')" 
 
 if [ "X$STD" = "X" ]; then
     exit 0;
 fi
 
 # If you want version specific links, here's how to start
-STD24="$(grep vmlinuz-2.4 $outfile | head -1 | sed 's/vmlinuz-//')" || true
-OLD24="$(grep vmlinuz-2.4 $outfile | head -1 | tail -1 | sed 's/vmlinuz-//')" || true
+STD24="$(grep vmlinuz-2.4 $outfile | head -n 1 | sed 's/vmlinuz-//')" || true
+OLD24="$(grep vmlinuz-2.4 $outfile | head -n 1 | tail -n 1 | sed 's/vmlinuz-//')" || true
 
-STD25="$(grep vmlinuz-2.5 $outfile | head -1 | sed 's/vmlinuz-//')" || true
-OLD25="$(grep vmlinuz-2.5 $outfile | head -1 | tail -1 | sed 's/vmlinuz-//')" || true
+STD25="$(grep vmlinuz-2.5 $outfile | head -n 1 | sed 's/vmlinuz-//')" || true
+OLD25="$(grep vmlinuz-2.5 $outfile | head -n 1 | tail -n 1 | sed 's/vmlinuz-//')" || true
 
 echo Booting $STD, old is $OLD
 

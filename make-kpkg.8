@@ -371,9 +371,7 @@ to a non empty value.
 To avoid a warning at install time, please read kernel\-img.conf(5),
 and add a 
 .I warn_initrd 
-directive in that file. To avoid the warning at compile time, please
-set the environment variable 
-.B INITRD_OK.
+directive in that file. 
 .TP
 .B \-\-zimage
 Makes a zImage kernel rather than a bzImage kernel (the default).
@@ -550,7 +548,7 @@ These hooks are variables that can be pointed to scripts that add or
 remove  a line from the grub menu list at kernel image install and
 remove times. A sample script to add lines to a grub menu file is
 included in the directory 
-.TT /usr/share/doc/kernel\-package/.
+.I /usr/share/doc/kernel\-package/.
 .TP
 .B build
 This target, used by target
@@ -564,7 +562,9 @@ This target allows you to build all add\-on modules and packages that are
 very dependent on the precise kernel version they are compiled for at the
 same time you build your kernel image.  This target expects to find the 
 modules or packages under /usr/src/modules, and, for all such directories,
-changes to /usr/src/modules/x, and runs the 
+changes to MODULE_LOC/x (MODULE_LOC defaults to 
+.I /usr/src/modules.
+), and runs the 
 .B kdist
 rule in the local 
 .I debian.rules
@@ -581,12 +581,16 @@ package to the Debian archives.
 .TP
 .B modules_config
 This target allows you to configure all packages under
+.B MODULE_LOC,
+which defaults to 
 .B /usr/src/modules.
 This is useful if you need to manually modify some aspects of the
 configuration, or if you want to manually compile the add on modules. 
 .TP
 .B modules_image
 This target allows you to build all packages under
+.B MODULE_LOC,
+which defaults to 
 .B /usr/src/modules,
 but does not create the source or diff files, and does not create and sign
 a changes file. This is the only modules related option you need if
@@ -600,6 +604,8 @@ especially if also using the option
 .TP
 .B modules_clean
 This target allows you to clean all packages under
+.B MODULE_LOC,
+which defaults to 
 .B /usr/src/modules,
 and this should be all that is needed to undo the effect of any of the
 other modules_ targets.

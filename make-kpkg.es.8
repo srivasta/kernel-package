@@ -28,7 +28,7 @@
 .\" (c) 2003 Software in the Public Interest
 .\" Esta traducción ha sido realizada por Rubén Porras Campo <nahoo@inicia.es>
 .\" Está basada en la página de manual original:
-.\" versión 1.15 del CVS de
+.\" versión 1.17 del CVS de
 .\" /cvs/debian-doc/manpages/english/kernel-package/make-kpkg.8
 .\" Revisada por Rudy Godoy <rudy@kernel-panik.org>
 
@@ -52,7 +52,7 @@ sino hay que indicar a
 como convertirse en superusuario, por ejemplo:
 .sp 1
 .ti +5
-make\-kpkg --rootcmd fakeroot kernel_image
+make\-kpkg \-\-rootcmd fakeroot kernel_image
 .sp 1
 El paquete Debian se crea en el directorio padre al directorio donde se ejecute
 .B make\-kpkg.
@@ -77,7 +77,7 @@ Muestra el modo de uso.
 .BR \-\-revision " número"
 Cambia el número de revisión de los paquetes a
 .BR número.
-Esto tiene algunas restricciones: la opción --revision sólo tiene efecto en la
+Esto tiene algunas restricciones: la opción \-\-revision sólo tiene efecto en la
 fase de configuración (en otras palabras, si existe un fichero llamado
 .I stamp\-configure
 , esta opción no tiene efecto \-\- ejecute 
@@ -86,7 +86,7 @@ o elimine manualmente los ficheros
 .I stamp\-configure 
 y
 .I stamp\-debian
-para que tenga efecto -- Recomiendo encarecidamente
+para que tenga efecto \-\- Recomiendo encarecidamente
 .B make\-kpkg clean 
 a menos que sepa lo que está haciendo).
 Adicionalmente, los paquetes oficiales con las fuentes proporcionan su propio
@@ -131,10 +131,10 @@ se añade al nombre del paquete, y, como tal, debe de cumplir las normas a las
 que están sujetos los nombres de los paquetes Debian. Esto quiere decir que sólo
 puede contener caracteres alfanuméricos en
 .B  minúsculas
-y los caracteres - + . (guión, signo más y punto). Las letras en mayúsculas no
+y los caracteres \- + . (guión, signo más y punto). Las letras en mayúsculas no
 están permitidas. Esto predomina sobre la variable de entorno
 .B APPEND_TO_VERSION.
-Por favor, dese cuenta que \fB\s-1debe\s0\fR ejecutar
+Por favor, dese cuenta que \fB\s\-1debe\s0\fR ejecutar
 .B make\-kpkg 
 .I clean
 después de configurar el núcleo usando
@@ -160,7 +160,7 @@ en ejecuciones posteriores de make\-kpkg (por ejemplo, para construir módulos
 independientes, o cualquier cosa).
 .B make\-kpkg
 no recuerda el argumento tal entre ejecuciones (esto es diferente con el
-argumento --revision, que si se recuerda). Si le molesta que make\-kpkg se queje
+argumento \-\-revision, que si se recuerda). Si le molesta que make\-kpkg se queje
 acerca del uso de
 .BR \-\-append_to_version 
 cuando ya existe un fichero
@@ -174,11 +174,11 @@ Esta opción está deprecada en favor de
 .BR \-\-append_to_version.
 Establece el sabor del núcleo según el argumento \fBtal\fR. El sabor también es
 añadido al nombre del paquete. Necesita un Makefile parcheado para que esto
-funcione apropiadamente (lea /usr/share/doc/kernel\-package/\s-1Flavours\s0.gz).
+funcione apropiadamente (lea /usr/share/doc/kernel\-package/\s\-1Flavours\s0.gz).
 Sólo debe de contener caracteres alfanuméricos en
 .B minúsculas
 y los caracteres \- + . (guión, signo más y punto). Las letras en mayúsculas no
-están permitidas. \fB\s-1NOTA\s0\fR: se desaconsejan los guiones. (Lea el
+están permitidas. \fB\s\-1NOTA\s0\fR: se desaconsejan los guiones. (Lea el
 capítulo 4 de las Normas de Debian para más detalles). Dese cuenta de que
 necesita ejecutar
 .B make\-kpkg 
@@ -311,7 +311,7 @@ Cambia el tipo de configuración hecha desde el \f(CWoldconfig\fR por omisión.
 \fIobjetivo\fR debe ser uno de \f(CWoldconfig\fR, \f(CWconfig\fR, \f(CWmenuconfig\fR,
 \f(CWgconfig\fR, \f(CWxconfig\fR; o \f(CWold\fR, \f(CWmenu\fR, \f(CWg\fR o \f(CWx\fR.
 .Sp
-Esta opción es particularmente útil cuando se usa \s-1PATCH_THE_KERNEL\s0 por si
+Esta opción es particularmente útil cuando se usa \s\-1PATCH_THE_KERNEL\s0 por si
 alguno de los parches cambia las opciones de configuración disponibles.
 .B Nota
 Sin embargo
@@ -381,13 +381,13 @@ la opción
 del programa
 .I mkinitrd.
 Por ejemplo, puede ser
- "genromfs -d %s -f %s"
+ "genromfs \-d %s \-f %s"
 o
  "mkcramfs %s %s"
 .TP
 .B \-\-rootcmd tal
 La orden que proporciona acceso de superusuario (por ejemplo, `sudo' o
-`fakeroot'), necesitado por la opción -r de dpkg\-buildpackage.
+`fakeroot'), necesitado por la opción \-r de dpkg\-buildpackage.
 .TP
 .B \-\-us
 Esta opción se pasa a dpkg\-buildpackage, indica que el paquete no debe firmar
@@ -406,7 +406,7 @@ página del manual Getopt::Long (3perl).
 .B CONCURRENCY_LEVEL
 Si está definida, esta variable establece el nivel de concurrencia usado por
 make para compilar el núcleo y el conjunto de módulos, usando la opción
-.I -j
+.I \-j
 para el make del objetivo
 .B build
 de
@@ -459,7 +459,7 @@ necesidades (eliminar arquitecturas, borrar los directorios de control de
 versiones, 
 .I find . \-type d \-name CVS \-prune \-exec rm \-rf {} \\;
 etc). No tiene efecto sobre otra cosa que no sean las fuentes del núcleo que van
-a ser empaquetadas -- si el script opera en el directorio actual y sus
+a ser empaquetadas \-\- si el script opera en el directorio actual y sus
 descendientes las fuentes originales del núcleo deberían permanecer
 intactas. Las variables de entorno
 .B HEADER_CLEAN_HOOK
@@ -539,7 +539,7 @@ Estos enganches son variables que pueden apuntar a scripts que añadan o eliminen
 línea a la lista del menú de grub durante la instalación o desinstalación del
 núcleo. Se incluye un script de ejemplo para añadir líneas al fichero de menú de
 grub en el directorio
-.TT /usr/share/doc/kernel\-package/.
+.I /usr/share/doc/kernel\-package/.
 .TP
 .B build
 Este objetivo, es usado por el objetivo
@@ -595,7 +595,7 @@ otros objetivos modules_.
 Este objetivo ejecuta pronto la configuración (realmente,
 .B config_target,
 establecido por 
-.B --config 
+.B \-\-config 
 que por omisión es
 .I oldconfig
 ), de forma que pueda editar los ficheros generados por

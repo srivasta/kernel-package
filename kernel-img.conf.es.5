@@ -27,7 +27,7 @@
 .\" (c) 2003 Software in the Public Interest
 .\" Esta traducción ha sido realizada por Rubén Porras <nahoo@inicia.es>
 .\" Está basada en la página de manual original:
-.\" versión 1.8 del CVS de
+.\" versión 1.9 del CVS de
 .\" /cvs/debian-doc/manpages/english/kernel-package/kernel-img.conf.5 
 .\" Revisada por Rudy Godoy <rudy@kernel-panik.org>
 
@@ -346,16 +346,16 @@ o
 .B silent_modules
 Está opción es para aquellos que se sienten molestos cuando se les avisa de
 módulos existentes en el directorio
-.TT /lib/modules/$version.
+.I /lib/modules/$version.
 Este directorio probablemente pertenezca a un paquete 
-.TT kernel\-image\-$version
+.I kernel\-image\-$version
 viejo o que ya no existe, en cuyo caso pueden aparecer problemas con módulos
 que hayan quedado en ese directorio, o puede que el directorio exista
 legítimamente porque se haya instalado un paquete independiente con módulos
 para la misma versión del núcleo. En este último caso la existencia del
 directorio es totalmente benigna. Si establece esta variable, nunca más podrá
 cancelar la instalación si se detecta previamente un directorio
-.TT /lib/modules/$version
+.I /lib/modules/$version
 existente. Por omisión no está establecido.
 .TP
 .B silent_loader
@@ -366,9 +366,9 @@ no afecta a que el gestor de arranque sea o no ejecutado (lea
 para entender como controlarlo, la ausencia de un fichero de configuración hará
 el proceso de instalación ameno e interactivo).
 .TP
-.B ignore_depmod_err
+.B ignore_depmod_error
 Si está establecido, no pide confirmación para continuar después de un problema
-con depmod en el script de pos\-instalación. Esto facilita las instalaciones
+con depmod en el script de post\-instalación. Esto facilita las instalaciones
 automatizadas, aunque puede enmascarar algún problema con la imagen del
 núcleo. De todas formas todavía se muestra un diagnóstico. 
 .SH FICHEROS
