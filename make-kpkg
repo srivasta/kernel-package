@@ -14,7 +14,7 @@
 #
 #
 #
-#    $Id: make-kpkg,v 1.24 1999/05/15 06:51:29 srivasta Exp $
+#    $Id: make-kpkg,v 1.25 1999/05/19 16:54:01 srivasta Exp $
 #
 require 5.002;
 use strict;
@@ -29,7 +29,7 @@ make-kpkg - build Debian kernel packages from Linux kernel sources.
 ($main::MYNAME     = $main::0) =~ s|.*/||;
 $main::Author      = "Manoj Srivastava";
 $main::AuthorMail  = "srivasta\@debian.org";
-$main::Version     = '$Revision: 1.24 $ ';
+$main::Version     = '$Revision: 1.25 $ ';
 
 my $help_opt=0; 
 my $revision=0; 
@@ -556,6 +556,25 @@ EOERR1
   } 
   if ($revision){
     $command .= " DEBIAN_REVISION=$revision ";
+
+    if ($revision !~ m/^(\w\.\+)+$/o)
+      {
+	print STDERR " Error: The revision string may only contain\n";
+	print STDERR " alphanumerics and  the  characters  +  .\n";
+	print STDERR " The current value is: $revision\n";
+	print STDERR " Aborting.\n";
+	exit 1;
+      }
+    
+    if (-f stamp-configure){
+      print STDERR "Warning: The $revision option only has an effect during\n"; 
+      print STDERR "the configure phase -- in other words, since the file\n"; 
+      print STDERR "stamp-configure exists, this option has no effect -- \n"; 
+      print STDERR "run make-kpkg clean or manually remove stamp-configure \n";  
+      print STDERR "for it to have an effect\n"; 
+      print STDERR "Please hit return to continue\n";
+      my $ans = <STDIN>;
+    }
   }
   if ($flavour){
     if ($flavour =~ m/[A-Z]+/o){
