@@ -5,14 +5,14 @@
 # Created On       : Sat Apr 27 05:55:26 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Tue Nov 13 13:38:14 2001
+# Last Modified On : Tue Nov 13 13:47:29 2001
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 219
+# Update Count     : 220
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
 #
-#    $Id: image.postinst,v 1.86 2001/11/13 19:39:42 srivasta Exp $
+#    $Id: image.postinst,v 1.87 2001/11/13 19:48:51 srivasta Exp $
 #
 
 #
@@ -1466,7 +1466,7 @@ sub make_liloconf {
     print CONF "boot=".$bootdevice, "\n", "root=".$rootdevice, "\n",
                @boilerplate;
     if ($initrd) {
-      print CONF "initrd=".$realimageloc."initrd\n";
+      print CONF "initrd=" . $image_dest . "initrd.img\n";
     }
   }
   elsif ($loader =~ /^vmelilo/io) {

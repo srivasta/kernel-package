@@ -22,7 +22,7 @@
 .\" USA.
 .\"
 .\"
-.\"    $Id: make-kpkg.8,v 1.43 2001/11/12 18:36:16 srivasta Exp $
+.\"    $Id: make-kpkg.8,v 1.44 2001/11/13 19:48:51 srivasta Exp $
 .\"
 .TH MAKE\-KPKG 1 "May 2 1997" "Debian" "Debian GNU/Linux manual"
 .SH NAME
@@ -347,8 +347,10 @@ If there is no
 file in the kernel source directory, a default configuration is
 provided similar to the one used to create the
 .B Debian
-boot\-floppies.  At install time, it updates symbolic links in the root
-directory to point to the new kernel image in
+boot\-floppies.  At install time, it updates symbolic links in the
+symlinkk destination directory (the root directory by default)
+to point to the new kernel image in the image directory, which is
+nominally 
 .I /boot.
 On installation, it also offers to run the Linux loader,
 .I LILO,
