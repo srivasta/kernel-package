@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Thu Jul 19 09:13:12 2001
+## Last Modified On : Thu Jul 19 10:17:55 2001
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 482
+## Update Count	    : 483
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.126 2001/07/19 14:15:11 srivasta Exp $
+## $Id: rules,v 1.127 2001/07/19 15:19:44 srivasta Exp $
 ###############################################################################
 
 ifdef ARCH
@@ -1242,7 +1242,7 @@ stamp-doc: debian
 	echo "This was produced by kernel-package version $(kpkg_version)." > \
 	         debian/tmp-doc/usr/share/doc/$(d_package)/Buildinfo
 	if test -f debian/official -a -f debian/README.Debian ; then \
-           $(install_file) README.Debian \
+           $(install_file) debian/README.Debian \
 		debian/tmp-doc/usr/share/doc/$(h_package)/README.Debian;\
 	fi
 	if test -f README.Debian ; then \
