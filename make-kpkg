@@ -5,16 +5,16 @@
 # Created On       : Mon Jun 17 01:10:11 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Fri May  8 04:33:59 1998
+# Last Modified On : Tue May 12 13:57:14 1998
 # Last Machine Used: tiamat.datasync.com
-# Update Count     : 101
+# Update Count     : 103
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
 #
 #
 #
-#    $Id: make-kpkg,v 1.14 1998/05/08 09:42:45 srivasta Exp $
+#    $Id: make-kpkg,v 1.15 1998/05/12 18:58:45 srivasta Exp $
 #
 require 5.002;
 use strict;
@@ -29,7 +29,7 @@ make-kpkg - build Debian kernel packages from Linux kernel sources.
 ($main::MYNAME     = $main::0) =~ s|.*/||;
 $main::Author      = "Manoj Srivastava";
 $main::AuthorMail  = "srivasta\@debian.org";
-$main::Version     = '$Revision: 1.14 $ ';
+$main::Version     = '$Revision: 1.15 $ ';
 
 my $help_opt=0; 
 my $revision=0; 
@@ -439,6 +439,9 @@ sub main (){
       print STDERR "Warning: The rootcmd option (set to [$root_cmd]) is\n"; 
       print STDERR "only valid for the buildpackage target. The target is:\n"; 
       print STDERR "[$argstring]\n"; 
+      print STDERR "Perhaps you would like \n";  
+      print STDERR "% $root_cmd $main::MYNAME $argstring\n"; 
+      print STDERR "instead? At the moment, I am ignoring $root_cmd\n";
       print STDERR "Please hit return to continue\n";
       my $ans = <STDIN>;
     }
