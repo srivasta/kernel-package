@@ -5,9 +5,9 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Tue Mar 19 23:15:34 2002
+## Last Modified On : Tue Mar 19 23:19:51 2002
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 135
+## Update Count	    : 136
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
@@ -34,7 +34,7 @@ export DEB_HOST_GNU_TYPE   := $(shell dpkg-architecture $(ha) -qDEB_HOST_GNU_TYP
 #                          sed 's/^Version: *//')
 #
 
-#    $Id: rules,v 1.33 2002/03/20 05:17:43 srivasta Exp $
+#    $Id: rules,v 1.34 2002/03/20 05:19:56 srivasta Exp $
 
 
 # Please change the maintainer information, as well as the debian version
@@ -125,7 +125,7 @@ stamp-binary:
 	$(install_file)    README $(DOCDIR)/README
 	$(install_file)    kernel/Flavours $(DOCDIR)/Flavours
 	$(install_file)    Problems $(DOCDIR)/Problems
-	$(install_file)    _make-kpkg $(BASHDIR)/make_kpkg
+	$(install_file)    _make-kpkg $(BASH_DIR)/make_kpkg
 	$(install_file)    Multi-Arch $(DOCDIR)/Multi-Arch
 	$(install_file)    Rationale $(DOCDIR)/Rationale
 	gzip -9fqr         $(DOCDIR)
