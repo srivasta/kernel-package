@@ -5,17 +5,17 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Wed Jun 18 13:10:06 1997
+## Last Modified On : Tue Jul 29 14:52:17 1997
 ## Last Machine Used: tiamat.datasync.com
-## Update Count	    : 177
+## Update Count	    : 182
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.5 1997/07/07 03:06:24 srivasta Exp $
+## $Id: rules,v 1.6 1997/07/29 23:05:01 srivasta Exp $
 ###############################################################################
 
-# Please change the maintainer information, as well as the debian version
-# below, espescially if you are uploading an official package)
+# The version of kernel-package this belongs to
+kpkg_version := =V
 
 # The maintainer information.
 maintainer = Herbert Xu
@@ -28,6 +28,11 @@ debian := 1.00
 
 # decide if image is meant to be in /boot rather than /
 image_in_boot :=
+# Can we use symlinks?
+no_symlink :=
+# If so, where is the real file (usually, vmlinuz-X.X.X is real, and
+# vmlinuz is the link, this variable reverses it.
+reverse_symlink :=
 
 # The version numbers for kernel-image, kernel-headers and
 # kernel-source are deduced from the Makefile (see below,
@@ -132,6 +137,14 @@ endif
 
 ifneq ($(strip $(IMAGE_IN_BOOT)),)
 image_in_boot := $(IMAGE_IN_BOOT)
+endif
+
+ifneq ($(strip $(NO_SYMLINK)),)
+no_symlink := $(NO_SYMLINK)
+endif
+
+ifneq ($(strip $(REVERSE_SYMLINK)),)
+reverse_symlink := $(REVERSE_SYMLINK)
 endif
 
 ifneq ($(strip $(IMAGE_TYPE)),)
@@ -252,6 +265,8 @@ stamp-source:
 	$(install_file) $(DEBDIR)/Headers \
 	         debian/tmp-source/usr/doc/$(package)/Headers
 	gzip -9f debian/tmp-source/usr/doc/$(package)/Headers
+	echo "This was produced by kernel-package version $(kpkg_version)." > \
+	         debian/tmp-source/usr/doc/$(package)/Buildinfo
 	(cd debian/tmp-source/usr/doc/$(package); \
          ln -s ../../src/$(package)/Documentation Documentation;)
 	-tar cf - `echo * | sed -e 's/debian//g' -e 's/\.deb//g' ` \
@@ -294,6 +309,8 @@ stamp-headers:
 	$(install_file) $(DEBDIR)/README.headers \
 	         debian/tmp-headers/usr/doc/$(h_package)/debian.README
 	gzip -9f debian/tmp-headers/usr/doc/$(h_package)/debian.README
+	echo "This was produced by kernel-package version $(kpkg_version)." > \
+	         debian/tmp-headers/usr/doc/$(package)/Buildinfo
 	-tar cf - include | \
             (cd debian/tmp-headers/usr/src/$(h_package); umask 000; tar xsf -)
 	(cd debian/tmp-headers/usr/src/$(h_package)/include; rm -f asm; \
@@ -320,6 +337,8 @@ stamp-doc:
 	       debian/tmp-doc/usr/doc/$(d_package)/LinkPolicy.Debian
 	$(install_file) $(DEBDIR)/README.doc \
 	         debian/tmp-doc/usr/doc/$(d_package)/README.Debian
+	echo "This was produced by kernel-package version $(kpkg_version)." > \
+	         debian/tmp-doc/usr/doc/$(package)/Buildinfo
 	-tar cf - Documentation | \
             (cd debian/tmp-doc/usr/doc/$(d_package); umask 000; tar xsf -)
 	-gzip -9fqr debian/tmp-doc/usr/doc/$(d_package)
@@ -350,6 +369,7 @@ ifdef MODULES_ENABLED
 endif
 	$(make_directory) debian/tmp-image/usr/doc/$(i_package)
 	sed -e 's/=V/$(version)/g' -e 's/=B/$(image_in_boot)/g' \
+            -e 's/=S/$(no_symlink)/g' -e 's/=R/$(reverse_symlink)/g' \
              $(DEBDIR)/image.postinst > debian/tmp-image/DEBIAN/postinst
 	chmod 755 debian/tmp-image/DEBIAN/postinst
 	sed -e 's/=V/$(version)/g' \
@@ -368,6 +388,8 @@ endif
 	$(install_file) $(DEBDIR)/README.image \
 	         debian/tmp-image/usr/doc/$(i_package)/debian.README
 	gzip -9f debian/tmp-image/usr/doc/$(i_package)/debian.README
+	echo "This was produced by kernel-package version $(kpkg_version)." > \
+	         debian/tmp-image/usr/doc/$(package)/Buildinfo
 ifdef MODULES_ENABLED
 	cp modules/* debian/tmp-image/lib/modules/$(version)/misc
 	chmod 644 debian/tmp-image/lib/modules/$(version)/misc/*
