@@ -1,3 +1,10 @@
+kernel-package (8.036) unstable; urgency=low
+
+  * Warn if the target machine does not have mkinitrd iv we are installing
+    an initrd image.                                         closes: Bug#192195
+
+ -- Manoj Srivastava <srivasta@debian.org>  Tue,  6 May 2003 19:12:22 -0500
+
 kernel-package (8.035) unstable; urgency=low
 
   * use mkdir in favour of $(make_directory) while creating the debian dir. 

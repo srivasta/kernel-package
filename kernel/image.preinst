@@ -1,5 +1,5 @@
 #! /usr/bin/perl
-#                              -*- Mode: Perl -*- 
+#                              -*- Mode: Cperl -*- 
 # image.preinst --- 
 # Author           : Manoj Srivastava ( srivasta@tiamat.datasync.com ) 
 # Created On       : Sun Jun 14 03:38:02 1998
@@ -150,6 +150,22 @@ if (!$warn_initrd) {   $do_initrd   = "YES";}
 # Here is a sanity check.
 my $pattern = "=" . "I";
 $initrd=~ s/^$pattern$//;
+
+if ($initrd) {
+  my $initrd_cmd = `which mkinitrd`;
+  if (!$initrd_cmd) {
+    print STDERR <<EOERROR;
+
+You are attempting to install an initrd kernel image (version $version)
+but you do not seem to have a mkinitrd command in the path. This will
+break the installation. I am aborting now.
+
+EOERROR
+  ;
+    die "Could not find mkinitrd in path.";
+  }
+}
+
 
 if ($initrd && !$do_initrd) {
     print STDERR <<EOF;
