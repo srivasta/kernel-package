@@ -21,7 +21,7 @@
 .\" Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139,
 .\" USA.
 .\"
-.\" $Id: kernel-pkg.conf.5,v 1.28 2001/09/30 08:59:40 srivasta Exp $
+.\" $Id: kernel-pkg.conf.5,v 1.29 2002/05/30 16:51:02 srivasta Exp $
 .\"
 .TH KERNEL\-PKG.CONF 5 "Jan  7 1997" "Debian" "Debian GNU/Linux manual" 
 .\" NAME should be all caps, SECTION should be 1-8, maybe w/ subsection
@@ -205,6 +205,11 @@ overrides this), the file .config.save in the top level directory is
 ignored. 
 .TP
 .B root_cmd 
+This is a variable meant to be passed on to 
+.B dpkg-buildpackage
+in the 
+.I buildpackage
+target.
 This should be set to a means of gaining superuser access (for
 example, 
 .I `sudo'
@@ -220,7 +225,11 @@ adds to this command an option to have dpkg-buildpackage not sign the
 source, similarily, the environment variable
 .B UNSIGN_CHANGELOG 
 adds to this command an option to have dpkg-buildpackage not sign the
-changelog.
+changelog. Again, this variable is only usefule for the
+.I buildpackage
+target. Set the  environment variable 
+.B ROOT_CMD
+if you just wish to build the kernel image, for instance.
 .TP
 .B delete_build_link
 If set to YES, the symbolic link 

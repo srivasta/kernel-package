@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Mon May  6 09:59:14 2002
+## Last Modified On : Wed May 29 17:02:50 2002
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 535
+## Update Count	    : 538
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.178 2002/05/06 15:15:56 srivasta Exp $
+## $Id: rules,v 1.179 2002/05/30 16:51:02 srivasta Exp $
 ###############################################################################
 
 ifdef KPKG_ARCH
@@ -755,13 +755,27 @@ endif
 #you can automated it a bit more with $(foreach) and $(if)
 
 ###ROOT_COMMAND
-
-int_get_root := $(shell [ $$(id -u) -ne 0 ] && echo "$(ROOT_CMD)" )
-
 ifneq ($(strip $(ROOT_CMD)),)
 int_root_cmd := -r$(strip $(ROOT_CMD))
 else
+# well, ROOT_CMD is not set yet
 ifneq ($(strip $(root_cmd)),)
+
+# Try and set ROOT_CMD from root_cmd
+int_dummy_root := $(root_cmd)
+ifneq ($(strip $(findstring -us, $(int_dummy_root))),)
+int_dummy_root := $(subst -us,, $(strip $(int_dummy_root)))
+endif
+ifneq ($(strip $(findstring -uc, $(int_dummy_root))),)
+int_dummy_root := $(subst -uc,, $(strip $(int_dummy_root)))
+endif
+ifneq ($(strip $(findstring -r, $(int_dummy_root))),)
+ROOT_CMD := $(patsubst -r%, %, $(strip $(int_dummy_root)))
+else
+ROOT_CMD     := $(strip $(root_cmd))
+endif
+
+
 ifeq ($(strip $(findstring -r, $(root_cmd))),)
 int_root_cmd := -r$(strip $(root_cmd))
 else
@@ -782,6 +796,9 @@ endif
 ifneq ($(strip $(int_root_cmd)),)
 root_cmd := $(int_root_cmd)
 endif
+
+int_get_root := $(shell [ $$(id -u) -ne 0 ] && echo "$(ROOT_CMD)" )
+
 
 ifneq ($(strip $(CLEAN_SOURCE)),)
 do_clean = $(CLEAN_SOURCE)

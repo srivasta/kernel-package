@@ -1,5 +1,5 @@
 
-   $Id: README,v 1.52 2002/01/22 03:51:07 srivasta Exp $
+   $Id: README,v 1.53 2002/05/30 16:51:02 srivasta Exp $
 
 This is the Debian GNU/Linux prepackaged version of the Linux kernel.
 Linux was written by Linus Torvalds <Linus.Torvalds@cs.Helsinki.FI> and
@@ -61,7 +61,10 @@ Oh, and of course, make-kpkg is part of kernel-package, usually found
 in section misc.
 
 
- For the Brave and the impatient:
+ For the Brave and the impatient: (Look for Kent's 10-Step Procedure
+ to Compiling a Debian Kernel near the tail end of this file for
+ more detailed HOWTO)
+
 Phase ONE: Getting and configuring the kernel
  1% cd <kernel source tree>
  2% make config   # or make menuconfig or make xconfig and configure
@@ -714,3 +717,178 @@ Foot note 1:
 Manoj Srivastava                        <srivasta@debian.org>
 PGP Key ID: 1024/C7261095 
 Key fingerprint =  CB D9 F4 12 68 07 E4 05  CC 2D 27 12 1D F5 E8 6E 
+======================================================================
+
+
+
+	Kent's 10-Step Procedure to Compiling a Debian Kernel
+		  Kent West <westk@nicanor.acu.edu>
+
+(I may leave a step or two out, but this is the gist. This example
+uses the latest kernel version at the time of writing, which was
+2.4.18)
+
+1. Run "dselect". Choose "Update". Choose "Select". "space bar" to get
+   out of the Help screens. Use "/" (without the quotes) to start
+   search.  Search for "kernel-source". Mark for installation the
+   2.4.18 or so.
+
+1b. Use "/" to search for "kernel-package". Mark it for installation 
+    also. "Enter" to get back to the main dselect menu.
+
+1c. Choose "Install". This will download a file in /usr/src with a .tgz 
+    extension, as well as install "kernel-package".
+
+2. "cd /usr/local/src"
+
+3. "bunzip2 /usr/src/kernel-source-2.4.18.tar.bz2" (or whatever the file is 
+   named). This will unzip (decompress) the file.
+
+4. "tar -xvf kernel-source-2.4.18.tar". This will untar the file (x
+   means extract, v means "be verbose", f means "use the file named
+   ...").  A new subdirectory named kernel-source-2.4.18 will be
+   created with all the untarred files under it. You can also do steps
+   3 and 4 in one tar command, but I never do; habit is the only
+   reason. I think you just add the "j" switch to tar, such as "tar
+   -xvjf 'filename'". (It used to be the I switch to tar, but they
+   moved from I to j).
+
+
+Pause and Breathe. You now have the kernel sources installed. You 
+haven't done anything with them yet, but they're installed.
+
+5. "cd /usr/local/src/kernel-source-2.4.18" 
+
+6. "make menuconfig". This will start a curses-based (text-based) 
+     menu-driven application. There are a lot of choices here, and
+     many of them won't make sense to you at all. Take the time to
+     look at most all of them (some of them you'll know you don't
+     need, like SCSI support if you have an all-IDE system, or Amateur
+     Radio Support if you're not a ham) and read the HELP on them if
+     they look relevant. A lot of the time the HELP will suggest
+     whether you should include it or not, and generally when in
+     doubt, leave things set the way they are. Some things to check
+     out:
+       * the correct processor for your system (AMD vs Pentium vs P4, etc)
+       * Symmetric Multi-Processing; "No" if you only have a single processor
+       * Loadable module support; "Yes" to all three sub-items.
+       * Parallel port support; "Yes" if you have a parallel
+         printer. "No" to keep things simple for now if you can live
+         without the printer for a while. 
+       * Plug-N-Play; "Yes"; ISA P-N-P; only if you have any ISA cards
+         installed. 
+       * Character devices; turn on Direct Rendering if your video card is 
+         listed, and turn on agpgart if your video chipset is listed;
+         mice if you  have a PS/2 mouse
+       * Sound - find the driver for your card
+       * Input core support (some USB stuff needs this, but I'm hazy
+         on it - use your best guess) 
+       * USB support (make your best guesses; I'm hazy on it)
+       * You probably won't need to touch the following:
+              - General Setup
+              - Memory Technology
+              - Block devices
+              - Multi-device support
+              - Networking options
+              - Telephony support
+              - ATA/IDE/MFM/RLL support
+              - Fusion MPT device support
+              - I20 device support
+              - Amateur Radio support
+              - Infrared support
+              - ISDN subsystem
+              - Old CD-ROM drivers (unless you have a non-ATAPI CD-ROM
+                drive for now; wait till you've compiled a kernel or
+                two) 
+              - Multimedia devices (unless you have a tv tuner, etc;
+                too complicated for now; wait) 
+              - File Systems (unless you'll be accessing a
+                DOS/FAT/NTFS/etc partition, or Windows shares via smb,
+                etc) 
+              - Console Drivers (play with different text modes at bootup)
+              - kernel hacking
+
+     It's by turning off unneeded stuff that the hackers get their kernels 
+     down in size and up in efficiency. But you're not really worried about 
+     either at this point.
+
+6b. Exit and save your configuration. This will create a hidden file
+    named ".config" in the "/usr/local/src/kenel-source-2.4.18"
+    directory. You could edit this file directly to make changes to
+    your configuration, but I wouldn't. All that this step (6 and 6b))
+    has done is to set up this configuration file. This file is read
+    by the actual kernel compilation process to compile the options
+    you've specified.
+
+
+Pause and breathe again. You have now configured your options for the 
+next kernel compilation, but you have not yet compiled it.
+
+
+7. Compile the kernel: use the command "make-kpkg clean
+   kernel_image". This will cause a bunch of grinding and text;
+   depending on the speed of your computer and the options you chose,
+   this could take minutes (fast computer) to hours (slow
+   computer). This step is a Debian-way of compiling the kernel. The
+   "other" way is to do it manually, which consists of several steps
+   such as "make dep" and "make modules" and "make modules_install"
+   and manually finding and moving the kernel to where it needs to be
+   and setting up symlinks and configuring lilo.conf and running
+   lilo. The Debian-way is much easier. The result will be a file
+   named something like "kernel-image-2.4.18_1.00.Custom_i386.deb",
+   one level up, in "/usr/local/src".
+
+   You can try reading the documentation in the "kernel-package"
+   package.  A more complicated comman line to build your kernel
+   image, with all kinds of bells and whistels, is:
+
+   make-kpkg -rootcmd fakeroot --append-to-version -custom.${VER} \
+        --revision custom.${VER} clean   kernel_image modules-image
+   This one also builds any standalone modules packages you may have
+   installed on your machine.
+
+
+Pause and breathe. You have now compiled your kernel and made a .deb 
+file out of it for easy installation.
+
+
+If you're (re)compiling a kernel with the same version number as your
+current version, you'll probably want to run the command "mv
+/lib/modules/2.[whateverversion] /lib/modules/2.[whateverversion].old"
+to move the old modules out of the way in preparation for the creation
+of new modules. If you forget, then step 8 shall warn you that you
+need to do this before it overwrites the old modules, and you can just
+open a new terminal and do it then without canceling whichever step it
+concerns. This is only applicable when (re)compiling the same version
+number of kernel as your existing version.
+
+8. Install the new .deb file. Use the command "dpkg -i
+   /usr/local/src/kernel-image-2.14.18*.deb". This will install the
+   new kernel to where it needs to be (and I believe configure
+   /etc/lilo.conf if [and only if] /etc/lilo.conf does not exist) and
+   run lilo.
+
+
+Pause and breathe. You are ready for a reboot to start running your new 
+kernel. Make sure you have a backup method for getting into your box (a 
+Debian install CD, or boot floppy, etc) in case something goes
+wrong. I generally have a lilo.conf file that includes at least one
+other image than /vmlinuz and /vmlinuz.old
+
+
+9. Reboot. After the reboot, you should be running the new kernel.
+   Typing "uname -a" will tell you what version of kernel you are
+   running.  Test the machine and see if things work properly.
+
+
+Pause, breathe, celebrate. You've successfully compiled and installed 
+your first kernel! You may not have a working sound card or USB stuff 
+yet, and other things may have broken, but now that you know the basic 
+procedure you can go back and try again.
+
+10: Celebrate.
+
+
+Have fun!
+
+Kent

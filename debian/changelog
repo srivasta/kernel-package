@@ -1,3 +1,19 @@
+kernel-package (8.004) unstable; urgency=low
+
+  * Mention that the symbolic links are not manipulated when the package
+    is upgrade -- only on initial install.                   closes: Bug#146371
+    This was actually done in 7.105 on user request (or else we were left
+    with two symlinks pointing to the same image). At this point, I
+    suggest that people use the post inst hooks to add symlinks, if they
+    wish. 
+  * use which instead of command -v
+  * Added Kent's 10-Step Procedure to Compiling a Debian Kernel, derived
+    from a posting on debian-user by Kent West <westk@nicanor.acu.edu>
+  * Document that root-cmd is meant for the buildpackage target, and
+    mention the env variable ROOT_CMD.                       closes: Bug#147770
+
+ -- Manoj Srivastava <srivasta@debian.org>  Thu, 30 May 2002 11:50:38 -0500
+
 kernel-package (8.003) unstable; urgency=low
 
   * fix typo.                                         really closes: Bug#145720

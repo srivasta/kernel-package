@@ -22,7 +22,7 @@
 .\" USA.
 .\"
 .\"
-.\"    $Id: make-kpkg.8,v 1.58 2002/05/13 08:17:35 srivasta Exp $
+.\"    $Id: make-kpkg.8,v 1.59 2002/05/30 16:51:02 srivasta Exp $
 .\"
 .TH MAKE\-KPKG 1 "May 2 1997" "Debian" "Debian GNU/Linux manual"
 .SH NAME
@@ -410,17 +410,17 @@ and the kernel versions is passed i through the environment variable
 .B version.
 for all these scripts.
 .IP
-At install time, the image package updates symbolic links in the
-symbolic link destination directory (the root directory by default)
-to point to the new kernel image in the image directory, which is
-nominally 
+On initial installation, the image package updates symbolic links in
+the symbolic link destination directory (the root directory by
+default) to point to the new kernel image in the image directory,
+which is nominally
 .I /boot.
 If the symbolic link already points to the current kernel image, no
 action is taken.  If a prior symbolic link exists, it is rotated out
 with a suffix.old, and a new symbolic link, properly updated is
 installed in its place (the variable minimal_swap in 
 .I /etc/kernel-img.conf
-further modifies this behaviour).
+further modifies this behaviour). No action is taken on upgrades.
 .IP
 On installation, it also offers to run the Linux loader,
 .I LILO
