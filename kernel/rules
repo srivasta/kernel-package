@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Fri Sep 21 22:28:38 2001
+## Last Modified On : Fri Sep 28 23:07:25 2001
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 488
+## Update Count	    : 491
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.137 2001/09/22 03:32:44 srivasta Exp $
+## $Id: rules,v 1.138 2001/09/29 21:56:39 srivasta Exp $
 ###############################################################################
 
 ifdef ARCH
@@ -528,10 +528,11 @@ HEADER_SRC:= $(HEADER_TOP)/usr/src/$(h_package)
 
 
 FILES_TO_CLEAN  = modules/modversions.h modules/ksyms.ver debian/files \
-                  conf.vars
+                  conf.vars scripts/cramfs/cramfsck scripts/cramfs/mkcramfs
 STAMPS_TO_CLEAN = stamp-build stamp-configure stamp-source stamp-image \
                   stamp-headers stamp-src stamp-diff stamp-doc \
-                  stamp-buildpackage stamp-libc-kheaders stamp-debian
+                  stamp-buildpackage stamp-libc-kheaders stamp-debian \
+                  stamp-patch
 DIRS_TO_CLEAN   = $(SOURCE_TOP) $(HEADER_TOP) $(IMAGE_TOP) $(DOC_TOP)
 
 CONFLOC    :=$(shell if test -f ~/.kernel-pkg.conf; then\
@@ -999,6 +1000,7 @@ ifneq ($(strip $(valid_patches)),)
               fi;                                      \
 	  fi;                                          \
         done
+	touch stamp-patch
 else
 	if [ -n "$(VERSIONED_PATCH_DIR)" -a                   \
              -d $(VERSIONED_DIR_PATCH_APPLY) ]; then          \
@@ -1109,6 +1111,19 @@ clean:
 
 real_stamp_clean:
 ifeq ($(strip $(patch_the_kernel)),YES)
+	$(deb_rule) unpatch_now
+endif
+	test -f stamp-patch || $(deb_rule) unpatch_now
+	rm -f $(FILES_TO_CLEAN) $(STAMPS_TO_CLEAN)
+	test ! -f .config || cp -pf .config config.precious
+	-test -f Makefile && \
+            $(MAKE) $(FLAV_ARG) $(EXTRAV_ARG) ARCH=$(KERNEL_ARCH) distclean
+	test ! -f config.precious || mv -f config.precious .config
+	rm -rf $(DIRS_TO_CLEAN)
+	-test -f stamp-building || test -f debian/official || rm -rf debian
+
+
+unpatch_now:
 ifneq ($(strip $(valid_unpatches)),)
 	-for patch in $(valid_unpatches) ; do              \
           if test -x  $$patch; then                        \
@@ -1146,15 +1161,9 @@ else
         else                                                    \
 	    true;                                               \
 	fi
+	rm -f stamp-patch
 endif
-endif
-	rm -f $(FILES_TO_CLEAN) $(STAMPS_TO_CLEAN)
-	test ! -f .config || cp -pf .config config.precious
-	-test -f Makefile && \
-            $(MAKE) $(FLAV_ARG) $(EXTRAV_ARG) ARCH=$(KERNEL_ARCH) distclean
-	test ! -f config.precious || mv -f config.precious .config
-	rm -rf $(DIRS_TO_CLEAN)
-	-test -f stamp-building || test -f debian/official || rm -rf debian
+
 
 binary:       binary-indep binary-arch
 binary-indep: kernel_source kernel_doc

@@ -1,3 +1,13 @@
+kernel-package (7.65) unstable; urgency=low
+
+  * Remember to unpatch the kernel even of the env varis not on during
+    cleanup.                                                 closes: Bug#113560
+  * Removed binaries from kernel-source packages             closes: Bug#113832
+  * The man page now mentions that --revision has a default  closes: Bug#113702
+  * Provide an upgrade path to the new initrd symlink loc    closes: Bug#113406
+
+ -- Manoj Srivastava <srivasta@debian.org>  Sat, 29 Sep 2001 16:55:51 -0500
+
 kernel-package (7.64) unstable; urgency=low
 
   * Added more customization to the default boot loader file created for

@@ -5,14 +5,14 @@
 # Created On       : Sat Apr 27 05:55:26 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Sun Sep  2 03:35:43 2001
+# Last Modified On : Sat Sep 29 01:40:53 2001
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 212
+# Update Count     : 213
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
 #
-#    $Id: image.postinst,v 1.79 2001/09/22 03:32:43 srivasta Exp $
+#    $Id: image.postinst,v 1.80 2001/09/29 21:56:39 srivasta Exp $
 #
 
 #
@@ -603,6 +603,34 @@ if ($initrd) {
 		   "/lib/modules/$version");
   die("Failed to create initrd image.\n") if $ret;
   image_magic("initrd", $realimageloc) if $initrd;
+  if ($initrd && -l "$image_dir/initrd" && ! $image_in_boot) {
+    print STDERR <<"EOIMG";
+I Note that you have an old $image_dir/initrd symbolic link in place.
+The location of the symbolic link is now the same location as the kernel 
+image symbolic links, names, in $image_dest.  I have three options here. 
+I can:
+ (a) update the symbolic link in the old location as well as the new one
+ (B) delete the old symbolic link (default).  You shall need to update the
+      boot loader
+ (c) Igore it and do nothing
+EOIMG
+  ;
+    my $answer='';
+    print "Please select one of a, b, or c";
+    $answer=<STDIN>;
+    if ($answer =~ /^\s*a/i) {
+      chdir "$image_dir";
+      image_magic("initrd", $realimageloc);
+      chdir "$image_dest";
+    }
+    elsif ($answer =~ /^\s*b/i) {
+      unlink "$image_dir/initrd";
+    }
+    else {
+      print STDERR 
+	"Please note that $image_dir/initrd points to the wrong image now\n";
+    }
+  }
 }
 
 image_magic($kimage, $image_dest);
