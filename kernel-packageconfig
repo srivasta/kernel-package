@@ -5,16 +5,16 @@
 # Created On       : Thu Jun 13 08:17:09 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Mon Jun  2 15:21:32 1997
-# Last Machine Used: tiamat.datasync.com
-# Update Count     : 6
+# Last Modified On : Tue Feb  1 02:06:56 2000
+# Last Machine Used: glaurung.green-gryphon.com
+# Update Count     : 7
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
 # 
 # 
 #
-#    $Id: kernel-packageconfig,v 1.4 2000/02/01 07:59:08 srivasta Exp $
+#    $Id: kernel-packageconfig,v 1.5 2000/02/01 08:07:12 srivasta Exp $
 #
 
 $|=1;
@@ -72,9 +72,9 @@ EOF1
     $maintainer =~ s|\n||g;
     $maintainer =~ s|\s+| |g;
     # replace any correctly escaped ' with bare '
-    maintainer =~ s/'\\''/'/g;
+    $maintainer =~ s/'\\''/'/g;
     # then revert
-    maintainer =~ s/'/'\\''/g;
+    $maintainer =~ s/'/'\\''/g;
 
     if ($maintainer !~ m|^\s*$|) {
       $File =~
