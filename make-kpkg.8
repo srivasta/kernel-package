@@ -22,7 +22,7 @@
 .\" USA.
 .\"
 .\"
-.\"    $Id: make-kpkg.8,v 1.56 2002/05/06 14:55:19 srivasta Exp $
+.\"    $Id: make-kpkg.8,v 1.57 2002/05/06 15:15:56 srivasta Exp $
 .\"
 .TH MAKE\-KPKG 1 "May 2 1997" "Debian" "Debian GNU/Linux manual"
 .SH NAME
@@ -184,7 +184,7 @@ configuration option to be set to YES  (this, in turn, can be
 overridden by the environment variable
 .B PATCH_THE_KERNEL
 ). 
-.PP
+.IP
 Unlike the treatment of the modules, you may only give the patch name
 (not the full path name of the patch file).  It shall be applied
 during the configure phase (and removed in the clean phase) if it can
@@ -201,7 +201,7 @@ to YES).  Please note that the patches are uninstalled from the source
 when you run the clean target.  This cleanup can be prevented by
 setting the env variable 
 .B NO_UNPATCH_BY_DEFAULT
-.PP
+.IP
 Some times it would be convenient to have the patches applied when
 one asks for specific patches using this option, without also having
 to explicitly set the envirnonment variable. Since setting the
@@ -220,7 +220,12 @@ Also, please note that if any patch installs a script in
 directory, 
 .B run-parts 
 shall be called on that dir just before the kernel image package is
-built. This is a way for the patch to insert any additional files into
+built. The location of the root of the image package being built shall
+be passed in the environment variable 
+.B IMAGE_TOP,
+and the kernel vbersions is passed i through the environment variable
+.B version.
+This is a way for the patch to insert any additional files into
 the image, for example.
 .TP
 .BR \-\-arch\ foo
@@ -388,7 +393,24 @@ If there is no
 file in the kernel source directory, a default configuration is
 provided similar to the one used to create the
 .B Debian
-boot\-floppies.  At install time, it updates symbolic links in the
+boot\-floppies.  
+.IP
+If the file 
+.I ./debian/post-install
+exists, and is an executable, it is run just before the kernel image
+package is created.  Also, please note that if there are any scripts in 
+.I ./debian/image.d/
+directory, 
+.B run-parts 
+shall be called on that dir just before the kernel image package is
+built. The location of the root of the image package being built shall
+be passed in the environment variable 
+.B IMAGE_TOP,
+and the kernel vbersions is passed i through the environment variable
+.B version.
+for all these scripts.
+.IP
+At install time, the image package updates symbolic links in the
 symlink destination directory (the root directory by default)
 to point to the new kernel image in the image directory, which is
 nominally 
@@ -399,6 +421,7 @@ with a suffix.old, and a new symbolic link, properly updated is
 installed in its place (the variable minimal_swap in 
 .I /etc/kernel-img.conf
 further modifies this behaviour).
+.IP
 On installation, it also offers to run the Linux loader,
 .I LILO
 (or alternates like 
@@ -414,7 +437,9 @@ running kernel.
 rates a special mention here, since grub may not need to be rerun
 after installing a kernel image, though an automated change to the
 menu list would be nice on install and removal of kernel image
-packages. Please see the documentation about hooks in
+packages. 
+.IP
+Please see the documentation about hooks in
 .B kernel-img.conf(5).
 These hooks are variables that can be pointed to scripts that add or
 remove  a line from the grub menu list at kernel image install and

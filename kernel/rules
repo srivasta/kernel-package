@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Mon May  6 09:52:01 2002
+## Last Modified On : Mon May  6 09:59:14 2002
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 533
+## Update Count	    : 535
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.177 2002/05/06 14:55:19 srivasta Exp $
+## $Id: rules,v 1.178 2002/05/06 15:15:56 srivasta Exp $
 ###############################################################################
 
 ifdef KPKG_ARCH
@@ -1537,6 +1537,10 @@ ifneq ($(strip $(KERNEL_CROSS)),)
 endif
 endif
 endif
+	if test -d $(SRCTOP)/debian/image.d ; then                            \
+             IMAGE_TOP=$(IMAGE_TOP) version=$(version)                        \
+                   run-parts --verbose $(SRCTOP)/debian/image.d ;             \
+        fi
 	if [ -x debian/post-install ]; then                                   \
 		IMAGE_TOP=$(IMAGE_TOP) version=$(version) debian/post-install;\
 	fi
@@ -1558,9 +1562,6 @@ endif
                         $(INT_IMAGE_DESTDIR)/System.map-$(version)
 	-test -f System.map &&  chmod 644                                     \
                         $(INT_IMAGE_DESTDIR)/System.map-$(version)
-	if test -d $(SRCTOP)/debian/image.d ; then \
-             run-parts --verbose $(SRCTOP)/debian/image.d ; \
-        fi
 ifeq ($(strip $(delete_build_link)),YES)
 	rm -f $(IMAGE_TOP)/lib/modules/$(version)/build
 endif

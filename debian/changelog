@@ -1,9 +1,13 @@
 kernel-package (8.002) unstable; urgency=low
 
   * Fixed a couple of spelling errors in the man page.       closes: Bug#146010
-  * Move the run parts for extra files into the image target.
+  * Move the run parts for extra files into the image target. Document
+    this ./debian/image.d/ directory, as well as the ./debian/postinstall
+    script, and pass in the location of the top of the package being
+    build, as well as the kernel version, to the scripts, and document
+    that as well.
 
- -- Manoj Srivastava <srivasta@debian.org>  Mon,  6 May 2002 09:54:41 -0500
+ -- Manoj Srivastava <srivasta@debian.org>  Mon,  6 May 2002 10:15:47 -0500
 
 kernel-package (8.001) unstable; urgency=low
 
