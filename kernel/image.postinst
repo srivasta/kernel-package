@@ -5,14 +5,14 @@
 # Created On       : Sat Apr 27 05:55:26 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Thu Mar  5 18:26:11 1998
+# Last Modified On : Thu Mar  5 18:32:41 1998
 # Last Machine Used: tiamat.datasync.com
-# Update Count     : 94
+# Update Count     : 95
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
 # 
-#    $Id: image.postinst,v 1.15 1998/03/06 00:28:41 srivasta Exp $
+#    $Id: image.postinst,v 1.16 1998/03/06 00:32:53 srivasta Exp $
 #
 
 # 
@@ -282,7 +282,7 @@ if ( ! -x "/sbin/$loader" ) {
   print "just one of many options. I am assuming you have made some   \n"; 
   print "other arrangement for your system to boot the new kernel     \n";
   print "Please hit return to continue.                               \n";
-  $answer = <STDIN>;
+  my $answer = <STDIN>;
   exit (0) unless defined $rootdevice;
   exit (0) if $loader =~ /silo/i; # No idea how to make non SILO floppies
 
