@@ -1,3 +1,19 @@
+kernel-package (3.55) unstable; urgency=low
+
+  * Added ARCH to make called, this allows for cross compiling kernels
+    (added on a request by  James Troup <J.J.Troup@scm.brad.ac.uk>)
+  * Make kernel-headers arch: any, so we can indeed have different headers
+    for diferent architectures.
+  * m68k can now handle vmlinuz, so reverse that behaviour in the rules
+    file. AFAIK m68k still uses zImage.
+  * Improvements to /usr/doc/kernel-patch/MultiArch.gz, based on
+    suggestions by James Troup <J.J.Troup@scm.brad.ac.uk>/
+  * Upgraded to standards version 2.4.0.0
+  * Fixed old FSF address in copyright file.
+  * This fixes all known lintian warnings.
+
+ -- Manoj Srivastava <srivasta@debian.org>  Mon,  9 Feb 1998 17:11:05 -0600
+
 kernel-package (3.54) unstable; urgency=low
 
   * Fixed rootcmd typos in make-kpkg. fixes: Bug#17618
