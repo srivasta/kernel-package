@@ -12,7 +12,7 @@
 # HISTORY          : 
 # Description      : 
 # 
-#    $Id: image.postinst,v 1.24 1998/09/08 19:49:11 srivasta Exp $
+#    $Id: image.postinst,v 1.25 1998/11/25 07:45:45 srivasta Exp $
 #
 
 # 
@@ -24,12 +24,13 @@ my $image_in_boot   = "=B";	# Should be empty, mostly
 my $no_symlink      = "=S";	# Should be empty, mostly
 my $reverse_symlink = "=R";	# Should be empty, mostly
 my $kimage          = "=K";	# Should be empty, mostly
-my $loader          = "=L";     # lilo, silo, or quik
+my $loader          = "=L";     # lilo, silo, quik, or nettrom
 my $image_dest      = "=D";     # where the image is located
 
 my $Loader          = "LILO";
 $Loader             = "SILO"  if $loader =~ /silo/io;
 $Loader             = "QUIK"  if $loader =~ /quik/io;
+$Loader             = "NETTROM"  if $loader =~ /nettrom/io;
 
 if (! $image_dest) {
   $image_dest         = "boot"  
@@ -237,6 +238,7 @@ EOFERR
 }
 
 exit (0) if $loader =~ /milo/i; # MILO does not have to be executed.
+exit (0) if $loader =~ /nettrom/i; # NETTROM does not have to be executed.
 
 undef $rootdevice;
 undef $rootdisk;
