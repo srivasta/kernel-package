@@ -12,7 +12,7 @@
 # HISTORY          : 
 # Description      : 
 # 
-#    $Id: image.postinst,v 1.66 2001/07/05 16:21:18 srivasta Exp $
+#    $Id: image.postinst,v 1.67 2001/07/05 18:37:40 srivasta Exp $
 #
 
 # 
@@ -495,7 +495,7 @@ EOFERR
 }
 
 # We may not have any modules installed
-if ( -d /lib/modules/$version ) {
+if ( -d "/lib/modules/$version" ) {
   system("depmod -a -F $realimageloc/System.map-$version $version");
 }
 
