@@ -5,16 +5,16 @@
 # Created On       : Mon Jun 17 01:10:11 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Thu Aug 28 01:03:55 2003
+# Last Modified On : Tue Sep 23 10:41:06 2003
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 202
+# Update Count     : 203
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
 #
 #
 #
-#    $Id: make-kpkg,v 1.90 2003/09/08 10:43:52 srivasta Exp $
+#    $Id: make-kpkg,v 1.91 2003/09/23 15:42:41 srivasta Exp $
 #
 require 5.002;
 use strict;
@@ -29,7 +29,7 @@ make-kpkg - build Debian kernel packages from Linux kernel sources.
 ($main::MYNAME     = $main::0) =~ s|.*/||;
 $main::Author      = "Manoj Srivastava";
 $main::AuthorMail  = "srivasta\@debian.org";
-$main::Version     = '$Revision: 1.90 $ ';
+$main::Version     = '$Revision: 1.91 $ ';
 
 my $added_modules='';
 my $added_patches='';
@@ -923,11 +923,9 @@ EOMSG
 	print STDERR "\t\t\t\"$uts_release_version\"\n";
 	print STDERR "does not match expectations:\n";
 	print STDERR "\t\t\t\"$composite_version\"\n";
-	print STDERR "Please run:\n";
-	print STDERR " % make-kpkg clean\n";
-	print STDERR " % make-kpkg ... --append_to_version $append_to_version";
-	print STDERR " kernel_image [modules_image]\n";
-	exit 1;
+	print STDERR "I'll try and recover\n";
+	system ("touch", "Makefile") == 0
+	  or die "touch Makefile ailed:$?";
       }
     }
     $command .= " APPEND_TO_VERSION=$append_to_version ";

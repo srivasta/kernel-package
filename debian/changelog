@@ -1,3 +1,13 @@
+kernel-package (8.060) unstable; urgency=low
+
+  * The preinst, prerm, postrm -- were all parsing force_build_link from
+    the config file, -- all except the postinst. Fixed. closes: Bug#212313
+  * make make-kpkg allow mismatches between the new version and that in
+    version.h, since we now have a method that allows us to recover from
+    that. 
+
+ -- Manoj Srivastava <srivasta@debian.org>  Tue, 23 Sep 2003 10:42:05 -0500
+
 kernel-package (8.059) unstable; urgency=low
 
   * Added handling of the /lib/modules/`uname -r`/build symbolic link, if
