@@ -16,10 +16,11 @@
 
 DPKG_ARCH := dpkg-architecture
 
-ifneq ($(strip $(KPKG_ARCH)),um)
-  ifneq ($(strip $(KPKG_ARCH)),xen)
-    MAKING_VIRTUAL_IMAGE:=YES
-  endif
+ifeq ($(strip $(KPKG_ARCH)),um)
+  MAKING_VIRTUAL_IMAGE:=YES
+endif
+ifeq ($(strip $(KPKG_ARCH)),xen)
+  MAKING_VIRTUAL_IMAGE:=YES
 endif
 
 ifdef KPKG_ARCH
