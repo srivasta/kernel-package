@@ -1,3 +1,11 @@
+kernel-package (6.01) unstable; urgency=low
+
+  * Added support for netwinders. closes: BUG#29333
+  * Modified modules support to not assume everything in /usr/src/modules
+    is a directory. 
+
+ -- Manoj Srivastava <srivasta@debian.org>  Wed, 25 Nov 1998 01:39:43 -0600
+
 kernel-package (5.13) frozen unstable; urgency=low
 
   * Fixed setting email address for modules. closes: BUG#29217
