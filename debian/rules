@@ -5,9 +5,9 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Tue Feb  8 19:41:37 2000
+## Last Modified On : Tue Mar 21 01:02:08 2000
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 126
+## Update Count	    : 127
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
@@ -19,7 +19,7 @@
 #                          sed 's/^Version: *//')
 #
 
-#    $Id: rules,v 1.22 2000/02/09 01:47:05 srivasta Exp $
+#    $Id: rules,v 1.23 2000/03/21 07:04:44 srivasta Exp $
 
 
 # Please change the maintainer information, as well as the debian version
@@ -107,6 +107,7 @@ stamp-binary:
 	gzip -9fqr         $(DOCDIR)
 	$(install_file)    debian/copyright  	   $(DOCDIR)/copyright
 	$(install_file)    kernel-pkg.conf.5 	   $(MAN5DIR)/kernel-pkg.conf.5
+	$(install_file)    kernel-img.conf.5 	   $(MAN5DIR)/kernel-img.conf.5
 	$(install_file)    kernel-package.5  	   $(MAN5DIR)/kernel-package.5
 	$(install_file)    make-kpkg.8       	   $(MAN1DIR)/make-kpkg.1
 	$(install_file)    kernel-packageconfig.8  $(MAN8DIR)/

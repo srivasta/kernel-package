@@ -5,14 +5,14 @@
 # Created On       : Sat Apr 27 05:55:26 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Tue Feb 29 00:17:58 2000
+# Last Modified On : Tue Mar 21 00:13:06 2000
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 113
+# Update Count     : 136
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
 # 
-#    $Id: image.postinst,v 1.41 2000/03/15 07:38:45 srivasta Exp $
+#    $Id: image.postinst,v 1.42 2000/03/21 07:04:45 srivasta Exp $
 #
 
 # 
@@ -23,6 +23,7 @@ my $version         = "=V";
 my $image_in_boot   = "=B";	# Should be empty, mostly
 my $no_symlink      = "=S";	# Should be empty, mostly
 my $reverse_symlink = "=R";	# Should be empty, mostly
+my $do_symlinks     = "Yes";	# target machine defined
 my $kimage          = "=K";	# Should be empty, mostly
 my $loader          = "=L";     # lilo, silo, quik, or nettrom
 my $image_dest      = "=D";     # where the image is located
@@ -31,13 +32,6 @@ my $Loader          = "LILO";
 $Loader             = "SILO"  if $loader =~ /silo/io;
 $Loader             = "QUIK"  if $loader =~ /quik/io;
 $Loader             = "NETTROM"  if $loader =~ /nettrom/io;
-
-if (! $image_dest) {
-  $image_dest         = "boot"  
-}
-else {
-  $image_dest  =~ s|^/||o;
-}
 
 
 # This should not point to /tmp, because of security risks.
@@ -51,7 +45,34 @@ my $rootdisk = '';
 my $rootpartition = '';
 my $imagedir = "/";
 my $realimageloc = "$image_dest/";
+my $have_conffile = "";
+my $CONF_LOC = '/etc/kernel-img.conf';
 
+
+if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
+  if (open(CONF, "$CONF_LOC")) {
+    while (<CONF>) {
+      chomp;
+      s/\#.*$//g;
+      next if /^\s*$/;
+      $do_symlink      = ""    if /do_symlinks\s*=\s*no/ig;
+      $no_symlink      = "Yes" if /no_symlinks\s*=\s*yes/ig;
+      $reverse_symlink = "Yes" if /no_symlinks\s*=\s*yes/ig;
+      $image_in_boot   = "Yes" if /image_in_boot\s*=\s*yes/ig;
+      $image_dest      = "$1"  if /image_dest\s*=\s*(\S+)/ig;
+    }
+    close CONF;
+    $have_conffile = "Yes";
+  }
+}
+
+
+if (! $image_dest) {
+  $image_dest         = "boot"  
+}
+else {
+  $image_dest  =~ s|^/||o;
+}
 
 if ($image_in_boot) {
   $imagedir = "/$image_dest/";
@@ -81,6 +102,12 @@ elsif ($kimage =~ m/^vmlinux$/o) {
 else {				# Let this be the default as well
   $kimage = "vmlinuz"
 }
+
+my $loader_exec;
+($loader_exec = $loader)  =~ s|.*/||;
+my ($loaderloc) = grep -x, map "$_/$loader_exec ", 
+  map { length($_) ? $_ : "." }  split /:/, $ENV{PATH};
+
 
 if (-l "$kimage") {
   # There is a symbolic link
@@ -125,7 +152,9 @@ if (-l "$kimage") {
 }
 elsif (! -e "$kimage") {
   # Hmm. Pristine system? How can that be?
+  # Possibly they do not want a link here.
   warn "$imagedir" . "$kimage does not exist. Installing from scratch, eh?\n";
+  warn "Or maybe you don't want a symbolic link here. Hmm.?\n";
   if ($no_symlink) {
     if (! rename($realimageloc . "$kimage-$version", "$kimage")) {
       die("Failed to move /$image_dest/$kimage-$version to "
@@ -139,23 +168,50 @@ elsif (! -e "$kimage") {
     }
   }
   else {
-    if (! symlink($realimageloc . "$kimage-$version", "$kimage")) {
-      die("Failed to symbolic-link /$image_dest/$kimage-$version to "
-	  . $imagedir . "$kimage .\n");
+    if (! $have_conffile) {
+      my $answer='';
+      
+      print STDERR "I notice that yo do not have $kimage symbolic\n";
+      print STDERR "link. I can create one for you, and it shall be\n";
+      print STDERR "updated by newer kernel image packages. This is \n";
+      print STDERR "useful if you use a boot loader like lilo.\n";
+      print STDERR "Do you want me to link " . $realimageloc
+	. "$kimage-$version" " to $kimage?[Yn]";
+      $answer=<STDIN>;
+      $do_symlink = "" if $answer =~ /n/i;
+
+      if (open(CONF, ">$CONF_LOC")) {
+	print CONF "# Do not create symbolic links in /\n";
+	print CONF "Do_Symlinks = $do_symlink\n";
+	close CONF;
+      }
+    }
+
+    if ($do_symlink =~ /Yes/i) {
+      symlink($realimageloc . "$kimage-$version", "$kimage") ||
+	die("Failed to symbolic-link /$image_dest/$kimage-$version to "
+	    . $imagedir . "$kimage .\n");
     }
   }
 }
 elsif ($no_symlink) {		# Maybe /$image_dest is on a dos system?
-  rename("$kimage", "$kimage.$$") || 
+  if (-e "$kimage") {
+    rename("$kimage", "$kimage.$$") || 
       die "failed to move " . $imagedir . "$kimage:$!";
-  if (! rename($realimageloc . "$kimage-$version", "$kimage")) {
-    rename("$kimage.$$", "$kimage");
-    die("Failed to move /$image_dest/$kimage-$version to "
-	. $imagedir . "$kimage .\n"); 
+    if (! rename($realimageloc . "$kimage-$version", "$kimage")) {
+      rename("$kimage.$$", "$kimage");
+      die("Failed to move /$image_dest/$kimage-$version to "
+	  . $imagedir . "$kimage .\n"); 
+    }
+    
+    # Ok, now we may clobber the previous .old files
+    rename("$kimage.$$", "$kimage.old");    
   }
-  
-  # Ok, now we may clobber the previous .old files
-  rename("$kimage.$$", "$kimage.old");
+  else {
+    rename($realimageloc . "$kimage-$version", "$kimage")  || 
+      die ("Failed to move /$image_dest/$kimage-$version to "
+	   . $imagedir . "$kimage .\n"); 
+  }
 } 
 elsif ($reverse_symlink) {		# Maybe /$image_dest is on a dos system?
   rename("$kimage", "$kimage.$$") || 
@@ -331,13 +387,6 @@ exit (0) if $loader =~ /milo/i; # MILO does not have to be executed.
 exit (0) if $loader =~ /nettrom/i; # NETTROM does not have to be executed.
 
 
-
-#my $loaderloc = `command -v $loader 2>/dev/null`;
-my $loader_exec;
-($loader_exec = $loader)  =~ s|.*/||;
-
-my ($loaderloc) = grep -x, map "$_/$loader_exec ", map { length($_) ? $_ : "." }
-  split /:/, $ENV{PATH};
 exit (0) unless $loaderloc;
 
 

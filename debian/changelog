@@ -1,3 +1,17 @@
+kernel-package (7.00) unstable; urgency=low
+
+  * Allow the official kernel-* package maintainer some leeway in
+    providing official control files (just like they can provide their own
+    changelog files now).
+  * On user request, do not fail to make symbolic links in / merely
+    because the system does not ahve the default bootloader installed --
+    people are using alternative boot loaders out there. Instead there is
+    a config file that can provide the answer -- oif the config file does
+    not exists, the postinst asks the user, and creates the config file. 
+    closes: Bug#60693
+  
+ -- Manoj Srivastava <srivasta@debian.org>  Tue, 21 Mar 2000 00:43:09 -0600
+
 kernel-package (6.42) unstable; urgency=low
 
   * Fixed suggests line to accept either libncurses-dev or

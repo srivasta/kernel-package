@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Mon Feb  7 00:54:09 2000
+## Last Modified On : Mon Mar 20 11:25:13 2000
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 425
+## Update Count	    : 426
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.90 2000/03/03 16:03:56 srivasta Exp $
+## $Id: rules,v 1.91 2000/03/21 07:04:45 srivasta Exp $
 ###############################################################################
 
 #
@@ -602,7 +602,8 @@ ifeq ($(strip $(patch_the_kernel)),YES)
 	    true; \
 	fi
 endif
-	-test ! -f stamp-debian && \
+	-test ! -f stamp-debian -a \
+               ! \( -f debian/official -a -f debian/control \) && \
 	   sed -e 's/=V/$(version)/g'        -e 's/=D/$(debian)/g' \
 	       -e 's/=A/$(architecture)/g'   -e 's/=SA/$(INT_SUBARCH)/g' \
                -e 's/=L/$(int_loaderdep) /g' \
