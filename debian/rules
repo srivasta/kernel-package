@@ -5,9 +5,9 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Mon May 24 12:52:04 1999
+## Last Modified On : Tue May 25 15:55:30 1999
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 123
+## Update Count	    : 124
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
@@ -19,7 +19,7 @@
 #                          sed 's/^Version: *//')
 #
 
-#    $Id: rules,v 1.12 1999/05/25 20:05:14 srivasta Exp $
+#    $Id: rules,v 1.13 1999/05/25 20:55:44 srivasta Exp $
 
 
 # Please change the maintainer information, as well as the debian version
@@ -100,9 +100,10 @@ stamp-binary:
 	$(install_file)    Multi-Arch $(DOCDIR)/Multi-Arch
 	$(install_file)    Rationale $(DOCDIR)/Rationale
 	gzip -9fqr         $(DOCDIR)
-	$(install_file)    debian/copyright $(DOCDIR)/copyright
-	$(install_file)    kernel-pkg.conf.5 $(MAN5DIR)/kernel-pkg.conf.5
-	$(install_file)    make-kpkg.8  $(MAN8DIR)/make-kpkg.8
+	$(install_file)    debian/copyright  	   $(DOCDIR)/copyright
+	$(install_file)    kernel-pkg.conf.5 	   $(MAN5DIR)/kernel-pkg.conf.5
+	$(install_file)    kernel-package.5  	   $(MAN5DIR)/kernel-package.5
+	$(install_file)    make-kpkg.8       	   $(MAN8DIR)/make-kpkg.8
 	$(install_file)    kernel-packageconfig.8  $(MAN8DIR)/
 	gzip -9fqr         debian/tmp/usr/man
 	$(install_file)    kernel-pkg.conf debian/tmp/etc/kernel-pkg.conf
