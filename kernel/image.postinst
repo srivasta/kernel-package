@@ -5,14 +5,14 @@
 # Created On       : Sat Apr 27 05:55:26 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Sun Apr 26 22:11:23 1998
+# Last Modified On : Tue Apr 28 22:53:45 1998
 # Last Machine Used: tiamat.datasync.com
-# Update Count     : 101
+# Update Count     : 102
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
 # 
-#    $Id: image.postinst,v 1.21 1998/04/27 19:20:32 srivasta Exp $
+#    $Id: image.postinst,v 1.22 1998/05/01 19:24:05 srivasta Exp $
 #
 
 # 
@@ -213,7 +213,10 @@ if ( -f "/lib/modules/$version/modules.dep" ) {
 
  I repeat: you have to reboot in order for the modules file to be
  created correctly. Do NOT just run depmod -a. Until you reboot, it
- may be impossible to load modules. Re boot now.
+ may be impossible to load modules. Re boot as soon as this install is
+ finished (Do not re boot right now, since you may not be able to boot
+ back up until installation is over, but boot immediately after). I
+ can not stress that too much. You need to re boot soon.
 
 EOFERR
 
