@@ -1,17 +1,17 @@
-#! /usr/bin/make -f 
+#! /usr/bin/make -f
 ############################ -*- Mode: Makefile -*- ###########################
 ## debian.rules ---
 ## Author	    : Manoj Srivastava ( srivasta@pilgrim.umass.edu )
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Wed Oct 14 00:56:43 1998
+## Last Modified On : Fri Oct 16 12:35:38 1998
 ## Last Machine Used: tiamat.datasync.com
-## Update Count	    : 368
+## Update Count	    : 369
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.53 1998/10/14 06:00:25 srivasta Exp $
+## $Id: rules,v 1.54 1998/10/16 17:38:44 srivasta Exp $
 ###############################################################################
 
 # The version of kernel-package this belongs to
@@ -120,7 +120,8 @@ kimage := zImage
 target = $(kimage)
 
 # PowerPCs use yet another loader: quik.
-ifeq ($(strip $(PPC_SUBARCH)),PowerMac)
+ifeq ($(strip $(SUBARCH)),PowerMac)
+SUBARCH:=pmac
 loaderdep=quik
 loader=quik
 loaderdoc=QuikDefault
@@ -132,13 +133,15 @@ coffdest=$(INT_IMAGE_DESTDIR)/vmlinux.coff-$(version)
 DEBCONFIG = $(CONFDIR)/config.powermac
 endif
 
-ifeq ($(strip $(PPC_SUBARCH)),CHRP)
+ifeq ($(strip $(SUBARCH)),CHRP)
+SUBARCH:=chrp
 kimagesrc = arch/$(KERNEL_ARCH)/chrpboot/$(kimage)
 kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
 DEBCONFIG = $(CONFDIR)/config.chrp
 endif
 
-ifeq ($(strip $(PPC_SUBARCH)),PReP)
+ifeq ($(strip $(SUBARCH)),PReP)
+SUBARCH:=prep
 kimagesrc = arch/$(KERNEL_ARCH)/coffboot/$(kimage)
 kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
 DEBCONFIG = $(CONFDIR)/config.prep
@@ -700,7 +703,7 @@ else
 	    (cd $$module; \
               ./debian/rules KVERS="$(version)" KSRC="$(SRCTOP)" \
                              KMAINT="$(pgp)" KEMAIL="<$email>" \
-                             kdist_image; ); \
+                             KDREV="$(debian)" kdist_image; ); \
         done
 endif
 
@@ -712,7 +715,8 @@ else
 	-for module in $(MODULE_LOC)/* ; do \
 	    (cd $$module; \
               ./debian/rules KVERS="$(version)" KSRC="$(SRCTOP)" \
-                             KMAINT="$(pgp)" KEMAIL="<$email>" kdist; ); \
+                             KMAINT="$(pgp)" KEMAIL="<$email>" \
+                             KDREV="$(debian)" kdist; ); \
         done
 endif
 
@@ -724,7 +728,7 @@ else
 	    (cd $$module; \
               ./debian/rules KVERS="$(version)" KSRC="$(SRCTOP)" \
                              KMAINT="$(pgp)" KEMAIL="<$email>" \
-                             kdist_configure; ); \
+                             KDREV="$(debian)" kdist_configure; ); \
         done
 endif
 
