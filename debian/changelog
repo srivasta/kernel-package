@@ -1,3 +1,12 @@
+kernel-package (5.10) frozen unstable; urgency=medium
+
+  * Add the variable KDREV to pass the debian revision to the modules
+    while compiling.
+  * Added powerpc fixes from Hartmut Koptein <koptein@et-inf.fho-emden.de>
+    These were needed to have things work at all.
+  
+ -- Manoj Srivastava <srivasta@debian.org>  Fri, 16 Oct 1998 12:37:39 -0500
+
 kernel-package (5.09) unstable; urgency=high
 
   * Fixed missing / on a pattern match,. This essentially hosed
