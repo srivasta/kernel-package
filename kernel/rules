@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.152 2002/01/06 10:10:10 srivasta Exp $
+## $Id: rules,v 1.153 2002/01/11 06:47:15 srivasta Exp $
 ###############################################################################
 
 ifdef KPKG_ARCH
@@ -414,10 +414,13 @@ loader=
 loaderdoc=
 target = boot
 NEED_DIRECT_GZIP_IMAGE=NO
-kimagesrc = $(strip arch/$(KERNEL_ARCH)/boot/vmlinux.ecoff)
+kimagesrc = $(strip vmlinux)
 kimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
 DEBCONFIG= $(CONFDIR)/config.$(KPKG_SUBARCH)
 KERNEL_ARCH= mips
+#HAVE_COFF_IMAGE = YES
+#coffsrc = $(strip arch/$(KERNEL_ARCH)/boot/vmlinux.ecoff)
+#coffdest=$(INT_IMAGE_DESTDIR)/vmlinux.ecoff-$(version)
 endif
 
 ######################################################################

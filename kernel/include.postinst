@@ -1,7 +1,7 @@
 #! /usr/bin/perl
-#                              -*- Mode: Perl -*- 
-# debian.postinst --- 
-# Author           : Manoj Srivastava ( srivasta@pilgrim.umass.edu ) 
+#                              -*- Mode: Perl -*-
+# debian.postinst ---
+# Author           : Manoj Srivastava ( srivasta@pilgrim.umass.edu )
 # Created On       : Sat Apr 27 05:42:43 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
@@ -9,12 +9,12 @@
 # Last Machine Used: glaurung.green-gryphon.com
 # Update Count     : 33
 # Status           : Unknown, Use with caution!
-# HISTORY          : 
-# Description      : 
-# 
-# 
+# HISTORY          :
+# Description      :
 #
-#    $Id: include.postinst,v 1.19 2001/07/05 16:21:18 srivasta Exp $
+#
+#
+#    $Id: include.postinst,v 1.20 2002/01/11 06:47:15 srivasta Exp $
 #
 
 
@@ -31,6 +31,7 @@ my $architecture;
 chomp($architecture = `dpkg --print-installation-architecture`);
 $architecture = "ppc" if $architecture eq "powerpc";
 $architecture = "parisc" if $architecture eq "hppa";
+$architecture = "mips" if $architecture eq "mipsel";
 
 my $stop_and_read = 0;
 
@@ -92,7 +93,7 @@ if (-d "/usr/doc") {
     }
     my $targetdir;
     my $stargetdir;
-    
+
     if (-x '/bin/pwd') {
       chdir('/usr/doc/');
       $targetdir=`/bin/pwd`;
@@ -121,7 +122,7 @@ if (-d "/usr/doc") {
 	  unlink "/usr/doc/$package/.dhelp";
 	  rmdir "/usr/doc/$package";
 	}
-	
+
 	if (-d "/usr/doc/$package") {
 	  print STDERR <<"EOFERRONE";
 Failed repairs. There are old files in /usr/doc/$package_name/ created
