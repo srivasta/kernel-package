@@ -14,7 +14,7 @@
 # 
 # 
 #
-#    $Id: kernel-packageconfig,v 1.2 1997/06/03 03:39:51 srivasta Exp $
+#    $Id: kernel-packageconfig,v 1.3 1998/10/14 06:03:05 srivasta Exp $
 #
 
 $|=1;
@@ -67,7 +67,7 @@ information looks prettier <grin>.
 Please supply the full name of the local kernel maintainer
 EOF1
 ;
-    print "\t:";
+    print "\t[default Unknown]:";
     $maintainer = <STDIN>;
     $maintainer =~ s|\n||g;
     $maintainer =~ s|\s+| |g;
@@ -92,7 +92,7 @@ address, it make keeping track easier.
 Please supply the email address of the local kernel maintainer
 EOF2
 ;
-    print "\t:";
+    print "\t[default unknown]:";
     $email = <STDIN>;
     $email =~ s|\n||g;
     $email =~ s|\s+| |g;
