@@ -5,14 +5,14 @@
 # Created On       : Sat Apr 27 05:55:26 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Wed Jun 18 13:01:01 1997
+# Last Modified On : Tue Jul 29 14:58:25 1997
 # Last Machine Used: tiamat.datasync.com
-# Update Count     : 48
+# Update Count     : 53
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
 # 
-#    $Id: image.postinst,v 1.3 1997/06/18 18:17:54 srivasta Exp $
+#    $Id: image.postinst,v 1.4 1997/07/29 23:08:44 srivasta Exp $
 #
 
 # 
@@ -21,6 +21,9 @@ $|=1;
 # Predefined values:
 my $version = "=V";
 my $image_in_boot = "=B";	# Should be empty, mostly
+my $no_symlink = "=S";		# Should be empty, mostly
+my $reverse_symlink = "=R";	# Should be empty, mostly
+
 
 #known variables
 my @boilerplate = ();
@@ -47,7 +50,7 @@ if (! -e 'vmlinuz') {
   die "$imagedir" . "vmlinuz does not exist. This is disastrous. Exiting\n";
 }
 # follow link target.
-if (-l 'vmlinuz') {
+if (-l 'vmlinuz' && !($no_symlink || $reverse_symlink)) {
   my $vmlinuz_target = readlink 'vmlinuz';
   if (! (defined($vmlinuz_target) && 
 	 "$vmlinuz_target" eq "$realimageloc" . "vmlinuz-$version")) {
@@ -78,6 +81,63 @@ if (-l 'vmlinuz') {
     rename("System.$$", "System.old");
   }
 }
+elsif ($no_symlink) {		# Maybe /boot is on a dos system?
+  rename("vmlinuz", "vmlinuz.$$") || 
+      die "failed to move " . $imagedir . "vmlinuz:$!";
+  if (!rename("System.map", "System.$$")) {
+    rename("vmlinuz.$$", "vmlinuz");
+    die "Error renaming " . $imagedir . "System.map";
+  }
+  if (! rename($realimageloc . "vmlinuz-$version", "vmlinuz")) {
+    rename("vmlinuz.$$", "vmlinuz");
+    rename("System.$$",  "System.map");
+    die("Failed to move /boot/vmlinuz-$version to "
+	. $imagedir . "vmlinuz .\n"); 
+  }
+  
+  if (! rename($realimageloc . "System.map-$version", "System.map")) {
+    rename("vmlinuz", $realimageloc . "vmlinuz-$version");
+    rename("vmlinuz.$$", "vmlinuz");
+    rename("System.$$", "System.map");
+    die("Failed to move /boot/System.map-$version to "
+	. $imagedir . "System.map.\n"); 
+  }
+  # Ok, now we may clobber the previous .old files
+  rename("vmlinuz.$$", "vmlinuz.old");
+  rename("System.$$", "System.old");
+} 
+elsif ($reverse_symlink) {		# Maybe /boot is on a dos system?
+  rename("vmlinuz", "vmlinuz.$$") || 
+      die "failed to move " . $imagedir . "vmlinuz:$!";
+  if (!rename("System.map", "System.$$")) {
+    rename("vmlinuz.$$", "vmlinuz");
+    die "Error renaming " . $imagedir . "System.map";
+  }
+  if (! rename($realimageloc . "vmlinuz-$version", "vmlinuz")) {
+    rename("vmlinuz.$$", "vmlinuz");
+    rename("System.$$",  "System.map");
+    die("Failed to move /boot/vmlinuz-$version to "
+	. $imagedir . "vmlinuz .\n"); 
+  }
+  
+  if (! rename($realimageloc . "System.map-$version", "System.map")) {
+    rename("vmlinuz", $realimageloc . "vmlinuz-$version");
+    rename("vmlinuz.$$", "vmlinuz");
+    rename("System.$$", "System.map");
+    die("Failed to move /boot/System.map-$version to "
+	. $imagedir . "System.map.\n"); 
+  }
+  if (! symlink("vmlinuz", $realimageloc . "vmlinuz-$version")) {
+    warn "Could not symlink vmlinuz to vmlinuz-$version :$!";
+  }
+  if (! symlink("System.map", $realimageloc . "System.map-$version")) {
+    warn "Could not symlink System.map to System.map-$version :$!";
+  }
+  # Ok, now we may clobber the previous .old files
+  rename("vmlinuz.$$", "vmlinuz.old");
+  rename("System.$$", "System.old");
+} 
+
 
 if ( -f '/lib/modules/$version/modules.dep' ) {
   unlink '/lib/modules/$version/modules.dep';
@@ -404,7 +464,13 @@ EO_MSG_B
   while (! $done) {
   MKBOOT:{
       my $ret;
-      $ret = system '/bin/dd', "if=/boot/vmlinuz-$version", "of=/dev/fd$drive";
+      if ($no_symlink || $reverse_symlink) {
+	$ret = system '/bin/dd', "if=$imagedir" . "vmlinuz", "of=/dev/fd$drive";
+      }
+      else {
+	$ret = system '/bin/dd', "if=$imagedir" . "vmlinuz-$version", 
+	              "of=/dev/fd$drive";
+      }
       last MKBOOT if $ret;
       $ret = system '/usr/sbin/rdev', "/dev/fd$drive", "$rootdevice";
       last MKBOOT if $ret;
