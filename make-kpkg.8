@@ -22,7 +22,7 @@
 .\" USA.
 .\"
 .\"
-.\"    $Id: make-kpkg.8,v 1.44 2001/11/13 19:48:51 srivasta Exp $
+.\"    $Id: make-kpkg.8,v 1.45 2001/12/21 21:27:54 srivasta Exp $
 .\"
 .TH MAKE\-KPKG 1 "May 2 1997" "Debian" "Debian GNU/Linux manual"
 .SH NAME
@@ -132,7 +132,14 @@ building stand alone modules, or something).
 .B make\-kpkg
 does not remember the argument foo in between invocations (this is
 different from the behaviour of --revision, which we do remember in
-between invocations). 
+between invocations). If you are annoyed by make-kpkg whining about
+using 
+.BR \-\-append_to_version 
+and there already being a 
+.T version.h
+file from before, you can set the environment variable
+.B VERSION_H_OK
+which shall shut off the warning.
 .TP
 .BR \-\-flavour\ foo
 This option is now deprecated in favour of 

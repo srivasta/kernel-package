@@ -14,7 +14,7 @@
 #
 #
 #
-#    $Id: make-kpkg,v 1.65 2001/09/30 09:01:53 srivasta Exp $
+#    $Id: make-kpkg,v 1.66 2001/12/21 21:27:54 srivasta Exp $
 #
 require 5.002;
 use strict;
@@ -29,7 +29,7 @@ make-kpkg - build Debian kernel packages from Linux kernel sources.
 ($main::MYNAME     = $main::0) =~ s|.*/||;
 $main::Author      = "Manoj Srivastava";
 $main::AuthorMail  = "srivasta\@debian.org";
-$main::Version     = '$Revision: 1.65 $ ';
+$main::Version     = '$Revision: 1.66 $ ';
 
 my $added_modules='';
 my $added_patches='';
@@ -846,7 +846,8 @@ EOMSG
       print STDERR "by the packaging tools. Aborting.\n";
       exit 1;
     }
-    if (-f "include/linux/version.h" && ! -f 'debian/official') {
+    if (-f "include/linux/version.h" && ! -f 'debian/official' && 
+	! $ENV{"VERSION_H_OK"}) {
       print STDERR "Warning: The file include/linux/version.h exists\n";
       print STDERR "If you did not run make-kpkg clean after configuring\n";
       print STDERR "the kernel with make (menu|x)?config, the chances\n";

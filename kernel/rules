@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.149 2001/12/02 00:24:18 srivasta Exp $
+## $Id: rules,v 1.150 2001/12/21 21:27:54 srivasta Exp $
 ###############################################################################
 
 ifdef ARCH
@@ -1253,7 +1253,7 @@ real_stamp_source:
 	$(install_file) $(DEBDIR)/copyright.source $(SOURCE_DOC)/copyright
 	echo "This was produced by kernel-package version $(kpkg_version)." > \
 	         $(SOURCE_DOC)/Buildinfo
-	-tar cf - `echo * | sed -e 's/debian//g' -e 's/\.deb//g' ` \
+	-tar cf - `echo * | sed -e 's/ debian//g' -e 's/\.deb//g' ` \
 	| (cd $(SOURCE_SRC); umask 000; tar xsf -)
 	(cd $(SOURCE_SRC); \
             $(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) distclean)
@@ -1512,7 +1512,7 @@ endif
 # only generate module image packages
 modules-image modules_image: configure
 ifndef MODULES_ENABLED
-	@echo Modules not configured, so not making modules_image
+	@echo Modules not configured, so not making $@
 else
 ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
 	@(echo "The changelog says we are creating $(saved_version), but I thought the version is $(version)"; exit 1)
@@ -1537,7 +1537,7 @@ endif
 # generate the modules packages and sign them
 modules: configure
 ifndef MODULES_ENABLED
-	@echo Modules not configured, so not making modules
+	@echo Modules not configured, so not making $@
 else
 ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
 	@(echo "The changelog says we are creating $(saved_version), but I thought the version is $(version)"; exit 1)
@@ -1562,7 +1562,7 @@ endif
 # configure the modules packages
 modules-config modules_config: configure
 ifndef MODULES_ENABLED
-	@echo Modules not configured, so not making modules_config
+	@echo Modules not configured, so not making $@
 else
 ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
 	@(echo "The changelog says we are creating $(saved_version), but I thought the version is $(version)"; exit 1)
@@ -1586,7 +1586,7 @@ endif
 
 modules-clean modules_clean: configure
 ifndef MODULES_ENABLED
-	@echo Modules not configured, so not making modules_config
+	@echo Modules not configured, so not making $@
 else
 	-for module in $(MODULE_LOC)/* ; do \
           if test -d  $$module; then \
