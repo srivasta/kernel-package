@@ -1,3 +1,10 @@
+kernel-package (7.14) unstable; urgency=high
+
+  * Fixed a bug in the image postinst where we were not chompingb the
+    newline off the dir returned by pwd. closes: Bug#67093
+
+ -- Manoj Srivastava <srivasta@debian.org>  Tue, 11 Jul 2000 15:46:45 -0500
+
 kernel-package (7.13) unstable; urgency=low
 
   * Added a new configuration directive for the target machine, namely,

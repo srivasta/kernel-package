@@ -5,14 +5,14 @@
 # Created On       : Sat Apr 27 05:55:26 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Mon Jul 10 23:11:52 2000
+# Last Modified On : Tue Jul 11 15:45:40 2000
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 189
+# Update Count     : 190
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
 # 
-#    $Id: image.postinst,v 1.53 2000/07/11 04:25:34 srivasta Exp $
+#    $Id: image.postinst,v 1.54 2000/07/11 22:59:18 srivasta Exp $
 #
 
 # 
@@ -299,11 +299,13 @@ elsif (-l "$kimage") {
     rename("$kimage", "$kimage.$$") || 
       die "failed to move " . $image_dest . "$kimage:$!";
     my $Old = $realimageloc;
-    if (test_relative ('Old Dir' => $Old, 'New Dir' => `pwd`)) {
+    my $cwd;
+    chomp($cwd=`pwd`);
+    if (test_relative ('Old Dir' => $Old, 'New Dir' => $cwd)) {
       $Old   =~ s|^/*||o;
     }
     elsif ($relative_links) {
-      $Old = spath('Old' => "$Old", 'New' => `pwd` );
+      $Old = spath('Old' => "$Old", 'New' => $cwd);
     }
     if (! symlink($Old . "$kimage-$version", "$kimage")) {
       rename("$kimage.$$", "$kimage");
