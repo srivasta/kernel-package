@@ -34,7 +34,7 @@ export DEB_HOST_GNU_TYPE   := $(shell dpkg-architecture $(ha) -qDEB_HOST_GNU_TYP
 #                          sed 's/^Version: *//')
 #
 
-#    $Id: rules,v 1.30 2002/01/22 03:57:29 srivasta Exp $
+#    $Id: rules,v 1.31 2002/01/22 04:01:07 srivasta Exp $
 
 
 # Please change the maintainer information, as well as the debian version
@@ -144,12 +144,12 @@ stamp-binary:
 		           $(TMPTOP)/usr/sbin/kernel-packageconfig
 	$(install_program) make-kpkg $(TMPTOP)/usr/bin/make-kpkg
 	(cd kernel;        tar cf - * | \
-           (cd             $(SRCTOP)/$(TMPTOP)/usr/share/$(package);\
+           (cd             $(TMPTOP)/usr/share/$(package);\
                            tar xf -))
-	$(install_file)    Rationale $(SRCTOP)/$(TMPTOP)/usr/share/$(package)/
+	$(install_file)    Rationale $(TMPTOP)/usr/share/$(package)/
 	# Hack, tell the   rules file what version of kernel package it is
 	sed -e             's/=K=V/$(version)/' kernel/rules > \
-                              $(SRCTOP)/$(TMPTOP)/usr/share/$(package)/rules
+                              $(TMPTOP)/usr/share/$(package)/rules
 	dpkg-gencontrol -isp
 	chown -R root.root $(TMPTOP)
 	dpkg --build       $(TMPTOP) ..
