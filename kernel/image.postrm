@@ -12,7 +12,7 @@
 # HISTORY          : 
 # Description      : 
 # 
-#     $Id: image.postrm,v 1.15 2001/11/02 08:16:22 srivasta Exp $
+#     $Id: image.postrm,v 1.16 2002/01/06 10:10:10 srivasta Exp $
 #
 
 
@@ -192,8 +192,8 @@ if (-f "/lib/modules/$version/modules.usbmap") {
   unlink "/lib/modules/$version/modules.usbmap";
 }
 
-if (-f $realimageloc . "initrd-$version") {
-  unlink $realimageloc . "initrd-$version";
+if (-f $realimageloc . "initrd.img-$version") {
+  unlink $realimageloc . "initrd.img-$version";
 }
 if (-f "/lib/modules/$version/modules.parportmap") {
   unlink "/lib/modules/$version/modules.parportmap";

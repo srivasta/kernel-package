@@ -5,17 +5,17 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Sat Dec  1 18:22:05 2001
+## Last Modified On : Sun Jan  6 04:06:17 2002
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 506
+## Update Count	    : 515
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.151 2001/12/21 21:46:30 srivasta Exp $
+## $Id: rules,v 1.152 2002/01/06 10:10:10 srivasta Exp $
 ###############################################################################
 
-ifdef ARCH
-  ha:=-a$(ARCH)
+ifdef KPKG_ARCH
+  ha:=-a$(KPKG_ARCH)
 endif
 
 DPKG_ARCH := dpkg-architecture
@@ -73,19 +73,19 @@ config_target := oldconfig
 
 # The default architecture (all if architecture independent)
 CROSS_ARG:=
-ifdef ARCH
-  architecture:=$(ARCH)
-  ifndef CROSS_COMPILE
-    KERNEL_CROSS:=$(ARCH)-linux-
-  else
-    KERNEL_CROSS:=$(CROSS_COMPILE)-
-  endif
+ifdef KPKG_ARCH
+  architecture:=$(KPKG_ARCH)
 else
   #architecture:=$(shell CC=$(HOSTCC) dpkg --print-gnu-build-architecture)
   architecture:=$(DEB_BUILD_ARCH)
-  ifdef CROSS_COMPILE
-     KERNEL_CROSS:=$(CROSS_COMPILE)-
+endif
+
+ifndef CROSS_COMPILE
+  ifneq ($(strip $(architecture)),$(strip $(DEB_BUILD_ARCH)))
+    KERNEL_CROSS:=$(architecture)-$(strip $(DEB_HOST_GNU_SYSTEM))-
   endif
+else
+  KERNEL_CROSS:=$(CROSS_COMPILE)-
 endif
 
 ifneq ($(strip $(KERNEL_CROSS)),)
@@ -114,27 +114,27 @@ INT_IMAGE_DESTDIR=debian/tmp-image$(IMAGEDIR)
 ### m68k
 ifeq ($(strip $(architecture)),m68k)
 
-ifeq (,$(findstring /$(SUBARCH)/,/amiga/atari/mac/mvme147/mvme16x/bvme6000/))
+ifeq (,$(findstring /$(KPKG_SUBARCH)/,/amiga/atari/mac/mvme147/mvme16x/bvme6000/))
  GUESS_SUBARCH:=$(shell awk '/Model/ { print $$2}' /proc/hardware)
  ifneq (,$(findstring Motorola,$(GUESS_SUBARCH)))
   GUESS_SUBARCH:=$(shell awk '/Model/ { print $$3}' /proc/hardware)
   ifneq (,$(findstring MVME147,$(GUESS_SUBARCH)))
-   SUBARCH:=mvme147
+   KPKG_SUBARCH:=mvme147
   else
-   SUBARCH:=mvme16x
+   KPKG_SUBARCH:=mvme16x
   endif
  else
   ifneq (,$(findstring BVME,$(GUESS_SUBARCH)))
-   SUBARCH:=bvme6000
+   KPKG_SUBARCH:=bvme6000
   else
    ifneq (,$(findstring Amiga,$(GUESS_SUBARCH)))
-    SUBARCH:=amiga
+    KPKG_SUBARCH:=amiga
    else
     ifneq (,$(findstring Atari,$(GUESS_SUBARCH)))
-     SUBARCH:=atari
+     KPKG_SUBARCH:=atari
     else
      ifneq (,$(findstring Mac,$(GUESS_SUBARCH)))
-      SUBARCH:=mac
+      KPKG_SUBARCH:=mac
      endif
     endif
    endif
@@ -147,8 +147,8 @@ kimage := zImage
 target = $(kimage)
 kimagesrc = vmlinux.gz
 kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
-DEBCONFIG = $(CONFDIR)/config.$(SUBARCH)
-ifneq (,$(findstring $(SUBARCH),mvme147 mvme16x bvme6000))
+DEBCONFIG = $(CONFDIR)/config.$(KPKG_SUBARCH)
+ifneq (,$(findstring $(KPKG_SUBARCH),mvme147 mvme16x bvme6000))
  loaderdep=vmelilo
  loader=vmelilo
  loaderdoc=VmeliloDefault
@@ -164,8 +164,8 @@ endif
 ifeq ($(strip $(architecture)),arm)
 GUESS_SUBARCH:='netwinder'
 
-ifeq (,$(findstring $(SUBARCH),netwinder))
-SUBARCH:=$(GUESS_SUBARCH)
+ifeq (,$(findstring $(KPKG_SUBARCH),netwinder))
+KPKG_SUBARCH:=$(GUESS_SUBARCH)
 endif
 
 kimage := zImage
@@ -193,14 +193,14 @@ GUESS_SUBARCH:=pmac
 endif
 endif
 
-ifeq (,$(findstring $(SUBARCH),apus chrp mbx pmac prep Amiga APUs CHRP MBX PReP ))
-SUBARCH:=$(GUESS_SUBARCH)
+ifeq (,$(findstring $(KPKG_SUBARCH),apus chrp mbx pmac prep Amiga APUs CHRP MBX PReP ))
+KPKG_SUBARCH:=$(GUESS_SUBARCH)
 endif
 
 KERNEL_ARCH:=ppc
 
-ifneq (,$(findstring $(SUBARCH),APUs apus Amiga))
-SUBARCH:=apus
+ifneq (,$(findstring $(KPKG_SUBARCH),APUs apus Amiga))
+KPKG_SUBARCH:=apus
 loader := NoLoader
 kimage := vmapus.gz
 target = zImage
@@ -211,8 +211,8 @@ kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
 DEBCONFIG = $(CONFDIR)/config.apus
 endif
 
-ifneq (,$(findstring $(SUBARCH),CHRP chrp))
-SUBARCH:=chrp
+ifneq (,$(findstring $(KPKG_SUBARCH),CHRP chrp))
+KPKG_SUBARCH:=chrp
 loaderdep=quik
 loader=quik
 loaderdoc=QuikDefault
@@ -225,8 +225,8 @@ kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
 DEBCONFIG = $(CONFDIR)/config.chrp
 endif
 
-ifneq (,$(findstring $(SUBARCH),MBX mbx))
-SUBARCH:=mbx
+ifneq (,$(findstring $(KPKG_SUBARCH),MBX mbx))
+KPKG_SUBARCH:=mbx
 loader := NoLoader
 kimage := zImage
 target = $(kimage)
@@ -237,8 +237,8 @@ kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
 DEBCONFIG = $(CONFDIR)/config.mbx
 endif
 
-ifneq (,$(findstring $(SUBARCH),pmac))
-SUBARCH:=pmac
+ifneq (,$(findstring $(KPKG_SUBARCH),pmac))
+KPKG_SUBARCH:=pmac
 target := zImage
 ifneq (,$(shell grep NewWorld /proc/cpuinfo))
 loaderdep=yaboot
@@ -260,8 +260,8 @@ coffdest=$(INT_IMAGE_DESTDIR)/vmlinux.coff-$(version)
 DEBCONFIG = $(CONFDIR)/config.pmac
 endif
 
-ifneq (,$(findstring $(SUBARCH),PReP prep))
-SUBARCH:=prep
+ifneq (,$(findstring $(KPKG_SUBARCH),PReP prep))
+KPKG_SUBARCH:=prep
 loader := NoLoader
 kimage := zImage
 target = $(kimage)
@@ -300,7 +300,7 @@ kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
 DEBCONFIG = $(CONFDIR)/config.sparc
 KERNEL_ARCH=sparc64
 ARCH_IN_NAME=yes
-SUBARCH=sun4u
+KPKG_SUBARCH=sun4u
 endif
 
 ifeq ($(strip $(architecture)),sparc)
@@ -315,13 +315,13 @@ kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
 DEBCONFIG = $(CONFDIR)/config.sparc
 # make-kpkg --subarch=sun4u binary-arch
 # to generate UltraSparc kernel packages.
-ifeq ($(SUBARCH),sun4u)
+ifeq ($(KPKG_SUBARCH),sun4u)
 KERNEL_ARCH=sparc64
 ARCH_IN_NAME=yes
 else
 machine = $(shell uname -m)
 ifeq ($(strip $(machine)),sparc64)
-SUBARCH=sun4u
+KPKG_SUBARCH=sun4u
 KERNEL_ARCH=sparc64
 ARCH_IN_NAME=yes
 endif
@@ -337,8 +337,8 @@ GUESS_SUBARCH:=$(shell if test -f .config; then \
                          uname -m;\
                        fi)
 
-ifeq (,$(findstring $(SUBARCH),i386 i486 i586 i686))
-SUBARCH:=$(GUESS_SUBARCH)
+ifeq (,$(findstring $(KPKG_SUBARCH),i386 i486 i586 i686))
+KPKG_SUBARCH:=$(GUESS_SUBARCH)
 endif
 
 kimage := bzImage
@@ -348,7 +348,7 @@ loaderdoc=LiloDefault
 target = $(kimage)
 kimagesrc = $(strip arch/$(KERNEL_ARCH)/boot/$(kimage))
 kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
-DEBCONFIG= $(CONFDIR)/config.$(SUBARCH)
+DEBCONFIG= $(CONFDIR)/config.$(KPKG_SUBARCH)
 endif
 
 ##### S/390
@@ -359,9 +359,9 @@ loader=zipl
 loaderdoc=
 target = image
 NEED_DIRECT_GZIP_IMAGE=NO
-kimagesrc = $(strip arch/$(KERNEL_ARCH)/boot/$(target)) 
+kimagesrc = $(strip arch/$(KERNEL_ARCH)/boot/$(target))
 kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
-DEBCONFIG= $(CONFDIR)/config.$(SUBARCH)
+DEBCONFIG= $(CONFDIR)/config.$(KPKG_SUBARCH)
 endif
 
 ##### hppa
@@ -377,7 +377,7 @@ KERNEL_ARCH := parisc
 kimagesrc=$(kimage)
 kimagedest=$(INT_IMAGE_DESTDIR)/vmlinux-$(version)
 # This doesn't seem to work, but the other archs do it...
-DEBCONFIG=$(CONFDIR)/config.$(SUBARCH)
+DEBCONFIG=$(CONFDIR)/config.$(KPKG_SUBARCH)
 endif
 
 ##### ia64
@@ -390,7 +390,7 @@ target=vmlinux
 NEED_DIRECT_GZIP_IMAGE=YES
 kimagesrc=vmlinux
 kimagedest=$(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
-DEBCONFIG=$(CONFDIR)/config.$(SUBARCH)
+DEBCONFIG=$(CONFDIR)/config.$(KPKG_SUBARCH)
 endif
 
 ##### mips
@@ -403,7 +403,7 @@ target = boot
 NEED_DIRECT_GZIP_IMAGE=NO
 kimagesrc = $(strip arch/$(KERNEL_ARCH)/boot/vmlinux.ecoff)
 kimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
-DEBCONFIG= $(CONFDIR)/config.$(SUBARCH)
+DEBCONFIG= $(CONFDIR)/config.$(KPKG_SUBARCH)
 endif
 
 ##### mipsel
@@ -416,7 +416,7 @@ target = boot
 NEED_DIRECT_GZIP_IMAGE=NO
 kimagesrc = $(strip arch/$(KERNEL_ARCH)/boot/vmlinux.ecoff)
 kimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
-DEBCONFIG= $(CONFDIR)/config.$(SUBARCH)
+DEBCONFIG= $(CONFDIR)/config.$(KPKG_SUBARCH)
 KERNEL_ARCH= mips
 endif
 
@@ -489,7 +489,7 @@ endif
 
 version = $(VERSION).$(PATCHLEVEL).$(SUBLEVEL)$(EXTRAVERSION)$(iatv)$(INT_FLAV)
 
-# SUBARCH is used to distinguish Amiga, Atari, Macintosh, etc. kernels
+# KPKG_SUBARCH is used to distinguish Amiga, Atari, Macintosh, etc. kernels
 # for Debian/m68k.  INT_SUBARCH is used in the names of the image file
 # produced. It only affects the naming of the kernel-image as the
 # source and doc packages are architecture independent and the
@@ -499,8 +499,8 @@ version = $(VERSION).$(PATCHLEVEL).$(SUBLEVEL)$(EXTRAVERSION)$(iatv)$(INT_FLAV)
 INT_SUBARCH :=
 
 ifneq ($(strip $(ARCH_IN_NAME)),)
-ifneq ($(strip $(SUBARCH)),)
-INT_SUBARCH := -$(SUBARCH)
+ifneq ($(strip $(KPKG_SUBARCH)),)
+INT_SUBARCH := -$(KPKG_SUBARCH)
 endif
 endif
 
@@ -649,7 +649,7 @@ endif
 # *AND* there is a DEBIAN_REVISION, in which case the DEBIAN_REVISION
 # over rides (since we are going to replace the changelog file soon
 # anyway.  Else, use the commandline or env var setting. Or else
-# default to 1.00.Custom, unless the human has requested that the 
+# default to 1.00.Custom, unless the human has requested that the
 # revision is mandatory, in which case we raise an error
 
 ifeq ($(strip $(HAS_CHANGELOG)),YES)
@@ -670,8 +670,8 @@ endif
 endif
 endif
 
-# Hmm. The version that we have computed *MUST* match the one that is in the 
-# changelog. 
+# Hmm. The version that we have computed *MUST* match the one that is in the
+# changelog.
 ifeq ($(strip $(HAS_CHANGELOG)),YES)
 saved_version := $(shell if test -f debian/changelog; then \
                      perl -nle 'print /^kernel-source-(\S+)/; exit 0' \
@@ -739,15 +739,28 @@ endif
 int_get_root := $(shell [ $$(id -u) -ne 0 ] && echo "$(ROOT_CMD)" )
 
 ifneq ($(strip $(ROOT_CMD)),)
-root_cmd := $(root_cmd) -r$(strip $(ROOT_CMD))
+int_root_cmd := -r$(strip $(ROOT_CMD))
+else
+ifneq ($(strip $(root_cmd)),)
+ifeq ($(strip $(findstring -r, $(root_cmd))),)
+int_root_cmd := -r$(strip $(root_cmd))
+else
+int_root_cmd := $(root_cmd)
+endif
+endif
 endif
 
 ifneq ($(strip $(UNSIGN_SOURCE)),)
-root_cmd := $(root_cmd) -us
+int_root_cmd := $(int_root_cmd) -us
 endif
 
 ifneq ($(strip $(UNSIGN_CHANGELOG)),)
-root_cmd := $(root_cmd) -uc
+int_root_cmd := $(int_root_cmd) -uc
+endif
+
+# make sure that root_cmd and int_root_cmd are the same
+ifneq ($(strip $(int_root_cmd)),)
+root_cmd := $(int_root_cmd)
 endif
 
 ifneq ($(strip $(CLEAN_SOURCE)),)
@@ -800,8 +813,8 @@ valid_modules:=
 
 # See what modules we are talking about
 ifeq ($(strip $(MODULES_ENABLED)),yes)
-ifneq ($(strip $(SELECTED_MODULES)),)
-canonical_modules=$(subst $(comma),$(space),$(SELECTED_MODULES))
+ifneq ($(strip $(KPKG_SELECTED_MODULES)),)
+canonical_modules=$(subst $(comma),$(space),$(KPKG_SELECTED_MODULES))
 else
 canonical_modules=$(shell find $(MODULE_LOC) -follow -maxdepth 1 -type d -print |\
 			   egrep -v '^$(MODULE_LOC)$$')
@@ -835,8 +848,8 @@ endif
 ifeq ($(strip $(patch_the_kernel)),YES)
 
 # Well then. Let us see if we want to select the patches we apply.
-ifneq ($(strip $(SELECTED_PATCHES)),)
-canonical_patches=$(subst $(comma),$(space),$(SELECTED_PATCHES))
+ifneq ($(strip $(KPKG_SELECTED_PATCHES)),)
+canonical_patches=$(subst $(comma),$(space),$(KPKG_SELECTED_PATCHES))
 
 ifneq ($(strip $(canonical_patches)),)
 # test to see if the patches exist
@@ -934,7 +947,7 @@ export root_cmd FLAVOUR INT_SUBARCH APPEND_TO_VERSION UNSIGN_CHANGELOG  \
        ALL_PATCH_APPLY ALL_PATCH_UNPATCH DIR_PATCH_UNPATCH              \
        DIR_PATCH_APPLY VERSIONED_PATCH_DIR VERSIONED_ALL_PATCH_UNPATCH  \
        VERSIONED_ALL_PATCH_APPLY VERSIONED_DIR_PATCH_UNPATCH            \
-       VERSIONED_DIR_PATCH_APPLY 
+       VERSIONED_DIR_PATCH_APPLY
 
 
 ifeq ($(strip $(IN_KERNEL_DIR)),)
@@ -1080,6 +1093,7 @@ conf.vars:
 	@echo "SUBLEVEL 	= $(SUBLEVEL)"      >> .mak
 	@echo "EXTRAVERSION     = $(EXTRAVERSION)"  >> .mak
 	@echo "ARCH             = $(ARCH)"          >> .mak
+	@echo "KPKG_ARCH        = $(KPKG_ARCH)"     >> .mak
 	@echo "HOSTCC           = $(HOSTCC)"        >> .mak
 	@echo "HOSTCFLAGS       = $(HOSTCFLAGS)"    >> .mak
 	@echo "CROSS_COMPILE    = $(CROSS_COMPILE)" >> .mak
@@ -1140,7 +1154,7 @@ clean:
                 || true
 
 # Perhaps a list of patches should be dumped to a file on patching? so we
-# only unpatch what we have applied? That would be changed, though saner, 
+# only unpatch what we have applied? That would be changed, though saner,
 # behaviour
 real_stamp_clean:
 ifeq ($(strip $(patch_the_kernel)),YES)
@@ -1258,7 +1272,8 @@ real_stamp_source:
 	(cd $(SOURCE_SRC); \
             $(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) distclean)
 	(cd $(SOURCE_SRC);         rm -f stamp-building $(STAMPS_TO_CLEAN))
-	(cd $(SOURCE_SRC);         make -C scripts/cramfs distclean ; )
+	(cd $(SOURCE_SRC);         \
+         [ ! -d scripts/cramfs ]   || make -C scripts/cramfs distclean ; )
 	(cd $(SOURCE_SRC)/include; rm -f asm ; )
 	if test -f debian/official -a -f debian/README.Debian ; then \
            $(install_file) debian/README.Debian $(SOURCE_SRC)/README.Debian ; \
@@ -1321,7 +1336,7 @@ endif
 	$(install_file) $(DEBDIR)/README.headers $(HEADER_DOC)/debian.README
 	gzip -9qf                                $(HEADER_DOC)/debian.README
 	$(install_file) .config  	        $(HEADER_DOC)/config-$(version)
-	$(install_file) conf.vars  	        $(HEADER_DOC)/conf.vars 
+	$(install_file) conf.vars  	        $(HEADER_DOC)/conf.vars
 	gzip -9qf                               $(HEADER_DOC)/config-$(version)
 	gzip -9qf                               $(HEADER_DOC)/conf.vars
 	if test -f debian/official -a -f debian/README.Debian ; then \
@@ -1435,7 +1450,7 @@ endif
 	             $(DEBDIR)/image.prerm > $(IMAGE_TOP)/DEBIAN/prerm
 	chmod 755 $(IMAGE_TOP)/DEBIAN/prerm
 	$(install_file) Documentation/Changes $(IMAGE_DOC)/
-	gzip -9qf $(IMAGE_DOC)/Changes 
+	gzip -9qf $(IMAGE_DOC)/Changes
 	$(install_file) debian/changelog        $(IMAGE_DOC)/changelog
 	gzip -9qf                               $(IMAGE_DOC)/changelog
 ifdef loaderdoc

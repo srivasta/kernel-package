@@ -1,3 +1,25 @@
+kernel-package (7.77) unstable; urgency=low
+
+  * Fix image.postrm to know about the new initrd name.      closes: Bug#126738
+  * Fix the version checking to also flag a upstream version with no
+    digits, since dpkg-deb chokes on that.                   closes: Bug#127240
+  * Fixed a cramfs cleanup (fix from Herbert Xu)             closes: Bug#127072
+  * Add an environment var for cross compile and arch opts. Also allow for
+    a mismatch between the architecture and DEB_BUILD_ARCH to flag a cross
+    compilation                                              closes: Bug#127887
+  * Make sure that root_cmd is prefixed with -r even when set in the
+    config file                                              closes: Bug#127828
+  * Apparently we no longer want to ship coff images, and hence the patch
+    in this bug report has been superceded by the one already applied.
+                                                             closes: Bug#124128
+  * Fix the bug in comparing the target of the /vmlinuz symbolic link to
+    the image we are installing.  I do not like the \test, since it could
+    be fooled by complex links, but I'll let this version stand until I
+    have a test case of failures.                closes: Bug#126319, Bug#126739
+  * Do not warn about versions unless there is a mismatch.   closes: Bug#127402
+
+ -- Manoj Srivastava <srivasta@debian.org>  Sun,  6 Jan 2002 04:08:44 -0600
+
 kernel-package (7.76) unstable; urgency=low
 
   * make the append-to-version and version.h warning be optionally turned

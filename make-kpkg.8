@@ -22,7 +22,7 @@
 .\" USA.
 .\"
 .\"
-.\"    $Id: make-kpkg.8,v 1.45 2001/12/21 21:27:54 srivasta Exp $
+.\"    $Id: make-kpkg.8,v 1.46 2002/01/06 10:10:10 srivasta Exp $
 .\"
 .TH MAKE\-KPKG 1 "May 2 1997" "Debian" "Debian GNU/Linux manual"
 .SH NAME
@@ -198,20 +198,25 @@ setting the env variable
 .BR \-\-arch\ foo
 This is useful for setting the architecture when you are cross
 compiling. If you are not cross compiling, the architecture is
-determined automatically.
+determined automatically. The same effect can be achieved by setting
+the environment variable
+.B KPKG_ARCH
 .TP
 .BR \-\-cross-compile\ foo
 .TP
 .BR \-\-cross_compile\ foo
 This is useful for setting the target string when you are cross
-compiling. 
+compiling. The same effect can be achieved by setting the environment variable
+.B CROSS_COMPILE
 .TP
 .BR \-\-subarch\ foo
 Some architectures (the Alpha, and the m68k) require a different
 kernel for each subarchitecture. This option provides a way of
 specifying it as an argument to \fBmake-kpkg\fR. \fBPlease note\fR
 that additional support for subarchitectures may be required in the
-kernel sources to actually make this do anything.
+kernel sources to actually make this do anything. The same effect can
+be achieved by setting the environment variable 
+.B KPKG_SUBARCH
 .TP
 .BR \-\-arch-in-name
 .TP

@@ -5,16 +5,16 @@
 # Created On       : Mon Jun 17 01:10:11 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Wed Jul  4 22:53:31 2001
+# Last Modified On : Sun Jan  6 03:58:33 2002
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 168
+# Update Count     : 176
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
 #
 #
 #
-#    $Id: make-kpkg,v 1.66 2001/12/21 21:27:54 srivasta Exp $
+#    $Id: make-kpkg,v 1.67 2002/01/06 10:10:09 srivasta Exp $
 #
 require 5.002;
 use strict;
@@ -29,7 +29,7 @@ make-kpkg - build Debian kernel packages from Linux kernel sources.
 ($main::MYNAME     = $main::0) =~ s|.*/||;
 $main::Author      = "Manoj Srivastava";
 $main::AuthorMail  = "srivasta\@debian.org";
-$main::Version     = '$Revision: 1.66 $ ';
+$main::Version     = '$Revision: 1.67 $ ';
 
 my $added_modules='';
 my $added_patches='';
@@ -750,9 +750,7 @@ EOMSG
 	exit (2);
       }
     }
-  }
 
-  if ($revision){
     $command .= " DEBIAN_REVISION=$revision ";
 
     if ($revision !~ m/^(\d+:)?[a-zA-Z\d\.\+\-]+$/o) {
@@ -781,35 +779,15 @@ EOMSG
       exit 1;
     }
 
-    if (-f 'debian/changelog' && -f 'debian/official') {
-      print STDERR "Warning: This appears to be an official package,\n";
-      print STDERR "which is special in the sense that it supplies its\n";
-      print STDERR "own details. The --revision option is ignored for\n";
-      print STDERR "official packages. Please remove debian/official,\n";
-      print STDERR "and run make-kpkg clean\n";
-      print STDERR "(or, if you know what you are doing,  manually remove\n";
-      print STDERR "stamp-debian, debian/changelog, debian/official, and\n";
-      print STDERR "stamp-configure) for it to have an effect\n";
-      print STDERR "Please hit return to continue\n";
-      my $ans = <STDIN>;
-    }
-    if (-f 'stamp-configure'){
-      print STDERR "Warning: The revision option only has an effect during\n";
-      print STDERR "the configure phase -- in other words, since the file\n";
-      print STDERR "stamp-configure exists, this option has no effect.\n";
-      print STDERR "Also, this option has no effect when compiling\n";
-      print STDERR "any independent modules; the version from the last\n";
-      print STDERR "make-kpkg run when you compiled the kernel-image\n";
-      print STDERR "shall be used.\n";
-      print STDERR "Run make-kpkg clean or, if you know what you are doing,\n";
-      print STDERR "manually remove stamp-debian, stamp-configure and \n"; 
-      print STDERR "debian/changelog for it to have an effect\n"; 
-      print STDERR "Please hit return to continue\n";
-      my $ans = <STDIN>;
-    }
   }
 
   if ($flavour){
+    my $makefile_flavour = `grep FLAVOUR Makefile`;
+    if (! $makefile_flavour) {
+      print STDERR " Error: The top level makefile has not been edited\n";
+      print STDERR " to define FLAVOUR. Please read FLAVOURS.gz\n";
+      exit 1;
+    }
     if ($flavour !~ m/^[a-z\d\.\-\+]+$/o) {
       print STDERR " Error: The flavour variable may only contain\n";
       print STDERR " lowercase alphanumerics and  the  characters  - +  .\n";
@@ -866,7 +844,7 @@ EOMSG
     $command .= " APPEND_TO_VERSION=$append_to_version ";
   }
   if ($arch){
-    $command .= " ARCH=$arch ";
+    $command .= " KPKG_ARCH=$arch ";
   }
   if ($config_target ne 'oldconfig') {
     $command .= " CONFIG_TARGET=$config_target ";
@@ -875,13 +853,13 @@ EOMSG
     $command .= " CROSS_COMPILE=$cross_compile ";
   }
   if ($subarch){
-    $command .= " SUBARCH=$subarch ";
+    $command .= " KPKG_SUBARCH=$subarch ";
   }
   if ($added_modules) {
-    $command .= " SELECTED_MODULES=\"$added_modules\"";
+    $command .= " KPKG_SELECTED_MODULES=\"$added_modules\"";
   }
   if ($added_patches) {
-    $command .= " SELECTED_PATCHES=\"$added_patches\"";
+    $command .= " KPKG_SELECTED_PATCHES=\"$added_patches\"";
   }
   if ($arch_in_name){
     $command .= " ARCH_IN_NAME=YES ";
