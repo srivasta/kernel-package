@@ -1,5 +1,5 @@
 
-   $Id: README,v 1.4 1997/07/29 22:52:57 srivasta Exp $
+   $Id: README,v 1.5 1997/08/04 18:06:25 srivasta Exp $
 
 This is the Debian GNU/Linux prepackaged version of the Linux kernel.
 Linux was written by Linus Torvalds <Linus.Torvalds@cs.Helsinki.FI> and
@@ -88,6 +88,11 @@ package become kernel-image-X.X.XX-custom.Y.deb), and dselect and dpkg
 -BOGiE will refuse to downgrade to a generic kernel (don't give the
 BOG arguments to dpkg if you actually do want to downgrade later).
 
+People who want to have multiple flavours of the same kernel version
+around should look at the file /usr/doc/kernel-package/Flavours.gz for
+details (Note: This involves modifying the kernel sources top level
+Makefile; not recommended unless you are *sure* you need it).
+
 You may also place long term directives (like your name and email
 address) in the file /etc/kernel-pkg.conf. Putting your name and
 address in that file is a good idea, to remind you that this is not an
@@ -113,9 +118,8 @@ debian:		The Debian revision of the kernel packages. Can be set
 		from the environment variable DEBIAN_REVISION, defaults
 		to 1.00.
 image_in_boot:	Set to True if you want the kernel image symlink (vmlinuz)
-                and System.map symlink in /boot rather than the default /. 
-		Can be set from the environment variable IMAGE_IN_BOOT. 
-		defaults to undefined.
+                in /boot rather than the default /. Can be set from the 
+		environment variable IMAGE_IN_BOOT. defaults to undefined.
 kimage:		The kernel image type (i.e. zImage or bzImage). Can be
 		set from the environment variable IMAGE_TYPE. Defaults
 		to bzImage.
