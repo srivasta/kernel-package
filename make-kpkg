@@ -5,16 +5,16 @@
 # Created On       : Mon Jun 17 01:10:11 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Fri Jul 28 01:24:52 2000
+# Last Modified On : Sat Jul 29 23:24:56 2000
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 145
+# Update Count     : 147
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
 #
 #
 #
-#    $Id: make-kpkg,v 1.43 2000/07/28 06:48:38 srivasta Exp $
+#    $Id: make-kpkg,v 1.44 2000/07/30 04:34:48 srivasta Exp $
 #
 require 5.002;
 use strict;
@@ -29,7 +29,7 @@ make-kpkg - build Debian kernel packages from Linux kernel sources.
 ($main::MYNAME     = $main::0) =~ s|.*/||;
 $main::Author      = "Manoj Srivastava";
 $main::AuthorMail  = "srivasta\@debian.org";
-$main::Version     = '$Revision: 1.43 $ ';
+$main::Version     = '$Revision: 1.44 $ ';
 
 my $help_opt=0; 
 my $revision=0; 
@@ -313,7 +313,9 @@ usage: $main::MYNAME [options] target [target ...]
  --flavour  foo        an additional kernel sub-version. ([-a-z.+0-9])
                          see /usr/share/doc/kernel-package/Flavours.gz
  --added_modules foo   Comma/space separated list of add on modules
-                       affected byt the modules_<blah> targets
+                       affected by the modules_<blah> targets
+ --added_patches bar   Comma/space separated list of patches applicable
+                        when patch_the_kernel is turned on
  --arch     foo        architecture
  --cross_compile       target string
  --subarch  bar        Set the sub arch for the image being compiled
@@ -735,6 +737,9 @@ EOERR1
   }
   if ($added_modules) {
     $command .= " SELECTED_MODULES=\"$added_modules\"";
+  }
+  if ($added_patches) {
+    $command .= " SELECTED_PATCHES=\"$added_patches\"";
   }
   if ($arch_in_name){
     $command .= " ARCH_IN_NAME=YES ";

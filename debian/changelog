@@ -1,3 +1,16 @@
+kernel-package (7.16) unstable; urgency=low
+
+  * Added dpkg-architecture invocation to the rules file, and export the
+    corresponding variables. Hopefully this closes: Bug#67909
+    There was a comment in the reprt about this holding up test-cycle-3,
+    I can back port this to potato if needed. 
+  * Added CROSS_COMPILE=$(KERNEL_CROSS) for the modules_install target as
+    well. This closes: Bug#67904
+    Thanks go to Chris Rutter <chris@willow.armlinux.org> for tracjing
+    these down.
+
+ -- Manoj Srivastava <srivasta@debian.org>  Sat, 29 Jul 2000 23:32:23 -0500
+
 kernel-package (7.15) unstable; urgency=low
 
   * Fixed up the sample kernel moules rules and control file

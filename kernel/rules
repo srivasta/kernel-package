@@ -5,14 +5,25 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Fri Jul 28 01:13:16 2000
+## Last Modified On : Sat Jul 29 23:30:52 2000
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 442
+## Update Count	    : 444
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.99 2000/07/28 06:48:39 srivasta Exp $
+## $Id: rules,v 1.100 2000/07/30 04:34:49 srivasta Exp $
 ###############################################################################
+
+# set the dpkg-architecture vars
+export DEB_BUILD_ARCH      := $(shell dpkg-architecture -qDEB_BUILD_ARCH)
+export DEB_BUILD_GNU_CPU   := $(shell dpkg-architecture -qDEB_BUILD_GNU_CPU)
+export DEB_BUILD_GNU_SYSTEM:= $(shell dpkg-architecture -qDEB_BUILD_GNU_SYSTEM)
+export DEB_BUILD_GNU_TYPE  := $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
+export DEB_HOST_ARCH       := $(shell dpkg-architecture -qDEB_HOST_ARCH)
+export DEB_HOST_GNU_CPU    := $(shell dpkg-architecture -qDEB_HOST_GNU_CPU)
+export DEB_HOST_GNU_SYSTEM := $(shell dpkg-architecture -qDEB_HOST_GNU_SYSTEM)
+export DEB_HOST_GNU_TYPE   := $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
+
 
 #
 # VERSION=$(shell LC_ALL=C dpkg-parsechangelog | grep ^Version: | \
@@ -1040,7 +1051,8 @@ ifdef MODULES_ENABLED
 ifeq  ($(strip $(HAVE_NEW_MODLIB)),)
 	$(mod_inst_cmds)
 else
-	$(MAKE) INSTALL_MOD_PATH=$(INSTALL_MOD_PATH) modules_install
+	$(MAKE) INSTALL_MOD_PATH=$(INSTALL_MOD_PATH) \
+                CROSS_COMPILE=$(KERNEL_CROSS) modules_install
 endif
 endif
 ifeq ($(strip $(NEED_DIRECT_GZIP_IMAGE)),YES)
