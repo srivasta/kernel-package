@@ -11,12 +11,7 @@ set -e
 # The following idempotent stuff doesn't generally need protecting 
 # against being run in the abort-* cases.
 
-package_name=libcgi-perl;
-
-# Ensure the menu system is updated
-[ ! -x /usr/bin/update-menus ] || /usr/bin/update-menus
-
-
+package_name=kernel-package
 
 case "$1" in
   configure)
@@ -132,9 +127,5 @@ EOF
   *) echo "$0: didn't understand being called with \`$1'" 1>&2
      exit 0;;
 esac
-
-if command -v install-docs >/dev/null 2>&1; then
-  install-docs -i /usr/share/doc-base/libcgi-perl
-fi
 
 exit 0

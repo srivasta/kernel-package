@@ -12,8 +12,9 @@ kernel-package (6.24) unstable; urgency=low
   * The normal upload closes: Bug#45471, Bug#44483, Bug#45427
     which were fixed in the NMU
   * Moved kernel-package and all generated packages to FHS compliance. 
+  * No longer unlink modules.dep. closes: Bug#46729,
 
- -- Manoj Srivastava <srivasta@debian.org>  Fri,  8 Oct 1999 05:31:53 -0500
+ -- Manoj Srivastava <srivasta@debian.org>  Fri,  8 Oct 1999 05:40:31 -0500
 
 kernel-package (6.23.1) unstable; urgency=low
 
