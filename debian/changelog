@@ -1,3 +1,9 @@
+kernel-package (7.99) unstable; urgency=high
+
+  * The last fix broke kernel-package.                       closes: Bug#138684
+
+ -- Manoj Srivastava <srivasta@debian.org>  Sat, 16 Mar 2002 23:25:26 -0600
+
 kernel-package (7.98) unstable; urgency=low
 
   * Changed a potentially confusing postinst message.

@@ -12,7 +12,7 @@
 # HISTORY          :
 # Description      :
 #
-#    $Id: image.postinst,v 1.100 2002/03/16 17:19:39 srivasta Exp $
+#    $Id: image.postinst,v 1.101 2002/03/17 05:29:01 srivasta Exp $
 #
 
 #
@@ -1188,7 +1188,7 @@ EOMSGB
 ;
 
 if ($do_bootloader) {
-   print STDERR <<"EOMSGC";
+  print STDERR <<"EOMSGC";
 
 WARNING
 If you are keeping another operating system or another version
@@ -1200,7 +1200,8 @@ go ahead and install the boot block here. If it does not work, you
 can still boot this system from $install_boot_method.
 
 EOMSGC
-;
+  ;
+}
 
 if ($do_bootfloppy) {
   if (&ask("Would you like to create a boot floppy now")) {
