@@ -1,3 +1,11 @@
+kernel-package (3.51) unstable; urgency=low
+
+  * Changed the kernel rules file not break on the sound modules of
+    2.1.70+ kernels (I think it is a bug in the kernel Makfile, but this
+    fix make make-kpkg handle the problem and be more robust).
+
+ -- Manoj Srivastava <srivasta@debian.org>  Thu, 25 Dec 1997 01:30:49 -0600
+
 kernel-package (3.50) unstable; urgency=low
 
   * Modified image.postinst to also cater to people on whose architecture
