@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Wed Jan 26 10:57:40 2000
+## Last Modified On : Mon Feb  7 00:54:09 2000
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 420
+## Update Count	    : 425
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.86 2000/01/27 06:52:33 srivasta Exp $
+## $Id: rules,v 1.87 2000/02/07 07:01:30 srivasta Exp $
 ###############################################################################
 
 #
@@ -153,7 +153,7 @@ KERNEL_ARCH:=ppc
 kimage := zImage
 target = $(kimage)
 
-ifneq (,$(findstring $(SUBARCH),APUs apus Amiga)))
+ifneq (,$(findstring $(SUBARCH),APUs apus Amiga))
 SUBARCH:=apus
 kimagesrc = arch/$(KERNEL_ARCH)/boot/$(kimage)
 kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
@@ -617,11 +617,10 @@ endif
 	touch stamp-debian
 
 configure: debian stamp-configure
-stamp-configure: .config
+stamp-configure: debian .config
 	test -f stamp-debian || $(deb_rule) debian
-	-test ! -f stamp-configure && \
-	  (test -f .config || \
-                $(install_file) $(DEBDIR)/config .config) \
+	test -f .config      || $(deb_rule) .config
+	-test ! -f stamp-configure \
 	  && $(MAKE) $(FLAV_ARG) CROSS_COMPILE=$(KERNEL_CROSS) \
                                  ARCH=$(KERNEL_ARCH) oldconfig \
           && $(MAKE) $(FLAV_ARG) CROSS_COMPILE=$(KERNEL_CROSS) \
@@ -636,8 +635,13 @@ ifneq ($(strip $(use_saved_config)),NO)
 		            cp -pf .config.save .config) || \
 			true
 endif
-	test -f .config || cp -pf $(CONFIG_FILE) .config
-
+	test -f .config || (test -f $(CONFIG_FILE) && \
+		            cp -pf $(CONFIG_FILE) .config) || \
+			true
+	test -f .config || (test -f $(DEBDIR)/config && \
+		            cp -pf $(DEBDIR)/config  .config) || \
+			true
+	test -f .config || $(error Need an config file .config)
 
 clean:
 ifeq ($(strip $(patch_the_kernel)),YES)
