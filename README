@@ -64,13 +64,13 @@ Phase TWO: Create a portable kernel image .deb file
       sudo are examples that come to mind).  NOTE: if you have
       instructed your boot loader to expect initrd kernels (which is
       the norm for recent official kernel image packages) you need to
-      addd --initrd to the line above, and make sure that you have
+      add --initrd to the line above, and make sure that you have
       applied the cramfs initrd patch to the kernel sources (or
       modified mkinitrd config not to create a cramfs initrd). The
       cramfs initrd patch is shipped with Debian kernel sources.
    % $Get_Root make-kpkg --initrd --revision=custom.1.0 kernel_image 
       Personally, I prefer non initrd images for my personal machines,
-      since then adding third party modules to the machine has fewere
+      since then adding third party modules to the machine has fewer
       gotchas
 Phase THREE: Install the kernel image on one or more machines
  5# dpkg -i ../kernel-image-X.XXX_1.0_<arch>.deb
