@@ -1,3 +1,16 @@
+kernel-package (7.18) unstable; urgency=low
+
+  * Make sure the dpkg-architecture calls takes into account the ARCH
+    variable, if set. closes: Bug# 70759
+  * Fixed address of the FSF. closes: Bug#70984
+  * use print-gnu-build-architecture. closes: Bug#65157
+  * Do not attempt to set user and group to root.root in the configure
+    phase, since dpkg-buildpackage does not run that target with
+    fakeroot. closes: Bug#72297
+  * make make-kpkg use ./debian/rules if appropriate.
+
+ -- Manoj Srivastava <srivasta@debian.org>  Wed, 27 Sep 2000 13:33:39 -0500
+
 kernel-package (7.17) unstable; urgency=low
 
   * Take the depends out of the kernel source package if kernel version is

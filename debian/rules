@@ -5,24 +5,28 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Sat Jul 29 23:18:14 2000
+## Last Modified On : Wed Sep  6 09:36:51 2000
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 131
+## Update Count	    : 132
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
 ##
 ###############################################################################
 
+ifdef ARCH
+  ha:=-a$(ARCH)
+endif
+
 # set the dpkg-architecture vars
-export DEB_BUILD_ARCH      := $(shell dpkg-architecture -qDEB_BUILD_ARCH)
-export DEB_BUILD_GNU_CPU   := $(shell dpkg-architecture -qDEB_BUILD_GNU_CPU)
-export DEB_BUILD_GNU_SYSTEM:= $(shell dpkg-architecture -qDEB_BUILD_GNU_SYSTEM)
-export DEB_BUILD_GNU_TYPE  := $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
-export DEB_HOST_ARCH       := $(shell dpkg-architecture -qDEB_HOST_ARCH)
-export DEB_HOST_GNU_CPU    := $(shell dpkg-architecture -qDEB_HOST_GNU_CPU)
-export DEB_HOST_GNU_SYSTEM := $(shell dpkg-architecture -qDEB_HOST_GNU_SYSTEM)
-export DEB_HOST_GNU_TYPE   := $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
+export DEB_BUILD_ARCH      := $(shell dpkg-architecture $(ha) -qDEB_BUILD_ARCH)
+export DEB_BUILD_GNU_CPU   := $(shell dpkg-architecture $(ha) -qDEB_BUILD_GNU_CPU)
+export DEB_BUILD_GNU_SYSTEM:= $(shell dpkg-architecture $(ha) -qDEB_BUILD_GNU_SYSTEM)
+export DEB_BUILD_GNU_TYPE  := $(shell dpkg-architecture $(ha) -qDEB_BUILD_GNU_TYPE)
+export DEB_HOST_ARCH       := $(shell dpkg-architecture $(ha) -qDEB_HOST_ARCH)
+export DEB_HOST_GNU_CPU    := $(shell dpkg-architecture $(ha) -qDEB_HOST_GNU_CPU)
+export DEB_HOST_GNU_SYSTEM := $(shell dpkg-architecture $(ha) -qDEB_HOST_GNU_SYSTEM)
+export DEB_HOST_GNU_TYPE   := $(shell dpkg-architecture $(ha) -qDEB_HOST_GNU_TYPE)
 
 
 #
@@ -30,7 +34,7 @@ export DEB_HOST_GNU_TYPE   := $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
 #                          sed 's/^Version: *//')
 #
 
-#    $Id: rules,v 1.25 2000/07/30 04:34:48 srivasta Exp $
+#    $Id: rules,v 1.26 2000/09/27 18:34:15 srivasta Exp $
 
 
 # Please change the maintainer information, as well as the debian version
@@ -59,7 +63,7 @@ LIBLOC     := /usr/share/kernel-package
 MODULE_LOC := /usr/src/modules
 
 DOCFILES = README.doc README.headers README.image README.modules \
-           README.source README.tecra
+           README.source README.tecra sample.kernel-img.conf
 
 # Location of the source dir
 SRCTOP     := $(shell if [ "$$PWD" != "" ]; then echo $$PWD; else pwd; fi)

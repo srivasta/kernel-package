@@ -5,24 +5,28 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Sat Jul 29 23:30:52 2000
+## Last Modified On : Mon Sep 11 01:11:04 2000
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 444
+## Update Count	    : 447
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.101 2000/08/20 19:36:38 srivasta Exp $
+## $Id: rules,v 1.102 2000/09/27 18:34:15 srivasta Exp $
 ###############################################################################
 
+ifdef ARCH
+  ha:=-a$(ARCH)
+endif
+
 # set the dpkg-architecture vars
-export DEB_BUILD_ARCH      := $(shell dpkg-architecture -qDEB_BUILD_ARCH)
-export DEB_BUILD_GNU_CPU   := $(shell dpkg-architecture -qDEB_BUILD_GNU_CPU)
-export DEB_BUILD_GNU_SYSTEM:= $(shell dpkg-architecture -qDEB_BUILD_GNU_SYSTEM)
-export DEB_BUILD_GNU_TYPE  := $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
-export DEB_HOST_ARCH       := $(shell dpkg-architecture -qDEB_HOST_ARCH)
-export DEB_HOST_GNU_CPU    := $(shell dpkg-architecture -qDEB_HOST_GNU_CPU)
-export DEB_HOST_GNU_SYSTEM := $(shell dpkg-architecture -qDEB_HOST_GNU_SYSTEM)
-export DEB_HOST_GNU_TYPE   := $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
+export DEB_BUILD_ARCH      := $(shell dpkg-architecture $(ha) -qDEB_BUILD_ARCH)
+export DEB_BUILD_GNU_CPU   := $(shell dpkg-architecture $(ha) -qDEB_BUILD_GNU_CPU)
+export DEB_BUILD_GNU_SYSTEM:= $(shell dpkg-architecture $(ha) -qDEB_BUILD_GNU_SYSTEM)
+export DEB_BUILD_GNU_TYPE  := $(shell dpkg-architecture $(ha) -qDEB_BUILD_GNU_TYPE)
+export DEB_HOST_ARCH       := $(shell dpkg-architecture $(ha) -qDEB_HOST_ARCH)
+export DEB_HOST_GNU_CPU    := $(shell dpkg-architecture $(ha) -qDEB_HOST_GNU_CPU)
+export DEB_HOST_GNU_SYSTEM := $(shell dpkg-architecture $(ha) -qDEB_HOST_GNU_SYSTEM)
+export DEB_HOST_GNU_TYPE   := $(shell dpkg-architecture $(ha)-qDEB_HOST_GNU_TYPE)
 
 
 #
@@ -76,7 +80,8 @@ ifdef ARCH
     KERNEL_CROSS:=$(CROSS_COMPILE)-
   endif
 else
-  architecture:=$(shell CC=$(HOSTCC) dpkg --print-architecture)
+  #architecture:=$(shell CC=$(HOSTCC) dpkg --print-gnu-build-architecture)
+  architecture:=$(DEB_BUILD_ARCH)
 endif
 
 KERNEL_ARCH:=$(architecture)
@@ -740,6 +745,13 @@ endif
 	rm -f stamp-building
 	touch stamp-buildpackage
 
+# stamp-debian and stamp-configure used to be a single target. Now
+# they are split - the reason is that arch-indep packages need to be
+# built before arch-dep packages, and make-kpkg tries to do 'make
+# config' for both cases.  This used to work because the .config file
+# resided with kernel-source, but now that it is in kernel-patch, it
+# breaks down.  I think the cleanest way out of this is to only deal
+# with config files when necessary, and thus the split. Herbert Xu
 debian: stamp-debian
 stamp-debian:
 	@test -f $(DEBDIR)/rules || \
@@ -784,7 +796,7 @@ endif
 	    -e 's/=A/$(architecture)/g' -e 's/=M/$(maintainer) <$(email)>/g' \
 		$(DEBDIR)/changelog > debian/changelog
 	-test ! -f debian/rules && \
-	   $(install_program) $(DEBDIR)/rules debian/rules
+	   install -p -m 755 $(DEBDIR)/rules debian/rules
 	touch stamp-debian
 
 configure: debian stamp-configure
@@ -812,8 +824,11 @@ endif
 	test -f .config || (test -f $(DEBDIR)/config && \
 		            cp -pf $(DEBDIR)/config  .config) || \
 			true
-	test -f .config || test -n "$(have_new_config_target)" || \
-                        $(error Need an config file .config)
+ifeq ($(strip $(have_new_config_target)),)
+	test -f .config || $(error Need an config file .config)
+endif
+# if $(have_new_config_target) is set, then we need not have a .config
+# file at this point
 
 clean:
 ifeq ($(strip $(patch_the_kernel)),YES)
