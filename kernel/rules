@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.212 2003/08/09 04:48:47 srivasta Exp $
+## $Id: rules,v 1.213 2003/08/10 09:16:48 srivasta Exp $
 ###############################################################################
 
 ifdef KPKG_ARCH
@@ -1534,7 +1534,7 @@ ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
 	@(echo "The changelog says we are creating $(saved_version), but I thought the version is $(version)"; exit 1)
 endif
 ifneq ($(strip $(UTS_RELEASE_VERSION)),$(strip $(version)))
-	@(echo The UTS Release version in include/linux/version.h $(UTS_RELEASE_VERSION) does not match current version $(version), reconfiguring)
+	@echo "The UTS Release version in include/linux/version.h $(UTS_RELEASE_VERSION) does not match current version $(version), reconfiguring"
 	touch Makefile
 endif
 	test -f stamp-configure || $(deb_rule) configure
