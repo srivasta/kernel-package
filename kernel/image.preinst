@@ -5,9 +5,9 @@
 # Created On       : Sun Jun 14 03:38:02 1998
 # Created On Node  : tiamat.datasync.com
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Sun Jun 20 00:30:33 2004
+# Last Modified On : Sun Feb 13 15:29:46 2005
 # Last Machine Used: glaurung.internal.golden-gryphon.com
-# Update Count     : 62
+# Update Count     : 68
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
@@ -81,6 +81,7 @@ my $CONF_LOC        = '/etc/kernel-img.conf';
 my $relative_links  = '';
 my $silent_modules  = '';
 my $silent_loader   = '';
+my $modules_base    = '/lib/modules';
 
 die "Pre inst Internal error. Aborting." unless $version;
 
@@ -244,20 +245,57 @@ EOF
     exit 1 unless  $answer =~ /^n/i;
 }
 
-if (-d "/lib/modules/$version") {
 
+sub check {
+  my $version = shift;
+  my $lib_modules="$modules_base/$version";
+
+  if (-d "$lib_modules") {
+    opendir(DIR, $lib_modules) || die "can’t opendir $lib_modules: $!";
+    my @children = readdir(DIR);
+    if ($#children == 1)          { return 1; } # empty dir
+    if ($#children  > 2)          { return 0; } # ., .., build are OK
+
+    my @dirs  = grep { -d "$lib_modules/$_" } @children;
+    if ($#dirs > 1)               { return 0; } # we have subdirs
+
+    my @links = grep { -l "$lib_modules/$_" } @children;
+    if ($#links == 0) {
+      if ($links[0] =~ /^build$/) { return 1; } # has build symlink, is all.
+      else                        { return 0; } # Bad name
+    }
+    elsif ($#links > -1)          { return 0; } # spurious symlinks
+
+    my @files = grep { -f "$lib_modules/$_" } @children;
+    if ($#files > -1)             { return 0; } # Should only have a symlink
+  }
+  else                            { return 1; } # No such dir
+  return 0;                                     # Should not get here
+}
+
+# If this is an official image, and only a build symlink exists, allow
+# it to be clobbered.
+if ($official_image =~ /^\s*YES\s*$/o && check($version)) { 
+  $silent_modules = 'YES';
+  if (-d "$modules_base/$version" && -l "$modules_base/$version/build" ) {
+    rename("$modules_base/$version/build", "$modules_base/$version/build.save") ||
+      die "failed to move $modules_base/$version/build:$!";
+  }
+}
+
+if (-d "$modules_base/$version") {
   if ($clobber_modules) {
-    my $ret = system("mv /lib/modules/$version /lib/modules/${version}_$$");
+    my $ret = system("mv $modules_base/$version $modules_base/${version}_$$");
     if ($ret) {
       print STDERR <<EOF;
 You are attempting to install a kernel image (version $version)
-However, the directory /lib/modules/$version still exists.
+However, the directory $modules_base/$version still exists.
 
 As you have instructed, an attempt was made to move the directory out
 of the way. Unfortunately, There was a problem moving
-/lib/modules/$version to /lib/modules/${version}_$$.
+$modules_base/$version to $modules_base/${version}_$$.
 
-I suggest you move /lib/modules/$version out of the way manually,
+I suggest you move $modules_base/$version out of the way manually,
 and then try re-installing this image.
 
 I am aborting.
@@ -269,7 +307,7 @@ EOF
   elsif ($silent_modules !~ m/YES/i) {
     print STDERR <<EOF;
 You are attempting to install a kernel image (version $version)
-However, the directory /lib/modules/$version still exists.  If this
+However, the directory $modules_base/$version still exists.  If this
 directory belongs to a previous =ST-image-$version package, and if
 you have deselected some modules, or installed standalone modules
 packages, this could be bad. However, if this directory exists because
@@ -277,7 +315,7 @@ you are also installing some stand alone modules right now, and they
 got unpacked before I did, then this is pretty benign.  Unfortunately,
 I can not tell the difference.
 
-If /lib/modules/$version belongs to a old install of
+If $modules_base/$version belongs to a old install of
 =ST-image-$version, then this is your last chance to abort the
 installation of this kernel image (nothing has been changed yet).
 
@@ -287,8 +325,8 @@ package but you know what you are doing, and if you feel that this
 image should be installed despite this anomaly, Please answer n to the
 question.
 
-Otherwise, I suggest you move /lib/modules/$version out of the way,
-perhaps to /lib/modules/$version.old or something, and then try
+Otherwise, I suggest you move $modules_base/$version out of the way,
+perhaps to $modules_base/$version.old or something, and then try
 re-installing this image.
 EOF
   ;
@@ -301,7 +339,7 @@ EOF
   }
   else {
     print STDERR <<EOF;
-The directory /lib/modules/$version still exists. Continuing as directed.
+The directory $modules_base/$version still exists. Continuing as directed.
 EOF
   ;
   }

@@ -5,9 +5,9 @@
 # Created On       : Sat Apr 27 05:55:26 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Tue Oct 19 14:53:52 2004
+# Last Modified On : Sun Feb 13 16:15:36 2005
 # Last Machine Used: glaurung.internal.golden-gryphon.com
-# Update Count     : 262
+# Update Count     : 266
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
@@ -88,7 +88,7 @@ my $realimageloc    = "/$image_dir/";
 my $have_conffile   = "";
 my $silent_modules  = '';
 my $silent_loader   = '';
-
+my $modules_base    = '/lib/modules';
 my $CONF_LOC        = '/etc/kernel-img.conf';
 
 # Ignore all invocations except when called on to configure.
@@ -242,31 +242,37 @@ my ($loaderloc) = grep -x, map "$_/$loader_exec",
 ## Fix the build link
 ######################################################################
 sub fix_build_link {
-  return unless -d "/lib/modules/$version";
+  return unless -d "$modules_base/$version";
+  # if we saved a build link in preinst, restore the link
+  if (! -e "$modules_base/$version/build" && 
+        -l "$modules_base/$version/build.save" ) {
+    rename("$modules_base/$version/build.save", "$modules_base/$version/build") ||
+      die "failed to move $modules_base/$version/build:$!";
+  }
   if ($relink_build_link || $force_build_link) {
     my $build_target;
-    if (-l "/lib/modules/$version/build") {
-      $build_target = readlink "/lib/modules/$version/build";
+    if (-l "$modules_base/$version/build") {
+      $build_target = readlink "$modules_base/$version/build";
     }
     else {
       return;
     }
     if (!defined($build_target)) { # Danglink link
       warn qq(
- Hmm. The package shipped with a symbolic link /lib/modules/$version/build
+ Hmm. There is a symbolic link $modules_base/$version/build
  However, I can not read it: $!
- Therefore, I am deleting /lib/modules/$version/build\n
+ Therefore, I am deleting $modules_base/$version/build\n
 );
-      my $num = unlink "/lib/modules/$version/build";
+      my $num = unlink "$modules_base/$version/build";
       if ($num != 1) {
-        warn "error unlinking /lib/modules/$version/build";
+        warn "error unlinking $modules_base/$version/build";
       }
       else {
         if ($force_build_link || -d "/usr/src/=ST-headers-$version") {
           my $result = symlink ("/usr/src/=ST-headers-$version",
-                                "/lib/modules/$version/build");
+                                "$modules_base/$version/build");
           if (! $result) {
-            warn "Could not link /usr/src/=ST-headers-$version to /lib/modules/$version/build:$!"
+            warn "Could not link /usr/src/=ST-headers-$version to $modules_base/$version/build:$!"
           }
         }
       }
@@ -281,24 +287,24 @@ if ($relink_build_link || $force_build_link) {
 ## Fix the source link
 ######################################################################
 sub fix_source_link {
-  return unless -d "/lib/modules/$version";
+  return unless -d "$modules_base/$version";
   if ($relink_src_link) {
     my $source_target;
-    if (-l "/lib/modules/$version/source") {
-      $source_target = readlink "/lib/modules/$version/source";
+    if (-l "$modules_base/$version/source") {
+      $source_target = readlink "$modules_base/$version/source";
     }
     else {
       return;
     }
     if (!defined($source_target)) { # Danglink link
       warn qq(
- Hmm. The package shipped with a symbolic link /lib/modules/$version/source
+ Hmm. The package shipped with a symbolic link $modules_base/$version/source
  However, I can not read it: $!
- Therefore, I am deleting /lib/modules/$version/source\n
+ Therefore, I am deleting $modules_base/$version/source\n
 );
-      my $num = unlink "/lib/modules/$version/source";
+      my $num = unlink "$modules_base/$version/source";
       if ($num != 1) {
-        warn "error unlinking /lib/modules/$version/source";
+        warn "error unlinking $modules_base/$version/source";
       }
     }
   }
@@ -799,7 +805,7 @@ sub image_magic {
 ######################################################################
 ######################################################################
 
-if ( -f "/lib/modules/$version/modules.dep" ) {
+if ( -f "$modules_base/$version/modules.dep" ) {
   my $running = '';
   chop($running=`uname -r`);
   if ($running eq $version) {
@@ -808,7 +814,7 @@ if ( -f "/lib/modules/$version/modules.dep" ) {
  You are attempting to install a kernel version that is the same as
  the version you are currently running (version $running). The modules
  list is quite likely to have been changed, and the modules dependency
- file /lib/modules/$version/modules.dep needs to be re-built. It can
+ file $modules_base/$version/modules.dep needs to be re-built. It can
  not be built correctly right now, since the module list for the
  running kernel are likely to be different from the kernel installed.
  I am creating a new modules.dep file, but that may not be
@@ -832,14 +838,14 @@ EOFERR
 }
 
 # We may not have any modules installed
-if ( -d "/lib/modules/$version" ) {
+if ( -d "$modules_base/$version" ) {
   my $ret = system("depmod -a -F $realimageloc/System.map-$version $version");
   my $exit_value  = $? >> 8;
   my $signal_num  = $? & 127;
   my $dumped_core = $? & 128;
   if ($ret) {
-    if ( -f "/lib/modules/$version/modules.dep") {
-      unlink "/lib/modules/$version/modules.dep" unless $initrd;
+    if ( -f "$modules_base/$version/modules.dep") {
+      unlink "$modules_base/$version/modules.dep" unless $initrd;
     }
     print "There was a problem running depmod.  This may be benign, \n";
     print "(You may have versioned symbol names, for instance).\n";
@@ -849,7 +855,7 @@ if ( -d "/lib/modules/$version" ) {
     print "\tdepmod dumped core \n" if $dumped_core ;
     if ($initrd) {
       print "Since this image uses initrd, I am not deleting the file\n";
-      print "/lib/modules/$version/modules.dep. However, there is no\n";
+      print "$modules_base/$version/modules.dep. However, there is no\n";
       print "guarantee that the file is valid. I would strongly advice\n";
       print "you to either abort and fix the errors in depmod, or \n";
       print "regenerate the initrd image with a known good modules.dep\n";
@@ -880,7 +886,7 @@ if ($initrd) {
   my $initrd_path = $realimageloc . "initrd.img-$version";
   my $ret = system("mkinitrd " .
                    ($mkimage ? "-m '$mkimage' " : "") .
-                   "-o $initrd_path.new /lib/modules/$version");
+                   "-o $initrd_path.new $modules_base/$version");
   die("Failed to create initrd image.\n") if $ret;
   rename("$initrd_path.new", "$initrd_path")
     or die("Failed to rename initrd ($initrd_path)\n");
