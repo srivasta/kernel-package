@@ -1,3 +1,18 @@
+kernel-package (8.067) unstable; urgency=low
+
+  * Change docbook-utils from recommends to suggests  closes: Bug#215177
+  * Make sure we do create a symlink if the user sys yes.
+                                                      closes: Bug#216814
+  * Stop make-kpkg.1 speaking like a buccaneer.       closes: Bug#216991
+  * Typycally -> typically                            closes: Bug#217186
+  * allow compiling kernel package bootable on PrPMC 750/PrPMC 800 cards
+    made by Motorola. Patch from Hubert Figuiere
+    <hub-linux-ppc@trantor.staff.proxad.net>          closes: Bug#216681
+  * Bug out with a diagnostic if kimagesrc or kimagedest were undefined;
+    typically the case if we can't determine the arch closes: Bug#216676
+
+ -- Manoj Srivastava <srivasta@debian.org>  Fri, 31 Oct 2003 11:20:34 -0600
+
 kernel-package (8.066) unstable; urgency=low
 
   * to default target for mips(el) changed between 2.4 and 2.5. Applied a

@@ -5,9 +5,9 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Tue Oct  7 11:07:36 2003
+## Last Modified On : Fri Oct 31 11:18:41 2003
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 618
+## Update Count	    : 620
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
@@ -223,7 +223,7 @@ GUESS_SUBARCH:=pmac
 endif
 endif
 
-ifeq (,$(findstring $(KPKG_SUBARCH),apus chrp mbx pmac prep Amiga APUs CHRP MBX PReP chrp-rs6k ))
+ifeq (,$(findstring $(KPKG_SUBARCH),apus prpmc chrp mbx pmac prep Amiga APUs CHRP MBX PReP chrp-rs6k ))
 KPKG_SUBARCH:=$(GUESS_SUBARCH)
 endif
 
@@ -267,6 +267,15 @@ kimagesrc = $(shell if [ -d arch/$(KERNEL_ARCH)/chrpboot ]; then \
 	echo arch/$(KERNEL_ARCH)/boot/images/$(kimage).chrp ; fi)
 kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
 DEBCONFIG = $(CONFDIR)/config.chrp
+endif
+
+ifneq (,$(findstring $(KPKG_SUBARCH),PRPMC prpmc))
+KPKG_SUBARCH:=prpmc
+loader := NoLoader
+kimage := zImage
+target = $(kimage)
+kimagesrc = arch/$(KERNEL_ARCH)/boot/images/zImage.pplus
+kimagedest = $(INT_IMAGE_DESTDIR)/zImage.pplus-$(version)
 endif
 
 ifneq (,$(findstring $(KPKG_SUBARCH),MBX mbx))
@@ -1196,6 +1205,17 @@ $(error Error. The version number $(strip $(version)) is not all \
  lowercase. Since the version ends up in the package name of the \
  kernel image package, this is a Debian policy violation, and \
  the packaging system shall refuse to package the image. )
+endif
+
+ifeq (,$(strip $(kimagedest)))
+$(error Error. I do not know where the kernel image goes to [kimagedest undefined]\
+ The usual case for this is that I could not determine which arch or subarch \
+ tihs machine belongs to. Please specify a subarch, and try again.)
+endif
+ifeq (,$(strip $(kimagesrc)))
+$(error Error. I do not know where the kernel image goes to [kimagesrc undefined]\
+ The usual case for this is that I could not determine which arch or subarch \
+ tihs machine belongs to. Please specify a subarch, and try again.)
 endif
 
 # export variables
