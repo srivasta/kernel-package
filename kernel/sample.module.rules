@@ -1,10 +1,30 @@
 #! /usr/bin/make -f
 
 # Name of package
-package		= kernmod
+package=$(shell head -n 1 debian/changelog | cut -d' ' -f 1)
+version=$(shell head -n 1 debian/changelog | sed 's/.*(\(.*\)).*/\1/')
+ifndef srcpkg
+srcpkg=$(package)-source
+endif
 # KSRC is the location of the kernel source. This is the default value,
 # when make-kpkg is used it will supply to real value
-KSRC		= /usr/src/linux
+ifndef KSRC
+KSRC=/usr/src/linux
+endif
+ifndef MODDIR
+MODDIR=..
+endif
+
+ifndef BUILD_DIR
+BUILD_DIR=.
+endif
+
+# clear root command if already root
+ifeq ($(shell id -u),0)
+ROOT_CMD=
+endif
+
+
 # KDREV is the package-revision, as given to make-kpkg by the user.
 # Just put a simply default value in here which we use when we test
 # the packagebuilding without make-kpkg
@@ -97,7 +117,7 @@ binary-arch:
 # The kdist_configure target is called by make-kpkg modules_config. It
 # should configure the module so it is ready for compilation (mostly
 # useful for calling configure)
-.PHONY: kdist_config
+.PHONY: kdist_configure
 kdist_config:
 	@echo Nothing to configure
 

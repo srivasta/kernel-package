@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Thu Sep 12 12:25:04 2002
+## Last Modified On : Sat Nov  2 21:24:41 2002
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 541
+## Update Count	    : 543
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.184 2002/10/29 21:12:33 srivasta Exp $
+## $Id: rules,v 1.185 2002/11/03 04:06:11 srivasta Exp $
 ###############################################################################
 
 ifdef KPKG_ARCH
@@ -695,8 +695,6 @@ saved_version := $(shell if test -f debian/changelog; then \
 ifneq ($(strip $(saved_version)),)
 ifneq ($(strip $(saved_version)),$(strip $(version)))
 HAVE_VERSION_MISMATCH=YES
-$(error The changelog says we are creating $(saved_version), but I thought the version is $(version))
-
 endif
 endif
 endif
@@ -1069,6 +1067,9 @@ stamp-build:
 # Builds the binary package.
 # debian.config contains the current idea of what the image should
 # have.
+ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
+	@(echo "The changelog says we are creating $(saved_version), but I thought the version is $(version)"; exit 1)
+endif
 	-test -f stamp-configure || $(deb_rule) configure
 	$(MAKE) $(do_parallel) $(EXTRAV_ARG) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) \
 	                    $(CROSS_ARG) $(target)
@@ -1080,6 +1081,9 @@ endif
 
 buildpackage: stamp-buildpackage
 stamp-buildpackage: configure
+ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
+	@(echo "The changelog says we are creating $(saved_version), but I thought the version is $(version)"; exit 1)
+endif
 	test -f stamp-configure || $(deb_rule) configure
 	echo 'Building Package' > stamp-building
 ifneq ($(strip $(root_cmd)),)
@@ -1099,6 +1103,9 @@ endif
 # with config files when necessary, and thus the split. Herbert Xu
 debian: stamp-debian
 stamp-debian:
+ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
+	@(echo "The changelog says we are creating $(saved_version), but I thought the version is $(version)"; exit 1)
+endif
 	@test -f $(DEBDIR)/rules || \
             echo Error: Could not find $(DEBDIR)/rules
 	-test ! -f stamp-debian && test ! -f debian/official && \
@@ -1318,6 +1325,9 @@ stamp-source: stamp-debian
                 || true
 
 real_stamp_source:
+ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
+	@(echo "The changelog says we are creating $(saved_version), but I thought the version is $(version)"; exit 1)
+endif
 	test -f stamp-debian || $(deb_rule) debian
 	rm -rf $(SOURCE_TOP)
 	$(make_directory) $(SOURCE_TOP)/DEBIAN
@@ -1444,6 +1454,7 @@ endif
 	fi
 	echo "This was produced by kernel-package version $(kpkg_version)." > \
 	         $(HEADER_DOC)/Buildinfo
+	$(install_file) Makefile       $(HEADER_SRC)
 	-tar cf - include |        (cd $(HEADER_SRC); umask 000; tar xsf -)
 	(cd $(HEADER_SRC)/include; rm -f asm; ln -s asm-$(KERNEL_ARCH) asm)
 	$(install_file) .config  	        $(HEADER_SRC)/.config

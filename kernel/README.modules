@@ -22,14 +22,18 @@
 USER INSTRUCTIONS
 ==== ============
 
-     1)   Ensure that the module source tree is in a subdirectory of
+     1)   install the source for your module package in a subdirectory of 
           the $(MODULE_LOC)[/usr/src/modules] directory.  Use a
           symbolic link to the actual source tree if you must.
 
-     2)   As root, go to the the base of the kernel source tree (usually
-          the /usr/src/kernel-source-<kernel version> directory).
+     2)   Get kernel sources from your favourite location. 
 
-     3.1) If you are building a kernel that is custom configured to your
+     3)   Make sure you have the versions of packages as recommended
+          in the Documentation/Changes file. 
+
+     4)   Unpack the kernel sources.  Change dir to the unpacked sources.
+
+     5) If you are building a kernel that is custom configured to your
           specifications, go ahead and configure the kernel with `make config',
           `make menuconfig', or `make xconfig.'
           To build a new kernel-image package, execute:
@@ -50,13 +54,7 @@ USER INSTRUCTIONS
           kernel, you would use --revision myhost.2 and so on.  See
           /usr/share/doc/kernel-package/README.gz for more information on
           revision numbers.
-
-     3.2) If you are using an official Debian kernel-image, simply copy
-          the config file from /boot to the kernel source tree and build
-          the dependencies:
-               cp /boot/config-<kernel version> .config
-
-     4)   To build the actual module packages, execute:
+     6)   To build the actual module packages, execute:
                make-kpkg modules_image
           This will generate a  <name>-modules-<kernel version>.deb file in
           the parent directory. The revision you supplied while building the
@@ -71,11 +69,47 @@ USER INSTRUCTIONS
           You can however force the revision number using the --revision
           flag (see 3.1).
 
-     5)   Install the two newly created deb files (you can use `dpkg -i
+     7) Install the two newly created deb files (you can use `dpkg -i
           file').
 
-     6)   Clean the source trees:
+     8)   Clean the source trees:
                make-kpkg clean modules_clean
+
+MODULE MAINTAINER INSTRUCTIONS
+====== ========== ============
+
+     1)   install the source for your module package in a subdirectory of 
+          the $(MODULE_LOC)[/usr/src/modules] directory.  Use a
+          symbolic link to the actual source tree if you must.
+
+     2)   if you are modules maintainer and want to build the set of
+          binary modules packages that will work with each of the
+          varients of the kernel that are in the archive, you want to
+          use the sources for the official kernel-images.
+          
+          apt-get source kernel-image-2.4.18-386 (substitute as
+           appropriate for kernel version and architecture)
+
+     3)   satisfy the build-deps of that image.
+
+     4)   debian/rules unpack
+
+     5) If you are building a whole set of modules for all
+         subarchitectures, you can do something like:
+           for i in 386 586tsc 686 686-smp k6 k7; do
+	     cd build-$i
+	     make-kpkg modules --append_to_version -$i
+	     make-kpkg modules_clean
+	     cd ..
+          done
+          Change the list of flavours as appropriate for your
+          architecture of course. See configs in config/ directory.
+          cp /boot/config-<kernel version> build-$i.config, etc, as needed. 
+
+     6)  Test, sign and upload the various .changes and .deb files
+         that result.
+
+======================================================================
 
         kernel-package provides for four targets for the use of
  stand-alone kernel modules packages.

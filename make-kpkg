@@ -5,16 +5,16 @@
 # Created On       : Mon Jun 17 01:10:11 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Thu Aug  8 22:10:07 2002
+# Last Modified On : Sat Nov  2 21:20:25 2002
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 184
+# Update Count     : 185
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
 #
 #
 #
-#    $Id: make-kpkg,v 1.76 2002/10/29 21:12:32 srivasta Exp $
+#    $Id: make-kpkg,v 1.77 2002/11/03 04:06:11 srivasta Exp $
 #
 require 5.002;
 use strict;
@@ -29,7 +29,7 @@ make-kpkg - build Debian kernel packages from Linux kernel sources.
 ($main::MYNAME     = $main::0) =~ s|.*/||;
 $main::Author      = "Manoj Srivastava";
 $main::AuthorMail  = "srivasta\@debian.org";
-$main::Version     = '$Revision: 1.76 $ ';
+$main::Version     = '$Revision: 1.77 $ ';
 
 my $added_modules='';
 my $added_patches='';
@@ -911,19 +911,21 @@ EOMSG
   if ($noexec){
     $command .= " -n ";
   }
-  if ($initrd && ! -e 'debian/official') {
-    print STDERR "Warning: You are using the initrd option, that may not\n";
-    print STDERR "work unless you have applied the initrd cramfs patch to \n";
-    print STDERR "the kernel, or modified mkinitrd not to use cramfs by\n";
-    print STDERR "default. The  cramfs initrd patch, is included in the \n";
-    print STDERR "Debian supplied kernel sources, but is not present in \n";
-    print STDERR "pristine kernel sources.\n";
-    print STDERR "By default, I assume you know what you are doing, and I\n";
-    print STDERR "apologize for being so annoying. Should I abort[Ny]?\n";
-    my $ans = <STDIN>;
-    if ($ans =~ m/^\s*[Yy]/g) {
-      print STDERR " Aborting.\n";
-      exit 1;
+  if ($initrd) {
+    if (! -e 'debian/official') {
+      print STDERR "Warning: You are using the initrd option, that may not\n";
+      print STDERR "work unless you have applied the initrd cramfs patch to\n";
+      print STDERR "the kernel, or modified mkinitrd not to use cramfs by\n";
+      print STDERR "default. The  cramfs initrd patch, is included in the \n";
+      print STDERR "Debian supplied kernel sources, but is not present in \n";
+      print STDERR "pristine kernel sources.\n";
+      print STDERR "By default, I assume you know what you are doing, and I\n";
+      print STDERR "apologize for being so annoying. Should I abort[Ny]?\n";
+      my $ans = <STDIN>;
+      if ($ans =~ m/^\s*[Yy]/g) {
+	print STDERR " Aborting.\n";
+	exit 1;
+      }
     }
     $command .= " INITRD=YES ";
   }

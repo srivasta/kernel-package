@@ -1,3 +1,12 @@
+kernel-package (8.13) unstable; urgency=low
+
+  * Incorporated kernel modules packager HOWTO.              closes: Bug#167483
+  * Fix initrd handling for official kernels                 closes: Bug#167497
+  * Include the top level Makefile with the kernel headers, as some
+    modules seem to eed that (openafs-modules-source)
+
+ -- Manoj Srivastava <srivasta@debian.org>  Sat,  2 Nov 2002 21:27:11 -0600
+
 kernel-package (8.012) unstable; urgency=low
 
   * Document the HEADER_CLEAN_HOOK and DOC_CLEAN_HOOK.
