@@ -28,8 +28,9 @@ kernel-package (3.60) unstable; urgency=low
     those files either, so as not to cause people with older kernels
     having a problem during removal.As soon as it is deemed permissible,
     we shall get less paranoid about /usr/src/linux-$version as well. 
+  * closes: Bug#18277
 
- -- Manoj Srivastava <srivasta@debian.org>  Wed, 18 Feb 1998 15:07:08 -0600
+ -- Manoj Srivastava <srivasta@debian.org>  Wed, 18 Feb 1998 16:44:31 -0600
 
 kernel-package (3.59) unstable; urgency=low
 
