@@ -1,3 +1,9 @@
+kernel-package (7.96) unstable; urgency=low
+
+  * Support labels in /etc/fstab. closes: Bug#121127, Bug#136949
+
+ -- Manoj Srivastava <srivasta@debian.org>  Tue,  5 Mar 2002 14:53:47 -0600
+
 kernel-package (7.95) unstable; urgency=low
 
   * Added an undocumented feature: if ./debian/post-install exists, it
