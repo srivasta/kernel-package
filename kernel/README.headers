@@ -1,5 +1,5 @@
 
-    $Id: README.headers,v 1.3 1997/06/25 07:33:27 srivasta Exp $
+    $Id: README.headers,v 1.4 1998/01/30 01:26:20 srivasta Exp $
 
  This is the Debian GNU/Linux prepackaged version of the Linux kernel
  headers. Linux was written by Linus Torvalds
@@ -9,19 +9,261 @@
  sources retrieved from directories under
  ftp.cs.helsinki.fi:/pub/Software/Linux/Kernel/
 
- This package contains the Linux kernel header files (also contained
- in libc5-dev packages). 
+ This package contains the Linux kernel header files. 
 
- 	This document contains comments from Linus Torvalds (made in
+
+		 Kernel Headers and libc6-dev package
+                 ____________________________________
+                 ====================================
+
+		    Need for kernel include files
+                    ==== === ====== ======= =====
+   
+	Even though GNU libc 2.0 (a.k.a. libc6) provides an uniform
+ interface to C programmers, one should realize that it needs
+ different underpinnings on different architectures and operating
+ systems (remember, glibc2 is multi-OS).
+
+	glibc provides all the standard files that the C standard and
+ POSIX require, and those in turn call in OS and platform specific
+ headers as required transparently to the user. There is an a complete
+ divorce of the kernel-level interface from the user-level interface:
+ the application programmer does not need to know kernel level details
+ at all.
+
+	 But this has been taken by some to mean that
+ /usr/include/{linux,asm} would be superfluous, which is a technical
+ impossibility given that glibc2 is not an architecture and OS
+ specific library.
+
+        I do not believe it is easy for glibc to present an interface
+ that does not match the underlying OS, and quite possibly people just
+ punted. If there is a mismatch between the user level structures and
+ the kernel level structures, then libc6 library shall have to install
+ translating wrappers around system calls (not such a great idea for
+ high performance systems). I can foresee cases where it would not be
+ possible to implement these wrappers, given a sufficiently large set
+ of architectures and OS's.
+
+	In the case of Linux, the kernel header files are the
+ underpinnings of the architecture independent interface.
+
+	Take a simple general ANSI C include file like <errno.h>. This
+ in turn includes /usr/include/errnos.h, which includes
+ /usr/include/linux/errno.h, which in turn includes
+ /usr/include/asm/errno.h. See? A simple, standard include file like
+ <errno.h>, and one needs kernel include files for that.
+
+		   Traditional two symlink approach
+                   =========== === ======= ========          
+
+ 	Under libc5, it was standard for part of the user interface to
+ libc to be exported from the kernel includes, via /usr/include/linux
+ and /usr/include/asm.  Traditionally, this was done by linking those
+ two directories to the appropriate directories in
+ /usr/src/linux/include.  This is the method documented in the install
+ instructions for the kernel sources, even today.
+
+
+			   Why that is bad
+                           === ==== == ===
+
+ 	Kernel headers no longer make sense exporting to user space
+ (in early days of Linux, that was not true). It is beginning to get
+ harder to synchronize the libc and the kernel headers as in the old
+ days; now linking with the latest kernel headers may subtly break new
+ code since the headers linked with are different from the compiled
+ library. In addition, the specter of programs breaking with new
+ kernel headers was preventing needed new features from being added to
+ the kernel (and damping innovative experimentation in kernel
+ development) (see appendix A for details).
+  
+  	Besides, the kernel itself no longer needs /usr/include/linux/* 
+  at all, so keeping the libc and kernel headers the same aren't
+  needed for kernel development.
+
+        The headers were included in Debian's libc5-dev after a rash
+ of very buggy alpha kernel releases (1.3.7* or something like that)
+ that proceeded to break compilations, etc.  Kernel versions are
+ changed far more rapidly than libc is, and there are higher chances
+ that people install a custom kernel than they install custom libc.
+
+        Add to that the fact that few programs really need the more
+ volatile elements of the header files (that is, things that really
+ change from kernel version to kernel version), [before you reject
+ this, consider: programs compiled on one kernel version usually work
+ on other kernels]. For the few that do need specific kernel headers,
+ use -I/usr/src/kernel-headers-<version> or some thing for a specific
+ kernel version, or -I/usr/src/linux/include for the latest set of
+ headers installed..
+
+        Most programs, even if they include <linux/something.h>, do
+ not really depend on the version of the kernel, as long as the kernel
+ versions are not too far off, they will work. And the headers
+ provided in libc5-dev (and libc6-dev) are just that. 
+
+	 The solution is to separate out the two sets of header files:
+ the kernel uses one frequently changing set, and a set of headers is
+ provided from a known good kernel version, which is tested, known to
+ be stable, and that is sufficient for compiling most programs, (it
+ also makes the compile time environments for programs on Debian
+ machines a well known one, easing the process of dealing with problem
+ reports).
+
+			Debian's libc5 method
+                        ======== ===== ======
+
+	It was decided, then, to have libc5 development package include
+ files found one specific kernel-sources to insulate most systems from
+ the vagaries of bleeding edge kernel sources, and to prevent subtle
+ breakage introduced by the difference in the headers a program is
+ compiled versus headers the libc was compiled with. As mentioned
+ before, most programs are not coupled tightly enough to kernel data
+ structures, and would continue to work even if the user upgrades the
+ kernel (and presumably the libc development package is not allowed to
+ lag too far behind current kernels).
+
+        There are two different capabilities which are the issue, and
+ the kernel-packages and libc5-dev address different ones:
+
+ a) The kernel packages try to provide a stable, well behaved kernel
+    and modules, and may be upgraded whenever there are significant
+    advances in those directions (bug fixes, more/better module
+    support, etc).  These, however, may not have include files that
+    are non-broken as far as non-kernel programs are concerned, and
+    the quality of the development/compilation environment is not the
+    kernel packages priority (Also, please note that the kernel
+    packages are tied together, so kernel-source, headers, and image
+    are produced in sync)
+
+ b) Quality of the development/compilation environment is the priority
+    of libc development package, and it tries to ensure that the headers it
+    provides would be stable and not break non-kernel programs. This
+    assertion may fail for alpha kernels, which may otherwise be
+    perfectly stable, hence the need for a different set of known-good
+    kernel include files.
+
+		   Shortcoming of the libc5 method
+                   =========== == === ===== ======
+
+	Unfortunately, the proposal for libc5 is beginning to unravel
+ at the edges, since Debian is going truly multi-architecture (and there
+ are murmurs of multi-OS Debian). 
+
+	The reason I say that the solution is unraveling at the edges
+ is that the kernel header files are getting to be quite architecture
+ dependent. We still want to make libc6-dev include headers from a
+ well known stable kernel source. But there is no one set of headers
+ to install, since different architectures need different (sometimes
+ radically different) files. 
+
+	If libc development packages continued to include kernel
+ headers explicitly, we would need different headers for different
+ architectures, resulting in libc6-dev-i386, libc6-dev-m68k, et. al.
+ Or we could maintain all the files in libc6-dev as a set of (quite
+ large) arch dependent patches. But those files are precisely the
+ files contained in kernel-headers-2.0.32.
+
+	Even in the case of more than one architecture sharing a
+ common kernel-header file set, all I say is that this invariant is
+ not guaranteed for any future releases. Kernel headers need not be the
+ same for any two given architectures. Any solution would do well to
+ address that.
+
+	However, the following still remains true: the libc
+ development packages should include a static, stable, tested, known
+ good kernel headers to insulate developers from the vagaries of
+ unstable kernel headers (and the subtler pitfall of compiling with
+ headers that do not match the libc being linked with).
+
+			Debian's libc6 method
+                        ======== ===== ======
+
+	The current solution is a variant of the original, bad,
+ symlink solution. The variation is that we link to header files from
+ a specific kernel version, namely 2.0.32, which are the headers that
+ libc was compiled with. Whereas we used to link to any old kernel in
+ the original libc5 symlink, the new libc6 symlink is to
+ /usr/src/linux-2.0.32, which is a symbolic link that holds headers
+ from a *static, well known*, *supported*, tested kernel version, and
+ we let the kernel-headers package handle architecture dependencies
+ (which it had to anyway).
+
+	One should also consider that the libc maintainer has enough
+ on their plates, and should not be expected to be responsible for the
+ creation and testing of the arch dependent diffs.
+
+	Coupled with the fact that the afore-mentioned diffs are
+ exactly what is there in kernel-headers package, it exists already,
+ and requires no work on the part of the libc maintainer.
+
+        So, a dependency was created on kernel headers rather than
+ create kernel header sized architecture dependent diffs. The
+ dependency is such that it libc6-dev links to the directory
+ /usr/src/linux-2.0.32. This link is provided by just the packages
+ kernel-source-2.0.32 or kernel-headers-2.0.32, and *no other* kernel
+ package! So, libc6-dev depends can now provide 2.0.32 kernel headers
+ *for all architectures*, with no messy architecture dependent
+ patches, we always have fixed, static, known good headers in
+ /usr/include/{linux,asm}, and this is goodness.
+
+        This is a working technical solution to having libc
+ development package contain/depend on a well known static set of
+ kernel headers (insulating the vast majority of programs that are not
+ closely tied to kernel version specific internal data structures),
+ while allowing the kernel headers to vary from architecture to
+ architecture, and still allowing device driver authors from having
+ any set of kernel headers they want on the machine through the simple
+ artifice of adding a -I flag to the compilation flags.
+
+	Indeed, had we thought of the current solution in libc5
+ days it would have been cleaner (and produced less confusion now).
+ The solution of having libc5-dev depend on kernel-headers-X.XX.XX
+ wold have worked just as well in the libc5 case as it is in the libc6
+ case.  I don't see a change in the situation, just a switch to an
+ equivalent, possibly cleaner, solution.  If we had had libc5-dev
+ depend on kernel-headers, then there wouldn't be the argument that
+ there is now.  
+
+  Authors response to complaints that Debian is doing it's own thing
+  ======= ======== == ========== ==== ====== == ===== ==== === =====
+
+       Yes, Debian is different. It has a package management
+ system. Different part of Debian work with each other. There are
+ assumptions part of the distribution make about itself, and because
+ of this set of co-operating assumptions, or rules, or policy, Debian
+ is better integrated than most Linux distributions I have seen. 
+
+        We often do not do things the "standard" way. Like when we
+ started including /usr/include/{linux,asm} directories instead of
+ having symlinks. It is different. And was acknowledged to be
+ technically superior. 
+
+        Again, we are making changes that shall not be reflected in
+ other distributions. I think we are making the technically superior
+ choice. But we shall be different again.
+
+       I think this solution works, and is an elegant solution.
+
+______________________________________________________________________
+
+			      Appendix A
+                              ======== =
+
+        This document contains comments from Linus Torvalds (made in
  an ``off-the-cuff'' personal email) to help clarify the rationale
  behind the Debian way of handling symlinks, but this should not be
  seen as an official policy statement by Linus. I'm attaching a
  disclaimer in his own words.
 
-	The only reason that Linus's message is quoted in here is that
+        The only reason that Linus's message is quoted in here is that
  he can explain the technical reasons with far more lucidity than I
  can, and now that I have permission to include his mail, I am
  removing most of my far less facile efforts in that regard. 
+
+
+	Need for isolating the C development Library from volatile
+	kernel headers
 
 ----------------------------------------------------------------------------
 >> "David" == David Engel <david@sw.ods.com> said on Mon, 24 Feb 1997
@@ -39,16 +281,6 @@ Linus> circulated it shouldn't be seen as a "official" document in any
 Linus> way..
 Linus> Linus
 ---------------------------------------------------------------------------
-
-        The headers were included in libc5-dev after a rash of very
- buggy alpha kernel releases (1.3.7* or something like that) that
- proceeded to break compilations, etc.  Kernel versions are changed
- far more rapidly than libc is, and there are higher chances that
- people install a custom kernel than they install custom libc.
-
-	libc6 includes it's own version of /usr/include/linux and
- friends form the beginning (that is, this is no longer a Debian only
- feature, the upstream version has moved to this scheme as well).
 
 >> "Linus" == Linus Torvalds said on Wed, 22 Jan 1997:
 
@@ -83,7 +315,7 @@ Linus> larger in the kernel, exactly _because_ of the damn
 Linus> sym-links. If I just make NR_OPEN larger (the right thing to
 Linus> do), the problem is that people with old libraries will now
 Linus> compile against a header file that doesn't match the library
-Linus> any more. And when the library internally uses another NR_OPEN
+Linus> any more. And when the library internally uses another  NR_OPEN
 Linus> than the new program does, "interesting" things happen.
 
 Linus> In contrast, with separate header files, this doesn't make any
@@ -155,47 +387,4 @@ Linus> Anyway, something like the patch that David suggested will
 Linus> certainly go in, although I suspect I'll wait for it to become
 Linus> "standard" and the glibc first real release to take place.
 
-
-        Add to that the fact that few programs really need the more
- volatile elements of the header files (that is, things that really
- change from kernel version to kernel version), [before you reject
- this, consider: programs compiled on one kernel version usually work
- on other kernels].
-
-        So, it makes sense that a set of headers be provided from a
- known good kernel version, and that is sufficient for compiling most
- programs, (it also makes the compile time environments for programs
- on Debian machines a well known one, easing the process of dealing
- with problem reports), the few programs that really depend on cutting
- edge kernel data structures may just use -I/usr/src/linux/include
- (provided that kernel-headers or kernel-source exists on the system).
-
-        Most programs, even if they include <linux/something.h>, do
- not really depend on the version of the kernel, as long as the kernel
- versions are not too far off, they will work. And the headers
- provided in libc5-dev (and libc6-dev) are just that. 
-
-        libc5-dev is uploaded frequently enough that it never lags too
- far behind the latest released kernel. libc6 has totally disconnected
- the included headers from kernel headers.
-
-        There are two different capabilities which are the issue, and
- the kernel-packages and libc{5,6}-dev address different ones:
-
- a) The kernel packages try to provide a stable, well behaved kernel
-    and modules, and may be upgraded whenever there are significant
-    advances in those directions (bug fixes, more/better module
-    support, etc).  These, however, may not have include files that
-    are non-broken as far as non-kernel programs are concerned, and
-    the quality of the development/compilation environment is not the
-    kernel packages priority (Also, please note that the kernel
-    packages are tied together, so kernel-source, headers, and image
-    are produced in sync)
-
- b) Quality of the development/compilation environment is the priority
-    of libc{5,6}-dev package, and it tries to ensure that the headers it
-    provides would be stable and not break non-kernel programs. This
-    assertion may fail for alpha kernels, which may otherwise be
-    perfectly stable, hence the need for a different set of known-good
-    kernel include files.
 
