@@ -5,9 +5,9 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Mon Nov 10 21:11:08 2003
+## Last Modified On : Fri Dec  5 02:38:40 2003
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 623
+## Update Count	    : 636
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
@@ -273,7 +273,7 @@ ifneq ($(strip $(filter ppc powerpc,$(architecture))),)
     kimage := zImage
     target = $(kimage)
     kimagesrc = arch/$(KERNEL_ARCH)/boot/images/zImage.pplus
-    kimagedest = $(INT_IMAGE_DESTDIR)/zImage.pplus-$(version)
+    kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
   endif
 
   ifneq (,$(findstring $(KPKG_SUBARCH),MBX mbx))
@@ -580,10 +580,10 @@ EXTRAV_ARG :=
 endif
 
 UTS_RELEASE_VERSION=$(shell if [ -f include/linux/version.h ]; then                  \
-                             grep 'define UTS_RELEASE' include/linux/version.h |   \
-                             perl -nle  'm/^\s*\S+\s*\S*\s*\"?([^\"]+)/g && print $$1;';\
-                            else echo "" ;                                           \
-                            fi)
+                 grep 'define UTS_RELEASE' include/linux/version.h |   \
+                 perl -nle  'm/^\s*#define\s+UTS_RELEASE\s+("?)(\S+)\1/g && print $$2;';\
+                 else echo "" ;                                           \
+                 fi)
  
 version = $(VERSION).$(PATCHLEVEL).$(SUBLEVEL)$(EXTRAVERSION)$(iatv)$(INT_FLAV)
 
@@ -1060,7 +1060,7 @@ fleshed_out    :=$(foreach mod,$(no_path_modules),$(MODULE_LOC)/$(mod))
 canonical_modules:=$(path_modules) $(fleshed_out)
 # test to see if the dir names are real
 valid_modules = $(shell for dir in $(canonical_modules); do \
-                            if [ -d $$dir ]; then           \
+                            if [ -d $$dir && -x $$dir/debian/rules ]; then \
                                echo $$dir;                  \
                             fi;                             \
                         done)
@@ -1156,8 +1156,28 @@ old_applied_patches=$(shell if [ -f applied_patches ]; then                   \
                             fi )
 
 ifeq ($(strip $(valid_unpatches)),)
-ifneq ($(strip $(old_applied_patches)),)
-valid_unpatches=$(old_applied_patches)
+ifneq ($(strip $(old_applied_patches)),) 
+old_unpatches=$(shell new="";                                          \
+                      for name in $(notdir $(old_applied_patches)); do \
+                          new="$$name $$new";                          \
+                      done;                                            \
+                      echo $$new;)
+temp_old_unpatches = $(shell for name in $(old_unpatches); do         \
+                            if [ -x $(VERSIONED_DIR_PATCH_UNPATCH)/$$name ];  \
+                              then echo $(VERSIONED_DIR_PATCH_UNPATCH)/$$name;\
+                            elif [ -x $(VERSIONED_ALL_PATCH_UNPATCH)/$$name ];\
+                              then echo $(VERSIONED_ALL_PATCH_UNPATCH)/$$name;\
+                            elif [ -x $(DIR_PATCH_UNPATCH)/$$name ]; then     \
+                               echo $(DIR_PATCH_UNPATCH)/$$name;              \
+                            elif [ -x $(ALL_PATCH_UNPATCH)/$$name ]; then     \
+                               echo $(ALL_PATCH_UNPATCH)/$$name;              \
+                            else                                              \
+                               echo $$name.error;                             \
+                            fi;                                               \
+                        done)
+temp_old_unpatch_not_found = $(filter %.error, $(temp_old_unpatches))
+old_unpatch_not_found = $(subst .error,,$(temp_unpatch_not_found))
+valid_unpatches = $(filter-out %.error, $(temp_old_unpatches))
 endif
 endif
 
@@ -1292,10 +1312,13 @@ ifneq ($(strip $(shell egrep ^[^\#]*CONFIG_MODULES $(CONFIG_FILE))),)
 	$(MAKE) $(do_parallel) $(EXTRAV_ARG) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) \
 	                    $(CROSS_ARG) modules
 endif
-	COLUMNS=150 dpkg -l gcc perl dpkg 'libc6*' binutils ldso make dpkg-dev |\
+	COLUMNS=150 dpkg -l 'gcc*' perl dpkg 'libc6*' binutils ldso make dpkg-dev |\
          awk '$$1 == "ii" { printf("%s-%s\n", $$2, $$3) }'   > debian/buildinfo
 	@echo this was built on a machine with the kernel: >> debian/buildinfo
 	uname -a >> debian/buildinfo
+	echo using the compiler: >> debian/buildinfo
+	grep LINUX_COMPILER include/linux/compile.h | \
+           sed -e 's/.*LINUX_COMPILER "//' -e 's/"$$//' >> debian/buildinfo
 	echo done >  $@
 
 buildpackage: clean stamp-buildpackage
@@ -1336,9 +1359,9 @@ ifneq ($(strip $(valid_patches)),)
           if test -x  $$patch; then                    \
               if $$patch; then                         \
                   echo "Patch $$patch processed fine"; \
-		  echo "$$patch" >> applied_patches;   \
+		  echo "$(notdir $$patch)" >> applied_patches;   \
               else                                     \
-                   echo "Patch $$patch  failed.";      \
+                   echo "Patch $(notdir $$patch)  failed.";      \
                    echo "Hit return to Continue";      \
 		   read ans;                           \
               fi;                                      \
@@ -1397,7 +1420,10 @@ endif
 	   install -p -m 755 $(DEBDIR)/rules debian/rules
 	echo done >  $@
 
-conf.vars:
+# We could always do $(MAKE) -n -p dummy | grep ^CC >> .mak here if we cared
+ifeq ($(strip $(INCLUDE_KERNEL_MAKEFILE)),yes)
+include Makefile
+conf_vars:
 	@echo "VERSION          = $(VERSION)"        > .mak
 	@echo "PATCHLEVEL       = $(PATCHLEVEL)"    >> .mak
 	@echo "SUBLEVEL 	      = $(SUBLEVEL)"      >> .mak
@@ -1424,7 +1450,14 @@ endif
 	@echo "CFLAGS           = $(CFLAGS)"        >> .mak
 	@echo "AFLAGS           = $(AFLAGS)"        >> .mak
 	@echo "MODFLAGS 	      = $(MODFLAGS)"      >> .mak
-	@mv -f .mak $@
+	@echo "do_parallel      = $(do_parallel)"   >> .mak
+	@echo "fast_dep         = $(fast_dep)"      >> .mak
+	@sed -e 's%$(TOPDIR)%$$(TOPDIR)%g' .mak     > $@
+	@rm -f .mak
+else
+conf.vars: Makefile
+	$(MAKE) -f debian/rules INCLUDE_KERNEL_MAKEFILE=yes conf_vars
+endif
 
 dummy_do_dep:
 	+$(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) \
@@ -1880,6 +1913,7 @@ ifneq ($(strip $(KERNEL_CROSS)),)
 	mv System.precious System.map
 endif
 endif
+	-depmod -q -FSystem.map -b $(IMAGE_TOP) $(version)
 endif
 	if test -d $(SRCTOP)/debian/image.d ; then                            \
              IMAGE_TOP=$(IMAGE_TOP) version=$(version)                        \

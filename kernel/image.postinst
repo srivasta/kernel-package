@@ -5,9 +5,9 @@
 # Created On       : Sat Apr 27 05:55:26 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Fri Oct 31 10:36:58 2003
+# Last Modified On : Fri Dec  5 02:16:30 2003
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 253
+# Update Count     : 255
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
@@ -226,14 +226,21 @@ my ($loaderloc) = grep -x, map "$_/$loader_exec",
 ## Fix the build link
 ######################################################################
 sub fix_build_link {
+  return unless -d "/lib/modules/$version";
   if ($relink_build_link || $force_build_link) {
     my $build_target;
     if (-l "/lib/modules/$version/build") {
       $build_target = readlink "/lib/modules/$version/build";
     }
+    else {
+      return;
+    }
     if (!defined($build_target)) { # Danglink link
-      warn "error reading /lib/modules/$version/build :$!\n";
-      warn "Deleting /lib/modules/$version/build\n";
+      warn qq(
+ Hmm. The package shipped with a symbolic link /lib/modules/$version/build
+ However, I can't read it: $!
+ Therefore, I am deleting /lib/modules/$version/build\n
+);
       if ($force_build_link || -d "/usr/src/kernel-headers-$version") {
 	my $num = unlink "/lib/modules/$version/build";
 	if ($num != 1) {
