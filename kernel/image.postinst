@@ -205,6 +205,10 @@ if (! -d "$image_dest") {
 
 # sanity
 if (!($do_bootfloppy || $do_bootloader)) {  $do_boot_enable = ''; }
+if ($do_symlink && $no_symlink) {
+  warn "Both do_symlinks and no_symlinks options enabled; disabling no_symlinks\n";
+  $no_symlink = 0;
+}
 
 # Official powerpc images may silently upgrade
 if ($official_image =~ /^\s*YES\s*$/o && $arch =~ m/powerpc/) {
@@ -661,7 +665,8 @@ sub image_magic {
               $have_conffile = "Yes";
             }
         }
-      if ($do_symlink =~ /Yes/i)
+
+      if (! $no_symlink && $do_symlink =~ /Yes/i)
         {
           if ($reverse_symlink)
             {
@@ -699,13 +704,11 @@ sub image_magic {
             }
         }
     }
-  elsif ($no_symlink)
+  elsif (-e "$kimage" && $no_symlink)# OK, $kimage exists -- but is not a link
     {           # Maybe /$image_dest is on a dos system?
-      if (-e "$kimage")
-        {
-          rename("$kimage", "$kimage.$$") ||
-            die "failed to move " . $image_dest . "$kimage:$!";
-        }
+      rename("$kimage", "$kimage.$$") ||
+        die "failed to move " . $image_dest . "$kimage:$!";
+
       my $ret = system("cp -a --backup=t " . $realimageloc
                        . "$kimage-$version " . "$kimage");
 
@@ -719,13 +722,10 @@ sub image_magic {
       # Ok, now we may clobber the previous .old files
       if (-e "$kimage.$$") { rename("$kimage.$$", "$kimage.old");  }
     }
-  elsif ($reverse_symlink)
+  elsif (-e "$kimage" && $reverse_symlink)
     {  # Maybe /$image_dest is on a dos system?
-      if (-e "$kimage")
-        {
-          rename("$kimage", "$kimage.$$") ||
-            die "failed to move " . $image_dest . "$kimage:$!";
-        }
+      rename("$kimage", "$kimage.$$") ||
+        die "failed to move " . $image_dest . "$kimage:$!";
       my $ret = system("mv -f " . $realimageloc . "$kimage-$version "
                        . $image_dest . "$kimage");
       if ($ret)
