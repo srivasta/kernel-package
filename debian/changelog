@@ -3,7 +3,7 @@ kernel-package (3.65) unstable; urgency=low
   * Rewrote /vmlinuz as symlink handling in image.postinst. This should
     correctly handle the bug. closes: Bug#19473
 
- --
+ -- Manoj Srivastava <srivasta@debian.org>  Wed, 11 Mar 1998 14:02:14 -0600
 
 kernel-package (3.64) unstable; urgency=low
 
