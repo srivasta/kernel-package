@@ -1,3 +1,11 @@
+kernel-package (3.35) unstable; urgency=low
+
+  * Preserve owner when copying the config file around. This fixes
+    BUG#11022. 
+  * Added final newline in the control file. This fixes BUG#11024.
+
+ -- Manoj Srivastava <srivasta@debian.org>  Sun,  6 Jul 1997 22:04:22 -0500
+
 kernel-package (3.34) unstable; urgency=low
 
   * Ran spell check on the README file.

@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.4 1997/06/25 07:33:28 srivasta Exp $
+## $Id: rules,v 1.5 1997/07/07 03:06:24 srivasta Exp $
 ###############################################################################
 
 # Please change the maintainer information, as well as the debian version
@@ -210,7 +210,7 @@ stamp-configure: .config
 
 clean:
 	rm -f $(FILES_TO_CLEAN) $(STAMPS_TO_CLEAN)
-	cp -f .config config.precious
+	cp -pf .config config.precious
 	-test -f Makefile && make distclean
 	mv -f config.precious .config
 	rm -rf $(DIRS_TO_CLEAN)
