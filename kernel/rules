@@ -5,9 +5,9 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Mon Sep 27 15:38:11 2004
+## Last Modified On : Mon Sep 27 23:38:00 2004
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count	    : 705
+## Update Count	    : 708
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
@@ -2014,9 +2014,9 @@ ifneq ($(strip $(KERNEL_CROSS)),)
 	mv System.precious System.map
 endif
 endif
-	test ! -e $(IMAGE_TOP)/lib/modules/$(version)/source ||
+	test ! -e $(IMAGE_TOP)/lib/modules/$(version)/source ||                        \
 	   mv $(IMAGE_TOP)/lib/modules/$(version)/source ./debian/source-link
-	test ! -e $(IMAGE_TOP)/lib/modules/$(version)/build ||
+	test ! -e $(IMAGE_TOP)/lib/modules/$(version)/build ||                         \
 	   mv $(IMAGE_TOP)/lib/modules/$(version)/build ./debian/build-link
 ifeq ($(strip $(KERNEL_ARCH)),um)
 	-depmod -q -FSystem.map -b $(IMAGE_TOP) \
@@ -2024,9 +2024,9 @@ ifeq ($(strip $(KERNEL_ARCH)),um)
 else
 	-depmod -q -FSystem.map -b $(IMAGE_TOP) $(version); 
 endif
-	test ! -e ./debian/source-link ||
+	test ! -e ./debian/source-link ||                                              \
 	   mv ./debian/source-link $(IMAGE_TOP)/lib/modules/$(version)/source 
-	test ! -e  ./debian/build-link ||
+	test ! -e  ./debian/build-link ||                                              \
 	   mv  ./debian/build-link $(IMAGE_TOP)/lib/modules/$(version)/build
 
 endif
@@ -2063,9 +2063,9 @@ endif
                         $(INT_IMAGE_DESTDIR)/patches-$(version)
 ifneq ($(strip $(KERNEL_ARCH)),um)
 	test ! -f System.map ||  cp System.map                         \
-                        $(INT_IMAGE_DESTDIR)/System.map-$(version);    \
+                        $(INT_IMAGE_DESTDIR)/System.map-$(version);    
 	test ! -f System.map ||  chmod 644                             \
-                        $(INT_IMAGE_DESTDIR)/System.map-$(version);    \
+                        $(INT_IMAGE_DESTDIR)/System.map-$(version);    
 else
 	mv $(INSTALL_MOD_PATH)/lib/modules/* $(IMAGE_TOP)/usr/share/kernel-uml/modules/ -v
 	rm -rf $(INSTALL_MOD_PATH)/lib
