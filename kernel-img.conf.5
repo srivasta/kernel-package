@@ -21,7 +21,7 @@
 .\" Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139,
 .\" USA.
 .\"
-.\" $Id: kernel-img.conf.5,v 1.18 2002/04/12 20:03:33 srivasta Exp $
+.\" $Id: kernel-img.conf.5,v 1.19 2002/09/01 01:15:03 srivasta Exp $
 .\"
 .TH KERNEL\-IMG.CONF 5 "Mar 21 2000" "Debian" "Debian GNU/Linux manual" 
 .\" NAME should be all caps, SECTION should be 1-8, maybe w/ subsection
@@ -53,13 +53,15 @@ and stashes the answer into
 .PP
 At the moment, the user modifiable variables supported are:
 .TP
-.B image_in_boot
-Set to Yes if you want the kernel image 
+.B link_in_boot 
+Set to Yes if you want the symbolic link to the kernel image, namely, 
 .I vmlinuz 
 in 
 .I /boot 
 rather than the default 
 .I /.  
+The old, and very confusing, name image_in_boot is deprecated, since
+it is the symbolic link that is usually being relocated. 
 Defaults to No.
 .TP
 .B do_symlinks
@@ -99,12 +101,14 @@ file.
 Mutually exclusive to 
 .I reverse_symlinks. 
 Can be used with
-.I image_in_boot. 
-If set to Yes, the image is placed in vmlinuz (instead of /boot/vmlinuz-X.X.XX).
-The old vmlinuz is moved to vmlinuz.old unconditionally. (Normally, that
-is only done if the version of the new image differs from the old
-one). This restricts you to two images, unless you take additional
-action and save copies of older images. This is for people who have
+.I link_in_boot (image_in_boot).
+If set to Yes, the real image is placed in vmlinuz (instead of
+/boot/vmlinuz-X.X.XX). If you use link_in_boot in conjunction with
+this, /boot/vmlinuz-X.X.XX is moved to /boot/vmlinuz.  The old vmlinuz
+is moved to vmlinuz.old unconditionally. (Normally, that is only done
+if the version of the new image differs from the old one). This
+restricts you to two images, unless you take additional action and
+save copies of older images. This is for people who have
 .I /boot 
 on a system that does not use symbolic links (and say, they use
 loadlin as a bootloader). This is a Hack.
@@ -118,7 +122,7 @@ file.
 Mutually exclusive to 
 .I no_symlinks.
 Can be used with
-.I image_in_boot.
+.I link_in_boot (image_in_boot).
 Just like 
 .I no_symlinks, 
 except that the
@@ -146,13 +150,13 @@ users, who may set both this and
 Defaults to 
 .I /.
 This can be used in conjunction with all above options except
-.B image_in_boot,
+.B link_in_boot (image_in_boot),
 which would not make sense. (If both 
 .B image_dest 
 and 
-.B image_in_boot
+.B link_in_boot (image_in_boot)
 are set, 
-.B image_in_boot
+.B link_in_boot (image_in_boot)
 overrides)
 .TP
 .B postinst_hook 

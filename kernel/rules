@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.181 2002/08/18 09:05:18 srivasta Exp $
+## $Id: rules,v 1.182 2002/09/01 01:15:04 srivasta Exp $
 ###############################################################################
 
 ifdef KPKG_ARCH
@@ -46,7 +46,7 @@ pgp=$(maintainer)
 
 #  Package specific stuff
 # decide if image is meant to be in /boot rather than /
-image_in_boot :=
+link_in_boot :=
 # Can we use symlinks?
 no_symlink :=
 # If so, where is the real file (usually, vmlinuz-X.X.X is real, and
@@ -710,7 +710,11 @@ endif
 endif
 
 ifneq ($(strip $(IMAGE_IN_BOOT)),)
-image_in_boot := $(IMAGE_IN_BOOT)
+link_in_boot := $(IMAGE_IN_BOOT)
+endif
+
+ifneq ($(strip $(LINK_IN_BOOT)),)
+link_in_boot := $(LINK_IN_BOOT)
 endif
 
 ifneq ($(strip $(NO_SYMLINK)),)
@@ -820,7 +824,9 @@ endif
 
 endif
 
-
+ifneq ($(strip $(SOURCE_CLEAN_HOOK)),)
+source_clean_hook=$(SOURCE_CLEAN_HOOK)
+endif
 
 ifneq ($(strip $(INITRD)),)
 initrddep := initrd-tools (>= 0.1.1), # there is a space here
@@ -1358,6 +1364,10 @@ real_stamp_source:
            $(install_file) README.Debian $(SOURCE_DOC)/README.Debian.1st; \
 	   gzip -9qf                     $(SOURCE_DOC)/README.Debian.1st;\
 	fi
+ifneq ($(strip $(source_clean_hook)),)
+	(cd $(SOURCE_SRC);              \
+               test -x $(source_clean_hook) && $(source_clean_hook))
+endif
 	chmod -R og=rX $(SOURCE_TOP)
 	chown -R root.root $(SOURCE_TOP)
 	(cd $(SOURCE_TOP)/usr/src/; \
@@ -1501,13 +1511,13 @@ endif
 	$(make_directory) $(IMAGE_TOP)/DEBIAN
 	$(make_directory) $(IMAGE_TOP)/$(IMAGEDIR)
 	$(make_directory) $(IMAGE_DOC)
-	sed -e 's/=V/$(version)/g'    -e 's/=B/$(image_in_boot)/g'   \
+	sed -e 's/=V/$(version)/g'    -e 's/=B/$(link_in_boot)/g'   \
             -e 's/=S/$(no_symlink)/g' -e 's/=R/$(reverse_symlink)/g' \
             -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \
             -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'        \
              $(DEBDIR)/image.postinst > $(IMAGE_TOP)/DEBIAN/postinst
 	chmod 755 $(IMAGE_TOP)/DEBIAN/postinst
-	sed -e 's/=V/$(version)/g'    -e 's/=B/$(image_in_boot)/g'   \
+	sed -e 's/=V/$(version)/g'    -e 's/=B/$(link_in_boot)/g'   \
             -e 's/=S/$(no_symlink)/g' -e 's/=R/$(reverse_symlink)/g' \
             -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \
             -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'        \

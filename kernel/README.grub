@@ -9,7 +9,7 @@ perfect on my system with the following kernel-package configuration:
 
 ,----
 | $ cat /etc/kernel-img.conf
-| image_in_boot = yes
+| link_in_boot = yes
 | do_symlinks = yes
 | no_symlinks = no
 | relative_links = yes

@@ -1,5 +1,5 @@
 
-    $Id: README,v 1.51 2002/05/30 16:51:02 srivasta Exp $
+    $Id: README,v 1.52 2002/09/01 01:15:03 srivasta Exp $
 
 This is the Debian GNU/Linux packaging scripts for the Linux kernel. 
 This package has been put together by Manoj Srivastava <srivasta@debian.org>.
@@ -276,9 +276,9 @@ debian 		The Debian revision of the kernel packages. Can be set
 		from the environment variable DEBIAN_REVISION. Defaults
 		to 1.0.
 
-image_in_boot	Set to True if you want the kernel image symlink (vmlinuz)
+link_in_boot	Set to True if you want the kernel image symlink (vmlinuz)
                 in /boot rather than the default /. Can be set from the
-		environment variable IMAGE_IN_BOOT. Defaults to
+		environment variable LINK_IN_BOOT. Defaults to
 		undefined. 
 
 kimage		The kernel image type (i.e. zImage or bzImage). Can be
@@ -286,7 +286,7 @@ kimage		The kernel image type (i.e. zImage or bzImage). Can be
 		to bzImage.
 
 no_symlinks     Mutually exclusive to reverse_symlinks Can be used with
-                image_in_boot. The image is placed in vmlinuz (instead
+                link_in_boot. The image is placed in vmlinuz (instead
                 of /boot/vmlinuz-X.X.XX). The old vmlinuz is moved to
                 vmlinuz.old unconditionally. (Normally, that is only
                 done if the version of the new image differs from the
@@ -297,7 +297,7 @@ no_symlinks     Mutually exclusive to reverse_symlinks Can be used with
                 This is a Hack.
 
 reverse_symlinks Mutually exclusive to no_symlinks. Can be used with
-                image_in_boot. Just like no_symlinks, except that the
+                link_in_boot. Just like no_symlinks, except that the
                 /boot/vmlinuz-X.XX is symlinked to the real new
                 image, vmlinuz. This too restricts you to just two
                 images unless further action is taken. The older
@@ -313,9 +313,9 @@ image_dest    If  you  want  the  symbolic  link  (or  image,  if
               boolean variable.  This may be of help  to  loadlin
               users,  who  may  set  both  this  and  move_image.
               Defaults to /. This can be used in conjunction with
-              all above options except image_in_boot, which would
+              all above options except link_in_boot, which would
               not   make   sense.   (If   both   image_dest   and
-              image_in_boot are set, image_in_boot overrides).
+              link_in_boot are set, link_in_boot overrides).
 
 patch_the_kernel This is an experts only variable. If set to YES (ENV
                  variable PATCH_THE_KERNEL overrides this), the build
@@ -380,7 +380,7 @@ script asks the user whether the symbolic link should be created, and
 stashes the answer into /etc/kernel-img.conf
 
 no_symlinks     Mutually exclusive to reverse_symlinks Can be used with
-                image_in_boot. The image is placed in vmlinuz (instead
+                link_in_boot. The image is placed in vmlinuz (instead
                 of /boot/vmlinuz-X.X.XX). The old vmlinuz is moved to
                 vmlinuz.old unconditionally. (Normally, that is only
                 done if the version of the new image differs from the
@@ -391,7 +391,7 @@ no_symlinks     Mutually exclusive to reverse_symlinks Can be used with
                 This is a Hack.
 
 reverse_symlinks Mutually exclusive to no_symlinks. Can be used with
-                image_in_boot. Just like no_symlinks, except that the
+                link_in_boot. Just like no_symlinks, except that the
                 /boot/vmlinuz-X.XX is symlinked to the real new
                 image, vmlinuz. This too restricts you to just two
                 images unless further action is taken. The older
@@ -414,7 +414,7 @@ do_symlinks   By  default,  the  kernel  image  post installation
               means of booting their machines, and do not like the
               symbolic links cluttering up their / directory.
 
-image_in_boot	Set to True if you want the kernel image symlink
+link_in_boot	Set to True if you want the kernel image symlink
                 (vmlinuz) in /boot rather than the default /.
                 Defaults to undefined. 
 
@@ -425,9 +425,9 @@ image_dest    If  you  want  the  symbolic  link  (or  image,  if
               Boolean variable.  This may be of help  to  loadlin
               users,  who  may  set  both  this  and  move_image.
               Defaults to /. This can be used in conjunction with
-              all above options except image_in_boot, which would
+              all above options except link_in_boot, which would
               not   make   sense.   (If   both   image_dest   and
-              image_in_boot are set, image_in_boot overrides).
+              link_in_boot are set, link_in_boot overrides).
 
 move_image    Instead  of  creating  symbolic  links  to  (or, if
               reverse_symlinks  is  set,  from)  image_dest,  the

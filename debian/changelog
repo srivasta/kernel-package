@@ -1,3 +1,21 @@
+kernel-package (8.008) unstable; urgency=low
+
+  * Hack ake-kpkg so that a clean command by itself always sets debian
+    revision, optionally reading from the changelog if it exists. This is
+    a hack meant for people who have set options to make the debian
+    revisions mandatory, but call clean on a pristince source directory.
+    This then overrides whatever is in the conf file, but that should not
+    matter, since we are just going to clean anyway.         closes: Bug#155749
+  * Provide for means of setting up hook scripts that are run while
+    packaging the sourc, and can poiunt to executable that massage the
+    source tree before packaging. Can be used, for example, to get rid of
+    version control trees, rune away unwanted architectures, etc. 
+                                                             closes: Bug#157128
+  * Clarified the option inage_on_boot. The new name is going to be
+    link_in_boot.
+
+ -- Manoj Srivastava <srivasta@debian.org>  Sat, 31 Aug 2002 20:14:44 -0500
+
 kernel-package (8.007) unstable; urgency=low
 
   * Change CONFIG_PSMOUSE to y instead of m for the lone config file that

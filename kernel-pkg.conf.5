@@ -21,7 +21,7 @@
 .\" Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139,
 .\" USA.
 .\"
-.\" $Id: kernel-pkg.conf.5,v 1.29 2002/05/30 16:51:02 srivasta Exp $
+.\" $Id: kernel-pkg.conf.5,v 1.30 2002/09/01 01:15:03 srivasta Exp $
 .\"
 .TH KERNEL\-PKG.CONF 5 "Jan  7 1997" "Debian" "Debian GNU/Linux manual" 
 .\" NAME should be all caps, SECTION should be 1-8, maybe w/ subsection
@@ -104,15 +104,15 @@ are set, then not providing a debian revision results in an error (and
 .B make-kpkg
 shall not provide a default vvalue of 1.0.0.Custom)
 .TP
-.B image_in_boot
-Set to True if you want the kernel image 
+.B link_in_boot
+Set to True if you want the symbolic link to the kernel image, namely, 
 .I vmlinuz 
 in 
 .I /boot 
 rather than the default 
 .I /.  
 Can be overridden by the environment variable
-.B IMAGE_IN_BOOT. 
+.B LINK_IN_BOOT. 
 Defaults to undefined.
 (Optional)
 .TP
@@ -138,7 +138,7 @@ file. Can be overridden by the environment variable
 Mutualy exclusive to 
 .I reverse_symlinks. 
 Can be used with
-.I image_in_boot. 
+.I link_in_boot. 
 The image is placed in vmlinuz (instead of /boot/vmlinuz-X.X.XX). The
 old vmlinuz is moved to vmlinuz.old unconditionally. (Normally, that
 is only done if the version of the new image differes from the old
@@ -158,7 +158,7 @@ file. Can be overridden by the environment variable
 Mutualy exclusive to 
 .I no_symlinks.
 Can be used with
-.I image_in_boot.
+.I link_in_boot.
 Just like 
 .I no_symlinks, 
 except that the
@@ -244,6 +244,14 @@ kernel source tree after building the kernel image package. The
 environment variable 
 .B CLEAN_SOURCE
 overrides this.
+.TP 
+.B source_clean_hook
+Set to point to an executable, this shall cause that executable to run
+from the top level of the kernel source tree before the sources are
+packaged. This has no effect on anything other than the kernel sources
+that are being packaged. This is to facilitate massaging of the kernel
+sources that are packaged (for example, to remove version control
+directories, or to prune away unwanted architectures).
 .TP
 .B extra_docs
 This variable should be set to the path of any extra documentation

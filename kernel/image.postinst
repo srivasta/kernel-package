@@ -12,7 +12,7 @@
 # HISTORY          :
 # Description      :
 #
-#    $Id: image.postinst,v 1.110 2002/08/10 15:53:16 srivasta Exp $
+#    $Id: image.postinst,v 1.111 2002/09/01 01:15:04 srivasta Exp $
 #
 
 #
@@ -22,7 +22,7 @@ $|=1;
 
 # Predefined values:
 my $version         = "=V";
-my $image_in_boot   = "=B";	# Should be empty, mostly
+my $link_in_boot   = "=B";	# Should be empty, mostly
 my $no_symlink      = "=S";	# Should be empty, mostly
 my $reverse_symlink = "=R";	# Should be empty, mostly
 my $do_symlink      = "Yes";	# target machine defined
@@ -109,7 +109,8 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
       $do_symlink      = "" if /do_symlinks\s*=\s*(no|false|0)\s*$/ig;
       $no_symlink      = "" if /no_symlinks\s*=\s*(no|false|0)\s*$/ig;
       $reverse_symlink = "" if /reverse_symlink\s*=\s*(no|false|0)\s*$/ig;
-      $image_in_boot   = "" if /image_in_boot\s*=\s*(no|false|0)\s*$/ig;
+      $link_in_boot    = "" if /image_in_boot\s*=\s*(no|false|0)\s*$/ig;
+      $link_in_boot    = "" if /link_in_boot\s*=\s*(no|false|0)\s*$/ig;
       $move_image      = "" if /move_image\s*=\s*(no|false|0)\s*$/ig;
       $clobber_modules = '' if /clobber_modules\s*=\s*(no|false|0)\s*$/ig;
       $do_boot_enable  = '' if /do_boot_enable\s*=\s*(no|false|0)\s*$/ig;
@@ -126,7 +127,8 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
       $do_symlink      = "Yes" if /do_symlinks\s*=\s*(yes|true|1)\s*$/ig;
       $no_symlink      = "Yes" if /no_symlinks\s*=\s*(yes|true|1)\s*$/ig;
       $reverse_symlink = "Yes" if /reverse_symlinks\s*=\s*(yes|true|1)\s*$/ig;
-      $image_in_boot   = "Yes" if /image_in_boot\s*=\s*(yes|true|1)\s*$/ig;
+      $link_in_boot    = "Yes" if /image_in_boot\s*=\s*(yes|true|1)\s*$/ig;
+      $link_in_boot    = "Yes" if /link_in_boot\s*=\s*(yes|true|1)\s*$/ig;
       $move_image      = "Yes" if /move_image\s*=\s*(yes|true|1)\s*$/ig;
       $clobber_modules = "Yes" if /clobber_modules\s*=\s*(yes|true|1)\s*$/ig;
       $do_boot_enable  = "Yes" if /do_boot_enable\s*=\s*(yes|true|1)\s*$/ig;
@@ -173,7 +175,7 @@ $do_bootfloppy = "" if $loader =~ /^delo/io;
 # We can't have boot floppies for initrd kernels
 $do_bootfloppy = "" if $initrd;
 
-if ($image_in_boot) {
+if ($link_in_boot) {
   $image_dest = "/$image_dir/";
   $image_dest =~ s|^/*|/|o;
 }
@@ -536,7 +538,7 @@ sub image_magic {
 		{
 		  if ($loader =~ /palo/i)
 		    {
-		      print CONF "image_in_boot = Yes\n";
+		      print CONF "link_in_boot = Yes\n";
 		      print CONF "do_symlinks = Yes\n";
 		      print CONF "relative_links = Yes\n";
 		      print CONF "do_bootfloppy = No\n";
@@ -790,7 +792,7 @@ EOIMG
     image_magic("initrd.img", $realimageloc) if $initrd;
   }
 
-  if ($initrd && -l "$image_dir/initrd" && ! $image_in_boot) {
+  if ($initrd && -l "$image_dir/initrd" && ! $link_in_boot) {
     print STDERR <<"EOIMG";
 I note that you have an old $image_dir/initrd symbolic link in place.
 The location of the symbolic link is now the same location as the kernel
