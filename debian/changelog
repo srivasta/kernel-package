@@ -1,3 +1,22 @@
+kernel-package (8.047) unstable; urgency=low
+
+  * Since the sample module rules were horribly out of date, and had
+    serious shortcomings, and there are a number of modules packages
+    extant to provide an example, the sample rules file was removed from
+    the apckage. I really do think it was doing more harm than good.
+                                            closes: Bug#150497, Bug#144207
+  * Added a new sample postint hook script, that shows how local admins
+    can enhance the symlinks policy to better suit their needs. This
+    sample script implements the wishlist items requested by multiple
+    people. I do not think that these should become the mainstream model;
+    since the numbers of kernels linked to, the numbers of streams (2.4,
+    2.5, -selinux, etc) depend so much on the local install. Instead, the
+    vanilla symlink policy should be the default, as it is now, but now
+    people can implement whatever policy they choose. 
+                                           closes: Bug#201043, Bug#193201
+
+ -- Manoj Srivastava <srivasta@debian.org>  Mon, 11 Aug 2003 14:45:03 -0500
+
 kernel-package (8.046) unstable; urgency=low
 
   * Man, the missing quotes thing does not want to go away. And testing at

@@ -183,10 +183,6 @@ MODULE Packaging hints
       module maintainers to see if this parallel compilation setting
       may be used.
 
-	Please have a look at the sample files for creating a
- dependent modules package, sample.module.rules and
- sample.module.control.
-
 	Have fun,
 
 	manoj

@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Sun Aug 10 11:49:27 2003
+## Last Modified On : Mon Aug 11 14:33:21 2003
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 579
+## Update Count	    : 580
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.214 2003/08/10 16:52:01 srivasta Exp $
+## $Id: rules,v 1.215 2003/08/11 19:47:19 srivasta Exp $
 ###############################################################################
 
 ifdef KPKG_ARCH
@@ -1457,9 +1457,6 @@ endif
 	gzip -9qf                                $(SOURCE_DOC)/README.tecra
 	$(install_file) $(DEBDIR)/README.modules $(SOURCE_DOC)/README.modules
 	gzip -9qf                                $(SOURCE_DOC)/README.modules
-	$(install_file) $(DEBDIR)/sample.module.rules \
-	                                      $(SOURCE_DOC)/sample.module.rules
-	gzip -9qf                             $(SOURCE_DOC)/sample.module.rules
 	$(install_file) $(DEBDIR)/sample.module.control \
                                             $(SOURCE_DOC)/sample.module.control
 	gzip -9qf                           $(SOURCE_DOC)/sample.module.control
