@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Tue Jul 14 14:58:55 1998
+## Last Modified On : Wed Jul 22 18:36:09 1998
 ## Last Machine Used: tiamat.datasync.com
-## Update Count	    : 284
+## Update Count	    : 285
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.42 1998/07/17 17:40:42 srivasta Exp $
+## $Id: rules,v 1.43 1998/07/23 06:20:08 srivasta Exp $
 ###############################################################################
 
 # The version of kernel-package this belongs to
@@ -473,30 +473,7 @@ stamp-source: configure
 
 libc-kheaders libc_kheaders: stamp-libc-kheaders
 stamp-libc-kheaders: configure
-	@test root = "`whoami`" || (echo need root priviledges; exit 1)
-	test -f stamp-configure || $(deb_rule) configure
-	rm -rf                     debian/tmp-kheaders
-	$(make_directory)          debian/tmp-kheaders/DEBIAN
-	$(make_directory)          debian/tmp-kheaders/usr/include
-	$(make_directory)          debian/tmp-kheaders/usr/doc/$(l_package)
-	$(install_file)            debian/changelog \
-	         debian/tmp-kheaders/usr/doc/$(l_package)/changelog.Debian
-	$(install_file)            $(DEBDIR)/README.headers \
-	         debian/tmp-kheaders/usr/doc/$(l_package)/README.debian
-	echo "This was produced by kernel-package version $(kpkg_version)." > \
-	         debian/tmp-kheaders/usr/doc/$(l_package)/Buildinfo
-	(cd include;               tar cf - linux asm-$(KERNEL_ARCH) ) | \
-                 (cd debian/tmp-kheaders/usr/include/; umask 000; tar xsf -)
-	(cd debian/tmp-kheaders/usr/include/; mv asm-$(KERNEL_ARCH) asm)
-	gzip -9qfr                 debian/tmp-kheaders/usr/doc/
-	$(install_file)            $(DEBDIR)/copyright.headers \
-		  debian/tmp-kheaders/usr/doc/$(l_package)/copyright
-	dpkg-gencontrol            -p$(l_package) -Pdebian/tmp-kheaders/
-	chown -R                   root.root debian/tmp-kheaders
-	chmod -R og=rX    	   debian/tmp-kheaders
-	dpkg --build      	   debian/tmp-kheaders $(DEB_DEST)
-	rm -rf            	   debian/tmp-kheaders
-	touch             	   stamp-libc-kheaders
+	@echo This target is now obsolete.
 
 
 kernel-headers kernel_headers: stamp-headers
@@ -677,12 +654,13 @@ endif
 	         debian/tmp-image/boot/config-$(version)
 # SILO can boot gzip'ed kernel; m68k has vmlinuz, just the kernel makefiles
 # don't seem to realise it.
-ifneq ($(strip $(architecture)),m68k)
+#ifneq ($(strip $(architecture)),m68k)
+ifeq ($(strip $(filter m68k ppc powerpc,$(architecture))),)
 	cp arch/$(architecture)/boot/$(kimage) \
                    debian/tmp-image/boot/vmlinuz-$(version)
 	chmod 644 debian/tmp-image/boot/vmlinuz-$(version)
 else
-ifeq ($(strip $(architecture)),powerpc)
+ifneq ($(strip $(filter ppc powerpc,$(architecture))),)
 	cp arch/$(KERNEL_ARCH)/$(SUBARCH)/boot/$(kimage) \
                    debian/tmp-image/boot/vmlinuz-$(version)
 	chmod 644 debian/tmp-image/boot/vmlinuz-$(version)
@@ -691,10 +669,10 @@ else
 	chmod 644 debian/tmp-image/boot/vmlinuz-$(version)
 endif
 endif
-ifneq ($(wildcard System.map),)
-	cp System.map debian/tmp-image/boot/System.map-$(version)
-	chmod 644 debian/tmp-image/boot/System.map-$(version)
-endif
+	-test -f System.map &&  cp System.map \
+                        debian/tmp-image/boot/System.map-$(version)
+	-test -f System.map &&  chmod 644 \
+                        debian/tmp-image/boot/System.map-$(version)
 	dpkg-gencontrol -p$(i_package) -Pdebian/tmp-image/
 	chown -R root.root debian/tmp-image
 	chmod -R og=rX debian/tmp-image
