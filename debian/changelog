@@ -1,3 +1,11 @@
+kernel-package (8.050) unstable; urgency=low
+
+  * When creating the buildinfo file, look for versions of libc6, not just
+    libc, since that pulls in all libraries staring with libc. 
+                                            closes: Bug#206786, Bug#206788
+
+ -- Manoj Srivastava <srivasta@debian.org>  Sat, 23 Aug 2003 11:20:24 -0500
+
 kernel-package (8.049) unstable; urgency=low
 
   * In the spanish man pages, it is make-kpkg.1, not make-kpkg.8. Fixed.
