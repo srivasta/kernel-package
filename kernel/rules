@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Thu Jul 19 10:17:55 2001
+## Last Modified On : Tue Jul 24 12:12:55 2001
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 483
+## Update Count	    : 484
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.127 2001/07/19 15:19:44 srivasta Exp $
+## $Id: rules,v 1.128 2001/07/24 17:15:37 srivasta Exp $
 ###############################################################################
 
 ifdef ARCH
@@ -1004,7 +1004,8 @@ stamp-configure: debian .config
 	-test ! -f stamp-configure \
 	  && $(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) CROSS_COMPILE=$(KERNEL_CROSS) \
                                  ARCH=$(KERNEL_ARCH) $(config_target) \
-          && $(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) CROSS_COMPILE=$(KERNEL_CROSS) \
+          && $(MAKE) $(do_parallel) $(EXTRAV_ARG) $(FLAV_ARG) \
+                                 CROSS_COMPILE=$(KERNEL_CROSS) \
                                  ARCH=$(KERNEL_ARCH) dep \
           && $(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) CROSS_COMPILE=$(KERNEL_CROSS) \
                                  ARCH=$(KERNEL_ARCH) clean && \

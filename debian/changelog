@@ -1,3 +1,11 @@
+kernel-package (7.55) unstable; urgency=low
+
+  * Fixed a typo in the grub example scripts.                closes: Bug#106387
+  * Document that append_to_version is fragile.              closes: Bug#106276
+  * make dep not run in parallel                             closes: Bug#106278
+
+ -- Manoj Srivastava <srivasta@debian.org>  Tue, 24 Jul 2001 12:14:34 -0500
+
 kernel-package (7.54) unstable; urgency=low
 
   * Nope, that wasn't it. Despite testing it, I needed to test both the

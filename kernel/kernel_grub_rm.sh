@@ -5,9 +5,9 @@
 # Created On       : Wed Jul  4 22:18:43 2001
 # Created On Node  : glaurung.green-gryphon.com
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Wed Jul  4 22:20:38 2001
+# Last Modified On : Tue Jul 24 12:01:40 2001
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 1
+# Update Count     : 2
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
@@ -19,8 +19,8 @@ CONFIG_FILE=/etc/kernel_grub.conf
 
 ### Defaults
 grub_menu_lst=/boot/grub/menu.lst
-grub_kernel_partition=(hd0,0)
-grub_root_partition=(hd0,0)             # the location of root filesystem.
+grub_kernel_partition='(hd0,0)'
+grub_root_partition='(hd0,0)'             # the location of root filesystem.
 # kernel_boot_options="hdc=ide-scsi"    # any options come here.
 
 if [ -e $CONFIG_FILE ]; then

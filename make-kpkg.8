@@ -22,7 +22,7 @@
 .\" USA.
 .\"
 .\"
-.\"    $Id: make-kpkg.8,v 1.38 2001/07/05 04:21:26 srivasta Exp $
+.\"    $Id: make-kpkg.8,v 1.39 2001/07/24 17:15:37 srivasta Exp $
 .\"
 .TH MAKE\-KPKG 1 "May 2 1997" "Debian" "Debian GNU/Linux manual"
 .SH NAME
@@ -118,6 +118,16 @@ include/linux/version.h after configuring and before compiling, or
 running 
 .B make-kpkg clean
 after configuring, before compiling.
+.B Note
+also that once you use 
+.BR \-\-append_to_version " foo"
+for configuring, or building the kernel-image, you need to also use
+the same option in any later invocation of make-kpkg (say, for
+building stand alone modules, or something).  
+.B make\-kpkg
+does not remember the argument foo in between invocations (this is
+different from the behaviour of --revision, which we do remember in
+between invocations). 
 .TP
 .BR \-\-flavour\ foo
 This option is now deprecated in favour of 
