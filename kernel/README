@@ -1,5 +1,5 @@
 
-   $Id: README,v 1.48 2001/09/08 23:57:06 srivasta Exp $
+   $Id: README,v 1.49 2001/12/02 00:24:18 srivasta Exp $
 
 This is the Debian GNU/Linux prepackaged version of the Linux kernel.
 Linux was written by Linus Torvalds <Linus.Torvalds@cs.Helsinki.FI> and
@@ -105,7 +105,8 @@ the tar file (that is, if you choose to build everything together with
 the dist target in debian.rules -- say if you want, for whatever
 reason, to run dchanges on the files created). I needed nearly 60MB to
 create the full spectrum of packages for version 1.99.7 (and doubtless
-this size will go up in the future).
+this size will go up in the future) [It has. Now even an gzipped kernel
+source is over 23MB].
 
 Now, cd linux (wherever you have created the kernel sources).
 

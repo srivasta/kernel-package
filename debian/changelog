@@ -1,3 +1,19 @@
+kernel-package (7.75) unstable; urgency=low
+
+  * fix the building of kernel images for mipsel and changes the name of
+    the kernel-images from vmlinuz to vmlinux since it's not compressed at
+    all.                                                     closes: Bug#119708
+  * If /vmlinux.old does not exist, then it is not a symlink.  It would
+    still be appropriate to clobber it.                      closes: Bug#119741
+  * Fix typo in postinst.                                    closes: Bug#120419
+  * Fix the cramfs cleanup, thanks to Herbert Xu closes: Bug#121145, Bug#119722
+  * Fix the image.preinst to point users to /initrd.img      closes: Bug#121956
+  * Fix problems linking to correct initrd                   closes: Bug#121960
+  * Fix numbering problems in REAME.modules steps            closes: Bug#120981
+  * The kernel headers now contain a .config file            closes: Bug#122009
+
+ -- Manoj Srivastava <srivasta@debian.org>  Sat,  1 Dec 2001 18:22:39 -0600
+
 kernel-package (7.74) unstable; urgency=low
 
   * The initrd image was wrongly named in /boot. Fixed,   

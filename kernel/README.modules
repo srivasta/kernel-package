@@ -51,7 +51,7 @@ USER INSTRUCTIONS
           /usr/share/doc/kernel-package/README.gz for more information on
           revision numbers.
 
-     3)   To build the actual module packages, execute:
+     4)   To build the actual module packages, execute:
                make-kpkg modules_image
 	  The revision you supplied while building the kernel shall be
 	  used automatically. Or, if you have skipped step 2 above; or
@@ -64,10 +64,10 @@ USER INSTRUCTIONS
           pcmcia-modules-<kernel version> deb file in the parent
           directory. 
 
-     4)   Install the two newly created deb files (you can use `dpkg -i
+     5)   Install the two newly created deb files (you can use `dpkg -i
           file').
 
-     5)   Clean the source trees:
+     6)   Clean the source trees:
 		make-kpkg clean modules_clean
 
         kernel-package provides for four targets for the use of
