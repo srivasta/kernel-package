@@ -21,7 +21,7 @@ Description: Debian Linux kernel package build scripts.
  If you are running on an intel x86 platform, and you wish to compile a
  custom kernel (why else are you considering this package?), then you may
  need the package bin86 as well.  (This is not required on other platforms).
-Depends: perl5, dpkg (>= 1.4), dpkg-dev (>= 1.4.0.9), c-compiler, make
+Depends: perl5, dpkg (>= 1.4), dpkg-dev (>= 1.4.0.9), gcc | c-compiler, make
 Recommends: libc-dev, debianutils
 Suggests: kernel-source, libdb3-dev, libncurses-dev
 Architecture: all
