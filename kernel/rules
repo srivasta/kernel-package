@@ -2133,6 +2133,9 @@ endif
 ifneq ($(strip $(KERNEL_CROSS)),)
 	mv System.precious System.map
 endif
+ifeq ($(strip $(architecture)),xen)
+	mv $(INSTALL_MOD_PATH)/lib/module/* $(INSTALL_MOD_PATH)/lib/module/$version
+endif
 endif
 	test ! -e $(IMAGE_TOP)/lib/modules/$(version)/source ||                        \
 	   mv $(IMAGE_TOP)/lib/modules/$(version)/source ./debian/source-link
