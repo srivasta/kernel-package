@@ -1,3 +1,14 @@
+kernel-package (4.07) frozen unstable; urgency=low
+
+  * BUGFIX: fixed a typo in image.postinst; should be s/// not m////
+  * BUGFIX: Fix typo in the powerpc patch; uneeded quotes were getting
+    into the control file for the kernel-image-* packages.
+  * Install a README.Debian file from the official package if it exists
+    (it contains information about the patches applied, and, presumably,
+    how to compile a kernel image .deb file).
+
+ -- Manoj Srivastava <srivasta@debian.org>  Mon, 27 Apr 1998 14:24:20 -0500
+
 kernel-package (4.06) frozen unstable; urgency=low
 
   * Added the libc-kheaders package.
