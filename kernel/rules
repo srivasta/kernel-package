@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.160 2002/03/03 18:09:17 srivasta Exp $
+## $Id: rules,v 1.161 2002/03/04 22:42:57 srivasta Exp $
 ###############################################################################
 
 ifdef KPKG_ARCH
@@ -77,11 +77,11 @@ ifdef KPKG_ARCH
   architecture:=$(KPKG_ARCH)
 else
   #architecture:=$(shell CC=$(HOSTCC) dpkg --print-gnu-build-architecture)
-  architecture:=$(DEB_BUILD_ARCH)
+  architecture:=$(DEB_HOST_ARCH)
 endif
 
 ifndef CROSS_COMPILE
-  ifneq ($(strip $(architecture)),$(strip $(DEB_BUILD_ARCH)))
+  ifneq ($(strip $(architecture)),$(strip $(DEB_HOST_ARCH)))
     KERNEL_CROSS:=$(architecture)-$(strip $(DEB_HOST_GNU_SYSTEM))-
   endif
 else
@@ -1517,6 +1517,9 @@ ifneq ($(strip $(KERNEL_CROSS)),)
 endif
 endif
 endif
+	if [ -x debian/post-install ]; then                                   \
+		IMAGE_TOP=$(IMAGE_TOP) version=$(version) debian/post-install;\
+	fi
 ifeq ($(strip $(NEED_DIRECT_GZIP_IMAGE)),YES)
 	gzip -9vc $(kimagesrc) > $(kimagedest)
 else

@@ -1,3 +1,13 @@
+kernel-package (7.95) unstable; urgency=low
+
+  * Added an undocumented feature: if ./debian/post-install exists, it
+    shall be executed during the image build process. This allows people
+    (well, this is designed for kernel-image maintainers) to hack the
+    package before dpkg-* are called.                        closes: Bug#136735
+  * Fixed missed up $(DEB_BUILD_ARCH) -> $(DEB_HOST_ARCH)    closes" Bug#136738
+
+ -- Manoj Srivastava <srivasta@debian.org>  Mon,  4 Mar 2002 16:42:12 -0600
+
 kernel-package (7.94) unstable; urgency=low
 
   * bumped the default version.                              closes: Bug#136432
