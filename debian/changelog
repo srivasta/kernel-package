@@ -1,3 +1,13 @@
+kernel-package (7.17) unstable; urgency=low
+
+  * Take the depends out of the kernel source package if kernel version is
+    greater than 2.4. closes: Bug#68771
+  * fixed a typo in the image postinst. closes: Bug#69082
+  * Made sure there is a trailing / in the destination dir. closes: Bug#69176
+  * Fixed a typo in kernel-img.conf.5. closes: Bug#69305
+
+ -- Manoj Srivastava <srivasta@debian.org>  Sun, 20 Aug 2000 14:34:51 -0500
+
 kernel-package (7.16) unstable; urgency=low
 
   * Added dpkg-architecture invocation to the rules file, and export the

@@ -22,14 +22,16 @@ Priority: optional
 Provides: kernel-source
 Depends: binutils, bzip2, fileutils (>= 4.0)
 Recommends: libc-dev, gcc, make
-Suggests: libncurses-dev | ncurses-dev, task-tcltk-dev, kernel-package
+Suggests: libncurses-dev | ncurses-dev, task-tcltk-dev, kernel-package, bin86
 Description: Linux kernel source for version =V
  This package provides the source code for the Linux kernel version =V.
  .
  You may configure the kernel to your setup by typing "make config"
  and following instructions, but you could get ncursesX.X-dev and
  tk4X-dev and try "make menuconfig" for a jazzier, and easier to use
- interface. Also, please read the detailed documentation in the file
+ interface. Also, on intel platforms, you MUST get bin86 if
+ you wish to compile the kernel sources. Ignore the suggestion to get bin86
+ for non intel architectures. Also, please read the detailed documentation
  /usr/share/doc/kernel-source-=V/README.headers.gz. 
  .
  If you wish to use this package to create a custom Linux kernel, then

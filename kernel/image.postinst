@@ -12,7 +12,7 @@
 # HISTORY          : 
 # Description      : 
 # 
-#    $Id: image.postinst,v 1.54 2000/07/11 22:59:18 srivasta Exp $
+#    $Id: image.postinst,v 1.55 2000/08/20 19:36:38 srivasta Exp $
 #
 
 # 
@@ -110,6 +110,9 @@ if ($image_in_boot) {
   $image_dest = "/$image_dir/"; 
   $image_dest =~ s|^/*|/|o; 
 }
+
+$image_dest = "$image_dest/"; 
+$image_dest =~ s|/+$|/|o; 
 
 if (! -d "$image_dest") {
   die "Expected Image Destination dir ($image_dest) to be a valid directory!\n";
@@ -322,7 +325,7 @@ elsif (! -e "$kimage") {
   # Possibly they do not want a link here. (we should be in /
   # here[$image_dest, really]
   warn "$image_dest" . "$kimage does not exist. Installing from scratch, eh?\n";
-  warn "Or maybe you don't want a symbolic link here. Hmm.?\n";
+  warn "Or maybe you don't want a symbolic link here. Hmm? Lets See.\n";
   if ($no_symlink) {
     my $ret = system("cp -a --backup=t " . $realimageloc . "$kimage-$version "
 		     . " $kimage");
@@ -397,7 +400,7 @@ elsif ($no_symlink) {		# Maybe /$image_dest is on a dos system?
   if ($ret) {
     if (-e "$kimage.$$") { rename("$kimage.$$", "$kimage"); }
     die("Failed to copy " . $realimageloc . "$kimage-$version to "
-	. $image_dest . "/$kimage .\n"); 
+	. $image_dest . "$kimage .\n"); 
   }
   
   # Ok, now we may clobber the previous .old files
@@ -477,7 +480,7 @@ if ( -f "/lib/modules/$version/modules.dep" ) {
  file /lib/modules/$version/modules.dep needs to be re-built. It can
  not be built correctly right now, since the module list for the
  running kernel are likely to be different from the kernel installed. 
- I am ccreating a new modules.dep file, but that may not be
+ I am creating a new modules.dep file, but that may not be
  correct. It shall be regenrated correctly at next reboot.
 
  I repeat: you have to reboot in order for the modules file to be

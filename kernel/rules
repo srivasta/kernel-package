@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.100 2000/07/30 04:34:49 srivasta Exp $
+## $Id: rules,v 1.101 2000/08/20 19:36:38 srivasta Exp $
 ###############################################################################
 
 # set the dpkg-architecture vars
@@ -668,12 +668,21 @@ TAR_SUFFIX := $(shell \
          echo gz; \
       fi )
 
+CONTROL=$(DEBDIR)/Control
+NEED_BIN86 := $(shell if dpkg --compare-versions \
+                  $(VERSION).$(PATCHLEVEL) lt 2.4 >/dev/null 2>&1; \
+                  then echo YES; fi)
+ifeq ($(strip $(NEED_BIN86)),YES)
+CONTROL=$(DEBDIR)/Control.bin86
+endif
+
 
 # Bug out if the version number id not all lowercase
 lc_version = $(shell echo $(version) | tr A-Z a-z)
 ifneq ($(strip $(version)),$(strip $(lc_version)))
 $(error Error. The version number $(strip $(version)) is not all lowercase)
 endif
+
 
 
 ifeq ($(strip $(IN_KERNEL_DIR)),)
@@ -769,7 +778,7 @@ endif
 	       -e 's/=A/$(architecture)/g'   -e 's/=SA/$(INT_SUBARCH)/g' \
                -e 's/=L/$(int_loaderdep) /g' \
                -e 's/=M/$(maintainer) <$(email)>/g'  \
-		         $(DEBDIR)/Control > debian/control
+		         $(CONTROL)> debian/control
 	-test ! -f stamp-debian && test ! -f debian/official && \
 	   sed -e 's/=V/$(version)/g' -e 's/=D/$(debian)/g' \
 	    -e 's/=A/$(architecture)/g' -e 's/=M/$(maintainer) <$(email)>/g' \
