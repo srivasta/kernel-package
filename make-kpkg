@@ -5,9 +5,9 @@
 # Created On       : Mon Jun 17 01:10:11 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Mon Feb 16 18:43:47 2004
+# Last Modified On : Sun Apr 25 15:20:34 2004
 # Last Machine Used: glaurung.internal.golden-gryphon.com
-# Update Count     : 212
+# Update Count     : 218
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
@@ -387,7 +387,7 @@ usage: $main::MYNAME [options] target [target ...]
   where options are:
  --help                This message.
  --revision number     The debian revision number. ([a-zA-Z.+0-9]) (Must
-                         have digit, no hyphen allowed)
+                         have digit)
  --flavour  foo        an additional kernel sub-version. ([-a-z.+0-9])
                        OBSOLETE
  --append-to-version foo
@@ -764,14 +764,31 @@ EOERR2
     }
   }
 
-  if (!-x "$rules_file"){
+  if (! -x "$rules_file"){
     print STDERR <<EOERR1;
     Could not locate the rules file (Normally found at the location
  $rules_file), which would seem an
  impossibility. I give up.
 EOERR1
      ;
+    die "Could not find rules file\n";
   }
+
+  if ($Targets =~ m/^\bclean\b/) {
+    if ($Targets !~ m/^\s*clean\s*$/) {
+      print STDERR <<EOERR3;
+ The clean target must be called by itself, and not along with other
+ targets on the same invocation, since that may cause unforeseen
+ errors and complications.  The targets I have been called with are:
+  $Target
+ I am replacing this list with just the clean target, please retry
+ with the clean target on a separate invocation.
+EOERR3
+     ;
+      $Targets ="clean";
+    }
+  }
+
   # Fine. Just do it!
   my $command = "$rules_file ";
   if ($signature){
@@ -779,71 +796,79 @@ EOERR1
   }
 
   if ($revision) {
-    if (-e "debian/changelog") {
-      open(INPUT, "debian/changelog") or die "Can not open debian/changelog";
-      my $line=<INPUT>;
-      close INPUT;
-      chomp $line;
-      my $version = '';
-      $line =~ m/\((\S+)\)/;
-      $version = $1;
-      if ($revision && $version ne $revision) {
-        print STDERR <<"EOMSG";
+    if ($Targets !~ m/^\s*clean\s*$/) { # No need to do all this for just clean
+      if (-e "debian/changelog") {
+	open(INPUT, "debian/changelog") or die "Can not open debian/changelog";
+	my $line=<INPUT>;
+	close INPUT;
+	chomp $line;
+	my $version = '';
+	$line =~ m/\((\S+)\)/;
+	$version = $1;
+	if ($revision && $version ne $revision) {
+	  print STDERR <<"EOMSG";
 I note that you are using the --revision flag with the value
    $revision.
 However, the ./debian/changelog file exists, and has a different value
    $version.
 I am confused by this discrepancy, and am halting.
 EOMSG
-      ;
-        exit (2);
+	  ;
+	  exit (2);
+	}
+      }
+      
+      $command .= " DEBIAN_REVISION=$revision ";
+
+      if ($revision !~ m/^(\d+:)?[a-zA-Z\d\.\+\-]+$/o) {
+	print STDERR " Error: The revision string may only contain\n";
+	print STDERR " alphanumerics and  the  characters  +  .\n";
+	print STDERR " If epochs are used, the colon : is also allowed\n";
+	print STDERR " The current value is: $revision\n";
+	print STDERR " Aborting.\n";
+	exit 1;
+      }
+
+      if ($revision =~ m/\-/o) {
+	print STDERR " I note you are using a hyphen in the revision number.\n";
+	print STDERR " Please ensure that the upstream and debian revision\n";
+	print STDERR " numbers are policy compliant enough that dpkg and\n";
+	print STDERR " shall not choke on them at the end of the compile\n";
+	if ($revision !~ m/^(\d+:)?[a-zA-Z\d\.\+\-]+-\d+[^-]*$/o) {
+	  die " The revision $revision fails policy compliance, aborting\n";
+	}
+	else {
+	  sleep 3;
+	}
+      }
+
+      if ($revision !~ m/^(\d+:)?.*?\d.*$/){
+	print STDERR " Error: The revision string must contain digits,\n";
+	print STDERR " or else the package creation scripts complain\n";
+	print STDERR " The current value is: $revision\n";
+	print STDERR " Aborting.\n";
+	exit 1;
       }
     }
-
-    $command .= " DEBIAN_REVISION=$revision ";
-
-    if ($revision !~ m/^(\d+:)?[a-zA-Z\d\.\+\-]+$/o) {
-      print STDERR " Error: The revision string may only contain\n";
-      print STDERR " alphanumerics and  the  characters  +  .\n";
-      print STDERR " If epochs are used, the colon : is also allowed\n";
-      print STDERR " The current value is: $revision\n";
-      print STDERR " Aborting.\n";
-      exit 1;
-    }
-
-    if ($revision =~ m/\-/o) {
-      print STDERR " I note you are using a hyphen in the revision number.\n";
-      print STDERR " Please ensure that the upstream and debian revision\n";
-      print STDERR " numbers are policy compliant enough that dpkg and\n";
-      print STDERR " shall not choke on them at the end of the compile\n";
-      print STDERR " Please hit return to continue\n";
-      my $ans = <STDIN>;
-    }
-
-    if ($revision !~ m/^(\d+:)?.*?\d.*$/){
-      print STDERR " Error: The revision string must contain digits,\n";
-      print STDERR " or else the package creation scripts complain\n";
-      print STDERR " The current value is: $revision\n";
-      print STDERR " Aborting.\n";
-      exit 1;
-    }
-
   }
   else {
-    if ($Targets =~ m/^\s*clean\s*$/) {
+    if ($Targets !~ m/^\s*clean\s*$/) {
       if (-e "debian/changelog") {
-        open(INPUT, "debian/changelog") or die "Can not open debian/changelog";
-        my $line=<INPUT>;
-        close INPUT;
-        chomp $line;
-        my $version = '';
-        $line =~ m/\((\S+)\)/;
-        $version = $1;
-        $command .= " DEBIAN_REVISION=$version ";
+	open(INPUT, "debian/changelog") or die "Can not open debian/changelog";
+	my $line=<INPUT>;
+	close INPUT;
+	chomp $line;
+	my $version = '';
+	$line =~ m/\((\S+)\)/;
+	$version = $1;
+	$command .= " DEBIAN_REVISION=$version ";
       }
       else {
-        $command .= " DEBIAN_REVISION=5:123.Custom ";
+	$command .= " DEBIAN_REVISION=5:123.Custom ";
       }
+    }
+    else {
+      $command .= " DEBIAN_REVISION=5:10.Custom ";
     }
   }
 
@@ -941,7 +966,7 @@ EOMSG
 	print STDERR "\t\t\t\"$composite_version\"\n";
 	print STDERR "I'll try and recover\n";
 	system ("touch", "Makefile") == 0
-	  or die "touch Makefile ailed:$?";
+	  or die "touch Makefile failed:$?";
       }
     }
     $command .= " APPEND_TO_VERSION=$append_to_version ";

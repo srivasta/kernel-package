@@ -5,9 +5,9 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Tue Apr 20 20:46:15 2004
+## Last Modified On : Mon Apr 26 14:40:24 2004
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count	    : 678
+## Update Count	    : 684
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
@@ -175,6 +175,8 @@ ifeq ($(strip $(architecture)),m68k)
   target = $(kimage)
   kimagesrc = vmlinux.gz
   kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
+  kelfimagesrc = vmlinux
+  kelfimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
   DEBCONFIG = $(CONFDIR)/config.$(KPKG_SUBARCH)
   ifneq (,$(findstring $(KPKG_SUBARCH),mvme147 mvme16x bvme6000))
     loaderdep=vmelilo
@@ -210,6 +212,8 @@ ifeq ($(strip $(architecture)),arm)
     kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
     DEBCONFIG = $(CONFDIR)/config.arm
   endif
+  kelfimagesrc = vmlinux
+  kelfimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
 endif
 
 ### PowerPC
@@ -245,6 +249,8 @@ ifneq ($(strip $(filter ppc powerpc,$(architecture))),)
 	echo arch/$(KERNEL_ARCH)/boot/images/vmapus.gz ; else \
 	echo arch/$(KERNEL_ARCH)/boot/$(kimage) ; fi)
     kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
+    kelfimagesrc = vmlinux
+    kelfimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
     DEBCONFIG = $(CONFDIR)/config.apus
   endif
 
@@ -259,6 +265,8 @@ ifneq ($(strip $(filter ppc powerpc,$(architecture))),)
 	echo arch/$(KERNEL_ARCH)/chrpboot/$(kimage) ; else \
 	echo arch/$(KERNEL_ARCH)/boot/images/$(kimage).chrp-rs6k ; fi)
     kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
+    kelfimagesrc = vmlinux
+    kelfimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
     DEBCONFIG = $(CONFDIR)/config.chrp
   endif
 
@@ -273,6 +281,8 @@ ifneq ($(strip $(filter ppc powerpc,$(architecture))),)
          echo arch/$(KERNEL_ARCH)/chrpboot/$(kimage) ; else \
          echo arch/$(KERNEL_ARCH)/boot/images/$(kimage).chrp ; fi)
     kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
+    kelfimagesrc = vmlinux
+    kelfimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
     DEBCONFIG = $(CONFDIR)/config.chrp
   endif
 
@@ -283,6 +293,8 @@ ifneq ($(strip $(filter ppc powerpc,$(architecture))),)
     target = $(kimage)
     kimagesrc = arch/$(KERNEL_ARCH)/boot/images/zImage.pplus
     kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
+    kelfimagesrc = vmlinux
+    kelfimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
   endif
 
   ifneq (,$(findstring $(KPKG_SUBARCH),MBX mbx))
@@ -294,6 +306,8 @@ ifneq ($(strip $(filter ppc powerpc,$(architecture))),)
 	echo arch/$(KERNEL_ARCH)/mbxboot/$(kimage) ; else \
 	echo arch/$(KERNEL_ARCH)/boot/images/zvmlinux.embedded; fi)
     kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
+    kelfimagesrc = vmlinux
+    kelfimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
     DEBCONFIG = $(CONFDIR)/config.mbx
   endif
 
@@ -335,6 +349,8 @@ ifneq ($(strip $(filter ppc powerpc,$(architecture))),)
          echo arch/$(KERNEL_ARCH)/boot/images/$(kimage).prep ; else \
          echo arch/$(KERNEL_ARCH)/boot/$(kimage) ; fi)
     kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
+    kelfimagesrc = vmlinux
+    kelfimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
     DEBCONFIG = $(CONFDIR)/config.prep
   endif
 
@@ -343,14 +359,16 @@ endif
 
 ##### Alpha
 ifeq ($(strip $(architecture)),alpha)
-kimage := vmlinuz
-loaderdep=
-loader=milo
-loaderdoc=
-target = boot
-kimagesrc = arch/$(KERNEL_ARCH)/boot/vmlinux.gz
-kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
-DEBCONFIG = $(CONFDIR)/config.alpha
+  kimage := vmlinuz
+  loaderdep=
+  loader=milo
+  loaderdoc=
+  target = boot
+  kimagesrc = arch/$(KERNEL_ARCH)/boot/vmlinux.gz
+  kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
+  kelfimagesrc = vmlinux
+  kelfimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
+  DEBCONFIG = $(CONFDIR)/config.alpha
 endif
 
 
@@ -392,6 +410,8 @@ ifeq ($(strip $(architecture)),sparc)
              elif [ $(VERSION) -ge 3 ]; then echo new; fi),)
     target    = image
     kimagesrc = arch/$(KERNEL_ARCH)/boot/image
+    kelfimagesrc = vmlinux
+    kelfimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
   else
     target    = vmlinux
     kimagesrc = vmlinux
@@ -460,6 +480,8 @@ ifeq ($(strip $(architecture)),s390)
   kimagesrc = $(strip arch/$(KERNEL_ARCH)/boot/$(target))
   kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
   DEBCONFIG= $(CONFDIR)/config.$(KPKG_SUBARCH)
+  kelfimagesrc = vmlinux
+  kelfimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
 endif
 
 ##### hppa
@@ -488,6 +510,8 @@ ifeq ($(strip $(architecture)),ia64)
   NEED_DIRECT_GZIP_IMAGE=NO
   kimagesrc=vmlinux.gz
   kimagedest=$(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
+  kelfimagesrc = vmlinux
+  kelfimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
   DEBCONFIG=$(CONFDIR)/config.$(KPKG_SUBARCH)
 endif
 
@@ -625,6 +649,25 @@ UTS_RELEASE_VERSION=$(shell if [ -f include/linux/version.h ]; then             
  
 version = $(VERSION).$(PATCHLEVEL).$(SUBLEVEL)$(EXTRAVERSION)$(iatv)$(INT_FLAV)
 
+# See if we are being run in the kernel directory
+IN_KERNEL_DIR := $(shell if test -d drivers -a -d kernel -a -d fs -a                \
+                                 -d include/linux ; then                            \
+                            echo YES;                                               \
+                         fi )
+
+IN_KERNEL_HEADERS=$(shell if [ -f kernel-headers.revision ]; then                    \
+                               cat kernel-headers.revision;                          \
+                            else echo "" ;                                          \
+                            fi)
+
+ifeq ($(strip $(IN_KERNEL_DIR)),)
+ifneq ($(strip $(IN_KERNEL_HEADERS)),)
+version=$(UTS_RELEASE_VERSION)
+debian :=$(IN_KERNEL_HEADERS)
+endif
+endif
+
+
 # KPKG_SUBARCH is used to distinguish Amiga, Atari, Macintosh, etc. kernels
 # for Debian/m68k.  INT_SUBARCH is used in the names of the image file
 # produced. It only affects the naming of the kernel-image as the
@@ -639,8 +682,6 @@ ifneq ($(strip $(KPKG_SUBARCH)),)
 INT_SUBARCH := -$(KPKG_SUBARCH)
 endif
 endif
-
-
 
 # The name of the package (for example, `emacs').
 package   := kernel-source-$(version)
@@ -1037,25 +1078,6 @@ CONFIG_FILE := $(shell if test -e .config ; then \
                        fi)
 
 
-# See if we are being run in the kernel directory
-IN_KERNEL_DIR := $(shell if test -d drivers -a -d kernel -a -d fs -a                \
-                                 -d include/linux ; then                            \
-                            echo YES;                                               \
-                         fi )
-
-IN_KERNEL_HEADERS=$(shell if [ -f kernel-headers.revision ]; then                    \
-                               cat kernel-headers.revision;                          \
-                            else echo "" ;                                          \
-                            fi)
-
-ifeq ($(strip $(IN_KERNEL_DIR)),)
-ifneq ($(strip $(IN_KERNEL_HEADERS)),)
-version=$(UTS_RELEASE_VERSION)
-debian=$(IN_KERNEL_HEADERS)
-endif
-endif
-
-
 # Deal with modules issues
 
 # define MODULES_ENABLED if appropriate
@@ -1253,6 +1275,8 @@ STOP_FOR_BIN86 = YES
 endif
 endif
 endif
+
+
 
 # Bug out if the version number id not all lowercase
 lc_version = $(shell echo $(version) | tr A-Z a-z)
@@ -1849,6 +1873,15 @@ ifneq ($(strip $(shell if [ -x /usr/bin/db2html ]; then echo YSE; fi)),)
 	$(MAKE)  mandocs htmldocs
 endif
 	-tar cf - Documentation | (cd $(DOC_DOC); umask 000; tar xsf -)
+ifeq ($(shell if [ $(VERSION) -ge 2 -a $(PATCHLEVEL) -ge 5 ]; then \
+                  echo new;fi),)
+	find -name Kconfig -print0 | xargs -0r cat | \
+	     (umask 000 ; cat > $(DOC_DOC)/Kconfig.collected)
+# removing if empty should be faster than running find twice
+	if ! test -s $(DOC_DOC)/Kconfig.collected) ; then \
+	    rm -f $(DOC_DOC)/Kconfig.collected ;          \
+         fi
+endif
 ifneq ($(strip $(doc_clean_hook)),)
 	(cd $(DOC_DOC);              \
                test -x $(doc_clean_hook) && $(doc_clean_hook))

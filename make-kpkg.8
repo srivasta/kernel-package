@@ -47,7 +47,7 @@ or tell
 how to become root, like so:
 .sp 1
 .ti +5
-make\-kpkg --rootcmd fakeroot kernel_image
+make\-kpkg \-\-rootcmd fakeroot kernel_image
 .sp 1
 The Debian package file is created in the parent directory of the
 kernel source directory where this command is run.
@@ -135,7 +135,7 @@ alphanumerics and the characters - + . (full stop, hyphen, and
 plus). Uppercase letters are not permitted under the Policy for a new
 package.  This over rides the environment variable
 .B APPEND_TO_VERSION
-Please  note  that you \fB\s\-1must\s0\fR run a 
+Please  note  that you \fB\s-1must\s0\fR run a 
 .B make\-kpkg 
 .I clean
 after configuring the kernel using 
@@ -177,12 +177,12 @@ This option is now deprecated in favor of
 .BR \-\-append_to_version.
 Sets the kernel flavour to the argument \fBfoo\fR. The flavour is
 also appended to the package name. You need a patched Makefile to make
-this work properly (see /usr/share/doc/kernel\-package/\s\-1Flavours\s0.gz).
+this work properly (see /usr/share/doc/kernel\-package/\s-1Flavours\s0.gz).
 It may contain only 
 .B lowercase
 alphanumerics and the characters \- + . (full stop, hyphen, and
 plus). Uppercase letter are not permitted under the Policy for a new
-package. \fB\s\-1NOTE\s0\fR: Hyphens are discouraged.  (Look at
+package. \fB\s-1NOTE\s0\fR: Hyphens are discouraged.  (Look at
 Chapters 4 of the Policy manual for details). Please note that you
 shall need to
 .B make\-kpkg 
@@ -319,7 +319,7 @@ Change the type of configure done from the default \f(CWoldconfig\fR.
 \f(CWmenuconfig\fR, \f(CWgconfig\fR, \f(CWxconfig\fR; \f(CWold\fR,
 \f(CWmenu\fR, \f(CWg\fR, or \f(CWx\fR.
 .Sp
-This option is particularly useful when using \s\-1PATCH_THE_KERNEL\s0 if some
+This option is particularly useful when using \s-1PATCH_THE_KERNEL\s0 if some
 of the patches change what configuration options are available. 
 .B Note
 however that 
