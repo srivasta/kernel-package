@@ -20,9 +20,8 @@ LIBLOC     := /usr/share/kernel-package
 MODULE_LOC := /usr/src/modules
 
 DOCFILES = README.doc README.headers README.image README.modules \
-           README.source README.tecra sample.kernel-img.conf \
-           kernel_grub_conf.sh sample.posthook.sh
-
+           README.source README.tecra 
+EXAMPLES = sample.kernel-img.conf kernel_grub_conf.sh sample.posthook.sh
 
 # where kernel-package files go to
 DEBDIR     = $(LIBLOC)
@@ -71,7 +70,7 @@ install:
 	$(make_directory)  $(FR_MAN1DIR)
 	$(make_directory)  $(FR_MAN5DIR)
 	$(make_directory)  $(FR_MAN8DIR)
-	$(make_directory)  $(DOCDIR)
+	$(make_directory)  $(DOCDIR)/examples
 	$(make_directory)  $(BASH_DIR)
 	$(make_directory)  $(prefix)/usr/bin
 	$(make_directory)  $(prefix)/usr/sbin
@@ -114,6 +113,9 @@ install:
 	(cd kernel;        tar cf - * | \
            (cd             $(prefix)/usr/share/$(package); umask 000;\
                            tar xpf -))
+	(cd $(DOCDIR);     for file in $(EXAMPLES); do \
+                            mv ../../$(package)/$$file examples/; \
+                           done)
 	find $(prefix)/usr/share/$(package) -type d -name .arch-ids -print0 | \
            xargs -0r rm -rf
 	$(install_file)    Rationale $(prefix)/usr/share/$(package)/

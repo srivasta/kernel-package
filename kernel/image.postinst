@@ -5,9 +5,9 @@
 # Created On       : Sat Apr 27 05:55:26 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Thu Apr  1 23:40:15 2004
+# Last Modified On : Fri Sep 10 10:42:51 2004
 # Last Machine Used: glaurung.internal.golden-gryphon.com
-# Update Count     : 260
+# Update Count     : 261
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
@@ -46,6 +46,7 @@ my $preinst_hook      = '';          #Normally we do not
 my $prerm_hook        = '';          #Normally we do not
 my $minimal_swap      = '';          # Do not swap symlinks
 my $ignore_depmod_err = '';	# normally we do not
+my $relink_src_link   = 'YES';	# There is no harm in checking the link
 my $relink_build_link = 'YES';	# There is no harm in checking the link
 my $force_build_link  = '';	# There is no harm in checking the link
 my $official_image    = "=OF";      # only true for official images
@@ -130,8 +131,9 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
       $silent_loader   = '' if /silent_loader\s*=\s*(no|false|0)\s*$/ig;
       $minimal_swap    = '' if /minimal_swap\s*=\s*(no|false|0)\s*$/ig;
       $ignore_depmod_err = '' if /ignore_depmod_err\s*=\s*(no|false|0)\s*$/ig;
+      $relink_src_link   = '' if /relink_src_link\s*=\s*(no|false|0)\s*$/ig;
       $relink_build_link = '' if /relink_build_link\s*=\s*(no|false|0)\s*$/ig;
-      $force_build_link = '' if /force_build_link\s*=\s*(no|false|0)\s*$/ig;
+      $force_build_link  = '' if /force_build_link\s*=\s*(no|false|0)\s*$/ig;
 
       $do_symlink      = "Yes" if /do_symlinks\s*=\s*(yes|true|1)\s*$/ig;
       $no_symlink      = "Yes" if /no_symlinks\s*=\s*(yes|true|1)\s*$/ig;
@@ -151,6 +153,7 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
       $silent_loader   = 'Yes' if /silent_loader\s*=\s*(yes|true|1)\s*$/ig;
       $minimal_swap    = 'Yes' if /minimal_swap\s*=\s*(yes|true|1)\s*$/ig;
       $ignore_depmod_err = 'Yes' if /ignore_depmod_err\s*=\s*(yes|true|1)\s*$/ig;
+      $relink_src_link   = 'Yes' if /relink_src_link\s*=\s*(yes|true|1)\s*$/ig;
       $relink_build_link = 'Yes' if /relink_build_link\s*=\s*(yes|true|1)\s*$/ig;
       $force_build_link = 'Yes' if /force_build_link\s*=\s*(yes|true|1)\s*$/ig;
 
@@ -247,7 +250,7 @@ sub fix_build_link {
     if (!defined($build_target)) { # Danglink link
       warn qq(
  Hmm. The package shipped with a symbolic link /lib/modules/$version/build
- However, I can't read it: $!
+ However, I can not read it: $!
  Therefore, I am deleting /lib/modules/$version/build\n
 );
       my $num = unlink "/lib/modules/$version/build";
@@ -269,6 +272,36 @@ sub fix_build_link {
 
 if ($relink_build_link || $force_build_link) {
   &fix_build_link();
+}
+######################################################################
+## Fix the source link
+######################################################################
+sub fix_source_link {
+  return unless -d "/lib/modules/$version";
+  if ($relink_src_link) {
+    my $source_target;
+    if (-l "/lib/modules/$version/source") {
+      $source_target = readlink "/lib/modules/$version/source";
+    }
+    else {
+      return;
+    }
+    if (!defined($source_target)) { # Danglink link
+      warn qq(
+ Hmm. The package shipped with a symbolic link /lib/modules/$version/source
+ However, I can not read it: $!
+ Therefore, I am deleting /lib/modules/$version/source\n
+);
+      my $num = unlink "/lib/modules/$version/source";
+      if ($num != 1) {
+	warn "error unlinking /lib/modules/$version/source";
+      }
+    }
+  }
+}
+
+if ($relink_src_link) {
+  &fix_source_link();
 }
 ######################################################################
 ######################################################################
@@ -827,7 +860,7 @@ if ( -d "/lib/modules/$version" ) {
     }
 
     if (! $ignore_depmod_err) {
-      if (&ask_y( "Would you like to abort now")) {
+      if (&ask( "Would you like to abort now")) {
 	exit (1);
       }
       else {

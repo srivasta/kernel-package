@@ -45,6 +45,7 @@ my $preinst_hook    = '';       #Normally we do not
 my $prerm_hook      = '';       #Normally we do not
 my $minimal_swap    = '';       # Do not swap symlinks
 my $ignore_depmod_err = '';    # normally we do not
+my $relink_src_link   = 'YES';	# There is no harm in checking the link
 my $relink_build_link = 'YES'; # There is no harm in checking the link
 my $force_build_link = '';	 # There is no harm in checking the link
 my $official_image  = "=OF"; # only true for official images
@@ -121,6 +122,7 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
       $silent_loader   = '' if /silent_loader\s*=\s*(no|false|0)\s*$/ig;
       $minimal_swap    = '' if /minimal_swap\s*=\s*(no|false|0)\s*$/ig;
       $ignore_depmod_err = '' if /ignore_depmod_err\s*=\s*(no|false|0)\s*$/ig;
+      $relink_src_link   = '' if /relink_src_link\s*=\s*(no|false|0)\s*$/ig;
       $relink_build_link = '' if /relink_build_link\s*=\s*(no|false|0)\s*$/ig;
       $force_build_link = '' if /force_build_link\s*=\s*(no|false|0)\s*$/ig;
 
@@ -142,6 +144,7 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
       $silent_loader   = 'Yes' if /silent_loader\s*=\s*(yes|true|1)\s*$/ig;
       $minimal_swap    = 'Yes' if /minimal_swap\s*=\s*(yes|true|1)\s*$/ig;
       $ignore_depmod_err = 'Yes' if /ignore_depmod_err\s*=\s*(yes|true|1)\s*$/ig;
+      $relink_src_link   = 'Yes' if /relink_src_link\s*=\s*(yes|true|1)\s*$/ig;
       $relink_build_link = 'Yes' if /relink_build_link\s*=\s*(yes|true|1)\s*$/ig;
       $force_build_link = 'Yes' if /force_build_link\s*=\s*(yes|true|1)\s*$/ig;
 
@@ -215,9 +218,9 @@ bootloader documentation for details on how to add initrd images.
 
 If you have already done so, and you wish to get rid of this message,
 please put
-  `do_initrd = Yes'
+  "do_initrd = Yes"
 in /etc/kernel-img.conf. Note that this is optional, but if you do not,
-you'll continue to see this message whenever you install a kernel
+you will continue to see this message whenever you install a kernel
 image using initrd.
 EOF
     if (-f "/etc/lilo.conf"){
@@ -270,7 +273,7 @@ you have deselected some modules, or installed standalone modules
 packages, this could be bad. However, if this directory exists because
 you are also installing some stand alone modules right now, and they
 got unpacked before I did, then this is pretty benign.  Unfortunately,
-I can't tell the difference.
+I can not tell the difference.
 
 If /lib/modules/$version belongs to a old install of
 kernel-image-$version, then this is your last chance to abort the

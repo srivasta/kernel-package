@@ -238,7 +238,10 @@ ifneq ($(strip $(filter ppc powerpc,$(architecture))),)
       ifneq (,$(findstring Power,$(GUESS_SUBARCH)))
         GUESS_SUBARCH:=pmac
       else
-        ifneq (,$(findstring iMac,$(GUESS_SUBARCH)))
+        # At the request of Colin Watson, changed from find string iMac.
+        # Any powerpc system that would contain  Mac in /proc/cpuinfo is a 
+        # PowerMac system, according to arch/ppc/platforms/* in the kernel source
+        ifneq (,$(findstring Mac,$(GUESS_SUBARCH)))
           GUESS_SUBARCH:=pmac
         endif
       endif
@@ -765,7 +768,7 @@ endif
 
 ifeq ($(strip $(ALL_PATCH_DIR)),)
 ALL_PATCH_DIR  = $(shell if [ -d /usr/src/kernel-patches/all/ ]; \
-                            then echo /usr/src/kernel-patches/all/ ;\
+                            then echo /usr/src/kernel-patches/all ;\
 			 fi)
 endif
 
@@ -1217,6 +1220,40 @@ endif
 
 
 endif
+else
+# OK. We want to patch the kernel, but there are no patches specified.
+valid_patches = $(shell if [ -n "$(VERSIONED_PATCH_DIR)" ] &&                \
+                            [ -d $(VERSIONED_DIR_PATCH_APPLY) ]; then         \
+                               run-parts --test $(VERSIONED_DIR_PATCH_APPLY); \
+                        fi;                                                   \
+                        if [ -n "$(VERSIONED_ALL_PATCH_DIR)" ] &&             \
+                           [ -d $(VERSIONED_ALL_PATCH_APPLY) ]; then          \
+                               run-parts --test $(VERSIONED_ALL_PATCH_APPLY); \
+                        fi;                                                   \
+                        if [ -n "$(PATCH_DIR)" ] &&                           \
+                           [ -d $(DIR_PATCH_APPLY) ]; then                    \
+                              run-parts --test $(DIR_PATCH_APPLY);            \
+                        fi;                                                   \
+                        if [ -n "$(ALL_PATCH_DIR)" ] &&                       \
+                           [ -d $(ALL_PATCH_APPLY)  ]; then                   \
+                              run-parts --test $(ALL_PATCH_APPLY);            \
+                        fi)
+valid_unpatches = $(shell if [ -n "$(VERSIONED_PATCH_DIR)"       ]  &&            \
+                             [ -d $(VERSIONED_DIR_PATCH_UNPATCH) ]; then          \
+                                 run-parts --test $(VERSIONED_DIR_PATCH_UNPATCH); \
+                           fi;                                                    \
+                           if [ -n "$(VERSIONED_ALL_PATCH_DIR)"    ]  &&          \
+                              [ -d $(VERSIONED_ALL_PATCH_UNPATCH)  ]; then        \
+                                 run-parts --test $(VERSIONED_ALL_PATCH_UNPATCH); \
+                           fi;                                                    \
+                           if [ -n "$(PATCH_DIR)"       ]  &&                     \
+                              [ -d $(DIR_PATCH_UNPATCH) ]; then                   \
+                                 run-parts --test $(DIR_PATCH_UNPATCH);           \
+                           fi;                                                    \
+                          if [ -n "$(ALL_PATCH_DIR)"    ]  &&                     \
+                             [ -d $(ALL_PATCH_UNPATCH)  ]; then                   \
+                                run-parts --test $(ALL_PATCH_UNPATCH);            \
+                          fi)
 endif
 endif
 
@@ -1447,38 +1484,6 @@ ifneq ($(strip $(valid_patches)),)
 	  fi;                                          \
         done
 	echo done >  stamp-patch
-else
-	if [ -n "$(VERSIONED_PATCH_DIR)" ] &&                   \
-            [ -d $(VERSIONED_DIR_PATCH_APPLY) ]; then          \
-            run-parts --exit-on-error $(VERSIONED_DIR_PATCH_APPLY); \
-	    (cd $(VERSIONED_DIR_PATCH_APPLY); ls -1) >>       \
-                                           applied_patches;   \
-        echo done >  stamp-patch;                                    \
-        else                                                  \
-	    true;                                             \
-	fi
-	if [ -n "$(VERSIONED_ALL_PATCH_DIR)" ] &&               \
-            [ -d $(VERSIONED_ALL_PATCH_APPLY) ]; then         \
-            run-parts --exit-on-error $(VERSIONED_ALL_PATCH_APPLY); \
-	    (cd $(VERSIONED_ALL_PATCH_APPLY); ls -1) >>       \
-                                           applied_patches;   \
-        echo done >  stamp-patch;                                    \
-        else                                                  \
-	    true;                                             \
-	fi
-	if [ -n "$(PATCH_DIR)" ] && [ -d $(DIR_PATCH_APPLY) ]; then \
-            run-parts --exit-on-error $(DIR_PATCH_APPLY);            \
-	    (cd $(DIR_PATCH_APPLY); ls -1) >> applied_patches;      \
-        else                                                         \
-	    true;                                                   \
-	fi
-	if [ -n "$(ALL_PATCH_DIR)" ] && [ -d $(ALL_PATCH_APPLY)  ]; then \
-            run-parts --exit-on-error $(ALL_PATCH_APPLY);           \
-	    (cd $(ALL_PATCH_APPLY); ls -1) >> applied_patches;\
-        echo done >  stamp-patch;                                    \
-        else                                                  \
-	    true;                                             \
-	fi
 endif
 endif
 	-test ! -f stamp-debian && \
@@ -1627,32 +1632,6 @@ ifneq ($(strip $(valid_unpatches)),)
               fi;                                          \
 	  fi;                                              \
         done
-	rm -f stamp-patch
-else
-	if [ -n "$(VERSIONED_PATCH_DIR)"       ]  &&          \
-            [ -d $(VERSIONED_DIR_PATCH_UNPATCH) ]; then        \
-            run-parts --report $(VERSIONED_DIR_PATCH_UNPATCH); \
-        else                                                   \
-	    true;                                             \
-	fi
-	if [ -n "$(VERSIONED_ALL_PATCH_DIR)"    ]  &&         \
-            [ -d $(VERSIONED_ALL_PATCH_UNPATCH)  ]; then       \
-            run-parts --report $(VERSIONED_ALL_PATCH_UNPATCH); \
-        else                                                   \
-	    true;                                             \
-	fi
-	if [ -n "$(PATCH_DIR)"       ]  &&                    \
-            [ -d $(DIR_PATCH_UNPATCH) ]; then                  \
-            run-parts --report $(DIR_PATCH_UNPATCH);           \
-        else                                                   \
-	    true;                                             \
-	fi
-	if [ -n "$(ALL_PATCH_DIR)"    ]  &&                   \
-            [ -d $(ALL_PATCH_UNPATCH)  ]; then                 \
-            run-parts --report $(ALL_PATCH_UNPATCH);           \
-        else                                                   \
-	    true;                                             \
-	fi
 	rm -f stamp-patch
 endif
 
@@ -2017,13 +1996,6 @@ endif
 endif
 	-depmod -q -FSystem.map -b $(IMAGE_TOP) $(version)
 endif
-	if test -d $(SRCTOP)/debian/image.d ; then                            \
-             IMAGE_TOP=$(IMAGE_TOP) version=$(version)                        \
-                   run-parts --verbose $(SRCTOP)/debian/image.d ;             \
-        fi
-	if [ -x debian/post-install ]; then                                   \
-		IMAGE_TOP=$(IMAGE_TOP) version=$(version) debian/post-install;\
-	fi
 ifeq ($(strip $(NEED_DIRECT_GZIP_IMAGE)),YES)
 	gzip -9vc $(kimagesrc) > $(kimagedest)
 else
@@ -2040,6 +2012,13 @@ ifneq ($(strip $(kelfimagesrc)),)
 	chmod 644 $(kelfimagedest)
 endif
 endif
+	if test -d $(SRCTOP)/debian/image.d ; then                             \
+             IMAGE_TOP=$(IMAGE_TOP) version=$(version)                          \
+                   run-parts --verbose $(SRCTOP)/debian/image.d ;               \
+         fi
+	if [ -x debian/post-install ]; then                                    \
+		IMAGE_TOP=$(IMAGE_TOP) version=$(version) debian/post-install;\
+	fi
 	test ! -s applied_patches || cp applied_patches                        \
                         $(INT_IMAGE_DESTDIR)/patches-$(version)
 	test ! -s applied_patches || chmod 644                                 \
