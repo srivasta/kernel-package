@@ -1,5 +1,5 @@
 
-   $Id: README,v 1.13 1998/02/13 19:40:38 srivasta Exp $
+   $Id: README,v 1.14 1998/02/18 07:09:34 srivasta Exp $
 
 This is the Debian GNU/Linux prepackaged version of the Linux kernel.
 Linux was written by Linus Torvalds <Linus.Torvalds@cs.Helsinki.FI> and
@@ -33,16 +33,21 @@ Before you go any further, please allow me to point out that you need to
 have a few other packages installed before you can compile your own kernels
 (it is difficult to compile anything without a compiler ;-). 
 
-Firstly, you will need gcc, the libc development package (libc5-dev at
-the time of writing), and, on Intel platforms, bin86. [If you use the
-menuconfig target of make, you will need ncursesX.X-dev, and make xconfig
-also requires tkX.X-dev, and other packages these depend on]
+Firstly, you will need gcc, the libc development package (libc5-dev or
+libc6-dev at the time of writing), and, on Intel platforms, bin86. [If
+you use the menuconfig target of make, you will need ncursesX.X-dev,
+and make xconfig also requires tkX.X-dev, and other packages these
+depend on]
 
 The packages suggested are:
-devel:        gcc, libc5-dev, binutils, make, and, for intel x86 platforms,
-              bin86 (non-Intel platforms don't need this).
+devel:        gcc, libc5-dev/libc6-dev, binutils, make, and, for intel
+              x86 platforms, bin86 (non-Intel platforms don't need
+              this).
 interpreters: awk, which is contained in either the mawk or gawk packages
 base:         gzip, shellutils, and grep.
+
+Some of these packages are marked essential, and hence are going to be
+present on your machine already. Others you have to check and install.
 
 Of course, pretty gui front ends to kernel configuration require more
 packages, but they are not strictly essential (though quite nice really). 
