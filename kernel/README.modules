@@ -83,7 +83,7 @@ USER INSTRUCTIONS
           file').
 
      8)   Clean the source trees:
-               make-kpkg clean modules_clean
+               make-kpkg modules_clean clean 
 
 MODULE MAINTAINER INSTRUCTIONS
 ====== ========== ============

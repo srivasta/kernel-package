@@ -1,3 +1,15 @@
+kernel-package (8.065) unstable; urgency=low
+
+  * Added a HOWTO for installing 2.6 kernels on a Woody machine to the
+    docs. The HOWTO comes from Marc Herbert.
+  * Since the mkimage command may legitimately contain /'s, use @ as sed
+    separator -- it is an unlikely character to be in that string. 
+                                                       closes: Bug#213722
+  * Make modules_clean depend on .config, not on configure.
+                                                       closes: Bug#214183
+
+ -- Manoj Srivastava <srivasta@debian.org>  Mon,  6 Oct 2003 11:17:11 -0500
+
 kernel-package (8.064) unstable; urgency=high
 
   * Fixes for the mips64el arches.                     closes: Bug#213621

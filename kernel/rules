@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Sat Sep 27 20:02:18 2003
+## Last Modified On : Mon Oct  6 11:20:49 2003
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 611
+## Update Count	    : 616
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.225 2003/10/01 16:36:33 srivasta Exp $
+## $Id: rules,v 1.226 2003/10/06 16:23:03 srivasta Exp $
 ###############################################################################
 
 ifdef KPKG_ARCH
@@ -1248,7 +1248,7 @@ endif
 	-test -f stamp-configure || $(deb_rule) configure
 	$(MAKE) $(do_parallel) $(EXTRAV_ARG) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) \
 	                    $(CROSS_ARG) $(target)
-ifdef MODULES_ENABLED
+ifneq ($(strip $(shell egrep ^[^\#]*CONFIG_MODULES $(CONFIG_FILE))),)
 	$(MAKE) $(do_parallel) $(EXTRAV_ARG) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) \
 	                    $(CROSS_ARG) modules
 endif
@@ -1778,23 +1778,23 @@ endif
             -e 's/=S/$(no_symlink)/g' -e 's/=R/$(reverse_symlink)/g' \
             -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \
             -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'        \
-            -e 's/=M/$(MKIMAGE)/g'                                   \
+            -e 's@=M@$(MKIMAGE)@g'                                   \
              $(DEBDIR)/image.postinst > $(IMAGE_TOP)/DEBIAN/postinst
 	chmod 755 $(IMAGE_TOP)/DEBIAN/postinst
 	sed -e 's/=V/$(version)/g'    -e 's/=B/$(link_in_boot)/g'   \
             -e 's/=S/$(no_symlink)/g' -e 's/=R/$(reverse_symlink)/g' \
             -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \
             -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'        \
-            -e 's/=M/$(MKIMAGE)/g'                                   \
+            -e 's@=M@$(MKIMAGE)@g'                                   \
              $(DEBDIR)/image.postrm > $(IMAGE_TOP)/DEBIAN/postrm
 	chmod 755 $(IMAGE_TOP)/DEBIAN/postrm
 	sed -e 's/=V/$(version)/g'    -e 's/=L/$(loader)/g'          \
 	    -e 's/=I/$(INITRD)/g'                                    \
-             -e 's/=M/$(MKIMAGE)/g'                                   \
+             -e 's@=M@$(MKIMAGE)@g'                                   \
 	             $(DEBDIR)/image.preinst > $(IMAGE_TOP)/DEBIAN/preinst
 	chmod 755 $(IMAGE_TOP)/DEBIAN/preinst
 	sed -e 's/=V/$(version)/g'    -e 's/=L/$(loader)/g'          \
-             -e 's/=M/$(MKIMAGE)/g'                                   \
+             -e 's@=M@$(MKIMAGE)@g'                                   \
 	             $(DEBDIR)/image.prerm > $(IMAGE_TOP)/DEBIAN/prerm
 	chmod 755 $(IMAGE_TOP)/DEBIAN/prerm
 	$(install_file) Documentation/Changes $(IMAGE_DOC)/
@@ -1826,7 +1826,7 @@ endif
 ifeq ($(strip $(HAVE_EXTRA_DOCS)),YES)
 	$(install_file) $(extra_docs) 	         $(IMAGE_DOC)/
 endif
-ifdef MODULES_ENABLED
+ifneq ($(strip $(shell egrep ^[^\#]*CONFIG_MODULES $(CONFIG_FILE))),)
 ifeq  ($(strip $(HAVE_NEW_MODLIB)),)
 	$(mod_inst_cmds)
 else
@@ -1900,7 +1900,7 @@ endif
 
 # only generate module image packages
 modules-image modules_image: configure 
-ifndef MODULES_ENABLED
+ifeq ($(strip $(shell egrep ^[^\#]*CONFIG_MODULES $(CONFIG_FILE))),)
 	@echo Modules not configured, so not making $@
 else
 ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
@@ -1927,7 +1927,7 @@ endif
 
 # generate the modules packages and sign them
 modules: configure 
-ifndef MODULES_ENABLED
+ifeq ($(strip $(shell egrep ^[^\#]*CONFIG_MODULES $(CONFIG_FILE))),)
 	@echo Modules not configured, so not making $@
 else
 ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
@@ -1955,7 +1955,7 @@ endif
 
 # configure the modules packages
 modules-config modules_config: configure
-ifndef MODULES_ENABLED
+ifeq ($(strip $(shell egrep ^[^\#]*CONFIG_MODULES $(CONFIG_FILE))),)
 	@echo Modules not configured, so not making $@
 else
 ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
@@ -1981,8 +1981,8 @@ endif
         done
 endif
 
-modules-clean modules_clean: configure
-ifndef MODULES_ENABLED
+modules-clean modules_clean: .config
+ifeq ($(strip $(shell egrep ^[^\#]*CONFIG_MODULES $(CONFIG_FILE))),)
 	@echo Modules not configured, so not making $@
 else
 	-for module in $(MODULE_LOC)/* ; do \

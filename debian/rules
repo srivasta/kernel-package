@@ -5,9 +5,9 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Fri Aug 22 11:44:03 2003
+## Last Modified On : Mon Oct  6 10:43:57 2003
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 145
+## Update Count	    : 146
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
@@ -34,7 +34,7 @@ export DEB_HOST_GNU_TYPE   := $(shell dpkg-architecture $(ha) -qDEB_HOST_GNU_TYP
 #                          sed 's/^Version: *//')
 #
 
-#    $Id: rules,v 1.43 2003/09/04 16:09:12 srivasta Exp $
+#    $Id: rules,v 1.44 2003/10/06 16:23:03 srivasta Exp $
 
 
 # Please change the maintainer information, as well as the debian version
@@ -136,14 +136,15 @@ stamp-binary:
 	$(make_directory)  $(LINTIANDIR)
 	echo "kernel-package: description-synopsis-might-not-be-phrased-properly" \
                                 >>          $(LINTIANDIR)/$(package)
-	$(install_file)    debian/conffiles $(TMPTOP)/DEBIAN/conffiles
-	$(install_file)    debian/changelog $(DOCDIR)/changelog
-	$(install_file)    README $(DOCDIR)/README
-	$(install_file)    kernel/Flavours $(DOCDIR)/Flavours
-	$(install_file)    Problems $(DOCDIR)/Problems
-	$(install_file)    _make-kpkg $(BASH_DIR)/make_kpkg
-	$(install_file)    Multi-Arch $(DOCDIR)/Multi-Arch
-	$(install_file)    Rationale $(DOCDIR)/Rationale
+	$(install_file)    debian/conffiles             $(TMPTOP)/DEBIAN/conffiles
+	$(install_file)    debian/changelog             $(DOCDIR)/changelog
+	$(install_file)    README                       $(DOCDIR)/README
+	$(install_file)    kernel/Flavours              $(DOCDIR)/Flavours
+	$(install_file)    kernel/HOWTO-Linux-2.6-Woody $(DOCDIR)/
+	$(install_file)    Problems                     $(DOCDIR)/Problems
+	$(install_file)    _make-kpkg                   $(BASH_DIR)/make_kpkg
+	$(install_file)    Multi-Arch                   $(DOCDIR)/Multi-Arch
+	$(install_file)    Rationale                    $(DOCDIR)/Rationale
 	gzip -9fqr         $(DOCDIR)
 	(cd $(DOCDIR);     for file in $(DOCFILES); do \
                             ln -s ../../$(package)/$$file $$file; \
