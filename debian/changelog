@@ -1,3 +1,21 @@
+kernel-package (3.37) unstable; urgency=low
+
+  * No longer create a System.map symlink in /, since that may confuse
+    klogd when choosing kernel images using LILO. Since top, ps, and klogd
+    look at /boot/System.map-<version>, we just need to make sure that
+    file is present. This makes us friendlier to multiple images of the
+    same kernel version.
+  * No longer redirect output to a file in /tmp for security reasons (we
+    use a log file in /var/log instead). This fixes BUG#11765 and
+    BUG#11766. 
+  * Added support for different flavours of the same kernel version for
+    people who need them. This is based on the ideas and work of Bill
+    Mitchell <mitchell@mozcom.com> and Noel Maddy <ncm@biostat.hfh.edu>.
+    This should make us fully compliant to having multiple flavours of the
+    same kernel version.
+
+ -- Manoj Srivastava <srivasta@debian.org>  Mon,  4 Aug 1997 13:03:38 -0500
+
 kernel-package (3.36) unstable; urgency=low
 
   * All kernel packages produced now list the version of kernel-package
