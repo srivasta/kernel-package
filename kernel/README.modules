@@ -3,9 +3,9 @@
                 === == ======= === === ==============
 
 	There are a number of add-on modules (that is, kernel modules
- are are developed apart fromt he Linux kernel and do not appear in
- the mainstream kernel sources). Notables, at the time of writing, are
- the pcmcia-cs and and the alsa sound modules.
+ are developed apart fromt he Linux kernel and do not appear in the 
+ mainstream kernel sources). Notables, at the time of writing, are the 
+ pcmcia-cs and and the alsa sound modules.
 
 	Most of these modules need to be compiled for each kernel
  version; they are very dependent on kernel structures. It was

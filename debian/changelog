@@ -1,3 +1,14 @@
+kernel-package (6.32) frozen unstable; urgency=low
+
+  * darnit. Forgot to mention frozen in the last upload. The current
+    potato version is broken (a grave bug); this fixes it. This version
+    also has undergone extensive testing, complete with building modules,
+    and installing the results, on an i386 machine. I would consider this
+    the final release for potato.
+  * Fixed a minor typor "are are" --> "are" in the docs. closes: Bug#56290
+
+ -- Manoj Srivastava <srivasta@debian.org>  Fri, 28 Jan 2000 13:26:22 -0600
+
 kernel-package (6.31) unstable; urgency=low
 
   * Never release a version without a full install test. There were typos
