@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.145 2001/11/12 18:46:14 srivasta Exp $
+## $Id: rules,v 1.146 2001/11/12 18:54:18 srivasta Exp $
 ###############################################################################
 
 ifdef ARCH
@@ -1143,7 +1143,7 @@ ifeq ($(strip $(patch_the_kernel)),YES)
 	$(deb_rule) unpatch_now
 endif
 ifeq ($(strip $(NO_UNPATCH_BY_DEFAULT)),)
-	test -f stamp-patch && $(deb_rule) unpatch_now
+	(test -f stamp-patch && $(deb_rule) unpatch_now) || true
 endif
 	rm -f $(FILES_TO_CLEAN) $(STAMPS_TO_CLEAN)
 	test ! -f .config || cp -pf .config config.precious
