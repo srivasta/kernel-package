@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Wed Nov 25 01:38:07 1998
-## Last Machine Used: tiamat.datasync.com
-## Update Count	    : 376
+## Last Modified On : Thu Jan  7 23:25:21 1999
+## Last Machine Used: tiamat.golden-gryphon.com
+## Update Count	    : 380
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.58 1998/11/25 07:43:41 srivasta Exp $
+## $Id: rules,v 1.59 1999/01/08 05:32:17 srivasta Exp $
 ###############################################################################
 
 # The version of kernel-package this belongs to
@@ -238,6 +238,8 @@ PATCHLEVEL:=$(shell egrep '^PATCHLEVEL +=' Makefile 2>/dev/null | \
                     sed -e 's/[^0-9]*\([0-9]*\)/\1/')
 SUBLEVEL:=$(shell egrep '^SUBLEVEL +=' Makefile 2>/dev/null | \
                   sed -e 's/[^0-9]*\([0-9]*\)/\1/')
+EXTRAVERSION:=$(shell egrep '^EXTRAVERSION +=' Makefile 2>/dev/null | \
+                 sed -e 's/EXTRAVERSION =\(.*\)/\1/')
 HAVE_NEW_MODLIB:=$(shell egrep '\(INSTALL_MOD_PATH)\' Makefile 2>/dev/null )
 
 # If you want to have more than one kernel configuration per kernel
@@ -262,7 +264,7 @@ INT_FLAV :=
 FLAV_ARG :=
 endif
 
-version = $(VERSION).$(PATCHLEVEL).$(SUBLEVEL)$(INT_FLAV)
+version = $(VERSION).$(PATCHLEVEL).$(SUBLEVEL)$(EXTRAVERSION)$(INT_FLAV)
 
 # SUBARCH is used to distinguish Amiga, Atari, Macintosh, etc. kernels
 # for Debian/m68k.  It only affects the naming of the kernel-image as
@@ -293,13 +295,13 @@ DIRS_TO_CLEAN   = debian/tmp-source debian/tmp-headers debian/tmp-image
 
 CONFLOC    :=/etc/kernel-pkg.conf
 LIBLOC     :=/usr/lib/kernel-package
-MODULE_LOC :=/usr/src/modules
+MODULE_LOC ?=/usr/src/modules
 
 DEBDIR      = $(LIBLOC)
 DEBDIR_NAME = $(shell basename $(DEBDIR))
-CONFDIR     = $(DEBDIR)/Config
+CONFDIR     ?= $(DEBDIR)/Config
 
-PATCH_DIR        := /usr/src/kernel-patches/$(architecture)
+PATCH_DIR        ?= /usr/src/kernel-patches/$(architecture)
 DIR_PATCH_APPLY   = $(PATCH_DIR)/apply
 DIR_PATCH_UNPATCH = $(PATCH_DIR)/unpatch
 
@@ -792,6 +794,7 @@ define mod_inst_cmds
         if [ -f SOUND_MODULES ]; then inst_mod SOUND_MODULES sound; fi; \
         if [ -f VIDEO_MODULES ]; then inst_mod VIDEO_MODULES video; fi; \
         if [ -f FC4_MODULES   ]; then inst_mod FC4_MODULES   fc4;   fi; \
+        if [ -f IRDA_MODULES  ]; then inst_mod IRDA_MODULES  net;   fi; \
         \
         ls *.o > .allmods; \
         echo $$MODULES | tr ' ' '\n' | sort | comm -23 .allmods - > .misc; \
