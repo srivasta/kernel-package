@@ -5,9 +5,9 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Wed Sep  6 09:36:51 2000
+## Last Modified On : Fri Jan 19 12:47:33 2001
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 132
+## Update Count	    : 133
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
@@ -34,7 +34,7 @@ export DEB_HOST_GNU_TYPE   := $(shell dpkg-architecture $(ha) -qDEB_HOST_GNU_TYP
 #                          sed 's/^Version: *//')
 #
 
-#    $Id: rules,v 1.26 2000/09/27 18:34:15 srivasta Exp $
+#    $Id: rules,v 1.27 2001/01/19 19:35:10 srivasta Exp $
 
 
 # Please change the maintainer information, as well as the debian version
@@ -63,7 +63,8 @@ LIBLOC     := /usr/share/kernel-package
 MODULE_LOC := /usr/src/modules
 
 DOCFILES = README.doc README.headers README.image README.modules \
-           README.source README.tecra sample.kernel-img.conf
+           README.source README.tecra sample.kernel-img.conf \
+           README kernel_grub_conf.sh
 
 # Location of the source dir
 SRCTOP     := $(shell if [ "$$PWD" != "" ]; then echo $$PWD; else pwd; fi)

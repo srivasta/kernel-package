@@ -21,7 +21,7 @@
 .\" Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139,
 .\" USA.
 .\"
-.\" $Id: kernel-img.conf.5,v 1.8 2001/01/19 18:07:20 srivasta Exp $
+.\" $Id: kernel-img.conf.5,v 1.9 2001/01/19 19:35:09 srivasta Exp $
 .\"
 .TH KERNEL\-IMG.CONF 5 "Mar 21 2000" "Debian" "Debian GNU/Linux manual" 
 .\" NAME should be all caps, SECTION should be 1-8, maybe w/ subsection
@@ -143,7 +143,8 @@ are set,
 overrides)
 .TP
 .B postinst_hook 
-Set this variable to a script to be executed after all the symbolic
+Set this variable to a script to be executed during installation after
+all the symbolic 
 links are created, but before running the boot loader or offering to
 create a floppy. This script shall be called with two arguments,
 the first being the
@@ -151,7 +152,19 @@ the first being the
 of the kernel image, and the second argument being the
 .I location
 of the kernel image itself. Errors in the script shall produce a
-warning message, but shall be otherwise ignored..
+warning message, but shall be otherwise ignored. An example script for
+grub users is present in /usr/share/doc/kernel-package/ directory.
+.TP
+.B postrm_hook 
+Set this variable to a script to be executed in the postrm (that is,
+after the image has been removed) after all the remove actions have
+been performed. This script shall be called with two arguments,
+the first being the
+.I version
+of the kernel image, and the second argument being the
+.I location
+of the kernel image itself. Errors in the script shall produce a
+warning message, but shall be otherwise ignored.
 .TP
 .B move_image 
 Instead of creating symbolic links to (or, is 

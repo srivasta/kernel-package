@@ -5,14 +5,14 @@
 # Created On       : Sat Apr 27 05:55:26 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Fri Jan 19 11:24:45 2001
+# Last Modified On : Fri Jan 19 12:59:05 2001
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 194
+# Update Count     : 195
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
 # 
-#    $Id: image.postinst,v 1.59 2001/01/19 17:53:57 srivasta Exp $
+#    $Id: image.postinst,v 1.60 2001/01/19 19:35:10 srivasta Exp $
 #
 
 # 
@@ -101,6 +101,7 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
 
       $image_dest      = "$1"  if /image_dest\s*=\s*(\S+)/ig;
       $postinst_hook   = "$1"  if /postinst_hook\s*=\s*(\S+)/ig;
+      $postrm_hook     = "$1"  if /postrm_hook\s*=\s*(\S+)/ig;
     }
     close CONF;
     $have_conffile = "Yes";

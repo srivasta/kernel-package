@@ -1,3 +1,17 @@
+kernel-package (7.27) unstable; urgency=low
+
+  * For folks using grub, there are now postinst_hook and postrm_hook
+    variables that can be pointed to scripts that add or remove a line
+    from the grub menu list at kerel image install and remove times. A
+    sample script to add lines to a grub menu file is included in the dir
+    /usr/share/doc/kernel-pacakage/. The script, called
+    kernel_grub_conf.sh, is coutesy of Junichi Uekawa <dancer@debian.org>
+    with minor modifications by yours truly.
+  * Added a postrm_hook variable that can be used to add a script to run
+    when removing a kernel image package
+
+ -- Manoj Srivastava <srivasta@debian.org>  Fri, 19 Jan 2001 13:34:56 -0600
+
 kernel-package (7.26) unstable; urgency=low
 
   * Documentation fixes, thanks to Ulf Jaenicke-Roessler
