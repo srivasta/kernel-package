@@ -5,15 +5,15 @@
 # Created On       : Fri May 17 03:28:59 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Mon Jun  2 15:12:53 1997
+# Last Modified On : Wed Jun 18 13:01:43 1997
 # Last Machine Used: tiamat.datasync.com
-# Update Count     : 51
+# Update Count     : 52
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
 # 
 #
-#    $Id: image.prerm,v 1.2 1997/06/03 03:33:19 srivasta Exp $
+#    $Id: image.prerm,v 1.3 1997/06/18 18:17:55 srivasta Exp $
 #
 # 
 
@@ -96,7 +96,6 @@ EOG
 sub success () {
     -f "/lib/modules/$version/modules.dep"  && 
       unlink "/lib/modules/$version/modules.dep";
-    -f "/boot/psdatabase-$version" && unlink "/boot/psdatabase-$version";
     exit 0;
 }
 
