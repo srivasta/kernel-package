@@ -1,3 +1,15 @@
+kernel-package (5.13) frozen unstable; urgency=low
+
+  * Fixed setting email address for modules. closes: BUG#29217
+  * Made it possible to set the subarch to be different from the one one
+    is on (as long as the subarch being set is a valid sub arch of the
+    current architecture). This should help the ppc folks.
+  * Added to the module compilation documentation by incorporating part of
+    the pcmcia-source documentation. This should hopefully make compiling
+    stand-alone modules easier to compile
+
+ -- Manoj Srivastava <srivasta@debian.org>  Mon,  9 Nov 1998 18:12:23 -0600
+
 kernel-package (5.12) unstable; urgency=low
 
   * Add things to the changelog file for the sub packages. Also, fix a
