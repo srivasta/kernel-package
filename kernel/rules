@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Tue Sep  8 14:32:50 1998
+## Last Modified On : Tue Sep  8 16:25:57 1998
 ## Last Machine Used: tiamat.datasync.com
-## Update Count	    : 352
+## Update Count	    : 353
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.44 1998/09/08 19:52:44 srivasta Exp $
+## $Id: rules,v 1.45 1998/09/08 21:26:25 srivasta Exp $
 ###############################################################################
 
 # The version of kernel-package this belongs to
@@ -619,7 +619,7 @@ stamp-image: configure build
 	sed -e 's/=V/$(version)/g'    -e 's/=B/$(image_in_boot)/g'   \
             -e 's/=S/$(no_symlink)/g' -e 's/=R/$(reverse_symlink)/g' \
             -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \
-            -e 's/=D/$(IMAGE_DESTDIR)/g'                             \
+            -e 's,=D,$(IMAGE_DESTDIR),g'                             \
              $(DEBDIR)/image.postinst > debian/tmp-image/DEBIAN/postinst
 	chmod 755 debian/tmp-image/DEBIAN/postinst
 	sed -e 's/=V/$(version)/g'    -e 's/=L/$(loader)/g'          \
