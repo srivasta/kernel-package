@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.139 2001/09/30 08:59:40 srivasta Exp $
+## $Id: rules,v 1.140 2001/10/01 17:07:38 srivasta Exp $
 ###############################################################################
 
 ifdef ARCH
@@ -648,7 +648,8 @@ endif
 # *AND* there is a DEBIAN_REVISION, in which case the DEBIAN_REVISION
 # over rides (since we are going to replace the changelog file soon
 # anyway.  Else, use the commandline or env var setting. Or else
-# default to 1.00
+# default to 1.00.Custom, unless the human has requested that the 
+# revision is mandatory, in which case we raise an error
 
 ifeq ($(strip $(HAS_CHANGELOG)),YES)
 debian := $(shell if test -f debian/changelog; then \
@@ -665,6 +666,19 @@ else
 debian := 1.00.Custom
 endif
 endif
+endif
+endif
+
+# Hmm. The version that we have computed *MUST* match the one that is in the 
+# changelog. 
+ifeq ($(strip $(HAS_CHANGELOG)),YES)
+saved_version := $(shell if test -f debian/changelog; then \
+                     perl -nle 'print /^kernel-source-(\S+)/; exit 0' \
+                          debian/changelog;\
+                  fi; )
+ifneq ($(strip $(saved_version)),$(strip $(version)))
+$(error "The changelog says we are creating $(saved_version), but I thiought the version is $(version)")
+
 endif
 endif
 
