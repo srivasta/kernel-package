@@ -1,3 +1,10 @@
+kernel-package (6.10) unstable; urgency=low
+
+  * Added new patch for flavours that works with 2.2 kernel Makefiles. 
+    closes: Bug#37857
+
+ -- Manoj Srivastava <srivasta@debian.org>  Mon, 17 May 1999 15:40:43 -0500
+
 kernel-package (6.09) unstable; urgency=low
 
   * Added new changes for PowerMacs (boy do those sub archs multiply out
