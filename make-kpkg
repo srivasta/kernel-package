@@ -5,16 +5,16 @@
 # Created On       : Mon Jun 17 01:10:11 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Tue Apr 14 02:12:22 1998
+# Last Modified On : Fri May  8 04:33:59 1998
 # Last Machine Used: tiamat.datasync.com
-# Update Count     : 100
+# Update Count     : 101
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
 #
 #
 #
-#    $Id: make-kpkg,v 1.13 1998/04/21 16:41:20 srivasta Exp $
+#    $Id: make-kpkg,v 1.14 1998/05/08 09:42:45 srivasta Exp $
 #
 require 5.002;
 use strict;
@@ -29,10 +29,11 @@ make-kpkg - build Debian kernel packages from Linux kernel sources.
 ($main::MYNAME     = $main::0) =~ s|.*/||;
 $main::Author      = "Manoj Srivastava";
 $main::AuthorMail  = "srivasta\@debian.org";
-$main::Version     = '$Revision: 1.13 $ ';
+$main::Version     = '$Revision: 1.14 $ ';
 
 my $help_opt=0; 
 my $revision=0; 
+my $flavour=''; 
 my $signature="" ;
 my $targ_opt=0; 
 my $noexec; 
@@ -43,6 +44,7 @@ my $root_cmd;
 my %option_ctl = ("help"       => \$help_opt,
 		  "noexec"     => \$noexec,
 		  "revision=s" => \$revision,
+		  "flavour=s"  => \$flavour,
 		  "pgpsign=s"  => \$signature,
 		  "targets"    => \$targ_opt,
 		  "zimage"     => \$zimage,
@@ -90,6 +92,20 @@ This is because  B<dpkg> imposes an ordering on version numbers,
 so that it can tell whether packages are being up or downgraded and
 so that dselect can tell whether a package it finds available is
 newer than the one installed on the system.
+
+
+=back
+
+=item B<--flavour> foo
+
+=over 2
+
+Sets the kernel flavour to the argument B<number>. The flavour is 
+also appended to the package name. You need a patched Makefile to 
+make this work propperly (see /usr/doc/kernel-package/FLAVOURS.gz).
+It may contain only alphanumerics and the characters - + . (full 
+stop, hyphen, and plus). B<NOTE>: Hyphens are discouraged.  (Look
+at Chapter 5 of the Programmers manual for details). 
 
 
 =back
@@ -170,6 +186,8 @@ usage: $main::MYNAME [options] target [target ...]
  --help                This message.
  --revision number     The debian revision number. ([a-z.+0-9]) (Must
                          have digit, no hyphen allowed)
+ --flavour  foo        an additional kernel sub-version. ([-a-z.+0-9])
+                         see /usr/doc/kernel-package/FLAVOURS.gz
  --pgpsign  name       A ID used to sign the changes file using pgp.
  --targets             Lists the known targets.
  --zimage              Create a kernel using zImage rather than bzImage
@@ -467,6 +485,9 @@ EOERR1
   } 
   if ($revision){
     $command .= " DEBIAN_REVISION=$revision ";
+  }
+  if ($flavour){
+    $command .= " FLAVOUR=$flavour ";
   }
   if ($noexec){
     $command .= " -n ";
