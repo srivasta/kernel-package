@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Fri May  1 14:22:36 1998
+## Last Modified On : Fri May  8 04:11:58 1998
 ## Last Machine Used: tiamat.datasync.com
-## Update Count	    : 266
+## Update Count	    : 269
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.37 1998/05/01 19:25:01 srivasta Exp $
+## $Id: rules,v 1.38 1998/05/08 09:43:18 srivasta Exp $
 ###############################################################################
 
 # The version of kernel-package this belongs to
@@ -41,6 +41,9 @@ reverse_symlink :=
 # Whether to look for and install kernel patches by default.
 # Be very careful if you do this.
 patch_the_kernel := NO
+
+# run make clean after build
+do_clean := YES
 
 # The default architecture (all if architecture independent)
 architecture:=$(shell dpkg --print-architecture)
@@ -113,13 +116,19 @@ SUBLEVEL:=$(shell grep ^SUBLEVEL Makefile 2>/dev/null | \
 # names and versions of the image, source, headers, and doc packages,
 # and where the modules are searched for in /lib/modules.
 
+ifdef FLAVOUR
+# uhm - should check if we really have a Makefile capable of Flavours?
+endif
+
 FLAVOUR:=$(shell grep ^FLAVOUR Makefile 2>/dev/null | \
                   perl -ple 's/FLAVOUR[\s:=]+//g')
 
 ifneq ($(strip $(FLAVOUR)),)
 INT_FLAV := -$(FLAVOUR)
+FLAV_ARG := FLAVOUR=$(FLAVOUR)
 else
 INT_FLAV :=
+FLAV_ARG :=
 endif
 
 version = $(VERSION).$(PATCHLEVEL).$(SUBLEVEL)$(INT_FLAV)
@@ -247,6 +256,9 @@ root_cmd = $(ROOT_CMD)
 endif
 
 
+ifneq ($(strip $(CLEAN_SOURCE)),)
+do_clean = $(CLEAN_SOURCE)
+endif
 
 # See if we are being run in the kernel directory
 IN_KERNEL_DIR := $(shell if test -d drivers -a -d kernel -a -d fs -a \
@@ -295,9 +307,9 @@ all build: configure
 # debian.config contains the current idea of what the image should
 # have.
 	-test -f stamp-configure || $(deb_rule) configure
-	$(MAKE) ARCH=$(KERNEL_ARCH) $(kimage)
+	$(MAKE) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) $(kimage)
 ifdef MODULES_ENABLED
-	$(MAKE) ARCH=$(KERNEL_ARCH) modules
+	$(MAKE) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) modules
 endif
 	touch stamp-build
 
@@ -336,9 +348,9 @@ endif
 	-test ! -f stamp-configure && \
 	  (test -f .config || \
                 $(install_file) $(DEBDIR)/config .config) \
-	  && $(MAKE) ARCH=$(KERNEL_ARCH) oldconfig \
-          && $(MAKE) ARCH=$(KERNEL_ARCH) dep \
-          && $(MAKE) ARCH=$(KERNEL_ARCH) clean && \
+	  && $(MAKE) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) oldconfig \
+          && $(MAKE) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) dep \
+          && $(MAKE) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) clean && \
               touch stamp-configure
 
 .config:
@@ -354,7 +366,7 @@ ifeq ($(strip $(patch_the_kernel)),YES)
 endif
 	rm -f $(FILES_TO_CLEAN) $(STAMPS_TO_CLEAN)
 	cp -pf .config config.precious
-	-test -f Makefile && $(MAKE) ARCH=$(KERNEL_ARCH) distclean
+	-test -f Makefile && $(MAKE) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) distclean
 	mv -f config.precious .config
 	rm -rf $(DIRS_TO_CLEAN)
 	test -f stamp-building || test -f debian/official || rm -rf debian
@@ -411,14 +423,14 @@ stamp-source: configure
 	-tar cf - `echo * | sed -e 's/debian//g' -e 's/\.deb//g' ` \
 	| (cd debian/tmp-source/usr/src/$(package); umask 000; tar xsf -)
 	(cd debian/tmp-source/usr/src/$(package); \
-            $(MAKE) ARCH=$(KERNEL_ARCH) distclean)
+            $(MAKE) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) distclean)
 	(cd debian/tmp-source/usr/src/$(package); \
                         rm -f stamp-building $(STAMPS_TO_CLEAN))
 	(cd debian/tmp-source/usr/src/$(package)/include; rm -f asm; \
 		ln -s asm-$(KERNEL_ARCH) asm)
 	if test -f debian/official -a -f debian/README.Debian ; then \
            $(install_file) debian/README.Debian \
-		debian/tmp-source/usr/src/$(package)/README.Debian
+		debian/tmp-source/usr/src/$(package)/README.Debian ; \
 	else \
 	    sed -e 's/=V/$(version)/g' -e 's/=A/$(architecture)/g' \
                  $(DEBDIR)/README.source > \
@@ -656,7 +668,9 @@ endif
 	chmod -R og=rX debian/tmp-image
 	dpkg --build debian/tmp-image $(DEB_DEST)
 	rm -f -r debian/tmp-image
-	$(MAKE) ARCH=$(KERNEL_ARCH) clean
+ifeq ($(strip $(do_clean)),YES)
+	$(MAKE) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) clean
+endif
 	rm -f stamp-build
 	touch stamp-image
 
