@@ -1,4 +1,4 @@
-kernel-package (8.12) unstable; urgency=low
+kernel-package (8.012) unstable; urgency=low
 
   * Document the HEADER_CLEAN_HOOK and DOC_CLEAN_HOOK.
 
