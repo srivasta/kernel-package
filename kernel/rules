@@ -345,16 +345,16 @@ DEBCONFIG = $(CONFDIR)/config.alpha
 endif
 
 
+##### Sparc
 ifeq ($(strip $(architecture)),sparc)
-kimage := vmlinuz
-loaderdep = silo
-loader = silo
-loaderdoc=SiloDefault
-NEED_DIRECT_GZIP_IMAGE = YES
-kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
-DEBCONFIG = $(CONFDIR)/config.sparc
-ARCH_IN_NAME = YES
-
+  kimage := vmlinuz
+  loaderdep = silo
+  loader = silo
+  loaderdoc=SiloDefault
+  NEED_DIRECT_GZIP_IMAGE = YES
+  kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
+  DEBCONFIG = $(CONFDIR)/config.sparc
+  ARCH_IN_NAME = YES
   ifneq (,$(filter sparc64%,$(KPKG_SUBARCH)))
     KERNEL_ARCH = sparc64
   else
@@ -364,164 +364,160 @@ ARCH_IN_NAME = YES
       KERNEL_ARCH = $(strip $(shell uname -m))
     endif
   endif
-endif
-
-ifneq ($(shell if [ $(VERSION) -ge 2 -a $(PATCHLEVEL) -ge 5 -a  \
+  ifneq ($(shell if [ $(VERSION) -ge 2 -a $(PATCHLEVEL) -ge 5 -a  \
                     $(SUBLEVEL) -ge 41 ]; then echo new; \
              elif [ $(VERSION) -ge 2 -a $(PATCHLEVEL) -ge 6 ]; then \
                                          echo new; \
              elif [ $(VERSION) -ge 3 ]; then echo new; fi),)
-       target    = image
-       kimagesrc = arch/$(KERNEL_ARCH)/boot/image
-else
-       target    = vmlinux
-       kimagesrc = vmlinux
+    target    = image
+    kimagesrc = arch/$(KERNEL_ARCH)/boot/image
+  else
+    target    = vmlinux
+    kimagesrc = vmlinux
+  endif
 endif
 
-endif
 
-
+##### i386 and such
 ifeq ($(strip $(architecture)),i386)
-# sub archs can be i386 i486 i586 i686
-GUESS_SUBARCH:=$(shell if test -f .config; then \
+  # sub archs can be i386 i486 i586 i686
+  GUESS_SUBARCH:=$(shell if test -f .config; then \
                         perl -nle '/^CONFIG_M(.86)=y/ && print "i$$1"' .config;\
                        else \
                          uname -m;\
                        fi)
-
-ifeq (,$(findstring $(KPKG_SUBARCH),i386 i486 i586 i686))
-KPKG_SUBARCH:=$(GUESS_SUBARCH)
-endif
-
-kimage := bzImage
-loaderdep=lilo (>= 19.1) | grub
-loader=lilo
-loaderdoc=LiloDefault
-target = $(kimage)
-kimagesrc = $(strip arch/$(KERNEL_ARCH)/boot/$(kimage))
-kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
-DEBCONFIG= $(CONFDIR)/config.$(KPKG_SUBARCH)
-kelfimagesrc = vmlinux
-kelfimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
+  ifeq (,$(findstring $(KPKG_SUBARCH),i386 i486 i586 i686))
+    KPKG_SUBARCH:=$(GUESS_SUBARCH)
+  endif
+  kimage := bzImage
+  loaderdep=lilo (>= 19.1) | grub
+  loader=lilo
+  loaderdoc=LiloDefault
+  target = $(kimage)
+  kimagesrc = $(strip arch/$(KERNEL_ARCH)/boot/$(kimage))
+  kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
+  DEBCONFIG= $(CONFDIR)/config.$(KPKG_SUBARCH)
+  kelfimagesrc = vmlinux
+  kelfimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
 endif
 
 ##### S/390
 ifeq ($(strip $(architecture)),s390)
-kimage := zimage
-loaderdep=zipl
-loader=zipl
-loaderdoc=
-target = image
-NEED_DIRECT_GZIP_IMAGE=NO
-kimagesrc = $(strip arch/$(KERNEL_ARCH)/boot/$(target))
-kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
-DEBCONFIG= $(CONFDIR)/config.$(KPKG_SUBARCH)
+  kimage := zimage
+  loaderdep=zipl
+  loader=zipl
+  loaderdoc=
+  target = image
+  NEED_DIRECT_GZIP_IMAGE=NO
+  kimagesrc = $(strip arch/$(KERNEL_ARCH)/boot/$(target))
+  kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
+  DEBCONFIG= $(CONFDIR)/config.$(KPKG_SUBARCH)
 endif
 
 ##### hppa
 ifeq ($(strip $(architecture)),hppa)
-kimage := vmlinux
-loaderdep=palo
-loader=palo
-loaderdoc=
-target=$(kimage)
-NEED_DIRECT_GZIP_IMAGE=NO
-# Override arch name because hppa uses arch/parisc not arch/hppa
-KERNEL_ARCH := parisc
-kimagesrc=$(kimage)
-kimagedest=$(INT_IMAGE_DESTDIR)/vmlinux-$(version)
-# This doesn't seem to work, but the other archs do it...
-DEBCONFIG=$(CONFDIR)/config.$(KPKG_SUBARCH)
+  kimage := vmlinux
+  loaderdep=palo
+  loader=palo
+  loaderdoc=
+  target=$(kimage)
+  NEED_DIRECT_GZIP_IMAGE=NO
+  # Override arch name because hppa uses arch/parisc not arch/hppa
+  KERNEL_ARCH := parisc
+  kimagesrc=$(kimage)
+  kimagedest=$(INT_IMAGE_DESTDIR)/vmlinux-$(version)
+  # This doesn't seem to work, but the other archs do it...
+  DEBCONFIG=$(CONFDIR)/config.$(KPKG_SUBARCH)
 endif
 
 ##### ia64
 ifeq ($(strip $(architecture)),ia64)
-kimage := vmlinuz
-loaderdep=elilo
-loader=elilo
-loaderdoc=
-target=compressed
-NEED_DIRECT_GZIP_IMAGE=NO
-kimagesrc=vmlinux.gz
-kimagedest=$(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
-DEBCONFIG=$(CONFDIR)/config.$(KPKG_SUBARCH)
+  kimage := vmlinuz
+  loaderdep=elilo
+  loader=elilo
+  loaderdoc=
+  target=compressed
+  NEED_DIRECT_GZIP_IMAGE=NO
+  kimagesrc=vmlinux.gz
+  kimagedest=$(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
+  DEBCONFIG=$(CONFDIR)/config.$(KPKG_SUBARCH)
 endif
 
 ##### mips
 ifeq ($(strip $(architecture)),mips)
-kimage := vmlinux
-loaderdep=arcboot
-loader=arcboot
-loaderdoc=
-NEED_DIRECT_GZIP_IMAGE=NO
-kimagesrc = $(strip vmlinux)
-kimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
-DEBCONFIG= $(CONFDIR)/config.$(KPKG_SUBARCH)
+  kimage := vmlinux
+  loaderdep=arcboot
+  loader=arcboot
+  loaderdoc=
+  NEED_DIRECT_GZIP_IMAGE=NO
+  kimagesrc = $(strip vmlinux)
+  kimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
+  DEBCONFIG= $(CONFDIR)/config.$(KPKG_SUBARCH)
 
-ifneq ($(shell if [ $(VERSION) -ge 2 -a $(PATCHLEVEL) -ge 5 -a  \
-                    $(SUBLEVEL) -ge 41 ]; then echo new; \
-             elif [ $(VERSION) -ge 2 -a $(PATCHLEVEL) -ge 6 ]; then \
-                                         echo new; \
-             elif [ $(VERSION) -ge 3 ]; then echo new; fi),)
-       target    =
-else
-       target    = boot
-endif
+  ifneq ($(shell if [ $(VERSION) -ge 2 -a $(PATCHLEVEL) -ge 5 -a  \
+                      $(SUBLEVEL) -ge 41 ]; then echo new; \
+               elif [ $(VERSION) -ge 2 -a $(PATCHLEVEL) -ge 6 ]; then \
+                                           echo new; \
+               elif [ $(VERSION) -ge 3 ]; then echo new; fi),)
+    target    =
+  else
+    target    = boot
+  endif
 
-ifneq (,$(filter mips64%,$(KPKG_SUBARCH)))
-  KERNEL_ARCH = mips64
-endif
-ifneq (,$(filter %-64,$(KPKG_SUBARCH)))
-  KERNEL_ARCH = mips64
-endif
+  ifneq (,$(filter mips64%,$(KPKG_SUBARCH)))
+    KERNEL_ARCH = mips64
+  endif
+  ifneq (,$(filter %-64,$(KPKG_SUBARCH)))
+    KERNEL_ARCH = mips64
+  endif
 endif
 
 ##### mipsel
 ifeq ($(strip $(architecture)),mipsel)
-kimage := vmlinux
-loaderdep=delo
-loader=delo
-loaderdoc=
-NEED_DIRECT_GZIP_IMAGE=NO
-kimagesrc = $(strip vmlinux)
-kimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
-DEBCONFIG= $(CONFDIR)/config.$(KPKG_SUBARCH)
-KERNEL_ARCH= mips
-#HAVE_COFF_IMAGE = YES
-#coffsrc = $(strip arch/$(KERNEL_ARCH)/boot/vmlinux.ecoff)
-#coffdest=$(INT_IMAGE_DESTDIR)/vmlinux.ecoff-$(version)
+  kimage := vmlinux
+  loaderdep=delo
+  loader=delo
+  loaderdoc=
+  NEED_DIRECT_GZIP_IMAGE=NO
+  kimagesrc = $(strip vmlinux)
+  kimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
+  DEBCONFIG= $(CONFDIR)/config.$(KPKG_SUBARCH)
+  KERNEL_ARCH= mips
+  #HAVE_COFF_IMAGE = YES
+  #coffsrc = $(strip arch/$(KERNEL_ARCH)/boot/vmlinux.ecoff)
+  #coffdest=$(INT_IMAGE_DESTDIR)/vmlinux.ecoff-$(version)
 
-ifneq ($(shell if [ $(VERSION) -ge 2 -a $(PATCHLEVEL) -ge 5 -a  \
-                    $(SUBLEVEL) -ge 41 ]; then echo new; \
-             elif [ $(VERSION) -ge 2 -a $(PATCHLEVEL) -ge 6 ]; then \
-                                         echo new; \
-             elif [ $(VERSION) -ge 3 ]; then echo new; fi),)
-       target    =
-else
-       target    = boot
-endif
+  ifneq ($(shell if [ $(VERSION) -ge 2 -a $(PATCHLEVEL) -ge 5 -a  \
+                      $(SUBLEVEL) -ge 41 ]; then echo new; \
+               elif [ $(VERSION) -ge 2 -a $(PATCHLEVEL) -ge 6 ]; then \
+                                           echo new; \
+               elif [ $(VERSION) -ge 3 ]; then echo new; fi),)
+    target    =
+  else
+    target    = boot
+  endif
 
-ifneq (,$(filter mips64el%,$(KPKG_SUBARCH)))
-  KERNEL_ARCH = mips64
-endif
-ifneq (,$(filter %-64,$(KPKG_SUBARCH)))
-  KERNEL_ARCH = mips64
-endif
+  ifneq (,$(filter mips64el%,$(KPKG_SUBARCH)))
+    KERNEL_ARCH = mips64
+  endif
+  ifneq (,$(filter %-64,$(KPKG_SUBARCH)))
+    KERNEL_ARCH = mips64
+  endif
 endif
 
 ifeq ($(strip $(architecture)),um)
-kimage := linux
-target = linux
-loaderdep=
-loaderdoc=
+  kimage := linux
+  target = linux
+  loaderdep=
+  loaderdoc=
 endif
 ######################################################################
 ######################################################################
 
 ifneq ($(strip $(loaderdep)),)
-int_loaderdep := $(loaderdep),
+  int_loaderdep := $(loaderdep),
 else
-int_loaderdep :=
+  int_loaderdep :=
 endif
 
 

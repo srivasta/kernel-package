@@ -1,3 +1,11 @@
+kernel-package (8.069) unstable; urgency=high
+
+  * Bug fix: "kernel-package: too many endifs", thanks to Guido Guenther
+    and Martin Thorsen Ranang. The recent fix for sparc left around a
+    spurious endif, I think.                    (Closes: #220320, #220319).
+
+ -- Manoj Srivastava <srivasta@debian.org>  Tue, 11 Nov 2003 18:32:34 -0600
+
 kernel-package (8.068) unstable; urgency=low
 
   * Bug fix: Added support for gconfig.  Mention that it is only for 2.6.X
