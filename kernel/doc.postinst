@@ -14,9 +14,10 @@
 # 
 # 
 #
-#    $Id: doc.postinst,v 1.1 2000/04/30 20:51:56 srivasta Exp $
+#    $Id: doc.postinst,v 1.2 2001/07/13 18:10:26 srivasta Exp $
 #
 
+#use strict;			# For debugging
 
 $|=1;
 
@@ -72,11 +73,11 @@ if (-d "/usr/doc") {
 	
 	if (-d "/usr/doc/$package") {
 	  print STDERR <<"EOFERRONE";
-Failed repairs. There are old files in /usr/doc/$package_name/ created
+Failed repairs. There are old files in /usr/doc/$package/ created
 by you or another script. I can copy them over to the new location
-/usr/share/doc/$package_name, if you wish, preserving your versions of
+/usr/share/doc/$package, if you wish, preserving your versions of
 the files.  No files shall be over written, instead, backup versions
-shall be created in /usr/share/doc/$package_name as needed.
+shall be created in /usr/share/doc/$package as needed.
 
 EOFERRONE
   ;

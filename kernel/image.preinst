@@ -15,7 +15,8 @@
 # 
 
 # 
-# use strict; #for debugging
+#use strict; #for debugging
+
 $|=1;
 
 # Predefined values:
@@ -23,7 +24,7 @@ my $version         = "=V";
 my $image_in_boot   = "=B";     # Should be empty, mostly
 my $no_symlink      = "=S";     # Should be empty, mostly
 my $reverse_symlink = "=R";     # Should be empty, mostly
-my $do_symlinks     = "Yes";	# target machine defined
+my $do_symlink     = "Yes";	# target machine defined
 my $do_boot_enable  = "Yes";	# target machine defined
 my $do_bootfloppy   = "Yes";	# target machine defined
 my $do_bootloader   = "Yes";	# target machine defined
@@ -107,7 +108,7 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
 # For some versions of kernel-package, we had tis warning in the
 # postinst, but the rules did not really interpolate the value in.
 # Here is a sanity check.
-$pattern = "=" . "I";
+my $pattern = "=" . "I";
 $initrd=~ s/^$pattern$//;
 
 if ($initrd && !$do_initrd) {
@@ -133,7 +134,7 @@ EOF
 if (-d "/lib/modules/$version") {
 
   if ($clobber_modules) {
-    my $ret = system("mv /lib/modules/$version /lib/modules/$version_$$");
+    my $ret = system("mv /lib/modules/$version /lib/modules/${version}_$$");
     if ($ret) {
       print STDERR <<EOF;
 You are attempting to install a kernel image (version $version)
@@ -141,7 +142,7 @@ However, the directory /lib/modules/$version still exists.
 
 As you have instructed, an attempt was made to move the directory out
 of the way. Unfortunately, There was a problem moving
-/lib/modules/$version to /lib/modules/$version_$$.  
+/lib/modules/$version to /lib/modules/${version}_$$.  
 
 I suggest you move /lib/modules/$version out of the way manually,
 and then try re-installing this image.

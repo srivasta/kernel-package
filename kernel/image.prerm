@@ -13,9 +13,10 @@
 # Description      : 
 # 
 #
-#    $Id: image.prerm,v 1.10 2001/07/06 19:53:02 srivasta Exp $
+#    $Id: image.prerm,v 1.11 2001/07/13 18:10:26 srivasta Exp $
 #
 # 
+#use strict;
 
 $|=1;
 # Predefined values:

@@ -12,19 +12,20 @@
 # HISTORY          : 
 # Description      : 
 # 
-#     $Id: image.postrm,v 1.9 2001/07/06 19:53:02 srivasta Exp $
+#     $Id: image.postrm,v 1.10 2001/07/13 18:10:26 srivasta Exp $
 #
 
 
 # 
-# use strict; #for debugging
+#use strict; #for debugging
+
 $|=1;
 # Predefined values:
 my $version         = "=V";
 my $image_in_boot   = "=B";	# Should be empty, mostly
 my $no_symlink      = "=S";	# Should be empty, mostly
 my $reverse_symlink = "=R";	# Should be empty, mostly
-my $do_symlinks     = "Yes";	# target machine defined
+my $do_symlink      = "Yes";	# target machine defined
 my $do_boot_enable  = "Yes";	# target machine defined
 my $do_bootfloppy   = "Yes";	# target machine defined
 my $do_bootloader   = "Yes";	# target machine defined
@@ -34,7 +35,10 @@ my $loader          = "=L";     # lilo, silo, quik, palo, vmelilo, or nettrom
 my $image_dir       = "=D";     # where the image is located
 my $clobber_modules = '';       # target machine defined
 my $initrd          = "=I";     # initrd kernel
+my $do_initrd       = '';       # Normally, we don't
 my $use_hard_links  = '';       # hardlinks do not work across fs boundaries
+my $postinst_hook   = '';       #Normally we do not
+my $postrm_hook     = '';       #Normally we do not
 
 my $Loader          = "LILO";
 $Loader             = "SILO"  if $loader =~ /silo/io;
@@ -42,13 +46,6 @@ $Loader             = "QUIK"  if $loader =~ /quik/io;
 $Loader             = "PALO"  if $loader =~ /palo/io;
 $Loader             = "NETTROM"  if $loader =~ /nettrom/io;
 $Loader             = "VMELILO"  if $loader =~ /vmelilo/io;
-
-if (! $image_dest) {
-  $image_dest         = "boot"  
-}
-else {
-  $image_dest  =~ s|^/||o;
-}
 
 
 # This should not point to /tmp, because of security risks.
@@ -64,6 +61,7 @@ my $image_dest      = "/";
 my $realimageloc  = "/$image_dir/";
 my $have_conffile = "";
 my $CONF_LOC      = '/etc/kernel-img.conf';
+my $relative_links = '';
 
 # remove multiple leading slashes; make sure there is at least one.
 $realimageloc  =~ s|^/*|/|o;
@@ -72,8 +70,8 @@ $realimageloc  =~ s|/+|/|o;
 # Ignore all invocations uxcept when called on to purge.
 exit 0 unless $ARGV[0] =~ /purge/;
 
-# most of our work is done in $imagedir
-chdir("$imagedir") or die "could not chdir to $imagedir:$!\n";
+# most of our work is done in $image_dir
+chdir("$image_dir") or die "could not chdir to $image_dir:$!\n";
 
 if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
   if (open(CONF, "$CONF_LOC")) {
@@ -141,7 +139,7 @@ sub image_magic {
     if (!defined($vmlinuz_target)) {
       # what, a dangling symlink?
       warn "The link "  . $image_dest . "$kimage is a dangling link\n";
-      warn "Removing dangling sym link "  . $imagedir . "$kimage \n";
+      warn "Removing dangling sym link "  . $image_dir . "$kimage \n";
       warn "Unless you used the optional flag in lilo, you may  \n";
       warn " need to re-run $loader\n";
       # Remove the dangling link

@@ -12,18 +12,20 @@
 # HISTORY          :
 # Description      :
 #
-#    $Id: image.postinst,v 1.69 2001/07/06 20:03:39 srivasta Exp $
+#    $Id: image.postinst,v 1.70 2001/07/13 18:10:26 srivasta Exp $
 #
 
 #
-# use strict; #for debugging
+#use strict; #for debugging
+
 $|=1;
+
 # Predefined values:
 my $version         = "=V";
 my $image_in_boot   = "=B";	# Should be empty, mostly
 my $no_symlink      = "=S";	# Should be empty, mostly
 my $reverse_symlink = "=R";	# Should be empty, mostly
-my $do_symlinks     = "Yes";	# target machine defined
+my $do_symlink      = "Yes";	# target machine defined
 my $do_boot_enable  = "Yes";	# target machine defined
 my $do_bootfloppy   = "Yes";	# target machine defined
 my $do_bootloader   = "Yes";	# target machine defined
@@ -34,7 +36,12 @@ my $image_dir       = "=D";     # where the image is located
 my $clobber_modules = '';       # target machine defined
 my $relative_links  = "";       # target machine defined
 my $initrd          = "=I";     # initrd kernel
+my $do_initrd       = '';	# Normally we do not
 my $use_hard_links  = '';       # hardlinks do not work across fs boundaries
+my $postinst_hook   = '';       #Normally we do not
+my $postrm_hook     = '';       #Normally we do not
+
+my $package_name    = "kernel-image-$version";
 
 my $Loader          = "LILO";
 $Loader             = "SILO"  if $loader =~ /silo/io;
@@ -49,15 +56,19 @@ $Loader             = "VMELILO"  if $loader =~ /vmelilo/io;
 my $temp_file_name = "/var/log/$loader" . "_log.$$";
 
 #known variables
-my @boilerplate   = ();
-my $bootdevice    = '';
-my $rootdevice    = '';
-my $rootdisk      = '';
-my $rootpartition = '';
+my @boilerplate     = ();
+my @silotemplate    = ();
+my @quiktemplate    = ();
+my @palotemplate    = ();
+my @vmelilotemplate = ();
+my $bootdevice      = '';
+my $rootdevice      = '';
+my $rootdisk        = '';
+my $rootpartition   = '';
 my $image_dest      = "/";
-my $realimageloc  = "/$image_dir/";
-my $have_conffile = "";
-my $CONF_LOC      = '/etc/kernel-img.conf';
+my $realimageloc    = "/$image_dir/";
+my $have_conffile   = "";
+my $CONF_LOC        = '/etc/kernel-img.conf';
 
 # Ignore all invocations except when called on to configure.
 exit 0 unless $ARGV[0] =~ /configure/;
@@ -465,7 +476,7 @@ sub image_magic {
 	  . $image_dest . "$kimage .\n");
     }
 
-    my $old = $image_dest;
+    my $Old = $image_dest;
     if (test_relative ('Old Dir' => $Old, 'New Dir' => $realimageloc)) {
       $Old   =~ s|^/*||o;
     }
@@ -1223,7 +1234,7 @@ EO_MSG_B
 sub silo_floppy {
   my $drive = shift;
   my $mountpoint = "/var/lib/kernel.mntpoint.$$";
-  $ret = system '/sbin/mke2fs', "/dev/fd$drive";
+  my $ret = system '/sbin/mke2fs', "/dev/fd$drive";
   return $ret if $ret;
   $ret = mkdir $mountpoint, 0755;
   return $ret if $ret;
