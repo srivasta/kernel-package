@@ -1,5 +1,5 @@
 
-    $Id: Problems,v 1.3 1997/09/18 04:59:24 srivasta Exp $
+    $Id: Problems,v 1.4 1997/10/22 07:47:57 srivasta Exp $
 
  This is an (incomplete) list of problems that people have encountered
  in the past while using kernel-package. Please remember to configure
@@ -80,3 +80,18 @@
 
      Anything other than modules.dep showing up is something that depmod
      can no longer tolerate. Remove those files, and things should be fine.
+
+   g) dpkg-gencontrol fails if LC_ALL is set to de_DE.  Actually, I can't
+      really confirm this works for anything except en_US. This is true as of
+      dpkg/dpkg-dev 1.4.0.19. The error actually reported seems to be
+      either that debian/substvars file can not be found, or that the
+      changelog file is empty (eben when the file is not empty). 
+
+      The work around seems to be to set the LC_ALL to en_US while compiling
+      the kernel. This should be fixed soon.
+
+    h) dpkg upgrades the custom kernel to a new standard kernel. This
+       means that epochs were used; unfortunately I did not consider
+       that when I wrote all the documentation. I have since upgraded
+       the documentation; and you can add epochs to your custom kernel
+       just as well as the upstream maintainers.

@@ -1,3 +1,15 @@
+kernel-package (3.42) unstable; urgency=low
+
+  * Changed image postinst not to use the obsolete -d option to
+    superformat. Removed extra spaces from the exec option, so that it is
+    more likely to work. Noticed by Joost Kooij <kooij@mpn.cp.philips.com>
+    as BUG#14022
+  * Note that the proposed two level versioning scheme fails if standard
+    kernels use epochs. Further note that one may introduce epochs even in
+    custom kernels. This fixes BUG#14067.
+
+ -- Manoj Srivastava <srivasta@debian.org>  Wed, 22 Oct 1997 02:47:22 -0500
+
 kernel-package (3.41) unstable; urgency=low
 
   * Handle obsolete /System.map and /System.old links left around by older

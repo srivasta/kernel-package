@@ -12,7 +12,7 @@
 # HISTORY          : 
 # Description      : 
 # 
-#    $Id: image.postinst,v 1.7 1997/09/26 15:48:55 srivasta Exp $
+#    $Id: image.postinst,v 1.8 1997/10/22 07:47:59 srivasta Exp $
 #
 
 # 
@@ -387,25 +387,21 @@ EO_MSG_A
       if (&ask("Do you wish me to format the floppy")){
          my $ret;
 	 my $format_command = '/usr/bin/fdformat';
-	 my $opt = ' ';
 	 
 	 if (-x "/usr/bin/fdformat" ) {
 	   $format_command = '/usr/bin/fdformat';
-	   $opt = '';
 
 	   if (-x "/usr/bin/superformat") {
 	     print "\n";
 	     print "Hmm, I see you have the newer superformat command\n";
 	     if (&ask("Do you wish me to use superformat format the floppy")) {
 	       $format_command = '/usr/bin/superformat';
-	       $opt = ' -d ';
 	     }
 	     print "\n";
 	   }
 	 }
 	 else {
 	    $format_command = '/usr/bin/superformat';
-	    $opt = ' -d ';   
 	 }
 	 
          print "Insert a floppy diskette into your boot drive \n";
@@ -413,7 +409,7 @@ EO_MSG_A
          $answer=<STDIN>;
         FMTFLOPPY: while (! $done) {
          DOFORMAT:{
-              $ret = system $format_command, " $opt /dev/fd$drive";
+              $ret = system $format_command, "/dev/fd$drive";
               last DOFORMAT if $ret;
               $done = 1;
            }
@@ -428,16 +424,16 @@ setfdprm for fdformat to work.
 
 In some rare cases, it may mean a problem with the Floppy or the drive
 it self (try formatting the floppy with
-      % $format_command  $opt /dev/fd$drive
+      % $format_command  /dev/fd$drive
 manually to make sure if the problem persists).  In case the problem
 persists, it maybe because you have an older fdformat which has a
 problem auto- detecting the floppy drive.  Upgrading to the latest
 fdutils may help, or maybe you need to run
       % setfdprm /dev/fd$drive 1440/1440 
 (or something like that) or you may try some thing like
-      % $format_command  $opt  /dev/fd0H1440
+      % $format_command  /dev/fd0H1440
  or even 
-      % $format_command  $opt  /dev/fd0u1440
+      % $format_command  /dev/fd0u1440
 manually which _may_ work. Or else, try a new floppy.
 
 EO_MSG_B

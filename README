@@ -1,5 +1,5 @@
 
-    $Id: README,v 1.6 1997/09/18 05:01:35 srivasta Exp $
+    $Id: README,v 1.7 1997/10/22 07:47:58 srivasta Exp $
 
 This is the Debian Linux packaging scripts for the Linux kernel. 
 This package has been put together by Manoj Srivastava <srivasta@debian.org>.
@@ -89,7 +89,9 @@ The revision number (the argument supplied after the --revision flag)
 has certain constraints: it may contain only alphanumerics and the
 characters + . (full stop, and plus) and should contain a digit.
 NOTE: No hyphens allowed. (Look at Chapter 5 of the Programmers manual
-for details)
+for details). Optionally, you may prepend the revision with a digit
+followed by a colon (:); this shall put your revision into a new
+epoch; (which makes older dpkg very confused), more on this later.
 
 This is because dpkg imposes an ordering on version numbers, so that
 it can tell whether packages are being up or downgraded and so that
@@ -100,7 +102,20 @@ I've found that using a two-level scheme where the major level starts
 with a letter nicely does the job, (--revision custom.Y, so the image
 package become kernel-image-X.X.XX-custom.Y.deb), and dselect and dpkg
 -BOGiE will refuse to downgrade to a generic kernel (don't give the
-BGO arguments to dpkg if you actually do want to downgrade later).
+BGO arguments to dpkg if you actually do want to downgrade
+later). 
+
+Unfortunately, this fails if the upstream maintainer uses epochs to
+correct a version misnumbering;-(. The good news is that you can add
+your own epoch to your customized image, ugly though that may
+be. (--revision 1:custom.Y; the kernel image file shall remain
+kernel-image-X.X.XX-custom.Y.deb, but dpkg shall know that it should
+not replace that with a standard kernel with an epoch. Hopefully, we
+shall never see an epoch greater than 1 on a standard kernel, but who
+knows. Choose your epoch, if you must use it, wisely. I fear, though,
+that with the introduction of epochs in kernel image versions shame
+has entered the garden of eden, and we must forever use epochs to
+guard against forced upgrades.
 
 People who want to have multiple flavours of the same kernel version
 around should look at the file /usr/doc/kernel-package/Flavours.gz for

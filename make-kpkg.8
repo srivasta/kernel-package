@@ -22,7 +22,7 @@
 .\" USA.
 .\"
 .\"
-.\"    $Id: make-kpkg.8,v 1.2 1997/06/03 00:44:31 srivasta Exp $
+.\"    $Id: make-kpkg.8,v 1.3 1997/10/22 07:47:58 srivasta Exp $
 .\"
 .TH MAKE\-KPKG 8 "May 2 1997" "Debian" "Debian GNU/Linux manual"
 .SH NAME
@@ -50,7 +50,9 @@ This has certain constraints: it may contain only
 alphanumerics and the characters + . (full stop, and plus) and must
 contain a digit.
 .BR  NOTE:
-No hyphens allowed. (Look at Chapter 5 of the Programmers manual for details)
+No hyphens allowed. (Look at Chapter 5 of the Programmers manual for
+details). Optionally, you may prepend the revision with a digit
+followed by a colon (:) 
 .TP
 .BR \-\-pgpsign " name"
 Set the string used to sign the 
