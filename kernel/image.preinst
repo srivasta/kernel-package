@@ -5,9 +5,9 @@
 # Created On       : Sun Jun 14 03:38:02 1998
 # Created On Node  : tiamat.datasync.com
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Fri May  3 15:24:22 2002
+# Last Modified On : Mon May 13 02:19:10 2002
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 49
+# Update Count     : 50
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
@@ -168,7 +168,7 @@ I repeat, You need to configure your boot loader. If you have already done
 so, and you wish to get rid of this message, please put
   `do_initrd = Yes'
 in /etc/kernel-img.conf. Note that this is optional, but if you do not, 
-you'll contitnue to see this message whenever you install a kernel 
+you'll continue to see this message whenever you install a kernel 
 image using initrd.
 EOF
     if (-f "/etc/lilo.conf"){

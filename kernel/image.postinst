@@ -5,14 +5,14 @@
 # Created On       : Sat Apr 27 05:55:26 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Sat May  4 13:50:19 2002
+# Last Modified On : Mon May 13 01:49:15 2002
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 238
+# Update Count     : 239
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
 #
-#    $Id: image.postinst,v 1.107 2002/05/04 19:20:30 srivasta Exp $
+#    $Id: image.postinst,v 1.108 2002/05/13 08:17:35 srivasta Exp $
 #
 
 #
@@ -739,7 +739,7 @@ if ( -d "/lib/modules/$version" ) {
       print "guarantee that the file is valid. I would strongly advice\n";
       print "you to either abort and fix the errors in depmod, or \n";
       print "regenerate the initrd image with a known good modules.dep\n";
-      print "file. I repeat, an initrd kenrel image with a bad modules.dep\n";
+      print "file. I repeat, an initrd kernel image with a bad modules.dep\n";
       print "shall fail to boot.\n";
     }
     else {

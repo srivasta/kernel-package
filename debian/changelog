@@ -1,3 +1,12 @@
+kernel-package (8.003) unstable; urgency=low
+
+  * fix typo.                                         really closes: Bug#145720
+  * Fix the setting for CONFIG_SCSI_SYM53C8XX_MAX_TAGS for some
+    pre-installed config files.                              closes: Bug#146351
+  * fixed typo.                                  closes: Bug#146470, Bug#146770
+
+ -- Manoj Srivastava <srivasta@debian.org>  Mon, 13 May 2002 03:17:11 -0500
+
 kernel-package (8.002) unstable; urgency=low
 
   * Fixed a couple of spelling errors in the man page.       closes: Bug#146010

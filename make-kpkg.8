@@ -22,7 +22,7 @@
 .\" USA.
 .\"
 .\"
-.\"    $Id: make-kpkg.8,v 1.57 2002/05/06 15:15:56 srivasta Exp $
+.\"    $Id: make-kpkg.8,v 1.58 2002/05/13 08:17:35 srivasta Exp $
 .\"
 .TH MAKE\-KPKG 1 "May 2 1997" "Debian" "Debian GNU/Linux manual"
 .SH NAME
@@ -84,10 +84,10 @@ details).
 Optionally, you may prepend the revision with a digit
 followed by a colon (:). The default is
 .B 1.00.Custom
-unless the env variable
+unless the environment variable
 .B DEBIAN_REVISION_MANDATORY
 is set, in which case an error is generated if the revision is not set
-on the command line or the config file.
+on the command line or the configuration file.
 .TP
 .BR \-\-append-to-version " foo"
 .TP
@@ -118,7 +118,7 @@ data (foo). This file won't be updated by the make-kpkg run (make-kpkg
 creates version.h if it doesn't exist, but doesn't touch if exists),
 so the final kernel will _not_ have the append_to_version data in its
 version number it shall look for the modules and symbols in all the
-wrong places. The simpliest solution is either to remove
+wrong places. The simplest solution is either to remove
 include/linux/version.h after configuring and before compiling, or
 running 
 .B make-kpkg clean
@@ -131,7 +131,7 @@ the same option in any later invocation of make-kpkg (say, for
 building stand alone modules, or something).  
 .B make\-kpkg
 does not remember the argument foo in between invocations (this is
-different from the behaviour of --revision, which we do remember in
+different from the behavior of --revision, which we do remember in
 between invocations). If you are annoyed by make-kpkg whining about
 using 
 .BR \-\-append_to_version 
@@ -142,7 +142,7 @@ file from before, you can set the environment variable
 which shall shut off the warning.
 .TP
 .BR \-\-flavour\ foo
-This option is now deprecated in favour of 
+This option is now deprecated in favor of 
 .BR \-\-append_to_version.
 Sets the kernel flavour to the argument \fBfoo\fR. The flavour is
 also appended to the package name. You need a patched Makefile to make
@@ -195,16 +195,16 @@ which defaults to a subdirectory of
 The default is that all patches are applied
 if requested (Either by setting the configuration option
 .B patch_the_kernel
-or the env variable 
+or the environment variable 
 .B PATCH_THE_KERNEL
-to YES).  Please note that the patches are uninstalled from the source
+to YES).  Please note that the patches are UN-installed from the source
 when you run the clean target.  This cleanup can be prevented by
-setting the env variable 
+setting the environment variable 
 .B NO_UNPATCH_BY_DEFAULT
 .IP
 Some times it would be convenient to have the patches applied when
 one asks for specific patches using this option, without also having
-to explicitly set the envirnonment variable. Since setting the
+to explicitly set the environment variable. Since setting the
 environment variable 
 .B PATCH_THE_KERNEL
 to YES could be dangerous, (for in that case all patches may be
@@ -219,11 +219,11 @@ Also, please note that if any patch installs a script in
 .I ./debian/image.d/
 directory, 
 .B run-parts 
-shall be called on that dir just before the kernel image package is
+shall be called on that directory just before the kernel image package is
 built. The location of the root of the image package being built shall
 be passed in the environment variable 
 .B IMAGE_TOP,
-and the kernel vbersions is passed i through the environment variable
+and the kernel versions is passed i through the environment variable
 .B version.
 This is a way for the patch to insert any additional files into
 the image, for example.
@@ -244,9 +244,9 @@ compiling. The same effect can be achieved by setting the environment variable
 .TP
 .BR \-\-subarch\ foo
 Some architectures (the Alpha, and the m68k) require a different
-kernel for each subarchitecture. This option provides a way of
+kernel for each sub-architecture. This option provides a way of
 specifying it as an argument to \fBmake-kpkg\fR. \fBPlease note\fR
-that additional support for subarchitectures may be required in the
+that additional support for sub-architectures may be required in the
 kernel sources to actually make this do anything. The same effect can
 be achieved by setting the environment variable 
 .B KPKG_SUBARCH
@@ -255,8 +255,8 @@ be achieved by setting the environment variable
 .TP
 .BR \-\-arch_in_name
 This option uses an extended name for the kernel image package by
-embedding the subarchitecture in the image name, so one could write a
-script to create multiple subarchitectures one after the other. You
+embedding the sub-architecture in the image name, so one could write a
+script to create multiple sub-architectures one after the other. You
 may also do this by setting the environment variable
 .B ARCH_IN_NAME. 
 \fBPlease note\fR that only the package
@@ -402,16 +402,16 @@ package is created.  Also, please note that if there are any scripts in
 .I ./debian/image.d/
 directory, 
 .B run-parts 
-shall be called on that dir just before the kernel image package is
+shall be called on that directory just before the kernel image package is
 built. The location of the root of the image package being built shall
 be passed in the environment variable 
 .B IMAGE_TOP,
-and the kernel vbersions is passed i through the environment variable
+and the kernel versions is passed i through the environment variable
 .B version.
 for all these scripts.
 .IP
 At install time, the image package updates symbolic links in the
-symlink destination directory (the root directory by default)
+symbolic link destination directory (the root directory by default)
 to point to the new kernel image in the image directory, which is
 nominally 
 .I /boot.
@@ -444,7 +444,7 @@ Please see the documentation about hooks in
 These hooks are variables that can be pointed to scripts that add or
 remove  a line from the grub menu list at kernel image install and
 remove times. A sample script to add lines to a grub menu file is
-included in the dir 
+included in the directory 
 .TT /usr/share/doc/kernel-package/.
 .TP
 .B build
@@ -486,7 +486,7 @@ This target allows you to build all packages under
 but does not create the source or diff files, and does not create and sign
 a changes file. This is the only modules related option you need if
 you just want to compile the add on modules image files for
-installation on one or more machines. Generally called inconjunction
+installation on one or more machines. Generally called in conjunction
 with 
 .B kernel_image,
 especially if also using the option
@@ -496,7 +496,7 @@ especially if also using the option
 .B modules_clean
 This target allows you to clean all packages under
 .B /usr/src/modules,
-and this sould be all that is needed to undo the effect of any of the
+and this should be all that is needed to undo the effect of any of the
 other modules_ targets.
 .TP
 .B configure
@@ -523,7 +523,7 @@ manually run the configuration step.
 .B libc\-kheaders
 This is a special target for the libc-dev maintainer, who can use it
 to create the headers package that libc needs. Please note that it is
-dangerous to create a libc-kheaders package that is different fomr the
+dangerous to create a libc-kheaders package that is different from the
 headers libc was compiled with; it is
 .B known
 to subtly break systems. Please look at 
@@ -532,7 +532,7 @@ for details.  Creating and installing a self created libc-kheaders
 package may break your system unless you know what you are doing. You
 have been warned.
 .SH "ENVIRONMENT VARIABLES"
-The following variables (documented aboce) affect 
+The following variables (documented above) affect 
 .B make-kpkg:
 .I DEBIAN_REVISION_MANDATORY
 .I APPEND_TO_VERSION
