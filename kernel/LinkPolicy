@@ -1,5 +1,5 @@
 
-   $Id: LinkPolicy,v 1.3 1997/06/25 07:33:27 srivasta Exp $
+   $Id: LinkPolicy,v 1.4 1998/01/30 01:26:31 srivasta Exp $
 
 This is an proposal for packages providing kernel sources, headers,
 and image, which attempts to make it possible to have multiple
@@ -121,6 +121,82 @@ configure                    -- link to builtin version
 ======================================================================
 
 
+	The following is an message on posted on the debian mailing
+ lists that provides a rationale for the link policy defined in this
+ document. 
+
+______________________________________________________________________
+
+
+
+>>"Noel" == Noel Maddy <ncm@biostat.hfh.edu> writes:
+
+Noel> It still leaves me with one question, though.  If the kernel
+Noel> headers that Debian is supplying for libc6 compilation are
+Noel> needed only for libc6 compilation, why are they kept in /usr/src
+Noel> with a symlink rather than putting them directly in
+Noel> /usr/include/linux?
+
+
+	Well, this kinda belongs to the can of worms we fondly
+ remember as "Debian's /usr/src policy" ;-). Lets see if I can address
+ this. Firstly, kernel headers are not merely for libc6
+ compilation. In fact, /usr/src/linux is not referenced at all by
+ normal compilation processes: those depend, in particular, on the
+ symbolic link /usr/src/linux-2.0.32, which is provided by either
+ kernel-headers-2.0.32 or by kernel-source-2.0.32.
+
+
+ /usr/src/linux           is meant to be a link to the chronologically
+                          latest installed set of kernel headers
+ /usr/src/linux-X.X.XX    is meant to be a link to a specific version
+                          of kernel include files.
+
+Noel> I would think that having kernel-headers put them directly into
+Noel> /usr/include/linux would make more sense.  That probably means
+Noel> that I'm not understanding some of the issues...
+
+	Then that means you could not have more than one kernel
+ headers or source packages installed. I have, at the moment, 2
+ header packages and 4 source packages on my machine. If they all
+ tried to go into /usr/src/linux; that would be chaos. Espescially if
+ /usr/src/linux were merely overlaid with the most recent install
+ (imagine installing 2.0.34 over 2.1.82 -- what a mess)
+
+	It is easy to manipulate the symbolic link in the
+ postrm/postinst phases of package management.
+
+	Why ahve them there at all? It is for the convenience of
+ module writes, honest ;-)
+
+	If I am a developer who has lovingly crafted, say, a kernel
+ module inextricably linked to a particular kernel version (and I
+ happen to know it does not work with older kernels, and may not work
+ with newer ones), I would put -I/usr/src/linux-Y.Y.YY, for the
+ relevant Y.Y.YY version of the kernel. The user may then install the
+ whole kernel source, or just the headers, and my module shall
+ compile. 
+
+	If, on the other hand, I am creating a module that say,
+ reports details on kernel internals, based on a set of definitions
+ based in a kernel header file, which may change from kernel to kernel
+ but has a fixed API, I can get a version tailored to the latest
+ kernel version by just specifying: -I/usr/src/linux, and be satisfied
+ that I can load a kernel header or source package, and recompile my
+ code, and it shall pick up the latest set of headers.
+
+	In either case I may have to put code into the module to test
+ the running kernel if required ;-)
+
+	That is the rationale behind the set of symlinks
+ /usr/src/linux* on a Debian system (remember, actual headers and
+ sources reside in /usr/src/kernel-{header,source}-Y.Y.YY).
+
+	I hope this clarifies things a trifle.
+
+	manoj
+Manoj Srivastava  <srivasta@acm.org> <http://www.datasync.com/%7Esrivasta/>
+Key C7261095 fingerprint = CB D9 F4 12 68 07 E4 05  CC 2D 27 12 1D F5 E8 6E
 
 
 
