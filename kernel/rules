@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Mon Nov 20 22:21:24 2000
+## Last Modified On : Thu Nov 30 18:28:59 2000
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 448
+## Update Count	    : 453
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.104 2000/11/21 04:46:48 srivasta Exp $
+## $Id: rules,v 1.105 2000/12/01 00:41:29 srivasta Exp $
 ###############################################################################
 
 ifdef ARCH
@@ -319,6 +319,20 @@ kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
 DEBCONFIG= $(CONFDIR)/config.$(SUBARCH)
 endif
 
+##### S/390
+ifeq ($(strip $(architecture)),s390)
+kimage := image
+loaderdep=
+loader=
+loaderdoc=
+target = $(kimage)
+NEED_DIRECT_GZIP_IMAGE=NO
+kimagesrc = $(strip arch/$(KERNEL_ARCH)/boot/$(kimage))
+kimagedest = $(INT_IMAGE_DESTDIR)/image-$(version)
+DEBCONFIG= $(CONFDIR)/config.$(SUBARCH)
+endif
+
+
 ######################################################################
 ######################################################################
 
@@ -469,11 +483,24 @@ pgp=$(PGP_SIGNATURE)
 endif
 
 
+
 # The Debian revision
+ifneq ($(strip $(DEBIAN_REVISION)),)
+HAS_CHANGELOG := $(shell \
+    if test -f debian/changelog -a \( -f stamp-debian -o -f debian/official \);\
+    then echo YES;\
+    else echo NO; fi; )
+else
 HAS_CHANGELOG := $(shell if test -f debian/changelog; then echo YES;\
                           else echo NO; fi; )
-# If there is a changelog file, it overrides. Else, use the
-# commandline or env var setting. Or else default to 1.00
+endif
+# If there is a changelog file, it overrides. The only exception is
+# when there is no stamp-config, and there is no debian/official,
+# *AND* there is a DEBIAN_REVISION, in which case the DEBIAN_REVISION
+# over rides (since we are going to replace the changelog file soon
+# anyway.  Else, use the commandline or env var setting. Or else
+# default to 1.00
+
 ifeq ($(strip $(HAS_CHANGELOG)),YES)
 debian := $(shell if test -f debian/changelog; then \
                      perl -nle 'print /\((\S+)\)/; exit 0' debian/changelog;\
@@ -489,7 +516,14 @@ endif
 endif
 
 
-
+ifneq ($(strip $(DELETE_BUILD_LINK)),)
+delete_build_link := YES
+else
+ifeq ($(strip $(delete_build_link)),)
+delete_build_link := $(shell if test -f debian/official; then echo YES;\
+                          else echo NO; fi; )
+endif
+endif
 
 ifneq ($(strip $(IMAGE_IN_BOOT)),)
 image_in_boot := $(IMAGE_IN_BOOT)
@@ -1093,6 +1127,9 @@ endif
                         $(INT_IMAGE_DESTDIR)/System.map-$(version)
 	-test -f System.map &&  chmod 644 \
                         $(INT_IMAGE_DESTDIR)/System.map-$(version)
+ifeq ($(strip $(delete_build_link)),YES)
+	rm -f debian/tmp-image/lib/modules/$(version)/build
+endif
 	dpkg-gencontrol -DArchitecture=$(architecture) -isp \
                         -p$(i_package) -Pdebian/tmp-image/
 	chown -R root.root debian/tmp-image

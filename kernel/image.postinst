@@ -12,7 +12,7 @@
 # HISTORY          : 
 # Description      : 
 # 
-#    $Id: image.postinst,v 1.56 2000/11/21 04:46:48 srivasta Exp $
+#    $Id: image.postinst,v 1.57 2000/12/01 00:41:29 srivasta Exp $
 #
 
 # 
@@ -55,7 +55,7 @@ my $realimageloc  = "/$image_dir/";
 my $have_conffile = "";
 my $CONF_LOC      = '/etc/kernel-img.conf';
 
-# Ignore all invocations uxcept when called on to configure.
+# Ignore all invocations except when called on to configure.
 exit 0 unless $ARGV[0] =~ /configure/;
 
 # Do some preliminary sanity checks here to ensure we actually have an
@@ -289,7 +289,7 @@ elsif (-l "$kimage") {
     my $vmlinuz_target = readlink "$kimage";
     if (!defined($vmlinuz_target)) {
       # what, a dangling symlink?
-      warn "The link "  . $image_dest . "$kimage is a danglink link\n";
+      warn "The link "  . $image_dest . "$kimage is a dangling link\n";
       $force_move = 1;
     }
     elsif ("$vmlinuz_target" ne "$realimageloc" . "$kimage-$version") {
@@ -346,7 +346,7 @@ elsif (! -e "$kimage") {
     if (! $have_conffile) {
       my $answer='';
       
-      print STDERR "I notice that yo do not have $kimage symbolic\n";
+      print STDERR "I notice that you do not have $kimage symbolic\n";
       print STDERR "link. I can create one for you, and it shall be\n";
       print STDERR "updated by newer kernel image packages. This is \n";
       print STDERR "useful if you use a boot loader like lilo.\n";
@@ -447,7 +447,7 @@ if (-e "/System.map" || -e "/System.old") {
  ensure that that file is present, and no longer require the symbolic
  link. 
 
- Actually, having the sumbolic link in / is technically detrimental
+ Actually, having the symbolic link in / is technically detrimental
  (apart from cluttering up /); many programs, though looking in /boot,
  still allow /System.map to override. If you use $Loader to choose
  between multiple kernels, then the /System.map symbolic link only
@@ -481,14 +481,14 @@ if ( -f "/lib/modules/$version/modules.dep" ) {
  not be built correctly right now, since the module list for the
  running kernel are likely to be different from the kernel installed. 
  I am creating a new modules.dep file, but that may not be
- correct. It shall be regenrated correctly at next reboot.
+ correct. It shall be regenerated correctly at next reboot.
 
  I repeat: you have to reboot in order for the modules file to be
  created correctly. Until you reboot, it may be impossible to load
  some modules. Reboot as soon as this install is finished (Do not re
  boot right now, since you may not be able to boot back up until
  installation is over, but boot immediately after). I can not stress
- that too much. You need to re boot soon. 
+ that too much. You need to reboot soon. 
 
 EOFERR
   ;
@@ -538,7 +538,7 @@ if (-d "/usr/doc") {
     if ($targetdir ne $stargetdir) {
       if (-d "/usr/doc/kernel-image-$version") {
 	print STDERR "Yikes! The old directory, /usr/doc/kernel-image-$version\n";
-	print STDERR "has not ben removed! This is an error; attempting\n";
+	print STDERR "has not been removed! This is an error; attempting\n";
 	print STDERR "repairs";
 	if (-f "/usr/doc/kernel-image-$version/.dhelp") {
 	  unlink "/usr/doc/kernel-image-$version/.dhelp";

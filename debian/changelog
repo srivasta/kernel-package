@@ -1,3 +1,16 @@
+kernel-package (7.22) unstable; urgency=low
+
+  * Added S/390 patch.. closes: Bug#77796
+   Thanks to  Chu-yeon Park <kokids@debian.org>
+  * If we are planning on deleting the ./debian/ directory, and we have
+    been supplied with a new revision to use, use that new revision when
+    we regenerate the ./debian/changelog file.
+  * optionally remove the /lib/modules/$version/build symbolic link. The
+    default is to remove the link from official packages, but not
+    otherwise. 
+
+ -- Manoj Srivastava <srivasta@debian.org>  Thu, 30 Nov 2000 18:41:17 -0600
+
 kernel-package (7.21) unstable; urgency=low
 
   * Changed suggestion to move old /lib/modules dir out of the
