@@ -5,9 +5,9 @@
 # Created On       : Sat May 15 11:05:13 1999
 # Created On Node  : glaurung.green-gryphon.com
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Sun Feb 20 00:02:15 2005
+# Last Modified On : Thu Mar 17 21:04:08 2005
 # Last Machine Used: glaurung.internal.golden-gryphon.com
-# Update Count     : 36
+# Update Count     : 37
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
@@ -247,13 +247,13 @@ if (-x "$postrm_hook") {
 	    warn "User hook script $postrm_hook failed";
 }
 if (-d "/etc/kernel/postrm.d") {
-  system ("run-parts", "-v", "--exit-on-error", "--arg=$version",
+  system ("run-parts", "--verbose", "--exit-on-error", "--arg=$version",
           "--arg=$realimageloc" . "$kimage-$version",
           "/etc/kernel/postrm.d") &&
             die "Failed to process /etc/kernel/postrm.d";
 }
 if (-d "/etc/kernel/postrm.d/$version") {
-  system ("run-parts", "-v", "--exit-on-error", "--arg=$version",
+  system ("run-parts", "--verbose", "--exit-on-error", "--arg=$version",
           "--arg=$realimageloc" . "$kimage-$version",
           "/etc/kernel/postrm.d/$version") &&
             die "Failed to process /etc/kernel/postrm.d/$version";

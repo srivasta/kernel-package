@@ -5,9 +5,9 @@
 # Created On       : Sun Jun 14 03:38:02 1998
 # Created On Node  : tiamat.datasync.com
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Sun Feb 20 00:02:39 2005
+# Last Modified On : Thu Mar 17 21:04:29 2005
 # Last Machine Used: glaurung.internal.golden-gryphon.com
-# Update Count     : 69
+# Update Count     : 70
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
@@ -351,13 +351,13 @@ if (-x "$preinst_hook") {
 	die "User hook script $preinst_hook failed";
 }
 if (-d "/etc/kernel/preinst.d") {
-  system ("run-parts", "-v", "--exit-on-error", "--arg=$version",
+  system ("run-parts", "--verbose", "--exit-on-error", "--arg=$version",
           "--arg=$realimageloc" . "$kimage-$version",
           "/etc/kernel/preinst.d") &&
             die "Failed to process /etc/kernel/preinst.d";
 }
 if (-d "/etc/kernel/preinst.d/$version") {
-  system ("run-parts", "-v", "--exit-on-error", "--arg=$version",
+  system ("run-parts", "--verbose", "--exit-on-error", "--arg=$version",
           "--arg=$realimageloc" . "$kimage-$version",
           "/etc/kernel/preinst.d/$version") &&
             die "Failed to process /etc/kernel/preinst.d/$version";

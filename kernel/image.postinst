@@ -5,9 +5,9 @@
 # Created On       : Sat Apr 27 05:55:26 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Sun Feb 20 00:02:19 2005
+# Last Modified On : Thu Mar 17 21:03:19 2005
 # Last Machine Used: glaurung.internal.golden-gryphon.com
-# Update Count     : 268
+# Update Count     : 269
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
@@ -1016,14 +1016,14 @@ if (-x "$postinst_hook") {
 }
 
 if (-d "/etc/kernel/postinst.d") {
-  system ("run-parts", "-v", "--exit-on-error", "--arg=$version",
+  system ("run-parts", "--verbose", "--exit-on-error", "--arg=$version",
           "--arg=$realimageloc" . "$kimage-$version",
           "/etc/kernel/postinst.d") &&
             die "Failed to process /etc/kernel/postinst.d";
 }
 
 if (-d "/etc/kernel/postinst.d/$version") {
-  system ("run-parts", "-v", "--exit-on-error", "--arg=$version",
+  system ("run-parts", "--verbose", "--exit-on-error", "--arg=$version",
           "--arg=$realimageloc" . "$kimage-$version",
           "/etc/kernel/postinst.d/$version") &&
             die "Failed to process /etc/kernel/postinst.d/$version";
