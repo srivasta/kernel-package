@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Wed Apr 30 12:35:47 2003
+## Last Modified On : Thu May  1 04:45:40 2003
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 563
+## Update Count	    : 564
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.201 2003/04/30 17:45:23 srivasta Exp $
+## $Id: rules,v 1.202 2003/05/01 09:46:59 srivasta Exp $
 ###############################################################################
 
 ifdef KPKG_ARCH
@@ -1279,7 +1279,7 @@ dummy_do_dep:
 stamp-kernel-configure: stamp-debian .config
 	$(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) \
                                  ARCH=$(KERNEL_ARCH) $(config_target) 	
-ifneq ($(shell if [ $(VERSION) -ge 2 -a $(PATCHLEVEL) -ge 5 ]; then \
+ifeq ($(shell if [ $(VERSION) -ge 2 -a $(PATCHLEVEL) -ge 5 ]; then \
                   echo new;fi),)
 	+$(MAKE) -f ./debian/rules dummy_do_dep
 	$(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) \

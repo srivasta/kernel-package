@@ -1,3 +1,9 @@
+kernel-package (8.034) unstable; urgency=high
+
+  * reverse the sense of a conditional.                      closes: Bug#191429
+
+ -- Manoj Srivastava <srivasta@debian.org>  Thu,  1 May 2003 04:46:38 -0500
+
 kernel-package (8.033) unstable; urgency=high
 
   * Fixed missing space before right bracket errors pointed out by Daniel
