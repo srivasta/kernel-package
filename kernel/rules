@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Thu Jul  5 11:06:03 2001
+## Last Modified On : Thu Jul 19 09:13:12 2001
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 481
+## Update Count	    : 482
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.125 2001/07/17 23:38:15 srivasta Exp $
+## $Id: rules,v 1.126 2001/07/19 14:15:11 srivasta Exp $
 ###############################################################################
 
 ifdef ARCH
@@ -1327,7 +1327,7 @@ endif
          gzip -9qf debian/tmp-image/usr/share/doc/$(i_package)/README.Debian;\
 	fi
 	if test -f README.Debian ; then \
-           $(install_file) debian/README.Debian \
+           $(install_file) README.Debian \
 	       debian/tmp-image/usr/share/doc/$(i_package)/README.Debian.1st;\
            gzip -9qf \
                debian/tmp-image/usr/share/doc/$(i_package)/README.Debian.1st;\

@@ -1,3 +1,10 @@
+kernel-package (7.53) unstable; urgency=low
+
+  * Out, out, damned spot -- will ye never go? Yet another attempt to fix
+    Bug#101332, Bug#105275, Bug#105280, Bug#105469 
+
+ -- Manoj Srivastava <srivasta@debian.org>  Thu, 19 Jul 2001 09:14:50 -0500
+
 kernel-package (7.52) unstable; urgency=low
 
   * Added append_to_version back to make-kpkg. It had mysteriously
