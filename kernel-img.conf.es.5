@@ -27,7 +27,7 @@
 .\" (c) 2003 Software in the Public Interest
 .\" Esta traducción ha sido realizada por Rubén Porras <nahoo@inicia.es>
 .\" Está basada en la página de manual original:
-.\" versión 1.7 del CVS de
+.\" versión 1.8 del CVS de
 .\" /cvs/debian-doc/manpages/english/kernel-package/kernel-img.conf.5 
 .\" Revisada por Rudy Godoy <rudy@kernel-panik.org>
 
@@ -205,9 +205,23 @@ de la imagen del núcleo. Los errores en el script sólo producirán un mensaje de
 aviso.
 .TP
 .B src_postinst_hook
-A diferencia de las otras variables hook, este es para un script que se ejecuta
-durante el postinst de un paquete fuente o con las cabeceras. Este script
-necesita dos argumentos, el primero es el
+A diferencia de las otras variables hook, éste es para un script que se ejecuta
+durante el postinst de un paquete de documentación, de cabeceras, o fuente. El
+uso de esta variable en paquetes con cabeceras ahora está desaconsejado, en algún
+momento el script de postinst del paquete con las cabeceras sólo deberá ejecutar
+headers_postinst_hook.
+Este script necesita dos argumentos, el primero es el
+.I nombre
+del paquete que se esta instalando (podría ser kernel-source-X.X.XX o
+kernel-headers-X.X.XX), y el segundo argumento es la
+.I versión
+del paquete que esta siendo instalado. Los errores en el script sólo producirán
+un mensaje de aviso.
+.TP
+.B headers_postinst_hook
+A diferencia de las otras variables hook, ésta es sólo para un script que se
+ejecuta durante el postinst de un paquete de cabeceras. Este script necesita dos
+argumentos, el primero es el
 .I nombre
 del paquete que se esta instalando (podría ser kernel-source-X.X.XX o
 kernel-headers-X.X.XX), y el segundo argumento es la

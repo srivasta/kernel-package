@@ -5,9 +5,9 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Tue Mar  2 22:45:48 2004
+## Last Modified On : Fri Apr  2 00:05:31 2004
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count	    : 670
+## Update Count	    : 672
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
@@ -439,6 +439,18 @@ endif
 
 ##### S/390
 ifeq ($(strip $(architecture)),s390)
+  # make it possible to build s390x kernels on s390 for 2.4 kernels only 
+  # because 2.6 always use s390 as architecture. 
+  ifeq (4,$(PATCHLEVEL))
+    ifeq (,$(findstring $(KPKG_SUBARCH),s390 s390x))
+      KPKG_SUBARCH = s390
+    endif
+    KERNEL_ARCH = $(KPKG_SUBARCH)
+    ifneq ($(shell uname -m),$(KPKG_SUBARCH))
+      UNAME_MACHINE = $(KPKG_SUBARCH)
+      export UNAME_MACHINE
+    endif
+  endif
   kimage := zimage
   loaderdep=zipl
   loader=zipl
@@ -1636,8 +1648,8 @@ endif
 	sed -e 's/=P/$(package)/g' -e 's/=V/$(version)/g' \
 	    $(DEBDIR)/src.postinst > $(SOURCE_TOP)/DEBIAN/postinst
 	chmod 755 $(SOURCE_TOP)/DEBIAN/postinst
-	$(install_file) debian/changelog         $(SOURCE_DOC)/changelog
-	gzip -9qf                             	 $(SOURCE_DOC)/changelog
+	$(install_file) debian/changelog               $(SOURCE_DOC)/changelog.Debian
+	gzip -9qf                             	 $(SOURCE_DOC)/changelog.Debian
 	$(install_file) $(DEBDIR)/README      	 $(SOURCE_DOC)/debian.README
 	gzip -9qf                             	 $(SOURCE_DOC)/debian.README
 	$(install_file) $(DEBDIR)/README.grub 	 $(SOURCE_DOC)/README.grub
@@ -1741,8 +1753,8 @@ endif
 		$(DEBDIR)/include.postinst > $(HEADER_TOP)/DEBIAN/postinst
 	chmod 755 $(HEADER_TOP)/DEBIAN/postinst
 	$(install_file) $(DEBDIR)/copyright.headers $(HEADER_DOC)/copyright
-	$(install_file) debian/changelog         $(HEADER_DOC)/changelog
-	gzip -9qf                                $(HEADER_DOC)/changelog
+	$(install_file) debian/changelog         $(HEADER_DOC)/changelog.Debian
+	gzip -9qf                                $(HEADER_DOC)/changelog.Debian
 	$(install_file) $(DEBDIR)/README.headers $(HEADER_DOC)/debian.README
 	gzip -9qf                                $(HEADER_DOC)/debian.README
 	$(install_file) .config  	              $(HEADER_DOC)/config-$(version)
@@ -1816,7 +1828,7 @@ endif
 	rm -rf            $(DOC_TOP)
 	$(make_directory) $(DOC_TOP)/DEBIAN
 	$(make_directory) $(DOC_DOC)
-	$(install_file) debian/changelog          $(DOC_DOC)/changelog
+	$(install_file) debian/changelog          $(DOC_DOC)/changelog.Debian
 	$(install_file) $(DEBDIR)/README.doc      $(DOC_DOC)/README.Debian
 	echo "This was produced by kernel-package version $(kpkg_version)." > \
 	           $(DOC_DOC)/Buildinfo
@@ -1907,8 +1919,8 @@ endif
 	chmod 755 $(IMAGE_TOP)/DEBIAN/prerm
 	$(install_file) Documentation/Changes $(IMAGE_DOC)/
 	gzip -9qf $(IMAGE_DOC)/Changes
-	$(install_file) debian/changelog        $(IMAGE_DOC)/changelog
-	gzip -9qf                               $(IMAGE_DOC)/changelog
+	$(install_file) debian/changelog        $(IMAGE_DOC)/changelog.Debian
+	gzip -9qf                               $(IMAGE_DOC)/changelog.Debian
 ifdef loaderdoc
 	$(install_file) $(DEBDIR)/$(loaderdoc)  $(IMAGE_DOC)/$(loaderdoc)
 	gzip -9qf                               $(IMAGE_DOC)/$(loaderdoc)
@@ -2037,6 +2049,12 @@ endif
                   echo "Module $$module processed fine";            \
               else                                                  \
                    echo "Module $$module failed.";                  \
+                   if [ "X$(strip $(root_cmd))" != "X" ]; then      \
+                      echo "Perhaps $$module does not understand --rootcmd?" \
+                      echo "If you see messages that indicate that it is not" \
+                      echo "in fact being built as root, please file a bug " \
+                      echo "against $$module."                      \
+                   fi                                               \
                    echo "Hit return to Continue";                   \
 		   read ans;                                        \
               fi;                                                   \
@@ -2066,8 +2084,14 @@ endif
                   echo "Module $$module processed fine";            \
               else                                                  \
                    echo "Module $$module failed.";                  \
+                   if [ "X$(strip $(root_cmd))" != "X" ]; then      \
+                      echo "Perhaps $$module does not understand --rootcmd?" \
+                      echo "If you see messages that indicate that it is not" \
+                      echo "in fact being built as root, please file a bug " \
+                      echo "against $$module."                      \
+                   fi                                               \
                    echo "Hit return to Continue?";                  \
-		   read ans;                                        \
+		   read ans;                                      \
               fi;                                                   \
 	     );                                                     \
 	  fi;                                                       \

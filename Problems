@@ -162,7 +162,7 @@ VFS: Cannot open root device "308" or 03:08
 
 	The cause for this is either you have not compiled the file
 	system type of the root file system into the kernel, or you
-	have instructed yout boot loader to expect an initrd kernel
+	have instructed your boot loader to expect an initrd kernel
 	(this is required for running a recent official kernel image
 	package from Debian), and have installed a non-initrd garden
 	variety kernel image.  You need to go back and recompile the

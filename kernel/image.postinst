@@ -5,9 +5,9 @@
 # Created On       : Sat Apr 27 05:55:26 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Tue Mar  2 19:12:47 2004
+# Last Modified On : Thu Apr  1 23:40:15 2004
 # Last Machine Used: glaurung.internal.golden-gryphon.com
-# Update Count     : 259
+# Update Count     : 260
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
@@ -250,12 +250,12 @@ sub fix_build_link {
  However, I can't read it: $!
  Therefore, I am deleting /lib/modules/$version/build\n
 );
-      if ($force_build_link || -d "/usr/src/kernel-headers-$version") {
-	my $num = unlink "/lib/modules/$version/build";
-	if ($num != 1) {
-	  warn "error unlinking /lib/modules/$version/build";
-	}
-	else {
+      my $num = unlink "/lib/modules/$version/build";
+      if ($num != 1) {
+	warn "error unlinking /lib/modules/$version/build";
+      }
+      else {
+	if ($force_build_link || -d "/usr/src/kernel-headers-$version") {
 	  my $result = symlink ("/usr/src/kernel-headers-$version",
 				"/lib/modules/$version/build");
 	  if (! $result) {
