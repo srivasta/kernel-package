@@ -21,7 +21,7 @@
 .\" Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139,
 .\" USA.
 .\"
-.\" $Id: kernel-pkg.conf.5,v 1.4 1997/08/04 18:07:14 srivasta Exp $
+.\" $Id: kernel-pkg.conf.5,v 1.5 1997/09/18 05:01:43 srivasta Exp $
 .\"
 .TH KERNEL\-PKG.CONF 5 "Jan  7 1997" "Debian" "Debian GNU/Linux manual" 
 .\" NAME should be all caps, SECTION should be 1-8, maybe w/ subsection
@@ -153,6 +153,19 @@ boot on umsdos, and who can't see the link in dos, but
 do want to know the image version when in Linux. 
 This is a Hack.
 Defaults to  undefined (optional)
+.TP
+.B patch_the_kernel
+This is an experts only variable. If set to YES (ENV
+variable 
+.B PATCH_THE_KERNEL 
+overrides this), the build
+process causes run-parts to be run over
+.I /usr/src/kernel-patches/$(architecture)/apply 
+and (hopefully) reverses the process during clean by
+running run-parts over
+.I /usr/src/kernel-patches/$(architecture)/unpatch. 
+This
+is still evolving.
 .PP
 The value of a variable can be set so:
 .IP a)
