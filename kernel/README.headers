@@ -1,5 +1,5 @@
 
-    $Id: README.headers,v 1.5 1998/03/05 22:44:57 srivasta Exp $
+    $Id: README.headers,v 1.6 1998/04/21 18:11:57 srivasta Exp $
 
  This is the Debian GNU/Linux prepackaged version of the Linux kernel
  headers. Linux was written by Linus Torvalds
@@ -176,14 +176,14 @@
  unstable kernel headers (and the subtler pitfall of compiling with
  headers that do not match the libc being linked with).
 
-			Debian's libc6 method
-                        ======== ===== ======
+		      Debian's old libc6 method
+		      ======== === ===== ======
 
-	The current solution is a variant of the original, bad,
- symlink solution. The variation is that we link to header files from
+	The previous solution was a variant of the original, bad,
+ symlink solution. The variation was that we link to header files from
  a specific kernel version, namely 2.0.32, which are the headers that
  libc was compiled with. Whereas we used to link to any old kernel in
- the original libc5 symlink, the new libc6 symlink is to
+ the original libc5 symlink, the new libc6 symlink was to
  /usr/src/kernel-header-2.0.32, which holds headers from a *static,
  well known*, *supported*, tested kernel version, and we let the
  kernel-headers package handle architecture dependencies (which it had
@@ -199,7 +199,7 @@
 
         So, a dependency was created on kernel headers rather than
  create kernel header sized architecture dependent diffs. The
- dependency is such that it libc6-dev links to the directory
+ dependency was such that it libc6-dev linked to the directory
  /usr/src/kernel-header-2.0.32. 
 
 	At one point libc6-dev pointed to /usr/src/linux-2.0.32, which
@@ -211,13 +211,12 @@
  (arch independent package), and hence does not provide kernel headers
  that meet libc6 requirements.
 
+	 So, libc6-dev depends could then provide 2.0.32 kernel
+ headers *for all architectures*, with no messy architecture dependent
+ patches, we always had fixed, static, known good headers in
+ /usr/include/{linux,asm}, and this was goodness. Or was it?
 
-	 So, libc6-dev depends can now provide 2.0.32 kernel headers
- *for all architectures*, with no messy architecture dependent
- patches, we always have fixed, static, known good headers in
- /usr/include/{linux,asm}, and this is goodness.
-
-        This is a working technical solution to having libc
+        This was a working technical solution to having libc
  development package contain/depend on a well known static set of
  kernel headers (insulating the vast majority of programs that are not
  closely tied to kernel version specific internal data structures),
@@ -226,14 +225,36 @@
  any set of kernel headers they want on the machine through the simple
  artifice of adding a -I flag to the compilation flags.
 
-	Indeed, had we thought of the current solution in libc5
+	Indeed, had we thought of the this solution in libc5
  days it would have been cleaner (and produced less confusion now).
  The solution of having libc5-dev depend on kernel-headers-X.XX.XX
- wold have worked just as well in the libc5 case as it is in the libc6
+ wold have worked just as well in the libc5 case as it did in the libc6
  case.  I don't see a change in the situation, just a switch to an
- equivalent, possibly cleaner, solution.  If we had had libc5-dev
- depend on kernel-headers, then there wouldn't be the argument that
- there is now.  
+ equivalent, possibly cleaner, solution.  
+
+		 Shortcoming of the old libc6 method
+		 =========== == === === ===== ======
+	Even though the method for libc6 outlined above was a working
+ technical solution, it was confusing to the users, who did not
+ understand why the kernel sources could not be substituited in place,
+ and what happened when the went to a new kernel version. This
+ confusion led us to believe that human factors dictated that a new,
+ less confusing solution had to be implemented.
+
+		      Debian's New libc6 method
+		      ======== === ===== ======
+
+	The current solution is an amalgam of the libc5 and the old
+ libc6 solutions. A new package, libc-kheaders, has been created, and
+ libc6-dev depends on it. libc-kheaders contains the a well known
+ static set of kernel headers, which is identiacal to the set of
+ headers used in the libc6 solution outlined above, except that the
+ headers unpack in /usr/include/{linux,asm}, and no symbolic links are
+ used at all. So, in some respects, we have reverted to the libc5
+ solution of no symlinks in /usr/include, while retaining the
+ flexibility of allowing for the different needs for different
+ architectures. It is my hope that this method is less confusing.
+
 
   Authors response to complaints that Debian is doing it's own thing
   ======= ======== == ========== ==== ====== == ===== ==== === =====
