@@ -22,7 +22,7 @@
 .\" USA.
 .\"
 .\"
-.\"    $Id: make-kpkg.8,v 1.65 2002/10/29 21:12:32 srivasta Exp $
+.\"    $Id: make-kpkg.8,v 1.66 2002/10/30 03:50:15 srivasta Exp $
 .\"
 .TH MAKE\-KPKG 1 "May 2 1997" "Debian" "Debian GNU/Linux manual"
 .SH NAME
@@ -395,7 +395,15 @@ version control directories,
 etc). This has no effect on anything
 other than the kernel sources that are being packaged -- if the script
 operates on the current directory and its children, the original
-source tree should remain intact.
+source tree should remain intact. The environment variables
+.B HEADER_CLEAN_HOOK
+and
+.B DOC_CLEAN_HOOK
+are similiar. The should point tp executables, then that executable
+shall be run from the temporary (top) directory of the kernel headers
+and coumentation just before packaging respectively, so people may
+take any action they see fit. This also has no effect on anything
+other than the sources that are being packaged.
 .TP
 .B kernel_headers
 This target produces a Debian package containing the header files
