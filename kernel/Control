@@ -21,7 +21,7 @@ Priority: optional
 Provides: kernel-source
 Depends: binutils | gas
 Recommends: libc-dev, gcc, make
-Suggests: ncurses-dev, tk-dev, kernel-package
+Suggests: ncurses-dev, tk-dev, kernel-package, bin86
 Description: Linux kernel source.
  This package provides the source code for the Linux kernel, as well
  as the scripts that maintain the symbolic link /usr/src/linux). 
@@ -30,7 +30,8 @@ Description: Linux kernel source.
  and following instructions, but you could get ncursesX.X-dev and
  tk4X-dev and try "make menuconfig" for a jazzier, and easier to use
  interface. Also, on intel platforms, you may wish to get bin86 (if
- you wish to compile the kernel sources, that is.) Also, please read 
+ you wish to compile the kernel sources, that is.) Ignore the suggestion 
+ for non intel architectures. Also, please read the detailed documentation
  /usr/doc/kernel-source-V/README.headers.gz. 
  .
  If you wish to use this package to create a custom Linux kernel, then
