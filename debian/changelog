@@ -1,3 +1,21 @@
+kernel-package (6.05) frozen unstable; urgency=high
+
+  * This fixes a bug introduced in the previous upload to frozen, in the
+    handling of the new extraversion. Most of the changes are bug fixes,
+    there is no new code.
+  * Tightened the reg exp for determining the extraversion to ignore
+    whitespace. Use builtin strip to remove leading and trailing
+    space. fixes: BUG#32457 
+  * If the changelog exists, use it to guess at the debian version (this is
+    merely setting the default value). If there is no changelog, the
+    default is still 1.00.
+  * If the .config file exists, use that to guess the subarch for intel
+    platforms. 
+  * Install debian/rules if it does not exist, regardless of
+    stamp-configure or debian/official.  fixes: BUG# 31823.
+
+ -- Manoj Srivastava <srivasta@debian.org>  Wed, 27 Jan 1999 18:34:15 -0600
+
 kernel-package (6.04) unstable; urgency=low
 
   * Tightened the reg exp fr determining the extraversion to ignore
