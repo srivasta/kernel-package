@@ -1,3 +1,28 @@
+kernel-package (6.28) frozen unstable; urgency=high
+
+  * Made kernel source depend on bzip2. This was a major braino, and
+    created a whole slew of bugs.
+    closes: Bug#52708, Bug#54308, Bug#54820, Bug#55071
+  * Fixed a minor typo in the readme file. closes: Bug#55880
+  * Make sure we honour the IMAGE_DESTDIR setting. closes: Bug#54871
+    Thanks go to Gerrit Pape <pape@innominate.de>
+  * removed a spurious istall docs -r from package prerm. closes: Bug#54123
+  * Reversed fix to 47766 that was preventing kernel-package from changing
+    symlinks in /. closes: Bug#54510, Bug#54667, Bug#54097, Bug#54126 
+  * Removed obsolete dependency on gas, which no longer seems to exist. 
+    closes: Bug#54033
+  * Applied a APUS patch from Sven LUTHER <luther@dpt-info.u-strasbg.fr>,
+    and made it possible to optionally ignore .config.save files. 
+    closes: Bug#53010
+  * Try and stop build if a patch application failed. closes: Bug#51780
+  * strip spaces from the root command, which could cause
+    dpkg-buildpackage to fail. closes: Bug#52272
+  * We do now warn about users using the --revision flag. closes: Bug#51133
+  * Add a note that we do not track Makefile, and the Flavours patch may
+    not apply cleanly. closes: Bug#47731
+
+ -- Manoj Srivastava <srivasta@debian.org>  Wed, 26 Jan 2000 03:43:34 -0600
+
 kernel-package (6.27) unstable; urgency=low
 
   * Removed mention of psdatabase from the man page, since we stopped

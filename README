@@ -1,5 +1,5 @@
 
-    $Id: README,v 1.28 1999/10/08 10:33:39 srivasta Exp $
+    $Id: README,v 1.29 2000/01/26 09:43:52 srivasta Exp $
 
 This is the Debian Linux packaging scripts for the Linux kernel. 
 This package has been put together by Manoj Srivastava <srivasta@debian.org>.
@@ -70,8 +70,7 @@ a) /tmp/linux
 b) /var/tmp/linux
 c) /usr/local/src/<whatever>
 d) /usr/src/linux-X.X.XX; where X.X.XX is the version number of the
-   kernel. Remember to re-link /usr/src/linux to point to this
-   directory, like: (cd /usr/src; rm linux; ln -s linux-X.X.XX) 
+   kernel. 
 
 In any case, choose a partition that has a large amount of free space,
 since recent kernels, unpacked, run to about 23MB, and you need more

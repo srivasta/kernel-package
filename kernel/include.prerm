@@ -16,9 +16,9 @@ package_name==P;
 case "$1" in
   remove)
     # This package about to be removed.
-    if command -v install-docs >/dev/null 2>&1; then
-	install-docs -r $package_name
-    fi
+    #if command -v install-docs >/dev/null 2>&1; then
+    #    install-docs -r $package_name
+    #fi
     
     if [ -L /usr/doc/$package_name ]; then
 	rm -f /usr/doc/$package_name

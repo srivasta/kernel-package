@@ -19,7 +19,7 @@ Architecture: all
 Section: devel
 Priority: optional
 Provides: kernel-source
-Depends: binutils | gas
+Depends: binutils, bzip2
 Recommends: libc-dev, gcc, make
 Suggests: ncurses-dev, tk-dev, kernel-package, bin86
 Description: Linux kernel source.

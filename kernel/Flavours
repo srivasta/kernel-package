@@ -45,7 +45,11 @@
 	This effort has been based on the ideas and work of Bill
  Mitchell <mitchell@mozcom.com> and Noel Maddy <ncm@biostat.hfh.edu>. 
 
-	The following patch works for newer 2.2 kernels:
+	The following patch works for newer 2.2 kernels (please note
+ that the patch may not apply cleanly, but the intent should surely be
+ clear). This should be used as a guideline; we are adding a new
+ variable, and adding it to the tail end of KERNELRELEASE.
+
 ======================================================================
 --- Makefile.~1~	Wed Apr 28 14:38:52 1999
 +++ Makefile	Fri May 14 14:18:50 1999

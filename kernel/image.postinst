@@ -5,14 +5,14 @@
 # Created On       : Sat Apr 27 05:55:26 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Fri Oct  8 05:43:39 1999
+# Last Modified On : Wed Jan 26 03:54:28 2000
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 107
+# Update Count     : 108
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
 # 
-#    $Id: image.postinst,v 1.31 1999/11/30 06:15:37 srivasta Exp $
+#    $Id: image.postinst,v 1.32 2000/01/26 09:54:47 srivasta Exp $
 #
 
 # 
@@ -103,7 +103,7 @@ if (-l "$kimage") {
       warn "The link "  . $imagedir . "$kimage is a danglink link\n";
       $force_move = 1;
     }
-    elsif ("$vmlinuz_target" eq "$realimageloc" . "$kimage-$version") {
+    elsif ("$vmlinuz_target" ne "$realimageloc" . "$kimage-$version") {
       $force_move = 1;
     }
   }
