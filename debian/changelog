@@ -1,3 +1,21 @@
+kernel-package (6.07) unstable; urgency=low
+
+  * Changed ?= rules in the makefile, since there are reports that
+    variables may not be getting interpolated correctly. Revert to old
+    fashined syntax. closes: Bug#32770
+  * Added section and priority in the genrated kernel packages, so that
+    user compiled packages also have a priority. coses: Bug#32848
+  * incorporated the ARM patch from Tor Slettnes. closes: Bug#33447
+
+ -- Manoj Srivastava <srivasta@debian.org>  Mon, 22 Feb 1999 01:14:55 -0600
+
+kernel-package (6.06.1) unstable; urgency=low
+
+  * Changed ARM build target from `vmlinux' to `Image'.  This is required
+    for 2.2.x kernels on the Corel Netwinder.
+
+ -- Tor Slettnes <tor@slett.net>  Fri, 12 Feb 1999 19:17:32 -0800
+
 kernel-package (6.06) unstable; urgency=low
 
   * Removed an extra packaging of the Documentation tree (quite
