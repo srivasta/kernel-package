@@ -1,3 +1,21 @@
+kernel-package (6.02) unstable; urgency=low
+
+  * Make kernel-doc-XXX now suggest kernel-image-=V=SA(that is, now we
+    include the architecture string that kernel-image packages may
+    optionally have. fixes: Bug#30291
+  * The EXTRAVERSION support in the NMU fixes: BUG#31290, BUG#31331, BUG#31444
+  * Added docuemntation about more variables in the makefile, namely, the
+    locations of the modules, patches, and configuration files, and how
+    one may modify the defaults.
+
+ -- Manoj Srivastava <srivasta@debian.org>  Thu,  7 Jan 1999 23:28:50 -0600
+
+kernel-package (6.01.1) unstable; urgency=low
+
+  * NMU; adds EXTRAVERSION support for 2.2.0-preblah kernels
+
+ -- Ben Gertzfield <che@debian.org>  Tue, 29 Dec 1998 20:02:24 -0800
+
 kernel-package (6.01) unstable; urgency=low
 
   * Added support for netwinders. closes: BUG#29333
