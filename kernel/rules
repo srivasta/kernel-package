@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Mon Sep  1 11:26:25 2003
+## Last Modified On : Sat Sep 27 20:02:18 2003
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 603
+## Update Count	    : 611
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.222 2003/09/21 19:23:34 srivasta Exp $
+## $Id: rules,v 1.223 2003/09/28 01:16:53 srivasta Exp $
 ###############################################################################
 
 ifdef KPKG_ARCH
@@ -523,8 +523,8 @@ EXTRAV_ARG :=
 endif
 
 UTS_RELEASE_VERSION=$(shell if [ -f include/linux/version.h ]; then                  \
-                               grep 'define UTS_RELEASE' include/linux/version.h |   \
-                                    awk '{print $$3; }' ;                             \
+                             grep 'define UTS_RELEASE' include/linux/version.h |   \
+                             perl -nle  'm/^\s*\S+\s*\S*\s*\"?([^\"]+)/g && print $$1;';\
                             else echo "" ;                                           \
                             fi)
  
@@ -1207,8 +1207,12 @@ stamp-build:
 ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
 	@(echo "The changelog says we are creating $(saved_version), but I thought the version is $(version)"; exit 1)
 endif
-ifneq ($(strip $(UTS_RELEASE_VERSION)),$(strip $(version)))
-	@echo "The UTS Release version in include/linux/version.h $(UTS_RELEASE_VERSION) does not match current version $(version), reconfiguring." 
+ifneq ($(strip $(UTS_RELEASE_VERSION)), $(strip $(version)))
+	@echo "The UTS Release version in include/linux/version.h" 
+	@echo "     \"$(strip $(UTS_RELEASE_VERSION))\" "
+	@echo "does not match current version " 
+	@echo "     \"$(strip $(version))\" "
+	@echo "Reconfiguring." 
 	touch Makefile
 endif
 	-test -f stamp-configure || $(deb_rule) configure
@@ -1606,13 +1610,21 @@ endif
 	gzip -9qf                                $(HEADER_DOC)/changelog
 	$(install_file) $(DEBDIR)/README.headers $(HEADER_DOC)/debian.README
 	gzip -9qf                                $(HEADER_DOC)/debian.README
-	$(install_file) .config  	        $(HEADER_DOC)/config-$(version)
-	$(install_file) conf.vars  	        $(HEADER_DOC)/conf.vars
-	gzip -9qf                               $(HEADER_DOC)/config-$(version)
-	gzip -9qf                               $(HEADER_DOC)/conf.vars
+	$(install_file) .config  	              $(HEADER_DOC)/config-$(version)
+	$(install_file) conf.vars  	     $(HEADER_DOC)/conf.vars
+	gzip -9qf                                $(HEADER_DOC)/config-$(version)
+	gzip -9qf                                $(HEADER_DOC)/conf.vars
+	$(install_file) CREDITS                  $(HEADER_DOC)/     
+	gzip -9qf                                $(HEADER_DOC)/CREDITS
+	$(install_file) MAINTAINERS              $(HEADER_DOC)/     
+	gzip -9qf                                $(HEADER_DOC)/MAINTAINERS
+	$(install_file) REPORTING-BUGS           $(HEADER_DOC)/     
+	gzip -9qf                                $(HEADER_DOC)/REPORTING-BUGS
+	$(install_file) README                   $(HEADER_DOC)/     
+	gzip -9qf                                $(HEADER_DOC)/README
 	if test -f debian/official -a -f debian/README.Debian ; then \
-           $(install_file) debian/README.Debian $(HEADER_SRC)/README.Debian ; \
-           gzip -9qf                            $(HEADER_SRC)/README.Debian ; \
+           $(install_file) debian/README.Debian $(HEADER_DOC)/README.Debian ; \
+           gzip -9qf                            $(HEADER_DOC)/README.Debian ; \
            $(install_file) README.Debian $(HEADER_DOC)/README.Debian;\
 	   gzip -9qf                     $(HEADER_DOC)/README.Debian;\
 	fi
@@ -1678,6 +1690,9 @@ endif
 	if test -f README.Debian ; then \
            $(install_file) README.Debian $(DOC_DOC)/README.Debian.1st;\
 	fi
+ifneq ($(strip $(shell if [ -x /usr/bin/db2html ]; then echo YSE; fi)),)
+	$(MAKE)  mandocs htmldocs
+endif
 	-tar cf - Documentation | (cd $(DOC_DOC); umask 000; tar xsf -)
 ifneq ($(strip $(doc_clean_hook)),)
 	(cd $(DOC_DOC);              \
@@ -1733,19 +1748,23 @@ endif
             -e 's/=S/$(no_symlink)/g' -e 's/=R/$(reverse_symlink)/g' \
             -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \
             -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'        \
+            -e 's/=M/$(MKIMAGE)/g'                                   \
              $(DEBDIR)/image.postinst > $(IMAGE_TOP)/DEBIAN/postinst
 	chmod 755 $(IMAGE_TOP)/DEBIAN/postinst
 	sed -e 's/=V/$(version)/g'    -e 's/=B/$(link_in_boot)/g'   \
             -e 's/=S/$(no_symlink)/g' -e 's/=R/$(reverse_symlink)/g' \
             -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \
             -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'        \
+            -e 's/=M/$(MKIMAGE)/g'                                   \
              $(DEBDIR)/image.postrm > $(IMAGE_TOP)/DEBIAN/postrm
 	chmod 755 $(IMAGE_TOP)/DEBIAN/postrm
 	sed -e 's/=V/$(version)/g'    -e 's/=L/$(loader)/g'          \
 	    -e 's/=I/$(INITRD)/g'                                    \
+             -e 's/=M/$(MKIMAGE)/g'                                   \
 	             $(DEBDIR)/image.preinst > $(IMAGE_TOP)/DEBIAN/preinst
 	chmod 755 $(IMAGE_TOP)/DEBIAN/preinst
 	sed -e 's/=V/$(version)/g'    -e 's/=L/$(loader)/g'          \
+             -e 's/=M/$(MKIMAGE)/g'                                   \
 	             $(DEBDIR)/image.prerm > $(IMAGE_TOP)/DEBIAN/prerm
 	chmod 755 $(IMAGE_TOP)/DEBIAN/prerm
 	$(install_file) Documentation/Changes $(IMAGE_DOC)/

@@ -5,16 +5,16 @@
 # Created On       : Mon Jun 17 01:10:11 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Tue Sep 23 18:36:02 2003
+# Last Modified On : Sat Sep 27 17:41:52 2003
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 204
+# Update Count     : 207
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
 #
 #
 #
-#    $Id: make-kpkg,v 1.92 2003/09/24 07:12:40 srivasta Exp $
+#    $Id: make-kpkg,v 1.93 2003/09/28 01:16:52 srivasta Exp $
 #
 require 5.002;
 use strict;
@@ -29,7 +29,7 @@ make-kpkg - build Debian kernel packages from Linux kernel sources.
 ($main::MYNAME     = $main::0) =~ s|.*/||;
 $main::Author      = "Manoj Srivastava";
 $main::AuthorMail  = "srivasta\@debian.org";
-$main::Version     = '$Revision: 1.92 $ ';
+$main::Version     = '$Revision: 1.93 $ ';
 
 my $added_modules='';
 my $added_patches='';
@@ -52,34 +52,38 @@ my $targ_opt=0;
 my $unsign_changelog='';
 my $unsign_source='';
 my $zimage;
+my $mkimage='';
 
-my %option_ctl = ("help"                => \$help_opt,
-                  "noexec"              => \$noexec,
-                  "initrd"              => \$initrd,
-                  "revision=s"          => \$revision,
-                  "flavour=s"           => \$flavour,
-                  "added_modules=s"     => \$added_modules,
-                  "added-modules=s"     => \$added_modules,
-                  "added-patches=s"     => \$added_patches,
-                  "added_patches=s"     => \$added_patches,
-                  "append-to-version=s" => \$append_to_version,
-                  "append_to_version=s" => \$append_to_version,
-                  "arch=s"              => \$arch,
-                  "config=s"            => \$config_target,
-                  "cross_compile=s"     => \$cross_compile,
-                  "cross-compile=s"     => \$cross_compile,
-                  "subarch=s"           => \$subarch,
-                  "arch_in_name"        => \$arch_in_name,
-                  "arch-in-name"        => \$arch_in_name,
-                  "pgpsign=s"           => \$signature,
-                  "key_id=s"            => \$key_id,
-                  "targets"             => \$targ_opt,
-                  "zimage"              => \$zimage,
-                  "rootcmd=s"           => \$root_cmd,
-                  "us"                  => \$unsign_source,
-                  "uc"                  => \$unsign_changelog,
-                  "bzimage"             => \$bzimage
-                 );
+my %option_ctl = 
+  (
+   "help"                => \$help_opt,
+   "noexec"              => \$noexec,
+   "initrd"              => \$initrd,
+   "revision=s"          => \$revision,
+   "flavour=s"           => \$flavour,
+   "added_modules=s"     => \$added_modules,
+   "added-modules=s"     => \$added_modules,
+   "added-patches=s"     => \$added_patches,
+   "added_patches=s"     => \$added_patches,
+   "append-to-version=s" => \$append_to_version,
+   "append_to_version=s" => \$append_to_version,
+   "arch=s"              => \$arch,
+   "config=s"            => \$config_target,
+   "cross_compile=s"     => \$cross_compile,
+   "cross-compile=s"     => \$cross_compile,
+   "subarch=s"           => \$subarch,
+   "arch_in_name"        => \$arch_in_name,
+   "arch-in-name"        => \$arch_in_name,
+   "pgpsign=s"           => \$signature,
+   "key_id=s"            => \$key_id,
+   "targets"             => \$targ_opt,
+   "zimage"              => \$zimage,
+   "rootcmd=s"           => \$root_cmd,
+   "us"                  => \$unsign_source,
+   "uc"                  => \$unsign_changelog,
+   "bzimage"             => \$bzimage,
+   "mkimage=s"           => \$mkimage
+  );
 
 =head1 SYNOPSIS
 
@@ -308,6 +312,15 @@ variable INITRD_OK is set.
 
 =back
 
+=item B<--mkimage> foo
+
+=over 2
+
+This should be a command that produces an initrd image given a directory.
+It is passed to the I<mkinitrd> as B<-m> option.
+
+=back
+
 =item B<--zimage>
 
 =over 2
@@ -397,6 +410,7 @@ usage: $main::MYNAME [options] target [target ...]
  --arch_in_name        Embed the subarch in the image package name
  --initrd              Create a image package suitable for initrd  for kernel
                        sources that have been patched with the cramfs patch.
+ --mkimage  foo        Command to generate the initrd image.
  --pgpsign  name       An ID used to sign the changes file using pgp.
  --config target       Change the type of configure done from the  default
                        oldconfig.
@@ -589,31 +603,33 @@ configuration-generated files are not stomped over later.
 =cut
 
 
-my %Known_targets=("clean"          => 1,
-                   "buildpackage"   => 1,
-                   "binary"         => 1,
-                   "binary-indep"   => 2,
-                   "debian"         => 1,
-                   "kernel_source"  => 3,
-                   "kernel-source"  => 3,
-                   "kernel_headers" => 3,
-                   "kernel-headers" => 3,
-                   "libc-kheaders"  => 3,
-                   "kernel_doc"     => 3,
-                   "kernel-doc"     => 3,
-                   "binary-arch"    => 2,
-                   "kernel_image"   => 3,
-                   "kernel-image"   => 3,
-                   "build"          => 4,
-                   "modules"        => 1,
-                   "modules_image"  => 1,
-                   "modules_config" => 1,
-                   "modules_clean"  => 1,
-                   "modules-image"  => 1,
-                   "modules-config" => 1,
-                   "modules-clean"  => 1,
-                   "configure"      => 1
-                  );
+my %Known_targets=
+  (
+   "clean"          => 1,
+   "buildpackage"   => 1,
+   "binary"         => 1,
+   "binary-indep"   => 2,
+   "debian"         => 1,
+   "kernel_source"  => 3,
+   "kernel-source"  => 3,
+   "kernel_headers" => 3,
+   "kernel-headers" => 3,
+   "libc-kheaders"  => 3,
+   "kernel_doc"     => 3,
+   "kernel-doc"     => 3,
+   "binary-arch"    => 2,
+   "kernel_image"   => 3,
+   "kernel-image"   => 3,
+   "build"          => 4,
+   "modules"        => 1,
+   "modules_image"  => 1,
+   "modules_config" => 1,
+   "modules_clean"  => 1,
+   "modules-image"  => 1,
+   "modules-config" => 1,
+   "modules-clean"  => 1,
+   "configure"      => 1
+  );
 
 my $targets_help =<<EOTRGT;
  Known Targets are:
@@ -971,6 +987,11 @@ EOMSG
       }
     }
     $command .= " INITRD=YES ";
+  }
+  if ($mkimage) {
+    $temp_string = $mkimage;
+    $mkimage =~ s/\$/$$/g;
+    $command .= " MKIMAGE='$temp_string' ";
   }
   if ($root_cmd){
      $command .= " ROOT_CMD=$root_cmd ";

@@ -1,3 +1,21 @@
+kernel-package (8.062) unstable; urgency=high
+
+  * Install additional useful documentation files in the kernel-doc
+    package.                                             closes: Bug#212848
+  * Added more voluble informational messages trying to track down
+    Bug#212965. Removed Quotes from around the UTS_RELEASE_VERSION
+                                                         closes: Bug#212965
+  * Added an option to make-kpkg to allow people to specify the command to
+    build an initrd image. This is useful if there are many kernel images
+    in the system with different initrd filesystem. Also added an option
+    to kernel-img.conf to over ride that variable on a per target basis.
+                                                         closes: Bug#212602
+  * Ship man pages and html documentation of the kernel in the kerel-doc
+    packages. Note that you need to have docbook-utils installed to take
+    advantage of this.                                   closes: Bug#210630
+
+ -- Manoj Srivastava <srivasta@debian.org>  Sat, 27 Sep 2003 20:00:10 -0500
+
 kernel-package (8.061) unstable; urgency=low
 
   * make make-kpkg parse extraversion values with non alphanumeric chars

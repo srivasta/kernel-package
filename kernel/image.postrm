@@ -5,14 +5,14 @@
 # Created On       : Sat May 15 11:05:13 1999
 # Created On Node  : glaurung.green-gryphon.com
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Thu Mar  6 17:06:39 2003
+# Last Modified On : Sat Sep 27 17:46:09 2003
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 29
+# Update Count     : 30
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
 # 
-#     $Id: image.postrm,v 1.29 2003/09/21 19:23:34 srivasta Exp $
+#     $Id: image.postrm,v 1.30 2003/09/28 01:16:53 srivasta Exp $
 #
 
 
@@ -35,6 +35,7 @@ my $loader            = "=L";     # lilo, silo, quik, palo, vmelilo, or nettrom
 my $image_dir         = "=D";     # where the image is located
 my $clobber_modules   = '';       # target machine defined
 my $initrd            = "=I";     # initrd kernel
+my $mkimage           = "=M";        # command to generate the initrd image
 my $do_initrd         = '';       # Normally, we don't
 my $warn_initrd       = 'YES';    # Normally we do
 my $use_hard_links    = '';       # hardlinks do not work across fs boundaries
@@ -141,6 +142,7 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
       $postrm_hook     = "$1"  if /postrm_hook\s*=\s*(\S+)/ig;
       $preinst_hook    = "$1"  if /preinst_hook\s*=\s*(\S+)/ig;
       $prerm_hook      = "$1"  if /prerm_hook\s*=\s*(\S+)/ig;
+      $mkimage         = "$1"  if /mkimage\s*=\s*(\S+)/ig;
     }
     close CONF;
     $have_conffile = "Yes";

@@ -21,7 +21,7 @@
 .\" Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139,
 .\" USA.
 .\"
-.\" $Id: kernel-img.conf.5,v 1.24 2003/09/21 19:23:34 srivasta Exp $
+.\" $Id: kernel-img.conf.5,v 1.25 2003/09/28 01:16:52 srivasta Exp $
 .\"
 .TH KERNEL\-IMG.CONF 5 "Mar 21 2000" "Debian" "Debian GNU/Linux manual" 
 .\" NAME should be all caps, SECTION should be 1-8, maybe w/ subsection
@@ -321,7 +321,17 @@ the link is a dangling link, a new symlink shall be created to point
 to /usr/src/kernel-headers-X.Y.ZZ, whether they have been installed or
 not. The default is unset, we don't create potentially dangling
 symlinks by default.
-
+.TP
+.B mkimage
+This should be a command that produces an initrd image given a
+directory. It is passed to the 
+.I mkinitrd
+program's 
+.I \-m
+option. For example, it can be
+  mkimage="genromfs -d %s -f %s"
+or
+  mkimage="mkcramfs %s %s"
 .TP
 .B silent_modules
 This option has been put in for the people who are vastly irritated on

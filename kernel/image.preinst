@@ -5,9 +5,9 @@
 # Created On       : Sun Jun 14 03:38:02 1998
 # Created On Node  : tiamat.datasync.com
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Mon May 13 02:19:10 2002
+# Last Modified On : Sat Sep 27 17:44:56 2003
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 50
+# Update Count     : 52
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
@@ -29,6 +29,7 @@ my $do_boot_enable  = "Yes";	# target machine defined
 my $do_bootfloppy   = "Yes";	# target machine defined
 my $do_bootloader   = "Yes";	# target machine defined
 my $move_image      = '';       # target machine defined
+my $mkimage         = "=M";     # command to generate the initrd image
 my $do_initrd       = '';       # target machine defined
 my $warn_initrd     = 'YES';    # target machine defined
 my $kimage          = "=K";     # Should be empty, mostly
@@ -140,6 +141,7 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
       $postrm_hook     = "$1"  if /postrm_hook\s*=\s*(\S+)/ig;
       $preinst_hook    = "$1"  if /preinst_hook\s*=\s*(\S+)/ig;
       $prerm_hook      = "$1"  if /prerm_hook\s*=\s*(\S+)/ig;
+      $mkimage         = "$1"  if /mkimage\s*=\s*(\S+)/ig;
     }
     close CONF;
     $have_conffile = "Yes";

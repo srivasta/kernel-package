@@ -22,7 +22,7 @@
 .\" USA.
 .\"
 .\"
-.\"    $Id: make-kpkg.8,v 1.75 2003/07/30 22:28:52 srivasta Exp $
+.\"    $Id: make-kpkg.8,v 1.76 2003/09/28 01:16:52 srivasta Exp $
 .\"
 .TH MAKE\-KPKG 1 "Nov 14 2002" "Debian" "Debian GNU/Linux manual"
 .SH NAME
@@ -363,6 +363,17 @@ Useful for people having problems with bzImage kernels.
 .B \-\-bzimage
 Makes a bzImage kernel. Useful for people who want a bzImage kernel on
 sites where the default is zImage kernels. 
+.TP
+.B \-\-mkimage
+This should be a command that produces an initrd image given a
+directory. It is passed to the 
+.I mkinitrd
+program's 
+.I \-m
+option. For example, it can be
+  "genromfs -d %s -f %s"
+or
+  "mkcramfs %s %s"
 .TP
 .B \-\-rootcmd foo
 The command that provides a means of gaining super user access (for

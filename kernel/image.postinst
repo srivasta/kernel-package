@@ -5,14 +5,14 @@
 # Created On       : Sat Apr 27 05:55:26 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Tue Sep 23 10:32:05 2003
+# Last Modified On : Sat Sep 27 17:44:12 2003
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 248
+# Update Count     : 250
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
 #
-#    $Id: image.postinst,v 1.123 2003/09/23 15:42:43 srivasta Exp $
+#    $Id: image.postinst,v 1.124 2003/09/28 01:16:53 srivasta Exp $
 #
 
 #
@@ -36,6 +36,7 @@ my $image_dir         = "=D";        # where the image is located
 my $clobber_modules   = '';          # target machine defined
 my $relative_links    = "";          # target machine defined
 my $initrd            = "=I";        # initrd kernel
+my $mkimage           = "=M";        # command to generate the initrd image
 my $do_initrd         = '';	# Normally we do not
 my $warn_initrd       = 'YES';	# Normally we do
 my $use_hard_links    = '';          # hardlinks do not work across fs boundaries
@@ -157,6 +158,7 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
       $postrm_hook     = "$1"  if /postrm_hook\s*=\s*(\S+)/ig;
       $preinst_hook    = "$1"  if /preinst_hook\s*=\s*(\S+)/ig;
       $prerm_hook      = "$1"  if /prerm_hook\s*=\s*(\S+)/ig;
+      $mkimage         = "$1"  if /mkimage\s*=\s*(\S+)/ig;
     }
     close CONF;
     $have_conffile = "Yes";
@@ -819,7 +821,9 @@ if ( -d "/lib/modules/$version" ) {
 # The initrd symlink should probably be in the same dir that the
 # symlinks are in
 if ($initrd) {
-  my $ret = system("mkinitrd -o " . $realimageloc . "initrd.img-$version " .
+  my $ret = system("mkinitrd " .
+                   ($mkimage ? "-m '$mkimage' " : "") .
+                   "-o " . $realimageloc . "initrd.img-$version " .
 		   "/lib/modules/$version");
   die("Failed to create initrd image.\n") if $ret;
 

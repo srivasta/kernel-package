@@ -22,6 +22,6 @@ Description: A utility for building Linux kernel related Debian packages.
  custom kernel (why else are you considering this package?), then you may
  need the package bin86 as well.  (This is not required on other platforms).
 Depends: perl, dpkg (>= 1.4), dpkg-dev (>= 1.4.0.9), gcc | c-compiler, make
-Recommends: libc-dev
+Recommends: libc-dev, docbook-utils
 Suggests: kernel-source, libdb3-dev, libncurses-dev
 Architecture: all
