@@ -4,15 +4,15 @@
 # Author           : Manoj Srivastava ( srivasta@pilgrim.umass.edu ) 
 # Created On       : Sat Apr 27 05:55:26 1996
 # Created On Node  : melkor.pilgrim.umass.edu
-# Last Modified By : Manoj Srivastava
-# Last Modified On : Wed Dec 24 12:56:26 1997
+# Last Modified By : Manoj Srivasta
+# Last Modified On : Tue Jan 20 01:50:50 1998
 # Last Machine Used: tiamat.datasync.com
-# Update Count     : 62
+# Update Count     : 65
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
 # 
-#    $Id: image.postinst,v 1.10 1997/12/24 19:13:48 srivasta Exp $
+#    $Id: image.postinst,v 1.11 1998/01/21 09:27:41 srivasta Exp $
 #
 
 # 
@@ -65,10 +65,29 @@ else {				# Let this be the default as well
 
 # Test if we need to do anything in / at all. This test make us idempotent.
 if (! -e "$kimage") {
-  die "$imagedir" . "$kimage does not exist. This is disastrous. Exiting\n";
+  # Hmm. Pristine system? How can that be?
+  warn "$imagedir" . "$kimage does not exist. Installing from scratch, eh?\n";
+  if ($no_symlink) {
+    if (! rename($realimageloc . "$kimage-$version", "$kimage")) {
+      die("Failed to move /boot/$kimage-$version to "
+	  . $imagedir . "$kimage .\n"); 
+    }
+  }
+  elsif ($reverse_symlink) {
+    if (! rename($realimageloc . "$kimage-$version", "$kimage")) {
+      die("Failed to move /boot/$kimage-$version to "
+	  . $imagedir . "$kimage .\n"); 
+    }
+  }
+  else {
+    if (! symlink($realimageloc . "$kimage-$version", "$kimage")) {
+      die("Failed to symbolic-link /boot/$kimage-$version to "
+	  . $imagedir . "$kimage .\n");
+    }
+  }
 }
-# follow link target.
-if (-l "$kimage" && !($no_symlink || $reverse_symlink)) {
+elsif (-l "$kimage" && !($no_symlink || $reverse_symlink)) {
+  # follow link target.  
   my $vmlinuz_target = readlink "$kimage";
   if (! (defined($vmlinuz_target) && 
 	 "$vmlinuz_target" eq "$realimageloc" . "$kimage-$version")) {
@@ -412,28 +431,12 @@ EO_MSG_A
   }
   print "\nOk, using drive at /dev/fd$drive.\n\n";
   
-  if (-x "/usr/bin/fdformat" || -x "/usr/bin/superformat") {
+  if (-x "/usr/bin/superformat") {
       print "If there is no formatted floppy available, I could attempt\n";
       print "to format it for you.\n";
       if (&ask("Do you wish me to format the floppy")){
          my $ret;
-	 my $format_command = '/usr/bin/fdformat';
-	 
-	 if (-x "/usr/bin/fdformat" ) {
-	   $format_command = '/usr/bin/fdformat';
-
-	   if (-x "/usr/bin/superformat") {
-	     print "\n";
-	     print "Hmm, I see you have the newer superformat command\n";
-	     if (&ask("Do you wish me to use superformat format the floppy")) {
-	       $format_command = '/usr/bin/superformat';
-	     }
-	     print "\n";
-	   }
-	 }
-	 else {
-	    $format_command = '/usr/bin/superformat';
-	 }
+	 my $format_command = '/usr/bin/superformat';
 	 
          print "Insert a floppy diskette into your boot drive \n";
          print "(/dev/fd$drive) and press <Return> when ready:";
