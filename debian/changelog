@@ -1,3 +1,14 @@
+kernel-package (5.04) unstable; urgency=low
+
+  * Backed out of System.map changes introduced in 5.02 since the patch
+    provided was fauly. reimplemented the system.map installation. This 
+    closes: Bug#24845
+  * Fixed the ifneq statement. Again, this was due to misapplied fixes for
+    the alpha. closes: Bug#24780
+  * Fixed typo in kernel image preinst. closes: Bug#24766
+
+ -- Manoj Srivastava <srivasta@debian.org>  Thu, 23 Jul 1998 01:20:40 -0500
+
 kernel-package (5.03) unstable; urgency=low
 
   * Applied numerous spelling corrections and punctuation fixes from
