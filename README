@@ -1,5 +1,5 @@
 
-    $Id: README,v 1.44 2001/07/11 21:37:52 srivasta Exp $
+    $Id: README,v 1.45 2001/08/20 06:31:08 srivasta Exp $
 
 This is the Debian GNU/Linux packaging scripts for the Linux kernel. 
 This package has been put together by Manoj Srivastava <srivasta@debian.org>.
@@ -541,7 +541,10 @@ A note on LILO: the kernel-image install-scripts arrange to have
 next most recent one, respectively.  You may choose to have LILO take
 advantage of this by putting image = /vmlinuz and image = /vmlinuz.old
 lines in your lilo.conf (please read documentation on LILO for
-details)
+details). Oh, and if your kernel image package uses initrd (as do the
+newer official kernel image packages), please do not forget to add a
+line (initrd=/boot/initrd-2.4.X-flavour) in your lilo.conf file
+pointing out this fact to lilo.
 
 Conversely, people who wish to tightly control the versions in
 lilo.conf (believe me, people, this gets to be a pain in the neck

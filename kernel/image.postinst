@@ -12,7 +12,7 @@
 # HISTORY          :
 # Description      :
 #
-#    $Id: image.postinst,v 1.73 2001/08/02 15:45:46 srivasta Exp $
+#    $Id: image.postinst,v 1.74 2001/08/20 06:31:08 srivasta Exp $
 #
 
 #
@@ -863,7 +863,7 @@ if ( ! -x "/sbin/$loader" ) {
     "vga=normal\n",
     "delay=20\n",
     "image=" . $image_dest . "$kimage\n",
-    "label=Linux\n",
+    "label = Linux\n",
     "read-only\n"
 );
 
@@ -872,11 +872,11 @@ if ( ! -x "/sbin/$loader" ) {
    "root=$rootdevice\n",
    "timeout=100\n",
    "image=" . $image_dest . "$kimage\n",
-   "\tlabel=Linux\n",
+   "\tlabel = Linux\n",
    "\tread-only\n",
    "other=1\n",
    "\tbootblock=" . $rootpartition .  "/boot/old.b\n",
-   "\tlabel=oldsys\n"
+   "\tlabel = oldsys\n"
 		);
 
 @quiktemplate = (
@@ -884,7 +884,7 @@ if ( ! -x "/sbin/$loader" ) {
    "root=$rootdevice\n",
    "timeout=100\n",
    "image=" . $image_dest . "$kimage\n",
-   "\tlabel=Linux\n",
+   "\tlabel = Linux\n",
    "\tread-only\n",
    "other=1\n",
    "\tbootblock=" . $rootpartition .  "/boot/old.b\n",

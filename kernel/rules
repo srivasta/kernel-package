@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.130 2001/08/02 03:21:29 srivasta Exp $
+## $Id: rules,v 1.131 2001/08/20 06:31:09 srivasta Exp $
 ###############################################################################
 
 ifdef ARCH
@@ -1253,7 +1253,7 @@ stamp-doc: debian
 	         debian/tmp-doc/usr/share/doc/$(d_package)/Buildinfo
 	if test -f debian/official -a -f debian/README.Debian ; then \
            $(install_file) debian/README.Debian \
-		debian/tmp-doc/usr/share/doc/$(h_package)/README.Debian;\
+		debian/tmp-doc/usr/share/doc/$(d_package)/README.Debian;\
 	fi
 	if test -f README.Debian ; then \
            $(install_file) README.Debian \

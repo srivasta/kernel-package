@@ -1,3 +1,25 @@
+kernel-package (7.59) unstable; urgency=low
+
+  * Fixed a typo in installing a readme file for the doc package. 
+                                                 closes: Bug#107026, Bug#108440
+  * Fixed a problem with the mindless replacement of =L in the image
+    postinst.                                                closes: Bug#107899
+  * No longer suggest task-tcltk-dev, since it no lionger exists. Of
+    course, there is not devcent way to suggest a tcl/tk devel env, so we
+    silently ignore it. This Sucks.                          closes: Bug#108776
+  * Fixed a typo in make-kpkg                                closes: Bug#107854
+  * Disable the vbersion.h warning for official kernels      closes: Bug#108468
+  * Added various bits of documentation about configuring for
+    initrd. Changed the question in image.preinst, as well as changing the
+    description of the kernel image packages.                closes: Bug#108624
+  * After talking with the submitter, the slowdown reported in the bug was
+    from unrelated reasons, and one can't explain the system.map
+    glitch. We decided to chalk this up as perhaps a kernel issue, and to
+    reopen this bug if we could get something that indicates otherwise. 
+                                                             closes: Bug#103958
+
+ -- Manoj Srivastava <srivasta@debian.org>  Mon, 20 Aug 2001 01:30:21 -0500
+
 kernel-package (7.58) unstable; urgency=low
 
   * disable the making of boot floppies for initrd kernels.  closes: Bug#107415

@@ -14,7 +14,7 @@
 #
 #
 #
-#    $Id: make-kpkg,v 1.60 2001/07/18 02:34:18 srivasta Exp $
+#    $Id: make-kpkg,v 1.61 2001/08/20 06:31:08 srivasta Exp $
 #
 require 5.002;
 use strict;
@@ -29,7 +29,7 @@ make-kpkg - build Debian kernel packages from Linux kernel sources.
 ($main::MYNAME     = $main::0) =~ s|.*/||;
 $main::Author      = "Manoj Srivastava";
 $main::AuthorMail  = "srivasta\@debian.org";
-$main::Version     = '$Revision: 1.60 $ ';
+$main::Version     = '$Revision: 1.61 $ ';
 
 my $added_modules='';
 my $added_patches='';
@@ -840,7 +840,7 @@ EOERR1
       print STDERR "by the packaging tools. Aborting.\n";
       exit 1;
     }
-    if (-f "include/linux/version.h" ) {
+    if (-f "include/linux/version.h" && ! -f 'debian/official') {
       print STDERR "Warning: The file include/linux/version.h exists\n";
       print STDERR "If you did not run make-kpkg clean after configuring\n";
       print STDERR "the kernel with make (menu|x)?config, the chances\n";
@@ -851,7 +851,7 @@ EOERR1
       print STDERR "though, I assume you know what you are doing, and I \n";
       print STDERR "apologize for being so annoying. Should I abort[Ny]?\n";
       my $ans = <STDIN>;
-      if ($ans =~ m/^\s*[Yy]g/) {
+      if ($ans =~ m/^\s*[Yy]/g) {
 	print STDERR " Aborting.\n";
 	exit 1;
       }

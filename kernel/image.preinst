@@ -123,7 +123,10 @@ EOF
       print STDERR "add an 'initrd=/boot/initrd' in your /etc/lilo.conf\n";
     }
     print STDERR <<EOF;
-To get rid of this message, put `do_initrd = Yes' in /etc/kernel-img.conf.
+I repeat, You need to configure your boot loader. If you have already done
+so, and you wish to get rid of this message, please put
+  `do_initrd = Yes'
+in /etc/kernel-img.conf.
 EOF
     print STDERR "Do you want to stop now? [Y/n]";
     my $answer = <STDIN>;

@@ -5,14 +5,14 @@
 # Created On       : Sat May 15 11:05:13 1999
 # Created On Node  : glaurung.green-gryphon.com
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Wed Jul  4 13:03:32 2001
+# Last Modified On : Thu Aug  2 14:29:59 2001
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 17
+# Update Count     : 18
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
 # 
-#     $Id: image.postrm,v 1.10 2001/07/13 18:10:26 srivasta Exp $
+#     $Id: image.postrm,v 1.11 2001/08/20 06:31:08 srivasta Exp $
 #
 
 
@@ -121,7 +121,7 @@ if ($image_in_boot) {$image_dest = "/$image_dir/"; $image_dest =~ s|^/*|/|o; }
 # Paranoid check to make sure that the correct value is put in there
 if (! $kimage)                    {$kimage = "vmlinuz"} # Hmm. empty
 elsif ($kimage =~ m/^b?zImage$/o) {$kimage = "vmlinuz"} # these produce vmlinuz
-elsif ($kimage =~ m/^Image$/o)    { my $nop = $kimage;}
+elsif ($kimage =~ m/^[iI]mage$/o) { my $nop = $kimage;}
 elsif ($kimage =~ m/^vmlinux$/o)  { my $nop = $kimage;}
 else                              {$kimage = "vmlinuz"} # default
 

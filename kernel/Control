@@ -22,7 +22,7 @@ Priority: optional
 Provides: kernel-source, kernel-source-=CV
 Depends: binutils, bzip2, fileutils (>= 4.0)
 Recommends: libc-dev, gcc, make
-Suggests: libncurses-dev | ncurses-dev, task-tcltk-dev, kernel-package
+Suggests: libncurses-dev | ncurses-dev, kernel-package
 Description: Linux kernel source for version =V
  This package provides the source code for the Linux kernel version =V.
  .
@@ -57,7 +57,10 @@ Description: Linux kernel binary image for version =V=SA.
  .
  Kernel image packages are generally produced using kernel-package,
  and it is suggested that you install that package if you wish to
- create a custom kernel from the sources.
+ create a custom kernel from the sources. Please look at kernel-img.conf(5),
+ and /usr/share/doc/kernel-package/README.gz  from the package kernel-package
+ for details on how to tailor the  installation of this or any other kernel 
+ image package
 
 Package: kernel-doc-=V
 Architecture: all
