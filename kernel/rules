@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Fri May  8 04:11:58 1998
+## Last Modified On : Mon May 11 01:42:27 1998
 ## Last Machine Used: tiamat.datasync.com
-## Update Count	    : 269
+## Update Count	    : 276
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.38 1998/05/08 09:43:18 srivasta Exp $
+## $Id: rules,v 1.39 1998/05/11 06:55:49 srivasta Exp $
 ###############################################################################
 
 # The version of kernel-package this belongs to
@@ -41,6 +41,9 @@ reverse_symlink :=
 # Whether to look for and install kernel patches by default.
 # Be very careful if you do this.
 patch_the_kernel := NO
+
+# do not create libc headers by default
+make_libc_headers := NO
 
 # run make clean after build
 do_clean := YES
@@ -251,6 +254,10 @@ ifneq ($(strip $(PATCH_THE_KERNEL)),)
 patch_the_kernel = $(PATCH_THE_KERNEL)
 endif
 
+ifneq ($(strip $(MAKE_LIBC_HEADERS)),)
+make_libc_headers = $(MAKE_LIBC_HEADERS)
+endif
+
 ifneq ($(strip $(ROOT_CMD)),)
 root_cmd = $(ROOT_CMD)
 endif
@@ -337,8 +344,13 @@ endif
 	-test ! -f stamp-configure && \
 	   sed -e 's/=V/$(version)/g'        -e 's/=D/$(debian)/g' \
 	       -e 's/=A/$(architecture)/g'   -e 's/=SA/$(INT_SUBARCH)/g' \
-               -e 's/=M/$(maintainer) <$(email)>/g' -e 's/=L/$(int_loaderdep) /g' \
+               -e 's/=L/$(int_loaderdep) /g' \
+               -e 's/=M/$(maintainer) <$(email)>/g'  \
 		         $(DEBDIR)/Control > debian/control
+ifeq ($(strip $(make_libc_headers)),YES)
+	-test ! -f stamp-configure && \
+	   cat $(DEBDIR)/Control.libc >> debian/control
+endif
 	-test ! -f stamp-configure && test ! -f debian/official && \
 	   sed -e 's/=V/$(version)/g' -e 's/=D/$(debian)/g' \
 	    -e 's/=A/$(architecture)/g' -e 's/=M/$(maintainer) <$(email)>/g' \
