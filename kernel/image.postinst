@@ -5,14 +5,14 @@
 # Created On       : Sat Apr 27 05:55:26 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Tue Jul 11 15:45:40 2000
+# Last Modified On : Mon Nov 20 22:22:53 2000
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 190
+# Update Count     : 191
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
 # 
-#    $Id: image.postinst,v 1.55 2000/08/20 19:36:38 srivasta Exp $
+#    $Id: image.postinst,v 1.56 2000/11/21 04:46:48 srivasta Exp $
 #
 
 # 
@@ -485,7 +485,7 @@ if ( -f "/lib/modules/$version/modules.dep" ) {
 
  I repeat: you have to reboot in order for the modules file to be
  created correctly. Until you reboot, it may be impossible to load
- some modules. Re boot as soon as this install is finished (Do not re
+ some modules. Reboot as soon as this install is finished (Do not re
  boot right now, since you may not be able to boot back up until
  installation is over, but boot immediately after). I can not stress
  that too much. You need to re boot soon. 

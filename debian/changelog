@@ -1,3 +1,27 @@
+kernel-package (7.21) unstable; urgency=low
+
+  * Changed suggestion to move old /lib/modules dir out of the
+    way. closes: Bug#72141
+  * include call to --arch while invoking dpkg-architecture. This
+    closes: Bug#70759
+  * The breakage in kernel-paclage that caused make lean to break has been
+    fixed for a couple of versions now. closes: Bug#72294
+  * kernel-pkg.conf.5 corrects the PATCH_THE_KERNEL documentation
+    issue. closes: Bug#74533
+  * The problem reported in 75439 can't be reproduced by either the alsa
+    maintainer or me, and it should not happen. The reporter agrees to let
+    us  close this issue until it recurs. closes: Bug#75439
+  * make-kpkg.1 now corrctly states it is a section 1 man page. 
+    closes: Bug#76039
+  * Fixed the readme.modules file to reflect the fact that the revison
+    option supplied while building the kernel shall over ride the revison
+    supplied for the modules. closes: Bug#77020
+  * Make a zimage for netwinders, since the old buggy loaders have been
+    fixed. closes: Bug#77430
+  * re boot --> reboot. closes: Bug#77461
+
+ -- Manoj Srivastava <srivasta@debian.org>  Mon, 20 Nov 2000 22:45:21 -0600
+
 kernel-package (7.20) unstable; urgency=low
 
   * There was a long standing cut and paste error in handling selected

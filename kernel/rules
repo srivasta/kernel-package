@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Mon Sep 11 01:11:04 2000
+## Last Modified On : Mon Nov 20 22:21:24 2000
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 447
+## Update Count	    : 448
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.103 2000/10/01 03:51:23 srivasta Exp $
+## $Id: rules,v 1.104 2000/11/21 04:46:48 srivasta Exp $
 ###############################################################################
 
 ifdef ARCH
@@ -146,14 +146,14 @@ ifeq (,$(findstring $(SUBARCH),netwinder))
 SUBARCH:=$(GUESS_SUBARCH)
 endif
 
-kimage := Image
+kimage := zImage
 loaderdep=
 loader=nettrom
 loaderdoc=
-target = Image
+target = zImage
 NEED_DIRECT_GZIP_IMAGE=NO
-kimagesrc = arch/$(KERNEL_ARCH)/boot/Image
-kimagedest = $(INT_IMAGE_DESTDIR)/Image-$(version)
+kimagesrc = arch/$(KERNEL_ARCH)/boot/zImage
+kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
 DEBCONFIG = $(CONFDIR)/config.arm
 ifeq ($(strip $(GUESS_SUBARCH)),netwinder)
         DEBCONFIG= $(CONFDIR)/config.netwinder
