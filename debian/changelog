@@ -1,3 +1,19 @@
+kernel-package (6.35) frozen unstable; urgency=low
+
+  * Fix for the amiga branch (extra paren in patch). Problem pointed out
+    by Daniel Jacobowitz <drow@false.org>. This makes kernel-package work
+    for amigas, I think.
+  * Fix warning in post inst about backups.
+
+ -- Manoj Srivastava <srivasta@debian.org>  Mon,  7 Feb 2000 00:57:10 -0600
+
+kernel-package (6.34) unstable; urgency=low
+
+  * Prodded by Daniel Jacobowitz <drow@false.org>, made a few adjustments
+    in the rules file to make make-kpkg parrallel make friendly.
+
+ -- Manoj Srivastava <srivasta@debian.org>  Thu,  3 Feb 2000 10:51:36 -0600
+
 kernel-package (6.33) frozen unstable; urgency=low
 
   * Make kernel-packageconfig escape single "'"s in the maintainer
