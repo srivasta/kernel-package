@@ -12,7 +12,7 @@
 # HISTORY          : 
 # Description      : 
 # 
-#    $Id: image.postinst,v 1.65 2001/07/05 04:21:26 srivasta Exp $
+#    $Id: image.postinst,v 1.66 2001/07/05 16:21:18 srivasta Exp $
 #
 
 # 
@@ -29,7 +29,7 @@ my $do_bootfloppy   = "Yes";	# target machine defined
 my $do_bootloader   = "Yes";	# target machine defined
 my $move_image      = '';       # target machine defined
 my $kimage          = "=K";	# Should be empty, mostly
-my $loader          = "=L";     # lilo, silo, quik, or nettrom
+my $loader          = "=L";     # lilo, silo, quik, palo, or nettrom
 my $image_dir       = "=D";     # where the image is located
 my $clobber_modules = '';       # target machine defined
 my $relative_links  = "";       # target machine defined
@@ -38,6 +38,7 @@ my $initrd          = "=I";     # initrd kernel
 my $Loader          = "LILO";
 $Loader             = "SILO"  if $loader =~ /silo/io;
 $Loader             = "QUIK"  if $loader =~ /quik/io;
+$Loader             = "PALO"  if $loader =~ /palo/io;
 $Loader             = "NETTROM"  if $loader =~ /nettrom/io;
 
 
@@ -366,8 +367,14 @@ sub image_magic {
 	$do_symlink = "" if $answer =~ /n/i;
       
 	if (open(CONF, ">$CONF_LOC")) {
-	  print CONF "# Do not create symbolic links in /\n";
-	  print CONF "Do_Symlinks = $do_symlink\n";
+	  if ($loader =~ /palo/i) {
+	    print CONF "image_in_boot = Yes\n";
+	    print CONF "do_symlink = Yes\n";
+	    print CONF "relative_links = Yes\n";
+	  } else {
+	    print CONF "# Do not create symbolic links in /\n";
+	    print CONF "Do_Symlinks = $do_symlink\n";
+	  }
 	  close CONF;
 	}
 	$have_conffile = "Yes";
@@ -625,8 +632,8 @@ EOFERRONE
 
 ## Run user hook script here, if any
 if (-x "$postinst_hook") {
-  system ("$postinst_hook", $version, $realimageloc . "$kimage-$version") &&
-	    warn "User hook script $postinst_hook failed";
+      system ("$postinst_hook", $version, $realimageloc . "$kimage-$version") &&
+		warn "User hook script $postinst_hook failed";
 }
 
 exit (0) unless $do_boot_enable;	# Exit if explicitly asked to
@@ -720,6 +727,7 @@ if ( ! -x "/sbin/$loader" ) {
   printf " (LInux LOader)"                if $loader =~ /lilo/i;
   printf " (Sparc Improved Linux lOader)" if $loader =~ /silo/i;
   printf " (QUIK: PowerMac Boot Loader)"  if $loader =~ /quik/i;
+  printf " (PALO: PA-RISC Boot Loader)"  if $loader =~ /palo/i;
   printf ", which is the boot loader I    \n";
   print "have additional help for, is not installed (it is, after all,\n";
   print "just one of many options). I am assuming you have made some  \n"; 
@@ -729,6 +737,7 @@ if ( ! -x "/sbin/$loader" ) {
   exit (0) unless defined $rootdevice;
   exit (0) if $loader =~ /silo/i; # No idea how to make non SILO floppies
   exit (0) if $loader =~ /quik/i;
+  exit (0) if $loader =~ /palo/i; # No such thing as PALO floppies
 
   if ($do_bootfloppy) {
     print "I can make a non-LILO diskette instead, but it won't be as useful.\n";
@@ -773,6 +782,16 @@ if ( ! -x "/sbin/$loader" ) {
    "other=1\n",
    "\tbootblock=" . $rootpartition .  "/boot/old.b\n",
    "\tlabel=oldsys\n"
+                );
+
+@palotemplate = (
+   "# See /usr/share/doc/palo/README.html and run 'palo --help' for\n",
+   "# more information\n\n",
+   "# $rootdevice $rootdisk $rootpartition $bootdevice\n",
+   "--init-partitioned=$rootdisk\n",
+   "--bootloader=/boot/iplboot\n",
+   "--recoverykernel=" . $image_dest . "$kimage\n",
+   "--commandline=$rootpartition" . $image_dest . "$kimage root=$rootdevice\n",
                 );
 
 
@@ -1175,6 +1194,12 @@ sub make_liloconf {
     if ($initrd) {
       print CONF "initrd=".$realimageloc."initrd\n";
     }
+  }
+  elsif ($loader =~ /quik/io) {
+    print CONF @quiktemplate;
+  }
+  elsif ($loader =~ /palo/io) {
+    print CONF @palotemplate;
   }
   else {
     print CONF @silotemplate;

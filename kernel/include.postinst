@@ -14,7 +14,7 @@
 # 
 # 
 #
-#    $Id: include.postinst,v 1.18 2000/03/15 07:14:53 srivasta Exp $
+#    $Id: include.postinst,v 1.19 2001/07/05 16:21:18 srivasta Exp $
 #
 
 
@@ -30,6 +30,7 @@ exit 0 unless ($ARGV[0] && $ARGV[0] =~ /configure/);
 my $architecture;
 chomp($architecture = `dpkg --print-installation-architecture`);
 $architecture = "ppc" if $architecture eq "powerpc";
+$architecture = "parisc" if $architecture eq "hppa";
 
 my $stop_and_read = 0;
 

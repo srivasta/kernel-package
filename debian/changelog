@@ -1,3 +1,15 @@
+kernel-package (7.45) unstable; urgency=low
+
+  * Added the official README.Debian file to the image and headers
+    packages as well.                                    closes: Bug#101332
+  * hppa changes from Paul Bame <bame@debian.org> 
+  * APUS changes from  Michel Dänzer <michdaen@iiic.ethz.ch>
+  * Added a message in the image preiinst, triggered only if the image is
+    an initrd image _and_ has lilo as the default bootloader, which tells
+    people how to configure lilo for initrd images. 
+
+ -- Manoj Srivastava <srivasta@debian.org>  Thu,  5 Jul 2001 11:20:51 -0500
+
 kernel-package (7.44) unstable; urgency=low
 
   * There was a problem  while installing a kernel with no modules created

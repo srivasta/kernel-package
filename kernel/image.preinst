@@ -5,9 +5,9 @@
 # Created On       : Sun Jun 14 03:38:02 1998
 # Created On Node  : tiamat.datasync.com
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Sat May  5 11:51:55 2001
+# Last Modified On : Thu Jul  5 11:18:47 2001
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 39
+# Update Count     : 40
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
@@ -104,7 +104,12 @@ if ($initrd && !$do_initrd) {
 You are attempting to install an initrd kernel image (version $version)
 This will not work unless you have configured your boot loader to use
 initrd.
-
+EOF
+    if ($loader =~ m/lilo/i) {
+      print STDERR "As a reminder, in order to configure lilo, you need to\n";
+      print STDERR "add an 'initrd=/boot/initrd' in your /etc/lilo.conf\n";
+    }
+    print STDERR <<EOF;
 To get rid of this message, put `do_initrd = Yes' in /etc/kernel-img.conf.
 EOF
     print STDERR "Do you want to stop now? [Y/n]";

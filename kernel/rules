@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Wed Jul  4 22:26:41 2001
+## Last Modified On : Thu Jul  5 11:06:03 2001
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 478
+## Update Count	    : 481
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.121 2001/07/05 04:21:27 srivasta Exp $
+## $Id: rules,v 1.122 2001/07/05 16:21:18 srivasta Exp $
 ###############################################################################
 
 ifdef ARCH
@@ -179,8 +179,8 @@ KERNEL_ARCH:=ppc
 
 ifneq (,$(findstring $(SUBARCH),APUs apus Amiga))
 SUBARCH:=apus
-kimage := zImage
-target = $(kimage)
+kimage := vmapus.gz
+target = zImage
 kimagesrc = $(shell if [ -d arch/$(KERNEL_ARCH)/boot/images ]; then \
 	echo arch/$(KERNEL_ARCH)/boot/vmapus ; else \
 	echo arch/$(KERNEL_ARCH)/boot/$(kimage) ; fi)
@@ -337,12 +337,15 @@ endif
 ifeq ($(strip $(architecture)),hppa)
 kimage := vmlinux
 loaderdep=palo
-loader=
+loader=palo
 loaderdoc=
 target=$(kimage)
 NEED_DIRECT_GZIP_IMAGE=NO
-kimagesrc=$(strip arch/$(KERNEL_ARCH)/boot/$(kimage))
+# Override arch name because hppa uses arch/parisc not arch/hppa
+KERNEL_ARCH := parisc
+kimagesrc=$(kimage)
 kimagedest=$(INT_IMAGE_DESTDIR)/vmlinux-$(version)
+# This doesn't seem to work, but the other archs do it...
 DEBCONFIG=$(CONFDIR)/config.$(SUBARCH)
 endif
 
@@ -1174,6 +1177,11 @@ stamp-headers: configure
 	$(install_file) $(DEBDIR)/README.headers \
 	         debian/tmp-headers/usr/share/doc/$(h_package)/debian.README
 	gzip -9qf debian/tmp-headers/usr/share/doc/$(h_package)/debian.README
+	if test -f debian/official -a -f debian/README.Debian ; then \
+           $(install_file) debian/README.Debian \
+		debian/tmp-source/usr/src/$(h_package)/README.Debian ; \
+           gzip -9qf debian/tmp-source/usr/src/$(h_package)/README.Debian ; \
+	fi
 	echo "This was produced by kernel-package version $(kpkg_version)." > \
 	         debian/tmp-headers/usr/share/doc/$(h_package)/Buildinfo
 	-tar cf - include | \
@@ -1274,6 +1282,11 @@ endif
 	echo "This was produced by kernel-package version $(kpkg_version)." > \
 	         debian/tmp-image/usr/share/doc/$(i_package)/Buildinfo
 	$(install_file) .config $(INT_IMAGE_DESTDIR)/config-$(version)
+	if test -f debian/official -a -f debian/README.Debian ; then \
+           $(install_file) debian/README.Debian \
+		debian/tmp-source/usr/src/$(i_package)/README.Debian ; \
+           gzip -9qf debian/tmp-source/usr/src/$(i_package)/README.Debian ; \
+	fi
 ifeq ($(strip $(HAVE_EXTRA_DOCS)),YES)
 	$(install_file) $(extra_docs) \
 	         debian/tmp-image/usr/share/doc/$(i_package)/
