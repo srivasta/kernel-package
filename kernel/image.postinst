@@ -12,7 +12,7 @@
 # HISTORY          : 
 # Description      : 
 # 
-#    $Id: image.postinst,v 1.40 2000/03/15 07:14:53 srivasta Exp $
+#    $Id: image.postinst,v 1.41 2000/03/15 07:38:45 srivasta Exp $
 #
 
 # 
@@ -331,9 +331,13 @@ exit (0) if $loader =~ /milo/i; # MILO does not have to be executed.
 exit (0) if $loader =~ /nettrom/i; # NETTROM does not have to be executed.
 
 
-my $loaderloc = `command -v $loader 2>/dev/null`;
-#my ($loaderloc) = grep -x, map "$_/$loader", map { length($_) ? $_ : "." }
-#  split /:/, $ENV{PATH};
+
+#my $loaderloc = `command -v $loader 2>/dev/null`;
+my $loader_exec;
+($loader_exec = $loader)  =~ s|.*/||;
+
+my ($loaderloc) = grep -x, map "$_/$loader_exec ", map { length($_) ? $_ : "." }
+  split /:/, $ENV{PATH};
 exit (0) unless $loaderloc;
 
 
