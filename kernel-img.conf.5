@@ -21,7 +21,7 @@
 .\" Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139,
 .\" USA.
 .\"
-.\" $Id: kernel-img.conf.5,v 1.17 2002/02/21 04:53:49 srivasta Exp $
+.\" $Id: kernel-img.conf.5,v 1.18 2002/04/12 20:03:33 srivasta Exp $
 .\"
 .TH KERNEL\-IMG.CONF 5 "Mar 21 2000" "Debian" "Debian GNU/Linux manual" 
 .\" NAME should be all caps, SECTION should be 1-8, maybe w/ subsection
@@ -260,7 +260,21 @@ Set to YES to prevent the
 .I kernel-image
 post installation script from issueing a warning when installing an
 intrd kernel. This assumes you have correctly set up your boot loader
-to be able to boot the initrd image.
+to be able to boot the initrd image. Default: no. This is deprecated
+in favour of the more descriptive
+.B warn_initrd
+option (please note that the sense of the option is inverted).
+.TP
+.B warn_initrd
+Set to NO to prevent the
+.I kernel-image
+post installation script from issueing a warning when installing an
+intrd kernel. This assumes you have correctly set up your boot loader
+to be able to boot the initrd image. This is now preferred to 
+.B do_initrd,
+since 
+.I warnings
+are what are prevented. Default: YES
 .TP
 .B use_hard_links
 This option has been put in for the people who can't handle symbolic

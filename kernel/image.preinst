@@ -30,6 +30,7 @@ my $do_bootfloppy   = "Yes";	# target machine defined
 my $do_bootloader   = "Yes";	# target machine defined
 my $move_image      = '';       # target machine defined
 my $do_initrd       = '';       # target machine defined
+my $warn_initrd     = 'YES';    # target machine defined
 my $kimage          = "=K";     # Should be empty, mostly
 my $loader          = "=L";     # lilo, silo, quik, palo, vmelilo, or nettrom
 my $image_dir       = "=D";     # where the image is located
@@ -99,6 +100,7 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
       $do_bootfloppy   = '' if /do_bootfloppy\s*=\s*(no|false|0)\s*$/ig;
       $do_bootloader   = '' if /do_bootloader\s*=\s*(no|false|0)\s*$/ig;
       $do_initrd       = '' if /do_initrd\s*=\s*(no|false|0)\s*$/ig;
+      $warn_initrd     = '' if /warn_initrd\s*=\s*(no|false|0)\s*$/ig;
       $relative_links  = '' if /relative_links \s*=\s*(no|false|0)\s*$/ig;
       $use_hard_links  = '' if /use_hard_links\s*=\s*(no|false|0)\s*$/ig;
       $silent_modules  = '' if /silent_modules\s*=\s*(no|false|0)\s*$/ig;
@@ -116,6 +118,7 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
       $do_bootloader   = "Yes" if /do_bootloader\s*=\s*(yes|true|1)\s*$/ig;
       $relative_links  = "Yes" if /relative_links\s*=\s*(yes|true|1)\s*$/ig;
       $do_initrd       = "Yes" if /do_initrd\s*=\s*(yes|true|1)\s*$/ig;
+      $warn_initrd     = "Yes" if /warn_initrd\s*=\s*(yes|true|1)\s*$/ig;
       $use_hard_links  = "Yes" if /use_hard_links\s*=\s*(yes|true|1)\s*$/ig;
       $silent_modules  = 'Yes' if /silent_modules\s*=\s*(yes|true|1)\s*$/ig;
       $silent_loader   = 'Yes' if /silent_loader\s*=\s*(yes|true|1)\s*$/ig;
@@ -132,6 +135,9 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
     $have_conffile = "Yes";	# stop perl complaining
   }
 }
+
+if ($do_initrd)    {   $warn_initrd = '';   }
+if (!$warn_initrd) {   $do_initrd   = "YES";}
 
 # About to upgrade this package from version $2 TO THIS VERSION.
 # "prerm upgrade" has already been called for the old version of

@@ -1,3 +1,16 @@
+kernel-package (7.105) unstable; urgency=low
+
+  * Fixed various typos in the kernel-doc package descriptions. 
+                                                             closes: Bug#140709
+  * Changed the bash complewtions function name.             closes: Bug#142492
+  * Fixed a last check to aid cross compilation              closes: Bug#142044
+  * Fixed a bunch of typos in diagnostics.                   closes: Bug#142234
+  * Really remove dangling symlinks on purge.                closes: Bug#141483
+  * Only move image symlinks around if we are not being upgraded. Thaks to
+    Herbert Xu for suggesting this.
+
+ -- Manoj Srivastava <srivasta@debian.org>  Fri, 12 Apr 2002 15:02:14 -0500
+
 kernel-package (7.104) unstable; urgency=low
 
   * Fix the rules file to short circuit a twisty set of confusing

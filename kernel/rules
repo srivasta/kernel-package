@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.167 2002/03/29 16:00:15 srivasta Exp $
+## $Id: rules,v 1.168 2002/04/12 20:03:34 srivasta Exp $
 ###############################################################################
 
 ifdef KPKG_ARCH
@@ -81,7 +81,7 @@ else
 endif
 
 ifndef CROSS_COMPILE
-  ifneq ($(strip $(architecture)),$(strip $(DEB_HOST_ARCH)))
+  ifneq ($(strip $(architecture)),$(strip $(DEB_BUILD_ARCH)))
     KERNEL_CROSS:=$(architecture)-$(strip $(DEB_HOST_GNU_SYSTEM))-
   endif
 else

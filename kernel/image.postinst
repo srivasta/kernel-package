@@ -5,14 +5,14 @@
 # Created On       : Sat Apr 27 05:55:26 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Sun Jan  6 03:33:58 2002
+# Last Modified On : Fri Apr 12 15:01:16 2002
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 231
+# Update Count     : 233
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
 #
-#    $Id: image.postinst,v 1.101 2002/03/17 05:29:01 srivasta Exp $
+#    $Id: image.postinst,v 1.102 2002/04/12 20:03:33 srivasta Exp $
 #
 
 #
@@ -37,6 +37,7 @@ my $clobber_modules = '';       # target machine defined
 my $relative_links  = "";       # target machine defined
 my $initrd          = "=I";     # initrd kernel
 my $do_initrd       = '';	# Normally we do not
+my $warn_initrd     = 'YES';	# Normally we do
 my $use_hard_links  = '';       # hardlinks do not work across fs boundaries
 my $postinst_hook   = '';       #Normally we do not
 my $postrm_hook     = '';       #Normally we do not
@@ -116,6 +117,7 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
       $relative_links  = '' if /relative_links \s*=\s*(no|false|0)\s*$/ig;
       $do_bootloader   = '' if /do_bootloader\s*=\s*(no|false|0)\s*$/ig;
       $do_initrd       = '' if /do_initrd\s*=\s*(no|false|0)\s*$/ig;
+      $warn_initrd     = '' if /warn_initrd\s*=\s*(no|false|0)\s*$/ig;
       $use_hard_links  = '' if /use_hard_links\s*=\s*(no|false|0)\s*$/ig;
       $silent_modules  = '' if /silent_modules\s*=\s*(no|false|0)\s*$/ig;
       $silent_loader   = '' if /silent_loader\s*=\s*(no|false|0)\s*$/ig;
@@ -132,6 +134,7 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
       $do_bootloader   = "Yes" if /do_bootloader\s*=\s*(yes|true|1)\s*$/ig;
       $relative_links  = "Yes" if /relative_links\s*=\s*(yes|true|1)\s*$/ig;
       $do_initrd       = "Yes" if /do_initrd\s*=\s*(yes|true|1)\s*$/ig;
+      $warn_initrd     = "Yes" if /do_initrd\s*=\s*(yes|true|1)\s*$/ig;
       $use_hard_links  = "Yes" if /use_hard_links\s*=\s*(yes|true|1)\s*$/ig;
       $silent_modules  = 'Yes' if /silent_modules\s*=\s*(yes|true|1)\s*$/ig;
       $silent_loader   = 'Yes' if /silent_loader\s*=\s*(yes|true|1)\s*$/ig;
@@ -147,6 +150,8 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
     $have_conffile = "Yes";
   }
 }
+
+
 
 # For some versions of kernel-package, we had this warning in the
 # postinst, but the rules did not really interpolate the value in.
@@ -792,7 +797,10 @@ EOIMG
   }
 }
 
-image_magic($kimage, $image_dest);
+# Only change the symlinks if we are not being upgraded
+if (! defined $ARGV[1] || ! $ARGV[1] || $ARGV[1] =~ m/<unknown>/og) {
+  image_magic($kimage, $image_dest);
+}
 
 # We used to have System.* files in /
 if (-e "/System.map" || -e "/System.old") {

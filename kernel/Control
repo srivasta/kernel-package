@@ -70,11 +70,11 @@ Provides: kernel-doc-=CV
 Depends: fileutils (>= 4.0)
 Suggests: kernel-image-=V=SA
 Description: Linux kernel specific documentation for version =V.
- This package provides The various readme's in the =V kernel
+ This package provides various Readme's in the =V kernel
  Documentation/ subdirectory: these typically contain kernel-specific
- installation notes for some drivers for example. See
- /usr/share/doc/kernel-doc-X.X.XX/Documentation/00-INDEX for a list of what
- is contained in each file.  Please read the Changes file, as it
- contains information about the problems, which may result by
- upgrading your kernel.
+ installation notes for some drivers. for example. Please see
+ /usr/share/doc/kernel-doc-X.X.XX/Documentation/00-INDEX for a list of
+ contents.  Please also read the Changes file, as it contains
+ information about the problems which may result by upgrading your
+ kernel.
 

@@ -14,7 +14,7 @@
 #
 #
 #
-#    $Id: make-kpkg,v 1.71 2002/02/18 15:08:32 srivasta Exp $
+#    $Id: make-kpkg,v 1.72 2002/04/12 20:03:33 srivasta Exp $
 #
 require 5.002;
 use strict;
@@ -29,7 +29,7 @@ make-kpkg - build Debian kernel packages from Linux kernel sources.
 ($main::MYNAME     = $main::0) =~ s|.*/||;
 $main::Author      = "Manoj Srivastava";
 $main::AuthorMail  = "srivasta\@debian.org";
-$main::Version     = '$Revision: 1.71 $ ';
+$main::Version     = '$Revision: 1.72 $ ';
 
 my $added_modules='';
 my $added_patches='';
@@ -838,16 +838,16 @@ EOMSG
       print STDERR "";
       print STDERR "However, if the file exists from a previous run, and\n";
       print STDERR "it existed before the make-kpkg --append_to_version was\n";
-      print STDERR "called, (for example, If you did not run make-kpkgclean\n";
+      print STDERR "called, (for example, If you did not run make-kpkg clean\n";
       print STDERR "after configuring the kernel with make (menu|x)?config)\n";
       print STDERR "the chances are that it does not contain the appended:\n";
       print STDERR "\t\t\t\"$append_to_version\"\n";
       print STDERR "Please check the value of macro UTS_RELEASE in the file\n";
       print STDERR "include/linux/version.h to make sure it is correct.\n";
       print STDERR "If it is not correct (or if you are not sure), I \n";
-      print STDERR "strongly recommend that you abort now, and run\n.";
-      print STDERR " % make-kpkg clean; ";
-      print STDERR " % make-kpkg ... --append_to_version $append_to_version kernel_image [modules_image]";
+      print STDERR "strongly recommend that you abort now, and run:\n";
+      print STDERR " % make-kpkg clean\n";
+      print STDERR " % make-kpkg ... --append_to_version $append_to_version kernel_image [modules_image]\n";
       print STDERR "By default, I assume you know what you are doing, and I\n";
       print STDERR "apologize for being so annoying. Should I abort[Ny]?\n";
       my $ans = <STDIN>;
