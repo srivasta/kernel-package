@@ -1,3 +1,21 @@
+kernel-package (5.08) unstable; urgency=low
+
+  * Added documentation of the tecra kernel issue in the README. 
+  * Added README.tecra as astandalone file documenting the tecra laptop
+    issue. 
+  * Added README.modules to document the way that addon modules may hook
+    into the kernel package and be kept compiled in synchrony with new
+    kernel compilations.
+  * Documented the fact that Flavours should be all lower case to meet the
+    strictures of the Packaging manual. closes: BUG#26843
+  * Added default values to prompts in kernel-packageconfig, since the
+    prompts were most unplesaing. closes: BUG#27289
+  * Fixed the dir modules are installed in to honour the flavour
+    setting. closes: BUG#27311
+  * Fixed typo in postinst. closes: Bug#25749
+
+ -- Manoj Srivastava <srivasta@debian.org>  Wed, 14 Oct 1998 01:04:29 -0500
+
 kernel-package (5.07) unstable; urgency=low
 
   * Make the long description for kernel-source emphasize the need to get
