@@ -14,7 +14,7 @@
 # 
 # 
 #
-#    $Id: include.postinst,v 1.9 1998/03/19 09:05:24 srivasta Exp $
+#    $Id: include.postinst,v 1.10 1998/07/14 21:33:15 srivasta Exp $
 #
 
 
@@ -46,7 +46,7 @@ chdir "/usr/src/$package/include" ||
   die "Could not chdir to  /usr/src/$package/include:$!";
 
 my $architecture;
-chomp($architecture = `dpkg --print-architecture`);
+chomp($architecture = `dpkg --print-installation-architecture`);
 $architecture = "ppc" if $architecture eq "powerpc";
 
 my $stop_and_read = 0;
