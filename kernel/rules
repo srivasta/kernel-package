@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.224 2003/09/30 05:32:03 srivasta Exp $
+## $Id: rules,v 1.225 2003/10/01 16:36:33 srivasta Exp $
 ###############################################################################
 
 ifdef KPKG_ARCH
@@ -481,10 +481,10 @@ KERNEL_ARCH= mips
 #coffdest=$(INT_IMAGE_DESTDIR)/vmlinux.ecoff-$(version)
 
 ifneq (,$(filter mips64el%,$(KPKG_SUBARCH)))
-  KERNEL_ARCH = mips64el
+  KERNEL_ARCH = mips64
 endif
 ifneq (,$(filter %-64,$(KPKG_SUBARCH)))
-  KERNEL_ARCH = mips64el
+  KERNEL_ARCH = mips64
 endif
 endif
 

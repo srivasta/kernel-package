@@ -1,3 +1,13 @@
+kernel-package (8.064) unstable; urgency=high
+
+  * Fixes for the mips64el arches.                     closes: Bug#213621
+  * 8.062 was a critical fix, and hasn't propagated to testing because of
+    subsequent bug fixes. This retains the hihg priority that 8.062
+    had. Hopefully, at some point the updates to kernel-package shall stop
+    being a daily occurrence.
+
+ -- Manoj Srivastava <srivasta@debian.org>  Wed,  1 Oct 2003 11:33:35 -0500
+
 kernel-package (8.063) unstable; urgency=low
 
   * Add chrp-rs6k support, and also allow setting of GUESS_SUBARCH
