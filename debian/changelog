@@ -1,3 +1,14 @@
+kernel-package (7.70) unstable; urgency=high
+
+  * Added patches for s390, from Jochen <jr@debian.s390.org> closes: Bug#115713
+  * remove /lib/modules/X.Y.Z/modules.ieee1394map            closes: Bug#115425
+  * Remove some over aggressive version checks.  closes: Bug#117515, Bug#117896
+                                                             closes: Bug#115097
+  * Do not move symlinks about if either the old or the new symlink
+    already points to the image being installed.             closes: Bug#117483
+
+ -- Manoj Srivastava <srivasta@debian.org>  Fri,  2 Nov 2001 02:16:02 -0600
+
 kernel-package (7.69) unstable; urgency=medium
 
   * Only complain about version mismatches on selected targets (read: not

@@ -5,14 +5,14 @@
 # Created On       : Sat Apr 27 05:55:26 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Sat Sep 29 01:40:53 2001
+# Last Modified On : Fri Nov  2 00:58:50 2001
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 213
+# Update Count     : 217
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
 #
-#    $Id: image.postinst,v 1.81 2001/10/02 16:15:12 srivasta Exp $
+#    $Id: image.postinst,v 1.82 2001/11/02 08:16:21 srivasta Exp $
 #
 
 #
@@ -43,7 +43,7 @@ my $postrm_hook     = '';       #Normally we do not
 
 my $package_name    = "kernel-image-$version";
 
-my $Loader          = "NoLOADER"; # 
+my $Loader          = "NoLOADER"; #
 $Loader             = "LILO"     if $loader =~ /^lilo/io;
 $Loader             = "SILO"     if $loader =~ /^silo/io;
 $Loader             = "QUIK"     if $loader =~ /^quik/io;
@@ -142,7 +142,7 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
 my $pattern = "=" . "I";
 $initrd=~ s/^$pattern$//;
 
-# no floppy disk support available for m68k VME, and it is not very useful 
+# no floppy disk support available for m68k VME, and it is not very useful
 # to make a boot floppy on PowerMac hardware at all.
 $do_bootfloppy = "" if $loader =~ /^vmelilo/io;
 $do_bootfloppy = "" if $loader =~ /^quik/io;
@@ -356,7 +356,19 @@ sub image_magic {
 	$force_move = 1;
       }
       elsif ("$vmlinuz_target" ne "$realimageloc" . "$kimage-$version") {
-	$force_move = 1;
+	if (-l "$kimage.old") {
+	  my $old_target = readlink "$kimage.old";
+	  if ("$old_target"  ne "$realimageloc" . "$kimage-$version") {
+	    $force_move = 1;
+	  }
+	  else {
+	    warn "$old_target points to " "$realimageloc" . "$kimage-$version";
+	    $force_move = 0;
+	  }
+	}
+	else {
+	  $force_move = 1;
+	}
       }
     }
 
@@ -389,7 +401,13 @@ sub image_magic {
       }
 
       # Ok, now we may clobber the previous .old file
-      rename("$kimage.$$", "$kimage.old");
+      if (-l "$kimage.old") {
+	rename("$kimage.$$", "$kimage.old");
+      }
+      else {
+	warn "$kimage.old is not a symlink, not clobbering\n";
+	unlink "$kimage.$$";
+      }
     }
   }
   elsif (! -e "$kimage") {
@@ -626,8 +644,8 @@ if ($initrd) {
   if ($initrd && -l "$image_dir/initrd" && ! $image_in_boot) {
     print STDERR <<"EOIMG";
 I Note that you have an old $image_dir/initrd symbolic link in place.
-The location of the symbolic link is now the same location as the kernel 
-image symbolic links, names, in $image_dest.  I have three options here. 
+The location of the symbolic link is now the same location as the kernel
+image symbolic links, names, in $image_dest.  I have three options here.
 I can:
  (a) update the symbolic link in the old location as well as the new one
  (B) delete the old symbolic link (default).  You shall need to update the
@@ -647,7 +665,7 @@ EOIMG
       unlink "$image_dir/initrd";
     }
     else {
-      print STDERR 
+      print STDERR
 	"Please note that $image_dir/initrd points to the wrong image now\n";
     }
   }
@@ -789,7 +807,7 @@ if ($loader =~ /noloader/io) {
     print STDERR << "MSGEND";
 I have determined no bootloader is required for your architecure.  This is
 either because there is no boot loader for your architecture, or because I
-did not change anything that would cause the boot loader to be run.  However, 
+did not change anything that would cause the boot loader to be run.  However,
 I could be wrong, and, if that is the case, I would appreciate it if you would
 please report a bug against the kernel-package package.
 
@@ -804,7 +822,6 @@ exit (0) if $loader =~ /silo/i; # SILO does not have to be executed.
 exit (0) if $loader =~ /yaboot/i; # yaboot does not have to be executed.
 exit (0) if $loader =~ /milo/i; # MILO does not have to be executed.
 exit (0) if $loader =~ /nettrom/i; # NETTROM does not have to be executed.
-exit (0) if $loader =~ /zipl/i; # Don't run zipl automatically at the moment
 
 exit (0) unless $loaderloc;
 
@@ -975,12 +992,20 @@ if ( ! -x "$loaderloc" ) {
   "image     = " . $image_dest . "$kimage\n",
   "read-only\n"
                 );
+if($loader =~ /^zipl/io)
+  {
+    $install_boot_method = "VM-reader or a boot tape";
+  }
+else
+  {
+    $install_boot_method = "a boot floppy";
+  }
 
 print STDERR <<"EOMSG";
 A new kernel image has been installed.
 
 $Loader sets up your system to boot Linux directly from your hard
-disk, without the need for a boot floppy.
+disk, without the need for booting from $install_boot_method.
 
 WARNING
 If you are keeping another operating system or another version
@@ -989,7 +1014,7 @@ install a boot block now. Wait until you read the $Loader documentation.
 That is because installing a boot block now might make the other
 system un-bootable. If you only want to run this version of Linux,
 go ahead and install the boot block here. If it does not work, you
-can still boot this system from a floppy.
+can still boot this system from $install_boot_method.
 
 EOMSG
 ;

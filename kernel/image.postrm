@@ -5,14 +5,14 @@
 # Created On       : Sat May 15 11:05:13 1999
 # Created On Node  : glaurung.green-gryphon.com
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Thu Aug  2 14:29:59 2001
+# Last Modified On : Mon Oct 29 15:06:06 2001
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 18
+# Update Count     : 19
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
 # 
-#     $Id: image.postrm,v 1.14 2001/09/10 16:49:08 srivasta Exp $
+#     $Id: image.postrm,v 1.15 2001/11/02 08:16:22 srivasta Exp $
 #
 
 
@@ -200,6 +200,9 @@ if (-f "/lib/modules/$version/modules.parportmap") {
 }
 if (-f "/lib/modules/$version/modules.generic_string") {
   unlink "/lib/modules/$version/modules.generic_string";
+}
+if (-f "/lib/modules/$version/modules.ieee1394map") {
+  unlink "/lib/modules/$version/modules.ieee1394map";
 }
 
 ## Run user hook script here, if any
