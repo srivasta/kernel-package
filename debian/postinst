@@ -20,10 +20,10 @@ case "$1" in
 
     cd /etc;
     if [ -f /usr/sbin/kernel-packageconfig ]; then
+	/usr/sbin/kernel-packageconfig
+    else
 	echo "Garbled installation: Could not find /usr/sbin/kernel-packageconfig";
 	exit 1;
-    else
-	/usr/sbin/kernel-packageconfig
     fi
 
     if [ -d /usr/doc ]; then
@@ -31,9 +31,9 @@ case "$1" in
 	if [   -d /usr/share/doc/$package_name ]; then
 	    # So the new doc dir exists, goody
 	    if [ -d /usr/doc/$package_name ]; then
-		echo "Yikes! The old directory, /usr/doc/$package_name"
+		echo "Yikes! The old directory, /usr/doc/$package_name,"
 		echo "has not ben removed! This is an error; attempting"
-		echo "repairs"
+		echo "repairs."
 		if [ -f /usr/doc/$package_name/.dhelp ]; then
 		    rm -f /usr/doc/$package_name/.dhelp
 		    rmdir --ignore-fail-on-non-empty /usr/doc/$package_name/
