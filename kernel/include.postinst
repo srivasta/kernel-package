@@ -4,17 +4,17 @@
 # Author           : Manoj Srivastava ( srivasta@pilgrim.umass.edu ) 
 # Created On       : Sat Apr 27 05:42:43 1996
 # Created On Node  : melkor.pilgrim.umass.edu
-# Last Modified By : Manoj Srivastava
-# Last Modified On : Sat Dec 13 12:17:13 1997
+# Last Modified By : Manoj Srivasta
+# Last Modified On : Tue Jan 20 02:11:30 1998
 # Last Machine Used: tiamat.datasync.com
-# Update Count     : 13
+# Update Count     : 16
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
 # 
 # 
 #
-#    $Id: include.postinst,v 1.3 1997/12/13 18:53:14 srivasta Exp $
+#    $Id: include.postinst,v 1.4 1998/01/21 09:28:24 srivasta Exp $
 #
 
 
@@ -39,7 +39,9 @@ if (-e 'linux' && ! -l 'linux') {
  Error configuring $package: /usr/src/linux does not seem to be a 
        symbolic link, possibly from an old package or a left-over from a 
        user installed kernel. Please remove /usr/src/linux and try to
-       reconfigure $package.  
+       reconfigure $package.  (Look at /usr/doc/$package/LinkPolicy
+       for details; local source should, in general, be kept in
+       /usr/local/src)
 
  Please Hit return to continue.
 EOF
@@ -54,6 +56,8 @@ if (-e "linux-$version" && ! -l "linux-$version" ) {
        be a symbolic link, possibly from an old package or a left-over
        from a user installed kernel. Please remove
        /usr/src/linux-$version and try to reconfigure $package.
+       (Look at /usr/doc/$package/LinkPolicy for details; local source
+       should, in general, be kept in /usr/local/src)
 
  Please Hit return to continue.
 EOF
