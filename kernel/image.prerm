@@ -5,9 +5,9 @@
 # Created On       : Fri May 17 03:28:59 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Tue Oct  7 11:09:23 2003
-# Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 67
+# Last Modified On : Sun Feb 20 00:04:15 2005
+# Last Machine Used: glaurung.internal.golden-gryphon.com
+# Update Count     : 68
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
@@ -159,7 +159,7 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
       $postrm_hook     = "$1"  if /postrm_hook\s*=\s*(\S+)/ig;
       $preinst_hook    = "$1"  if /preinst_hook\s*=\s*(\S+)/ig;
       $prerm_hook      = "$1"  if /prerm_hook\s*=\s*(\S+)/ig;
-      $mkimage         = "$1"  if /mkimage\s*=\s*(\S+)/ig;
+      $mkimage         = "$1"  if /mkimage\s*=\s*(.+)$/ig;
     }
     close CONF;
     $have_conffile = "Yes";
