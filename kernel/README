@@ -1,5 +1,5 @@
 
-   $Id: README,v 1.38 2000/09/27 18:34:15 srivasta Exp $
+   $Id: README,v 1.39 2001/01/19 17:53:57 srivasta Exp $
 
 This is the Debian GNU/Linux prepackaged version of the Linux kernel.
 Linux was written by Linus Torvalds <Linus.Torvalds@cs.Helsinki.FI> and
@@ -141,11 +141,10 @@ a) It only has an effect during the configure phase (in other words,
    So, if you want to re-run make-kpkg with a different revision
    number, you have to make sure you start with a clean slate.
 b) It may contain only alphanumerics and the characters + . - (full
-   stop, hyphen, and plus) and should contain a digit.  (Look at
-   Chapter 5 of the Programmers manual for details). Optionally, you
-   may prepend the revision with a digit followed by a colon (:); this
-   shall put your revision into a new epoch; (which makes older dpkg
-   very confused), more on this later.
+   stop, and plus) and should contain a digit.  Note: No hyphens
+   allowed (Look atthe Debian Policy manual for details). Optionally,
+   you may prepend the revision with a digit followed by a colon (:);
+   this shall put your revision into a new epoch; more on this later.
 
 You should _not_ use a "_" in the revision number! As tempting as it may
 seem, it actually interferes with the policy.

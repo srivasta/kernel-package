@@ -1,3 +1,22 @@
+kernel-package (7.25) unstable; urgency=low
+
+  * Fixed a typo in the postinst that caused a warning to be issued when
+    the user hook script executed correctly (and no warnings on error),
+  * The software and the documentation was inconsistent as to the format
+    of the revision flag: the man page and the command line help insisted
+    that hyphens were not allowed; the README and the software itself
+    would allow hyphens, but no checks were then in place to ensure the
+    resulting version was legal. This caused problems at the tail end of a
+    fairly expensive kernel compile. I think I am going to standardize on
+    not allowing hyphens, cause then the checks already in place are
+    sufficient, and I think it is reasonable not to have debian revisions
+    for kernel-image-X.X.XX packages (in a way, these packages are really
+    Debian only). So, now you may no longer sneak in a hyphen and thus
+    debian revisions into the ekrnel-image versions (and thus it shall
+    remain unless there is a public outcry). closes: Bug#77423
+
+ -- Manoj Srivastava <srivasta@debian.org>  Fri, 19 Jan 2001 11:51:49 -0600
+
 kernel-package (7.24) unstable; urgency=low
 
   * In the images postrm, ensure that modules.{isapnpmap,pcimap,usbmap}

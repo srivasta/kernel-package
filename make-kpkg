@@ -5,16 +5,16 @@
 # Created On       : Mon Jun 17 01:10:11 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Sat Jul 29 23:24:56 2000
+# Last Modified On : Fri Jan 19 11:44:29 2001
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 147
+# Update Count     : 149
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
 #
 #
 #
-#    $Id: make-kpkg,v 1.47 2000/12/19 06:33:15 srivasta Exp $
+#    $Id: make-kpkg,v 1.48 2001/01/19 17:53:57 srivasta Exp $
 #
 require 5.002;
 use strict;
@@ -29,7 +29,7 @@ make-kpkg - build Debian kernel packages from Linux kernel sources.
 ($main::MYNAME     = $main::0) =~ s|.*/||;
 $main::Author      = "Manoj Srivastava";
 $main::AuthorMail  = "srivasta\@debian.org";
-$main::Version     = '$Revision: 1.47 $ ';
+$main::Version     = '$Revision: 1.48 $ ';
 
 my $help_opt=0; 
 my $revision=0; 
@@ -103,9 +103,9 @@ this option has no effect -- run make-kpkg clean or manually remove
 stamp-configure, and stamp-debian (and debian/official, if that
 exists) for it to have an effect). I suggest you run make-kpkg clean
 unless you know what you are doing. Secondly, it may contain only
-alphanumerics and the characters + . (full stop, and plus) and should
-contain a digit. B<NOTE>: No hyphens allowed. (Look at Chapter 5 of
-the Programmers manual for details). Optionally, you may prepend the
+alphanumerics and the characters + . (full stop, and plus)
+and should contain a digit. B<NOTE>: No hyphens allowed. (Look at the
+Debian policy manual for details). Optionally, you may prepend the
 revision with a digit followed by a colon (:)
 
 This is because  B<dpkg> imposes an ordering on version numbers,
@@ -684,13 +684,11 @@ EOERR1
   if ($revision){
     $command .= " DEBIAN_REVISION=$revision ";
 
-    if ($revision !~ m/^(\d+:)?[\-\w\.\+]+$/o)
+    if ($revision !~ m/^(\d+:)?[\w\.\+]+$/o)
       {
 	print STDERR " Error: The revision string may only contain\n";
 	print STDERR " alphanumerics and  the  characters  +  .\n";
 	print STDERR " If epochs are used, the colon : is also allowed\n";
-	print STDERR " Also, if Debian revions are used, the hyphen is\n";
-	print STDERR " allowed too\n"; 
 	print STDERR " The current value is: $revision\n";
 	print STDERR " Aborting.\n";
 	exit 1;
