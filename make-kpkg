@@ -14,7 +14,7 @@
 #
 #
 #
-#    $Id: make-kpkg,v 1.45 2000/09/27 18:34:14 srivasta Exp $
+#    $Id: make-kpkg,v 1.46 2000/09/28 06:12:39 srivasta Exp $
 #
 require 5.002;
 use strict;
@@ -29,7 +29,7 @@ make-kpkg - build Debian kernel packages from Linux kernel sources.
 ($main::MYNAME     = $main::0) =~ s|.*/||;
 $main::Author      = "Manoj Srivastava";
 $main::AuthorMail  = "srivasta\@debian.org";
-$main::Version     = '$Revision: 1.45 $ ';
+$main::Version     = '$Revision: 1.46 $ ';
 
 my $help_opt=0; 
 my $revision=0; 
@@ -661,9 +661,9 @@ EOERR
     exit 1;
   }
 
-  if (-f "stamp-debian" && -d debian && -x debian/rules) {
+  if (-f "stamp-debian" && -d "debian" && -x "debian/rules") {
     if ($Targets !~ /^debian|configure/o) {
-      $rules_file = "debian/rules;
+      $rules_file = "debian/rules";
     }
   }
 
