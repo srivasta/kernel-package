@@ -5,9 +5,9 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Thu Mar 17 02:05:24 2005
+## Last Modified On : Sat Mar 19 10:08:03 2005
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count	    : 774
+## Update Count	    : 775
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
@@ -1748,7 +1748,7 @@ endif
 		$(DEBDIR)/changelog > debian/changelog
 	-test ! -f debian/rules &&                                       \
 	   install -p -m 755 $(DEBDIR)/rules debian/rules
-	-test ! -f stamp-debian && test ! -f debian/official &&              \
+#	-test ! -f stamp-debian && test ! -f debian/official &&              \
 #	for file in $(DEBIAN_FILES); do cp -f  $(LIBLOC)/$$file ./debian/; done
 #	for dir  in $(DEBIAN_DIRS);  do cp -af $(LIBLOC)/$$dir  ./debian/; done
 	echo done >  $@
