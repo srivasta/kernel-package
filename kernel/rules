@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.203 2003/05/05 18:04:31 srivasta Exp $
+## $Id: rules,v 1.204 2003/05/13 00:26:24 srivasta Exp $
 ###############################################################################
 
 ifdef KPKG_ARCH
@@ -777,6 +777,28 @@ endif
 endif
 endif
 
+
+ifeq ($(strip $(patch_the_kernel)),yes)
+patch_the_kernel = YES
+endif
+ifeq ($(strip $(patch_the_kernel)),Yes)
+patch_the_kernel = YES
+endif
+ifeq ($(strip $(patch_the_kernel)),YEs)
+patch_the_kernel = YES
+endif
+ifeq ($(strip $(patch_the_kernel)),yEs)
+patch_the_kernel = YES
+endif
+ifeq ($(strip $(patch_the_kernel)),yES)
+patch_the_kernel = YES
+endif
+ifeq ($(strip $(patch_the_kernel)),yeS)
+patch_the_kernel = YES
+endif
+
+
+
 ifneq ($(strip $(CONFIG_TARGET)),)
 config_target := $(CONFIG_TARGET)
 have_new_config_target := YES
@@ -1197,7 +1219,7 @@ ifneq ($(strip $(valid_patches)),)
 else
 	if [ -n "$(VERSIONED_PATCH_DIR)" -a                   \
              -d $(VERSIONED_DIR_PATCH_APPLY) ]; then          \
-            run-parts --verbose $(VERSIONED_DIR_PATCH_APPLY); \
+            run-parts --exit-on-error $(VERSIONED_DIR_PATCH_APPLY); \
 	    (cd $(VERSIONED_DIR_PATCH_APPLY); ls -1) >>       \
                                            applied_patches;   \
         echo done >  stamp-patch;                                    \
@@ -1206,7 +1228,7 @@ else
 	fi
 	if [ -n "$(VERSIONED_ALL_PATCH_DIR)" -a               \
              -d $(VERSIONED_ALL_PATCH_APPLY)  ]; then         \
-            run-parts --verbose $(VERSIONED_ALL_PATCH_APPLY); \
+            run-parts --exit-on-error $(VERSIONED_ALL_PATCH_APPLY); \
 	    (cd $(VERSIONED_ALL_PATCH_APPLY); ls -1) >>       \
                                            applied_patches;   \
         echo done >  stamp-patch;                                    \
@@ -1215,14 +1237,14 @@ else
 	fi
 	if [ -n "$(PATCH_DIR)" -a                             \
              -d $(DIR_PATCH_APPLY) ]; then                    \
-            run-parts --verbose $(DIR_PATCH_APPLY);           \
+            run-parts --exit-on-error $(DIR_PATCH_APPLY);           \
 	    (cd $(DIR_PATCH_APPLY); ls -1) >> applied_patches;\
         else                                                  \
 	    true;                                             \
 	fi
 	if [ -n "$(ALL_PATCH_DIR)" -a                         \
              -d $(ALL_PATCH_APPLY)  ]; then                   \
-            run-parts --verbose $(ALL_PATCH_APPLY);           \
+            run-parts --exit-on-error $(ALL_PATCH_APPLY);           \
 	    (cd $(ALL_PATCH_APPLY); ls -1) >> applied_patches;\
         echo done >  stamp-patch;                                    \
         else                                                  \
@@ -1357,25 +1379,25 @@ ifneq ($(strip $(valid_unpatches)),)
 else
 	if [ -n "$(VERSIONED_PATCH_DIR)" -a                     \
              -d $(VERSIONED_DIR_PATCH_UNPATCH) ]; then          \
-            run-parts --verbose $(VERSIONED_DIR_PATCH_UNPATCH); \
+            run-parts --report $(VERSIONED_DIR_PATCH_UNPATCH); \
         else                                                    \
 	    true;                                               \
 	fi
 	if [ -n "$(VERSIONED_ALL_PATCH_DIR)" -a                 \
              -d $(VERSIONED_ALL_PATCH_UNPATCH)  ]; then         \
-            run-parts --verbose $(VERSIONED_ALL_PATCH_UNPATCH); \
+            run-parts --report $(VERSIONED_ALL_PATCH_UNPATCH); \
         else                                                    \
 	    true;                                               \
 	fi
 	if [ -n "$(PATCH_DIR)" -a                               \
              -d $(DIR_PATCH_UNPATCH) ]; then                    \
-            run-parts --verbose $(DIR_PATCH_UNPATCH);           \
+            run-parts --report $(DIR_PATCH_UNPATCH);           \
         else                                                    \
 	    true;                                               \
 	fi
 	if [ -n "$(ALL_PATCH_DIR)" -a                           \
              -d $(ALL_PATCH_UNPATCH)  ]; then                   \
-            run-parts --verbose $(ALL_PATCH_UNPATCH);           \
+            run-parts --report $(ALL_PATCH_UNPATCH);           \
         else                                                    \
 	    true;                                               \
 	fi

@@ -1,3 +1,9 @@
+kernel-package (8.037) unstable; urgency=low
+
+  * Make a failed poatch a failure, since it may mess up the sources. 
+
+ -- Manoj Srivastava <srivasta@debian.org>  Mon, 12 May 2003 19:25:42 -0500
+
 kernel-package (8.036) unstable; urgency=low
 
   * Warn if the target machine does not have mkinitrd iv we are installing
