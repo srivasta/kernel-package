@@ -14,7 +14,12 @@ into extended memory, they aggravate this problem.  zImage kernels just
 compress into conventional memory, so they never need to touch the a20 gate,
 but they hit the 640k limit.
 
-There are two solutions that I know of:
+This problem is *not* present in 2.1.* and later (2.2 when available)
+kernels, bzImage kernel work just fine (the necessary code has been
+added, see the .S files in the kernel sources).
+
+
+For older kernels there are two solutions that I know of:
 
   1) apply a patch, which flushes the cache.  Unfortunately this
      causes other machines to crash so is not universally applicable

@@ -20,7 +20,6 @@ set -e
 
 version="=V";
 
-
 if [ "X$version" = "X" ]; then
     echo >&2 "Pre inst Internal error. Aborting."
     exit 1;
@@ -35,18 +34,18 @@ case "$1" in
     # "prerm upgrade" has already been called for the old version of
     # this package.
     if [ -d /lib/modules/$version ]; then
-	echo >&2 "You are attempting to install a kernel image(version $version)"
+        echo >&2 "You are attempting to install a kernel image (version $version)"
 	echo >&2 "However, the directory /lib/modules/$version still exists."
 	echo >&2 "If you have deselected some modules, this could be bad."
 	echo >&2 ""
 	echo >&2 "This is your last chance to abort the installation of this"
 	echo >&2 "kernel image (nothing has been changed yet). "
 	echo >&2 ""
-	echo >&2 "I Suggest you move /lib/modules/$version out of the way,"
+	echo >&2 "I suggest you move /lib/modules/$version out of the way,"
 	echo >&2 "perhaps to /lib/modules/$version.old or something,"
 	echo >&2 "and then try re-installing this image."
 	echo >&2 ""
-	echo -n >&2 "Do you want to stop now?[Y/n] "
+	echo -n >&2 "Do you want to stop now? [Y/n] "
 	read ans;
 	case $ans in
 	    [Nn]*)
