@@ -1452,8 +1452,9 @@ ifneq ($(strip $(shell test -f version.Debian && cat version.Debian)),)
 	 awk '$$1 == "ii" { printf("%s-%s\n", $$2, $$3) }' >> debian/buildinfo
 endif
 	echo applied kernel patches: >> debian/buildinfo
-	COLUMNS=150 dpkg -l $(shell echo $(valid_patches) | tr ' ' '\n' | sed -ne 's/^.*\/\(.*\)/kernel-patch-\1/p') |\
-+	 awk '$$1 == "ii" { printf("%s-%s\n", $$2, $$3) }' >> debian/buildinfo
+	COLUMNS=150 dpkg -l \
+				$(shell echo $(valid_patches) | tr ' ' '\n' | sed -ne 's/^.*\/\(.*\)/kernel-patch-\1/p') |\
+	      awk '$$1 == "ii" { printf("%s-%s\n", $$2, $$3) }' >> debian/buildinfo
 	echo done >  $@
 
 buildpackage: clean stamp-buildpackage
