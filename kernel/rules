@@ -5,9 +5,9 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Sat Dec  6 10:42:20 2003
+## Last Modified On : Sun Dec  7 11:07:31 2003
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 641
+## Update Count	    : 643
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
@@ -117,7 +117,7 @@ EXTRA_VERSION =$(shell egrep '^EXTRAVERSION +=' Makefile 2>/dev/null | \
 HAVE_NEW_MODLIB =$(shell egrep '\(INSTALL_MOD_PATH\)' Makefile 2>/dev/null )
 
 HAS_ILLEGAL_EXTRA_VERSION =$(shell                         \
-    perl -e '$$i="$(EXTRA_VERSION)"; $$i !~ m/^[a-z\d\.\-\+]+$/o && print YES;')
+    perl -e '$$i="$(EXTRA_VERSION)"; $$i !~ m/^[a-z\d\.\-\+]+$$/o && print YES;')
 
 ifneq ($(strip $(HAS_ILLEGAL_EXTRA_VERSION)),)
 $(error Error: The EXTRAVERSION may only contain lowercase alphanumerics \
@@ -398,7 +398,7 @@ endif
 ifeq ($(strip $(architecture)),i386)
   # sub archs can be i386 i486 i586 i686
   GUESS_SUBARCH:=$(shell if test -f .config; then \
-                        perl -nle '/^CONFIG_M(.86)=y/ && print "i$$1"' .config;\
+                        perl -nle '/^CONFIG_M(.86)=y/ && print "$$1"' .config;\
                        else \
                          uname -m;\
                        fi)
