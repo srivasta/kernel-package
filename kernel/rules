@@ -5,9 +5,9 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Fri Dec  5 11:03:49 2003
+## Last Modified On : Sat Dec  6 10:42:20 2003
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 638
+## Update Count	    : 641
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
@@ -116,7 +116,13 @@ EXTRA_VERSION =$(shell egrep '^EXTRAVERSION +=' Makefile 2>/dev/null | \
  sed -e 's/EXTRAVERSION *= *\([^ \t]*\)/\1/')
 HAVE_NEW_MODLIB =$(shell egrep '\(INSTALL_MOD_PATH\)' Makefile 2>/dev/null )
 
+HAS_ILLEGAL_EXTRA_VERSION =$(shell                         \
+    perl -e '$$i="$(EXTRA_VERSION)"; $$i !~ m/^[a-z\d\.\-\+]+$/o && print YES;')
 
+ifneq ($(strip $(HAS_ILLEGAL_EXTRA_VERSION)),)
+$(error Error: The EXTRAVERSION may only contain lowercase alphanumerics \
+ and  the  characters  - +  . The current value is: $(EXTRA_VERSION). Aborting.)
+endif
 
 ######################################################################
 ###          Architecture specific stuff                           ###
@@ -1060,7 +1066,7 @@ fleshed_out    :=$(foreach mod,$(no_path_modules),$(MODULE_LOC)/$(mod))
 canonical_modules:=$(path_modules) $(fleshed_out)
 # test to see if the dir names are real
 valid_modules = $(shell for dir in $(canonical_modules); do \
-                            if [ -d $$dir && -x $$dir/debian/rules ]; then \
+                            if [ -d $$dir ] && [ -x $$dir/debian/rules ]; then \
                                echo $$dir;                  \
                             fi;                             \
                         done)
@@ -1452,7 +1458,7 @@ endif
 	@echo "MODFLAGS 	      = $(MODFLAGS)"      >> .mak
 	@echo "do_parallel      = $(do_parallel)"   >> .mak
 	@echo "fast_dep         = $(fast_dep)"      >> .mak
-	@sed -e 's%$(TOPDIR)%$$(TOPDIR)%g' .mak     > $@
+	@sed -e 's%$(TOPDIR)%$$(TOPDIR)%g' .mak     > conf.vars
 	@rm -f .mak
 else
 conf.vars: Makefile
