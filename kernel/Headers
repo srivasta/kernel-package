@@ -1,5 +1,5 @@
 
-    $Id: Headers,v 1.2 1997/06/03 03:23:16 srivasta Exp $
+    $Id: Headers,v 1.3 1997/06/25 07:33:27 srivasta Exp $
 
  This package contains the Linux kernel header files (also contained
  in libc5-dev packages). 
@@ -7,7 +7,7 @@
         The headers were included in libc5-dev after a rash of very
  buggy alpha kernel releases (1.3.7* or something like that) that
  proceeded to break compilations, etc.  Kernel versions are changed
- far more rapidly than libc is, and there are higer chances that
+ far more rapidly than libc is, and there are higher chances that
  people install a custom kernel than they install custom libc.
 
         Add to that the fact that few programs really need the more
@@ -19,7 +19,7 @@
         So, it makes sense that a set of headers be provided from a
  known good kernel version, and that is sufficient for compiling most
  programs, (it also makes the compile time environments for programs
- on debian machines a well known one, easing the process of dealing
+ on Debian machines a well known one, easing the process of dealing
  with problem reports), the few programs that really depend on cutting
  edge kernel data structures may just use -I/usr/src/linux/include
  (provided that kernel-headers or kernel-source exists on the system).
@@ -35,7 +35,7 @@
         There are two different capabilities which are the issue, and
  the kernel-packages and libc5-dev address different ones:
 
- a) The kernel packages try tp provide a stable, well behaved kernel
+ a) The kernel packages try to provide a stable, well behaved kernel
     and modules, and may be upgraded whenever there are significant
     advances in those directions (bug fixes, more/better module
     support, etc).  These, however, may not have include files that

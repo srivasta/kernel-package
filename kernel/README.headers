@@ -1,5 +1,5 @@
 
-    $Id: README.headers,v 1.2 1997/06/03 03:26:31 srivasta Exp $
+    $Id: README.headers,v 1.3 1997/06/25 07:33:27 srivasta Exp $
 
  This is the Debian GNU/Linux prepackaged version of the Linux kernel
  headers. Linux was written by Linus Torvalds
@@ -43,7 +43,7 @@ Linus> Linus
         The headers were included in libc5-dev after a rash of very
  buggy alpha kernel releases (1.3.7* or something like that) that
  proceeded to break compilations, etc.  Kernel versions are changed
- far more rapidly than libc is, and there are higer chances that
+ far more rapidly than libc is, and there are higher chances that
  people install a custom kernel than they install custom libc.
 
 	libc6 includes it's own version of /usr/include/linux and
@@ -89,7 +89,7 @@ Linus> than the new program does, "interesting" things happen.
 Linus> In contrast, with separate header files, this doesn't make any
 Linus> difference.  If I change NR_OPEN in the kernel, the compilation
 Linus> environment won't notice UNTIL the library and associated
-Linus> header files are changed: thus the user will contine to compile
+Linus> header files are changed: thus the user will continue to compile
 Linus> with the old values, but because we'll still be binary
 Linus> compatible, the worst thing that happens is that new programs
 Linus> won't take advantage of new features unless the developer has
@@ -108,7 +108,7 @@ Linus> One specific example of why we want separate header files for
 Linus> libraries and kernel is offered by glibc: Matthias wanted to
 Linus> have a "sigset_t" that will suffice for the future when the
 Linus> POSIX.1b realtime signals are implemented. But at the same time
-Linus> he obviously wants to be able to support programmin on
+Linus> he obviously wants to be able to support programming on
 Linus> Linux-2.0 and the current 2.1 that do not have that support.
 
 Linus> The _only_ reasonably clean way to handle these kinds of
@@ -165,7 +165,7 @@ Linus> "standard" and the glibc first real release to take place.
         So, it makes sense that a set of headers be provided from a
  known good kernel version, and that is sufficient for compiling most
  programs, (it also makes the compile time environments for programs
- on debian machines a well known one, easing the process of dealing
+ on Debian machines a well known one, easing the process of dealing
  with problem reports), the few programs that really depend on cutting
  edge kernel data structures may just use -I/usr/src/linux/include
  (provided that kernel-headers or kernel-source exists on the system).
@@ -182,7 +182,7 @@ Linus> "standard" and the glibc first real release to take place.
         There are two different capabilities which are the issue, and
  the kernel-packages and libc{5,6}-dev address different ones:
 
- a) The kernel packages try tp provide a stable, well behaved kernel
+ a) The kernel packages try to provide a stable, well behaved kernel
     and modules, and may be upgraded whenever there are significant
     advances in those directions (bug fixes, more/better module
     support, etc).  These, however, may not have include files that

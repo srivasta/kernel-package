@@ -1,3 +1,10 @@
+kernel-package (3.34) unstable; urgency=low
+
+  * Ran spell check on the README file.
+  * Added a missing endif in the rules file
+
+ -- Manoj Srivastava <srivasta@debian.org>  Wed, 25 Jun 1997 02:32:42 -0500
+
 kernel-package (3.33) unstable; urgency=low
 
   * No longer carries around an extra uncompressed kernel image, and does

@@ -1,5 +1,5 @@
 
-   $Id: README,v 1.2 1997/06/03 03:23:45 srivasta Exp $
+   $Id: README,v 1.3 1997/06/25 07:33:27 srivasta Exp $
 
 This is the Debian GNU/Linux prepackaged version of the Linux kernel.
 Linux was written by Linus Torvalds <Linus.Torvalds@cs.Helsinki.FI> and
@@ -34,17 +34,17 @@ have a few other packages installed before you can compile your own kernels
 (it is difficult to compile anything without a compiler ;-). 
 
 Firstly, you will need gcc, the libc development package (libc5-dev at
-the time of writing), and, on intel platforms, bin86. [If you use the
+the time of writing), and, on Intel platforms, bin86. [If you use the
 menuconfig target of make, you will need ncursesX.X-dev, and make xconfig
 also requires tkX.X-dev, and other packages these depend on]
 
 The packages suggested are:
 devel:        gcc, libc5-dev, binutils, make, and, for intel x86 platforms,
-              bin86 (non-intel platforms don't need this).
+              bin86 (non-Intel platforms don't need this).
 interpreters: gawk.
 base:         gzip, shellutils, and grep.
 
-Of course, pretty gui frontends to kernel configuration require more
+Of course, pretty gui front ends to kernel configuration require more
 packages, but they are not strictly essential (though quite nice really). 
 
 Oh, and of course, make-kpkg is part of kernel-package, usually found
@@ -125,7 +125,7 @@ The value of a variable can be set so:
      customization is done.
   b) Variables can be set in the config file /etc/kernel-pkg.conf. 
      These values over ride the defaults.
-  c) Variables can also be set by setting a corresponding envirnment
+  c) Variables can also be set by setting a corresponding environment
      variable.  These values over ride the config file and the defaults
   d) Using make-kpkg options, or, if using the rules file directly, on 
      command line ( # xxx/rules DEBIAN_REVISION=2.0a kernel_image). This 
@@ -139,7 +139,7 @@ To generate a new kernel image, just run
 
 This will create a default kernel image (as in the image package or
 available on the boot disks.  The kernel image package produced will
-offer you a chance to create a bootdisk, or to run lilo, but the
+offer you a chance to create a boot disk, or to run LILO, but the
 default is not to do either, and you may choose to ignore these
 friendly overtures by the postinst.
  
@@ -165,7 +165,7 @@ To create a source or header package, run
 % make-kpkg -r=custom.1.0 kernel_headers
 Note: You only need one of these.
 
-Similarily, the documentation package is built by:
+Similarly, the documentation package is built by:
 % make-kpkg -r=custom.1.0 kernel_doc
 
 Or if you want to generate the whole package, 
@@ -204,7 +204,7 @@ Foot note 1:
   this. The kernel knows what version it is, as given in the kernel
   Makefile as the variables VERSION, PATCHLEVEL, and SUBLEVEL. It will
   look for the modules in /lib/modules/$VERSION.$PATCHLEVEL.$SUBLEVEL.
-  The debian scripts think they know what the kernel version is, as
+  The Debian scripts think they know what the kernel version is, as
   given in the Debian file rules as the variable v (near the top). It
   then proceeds to put the modules in /lib/modules/$v.  So, it is
   essential that the kernel (Makefile) and the Debian script (rules)

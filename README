@@ -1,14 +1,14 @@
 
-    $Id: README,v 1.2 1997/06/03 00:22:18 srivasta Exp $
+    $Id: README,v 1.3 1997/06/25 07:33:26 srivasta Exp $
 
 This is the Debian Linux packaging scripts for the Linux kernel. 
 This package has been put together by Manoj Srivastava <srivasta@debian.org>.
 
 
-INTALLATION NOTES:
+INSTALLATION NOTES:
 
 To use this package to create kernel-image packages, you need to get
-the kernel source (available from your favourite linux archive),
+the kernel source (available from your favorite Linux archive),
 unpack your kernel somewhere. Preferably somewhere other than
 /usr/src/linux (more on this later).
 
@@ -17,7 +17,7 @@ have a few other packages installed before you can compile your own kernels
 (it is difficult to compile anything without a compiler ;-). 
 
 Firstly, you will need gcc, the libc development package (libc5-dev at
-the time of writing), and, on intel platforms, bin86. [If you use the
+the time of writing), and, on Intel platforms, bin86. [If you use the
 menuconfig target of make, you will need ncursesX.X-dev, and make xconfig
 also requires tkX.X-dev, and other packages these depend on]
 
@@ -27,7 +27,7 @@ devel:        gcc, libc5-dev, binutils, make, and, for intel x86 platforms,
 interpreters: gawk.
 base:         gzip, shellutils, and grep.
 
-Of course, pretty gui frontends to kernel configuration require more
+Of course, pretty gui front ends to kernel configuration require more
 packages, but they are not strictly essential (though quite nice really). 
 
 
@@ -61,7 +61,7 @@ someplace else.
 Some of the suggestions about where to unpack the kernel packages are
 a) /tmp/linux
 b) /var/tmp/linux
-c) /usr/src/linux-X.X.XX; where X.X.XX is the version numnber of the
+c) /usr/src/linux-X.X.XX; where X.X.XX is the version number of the
    kernel. Remember to re-link /usr/src/linux to point to this
    directory, like: (cd /usr/src; rm linux; ln -s linux-X.X.XX) 
 
@@ -70,7 +70,7 @@ since recent kernels, unpacked, run to about 23MB, and you need more
 than double that in order to create kernel-image, kernel-source, and
 the tar file (that is, if you choose to build everything together with
 the dist target in debian.rules -- say if you want, for whatever
-reason, to run dchanges on the files created). I needed nearlt 60MB to
+reason, to run dchanges on the files created). I needed nearly 60MB to
 create the full spectrum of packages for version 1.99.7 (and doubtless
 this size will go up in the future).
 
@@ -135,7 +135,7 @@ The value of a variable can be set so:
      customization is done.
   b) Variables can be set in the config file /etc/kernel-pkg.conf. 
      These values over ride the defaults.
-  c) Variables can also be set by setting a corresponding envirnment
+  c) Variables can also be set by setting a corresponding environment
      variable.  These values over ride the config file and the defaults
   d) Using make-kpkg options, or, if using the rules file directly, on 
      command line ( # xxx/rules DEBIAN_REVISION=2.0a kernel_image). This 
@@ -149,7 +149,7 @@ To generate a new kernel image, just run
 
 This will create a default kernel image (as in the image package or
 available on the boot disks.  The kernel image package produced will
-offer you a chance to create a bootdisk, or to run lilo, but the
+offer you a chance to create a boot disk, or to run LILO, but the
 default is not to do either, and you may choose to ignore these
 friendly overtures by the postinst.
 
@@ -174,22 +174,22 @@ To create a source or header package, run
 % make-kpkg -revision custom.1.0 kernel_headers
 Note: You only need one of these.
 
-Similarily, the documentation package is built by:
+Similarly, the documentation package is built by:
 % make-kpkg -r=custom.1.0 kernel_doc
 
 Or if you want to generate the whole package, 
 % make-kpkg -revision custom.1.0 -signature "Your pgp id" dist
 Note that this needs a pgp key.
 
-A note on lilo: the kernel-image install-scripts arrange to have
+A note on LILO: the kernel-image install-scripts arrange to have
 /vmlinuz and /vmlinuz.old point to the latest kernel image and the
-next most recent one, respectively.  You may choose to have lilo take
+next most recent one, respectively.  You may choose to have LILO take
 advantage of this by putting image = /vmlinuz and image = /vmlinuz.old
-lines in your lilo.conf (please read documentation on lilo for
+lines in your lilo.conf (please read documentation on LILO for
 details)
 
-Conversly, people who wish to tightly control the versions in
-lilo.conf (believe me, people, this gets to be a pain in the neck
+Conversely, people who wish to tightly control the versions in
+LILO.conf (believe me, people, this gets to be a pain in the neck
 fast) can use image = /boot/vmlinuz-X.X.XX.
 
 So that loadlin people don't feel left out, all this talk about LILO
@@ -202,7 +202,7 @@ links in /). for instance, you could:
  [2]% cp /boot/vmlinuz-X.X.XX <place where loadlin needs image>
  [3]% echo '' > /boot/vmlinuz-X.X.XX
 
-        So you don't have the image taking upspace, but still leave a
+        So you don't have the image taking up space, but still leave a
 target for the /vmlinuz symlink.
 
 Have fun,
