@@ -5,14 +5,14 @@
 # Created On       : Sat Apr 27 05:55:26 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivasta
-# Last Modified On : Tue Jan 20 01:50:50 1998
+# Last Modified On : Fri Jan 23 13:09:50 1998
 # Last Machine Used: tiamat.datasync.com
-# Update Count     : 65
+# Update Count     : 66
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
 # 
-#    $Id: image.postinst,v 1.11 1998/01/21 09:27:41 srivasta Exp $
+#    $Id: image.postinst,v 1.12 1998/01/23 20:48:37 srivasta Exp $
 #
 
 # 
@@ -512,7 +512,7 @@ EO_MSG_B
 	$ret = system '/bin/dd', "if=$imagedir" . "$kimage", "of=/dev/fd$drive";
       }
       else {
-	$ret = system '/bin/dd', "if=$imagedir" . "$kimage-$version", 
+	$ret = system '/bin/dd', "if=$realimageloc" . "$kimage-$version", 
 	              "of=/dev/fd$drive";
       }
       last MKBOOT if $ret;
