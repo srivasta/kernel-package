@@ -28,7 +28,7 @@
 .\" (c) 2003 Software in the Public Interest
 .\" Esta traducción ha sido realizada por Rubén Porras Campo <nahoo@inicia.es>
 .\" Está basada en la página de manual original:
-.\" versión 1.18 del CVS de
+.\" versión 1.20 del CVS de
 .\" /cvs/debian-doc/manpages/english/kernel-package/make-kpkg.8
 .\" Revisada por Rudy Godoy <rudy@kernel-panik.org>
 
@@ -131,8 +131,13 @@ se añade al nombre del paquete, y, como tal, debe de cumplir las normas a las
 que están sujetos los nombres de los paquetes Debian. Esto quiere decir que sólo
 puede contener caracteres alfanuméricos en
 .B  minúsculas
-y los caracteres \- + . (guión, signo más y punto). Las letras en mayúsculas no
-están permitidas. Esto predomina sobre la variable de entorno
+y los caracteres \- + . (guión, signo más y punto). Las Normas no permiten
+letras mayúsculas en los paquetes nuevos. Si la variable de entorno
+.B IGNORE_UPPERCASE_VERSION
+está establecida, make-kpkg pasará a minúsculas los números de versión en el
+Makefile o en el fichero
+.I localversion.
+Esto predomina sobre la variable de entorno
 .B APPEND_TO_VERSION.
 Por favor, dese cuenta que \fB\s\-1debe\s0\fR ejecutar
 .B make\-kpkg 
@@ -250,8 +255,8 @@ pero no en otra situación.
 Además, dese cuenta que si algún parche instala un script en el directorio
 .I ./debian/image.d/
 , debe de llamarse a 
-.B run\-parts 
-en sobre ese directorio nada más se construya la imagen del núcleo. El lugar de
+.B run\-parts
+sobre ese directorio nada más se construya la imagen del núcleo. El lugar de
 la raíz del paquete con la imagen siendo construida debe pasarse en la variable
 de entorno
 .B IMAGE_TOP,
@@ -259,6 +264,12 @@ y la versión del núcleo se pasa mediante la variable de entorno
 .B version.
 De esta forma es posible que un parche inserte ficheros adicionales en la
 imagen, por ejemplo.
+.IP
+Algunos de los paquetes con parches también tienen en cuenta otras variables de
+entorno, esto se documenta en el directorio doc apropiador (por ejemplo, debería
+mirar en
+.I /usr/share/doc/kernel-patch-tal/README-kernelpatch.Debian
+si quiere información adicional para sobre el parche tal).
 .TP
 .BR \-\-arch\ tal
 Útil para establecer la arquitectura cuando se esté realizando compilación
@@ -402,15 +413,17 @@ opción=valor; para más detalles sobre ésta y otras variantes soportadas, lea la
 página del manual Getopt::Long (3perl).
 .TP
 .B CONCURRENCY_LEVEL
-Si está definida, esta variable establece el nivel de concurrencia usado por
-make para compilar el núcleo y el conjunto de módulos, usando la opción
+Si está definida, esta variable de entorno establece el nivel de concurrencia
+usado por make para compilar el núcleo y el conjunto de módulos, usando la
+opción
 .I \-j
 para el make del objetivo
 .B build
 de
 .B make\-kpkg.
-Si se usa debe ser un entero (pequeño).
-
+Si se usa debe ser un entero (pequeño). Puede obtener el número actual de
+procesadores usando la orden:
+ "grep -c '^processor' /proc/cpuinfo"
 .SH OBJETIVOS
 .TP
 .B clean
@@ -515,6 +528,27 @@ simbólico acorde a la nueva situación (la variable minimal_swap en
 modifica este comportamiento). No se realiza ninguna actuación en las
 actualizaciones.
 .IP
+Por favor, lea la documentación acerca de enganches en
+.B kernel\-img.conf(5).
+Estos enganches son variables que pueden apuntar a scripts que añadan o eliminen
+una línea a la lista del menú de grub durante la instalación o desinstalación
+del núcleo. Se incluye un script de ejemplo para añadir líneas al fichero de
+menú de grub en el directorio
+.I /usr/share/doc/kernel\-package/.
+.IP
+Además de las variables de enganche que pueda establecer el administrador local,
+hay una serie de directorios en los que los paquetes, o el administrador local,
+pueden colocar scripts. Los directorios son
+.I /etc/kernel/preinst.d/,
+.I /etc/kernel/postinst.d/,
+.I /etc/kernel/prerm.d/,
+y
+.I /etc/kernel/postrm.d/.
+Si existen, el paquete kernel-image ejecutará
+.B run-parts
+sobre los directorios, usando la versión a instalar o eliminar como argumento,
+en la fase correspondiente de la instalación o desinstalación.
+.IP
 Durante la instalación, también ofrece ejecutar
 .I LILO
 (o alternativas como 
@@ -530,14 +564,6 @@ en ejecución.
 se merece una mención especial, aunque no necesite ejecutarse después de
 instalar la imagen del núcleo no está de más un cambio automático a su menú
 después de instalar o desinstalar un paquete con una imagen del núcleo.
-.IP
-Lea la documentación acerca de enganches en
-.B kernel\-img.conf(5).
-Estos enganches son variables que pueden apuntar a scripts que añadan o eliminen una
-línea a la lista del menú de grub durante la instalación o desinstalación del
-núcleo. Se incluye un script de ejemplo para añadir líneas al fichero de menú de
-grub en el directorio
-.I /usr/share/doc/kernel\-package/.
 .TP
 .B build
 Este objetivo, es usado por el objetivo
@@ -646,6 +672,7 @@ Las siguientes variables (documentadas arriba) afectan a
 .I MODULE_LOC
 .I INITRD_OK
 .I CONCURRENCY_LEVEL
+.I IGNORE_UPPERCASE_VERSION
 .SH FICHEROS
 Aparte de las opciones de ejecución, el fichero 
 .I debian.rules
