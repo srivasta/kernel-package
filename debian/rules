@@ -5,16 +5,21 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Fri Feb 27 16:27:10 1998
-## Last Machine Used: tiamat.datasync.com
-## Update Count	    : 122
+## Last Modified On : Mon May 24 12:52:04 1999
+## Last Machine Used: glaurung.green-gryphon.com
+## Update Count	    : 123
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
 ##
 ###############################################################################
 
-#    $Id: rules,v 1.11 1998/02/27 22:27:17 srivasta Exp $
+#
+# VERSION=$(shell LC_ALL=C dpkg-parsechangelog | grep ^Version: | \
+#                          sed 's/^Version: *//')
+#
+
+#    $Id: rules,v 1.12 1999/05/25 20:05:14 srivasta Exp $
 
 
 # Please change the maintainer information, as well as the debian version

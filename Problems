@@ -1,5 +1,5 @@
 
-    $Id: Problems,v 1.9 1999/02/22 07:15:59 srivasta Exp $
+    $Id: Problems,v 1.10 1999/05/25 20:05:14 srivasta Exp $
 
  This is an (incomplete) list of problems that people have encountered
  in the past while using kernel-package. Please remember to configure
@@ -125,3 +125,11 @@ make: *** [all] Error 2
      k) Modules do not build when there is an epoch in the version.
         Some modules have been reported to have problems with epochs
         in the version number.
+
+     l) The version number seems to be dropped in the name of the package,
+	i.e., you get results like kernel-image-.._300_i386.deb, where the 
+	300 is from the --revision flag.
+
+	This seems to result from using the broken perl 5.005 packages
+	installed a while ago in unstable. That package has since been
+	withdrawn. Problems seem to go away when one downgrades to 5.004.

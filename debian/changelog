@@ -1,3 +1,11 @@
+kernel-package (6.16) unstable; urgency=low
+
+  * Another rules typo involving cross compilation
+  * Added a kernelpackage.5 man page, which should make finding the docs
+    for make-kpkg easier.
+
+ -- Manoj Srivastava <srivasta@debian.org>  Tue, 25 May 1999 15:03:14 -0500
+
 kernel-package (6.15) unstable; urgency=low
 
   * Some days you can't win. Yet another cut and paste error in powermac

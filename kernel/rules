@@ -5,14 +5,19 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Fri May 21 12:09:42 1999
+## Last Modified On : Tue May 25 15:00:54 1999
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 399
+## Update Count	    : 401
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.69 1999/05/21 17:09:55 srivasta Exp $
+## $Id: rules,v 1.70 1999/05/25 20:05:15 srivasta Exp $
 ###############################################################################
+
+#
+# VERSION=$(shell LC_ALL=C dpkg-parsechangelog | grep ^Version: | \
+#                          sed 's/^Version: *//')
+#
 
 # The version of kernel-package this belongs to
 kpkg_version := =K=V
@@ -772,7 +777,7 @@ endif
                         $(INT_IMAGE_DESTDIR)/System.map-$(version)
 	-test -f System.map &&  chmod 644 \
                         $(INT_IMAGE_DESTDIR)/System.map-$(version)
-	dpkg-gencontrol -DArchitecture=$(KERNEL_ARCH) -isp \
+	dpkg-gencontrol -DArchitecture=$(architecture) -isp \
                         -p$(i_package) -Pdebian/tmp-image/
 	chown -R root.root debian/tmp-image
 	chmod -R og=rX debian/tmp-image
