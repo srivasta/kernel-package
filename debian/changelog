@@ -4,8 +4,13 @@ kernel-package (6.12) unstable; urgency=low
     file already exists, since the --revision flag has no effect. Also
     require the revision flag to only contain anlphanumerics and . and +,
     and error out if otherwise. closes: Bug#35951
+  * The control file is fed $architecure, which needs be a valid arch
+    string. The additional -D option to dpkg-gencontrol is needed for
+    cross compilation (the default arch that dpkg-gencontrol guesses is
+    not the target architecture). So dpkg-gencontrol has to be told what
+    is in the control file. closes: Bug#37998
 
- -- Manoj Srivastava <srivasta@debian.org>  Wed, 19 May 1999 11:52:58 -0500
+ -- Manoj Srivastava <srivasta@debian.org>  Wed, 19 May 1999 23:56:30 -0500
 
 kernel-package (6.11) unstable; urgency=low
 
