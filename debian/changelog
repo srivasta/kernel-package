@@ -1,3 +1,14 @@
+kernel-package (7.62) unstable; urgency=low
+
+  * experimental change to allow root_cmd to be used on every target.
+    This may break things.                       closes: Bug#95582, Bug#107561
+  * Add an option to prevent the preinst from whining about existing
+    /lib/modules/$version
+
+  --
+
+ -- Manoj Srivastava <srivasta@debian.org>  Sat,  8 Sep 2001 16:08:33 -0500
+
 kernel-package (7.61) unstable; urgency=low
 
   * Changed the message about preexisting /lib/modules/$version directory

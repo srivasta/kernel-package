@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.133 2001/09/08 18:44:52 srivasta Exp $
+## $Id: rules,v 1.134 2001/09/08 21:22:39 srivasta Exp $
 ###############################################################################
 
 ifdef ARCH
@@ -702,6 +702,15 @@ ifneq ($(strip $(USE_SAVED_CONFIG)),)
 use_saved_config = $(USE_SAVED_CONFIG)
 endif
 
+#ifeq ($(origin var),command line)
+#$(warn You are setting an internal var from the cmdline. Use at your own risk)
+#endif
+#you can automated it a bit more with $(foreach) and $(if)
+
+###ROOT_COMMAND
+
+int_get_root := $(shell [ $$(id -u) -ne 0 ] && echo "$(ROOT_CMD)" )
+
 ifneq ($(strip $(ROOT_CMD)),)
 root_cmd := $(root_cmd) -r$(strip $(ROOT_CMD))
 endif
@@ -1143,7 +1152,7 @@ binary-arch:  kernel_image  kernel_headers
 
 kernel-source kernel_source: stamp-source
 stamp-source: debian
-	@test 0 = $$(id | sed -e 's/(.*$$//' -e 's/^uid=//') || \
+	@test $(id -u) -ne 0 -o "X$(int_get_root)" != "X" || \
 		(echo need root priviledges; exit 1)
 	test -f stamp-debian || $(deb_rule) debian
 	rm -rf $(SOURCE_TOP)
@@ -1202,16 +1211,17 @@ stamp-source: debian
            $(install_file) README.Debian $(SOURCE_DOC)/README.Debian.1st; \
 	   gzip -9qf $(SOURCE_DOC)/README.Debian.1st;\
 	fi
-	chown -R root.root $(SOURCE_TOP)
 	chmod -R og=rX $(SOURCE_TOP)
+	$(int_get_root) chown -R root.root $(SOURCE_TOP)/$(package)
 	(cd $(SOURCE_TOP)/usr/src/; \
-           tar $(TAR_COMPRESSION) -cf $(package).tar.$(TAR_SUFFIX) $(package);\
-             rm -rf $(package);)
+           $(int_get_root) tar $(TAR_COMPRESSION) -cf \
+                                    $(package).tar.$(TAR_SUFFIX) $(package);\
+             $(int_get_root) rm -rf $(package);)
 	dpkg-gencontrol -isp -p$(package) -P$(SOURCE_TOP)/
-	chown -R root.root $(SOURCE_TOP)
 	chmod -R og=rX $(SOURCE_TOP)
-	dpkg --build $(SOURCE_TOP) $(DEB_DEST)
-	rm -f -r $(SOURCE_TOP)
+	$(int_get_root) chown -R root.root $(SOURCE_TOP)
+	$(int_get_root) dpkg --build $(SOURCE_TOP) $(DEB_DEST)
+	$(int_get_root) rm -f -r $(SOURCE_TOP)
 	touch stamp-source
 
 libc-kheaders libc_kheaders: stamp-libc-kheaders
@@ -1221,7 +1231,7 @@ stamp-libc-kheaders: configure
 
 kernel-headers kernel_headers: stamp-headers
 stamp-headers: configure
-	@test $$(id | sed -e 's/(.*$$//' -e 's/^uid=//') || \
+	@test $(id -u) -ne 0 -o "X$(int_get_root)" != "X" || \
 		(echo need root priviledges; exit 1)
 	test -f stamp-configure || $(deb_rule) configure
 	rm -rf $(HEADER_TOP)
@@ -1259,15 +1269,15 @@ stamp-headers: configure
 	(cd $(HEADER_SRC)/include; rm -f asm; ln -s asm-$(KERNEL_ARCH) asm)
 	dpkg-gencontrol -DArchitecture=$(architecture) -isp \
                         -p$(h_package) -P$(HEADER_TOP)/
-	chown -R root.root $(HEADER_TOP)
-	chmod -R og=rX $(HEADER_TOP)
-	dpkg --build $(HEADER_TOP) $(DEB_DEST)
-	rm -rf $(HEADER_TOP)
+	$(int_get_root) chown -R root.root $(HEADER_TOP)
+	$(int_get_root) chmod -R og=rX $(HEADER_TOP)
+	$(int_get_root) dpkg --build $(HEADER_TOP) $(DEB_DEST)
+	$(int_get_root) rm -rf $(HEADER_TOP)
 	touch stamp-headers
 
 kernel-doc kernel_doc: stamp-doc
 stamp-doc: debian
-	@test $$(id | sed -e 's/(.*$$//' -e 's/^uid=//') || \
+	@test $(id -u) -ne 0 -o "X$(int_get_root)" != "X" || \
 		(echo need root priviledges; exit 1)
 	test -f stamp-debian || $(deb_rule) debian
 	rm -rf            $(DOC_TOP)
@@ -1293,10 +1303,10 @@ stamp-doc: debian
 		$(DEBDIR)/include.prerm > $(DOC_TOP)/DEBIAN/prerm
 	chmod 755 $(DOC_TOP)/DEBIAN/prerm
 	dpkg-gencontrol -isp -p$(d_package) -P$(DOC_TOP)/
-	chown -R root.root $(DOC_TOP)
 	chmod -R og=rX $(DOC_TOP)
-	dpkg --build $(DOC_TOP) $(DEB_DEST)
-	rm -rf $(DOC_TOP)
+	$(int_get_root) chown -R root.root $(DOC_TOP)
+	$(int_get_root) dpkg --build $(DOC_TOP) $(DEB_DEST)
+	$(int_get_root) rm -rf $(DOC_TOP)
 	touch stamp-doc
 
 kernel-image kernel_image: stamp-image
@@ -1307,8 +1317,8 @@ stamp-image: configure build kernel-image-deb
 # seems to create a working .deb with a kernel that gives the correct
 # user name (as opposed to root@...)
 kernel-image-deb:
-	@test $$(id | sed -e 's/(.*$$//' -e 's/^uid=//')    \
-		 || (echo need root priviledges; exit 1)
+	@test $(id -u) -ne 0 -o "X$(int_get_root)" != "X" || \
+		 (echo need root priviledges; exit 1)
 	rm -f -r ./$(IMAGE_TOP) ./$(IMAGE_TOP).deb
 	test -f stamp-configure     || $(deb_rule) configure
 	test -f stamp-build         || $(deb_rule) build
@@ -1388,13 +1398,14 @@ ifeq ($(strip $(delete_build_link)),YES)
 endif
 	dpkg-gencontrol -DArchitecture=$(architecture) -isp \
                         -p$(i_package) -P$(IMAGE_TOP)/
-	chown -R root.root $(IMAGE_TOP)
 	chmod -R og=rX $(IMAGE_TOP)
-	dpkg --build $(IMAGE_TOP) $(DEB_DEST)
-	rm -f -r $(IMAGE_TOP)
+	$(int_get_root) chown -R root.root $(IMAGE_TOP)
+	$(int_get_root) dpkg --build $(IMAGE_TOP) $(DEB_DEST)
+	$(int_get_root) rm -f -r $(IMAGE_TOP)
 ifeq ($(strip $(do_clean)),YES)
-	$(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) clean
-	rm -f stamp-build
+	$(int_get_root) $(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) \
+                                clean
+	$(int_get_root) rm -f stamp-build
 endif
 	touch stamp-image
 

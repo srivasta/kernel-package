@@ -12,7 +12,7 @@
 # HISTORY          :
 # Description      :
 #
-#    $Id: image.postinst,v 1.76 2001/09/08 18:44:52 srivasta Exp $
+#    $Id: image.postinst,v 1.77 2001/09/08 21:22:38 srivasta Exp $
 #
 
 #
@@ -70,6 +70,8 @@ my $rootpartition   = '';
 my $image_dest      = "/";
 my $realimageloc    = "/$image_dir/";
 my $have_conffile   = "";
+my $silent_modules  = '';
+
 my $CONF_LOC        = '/etc/kernel-img.conf';
 
 # Ignore all invocations except when called on to configure.
@@ -106,6 +108,7 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
       $do_bootloader   = '' if /do_bootloader\s*=\s*(no|false|0)\s*$/ig;
       $do_initrd       = '' if /do_initrd\s*=\s*(no|false|0)\s*$/ig;
       $use_hard_links  = '' if /use_hard_links\s*=\s*(no|false|0)\s*$/ig;
+      $silent_modules  = '' if /silent_modules\s*=\s*(no|false|0)\s*$/ig;
 
       $do_symlink      = "Yes" if /do_symlinks\s*=\s*(yes|true|1)\s*$/ig;
       $no_symlink      = "Yes" if /no_symlinks\s*=\s*(yes|true|1)\s*$/ig;
@@ -119,6 +122,7 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
       $relative_links  = "Yes" if /relative_links\s*=\s*(yes|true|1)\s*$/ig;
       $do_initrd       = "Yes" if /do_initrd\s*=\s*(yes|true|1)\s*$/ig;
       $use_hard_links  = "Yes" if /use_hard_links\s*=\s*(yes|true|1)\s*$/ig;
+      $silent_modules  = 'Yes' if /silent_modules\s*=\s*(yes|true|1)\s*$/ig;
 
       $image_dest      = "$1"  if /image_dest\s*=\s*(\S+)/ig;
       $postinst_hook   = "$1"  if /postinst_hook\s*=\s*(\S+)/ig;
@@ -129,7 +133,7 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
   }
 }
 
-# For some versions of kernel-package, we had tis warning in the
+# For some versions of kernel-package, we had this warning in the
 # postinst, but the rules did not really interpolate the value in.
 # Here is a sanity check.
 my $pattern = "=" . "I";

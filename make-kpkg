@@ -14,7 +14,7 @@
 #
 #
 #
-#    $Id: make-kpkg,v 1.61 2001/08/20 06:31:08 srivasta Exp $
+#    $Id: make-kpkg,v 1.62 2001/09/08 21:22:38 srivasta Exp $
 #
 require 5.002;
 use strict;
@@ -29,7 +29,7 @@ make-kpkg - build Debian kernel packages from Linux kernel sources.
 ($main::MYNAME     = $main::0) =~ s|.*/||;
 $main::Author      = "Manoj Srivastava";
 $main::AuthorMail  = "srivasta\@debian.org";
-$main::Version     = '$Revision: 1.61 $ ';
+$main::Version     = '$Revision: 1.62 $ ';
 
 my $added_modules='';
 my $added_patches='';
@@ -681,20 +681,6 @@ sub main (){
       }
     }    
     my $argstring = join (' ', @ARGV);
-    if ($argstring !~ m/buildpackage/o){
-      print STDERR "Warning: The rootcmd, uc, and us options ";
-      $root_cmd && print STDERR "(rootcmd is set to [$root_cmd]) ";
-      print STDERR " are\n";  
-      print STDERR "only valid for the buildpackage target. The target is:\n"; 
-      print STDERR "[$argstring]\n"; 
-      if ($root_cmd){
-	print STDERR "Perhaps you would like\n";  
-	print STDERR "% $root_cmd $main::MYNAME $argstring\n"; 
-	print STDERR "instead? At the moment, I am ignoring $root_cmd\n";
-      }
-      print STDERR "Please hit return to continue\n";
-      my $ans = <STDIN>;
-    }
   }
 
   # Fine. Now we check targets.

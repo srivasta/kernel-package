@@ -21,7 +21,7 @@
 .\" Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139,
 .\" USA.
 .\"
-.\" $Id: kernel-img.conf.5,v 1.13 2001/07/11 21:27:30 srivasta Exp $
+.\" $Id: kernel-img.conf.5,v 1.14 2001/09/08 21:22:38 srivasta Exp $
 .\"
 .TH KERNEL\-IMG.CONF 5 "Mar 21 2000" "Debian" "Debian GNU/Linux manual" 
 .\" NAME should be all caps, SECTION should be 1-8, maybe w/ subsection
@@ -248,6 +248,21 @@ directory and the location of the image (nominally /boot) live on the
 same file system (since one can't make hard links scross file
 systems. 
 .B You have been warned.
+.TP
+.B silent_modules
+This option has been put in for the people who are vastly irritated on
+being warned about preexisting modules directory 
+.TT /lib/modules/$version
+That directory may belong to an old or defunct 
+.TT kernel-image-$version 
+package, in which case problems may arise with lefover modules in that
+dir tree, or the directory may legitimately exist due to a independent
+modules paqckage being installed for this kernel version that has
+already been unpacked.  In this latter case the existence of the
+directory is benign.  If you set this varable, you shall no longer be
+given a chance to abort if a preexisting modules directory 
+.TT /lib/modules/$version
+is detected. 
 .SH FILES
 The file described here is
 .I /etc/kernel-img.conf.

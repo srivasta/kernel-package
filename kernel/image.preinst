@@ -39,6 +39,7 @@ my $use_hard_links  = '';       # hardlinks do not wirk across fs boundaries
 my $postinst_hook   = '';       #Normally we do not
 my $postrm_hook     = '';       #Normally we do not
 
+
 my $Loader          = "NoLOADER"; # 
 $Loader             = "LILO"     if $loader =~ /^lilo/io;
 $Loader             = "SILO"     if $loader =~ /^silo/io;
@@ -65,7 +66,8 @@ my $image_dest      = "/";
 my $realimageloc    = "/$image_dir/";
 my $have_conffile   = "";
 my $CONF_LOC        = '/etc/kernel-img.conf';
-my $relative_links = '';
+my $relative_links  = '';
+my $silent_modules  = '';
 
 die "Pre inst Internal error. Aborting." unless $version;
 
@@ -91,6 +93,7 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
       $do_initrd       = '' if /do_initrd\s*=\s*(no|false|0)\s*$/ig;
       $relative_links  = '' if /relative_links \s*=\s*(no|false|0)\s*$/ig;
       $use_hard_links  = '' if /use_hard_links\s*=\s*(no|false|0)\s*$/ig;
+      $silent_modules  = '' if /silent_modules\s*=\s*(no|false|0)\s*$/ig;
 
       $do_symlink      = "Yes" if /do_symlinks\s*=\s*(yes|true|1)\s*$/ig;
       $no_symlink      = "Yes" if /no_symlinks\s*=\s*(yes|true|1)\s*$/ig;
@@ -104,6 +107,7 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
       $relative_links  = "Yes" if /relative_links\s*=\s*(yes|true|1)\s*$/ig;
       $do_initrd       = "Yes" if /do_initrd\s*=\s*(yes|true|1)\s*$/ig;
       $use_hard_links  = "Yes" if /use_hard_links\s*=\s*(yes|true|1)\s*$/ig;
+      $silent_modules  = 'Yes' if /silent_modules\s*=\s*(yes|true|1)\s*$/ig;
 
       $image_dest      = "$1"  if /image_dest\s*=\s*(\S+)/ig;
       $postinst_hook   = "$1"  if /postinst_hook\s*=\s*(\S+)/ig;
@@ -170,7 +174,7 @@ EOF
       exit 1;
     }
   }
-  else {
+  elsif ($silent_about_modules !~ m/YES/i) {
     print STDERR <<EOF;
 You are attempting to install a kernel image (version $version)
 However, the directory /lib/modules/$version still exists.  If this
@@ -200,6 +204,12 @@ EOF
     my $answer = <STDIN>;
     print STDERR "Ok, Aborting\n" unless $answer =~ /^n/i;
     exit 1 unless  $answer =~ /^n/i;
+  }
+  else {
+    print STDERR <<EOF;
+The directory /lib/modules/$version still exists. Continuing as directed.
+EOF
+  ;
   }
 }
 
