@@ -5,16 +5,16 @@
 # Created On       : Sat Apr 27 05:42:43 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Mon Aug 25 13:05:59 2003
+# Last Modified On : Wed Aug 27 00:49:59 2003
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 39
+# Update Count     : 40
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
 #
 #
 #
-#    $Id: include.postinst,v 1.22 2003/08/25 20:32:31 srivasta Exp $
+#    $Id: include.postinst,v 1.23 2003/09/01 17:09:15 srivasta Exp $
 #
 
 
@@ -111,7 +111,7 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
 
 ## Run user hook script here, if any
 if (-x "$src_postinst_hook") {
-    system ("$src_postinst_hook", $version) &&
+    system ("$src_postinst_hook", $package, $version) &&
 	warn "User hook script $src_postinst_hook failed";
 }
 

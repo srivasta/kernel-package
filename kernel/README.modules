@@ -26,17 +26,30 @@ USER INSTRUCTIONS
           the $(MODULE_LOC)[/usr/src/modules] directory.  Use a
           symbolic link to the actual source tree if you must.
 
-     2)   Get kernel sources from your favourite location. 
+     2)   Get kernel sources from your favourite location. If you are
+          attempting t compile modules for an official kernel-image
+          package, amke sure you get the corresponding kernel sources
+          (Debian tends to patch the mainline kernel with useful
+          patches). Alternately, some modules have scripts that allow
+          you to just install the coresponding kernel-headers package,
+          and then point themodule building process to the location of
+          the kernel-headers (usually by adding the kernel-headers
+          directory to Make's include path). 
+             NOTE: If you can't get the sources the kernel was
+             compiled from [if it was a custom kernel, and the source
+             tree was deleted], you can often get by by copying
+             /boot/config-X.X.XX to .config, and then running the
+             oldconfig and dep targets as below.
 
      3)   Make sure you have the versions of packages as recommended
           in the Documentation/Changes file. 
 
      4)   Unpack the kernel sources.  Change dir to the unpacked sources.
 
-     5) If you are building a kernel that is custom configured to your
-          specifications, go ahead and configure the kernel with `make config',
-          `make menuconfig', or `make xconfig.'
-          To build a new kernel-image package, execute:
+     5) a.If you are building a kernel that is custom configured to your
+          specifications at this time, go ahead and configure the
+          kernel with `make config', `make menuconfig', or `make
+          xconfig.'  To build a new kernel-image package, execute:
                make-kpkg --revision number kernel_image
           This will generate a kernel-image-<kernel version> deb file
           in the parent directory.  Here number (the argument supplied
@@ -54,6 +67,11 @@ USER INSTRUCTIONS
           kernel, you would use --revision myhost.2 and so on.  See
           /usr/share/doc/kernel-package/README.gz for more information on
           revision numbers.
+        b.If you are working with an official kernel image. just do a
+              make oldconfig; make dep.
+          This shall create the header files that the module you are
+          trying to compile likely needs. 
+
      6)   To build the actual module packages, execute:
                make-kpkg modules_image
           This will generate a  <name>-modules-<kernel version>.deb file in
@@ -63,7 +81,7 @@ USER INSTRUCTIONS
           If you are using an official Debian kernel-image with specific
           options (kernel-image-x.y.z-foo), you should append this version
           for modules compilation:
-               make-kpkg --append-to-version -foo modules_images
+               make-kpkg --append-to-version -foo modules_image
           (e.g. of foo at this time are "386", "k6", "586tsc"...)
           A revision number based on the date shall be used automatically.
           You can however force the revision number using the --revision

@@ -1,3 +1,20 @@
+kernel-package (8.054) unstable; urgency=low
+
+  * Expaded the user instructions in README.modules to handle building
+    kernel modules for official kernel images.
+  * Fixed a typo in kernel-pkg.conf man page.        closes: Bug#208187
+  * For 2.6 kernels, add make prepare in the palce of the make dep for 2.4
+    kernels.                                         closes: Bug#207986
+
+ -- Manoj Srivastava <srivasta@debian.org>  Mon,  1 Sep 2003 11:28:49 -0500
+
+kernel-package (8.053) unstable; urgency=low
+
+  * The change for module compilation in header-only dirs doesn't work,
+    because $#empty_array == -1 in perl.
+
+ -- Manoj Srivastava <srivasta@debian.org>  Thu, 28 Aug 2003 01:04:29 -0500
+
 kernel-package (8.052) unstable; urgency=low
 
   * UTS_RELEASE_VERSION calculation was off (need to double $ in a
