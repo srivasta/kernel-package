@@ -1,5 +1,5 @@
 
-    $Id: README,v 1.8 1997/10/25 07:00:45 srivasta Exp $
+    $Id: README,v 1.9 1997/11/10 16:40:30 srivasta Exp $
 
 This is the Debian Linux packaging scripts for the Linux kernel. 
 This package has been put together by Manoj Srivastava <srivasta@debian.org>.
@@ -211,6 +211,14 @@ patch_the_kernel This is an experts only variable. If set to YES (ENV
                  running run-parts over
                  /usr/src/kernel-patches/$(architecture)/unpatch. This
                  is still evolving.
+root_cmd         This should be set to a means of gaining super user
+                 access (for example, `sudo' or `fakeroot') as needed
+                 by dpkg-buildpackages's -r option. Ths is only
+                 relevant for the buildpackage taregt, when it is used
+                 to call dpkg-buildpackage with the proper
+                 options. The environment variable ROOT_CMD over-rides
+                 this.
+                 
 
 The value of a variable can be set so: 
   a) Defaults exist in the rules file. These are the values used if no

@@ -21,7 +21,7 @@
 .\" Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139,
 .\" USA.
 .\"
-.\" $Id: kernel-pkg.conf.5,v 1.5 1997/09/18 05:01:43 srivasta Exp $
+.\" $Id: kernel-pkg.conf.5,v 1.6 1997/11/10 16:40:31 srivasta Exp $
 .\"
 .TH KERNEL\-PKG.CONF 5 "Jan  7 1997" "Debian" "Debian GNU/Linux manual" 
 .\" NAME should be all caps, SECTION should be 1-8, maybe w/ subsection
@@ -166,6 +166,20 @@ running run-parts over
 .I /usr/src/kernel-patches/$(architecture)/unpatch. 
 This
 is still evolving.
+.TP
+.B root_cmd 
+This should be set to a means of gaining super user  access (for
+example, 
+.I `sudo'
+or 
+.I`fakeroot')
+as needed by 
+.B dpkg-buildpackages's 
+-r option. Ths is only relevant for the buildpackage taregt, when it
+is used to call dpkg-buildpackage with the proper options. The
+environment variable 
+.B ROOT_CMD
+over-rides this.
 .PP
 The value of a variable can be set so:
 .IP a)
