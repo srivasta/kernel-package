@@ -14,7 +14,7 @@
 #
 #
 #
-#    $Id: make-kpkg,v 1.64 2001/09/30 08:59:40 srivasta Exp $
+#    $Id: make-kpkg,v 1.65 2001/09/30 09:01:53 srivasta Exp $
 #
 require 5.002;
 use strict;
@@ -29,7 +29,7 @@ make-kpkg - build Debian kernel packages from Linux kernel sources.
 ($main::MYNAME     = $main::0) =~ s|.*/||;
 $main::Author      = "Manoj Srivastava";
 $main::AuthorMail  = "srivasta\@debian.org";
-$main::Version     = '$Revision: 1.64 $ ';
+$main::Version     = '$Revision: 1.65 $ ';
 
 my $added_modules='';
 my $added_patches='';
@@ -734,7 +734,7 @@ EOERR1
   if ($revision) {
     if (-e "debian/changelog") {
       open(INPUT, "debian/changelog") or die "Can not open debian/changelog";
-      $line=<INPUT>;
+      my $line=<INPUT>;
       close INPUT;
       chomp $line;
       my $version = '';
