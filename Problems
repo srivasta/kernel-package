@@ -1,5 +1,5 @@
 
-    $Id: Problems,v 1.8 1998/07/17 04:27:55 srivasta Exp $
+    $Id: Problems,v 1.9 1999/02/22 07:15:59 srivasta Exp $
 
  This is an (incomplete) list of problems that people have encountered
  in the past while using kernel-package. Please remember to configure
@@ -121,3 +121,7 @@ make: *** [all] Error 2
 	make-kpkg --zimage <other options> kernel_image
 	This is truly a weird error message for machines that need
 	zImage rather than the default bzImage
+
+     k) Modules do not build when there is an epoch in the version.
+        Some modules have been reported to have problems with epochs
+        in the version number.
