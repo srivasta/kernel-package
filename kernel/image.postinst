@@ -12,7 +12,7 @@
 # HISTORY          :
 # Description      :
 #
-#    $Id: image.postinst,v 1.68 2001/07/06 19:53:01 srivasta Exp $
+#    $Id: image.postinst,v 1.69 2001/07/06 20:03:39 srivasta Exp $
 #
 
 #
@@ -512,15 +512,13 @@ sub image_magic {
 
       # Ok, now we may clobber the previous .old file
       rename("$kimage.$$", "$kimage.old");
+  }
+    else {
+      # Hmm, no link in $image_dest
+      warn "Hmm, $kimage is not a link. Not changing it then.\n";
     }
   }
-  }
-  else {
-    # Hmm, no link in $image_dest
-    warn "Hmm, $kimage is not a link. Not changing it then.\n";
-  }
 }
-
 
 ######################################################################
 ######################################################################
