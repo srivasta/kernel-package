@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.61 1999/01/28 00:35:22 srivasta Exp $
+## $Id: rules,v 1.62 1999/02/01 07:11:22 srivasta Exp $
 ###############################################################################
 
 # The version of kernel-package this belongs to
@@ -246,7 +246,7 @@ PATCHLEVEL:=$(shell egrep '^PATCHLEVEL +=' Makefile 2>/dev/null | \
 SUBLEVEL:=$(shell egrep '^SUBLEVEL +=' Makefile 2>/dev/null | \
                   sed -e 's/[^0-9]*\([0-9]*\)/\1/')
 EXTRA_VERSION:=$(shell egrep '^EXTRAVERSION +=' Makefile 2>/dev/null | \
-                 sed -e 's/EXTRAVERSION *= *\(.*\)/\1/')
+                 sed -e 's/EXTRAVERSION[\t ]*=[\t ]*\(.*\)/\1/')
 EXTRAVERSION:=$(strip $(EXTRA_VERSION))
 HAVE_NEW_MODLIB:=$(shell egrep '\(INSTALL_MOD_PATH)\' Makefile 2>/dev/null )
 
@@ -557,8 +557,6 @@ stamp-source: configure
 		debian/tmp-source/usr/doc/$(package)/copyright
 	echo "This was produced by kernel-package version $(kpkg_version)." > \
 	         debian/tmp-source/usr/doc/$(package)/Buildinfo
-	-tar cf - Documentation | \
-            (cd debian/tmp-doc/usr/doc/$(package); umask 000; tar xsf -)
 	-tar cf - `echo * | sed -e 's/debian//g' -e 's/\.deb//g' ` \
 	| (cd debian/tmp-source/usr/src/$(package); umask 000; tar xsf -)
 	(cd debian/tmp-source/usr/src/$(package); \
