@@ -1,3 +1,16 @@
+kernel-package (8.051) unstable; urgency=low
+
+  * Add a postinst hook for source and header images as well. This allows
+    people to create scripts to do whatever they feel like doing when
+    headers are instralled, including changing build symlinks if they
+    wish.                                               closes: Bug#207145
+  * Remove warnings if not in a kernel directory, but in a kernel-headers
+    created directory, and if the only target command is a module related
+    one. This is a massively reworked variation of the patch in the
+    report, and should have the same functionality.     closes: Bug# 207194
+
+ -- Manoj Srivastava <srivasta@debian.org>  Mon, 25 Aug 2003 15:31:39 -0500
+
 kernel-package (8.050) unstable; urgency=low
 
   * When creating the buildinfo file, look for versions of libc6, not just

@@ -1,20 +1,20 @@
-#! /usr/bin/perl
+#! /usr/bin/perl -w
 #                              -*- Mode: Perl -*-
 # make-kpkg ---
 # Author           : root ( root@melkor.pilgrim.umass.edu )
 # Created On       : Mon Jun 17 01:10:11 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Wed Jul 30 17:01:52 2003
+# Last Modified On : Mon Aug 25 15:29:29 2003
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 190
+# Update Count     : 195
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
 #
 #
 #
-#    $Id: make-kpkg,v 1.84 2003/08/08 19:13:57 srivasta Exp $
+#    $Id: make-kpkg,v 1.85 2003/08/25 20:32:30 srivasta Exp $
 #
 require 5.002;
 use strict;
@@ -29,7 +29,7 @@ make-kpkg - build Debian kernel packages from Linux kernel sources.
 ($main::MYNAME     = $main::0) =~ s|.*/||;
 $main::Author      = "Manoj Srivastava";
 $main::AuthorMail  = "srivasta\@debian.org";
-$main::Version     = '$Revision: 1.84 $ ';
+$main::Version     = '$Revision: 1.85 $ ';
 
 my $added_modules='';
 my $added_patches='';
@@ -42,7 +42,7 @@ my $cross_compile='';
 my $flavour='';
 my $key_id='';
 my $help_opt=0;
-my $noexec; 
+my $noexec;
 my $initrd=0;
 my $revision=0;
 my $root_cmd;
@@ -53,37 +53,37 @@ my $unsign_changelog='';
 my $unsign_source='';
 my $zimage;
 
-my %option_ctl = ("help"            	=> \$help_opt,
-		  "noexec"          	=> \$noexec,
-		  "initrd"              => \$initrd,
-		  "revision=s"      	=> \$revision,
-		  "flavour=s"       	=> \$flavour,
-		  "added_modules=s" 	=> \$added_modules,
-		  "added-modules=s" 	=> \$added_modules,
-		  "added-patches=s" 	=> \$added_patches,
-		  "added_patches=s" 	=> \$added_patches,
-		  "append-to-version=s" => \$append_to_version,
-		  "append_to_version=s" => \$append_to_version,
-                  "arch=s"          	=> \$arch,
-                  "config=s"        	=> \$config_target,
-                  "cross_compile=s" 	=> \$cross_compile,
-                  "cross-compile=s" 	=> \$cross_compile,
-		  "subarch=s"       	=> \$subarch,
-		  "arch_in_name"    	=> \$arch_in_name,
-		  "arch-in-name"    	=> \$arch_in_name,
-		  "pgpsign=s"       	=> \$signature,
-		  "key_id=s"        	=> \$key_id,
-		  "targets"         	=> \$targ_opt,
-		  "zimage"          	=> \$zimage,
-		  "rootcmd=s"       	=> \$root_cmd,
-		  "us"              	=> \$unsign_source,
-		  "uc"              	=> \$unsign_changelog,
-		  "bzimage"         	=> \$bzimage
-		 );
+my %option_ctl = ("help"                => \$help_opt,
+                  "noexec"              => \$noexec,
+                  "initrd"              => \$initrd,
+                  "revision=s"          => \$revision,
+                  "flavour=s"           => \$flavour,
+                  "added_modules=s"     => \$added_modules,
+                  "added-modules=s"     => \$added_modules,
+                  "added-patches=s"     => \$added_patches,
+                  "added_patches=s"     => \$added_patches,
+                  "append-to-version=s" => \$append_to_version,
+                  "append_to_version=s" => \$append_to_version,
+                  "arch=s"              => \$arch,
+                  "config=s"            => \$config_target,
+                  "cross_compile=s"     => \$cross_compile,
+                  "cross-compile=s"     => \$cross_compile,
+                  "subarch=s"           => \$subarch,
+                  "arch_in_name"        => \$arch_in_name,
+                  "arch-in-name"        => \$arch_in_name,
+                  "pgpsign=s"           => \$signature,
+                  "key_id=s"            => \$key_id,
+                  "targets"             => \$targ_opt,
+                  "zimage"              => \$zimage,
+                  "rootcmd=s"           => \$root_cmd,
+                  "us"                  => \$unsign_source,
+                  "uc"                  => \$unsign_changelog,
+                  "bzimage"             => \$bzimage
+                 );
 
 =head1 SYNOPSIS
 
- usage: make-kpkg [options] [target [target ...]] 
+ usage: make-kpkg [options] [target [target ...]]
 
 =cut
 
@@ -92,7 +92,7 @@ my %option_ctl = ("help"            	=> \$help_opt,
 This manual page explains the  Debian  B<make-kpkg>  utility,
 which  is  used  to create the kernel related Debian pack­
 ages. This utility needs to be run from a top level  Linux
-kernel source directory. 
+kernel source directory.
 
 =cut
 
@@ -116,11 +116,11 @@ exists) for it to have an effect). I suggest you run make-kpkg clean
 unless you know what you are doing. Secondly, it may contain only
 alphanumerics and the characters + . (full stop, and plus)
 and must contain a digit. B<NOTE>: No hyphens allowed. (Look at the
-Debian policy manual for details). I<Actually, that is a lie: official 
+Debian policy manual for details). I<Actually, that is a lie: official
 kernel and modules maintainers have special dispensation to use hyphens,
 but it is strongly deprecated for most people, since we do no sanitization
 of the version number, and dpkg and friends may choke on it at the end
-of the compile unless one knows what one is doing.> 
+of the compile unless one knows what one is doing.>
 
 Optionally, you may prepend the revision with a digit followed by a colon (:)
 
@@ -146,7 +146,7 @@ are not permitted under the Policy for a new package.
 
 Please note that you must run a B<make-kpkg clean> after configuring
 the kernel using make (x|menu)?config, since that creates
-include/linux/version.h without the appended version I<foo>. 
+include/linux/version.h without the appended version I<foo>.
 
 =back
 
@@ -239,7 +239,7 @@ actually make this do anything.
 This option uses an extended name for the kernel image package by
 embedding the subarchitecture in the image name, so one could write a
 script to create multiple subarchitectures one after the other. You
-may also do this by setting the environment variable ARCH_IN_NAME. 
+may also do this by setting the environment variable ARCH_IN_NAME.
 
 =back
 
@@ -342,7 +342,7 @@ option.
 
 This option is passed to dpkg-buildpackage, and directs that package
 not to sign the source. This is only relevant to the buildpackage
-target. 
+target.
 
 =back
 
@@ -352,7 +352,7 @@ target.
 
 This option is passed to dpkg-buildpackage, and directs that package
 not to sign the changelog. This is only relevant to the buildpackage
-target. 
+target.
 
 =back
 
@@ -380,12 +380,12 @@ usage: $main::MYNAME [options] target [target ...]
  --append-to-version foo
  --append_to_version foo an additional kernel sub-version. ([-a-z.+0-9])
                          Does not require editing the kernel Makefile
-                         over rides env var APPEND_TO_VERSION. 
+                         over rides env var APPEND_TO_VERSION.
                          requires a make-kpkg clean
  --added-modules foo
  --added_modules foo   Comma/space separated list of add on modules
                        affected by the modules_<blah> targets
- --added-patches bar 
+ --added-patches bar
  --added_patches bar   Comma/space separated list of patches applicable
                         when patch_the_kernel is turned on
  --arch     foo        architecture
@@ -395,7 +395,7 @@ usage: $main::MYNAME [options] target [target ...]
                         (have to be on a compatible machine).
  --arch-in-name
  --arch_in_name        Embed the subarch in the image package name
- --initrd              Create a image package suitable for initrd  for kernel 
+ --initrd              Create a image package suitable for initrd  for kernel
                        sources that have been patched with the cramfs patch.
  --pgpsign  name       An ID used to sign the changes file using pgp.
  --config target       Change the type of configure done from the  default
@@ -405,19 +405,19 @@ usage: $main::MYNAME [options] target [target ...]
  --zimage              Create a kernel using zImage rather than bzImage
  --bzimage             Create a kernel using bzImage (in case the site
                        wide default is zimage, as set in
-                       /etc/kernel-pkg.conf) 
+                       /etc/kernel-pkg.conf)
  --rootcmd method      A command that provides a means of gaining
-              	       superuser access (for example, `sudo' or
-              	       `fakeroot') as needed by dpkg-buildpackages'
-              	       -r option.
+                       superuser access (for example, `sudo' or
+                       `fakeroot') as needed by dpkg-buildpackages'
+                       -r option.
  --us                  This option is passed to dpkg-buildpackage, and
                        directs that package not to sign the
                        source. This is only relevant for the
-                       buildpackage target. 
+                       buildpackage target.
  --uc                  This option is passed to dpkg-buildpackage, and
                        directs that package not to sign the
                        changelog. This is only relevant for the
-                       buildpackage target. 
+                       buildpackage target.
 
 Use one of --zimage or --bzimage, or none, but not both.
 
@@ -461,7 +461,7 @@ produces the complete package using B<dpkg-buildpackage>.
 =over 3
 
 This target produces all four Debian kernel packages by running the
-targets B<kernel_source>, B<kernel_headers>, B<kernel_doc> and 
+targets B<kernel_source>, B<kernel_headers>, B<kernel_doc> and
 B<kernel_image>.
 
 =back
@@ -495,7 +495,7 @@ source/header package on the system.
 =over 3
 
 This target produces a Debian package containing the documentation
-included in the Linux kernel. 
+included in the Linux kernel.
 
 =back
 
@@ -550,7 +550,7 @@ be used to sign the kernel packages.
 =over 3
 
 This target allows you to  configure  all  packages under
-I</usr/src/modules>. 
+I</usr/src/modules>.
 
 =back
 
@@ -590,30 +590,30 @@ configuration-generated files are not stomped over later.
 
 
 my %Known_targets=("clean"          => 1,
-		   "buildpackage"   => 1,
-		   "binary"         => 1,
-		   "binary-indep"   => 2,
-		   "debian"         => 1,
-		   "kernel_source"  => 3,
-		   "kernel-source"  => 3,
-		   "kernel_headers" => 3,
-		   "kernel-headers" => 3,
-		   "libc-kheaders"  => 3,
-		   "kernel_doc"     => 3,
-		   "kernel-doc"     => 3,
-		   "binary-arch"    => 2,
-		   "kernel_image"   => 3,
-		   "kernel-image"   => 3,
-		   "build"          => 4,
-		   "modules"        => 1,
-		   "modules_image"  => 1,
-		   "modules_config" => 1,
-		   "modules_clean"  => 1,
-		   "modules-image"  => 1,
-		   "modules-config" => 1,
-		   "modules-clean"  => 1,
-		   "configure"      => 1
-		  );
+                   "buildpackage"   => 1,
+                   "binary"         => 1,
+                   "binary-indep"   => 2,
+                   "debian"         => 1,
+                   "kernel_source"  => 3,
+                   "kernel-source"  => 3,
+                   "kernel_headers" => 3,
+                   "kernel-headers" => 3,
+                   "libc-kheaders"  => 3,
+                   "kernel_doc"     => 3,
+                   "kernel-doc"     => 3,
+                   "binary-arch"    => 2,
+                   "kernel_image"   => 3,
+                   "kernel-image"   => 3,
+                   "build"          => 4,
+                   "modules"        => 1,
+                   "modules_image"  => 1,
+                   "modules_config" => 1,
+                   "modules_clean"  => 1,
+                   "modules-image"  => 1,
+                   "modules-config" => 1,
+                   "modules-clean"  => 1,
+                   "configure"      => 1
+                  );
 
 my $targets_help =<<EOTRGT;
  Known Targets are:
@@ -651,11 +651,11 @@ sub main (){
   my $Targets = "";
 
   $rules_file = "/usr/share/kernel-package/rules";
-  
+
   $ret = GetOptions(%option_ctl);
   if(!$ret) {
-	print "use --help to display command line syntax help.\n" ;
-	exit 1;
+        print "use --help to display command line syntax help.\n" ;
+        exit 1;
   }
   if ($help_opt || $targ_opt){
     print "$usage" if $help_opt;
@@ -679,23 +679,23 @@ sub main (){
   if ($ENV{'MAKEFLAGS'} =~ /-j/ || $ENV{'MAKEFLAGS'} =~ /--jobs/ ) {
     $errors .= "The environment variable MAKEFLAGS contains the flag -j.\n" .
       "Unfortunately, this is not supported at this time. Instead, please\n" .
-	"use the supported mechanism by setting CONCURRENCY_LEVEL\n" ;
+        "use the supported mechanism by setting CONCURRENCY_LEVEL\n" ;
   }
 
   if ($ENV{'MFLAGS'} =~ /-j/ || $ENV{'MFLAGS'} =~ /--jobs/ ) {
     $errors .= "The environment variable MFLAGS contains the flag -j.\n" .
       "Unfortunately, this is not supported at this time. Instead, please\n" .
-	"use the supported mechanism by setting CONCURRENCY_LEVEL\n" ;
+        "use the supported mechanism by setting CONCURRENCY_LEVEL\n" ;
   }
 
   if ($root_cmd || $unsign_source || $unsign_changelog){
     if ($root_cmd){
-      if ($root_cmd =~ m/^-/o){ 
-	$errors .= "The rootcmd option takes a simple command name\n" .
-	  "Like sudo or fakeroot. The leading - confuses me.\n" .
-	    "rejecting rootcmd $root_cmd";
+      if ($root_cmd =~ m/^-/o){
+        $errors .= "The rootcmd option takes a simple command name\n" .
+          "Like sudo or fakeroot. The leading - confuses me.\n" .
+            "rejecting rootcmd $root_cmd";
       }
-    }    
+    }
     my $argstring = join (' ', @ARGV);
   }
 
@@ -715,7 +715,9 @@ sub main (){
   }
   # See if we are running in a linux kernel directory
   if (!(-d "drivers" && -d "kernel" && -d "fs" && -d "include/linux")){
-    print STDERR <<EOERR;
+    my @other_targets = grep (! m/^modules/, @ARGV);
+    if ($#other_targets || ! -d "include/linux") {
+      print STDERR <<EOERR;
 We do not seem to be in a top level linux kernel source directory
 tree. Since we are trying to make a kernel package, that does not make
 sense.  Please change directory to a top level linux kernel source
@@ -723,11 +725,21 @@ directory, and try again. (If I am wrong, and this is indeed a top
 level linux kernel source directory, then I have gotten sadly out of
 date with current kernels, and you should upgrade kernel-package)
 EOERR
+      ;
+      exit 1;
+    }
+    else {
+      print STDERR <<EOERR2;
+We do not seem to be in a top level linux kernel source directory
+tree. However, there are kernel headers that may be suitable to build
+external kernel modules. Since you do not have non-module targets, let
+us continue.
+EOERR2
   ;
-    exit 1;
+    }
   }
 
-  if (-f "stamp-debian" && -d "debian" && -x "debian/rules" && 
+  if (-f "stamp-debian" && -d "debian" && -x "debian/rules" &&
       ! -f "debian/official") {
     if ($Targets !~ /^debian|configure/o) {
       $rules_file = "debian/rules";
@@ -738,7 +750,7 @@ EOERR
     print STDERR <<EOERR1;
     Could not locate the rules file (Normally found at the location
  $rules_file), which would seem an
- impossibility. I give up. 
+ impossibility. I give up.
 EOERR1
      ;
   }
@@ -758,15 +770,15 @@ EOERR1
       $line =~ m/\((\S+)\)/;
       $version = $1;
       if ($revision && $version ne $revision) {
-	print STDERR <<"EOMSG";
-I note that you are using the --revision flag with the value 
+        print STDERR <<"EOMSG";
+I note that you are using the --revision flag with the value
    $revision.
 However, the ./debian/changelog file exists, and has a different value
-   $version.  
+   $version.
 I am confused by this discrepancy, and am halting.
 EOMSG
       ;
-	exit (2);
+        exit (2);
       }
     }
 
@@ -802,17 +814,17 @@ EOMSG
   else {
     if ($Targets =~ m/^\s*clean\s*$/) {
       if (-e "debian/changelog") {
-	open(INPUT, "debian/changelog") or die "Can not open debian/changelog";
-	my $line=<INPUT>;
-	close INPUT;
-	chomp $line;
-	my $version = '';
-	$line =~ m/\((\S+)\)/;
-	$version = $1;
-	$command .= " DEBIAN_REVISION=$version ";
+        open(INPUT, "debian/changelog") or die "Can not open debian/changelog";
+        my $line=<INPUT>;
+        close INPUT;
+        chomp $line;
+        my $version = '';
+        $line =~ m/\((\S+)\)/;
+        $version = $1;
+        $command .= " DEBIAN_REVISION=$version ";
       }
       else {
-	$command .= " DEBIAN_REVISION=5:123.Custom ";
+        $command .= " DEBIAN_REVISION=5:123.Custom ";
       }
     }
   }
@@ -860,8 +872,8 @@ EOMSG
       print STDERR "by the packaging tools. Aborting.\n";
       exit 1;
     }
-    if (-f "include/linux/version.h" && ! -f 'debian/official' && 
-	! $ENV{"VERSION_H_OK"} && ! ($Targets =~ m/^\s*clean\s*$/ )) {
+    if (-f "include/linux/version.h" && ! -f 'debian/official' &&
+        ! $ENV{"VERSION_H_OK"} && ! ($Targets =~ m/^\s*clean\s*$/ )) {
       print STDERR "Warning: The file include/linux/version.h exists\n";
       print STDERR "If it was created just now by calling make-kpkg with\n";
       print STDERR "the --append_to_version option on a clean source tree,\n";
@@ -883,8 +895,8 @@ EOMSG
       print STDERR "apologize for being so annoying. Should I abort[Ny]?\n";
       my $ans = <STDIN>;
       if ($ans =~ m/^\s*[Yy]/g) {
-	print STDERR " Aborting.\n";
-	exit 1;
+        print STDERR " Aborting.\n";
+        exit 1;
       }
     }
     $command .= " APPEND_TO_VERSION=$append_to_version ";
@@ -894,7 +906,7 @@ EOMSG
   }
   if ($config_target ne 'oldconfig') {
     $command .= " CONFIG_TARGET=$config_target ";
-  }  
+  }
   if ($cross_compile){
     $command .= " CROSS_COMPILE=$cross_compile ";
   }
@@ -925,8 +937,8 @@ EOMSG
       print STDERR "apologize for being so annoying. Should I abort[Ny]?\n";
       my $ans = <STDIN>;
       if ($ans =~ m/^\s*[Yy]/g) {
-	print STDERR " Aborting.\n";
-	exit 1;
+        print STDERR " Aborting.\n";
+        exit 1;
       }
     }
     $command .= " INITRD=YES ";
@@ -966,8 +978,8 @@ EOMSG
   # For some reason, this causes all modules to fail
   #$command .= " CC=\"$cc\" HOSTCC=\"$hostcc\"";
   $command .= " $Targets";
-  # print STDERR $command; 
-  exec $command; 
+  # print STDERR $command;
+  exec $command;
 }
 
 ## Now just call main
@@ -1008,7 +1020,7 @@ None known so far.
 =head1 AUTHOR
 
 This  was  written by Manoj Srivastava <srivasta@debian.org>, for the
-Debian GNU/Linux system. 
+Debian GNU/Linux system.
 
 =cut
 

@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Sat Aug 23 11:17:57 2003
+## Last Modified On : Mon Aug 25 14:14:12 2003
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 591
+## Update Count	    : 600
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.218 2003/08/23 16:20:30 srivasta Exp $
+## $Id: rules,v 1.219 2003/08/25 20:32:31 srivasta Exp $
 ###############################################################################
 
 ifdef KPKG_ARCH
@@ -527,7 +527,7 @@ UTS_RELEASE_VERSION=$(shell if [ -f include/linux/version.h ]; then             
                                     awk '{print $3; }' ;                             \
                             else echo "" ;                                           \
                             fi)
-
+ 
 version = $(VERSION).$(PATCHLEVEL).$(SUBLEVEL)$(EXTRAVERSION)$(iatv)$(INT_FLAV)
 
 # KPKG_SUBARCH is used to distinguish Amiga, Atari, Macintosh, etc. kernels
@@ -941,6 +941,26 @@ CONFIG_FILE := $(shell if test -e .config ; then \
                        else echo /dev/null ; \
                        fi)
 
+
+# See if we are being run in the kernel directory
+IN_KERNEL_DIR := $(shell if test -d drivers -a -d kernel -a -d fs -a                \
+                                 -d include/linux ; then                            \
+                            echo YES;                                               \
+                         fi )
+
+IN_KERNEL_HEADERS=$(shell if [ -f kernel-headers.revision ]; then                    \
+                               cat kernel-headers.revision;                          \
+                            else echo "" ;                                          \
+                            fi)
+
+ifeq ($(strip $(IN_KERNEL_DIR)),)
+ifneq ($(strip $(IN_KERNEL_HEADERS)),)
+version=$(UTS_RELEASE_VERSION)
+debian=$(IN_KERNEL_HEADERS)
+endif
+endif
+
+
 # Deal with modules issues
 
 # define MODULES_ENABLED if appropriate
@@ -1060,11 +1080,6 @@ valid_unpatches=$(old_applied_patches)
 endif
 endif
 
-# See if we are being run in the kernel directory
-IN_KERNEL_DIR := $(shell if test -d drivers -a -d kernel -a -d fs -a \
-                                 -d include/linux ; then \
-                            echo YES; \
-                         fi )
 # See if the version numbers are valid
 HAVE_VALID_PACKAGE_VERSION := $(shell \
       if test -x $(DEBDIR)/kpkg-vercheck; then \
@@ -1591,6 +1606,7 @@ else
 	(cd $(HEADER_SRC)/include; rm -f asm; ln -s asm-$(KERNEL_ARCH) asm)
 endif
 	$(install_file) .config  	        $(HEADER_SRC)/.config
+	echo $(debian)                    > $(HEADER_SRC)/kernel-headers.revision
 ifneq ($(strip $(header_clean_hook)),)
 	(cd $(HEADER_SRC);              \
                test -x $(header_clean_hook) && $(header_clean_hook))

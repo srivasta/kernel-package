@@ -21,7 +21,7 @@
 .\" Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139,
 .\" USA.
 .\"
-.\" $Id: kernel-img.conf.5,v 1.21 2003/08/10 09:42:03 srivasta Exp $
+.\" $Id: kernel-img.conf.5,v 1.22 2003/08/25 20:32:30 srivasta Exp $
 .\"
 .TH KERNEL\-IMG.CONF 5 "Mar 21 2000" "Debian" "Debian GNU/Linux manual" 
 .\" NAME should be all caps, SECTION should be 1-8, maybe w/ subsection
@@ -201,6 +201,17 @@ of the kernel image, and the second argument being the
 .I location
 of the kernel image itself. Errors in the script shall produce a
 warning message, but shall be otherwise ignored.
+.TP
+.B src_postinst_hook 
+Unlike the other hook variables, this is meant for a script run during
+the post inst of a headers or a source package. This script shall be
+called with two arguments, the first being the
+.I name
+of the package being installed (could be kernel-source-X.X.XX or
+kernel-headers-X.X.XX), and the second argument being the
+.I version
+of the package being installed. Errors in the script shall produce a
+warning message, but shall be otherwise ignored. 
 .TP
 .B move_image 
 Instead of creating symbolic links to (or, if 
