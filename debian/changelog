@@ -57,7 +57,7 @@ kernel-package (4.09) frozen unstable; urgency=low
   * Added make-kpkg support for kernel Flavours. Reported by Rainer
     Clasen. closes: Bug#21694
   * Added a config file option do_clean, and an env variable CLEAN_SOURCE
-    to control whether the sorce dir is cleaned after a kernel build. 
+    to control whether the source dir is cleaned after a kernel build. 
     closes: Bug#22219
 
  -- Manoj Srivastava <srivasta@debian.org>  Fri,  8 May 1998 04:38:57 -0500
@@ -68,7 +68,7 @@ kernel-package (4.08) frozen unstable; urgency=low
     until after installation is finished before rebooting, since one may
     not be able to reboot before then. closes: Bug#21840
   * Fixed a syntax error in the kernel rules file. closes: Bug#21967
-  * Changed all the changelog file names to changelog.Debian, as ooposed
+  * Changed all the changelog file names to changelog.Debian, as opposed
     to changelog.debian. closes: Bug#21968
 
  -- Manoj Srivastava <srivasta@debian.org>  Fri,  1 May 1998 14:19:45 -0500
@@ -76,7 +76,7 @@ kernel-package (4.08) frozen unstable; urgency=low
 kernel-package (4.07) frozen unstable; urgency=low
 
   * BUGFIX: fixed a typo in image.postinst; should be s/// not m////
-  * BUGFIX: Fix typo in the powerpc patch; uneeded quotes were getting
+  * BUGFIX: Fix typo in the powerpc patch; unneeded quotes were getting
     into the control file for the kernel-image-* packages.
   * Install a README.Debian file from the official package if it exists
     (it contains information about the patches applied, and, presumably,
@@ -92,7 +92,7 @@ kernel-package (4.06) frozen unstable; urgency=low
   * Put a README.Debian file in the kernel-source package main directory. 
                                                               closes: Bug#21129
   * Do not use -o root when installing the .config file, so that build
-    does not require root priviledges.                        closes: Bug#21324
+    does not require root privileges.                        closes: Bug#21324
   * Added patch for powerpc stuff.                            closes: Bug#21377.
   * Ignore legal leading spaces in a fstab line. This s a bug, though not
     formally reported.
@@ -117,7 +117,7 @@ kernel-package (4.04) frozen unstable; urgency=low
 
 kernel-package (4.03) unstable; urgency=low
 
-  * Fixed a typo which mis warned about rootcmd. closes: Bug#20286
+  * Fixed a typo which mistakenly warned about rootcmd. closes: Bug#20286
   * Added the klogd patch from Yann Dirson <ydirson@a2points.com> to the
     Flavours file, which allows klogd to not choke on non-numeric kernel
     version numbers. This is also logged as Bug 20135.
@@ -133,10 +133,10 @@ kernel-package (4.02) unstable; urgency=low
 
 kernel-package (4.01) frozen unstable; urgency=low
 
-  * In order to do cross sompilation, I was asked to export a variable
+  * In order to do cross compilation, I was asked to export a variable
     called ARCH which is set to the Debian architecture (dpkg
-    --print-architecture). Unfortunately. this breaks for PowerPc's, since
-    though Debian calls the architecture powerpc, the kernel knows it as
+    --print-architecture). Unfortunately, this breaks for PowerPCs: 
+    although Debian calls the architecture powerpc, the kernel knows it as
     ppc. Things get very confused. This fix is essential for PowerPC
     compilations. 
 
@@ -181,13 +181,13 @@ kernel-package (3.62) unstable; urgency=low
     are kept in /boot for further reference.
   * Modified README.headers to indicate why kernel-source did not provide
     the headers required by libc6, but kernel-headers does.
-  * Brought the headers README upto date
-  * Make the kernel-image suggest SILo on the sparcs rather than LILO.
+  * Brought the headers README up to date.
+  * Make the kernel-image suggest SILO on the sparcs rather than LILO.
 
     Made a series of changes for sparc architecture machines. Since the
     patches are hand installed, please test this version carefully
   
-  * Added documentaion for actiosn take for SILO
+  * Added documentation for actions take for SILO
   * Created a special config.sparc for sparc machines
   * Changed the image prerm to look for and deal with silo as well as lilo
     installations
@@ -291,11 +291,11 @@ kernel-package (3.58) unstable; urgency=low
     etc. kernels for Debian/m68k, and may well be required for the alpha,
     from what I hear. Unlike the FLAVOURS variable, which affects
     everything it can lay its grubby hands on (kernel image, headers,
-    source, doc package versiosn, and where the modules are looked for
-    unde /lib/modules), this only affects the naming of the kernel-image
+    source, doc package versions, and where the modules are looked for
+    under /lib/modules), this only affects the naming of the kernel-image
     as the source and doc packages are architecture independent and the
     kernel-headers do not vary from one sub-architecture to the
-    next. These changes are coutesy of James Troup <J.J.Troup@scm.brad.ac.uk>
+    next. These changes are courtesy of James Troup <J.J.Troup@scm.brad.ac.uk>
 
  -- Manoj Srivastava <srivasta@debian.org>  Mon, 16 Feb 1998 16:47:08 -0600
 
@@ -322,7 +322,7 @@ kernel-package (3.55) unstable; urgency=low
   * Added ARCH to make called, this allows for cross compiling kernels
     (added on a request by  James Troup <J.J.Troup@scm.brad.ac.uk>)
   * Make kernel-headers arch: any, so we can indeed have different headers
-    for diferent architectures.
+    for different architectures.
   * m68k can now handle vmlinuz, so reverse that behaviour in the rules
     file. AFAIK m68k still uses zImage.
   * Improvements to /usr/doc/kernel-patch/MultiArch.gz, based on
@@ -336,7 +336,7 @@ kernel-package (3.55) unstable; urgency=low
 kernel-package (3.54) unstable; urgency=low
 
   * Fixed rootcmd typos in make-kpkg. fixes: Bug#17618
-  * Redid the Headers README file
+  * Re-did the Headers README file
   * Added a rationale to the LinkPolicy document. So far, it detailed
     *what* Debian did. Now, it also says *why* we do it.
 
@@ -368,7 +368,7 @@ kernel-package (3.52) unstable; urgency=low
 kernel-package (3.51) unstable; urgency=low
 
   * Changed the kernel rules file not break on the sound modules of
-    2.1.70+ kernels (I think it is a bug in the kernel Makfile, but this
+    2.1.70+ kernels (I think it is a bug in the kernel Makefile, but this
     fix make make-kpkg handle the problem and be more robust).
 
  -- Manoj Srivastava <srivasta@debian.org>  Thu, 25 Dec 1997 01:30:49 -0600
@@ -384,7 +384,7 @@ kernel-package (3.50) unstable; urgency=low
 
 kernel-package (3.49) unstable; urgency=low
 
-  * Made the postrm's also know about the kernel versrion, not just the
+  * Made the postrms also know about the kernel version, not just the
     postinst. (Sorry). closes:Bug#15920
   * Changed include.postrm to be more careful about removing the symbolic
     link /usr/src/linux-X.Y.Z. Keep track if there is another package
@@ -397,7 +397,7 @@ kernel-package (3.48) unstable; urgency=low
   * Important changes for kernel-source-* and kernel-header-* packages: now
     kernel-source-* packages also provide the exact kernel-header-* (libc6
     need only depend on kernel-header-* now.
-  * The kernel-header-* and kernel-source-* packages now also maitain the
+  * The kernel-header-* and kernel-source-* packages now also maintain the
     /usr/src/linux-X.YY.ZZ links (in addition to the /usr/src/linux links)
     This is used in the libc6 package.
 
@@ -432,7 +432,7 @@ kernel-package (3.45) unstable; urgency=low
     this. 
   * Added handling for root_cmd in the rules file. This should be set to
     `sudo' or `fakeroot' and is only used in the target buildpackage (it
-    calls dpkg-buildpackge -r$root_cmd)
+    calls dpkg-buildpackage -r$root_cmd)
   * Made the rules file notice the env variable ROOT_CMD and over ride the
     site wide default.
   * Added a rootcmd option to make-kpkg and have it set the root_cmd
@@ -460,7 +460,7 @@ kernel-package (3.44) unstable; urgency=low
 kernel-package (3.43) unstable; urgency=low
 
   * Added README.headers to the kernel-source package as well, since the
-    information _is_ relevant to compiling kernels. Since kernel soiurce
+    information _is_ relevant to compiling kernels. Since kernel source
     packages have higher visibility than kernel header packages, this may
     help avoid some FAQs from being asked.
   * Expand on epoch numbers on standard kernel packages. Now the README
@@ -487,9 +487,9 @@ kernel-package (3.41) unstable; urgency=low
     in the map files (including top, ps, and klogd) also will look at
     /boot/System.map-<version>, we just need to ensure that that file is
     present, and no longer require the symbolic link. 
-    Actually, having the sumbolic link in / is technically detrimental
+    Actually, having the symbolic link in / is technically detrimental
     (apart from cluttering up /); many programs, though looking in /boot,
-    stll allow /Sytem.map to override. If you use LILO to choose between
+    still allow /System.map to override. If you use LILO to choose between
     multiple kernels, then the /System.map symbolic link only applies to
     one such kernel, for all other choices the symbols loaded will be
     wrong. Not having the symbolic links at all prevents this. 
@@ -512,7 +512,7 @@ kernel-package (3.39) unstable; urgency=low
   * Fixed handling of modules.dep in the image.postinst. We do not attempt
     to recreate a modules.dep, since the man page admits the file so
     created may be incorrect. We warn the installer that there maybe
-    problems loading modules into the kernel intil reboot iff the version
+    problems loading modules into the kernel until reboot iff the version
     being installed is the same as the version currently running.
   * This fixes BUG#13009.
 
@@ -558,7 +558,7 @@ kernel-package (3.36) unstable; urgency=low
   * The image prerm will allow you to remove an running kernel image and
     hose your system. You will be warned. (under protest).
   * Added a variable to choose a no symlink option, which puts the real
-    images in /vmlinuz and /vmlinuz.old, not symlinks (similarily for
+    images in /vmlinuz and /vmlinuz.old, not symlinks (similarly for
     System.map). This makes it potentially less useful, since unless other
     action is taken one would have only two images on the machine at the
     time. This has been added for people who use file systems that do not
@@ -567,7 +567,7 @@ kernel-package (3.36) unstable; urgency=low
     real file, vmlinuz-2.0.30 is the link. This also restricts the system
     to two image files unless the user save a copy, added for people with
     boot on umsdos (can't see symlinks in dos mode) but who want the links
-    to see what the image versions are in Linux. Mutualy exclusive with
+    to see what the image versions are in Linux. Mutually exclusive with
     the no symlink option. (apart from the symlinks, it is identical to
     the no symlink option). These should fix Bug#11395.
   * Fixed typo in control file for kernel-doc description. This fixes
@@ -612,7 +612,7 @@ kernel-package (3.32) unstable; urgency=low
 
 kernel-package (3.31) unstable; urgency=low
 
-  * Added a version number to the dependecy on dpkg-dev, we now require at
+  * Added a version number to the dependency on dpkg-dev, we now require at
     least version 1.4.0.9., since dpkg-gencontrol fails with an error:
     failure: chown new files list file: Illegal seek
     This fixes BUG#10121.
@@ -630,8 +630,8 @@ kernel-package (3.30) unstable; urgency=low
     missing, and it can get quite critical on some machines.  Also, the
     config file may serve as a base for compiling the next kernel. This
     file is not really a configuration file (not when packaged as part of
-    the kernel-image package), hence it does not belong in /etc (no amout
-    of changing this file will have any affet on system behaviour).  
+    the kernel-image package), hence it does not belong in /etc (no amount
+    of changing this file will have any affect on system behaviour).  
 
  -- Manoj Srivastava <srivasta@debian.org>  Wed, 21 May 1997 01:44:17 -0500
 
@@ -658,12 +658,12 @@ kernel-package (3.27) frozen unstable; urgency=low
 
   * Really add in all the changes sent in by Herbert Xu. The changes are: 
     * Changed to source package name back to kernel-source-=V again. 
-    * Changed the install's to be without -o root -g root since it is no
-      longer useful as the chown's are done before the packages are built. It
+    * Changed the installs to be without -o root -g root since it is no
+      longer useful as the chowns are done before the packages are built. It
       also means that if it is used in targets like stamp-configure which may
       be run by anyone it won't not generate an error.
     * Made rules file generate the control file.
-    * Fixed some typos in chowns commands while generating the header
+    * Fixed some typos in chown commands while generating the header
       packages. 
 
  -- Manoj Srivastava <srivasta@debian.org>  Mon, 21 Apr 1997 15:12:19 -0500
@@ -756,8 +756,8 @@ kernel-package (3.19) unstable; urgency=low
 
 kernel-package (3.18) unstable; urgency=high
 
-  * Succesfully compiled a 2.1.27 kernel.
-  * Made make-kpkg not look for modules directoryi; that directory is
+  * Successfully compiled a 2.1.27 kernel.
+  * Made make-kpkg not look for modules directory; that directory is
     removed by a make-kpkg clean.
   * Mentioned that ncurses-dev is required for make menuconfig in the
     README file.
@@ -846,7 +846,7 @@ kernel-package (3.10) unstable; urgency=low
 kernel-package (3.09) unstable; urgency=low
 
   * Added documentation to the effect that make-kpkg is part of
-    kernel-package in various README's. 
+    kernel-package in various READMEs. 
   * Made the final location of vmlinuz configurable (since one may have
     it under /boot as well as /).
 
@@ -873,7 +873,7 @@ kernel-package (3.06) unstable; urgency=low
     variable DEB_DEST in the conf file.
   * Offer user a choice about floppy drive to use. Also make it explicit
     which floppy drive is being used. This fixes BUG#6037.
-  * Warn intel users that they should get bin86 as well, if they intend
+  * Warn Intel users that they should get bin86 as well, if they intend
     to compile a custom kernel.  This fixes BUG#6144.
 
  -- Manoj Srivastava <srivasta@debian.org>  Fri, 27 Dec 1996 18:09:51 -0600
@@ -908,7 +908,7 @@ kernel-package (3.03) frozen unstable; urgency=medium
 kernel-package (3.02) unstable; urgency=low
 
   * kernel-source-X.XX now no longer recommends bin86, since bin86 is only
-    available intel platforms.  It now merely mentions it in the
+    available Intel platforms.  It now merely mentions it in the
     description. 
 
  -- Manoj Srivastava <srivasta@debian.org>  Thu, 7 Nov 1996 22:18:15 -0600
@@ -918,7 +918,7 @@ kernel-package (3.01) unstable; urgency=low
   * Changed one last typo in postinst. This (finally) fixes Bug#4234. 
   * Also, version 3.00 fixed Bug#4500 and Bug#4624
   * kernel-source-X.XX now recommends bin86, which fixes Bug#4443
-  * Added short, succint (and potentially dangerous) instructions on
+  * Added short, succinct (and potentially dangerous) instructions on
     compiling kernels at the top of the README file.  This fixes Bug#4445.
 
  -- Manoj Srivastava <srivasta@datasync.com>  Wed, 6 Nov 1996 23:58:35 -0600
@@ -930,7 +930,7 @@ kernel-package (3.00) unstable; urgency=medium
     binary-arch, binary-indep, and buildpackage targets.
   * Changed make-kpkg to reflect reorganization of the
     /usr/lib/kernel-package/ tree.
-  * Changed Authour email.
+  * Changed Author email.
   * Removed dithering about ./debian/* in kernel sources, now make-kpkg
     looks only at /usr/lib/kernel-package/ (clears confusion about older
     versions of kernel-package).
@@ -941,7 +941,7 @@ kernel-package (3.00) unstable; urgency=medium
   * Moved *.README to copyright.*, and changed the rules files to
     conform. 
   * Added explanation for kernel-headers-X.XX (and why we need this
-    package inspite of having headers in libc5-dev)
+    package in spite of having headers in libc5-dev)
   
  -- Manoj Srivastava <srivasta@datasync.com>  Mon, 4 Nov 1996 16:19:33 -0600
 
@@ -960,7 +960,7 @@ kernel-package (2.02) unstable; low
   * Also enabled kernel-{source,image,headers} targets in kernel.rules 
   * Changed make-kpkg to also accept the new targets.
   * Fixed typo in man page.
-  * The man page says it is an adminstrators man page rather than a 
+  * The man page says it is an administrators man page rather than a 
     programmers man page.
   * Recommended libc-dev for kernel-source and kernel-package
   * source suggests ncurses3.0-dev, tk40-dev and the description explains 
@@ -979,7 +979,7 @@ kernel-package (2.02) unstable; low
     directory /usr/src/modules/ (whether these files are produced is at
     the discretion of the maintainer of that modules package.
   * Make configure depend on stamp-configure which in turn depends on
-    .config Hopefully, this will remake the image atrget if one changes
+    .config Hopefully, this will remake the image target if one changes
     the config file Hopefully, this will not cause the image target to
     build needlessly. 
 
@@ -994,7 +994,7 @@ kernel-package (2.01) unstable; urgency=low
   * Fixed the targets expected by make-kpkg (kernel_image rather than 
     kernel-image, etc).
   * In image.postinst, made arguments to system be a single argument if  
-    the arguments contain shell metacharacters, (this way perl passes
+    the arguments contain shell meta-characters, (this way perl passes
     them to sh -c).
   * Made make-kpkg accept non floats as revision numbers, to facilitate  
     local names.

@@ -38,11 +38,11 @@ kernel-source-0.33 (1.01) unstable; urgency=low
     etc. kernels for Debian/m68k, and may well be required for the alpha,
     from what I hear. Unlike the FLAVOURS variable, which affects
     everything it can lay its grubby hands on (kernel image, headers,
-    source, doc package versiosn, and where the modules are looked for
-    unde /lib/modules), this only affects the naming of the kernel-image
+    source, doc package versions, and where the modules are looked for
+    under /lib/modules), this only affects the naming of the kernel-image
     as the source and doc packages are architecture independent and the
     kernel-headers do not vary from one sub-architecture to the
-    next. These changes are coutesy of James Troup <J.J.Troup@scm.brad.ac.uk>
+    next. These changes are courtesy of James Troup <J.J.Troup@scm.brad.ac.uk>
 
  -- Manoj Srivastava <srivasta@debian.org>  Mon, 16 Feb 1998 16:47:08 -0600
 
@@ -61,7 +61,7 @@ kernel-source-0.31 (1.01) unstable; urgency=low
   * Added ARCH to make called, this allows for cross compiling kernels
     (added on a request by  James Troup <J.J.Troup@scm.brad.ac.uk>)
   * Make kernel-headers arch: any, so we can indeed have different headers
-    for diferent architectures.
+    for different architectures.
   * m68k can now handle vmlinuz, so reverse that behaviour in the rules
     file. AFAIK m68k still uses zImage.
   * Improvements to /usr/doc/kernel-patch/MultiArch.gz, based on
@@ -110,7 +110,7 @@ kernel-source-0.27 (1.01) unstable; urgency=low
     fixes: Bug#16968
   * ignore obsolete fdformat in favour of superformat.
   * Changed the kernel rules file not break on the sound modules of
-    2.1.70+ kernels (I think it is a bug in the kernel Makfile, but this
+    2.1.70+ kernels (I think it is a bug in the kernel Makefile, but this
     fix make make-kpkg handle the problem and be more robust).
   * Modified image.postinst to also cater to people on whose architecture
     the image is not called vmlinuz but something else (like vmlinux, for
@@ -154,7 +154,7 @@ kernel-source-0.24 (1.01) unstable; urgency=low
 kernel-source-0.23 (1.-0) unstable; urgency=low
 
   * Added README.headers to the kernel-source package as well, since the
-    information _is_ relevant to compiling kernels. Since kernel soiurce
+    information _is_ relevant to compiling kernels. Since kernel source
     packages have higher visibility than kernel header packages, this may
     help avoid some FAQs from being asked.
   * Changed image postinst not to use the obsolete -d option to
@@ -173,9 +173,9 @@ kernel-source-0.22 (1.01) unstable; urgency=low
     in the map files (including top, ps, and klogd) also will look at
     /boot/System.map-<version>, we just need to ensure that that file is
     present, and no longer require the symbolic link. 
-    Actually, having the sumbolic link in / is technically detrimental
+    Actually, having the symbolic link in / is technically detrimental
     (apart from cluttering up /); many programs, though looking in /boot,
-    stll allow /Sytem.map to override. If you use LILO to choose between
+    still allow /System.map to override. If you use LILO to choose between
     multiple kernels, then the /System.map symbolic link only applies to
     one such kernel, for all other choices the symbols loaded will be
     wrong. Not having the symbolic links at all prevents this. 
@@ -189,7 +189,7 @@ kernel-source-0.21 (1.01) unstable; urgency=low
   * Fixed handling of modules.dep in the image.postinst. We do not attempt
     to recreate a modules.dep, since the man page admits the file so
     created may be incorrect. We warn the installer that there maybe
-    problems loading modules into the kernel intil reboot iff the version
+    problems loading modules into the kernel until reboot iff the version
     being installed is the same as the version currently running.
 
  -- Manoj Srivastava <srivasta@debian.org>  Tue, 16 Sep 1997 15:07:02 -0500
@@ -280,12 +280,12 @@ kernel-source-0.13 (1.01) unstable; urgency=low
 
   * Really add in all the changes sent in by Herbert Xu. The changes are: 
     * Changed to source package name back to kernel-source-=V again. 
-    * Changed the install's to be without -o root -g root since it is no
-      longer useful as the chown's are done before the packages are built. It
+    * Changed the installs to be without -o root -g root since it is no
+      longer useful as the chowns are done before the packages are built. It
       also means that if it is used in targets like stamp-configure which may
       be run by anyone it won't not generate an error.
     * Made rules file generate the control file.
-    * Fixed some typos in chowns commands while generating the header
+    * Fixed some typos in chown commands while generating the header
       packages. 
 
  -- Manoj Srivastava <srivasta@debian.org>  Mon, 21 Apr 1997 15:12:19 -0500
@@ -366,7 +366,7 @@ kernel-source-0.5 (1.01) unstable; urgency=low
 kernel-source-0.4 (1.01) unstable; urgency=low
 
   * kernel-source-X.XX now recommends bin86, which fixes Bug#4443
-  * Added short, succint (and potentially dangerous) instructions on
+  * Added short, succinct (and potentially dangerous) instructions on
     compiling kernels at the top of the README file.  This fixes Bug#4445.
 
  -- Manoj Srivastava <srivasta@debian.org>  Wed, 6 Nov 1996 23:59:47 -0600
@@ -390,7 +390,7 @@ kernel-source-0.2 (1.01) unstable; urgency=low
   * Also enabled kernel-{source,image,headers} targets in kernel.rules 
   * Changed make-kpkg to also accept the new targets.
   * Fixed typo in man page.
-  * The man page says it is an adminstrators man page rather than a 
+  * The man page says it is an administrators man page rather than a 
     programmers man page.
   * Recommended libc-dev for kernel-source and kernel-package
   * source suggests ncurses3.0-dev, tk40-dev and the description explains 
@@ -409,7 +409,7 @@ kernel-source-0.2 (1.01) unstable; urgency=low
     directory /usr/src/modules/ (whether these files are produced is at
     the discretion of the maintainer of that modules package.
   * Make configure depend on stamp-configure which in turn depends on
-    .config Hopefully, this will remake the image atrget if one changes
+    .config Hopefully, this will remake the image target if one changes
     the config file Hopefully, this will not cause the image target to
     build needlessly. 
 
@@ -424,7 +424,7 @@ kernel-source-0.1 (1.01) unstable; urgency=low
   * Fixed the targets expected by make-kpkg (kernel_image rather than 
     kernel-image, etc).
   * In image.postinst, made arguments to system be a single argument if  
-    the arguments contain shell metacharacters, (this way perl passes
+    the arguments contain shell meta-characters, (this way perl passes
     them to sh -c).
   * Made make-kpkg accept non floats as revision numbers, to facilitate  
     local names.

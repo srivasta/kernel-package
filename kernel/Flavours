@@ -14,7 +14,7 @@
 
 	Firstly, the modules from different flavours have to be
  installed in separate directories, the modutils have to be made aware
- of this alternative dorectory, and also, the kernel (and klogd)
+ of this alternative directory, and also, the kernel (and klogd)
  should be able to load the right set of symbols from a System.map
  file (which are different enough in different flavours that klogd
  refuses to load the wrong one).

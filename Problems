@@ -1,5 +1,5 @@
 
-    $Id: Problems,v 1.6 1998/03/05 22:37:58 srivasta Exp $
+    $Id: Problems,v 1.7 1998/07/17 04:26:14 srivasta Exp $
 
  This is an (incomplete) list of problems that people have encountered
  in the past while using kernel-package. Please remember to configure
@@ -16,7 +16,7 @@
     so.
 
  b) warning, 'debian/tmp-image/DEBIAN/control' contains user-defined field
-   'Installed-Size'warning,
+   'Installed-Size' warning,
     dpkg-deb: unable to create  '..': is a directory
 
     The problem is actually that the version of dpkg being used is
@@ -85,7 +85,7 @@
       really confirm this works for anything except en_US. This is true as of
       dpkg/dpkg-dev 1.4.0.19. The error actually reported seems to be
       either that debian/substvars file can not be found, or that the
-      changelog file is empty (eben when the file is not empty). 
+      changelog file is empty (even when the file is not empty). 
 
       The work around seems to be to set the LC_ALL to en_US while compiling
       the kernel. This should be fixed soon.
@@ -102,7 +102,7 @@
 
 	rm `which encaps`
 
-    j) build fails with a bizzarre error talking about /bin/ls and tab
+    j) build fails with a bizarre error talking about /bin/ls and tab
        sizes = Text:
 make[3]: Leaving directory `/usr/src/kernel-source-2.0.32/arch/i386/math-emu'
 make[2]: Leaving directory `/usr/src/kernel-source-2.0.32/arch/i386/math-emu'
@@ -120,4 +120,4 @@ make: *** [all] Error 2
 
 	make-kpkg --zimage <other options> kernel_image
 	This is truly a weird error message for machines that need
-	zImage rahter than the default bzImage
+	zImage rather than the default bzImage

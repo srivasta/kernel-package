@@ -10,14 +10,14 @@
  non-i386 architectures.
 
 	I understand that the patches are such that the kernel header
- files may change (reuiring an architectire specific kernel-headers
+ files may change (requiring an architecture specific kernel-headers
  package), and also kernel-doc, and of course kernel-image
  packages. However, one would like to avoid uploading the huge base
  kernel sources for every architecture, just for efficiency if nothing
  else.
 
 	I guess this proposal is that there is one common, large
- source package (maintained, as now, by the i386 maitainer), and every
+ source package (maintained, as now, by the i386 maintainer), and every
  other architecture maintainer just release kernel-patch packages.
 
 	make-kpkg from kernel-package has been modified to be aware of
@@ -27,7 +27,7 @@
  support also present).
 
 	A nice side effect of this proposal is that we can handle
- arbitary patches as well, which could allow the authors of kernel
+ arbitrary patches as well, which could allow the authors of kernel
  patches to say, for example, I have a nice new driver for device XXX,
  to use in your kernel, get kernel-patch-yyy.deb, and rebuild your
  kernel to use it.
