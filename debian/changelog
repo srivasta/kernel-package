@@ -1,3 +1,11 @@
+kernel-package (7.107) unstable; urgency=low
+
+  *  marks debian as phony and removes it from stamp-* dependencies where
+    stamp-debian is used instead. Thanks to Herbert Xu for the patch.
+                                                             closes: Bug#142773
+
+ -- Manoj Srivastava <srivasta@debian.org>  Sun, 14 Apr 2002 11:52:46 -0500
+
 kernel-package (7.106) unstable; urgency=medium
 
   * Only move initrd symlinks when we move image symlinks.

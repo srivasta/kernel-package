@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.168 2002/04/12 20:03:34 srivasta Exp $
+## $Id: rules,v 1.169 2002/04/14 16:52:58 srivasta Exp $
 ###############################################################################
 
 ifdef KPKG_ARCH
@@ -1150,7 +1150,7 @@ dummy_do_dep:
 	+$(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) \
                                  ARCH=$(KERNEL_ARCH) $(fast_dep) dep 
 
-stamp-kernel-configure: debian .config
+stamp-kernel-configure: stamp-debian .config
 	$(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) \
                                  ARCH=$(KERNEL_ARCH) $(config_target) 	
 	+$(MAKE) -f ./debian/rules dummy_do_dep
@@ -1159,7 +1159,7 @@ stamp-kernel-configure: debian .config
 	touch $@
 
 configure: debian .config stamp-configure
-stamp-configure: debian .config conf.vars stamp-kernel-configure
+stamp-configure: stamp-debian .config conf.vars stamp-kernel-configure
 	touch $@
 
 
@@ -1257,7 +1257,7 @@ binary-arch:  kernel_image  kernel_headers
 
 
 kernel-source kernel_source: stamp-source
-stamp-source: debian
+stamp-source: stamp-debian
 	@test $$(id -u) -eq 0 -o "X$(int_get_root)" != "X" || \
 		(echo need root priviledges; exit 1)
 	@test $$(id -u) -ne 0 && $(int_get_root) $(deb_rule) real_stamp_source\
@@ -1400,7 +1400,7 @@ endif
 	touch stamp-headers
 
 kernel-doc kernel_doc: stamp-doc
-stamp-doc: debian
+stamp-doc: stamp-debian
 	@test $$(id -u) -eq 0  -o "X$(int_get_root)" != "X" || \
 		(echo need root priviledges; exit 1)
 	@test $$(id -u) -ne 0 && $(int_get_root) $(deb_rule) real_stamp_doc\
@@ -1728,4 +1728,4 @@ endef
 # IRDA_MODULES		X	X
 # USB_MODULES			X
 
-.PHONY: binary binary-arch binary-indep clean modules modules_image
+.PHONY: binary binary-arch binary-indep clean debian modules modules_image
