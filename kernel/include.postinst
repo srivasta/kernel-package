@@ -108,6 +108,10 @@ if (-x "$header_postinst_hook") {
     system ("$header_postinst_hook", $package, $version) &&
 	warn "User hook script $header_postinst_hook failed";
 }
+if (-x "$header_postinst_hook") {
+    system ("$header_postinst_hook", $package, $version) &&
+	warn "User hook script $header_postinst_hook failed";
+}
 
 
 

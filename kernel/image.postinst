@@ -5,9 +5,9 @@
 # Created On       : Sat Apr 27 05:55:26 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Wed Feb 18 17:50:43 2004
+# Last Modified On : Tue Mar  2 19:12:47 2004
 # Last Machine Used: glaurung.internal.golden-gryphon.com
-# Update Count     : 256
+# Update Count     : 259
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
@@ -49,6 +49,7 @@ my $ignore_depmod_err = '';	# normally we do not
 my $relink_build_link = 'YES';	# There is no harm in checking the link
 my $force_build_link  = '';	# There is no harm in checking the link
 my $official_image    = "=OF";      # only true for official images
+my $arch            = "=A";  #  should be same as dpkg --print-installation-architecture
 
 my $package_name    = "kernel-image-$version";
 
@@ -202,6 +203,13 @@ if (! -d "$image_dest") {
 # sanity
 if (!($do_bootfloppy || $do_bootloader)) {  $do_boot_enable = ''; }
 
+# Official powerpc images may silently upgrade
+if ($official_image =~ /^\s*YES\s*$/o && $arch =~ m/powerpc/) {
+  $silent_modules = 'Yes';
+}
+
+
+
 # most of our work is done in $image_dest (nominally /)
 chdir("$image_dest") or die "could not chdir to $image_dest:$!\n";
 
@@ -221,6 +229,7 @@ my $loader_exec;
 ($loader_exec = $loader)  =~ s|.*/||;
 my ($loaderloc) = grep -x, map "$_/$loader_exec",
   map { length($_) ? $_ : "." }  split /:/, $ENV{PATH};
+
 
 ######################################################################
 ## Fix the build link
@@ -779,10 +788,11 @@ if ( -f "/lib/modules/$version/modules.dep" ) {
 
 EOFERR
   ;
-
-    my $answer='';
-    print "Please Hit return to continue.  ";
-    $answer=<STDIN>;
+    if ($silent_modules !~ m/YES/i) {
+      my $answer='';
+      print "Please Hit return to continue.  ";
+      $answer=<STDIN>;
+    }
   }
 }
 

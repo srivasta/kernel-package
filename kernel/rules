@@ -1878,6 +1878,7 @@ endif
             -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \
             -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'        \
             -e 's@=M@$(MKIMAGE)@g'    -e 's/=OF/$(AM_OFFICIAL)/g'    \
+            -e 's@=A@$(DEB_HOST_ARCH)@g'                             \
              $(DEBDIR)/image.postinst > $(IMAGE_TOP)/DEBIAN/postinst
 	chmod 755 $(IMAGE_TOP)/DEBIAN/postinst
 	sed -e 's/=V/$(version)/g'    -e 's/=B/$(link_in_boot)/g'   \
@@ -1889,7 +1890,7 @@ endif
 	chmod 755 $(IMAGE_TOP)/DEBIAN/postrm
 	sed -e 's/=V/$(version)/g'    -e 's/=L/$(loader)/g'          \
 	    -e 's/=I/$(INITRD)/g'     -e 's/=OF/$(AM_OFFICIAL)/g'    \
-             -e 's@=M@$(MKIMAGE)@g'                                   \
+             -e 's@=M@$(MKIMAGE)@g'    -e 's@=A@$(DEB_HOST_ARCH)@g'   \
 	             $(DEBDIR)/image.preinst > $(IMAGE_TOP)/DEBIAN/preinst
 	chmod 755 $(IMAGE_TOP)/DEBIAN/preinst
 	sed -e 's/=V/$(version)/g'    -e 's/=L/$(loader)/g'          \
