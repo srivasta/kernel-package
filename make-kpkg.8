@@ -22,7 +22,7 @@
 .\" USA.
 .\"
 .\"
-.\"    $Id: make-kpkg.8,v 1.42 2001/09/30 08:59:40 srivasta Exp $
+.\"    $Id: make-kpkg.8,v 1.43 2001/11/12 18:36:16 srivasta Exp $
 .\"
 .TH MAKE\-KPKG 1 "May 2 1997" "Debian" "Debian GNU/Linux manual"
 .SH NAME
@@ -183,7 +183,10 @@ which defaults to a subdirectory of
 The default is that all patches are applied
 if requested (By setting the env variable 
 .B PATCH_THE_KERNEL
-to YES).
+to YES).  Please note that the patches are uninstalled from the source
+when you run the clean target.  This cleanup can be prevented by
+setting the env variable 
+.B NO_UNPATCH_BY_DEFAULT
 .TP
 .BR \-\-arch\ foo
 This is useful for setting the architecture when you are cross

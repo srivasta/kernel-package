@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.143 2001/11/02 08:16:22 srivasta Exp $
+## $Id: rules,v 1.144 2001/11/12 18:36:16 srivasta Exp $
 ###############################################################################
 
 ifdef ARCH
@@ -929,7 +929,11 @@ endif
 
 # export variables
 export root_cmd FLAVOUR INT_SUBARCH APPEND_TO_VERSION UNSIGN_CHANGELOG  \
-       UNSIGN_SOURCE ROOT_CMD MODULE_LOC EXTRAVERSION
+       UNSIGN_SOURCE ROOT_CMD MODULE_LOC EXTRAVERSION ALL_PATCH_DIR     \
+       ALL_PATCH_APPLY ALL_PATCH_UNPATCH DIR_PATCH_UNPATCH              \
+       DIR_PATCH_APPLY VERSIONED_PATCH_DIR VERSIONED_ALL_PATCH_UNPATCH  \
+       VERSIONED_ALL_PATCH_APPLY VERSIONED_DIR_PATCH_UNPATCH            \
+       VERSIONED_DIR_PATCH_APPLY 
 
 
 ifeq ($(strip $(IN_KERNEL_DIR)),)
@@ -1138,7 +1142,9 @@ real_stamp_clean:
 ifeq ($(strip $(patch_the_kernel)),YES)
 	$(deb_rule) unpatch_now
 endif
+ifeq ($(strip $(NO_UNPATCH_BY_DEFAULT)),)
 	test -f stamp-patch || $(deb_rule) unpatch_now
+endif
 	rm -f $(FILES_TO_CLEAN) $(STAMPS_TO_CLEAN)
 	test ! -f .config || cp -pf .config config.precious
 	-test -f Makefile && \

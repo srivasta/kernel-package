@@ -12,7 +12,7 @@
 # HISTORY          :
 # Description      :
 #
-#    $Id: image.postinst,v 1.83 2001/11/02 08:22:16 srivasta Exp $
+#    $Id: image.postinst,v 1.84 2001/11/12 18:36:16 srivasta Exp $
 #
 
 #
@@ -292,6 +292,15 @@ sub image_magic {
   my $kimage = $_[0];
   my $image_dest = $_[1];
 
+  # Well, in any case, if the destination is a directory, we should do
+  # nothing, except throw a diagnostic.
+  if (-d "$kimage" ) {
+    die ("Hmm. $kimage is a directory, which I did not expect.  I am\n" .
+	 "trying to create a symbolic link with that name linked to \n" .
+	 "$image_dest . Since a directory exists here, my assumptions \n" .
+	 "are way off, and I am aborting.\n" );
+    exit (3);
+  }
   if ($move_image) {
     # Maybe $image_dest is in on dos, or something?
     if (-e "$kimage-$version") {
@@ -506,7 +515,7 @@ sub image_magic {
     # Ok, now we may clobber the previous .old files
     if (-e "$kimage.$$") { rename("$kimage.$$", "$kimage.old");  }
   }
-  elsif ($reverse_symlink) {		# Maybe /$image_dest is on a dos system?
+  elsif ($reverse_symlink) {  # Maybe /$image_dest is on a dos system?
     if (-e "$kimage") {
       rename("$kimage", "$kimage.$$") ||
 	die "failed to move " . $image_dest . "$kimage:$!";
@@ -635,12 +644,40 @@ if ( -d "/lib/modules/$version" ) {
 
 
 
-# The initrd symlink should probably be i the same dir that the symlinks are in
+# The initrd symlink should probably be in the same dir that the
+# symlinks are in
 if ($initrd) {
   my $ret = system("mkinitrd -o " . $realimageloc . "initrd-$version " .
 		   "/lib/modules/$version");
   die("Failed to create initrd image.\n") if $ret;
-  image_magic("initrd", $realimageloc) if $initrd;
+
+  if ($initrd && -l "initrd" ) {
+    print STDERR <<"EOIMG";
+
+I Note that you have an old initrd symbolic link in place. The name of
+the symbolic link is being changed to initrd.img I have three options
+here.  I can: (a) update the symbolic link in the old location as well
+as the new one (B) delete the old symbolic link (default).  You shall
+need to update the boot loader (c) Igore it and do nothing
+
+EOIMG
+  ;
+   my $answer='';
+    print "Please select one of a, b, or c";
+    $answer=<STDIN>;
+    if ($answer =~ /^\s*a/i) {
+      image_magic("initrd", $realimageloc);
+    }
+    elsif ($answer =~ /^\s*b/i) {
+      unlink "initrd";
+    }
+    else {
+      print STDERR
+	"Please note that initrd points to the wrong image now\n";
+    }
+
+  image_magic("initrd.img", $realimageloc) if $initrd;
+
   if ($initrd && -l "$image_dir/initrd" && ! $image_in_boot) {
     print STDERR <<"EOIMG";
 I Note that you have an old $image_dir/initrd symbolic link in place.

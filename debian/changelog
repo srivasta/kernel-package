@@ -1,3 +1,15 @@
+kernel-package (7.71) unstable; urgency=low
+
+  * exported all kinds of vars that give the location of kernel patches.
+    This should help with Bug#118058
+  * Added a new variable NO_UNPATCH_BY_DEFAULT.              closes: Bug#119268
+  * Renamed the initrd symlink to /initrd.img so it no longer conflicts
+    with a dir of the name people seem to have. Also added diagnostics if
+    the target happens to be a dir, not a symlink or file. I added yet
+    another backwards compatibility measure.                 closes: Bug#114487
+
+ -- Manoj Srivastava <srivasta@debian.org>  Mon, 12 Nov 2001 12:30:02 -0600
+
 kernel-package (7.70) unstable; urgency=high
 
   * Added patches for s390, from Jochen <jr@debian.s390.org> closes: Bug#115713
