@@ -1,3 +1,10 @@
+kernel-package (3.65) unstable; urgency=low
+
+  * Rewrote /vmlinuz as symlink handling in image.postinst. This should
+    correctly handle the bug. closes: Bug#19473
+
+ --
+
 kernel-package (3.64) unstable; urgency=low
 
   * Add a make recommendation for kernel source package as well. 

@@ -5,14 +5,14 @@
 # Created On       : Sat Apr 27 05:55:26 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Thu Mar  5 18:32:41 1998
+# Last Modified On : Wed Mar 11 13:34:20 1998
 # Last Machine Used: tiamat.datasync.com
-# Update Count     : 95
+# Update Count     : 98
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
 # 
-#    $Id: image.postinst,v 1.16 1998/03/06 00:32:53 srivasta Exp $
+#    $Id: image.postinst,v 1.17 1998/03/11 20:03:09 srivasta Exp $
 #
 
 # 
@@ -90,15 +90,37 @@ if (! -e "$kimage") {
     }
   }
 }
-elsif (-l "$kimage" && !($no_symlink || $reverse_symlink)) {
+elsif (-l "$kimage") {
+  # There is a symbolic link
+  my $force_move = 0;
+  
+  if ($no_symlink || $reverse_symlink) {
+    # we do not want links, yet we have a symbolic link here!
+    warn "found a symbolic link in " . $imagedir . "$kimage \n" .
+      "even though no_symlink is defined\n" if $no_symlink;
+    warn "found a symbolic link in " . $imagedir . "$kimage \n" .
+      "even though reverse_symlink is defined\n" if $reverse_symlink;
+    # make sure we change this state of affairs
+    $force_move = 1;
+  }
   # follow link target.  
-  my $vmlinuz_target = readlink "$kimage";
-  if (! (defined($vmlinuz_target) && 
-	 "$vmlinuz_target" eq "$realimageloc" . "$kimage-$version")) {
+  if (!$force_move) {
+    my $vmlinuz_target = readlink "$kimage";
+    if (!defined($vmlinuz_target)) {
+      # what, a dangling symlink?
+      warn "The link "  . $imagedir . "$kimage is a danglink link\n";
+      $force_move = 1;
+    }
+    elsif ("$vmlinuz_target" ne "$realimageloc" . "$kimage-$version") {
+      $force_move = 1;
+    }
+  }
+
+  if ($force_move) {
     # don't clobber $kimage.old quite yet
     rename("$kimage", "$kimage.$$") || 
       die "failed to move " . $imagedir . "$kimage:$!";
-
+    
     if (! symlink($realimageloc . "$kimage-$version", "$kimage")) {
       rename("$kimage.$$", "$kimage");
       die("Failed to symbolic-link /boot/$kimage-$version to "
@@ -702,3 +724,4 @@ sub run_lilo (){
 
 
 __END__
+
