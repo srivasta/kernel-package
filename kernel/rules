@@ -5,9 +5,9 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Sat Apr  3 10:44:16 2004
+## Last Modified On : Tue Apr 20 20:46:15 2004
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count	    : 676
+## Update Count	    : 678
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
@@ -1335,7 +1335,7 @@ ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
 endif
 ifneq ($(strip $(UTS_RELEASE_VERSION)), $(strip $(version)))
 	if [ -f include/linux/version.h ]; then                                          \
-             uts_ver=$(grep 'define UTS_RELEASE' include/linux/version.h |                \
+             uts_ver=$$(grep 'define UTS_RELEASE' include/linux/version.h |                \
                 perl -nle  'm/^\s*\#define\s+UTS_RELEASE\s+("?)(\S+)\1/g && print $$2;'); \
 	    if [ "X$$uts_ver" != "X$(strip $(UTS_RELEASE_VERSION))" ]; then              \
                 echo "The UTS Release version in include/linux/version.h";                \
