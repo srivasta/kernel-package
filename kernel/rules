@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Tue Apr 21 11:46:43 1998
+## Last Modified On : Tue Apr 21 12:25:58 1998
 ## Last Machine Used: tiamat.datasync.com
-## Update Count	    : 258
+## Update Count	    : 259
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.32 1998/04/21 16:52:26 srivasta Exp $
+## $Id: rules,v 1.33 1998/04/21 17:26:27 srivasta Exp $
 ###############################################################################
 
 # The version of kernel-package this belongs to
@@ -433,6 +433,7 @@ stamp-libc-kheaders: configure
 	test -f stamp-configure || $(deb_rule) configure
 	rm -rf debian/tmp-kheaders
 	$(make_directory) debian/tmp-kheaders/DEBIAN
+	$(make_directory) debian/tmp-kheaders/usr/include
 	$(make_directory) debian/tmp-kheaders/usr/src/$(l_package)
 	$(make_directory) debian/tmp-kheaders/usr/doc/$(l_package)
 	$(install_file) debian/changelog \
