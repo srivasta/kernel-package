@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.85 2000/01/27 06:13:30 srivasta Exp $
+## $Id: rules,v 1.86 2000/01/27 06:52:33 srivasta Exp $
 ###############################################################################
 
 #
@@ -424,10 +424,12 @@ else
 ifneq ($(strip $(DEBIAN_REVISION)),)
 debian := $(DEBIAN_REVISION)
 else
+ifeq ($(strip $(debian)),)
 debian := 1.00
 endif
 endif
 endif
+
 
 
 
@@ -633,7 +635,7 @@ ifneq ($(strip $(use_saved_config)),NO)
 	test -f .config || (test -f .config.save && \
 		            cp -pf .config.save .config) || \
 			true
-fi
+endif
 	test -f .config || cp -pf $(CONFIG_FILE) .config
 
 

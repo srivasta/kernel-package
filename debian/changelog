@@ -1,3 +1,10 @@
+kernel-package (6.31) unstable; urgency=low
+
+  * Never release a version without a full install test. There were typos
+    in 6.30 which made it not work
+  
+ -- Manoj Srivastava <srivasta@debian.org>  Thu, 27 Jan 2000 00:57:39 -0600
+
 kernel-package (6.30) frozen unstable; urgency=low
 
   * Make sure we test for uid 0, not just root.
