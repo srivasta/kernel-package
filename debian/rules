@@ -19,7 +19,7 @@
 #                          sed 's/^Version: *//')
 #
 
-#    $Id: rules,v 1.19 2000/01/27 06:00:45 srivasta Exp $
+#    $Id: rules,v 1.20 2000/01/27 06:02:05 srivasta Exp $
 
 
 # Please change the maintainer information, as well as the debian version
@@ -82,7 +82,7 @@ binary-arch: build
 binary-indep: build stamp-binary
 
 stamp-binary:
-	@test $$(id | sed -e 's/(.*$//' -e 's/^uid=//') || \
+	@test $$(id | sed -e 's/\(.*$//' -e 's/^uid=//') || \
 		(echo need root priviledges; exit 1)
 	$(checkdir)
 	rm -rf debian/tmp  debian/tmp.deb
