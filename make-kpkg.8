@@ -22,7 +22,7 @@
 .\" USA.
 .\"
 .\"
-.\"    $Id: make-kpkg.8,v 1.48 2002/01/22 03:51:06 srivasta Exp $
+.\"    $Id: make-kpkg.8,v 1.49 2002/01/28 18:37:19 srivasta Exp $
 .\"
 .TH MAKE\-KPKG 1 "May 2 1997" "Debian" "Debian GNU/Linux manual"
 .SH NAME
@@ -162,7 +162,7 @@ if you wish to recompile the kernel-image using a flavour.
 .BR \-\-added-modules\ foo
 .TP
 .BR \-\-added_modules\ foo
-The argument should be a comma or space separated list of additional
+The argument should be a comma separated list of additional
 add-on modules (not in the main kernel tree) that you wish to
 build when you invoke the modules_blah targets. You may give full path
 names of the directory the modules 
@@ -177,7 +177,7 @@ are compiled when the modules_blah targets are invoked.
 .BR \-\-added-patches\ foo
 .TP
 .BR \-\-added_patches\ foo
-The argument should be a comma or space separated list of additional
+The argument should be a comma separated list of additional
 patches to the kernel sources. This requires the 
 .I patch_the_kernel
 configuration option to be set to YES. Unlike the treatment of the

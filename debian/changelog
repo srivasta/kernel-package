@@ -1,3 +1,12 @@
+kernel-package (7.84) unstable; urgency=low
+
+  * Well, apparently the space separated list of modules/patches is not
+    working. Separating by commas still works. Since no one has complained
+    before, I'm just discontinuing support for space separated lists (the
+    quoting complexities are making my eyes cross).          closes: Bug#131157
+
+ -- Manoj Srivastava <srivasta@debian.org>  Mon, 28 Jan 2002 12:37:11 -0600
+
 kernel-package (7.83) unstable; urgency=low
 
   * The boot-floppies normally create /etc/zipl.conf on s390 but when this
