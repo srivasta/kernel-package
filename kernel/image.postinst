@@ -12,7 +12,7 @@
 # HISTORY          :
 # Description      :
 #
-#    $Id: image.postinst,v 1.116 2003/05/07 00:12:36 srivasta Exp $
+#    $Id: image.postinst,v 1.117 2003/05/13 07:11:39 srivasta Exp $
 #
 
 #
@@ -817,6 +817,26 @@ EOIMG
       print STDERR
 	"Please note that $image_dir/initrd points to the wrong image now\n";
     }
+  }
+}
+else {				# Not making an initrd emage
+  if (-l "initrd.img") {
+    # Ooh, last image was an initrd image? in any case, we should move it. 
+    my $target = readlink "initrd.img";
+    if (!defined($target)){
+      # Eh. dangling link. can safely be removed.
+      unlink("initrd.img");
+    }
+    else {
+      if (-l "initrd.img.old" || ! -e "initrd.img.old" )      {
+	rename("initrd.img", "initrd.old");
+      }
+      else      {
+	warn "initrd.img.old is not a symlink, not clobbering\n";
+	unlink("initrd.img");
+      }
+    }
+
   }
 }
 

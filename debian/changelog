@@ -1,3 +1,12 @@
+kernel-package (8.038) unstable; urgency=low
+
+  * rotate the initrd link even if the current image is not an initrd
+    image; since if this is not an initrd image, the initrd symlink does
+    not point to us, and should be rotated just like the image symlink was
+    rotated.
+
+ -- Manoj Srivastava <srivasta@debian.org>  Tue, 13 May 2003 02:11:31 -0500
+
 kernel-package (8.037) unstable; urgency=low
 
   * Make a failed poatch a failure, since it may mess up the sources. 
