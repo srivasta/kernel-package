@@ -5,9 +5,9 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Wed Feb 16 04:20:30 2005
+## Last Modified On : Tue Mar  1 10:52:17 2005
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count	    : 767
+## Update Count	    : 771
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
@@ -249,7 +249,7 @@ ifeq ($(strip $(architecture)),arm)
     kimage := zImage
     target = Image
     kimagesrc = arch/$(KERNEL_ARCH)/boot/Image
-    kimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
+    kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
     loaderdep=
     loader=nettrom
     loaderdoc=
@@ -299,9 +299,13 @@ ifneq ($(strip $(filter ppc powerpc,$(architecture))),)
     else
       GUESS_SUBARCH:=pmac
     endif
+    # Well NuBus powermacs are not pmac subarchs, but nubus ones.
+    #ifeq (,$(shell grep NuBus /proc/cpuinfo))
+    #  GUESS_SUBARCH:=nubus
+    #endif
   endif
 
-  ifeq (,$(findstring $(KPKG_SUBARCH),apus prpmc chrp mbx pmac prep Amiga APUs CHRP MBX PReP chrp-rs6k ))
+  ifeq (,$(findstring $(KPKG_SUBARCH),apus prpmc chrp mbx pmac prep Amiga APUs CHRP MBX PReP chrp-rs6k nubus ))
     KPKG_SUBARCH:=$(GUESS_SUBARCH)
   endif
 
@@ -419,6 +423,15 @@ ifneq ($(strip $(filter ppc powerpc,$(architecture))),)
     kelfimagesrc = vmlinux
     kelfimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
     DEBCONFIG = $(CONFDIR)/config.prep
+  endif
+
+  ifneq (,$(findstring $(KPKG_SUBARCH), NuBuS nubus))
+    KPKG_SUBARCH := nubus
+    target := zImage
+    loader= NoLoader
+    kimagesrc = arch/$(KERNEL_ARCH)/appleboot/Mach\ Kernel
+    kimage := vmlinux
+    kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
   endif
 
 endif
@@ -2130,58 +2143,58 @@ endif
 ifneq ($(strip $(KERNEL_ARCH)),um)
   ifneq ($(strip $(KERNEL_ARCH)),xen)
 	sed -e 's/=V/$(version)/g'    -e 's/=B/$(link_in_boot)/g'    \
-            -e 's/=S/$(no_symlink)/g' -e 's/=R/$(reverse_symlink)/g' \
+            -e 's/=ST/$(INT_STEM)/g'  -e 's/=R/$(reverse_symlink)/g' \
             -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \
             -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'        \
             -e 's@=M@$(MKIMAGE)@g'    -e 's/=OF/$(AM_OFFICIAL)/g'    \
             -e 's@=A@$(DEB_HOST_ARCH)@g'                             \
-            -e 's/=ST/$(INT_STEM)/g'                                 \
+            -e 's/=S/$(no_symlink)/g'                                \
              $(DEBDIR)/image.postinst > $(IMAGE_TOP)/DEBIAN/postinst
 	chmod 755 $(IMAGE_TOP)/DEBIAN/postinst
 	sed -e 's/=V/$(version)/g'    -e 's/=B/$(link_in_boot)/g'    \
-            -e 's/=S/$(no_symlink)/g' -e 's/=R/$(reverse_symlink)/g' \
+            -e 's/=ST/$(INT_STEM)/g'  -e 's/=R/$(reverse_symlink)/g' \
             -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \
             -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'        \
             -e 's@=M@$(MKIMAGE)@g'    -e 's/=OF/$(AM_OFFICIAL)/g'    \
             -e 's@=A@$(DEB_HOST_ARCH)@g'                             \
-            -e 's/=ST/$(INT_STEM)/g'                                 \
+            -e 's/=S/$(no_symlink)/g'                                \
              $(DEBDIR)/image.postrm > $(IMAGE_TOP)/DEBIAN/postrm
 	chmod 755 $(IMAGE_TOP)/DEBIAN/postrm
 	sed -e 's/=V/$(version)/g'    -e 's/=B/$(link_in_boot)/g'    \
-            -e 's/=S/$(no_symlink)/g' -e 's/=R/$(reverse_symlink)/g' \
+            -e 's/=ST/$(INT_STEM)/g'  -e 's/=R/$(reverse_symlink)/g' \
             -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \
             -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'        \
             -e 's@=M@$(MKIMAGE)@g'    -e 's/=OF/$(AM_OFFICIAL)/g'    \
             -e 's@=A@$(DEB_HOST_ARCH)@g'                             \
-            -e 's/=ST/$(INT_STEM)/g'                                 \
+            -e 's/=S/$(no_symlink)/g'                                \
              $(DEBDIR)/image.preinst > $(IMAGE_TOP)/DEBIAN/preinst
 	chmod 755 $(IMAGE_TOP)/DEBIAN/preinst
 	sed -e 's/=V/$(version)/g'    -e 's/=B/$(link_in_boot)/g'    \
-            -e 's/=S/$(no_symlink)/g' -e 's/=R/$(reverse_symlink)/g' \
+            -e 's/=ST/$(INT_STEM)/g'  -e 's/=R/$(reverse_symlink)/g' \
             -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \
             -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'        \
             -e 's@=M@$(MKIMAGE)@g'    -e 's/=OF/$(AM_OFFICIAL)/g'    \
             -e 's@=A@$(DEB_HOST_ARCH)@g'                             \
-            -e 's/=ST/$(INT_STEM)/g'                                 \
+            -e 's/=S/$(no_symlink)/g'                                \
              $(DEBDIR)/image.prerm > $(IMAGE_TOP)/DEBIAN/prerm
 	chmod 755 $(IMAGE_TOP)/DEBIAN/prerm
   else
 	sed -e 's/=V/$(version)/g'    -e 's/=B/$(link_in_boot)/g'    \
-            -e 's/=S/$(no_symlink)/g' -e 's/=R/$(reverse_symlink)/g' \
+            -e 's/=ST/$(INT_STEM)/g'  -e 's/=R/$(reverse_symlink)/g' \
             -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \
             -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'        \
             -e 's@=M@$(MKIMAGE)@g'    -e 's/=OF/$(AM_OFFICIAL)/g'    \
             -e 's@=A@$(DEB_HOST_ARCH)@g'                             \
-            -e 's/=ST/$(INT_STEM)/g'                                 \
+            -e 's/=S/$(no_symlink)/g'                                \
              $(DEBDIR)/xen.postinst > $(IMAGE_TOP)/DEBIAN/postinst
 	chmod 755 $(IMAGE_TOP)/DEBIAN/postinst
 	sed -e 's/=V/$(version)/g'    -e 's/=B/$(link_in_boot)/g'    \
-            -e 's/=S/$(no_symlink)/g' -e 's/=R/$(reverse_symlink)/g' \
+            -e 's/=ST/$(INT_STEM)/g'  -e 's/=R/$(reverse_symlink)/g' \
             -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \
             -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'        \
             -e 's@=M@$(MKIMAGE)@g'    -e 's/=OF/$(AM_OFFICIAL)/g'    \
             -e 's@=A@$(DEB_HOST_ARCH)@g'                             \
-            -e 's/=ST/$(INT_STEM)/g'                                 \
+            -e 's/=S/$(no_symlink)/g'                                \
              $(DEBDIR)/xen.prerm > $(IMAGE_TOP)/DEBIAN/prerm
 	chmod 755 $(IMAGE_TOP)/DEBIAN/prerm
   endif
@@ -2189,21 +2202,21 @@ else
 	$(make_directory) $(UML_DIR)
 	$(make_directory) $(MAN1DIR)
 	sed -e 's/=V/$(version)/g'    -e 's/=B/$(link_in_boot)/g'    \
-            -e 's/=S/$(no_symlink)/g' -e 's/=R/$(reverse_symlink)/g' \
+            -e 's/=ST/$(INT_STEM)/g'  -e 's/=R/$(reverse_symlink)/g' \
             -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \
             -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'        \
             -e 's@=M@$(MKIMAGE)@g'    -e 's/=OF/$(AM_OFFICIAL)/g'    \
             -e 's@=A@$(DEB_HOST_ARCH)@g'                             \
-            -e 's/=ST/$(INT_STEM)/g'                                 \
+            -e 's/=S/$(no_symlink)/g'                                \
               $(DEBDIR)/um.postinst > $(IMAGE_TOP)/DEBIAN/postinst
 	chmod 755 $(IMAGE_TOP)/DEBIAN/postinst
 	sed -e 's/=V/$(version)/g'    -e 's/=B/$(link_in_boot)/g'    \
-            -e 's/=S/$(no_symlink)/g' -e 's/=R/$(reverse_symlink)/g' \
+            -e 's/=ST/$(INT_STEM)/g'  -e 's/=R/$(reverse_symlink)/g' \
             -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \
             -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'        \
             -e 's@=M@$(MKIMAGE)@g'    -e 's/=OF/$(AM_OFFICIAL)/g'    \
             -e 's@=A@$(DEB_HOST_ARCH)@g'                             \
-            -e 's/=ST/$(INT_STEM)/g'                                 \
+            -e 's/=S/$(no_symlink)/g'                                \
               $(DEBDIR)/um.prerm > $(IMAGE_TOP)/DEBIAN/prerm
 	chmod 755 $(IMAGE_TOP)/DEBIAN/prerm
 	$(install_file) $(DEBDIR)/linux.1 $(MAN1DIR)/linux-$(version).1
