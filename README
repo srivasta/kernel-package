@@ -1,5 +1,5 @@
 
-    $Id: README,v 1.16 1998/05/08 09:41:57 srivasta Exp $
+    $Id: README,v 1.17 1998/05/11 06:54:54 srivasta Exp $
 
 This is the Debian Linux packaging scripts for the Linux kernel. 
 This package has been put together by Manoj Srivastava <srivasta@debian.org>.
@@ -252,7 +252,14 @@ do_clean	 Set to anything but YES, this shall forego the make
                  clean done in the kernel source tree after building
                  the kernel image package. The environment variable
                  CLEAN_SOURCE over-rides this.
-                 
+make_libc_headers  This is meant to be used by the libc6 maintianer,
+                   when he compiles libc6, to also package up the
+                   corresponding headers. DO NOT SET THIS as a
+                   mismatch between the headers you package and libc6
+                   may well create a subtle instablity in all code
+                   compiled on your machine. You have been warned. The
+                   environment variable MAKE_LIBC_HEADERS over-rides
+                   this. 
 
 The value of a variable can be set so: 
   a) Defaults exist in the rules file. These are the values used if no
