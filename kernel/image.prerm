@@ -91,8 +91,8 @@ my $running = '';
 my $WouldInvalidate = 0;
 
 if ($ARGV[0] && ($ARGV[0] =~ /remove/ || $ARGV[0] =~ /upgrade/)) {
-  if (-l "/usr/doc/kernel-image-$version") {
-    unlink "/usr/doc/kernel-image-$version";
+  if (-l "/usr/doc/=ST-image-$version") {
+    unlink "/usr/doc/=ST-image-$version";
   }
 }
 
@@ -247,7 +247,7 @@ if (-f "/etc/$loader.conf") { #I know, could be a link, but ..
     print STDERR <<"EOF";
 
  You have a valid /etc/$loader.conf file that mentions
- $kimage-$version.  Removing kernel-image-$version would invalidate
+ $kimage-$version.  Removing =ST-image-$version would invalidate
  that file. (you will have to edit /etc/$loader.conf or re-target
  symbolic links mentioned there (typically, /vmlinuz and /vmlinuz.old)
  to not refer to $kimage-$version and will have to re-run $loader). 
@@ -257,7 +257,7 @@ if (-f "/etc/$loader.conf") { #I know, could be a link, but ..
 
 EOF
   ;
-    if (&ask("Are you sure you want to remove kernel-image-$version")) {
+    if (&ask("Are you sure you want to remove =ST-image-$version")) {
       print STDERR <<"EOG";
 
 Remember to edit /etc/$loader.conf and re-run $loader, or Make other
@@ -268,7 +268,7 @@ EOG
       &success();
     }
     else {
-      print STDERR "\nNot removing kernel-image-$version.\n";
+      print STDERR "\nNot removing =ST-image-$version.\n";
       exit 1;
     }
   }

@@ -1,4 +1,4 @@
-kernel-source-=V (=D) unstable; urgency=low
+=ST-source-=V (=D) unstable; urgency=low
 
   * Added support for netwinders
   * Modified modules support to not assume everything in /usr/src/modules

@@ -1,24 +1,24 @@
-Source: kernel-source-=V
+Source: =ST-source-=V
 Section: devel
 Priority: optional
 Maintainer:  =M
 Standards-Version: 3.5.9.0
 
-Package: kernel-headers-=V
+Package: =ST-headers-=V
 Architecture: any
 Section: devel
 Priority: optional
-Provides: kernel-headers, kernel-headers-=CV
+Provides: =ST-headers, =ST-headers-=CV
 Description: Header files related to Linux kernel version =V
  This package provides kernel header files for version =V, for sites 
  that want the latest kernel headers. Please read
- /usr/share/doc/kernel-headers-=V/debian.README.gz for details
+ /usr/share/doc/=ST-headers-=V/debian.README.gz for details
 
-Package: kernel-source-=V
+Package: =ST-source-=V
 Architecture: all
 Section: devel
 Priority: optional
-Provides: kernel-source, kernel-source-=CV
+Provides: =ST-source, =ST-source-=CV
 Depends: binutils, bzip2
 Recommends: libc-dev, gcc, make
 Suggests: libncurses-dev | ncurses-dev, kernel-package
@@ -31,20 +31,20 @@ Description: Linux kernel source for version =V
  are options to use QT or GNOME based configuration interfaces, but they
  need additional packages to be installed. Also, please read the detailed 
  documentation in the file
- /usr/share/doc/kernel-source-=V/README.headers.gz.
+ /usr/share/doc/=ST-source-=V/README.headers.gz.
  .
  If you wish to use this package to create a custom Linux kernel, then
  it is suggested that you investigate the package kernel-package,
  which has been designed to ease the task of creating kernel image
  packages. 
 
-Package: kernel-image-=V=SA
+Package: =ST-image-=V=SA
 Architecture: =A
 Section: base
 Priority: optional
-Provides: kernel-image,  kernel-image-=CV
+Provides: =ST-image,  =ST-image-=CV
 Depends: =I coreutils | fileutils (>= 4.0)
-Suggests: =L fdutils, kernel-doc-=V=SA | kernel-source-=V 
+Suggests: =L fdutils, =ST-doc-=V=SA | =ST-source-=V 
 Description: Linux kernel binary image for version =V=SA.
  This package contains the Linux kernel image for version =V=SA,
  the corresponding System.map file, and the modules built by the
@@ -63,17 +63,17 @@ Description: Linux kernel binary image for version =V=SA.
  for details on how to tailor the  installation of this or any other kernel 
  image package
 
-Package: kernel-doc-=V
+Package: =ST-doc-=V
 Architecture: all
 Section: doc
 Priority: optional
-Provides: kernel-doc-=CV
-Suggests: kernel-image-=V=SA
+Provides: =ST-doc-=CV
+Suggests: =ST-image-=V=SA
 Description: Linux kernel specific documentation for version =V.
  This package provides various Readme's in the =V kernel
  Documentation/ subdirectory: these typically contain kernel-specific
  installation notes for some drivers. for example. Please see
- /usr/share/doc/kernel-doc-X.X.XX/Documentation/00-INDEX for a list of
+ /usr/share/doc/=ST-doc-X.X.XX/Documentation/00-INDEX for a list of
  contents.  Please also read the Changes file, as it contains
  information about the problems which may result by upgrading your
  kernel.

@@ -48,6 +48,7 @@ my $revision=0;
 my $root_cmd;
 my $signature="" ;
 my $subarch='';
+my $stem='';
 my $targ_opt=0;
 my $unsign_changelog='';
 my $unsign_source='';
@@ -72,6 +73,7 @@ my %option_ctl =
    "cross_compile=s"     => \$cross_compile,
    "cross-compile=s"     => \$cross_compile,
    "subarch=s"           => \$subarch,
+   "stem=s"              => \$stem,
    "arch_in_name"        => \$arch_in_name,
    "arch-in-name"        => \$arch_in_name,
    "pgpsign=s"           => \$signature,
@@ -247,6 +249,14 @@ may also do this by setting the environment variable ARCH_IN_NAME.
 
 =back
 
+=item B<--stem> foo
+
+=over 2
+
+This option determines the stem of the name of the packages. This is
+set to C<kernel> by default. You may also do this by setting the
+environment variable KPKG_STEM.
+
 =item B<--pgpsign> name
 
 =over 2
@@ -408,6 +418,7 @@ usage: $main::MYNAME [options] target [target ...]
                         (have to be on a compatible machine).
  --arch-in-name
  --arch_in_name        Embed the subarch in the image package name
+ --stem     foo        Call the packages foo-* instead of kernel-*
  --initrd              Create a image package suitable for initrd  for kernel
                        sources that have been patched with the cramfs patch.
  --mkimage  foo        Command to generate the initrd image.
@@ -991,6 +1002,9 @@ EOMSG
   }
   if ($arch_in_name){
     $command .= " ARCH_IN_NAME=YES ";
+  }
+  if ($stem) {
+    $command .= " KPKG_STEM=$stem ";
   }
   if ($noexec){
     $command .= " -n ";

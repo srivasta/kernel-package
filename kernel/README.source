@@ -10,7 +10,7 @@
  that you download from a primary Linux kernel archive site.
 
 	If you wish to create a kernel image Debian package, e.g.:
- ../kernel-image=V_=V-C1.0_=A.deb
+ ../=ST-image=V_=V-C1.0_=A.deb
  please read /usr/share/doc/kernel-source-=V/README.gz fileand follow
  directions. 
 

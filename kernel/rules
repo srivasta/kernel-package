@@ -740,6 +740,12 @@ endif
 ######################################################################
 ######################################################################
 
+ifneq ($(strip $(KPKG_STEM)),)
+INT_STEM := $(KPKG_STEM)
+else
+INT_STEM := kernel
+endif
+
 ifneq ($(strip $(loaderdep)),)
   int_loaderdep := $(loaderdep),
 else
@@ -809,8 +815,8 @@ IN_KERNEL_DIR := $(shell if test -d drivers && test -d kernel && test -d fs && t
                             echo YES;                                               \
                          fi )
 
-IN_KERNEL_HEADERS=$(shell if [ -f kernel-headers.revision ]; then                    \
-                               cat kernel-headers.revision;                          \
+IN_KERNEL_HEADERS=$(shell if [ -f $(INT_STEM)-headers.revision ]; then                    \
+                               cat $(INT_STEM)-headers.revision;                          \
                             else echo "" ;                                          \
                             fi)
 
@@ -857,18 +863,18 @@ endif
 endif
 
 # The name of the package (for example, `emacs').
-package   := kernel-source-$(version)
-h_package := kernel-headers-$(version)
+package   := $(INT_STEM)-source-$(version)
+h_package := $(INT_STEM)-headers-$(version)
 ifeq ($(strip $(KERNEL_ARCH)),um)
-	i_package := kernel-uml-$(version)$(INT_SUBARCH)
+	i_package := $(INT_STEM)-uml-$(version)$(INT_SUBARCH)
 else
   ifeq ($(strip $(KERNEL_ARCH)),xen)
-	i_package := kernel-$(KPKG_SUBARCH)-$(version)
+	i_package := $(INT_STEM)-$(KPKG_SUBARCH)-$(version)
   else
-	i_package := kernel-image-$(version)$(INT_SUBARCH)
+	i_package := $(INT_STEM)-image-$(version)$(INT_SUBARCH)
   endif
 endif
-d_package := kernel-doc-$(version)
+d_package := $(INT_STEM)-doc-$(version)
 l_package := libc-kheaders
 
 SOURCE_TOP:= debian/tmp-source
@@ -1049,7 +1055,7 @@ endif
 # changelog.
 ifeq ($(strip $(HAS_CHANGELOG)),YES)
 saved_version := $(shell if test -f debian/changelog; then \
-                     perl -nle 'print /^kernel-source-(\S+)/; exit 0' \
+                     perl -nle 'print /^$(INT_STEM)-source-(\S+)/; exit 0' \
                           debian/changelog;\
                   fi; )
 ifneq ($(strip $(saved_version)),)
@@ -1665,10 +1671,12 @@ endif
                 -e 's/=L/$(int_loaderdep) /g' -e 's/=I/$(initrddep)/g'    \
                 -e 's/=CV/$(VERSION).$(PATCHLEVEL)/g'                     \
                 -e 's/=M/$(maintainer) <$(email)>/g'                      \
+                -e 's/=ST/$(INT_STEM)/g'                                  \
 		         $(CONTROL)> debian/control
 	-test ! -f stamp-debian && test ! -f debian/official &&              \
 	   sed -e 's/=V/$(version)/g' -e 's/=D/$(debian)/g'                  \
 	    -e 's/=A/$(architecture)/g' -e 's/=M/$(maintainer) <$(email)>/g' \
+            -e 's/=ST/$(INT_STEM)/g'                                         \
 		$(DEBDIR)/changelog > debian/changelog
 	-test ! -f debian/rules &&                                       \
 	   install -p -m 755 $(DEBDIR)/rules debian/rules
@@ -1892,6 +1900,7 @@ endif
 	   gzip -9qf $(SOURCE_DOC)/README.Debian;\
 	else \
 	    sed -e 's/=V/$(version)/g' -e 's/=A/$(architecture)/g' \
+             -e 's/=ST/$(INT_STEM)/g'                              \
                  $(DEBDIR)/README.source >  $(SOURCE_SRC)/README.Debian ; \
 	fi
 	if test -f README.Debian ; then \
@@ -1995,7 +2004,7 @@ else
 	(cd $(HEADER_SRC)/include; rm -f asm; ln -s asm-$(KERNEL_ARCH) asm)
 endif
 	$(install_file) .config  	        $(HEADER_SRC)/.config
-	echo $(debian)                    > $(HEADER_SRC)/kernel-headers.revision
+	echo $(debian)                    > $(HEADER_SRC)/$(INT_STEM)-headers.revision
 ifneq ($(strip $(header_clean_hook)),)
 	(cd $(HEADER_SRC);              \
                test -x $(header_clean_hook) && $(header_clean_hook))
@@ -2114,6 +2123,7 @@ ifneq ($(strip $(KERNEL_ARCH)),um)
             -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'        \
             -e 's@=M@$(MKIMAGE)@g'    -e 's/=OF/$(AM_OFFICIAL)/g'    \
             -e 's@=A@$(DEB_HOST_ARCH)@g'                             \
+             -e 's/=ST/$(INT_STEM)/g'                                \
              $(DEBDIR)/image.postinst > $(IMAGE_TOP)/DEBIAN/postinst
 	chmod 755 $(IMAGE_TOP)/DEBIAN/postinst
 	sed -e 's/=V/$(version)/g'    -e 's/=B/$(link_in_boot)/g'   \
@@ -2126,10 +2136,12 @@ ifneq ($(strip $(KERNEL_ARCH)),um)
 	sed -e 's/=V/$(version)/g'    -e 's/=L/$(loader)/g'          \
              -e 's/=I/$(INITRD)/g'     -e 's/=OF/$(AM_OFFICIAL)/g'    \
              -e 's@=M@$(MKIMAGE)@g'    -e 's@=A@$(DEB_HOST_ARCH)@g'   \
+            -e 's/=ST/$(INT_STEM)/g'                                 \
 	             $(DEBDIR)/image.preinst > $(IMAGE_TOP)/DEBIAN/preinst
 	chmod 755 $(IMAGE_TOP)/DEBIAN/preinst
 	sed -e 's/=V/$(version)/g'    -e 's/=L/$(loader)/g'          \
              -e 's@=M@$(MKIMAGE)@g'    -e 's/=OF/$(AM_OFFICIAL)/g'    \
+            -e 's/=ST/$(INT_STEM)/g'                                 \
              $(DEBDIR)/image.prerm > $(IMAGE_TOP)/DEBIAN/prerm
 	chmod 755 $(IMAGE_TOP)/DEBIAN/prerm
   else
@@ -2260,7 +2272,8 @@ endif
                    run-parts --verbose $(SRCTOP)/debian/image.d ;               \
          fi
 	if [ -x debian/post-install ]; then                                    \
-		IMAGE_TOP=$(IMAGE_TOP) version=$(version) debian/post-install;\
+		IMAGE_TOP=$(IMAGE_TOP) STEM=$(INT_STEM) version=$(version)    \
+			debian/post-install;                                  \
 	fi
 	test ! -s applied_patches || cp applied_patches                        \
                         $(INT_IMAGE_DESTDIR)/patches-$(version)

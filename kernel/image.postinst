@@ -52,7 +52,7 @@ my $force_build_link  = '';	# There is no harm in checking the link
 my $official_image    = "=OF";      # only true for official images
 my $arch            = "=A";  #  should be same as dpkg --print-installation-architecture
 
-my $package_name    = "kernel-image-$version";
+my $package_name    = "=ST-image-$version";
 
 my $Loader          = "NoLOADER"; #
 $Loader             = "LILO"     if $loader =~ /^lilo/io;
@@ -258,11 +258,11 @@ sub fix_build_link {
 	warn "error unlinking /lib/modules/$version/build";
       }
       else {
-	if ($force_build_link || -d "/usr/src/kernel-headers-$version") {
-	  my $result = symlink ("/usr/src/kernel-headers-$version",
+	if ($force_build_link || -d "/usr/src/=ST-headers-$version") {
+	  my $result = symlink ("/usr/src/=ST-headers-$version",
 				"/lib/modules/$version/build");
 	  if (! $result) {
-	    warn "Could not link /usr/src/kernel-headers-$version to /lib/modules/$version/build:$!"
+	    warn "Could not link /usr/src/=ST-headers-$version to /lib/modules/$version/build:$!"
 	  }
 	}
       }
@@ -1000,7 +1000,7 @@ EOMAP
 }
 
 my $linktarget;
-$linktarget = "../share/doc/kernel-image-$version";
+$linktarget = "../share/doc/=ST-image-$version";
 
 
 ## Run user hook script here, if any
