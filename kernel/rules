@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.30 1998/03/18 07:15:37 srivasta Exp $
+## $Id: rules,v 1.31 1998/03/19 09:06:16 srivasta Exp $
 ###############################################################################
 
 # The version of kernel-package this belongs to
@@ -57,14 +57,21 @@ endif
 endif
 
 # Sparcs use silo, not lilo. Try to accomodate them
+# PowerPCs use yet another loader: quik.
 ifeq ($(strip $(architecture)),sparc)
 loaderdep=silo
 loader=silo
 loaderdoc=SiloDefault
 else
+ifeq ($(strip $(architecture)),powerpc)
+loaderdep=quik
+loader=quik
+loaderdoc=QuikDefault
+else
 loaderdep=lilo (>= 19.1)
 loader=lilo
 loaderdoc=LiloDefault
+endif
 endif
 
 #  Package specific stuff
@@ -108,6 +115,7 @@ version = $(VERSION).$(PATCHLEVEL).$(SUBLEVEL)$(INT_FLAV)
 # affects the naming of the kernel-image as the source and doc
 # packages are architecture independent and the kernel-headers do not
 # vary from one sub-architecture to the next.
+# Note: Debian/powerpc will eventually use SUBARCH too.
 
 SUBARCH:=$(shell grep ^SUBARCH Makefile 2>/dev/null | \
                   perl -ple 's/SUBARCH[\s:=]+//g')
@@ -160,7 +168,6 @@ else
 KERNEL_ARCH:=$(architecture)
 endif
 
-powerpc
 # The file which has local configuration
 CONFIG_FILE := $(shell if test -e .config ; then \
                            echo .config; \
@@ -388,7 +395,7 @@ stamp-source: configure
 	(cd debian/tmp-source/usr/src/$(package); \
                         rm -f stamp-building $(STAMPS_TO_CLEAN))
 	(cd debian/tmp-source/usr/src/$(package)/include; rm -f asm; \
-		ln -s asm-$(architecture) asm)
+		ln -s asm-$(KERNEL_ARCH) asm)
 	$(install_file) .config debian/tmp-source/usr/src/$(package)/.config
 	dpkg-gencontrol -p$(package) -Pdebian/tmp-source/
 	chown -R root.root debian/tmp-source
@@ -427,7 +434,7 @@ stamp-headers: configure
 	-tar cf - include | \
             (cd debian/tmp-headers/usr/src/$(h_package); umask 000; tar xsf -)
 	(cd debian/tmp-headers/usr/src/$(h_package)/include; rm -f asm; \
-		ln -s asm-$(architecture) asm)
+		ln -s asm-$(KERNEL_ARCH) asm)
 	dpkg-gencontrol -p$(h_package) -Pdebian/tmp-headers/
 	chown -R root.root debian/tmp-headers
 	chmod -R og=rX debian/tmp-headers
