@@ -5,16 +5,16 @@
 # Created On       : Mon Jun 17 01:10:11 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Wed Apr 25 02:08:12 2001
+# Last Modified On : Sun Apr 29 10:51:27 2001
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 159
+# Update Count     : 163
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
 #
 #
 #
-#    $Id: make-kpkg,v 1.55 2001/04/25 07:19:21 srivasta Exp $
+#    $Id: make-kpkg,v 1.56 2001/04/29 16:02:44 srivasta Exp $
 #
 require 5.002;
 use strict;
@@ -29,7 +29,7 @@ make-kpkg - build Debian kernel packages from Linux kernel sources.
 ($main::MYNAME     = $main::0) =~ s|.*/||;
 $main::Author      = "Manoj Srivastava";
 $main::AuthorMail  = "srivasta\@debian.org";
-$main::Version     = '$Revision: 1.55 $ ';
+$main::Version     = '$Revision: 1.56 $ ';
 
 my $added_modules='';
 my $added_patches='';
@@ -59,13 +59,18 @@ my %option_ctl = ("help"            	=> \$help_opt,
 		  "revision=s"      	=> \$revision,
 		  "flavour=s"       	=> \$flavour,
 		  "added_modules=s" 	=> \$added_modules,
+		  "added-modules=s" 	=> \$added_modules,
+		  "added-patches=s" 	=> \$added_patches,
 		  "added_patches=s" 	=> \$added_patches,
+		  "append-to-version=s" => \$append_to_version,
 		  "append_to_version=s" => \$append_to_version,
                   "arch=s"          	=> \$arch,
                   "config=s"        	=> \$config_target,
                   "cross_compile=s" 	=> \$cross_compile,
+                  "cross-compile=s" 	=> \$cross_compile,
 		  "subarch=s"       	=> \$subarch,
 		  "arch_in_name"    	=> \$arch_in_name,
+		  "arch-in-name"    	=> \$arch_in_name,
 		  "pgpsign=s"       	=> \$signature,
 		  "key_id=s"        	=> \$key_id,
 		  "targets"         	=> \$targ_opt,
@@ -122,6 +127,8 @@ newer than the one installed on the system.
 
 =back
 
+=item B<--append-to-version> foo
+
 =item B<--append_to_version> foo
 
 This argument (B<foo>) is appended to the value of the EXTRAVERSION
@@ -150,6 +157,8 @@ Chapters 4 of the Policy manual for details).
 
 =back
 
+=item B<--added-modules> foo
+
 =item B<--added_modules> foo
 
 =over 2
@@ -163,6 +172,8 @@ The default is that all modules in  C<MODULE_LOC> are compiled when
 the modules_blah targets are invoked.
 
 =back
+
+=item B<--added-patches> foo
 
 =item B<--added_patches> foo
 
@@ -187,6 +198,8 @@ Sets the architecture. This is mostly useful when cross compiling.
 
 =back
 
+=item B<--cross-compile> foo
+
 =item B<--cross_compile> foo
 
 =over 2
@@ -208,8 +221,9 @@ actually make this do anything.
 
 =back
 
-=item B<--arch_in_name> foo
+=item B<--arch-in-name> foo
 
+=item B<--arch_in_name> foo
 
 =over 2
 
@@ -324,10 +338,10 @@ target.
 
 =back
 
-The options maybe shortened to the smallest unique string,
-and may be entered with either a - or a -- prefix, and you
-may use a space or an = symbol between  an  option  string
-and a value.
+The options maybe shortened to the smallest unique string, and may be
+entered with either a - or a -- prefix, and you may use a space or an
+= symbol between an option string and a value.  Please refer to man
+Getopt::Long for details on how the options may be entered.
 
 =cut
 
@@ -343,17 +357,22 @@ usage: $main::MYNAME [options] target [target ...]
                          have digit, no hyphen allowed)
  --flavour  foo        an additional kernel sub-version. ([-a-z.+0-9])
                        OBSOLETE
+ --append-to-version foo
  --append_to_version foo an additional kernel sub-version. ([-a-z.+0-9])
                          Does not require editing the kernel Makefile
                          over rides env var APPEND_TO_VERSION
+ --added-modules foo
  --added_modules foo   Comma/space separated list of add on modules
                        affected by the modules_<blah> targets
+ --added-patches bar 
  --added_patches bar   Comma/space separated list of patches applicable
                         when patch_the_kernel is turned on
  --arch     foo        architecture
+ --cross-compile
  --cross_compile       target string
  --subarch  bar        Set the subarch for the image being compiled
                         (have to be on a compatible machine).
+ --arch-in-name
  --arch_in_name        Embed the subarch in the image package name
  --initrd              Create a image package suitable for initrd  
  --pgpsign  name       An ID used to sign the changes file using pgp.
@@ -378,10 +397,10 @@ usage: $main::MYNAME [options] target [target ...]
 
 Use one of --zimage or --bzimage, or none, but not both.
 
-Option Format:
-The options may be shortened to the smallest unique string, and may
-be entered with either a - or a -- prefix, and you may use a space
-between an option string and a value.
+Option Format: The options may be shortened to the smallest unique
+string, and may be entered with either a - or a -- prefix, and you may
+use a space between an option string and a value. Please refer to man
+Getopt::Long for details on how the options may be entered.
 
 Version: $main::Version
 $main::Author <$main::AuthorMail>

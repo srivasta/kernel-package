@@ -81,6 +81,80 @@
 +KERNELRELEASE=$(VERSION).$(PATCHLEVEL).$(SUBLEVEL)$(EXTRAVERSION)$(INT_FLAV)
 ======================================================================
 
+	The patch provided below is from the sources for 2.4.2
+ kernel, and may not apply cleanly on other versions of the kernel. It is 
+ recommended that you use it purely as a guideline.
+
+======================================================================
+diff -Naur linux-2.4.2.orig/Documentation/kbuild/makefiles.txt linux-2.4.2/Documentation/kbuild/makefiles.txt
+--- linux-2.4.2.orig/Documentation/kbuild/makefiles.txt	Wed Feb 14 00:13:42 2001
++++ linux-2.4.2/Documentation/kbuild/makefiles.txt	Wed Feb 28 09:59:30 2001
+@@ -127,7 +127,7 @@
+ 
+ The top Makefile exports the following variables:
+ 
+-    VERSION, PATCHLEVEL, SUBLEVEL, EXTRAVERSION
++    VERSION, PATCHLEVEL, SUBLEVEL, EXTRAVERSION, FLAVOR
+ 
+ 	These variables define the current kernel version.  A few arch
+ 	Makefiles actually use these values directly; they should use
+@@ -140,6 +140,9 @@
+ 	$(EXTRAVERSION) defines an even tinier sublevel for pre-patches
+ 	or additional patches.	It is usually some non-numeric string
+ 	such as "-pre4", and is often blank.
++
++	$(FLAVOR) can be locally set to enable multiple installation
++	of a kernel with the same version number, without modules clashing.
+ 
+     KERNELRELEASE
+ 
+diff -Naur linux-2.4.2.orig/Makefile linux-2.4.2/Makefile
+--- linux-2.4.2.orig/Makefile	Thu Feb 22 02:54:15 2001
++++ linux-2.4.2/Makefile	Wed Feb 28 09:59:51 2001
+@@ -3,7 +3,10 @@
+ SUBLEVEL = 2
+ EXTRAVERSION =
+ 
+-KERNELRELEASE=$(VERSION).$(PATCHLEVEL).$(SUBLEVEL)$(EXTRAVERSION)
++ifdef FLAVOR
++  FLAVOR:=+$(FLAVOR)
++endif
++KERNELRELEASE=$(VERSION).$(PATCHLEVEL).$(SUBLEVEL)$(EXTRAVERSION)$(FLAVOR)
+ 
+ ARCH := $(shell uname -m | sed -e s/i.86/i386/ -e s/sun4u/sparc64/ -e s/arm.*/arm/ -e s/sa110/arm/)
+ 
+diff -Naur linux-2.4.2.orig/arch/arm/boot/Makefile linux-2.4.2/arch/arm/boot/Makefile
+--- linux-2.4.2.orig/arch/arm/boot/Makefile	Fri Feb  9 02:32:44 2001
++++ linux-2.4.2/arch/arm/boot/Makefile	Wed Feb 28 09:45:36 2001
+@@ -129,10 +129,10 @@
+ 	@test "$(INITRD)" != "" || (echo You must specify INITRD; exit -1)
+ 
+ install: $(CONFIGURE) Image
+-	sh ./install.sh $(VERSION).$(PATCHLEVEL).$(SUBLEVEL)$(EXTRAVERSION) Image $(TOPDIR)/System.map "$(INSTALL_PATH)"
++	sh ./install.sh $(KERNELRELEASE) Image $(TOPDIR)/System.map "$(INSTALL_PATH)"
+ 
+ zinstall: $(CONFIGURE) zImage
+-	sh ./install.sh $(VERSION).$(PATCHLEVEL).$(SUBLEVEL)$(EXTRAVERSION) zImage $(TOPDIR)/System.map "$(INSTALL_PATH)"
++	sh ./install.sh $(KERNELRELEASE) zImage $(TOPDIR)/System.map "$(INSTALL_PATH)"
+ 
+ clean:
+ 	$(RM) Image zImage bootpImage
+diff -Naur linux-2.4.2.orig/scripts/Menuconfig linux-2.4.2/scripts/Menuconfig
+--- linux-2.4.2.orig/scripts/Menuconfig	Sun Oct  8 19:30:40 2000
++++ linux-2.4.2/scripts/Menuconfig	Wed Feb 28 09:46:05 2001
+@@ -1372,7 +1372,7 @@
+ 
+ DIALOG="./scripts/lxdialog/lxdialog"
+ 
+-kernel_version="${VERSION}.${PATCHLEVEL}.${SUBLEVEL}${EXTRAVERSION}"
++kernel_version="${KERNELRELEASE}"
+ 
+ backtitle="Linux Kernel v$kernel_version Configuration"
+ 
+
+======================================================================
+
+
 	The patch provided below is from the Makefile for 2.1.47
  kernel, and may not apply cleanly on other Makefiles. It is
  recommended that you use it purely as a guideline, and modify the

@@ -5,14 +5,14 @@
 # Created On       : Sat Apr 27 05:55:26 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Wed Apr 25 00:30:17 2001
+# Last Modified On : Sat Apr 28 10:14:21 2001
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 198
+# Update Count     : 199
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
 # 
-#    $Id: image.postinst,v 1.63 2001/04/25 07:19:22 srivasta Exp $
+#    $Id: image.postinst,v 1.64 2001/04/29 16:02:44 srivasta Exp $
 #
 
 # 
@@ -1144,8 +1144,8 @@ sub silo_floppy {
        "root=/dev/fd$drive\n",
        "read-write\n",
        "timeout=100\n",        # 10s
-       "image=/linux\n",
-       "\tlabel=Linux\n",
+       "image = /linux\n",
+       "\tlabel = Linux\n",
        "\tappend=root=$rootdevice\n";
     close SILO;
     $ret = system '/sbin/silo', '-r', $mountpoint;

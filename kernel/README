@@ -1,5 +1,5 @@
 
-   $Id: README,v 1.42 2001/04/24 08:09:19 srivasta Exp $
+   $Id: README,v 1.43 2001/04/29 16:02:44 srivasta Exp $
 
 This is the Debian GNU/Linux prepackaged version of the Linux kernel.
 Linux was written by Linus Torvalds <Linus.Torvalds@cs.Helsinki.FI> and
@@ -315,14 +315,17 @@ image_dest    If  you  want  the  symbolic  link  (or  image,  if
 patch_the_kernel This is an experts only variable. If set to YES (ENV
                  variable PATCH_THE_KERNEL overrides this), the build
                  process causes run-parts to be run over
-                 /usr/src/kernel-patches/$(architecture)/apply 
-                 and (hopefully) reverses the process during clean by
+                 /usr/src/kernel-patches/$(architecture)/apply and
+                 (hopefully) reverses the process during clean by
                  running run-parts over
                  /usr/src/kernel-patches/$(architecture)/unpatch. The
                  special architecture all is used for arch independent
                  patches. You may use the --added_patches command line
-                 in conjunction with this variable to selectively apply
-                 only some patches from that directory.
+                 in conjunction with this variable to selectively
+                 apply only some patches from that directory. The
+                 people who package the pacthes should have arranged
+                 to have the order of application and unapplication be
+                 sane.
 
 root_cmd         This should be set to a means of gaining superuser
                  access (for example, `sudo' or `fakeroot') as needed

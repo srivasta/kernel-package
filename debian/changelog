@@ -1,3 +1,15 @@
+kernel-package (7.37) unstable; urgency=low
+
+  * Added a new patch for FLAVOUR for 2.4.3 kernels.
+  * Fix the second half of the postinst problem, really. closes: Bug#93963
+  * fix the reference at the bottom of kernel-package(5) (make-kpkg is in
+    section 1, not section 8).                           closes: Bug#95405
+  * 2386 -> i386 in man kernel-package                   closes: Bug#95403
+  * Fixed a missing \n.B in man make-kpkg (1)            closes: Bug#95654
+  * Now support hyphens between words in long options    closes: Bug#95175
+
+ -- Manoj Srivastava <srivasta@debian.org>  Sun, 29 Apr 2001 10:40:49 -0500
+
 kernel-package (7.36) unstable; urgency=low
 
   * Fixed a typo in make-kpkg; closes: Bug#92238
