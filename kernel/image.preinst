@@ -172,20 +172,28 @@ EOF
   }
   else {
     print STDERR <<EOF;
-
 You are attempting to install a kernel image (version $version)
-However, the directory /lib/modules/$version still exists.
-If you have deselected some modules, or installed standalone modules 
-packages, this could be bad.
+However, the directory /lib/modules/$version still exists.  If this
+directory belongs to a previous kernel-image-$version package, and if
+you have deselected some modules, or installed standalone modules
+packages, this could be bad. However, if this directory exists because
+you are also installing some stand alone modules right now, and they
+got unpacked before I did, then this is pretty benign.  Unfortunately,
+I can't tell the difference.
 
-This is your last chance to abort the installation of this
-kernel image (nothing has been changed yet). 
+If /lib/modules/$version belongs to a old install of
+kenel-image-$version, this is your last chance to abort the
+installation of this kernel image (nothing has been changed yet).
 
-If you know what you are doing, and if you feel that this image should
-be installed despite this anomaly, I suggest you move
-/lib/modules/$version out of the way, perhaps to
-/lib/modules/$version.old or something, and then try re-installing
-this image.
+If this directory is because of stand alone modules being installed
+right now, or if it does belong to an older kernel-image-$version
+package but you know what you are doing, and if you feel that this
+image should be installed despite this anomaly, Please answer n to the
+question.
+
+Otherwise, I suggest you move /lib/modules/$version out of the way,
+perhaps to /lib/modules/$version.old or something, and then try
+re-installing this image.
 EOF
   ;
     print STDERR "Do you want to stop now? [Y/n]";

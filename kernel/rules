@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.132 2001/09/03 18:10:24 srivasta Exp $
+## $Id: rules,v 1.133 2001/09/08 18:44:52 srivasta Exp $
 ###############################################################################
 
 ifdef ARCH
@@ -72,6 +72,7 @@ config_target := oldconfig
 
 
 # The default architecture (all if architecture independent)
+CROSS_ARG:=
 ifdef ARCH
   architecture:=$(ARCH)
   ifndef CROSS_COMPILE
@@ -82,6 +83,13 @@ ifdef ARCH
 else
   #architecture:=$(shell CC=$(HOSTCC) dpkg --print-gnu-build-architecture)
   architecture:=$(DEB_BUILD_ARCH)
+  ifdef CROSS_COMPILE
+     KERNEL_CROSS:=$(CROSS_COMPILE)-
+  endif
+endif
+
+ifneq ($(strip $(KERNEL_CROSS)),)
+  CROSS_ARG:=CROSS_COMPILE=$(KERNEL_CROSS)
 endif
 
 KERNEL_ARCH:=$(architecture)
@@ -934,10 +942,10 @@ stamp-build:
 # have.
 	-test -f stamp-configure || $(deb_rule) configure
 	$(MAKE) $(do_parallel) $(EXTRAV_ARG) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) \
-	                    CROSS_COMPILE=$(KERNEL_CROSS) $(target)
+	                    $(CROSS_ARG) $(target)
 ifdef MODULES_ENABLED
 	$(MAKE) $(do_parallel) $(EXTRAV_ARG) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) \
-	                    CROSS_COMPILE=$(KERNEL_CROSS) modules
+	                    $(CROSS_ARG) modules
 endif
 	touch stamp-build
 
@@ -1052,12 +1060,12 @@ stamp-configure: debian .config conf.vars
 	test -f stamp-debian || $(deb_rule) debian
 	test -f .config      || $(deb_rule) .config
 	-test ! -f stamp-configure \
-	  && $(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) CROSS_COMPILE=$(KERNEL_CROSS) \
+	  && $(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) \
                                  ARCH=$(KERNEL_ARCH) $(config_target) \
           && $(MAKE) $(do_parallel) $(EXTRAV_ARG) $(FLAV_ARG) \
-                                 CROSS_COMPILE=$(KERNEL_CROSS) \
+                                 $(CROSS_ARG) \
                                  ARCH=$(KERNEL_ARCH) dep \
-          && $(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) CROSS_COMPILE=$(KERNEL_CROSS) \
+          && $(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) \
                                  ARCH=$(KERNEL_ARCH) clean && \
               touch stamp-configure
 
@@ -1358,7 +1366,7 @@ ifeq  ($(strip $(HAVE_NEW_MODLIB)),)
 	$(mod_inst_cmds)
 else
 	$(MAKE) $(EXTRAV_ARG) INSTALL_MOD_PATH=$(INSTALL_MOD_PATH) \
-                CROSS_COMPILE=$(KERNEL_CROSS) modules_install
+                $(CROSS_ARG) modules_install
 endif
 endif
 ifeq ($(strip $(NEED_DIRECT_GZIP_IMAGE)),YES)

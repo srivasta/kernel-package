@@ -1,3 +1,15 @@
+kernel-package (7.61) unstable; urgency=low
+
+  * Changed the message about preexisting /lib/modules/$version directory
+    since that dir may exist due to a stand alone modules package being
+    installed at the same time (we can not depend on any unpack
+    ordering).                                               closes: Bug#110845
+  * Change question asking whether or not to syumlink.       closes: Bug#111382
+  * Do not pass in an empty CROSS_COMPILE= into the kernel build, since
+    this breaks hppa builds.                                 closes: Bug#111452
+
+ -- Manoj Srivastava <srivasta@debian.org>  Sat,  8 Sep 2001 13:44:30 -0500
+
 kernel-package (7.60) unstable; urgency=low
 
   * Fix suggest dependency in the image package.             closes: Bug#110125

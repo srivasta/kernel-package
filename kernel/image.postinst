@@ -12,7 +12,7 @@
 # HISTORY          :
 # Description      :
 #
-#    $Id: image.postinst,v 1.75 2001/09/03 18:10:24 srivasta Exp $
+#    $Id: image.postinst,v 1.76 2001/09/08 18:44:52 srivasta Exp $
 #
 
 #
@@ -416,7 +416,7 @@ sub image_magic {
 	print STDERR "link. I can create one for you, and it shall be\n";
 	print STDERR "updated by newer kernel image packages. This is \n";
 	print STDERR "useful if you use a boot loader like lilo.\n";
-	print STDERR "Do you want me to link " . $realimageloc .
+	print STDERR "Do you want me to create a link from " . $realimageloc .
 	  "$kimage-$version to $kimage?[Yn] ";
 	$answer=<STDIN>;
 	$do_symlink = "" if $answer =~ /n/i;
@@ -902,7 +902,7 @@ if ( ! -x "$loaderloc" ) {
    "# more information\n\n",
    "# $rootdevice $rootdisk $rootpartition $bootdevice\n",
    "--init-partitioned=$rootdisk\n",
-   "--bootloader=/boot/iplboot\n",
+   "--bootloader=/usr/share/palo/iplboot\n",
    "--recoverykernel=" . $image_dest . "$kimage\n",
    "--commandline=$rootpartition" . $image_dest . "$kimage root=$rootdevice\n",
                 );
