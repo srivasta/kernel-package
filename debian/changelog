@@ -1,3 +1,14 @@
+kernel-package (8.007) unstable; urgency=low
+
+  * Change CONFIG_PSMOUSE to y instead of m for the lone config file that
+    had that value; since that kernel var is no longer a tristate var; and
+    the m confused things.                                  closes: Bug#156478
+  * document that an empty ./debian/official file is removed by make
+    mrproper, and thus fails to prevent ./debian dir from being removced
+    in a clea.                                              closes: Bug#156970
+
+ -- Manoj Srivastava <srivasta@debian.org>  Sun, 18 Aug 2002 05:14:53 -0500
+
 kernel-package (8.006) unstable; urgency=low
 
   * Fix typo in postrm. closes: Bug#156579, Bug#156927, Bug#156853, Bug#157132

@@ -22,7 +22,7 @@
 .\" USA.
 .\"
 .\"
-.\"    $Id: make-kpkg.8,v 1.60 2002/08/09 03:38:58 srivasta Exp $
+.\"    $Id: make-kpkg.8,v 1.61 2002/08/18 10:15:13 srivasta Exp $
 .\"
 .TH MAKE\-KPKG 1 "May 2 1997" "Debian" "Debian GNU/Linux manual"
 .SH NAME
@@ -67,7 +67,7 @@ revision, is not modified by
 If you happen to have an official source, (that would mean that the
 file 
 .I debian/official
-exists), and want to use your own revision number,
+exists, and is not empty), and want to use your own revision number,
 make sure you remove
 .I debian/official
 before running  
@@ -80,9 +80,13 @@ a clean slate.  Secondly, the version may contain only
 alphanumerics and the characters + . (full stop and plus)
 and must contain a digit. (Look at the Policy manual for
 details). 
-.I Actually, that is a lie: official kernel and modules maintainers have special dispensation to use hyphens, but it is strongly deprecated for most people, since no sanitization of the version number is done, and dpkg and friends may choke on it at the end of the compile unless one knows what one is doing.
-Optionally, you may prepend the revision with a digit
-followed by a colon (:). The default is
+.I Actually, that is a lie: official kernel and modules maintainers
+have special dispensation to use hyphens, but it is strongly
+deprecated for most people, since no sanitization of the version
+number is done, and dpkg and friends may choke on it at the end of the
+compile unless one knows what one is doing. 
+Optionally, you may prepend the revision with a digit followed by a
+colon (:). The default is
 .B 1.00.Custom
 unless the environment variable
 .B DEBIAN_REVISION_MANDATORY
