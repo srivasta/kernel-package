@@ -5,16 +5,16 @@
 # Created On       : Mon Jun 17 01:10:11 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Wed Jan 21 03:22:30 1998
+# Last Modified On : Wed Jan 21 03:47:18 1998
 # Last Machine Used: tiamat.datasync.com
-# Update Count     : 94
+# Update Count     : 95
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
 #
 #
 #
-#    $Id: make-kpkg,v 1.9 1998/01/21 09:25:39 srivasta Exp $
+#    $Id: make-kpkg,v 1.10 1998/01/21 09:49:35 srivasta Exp $
 #
 require 5.002;
 use strict;
@@ -29,7 +29,7 @@ make-kpkg - build Debian kernel packages from Linux kernel sources.
 ($main::MYNAME     = $main::0) =~ s|.*/||;
 $main::Author      = "Manoj Srivastava";
 $main::AuthorMail  = "srivasta\@debian.org";
-$main::Version     = '$Revision: 1.9 $ ';
+$main::Version     = '$Revision: 1.10 $ ';
 
 my $help_opt=0; 
 my $revision=0; 
@@ -79,11 +79,12 @@ Sets the Debian revision number for the packages produced to the
 argument B<number>. This has certain constraints: It only has an
 effect during the configure phase (in other words, if a file called
 stamp-configure exists, this option has no effect -- run make-kpkg
-clean or manually remove stamp-configure for it to have an effect). It
-may contain only alphanumerics and the characters + . (full stop, and
-plus) and should contain a digit. B<NOTE>: No hyphens allowed. (Look
-at Chapter 5 of the Programmers manual for details). Optionally, you
-may prepend the revision with a digit followed by a colon (:)
+clean or manually remove stamp-configure for it to have an
+effect). Secondly, it may contain only alphanumerics and the
+characters + . (full stop, and plus) and should contain a
+digit. B<NOTE>: No hyphens allowed. (Look at Chapter 5 of the
+Programmers manual for details). Optionally, you may prepend the
+revision with a digit followed by a colon (:)
 
 This is because  B<dpkg> imposes an ordering on version numbers,
 so that it can tell whether packages are being up or downgraded and

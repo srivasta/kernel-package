@@ -1,5 +1,5 @@
 
-    $Id: README,v 1.11 1998/01/21 09:24:46 srivasta Exp $
+    $Id: README,v 1.12 1998/01/21 09:49:34 srivasta Exp $
 
 This is the Debian Linux packaging scripts for the Linux kernel. 
 This package has been put together by Manoj Srivastava <srivasta@debian.org>.
@@ -88,17 +88,17 @@ fly by setting the DEBIAN_REVISION environmental variable.
 
 The revision number (the argument supplied after the --revision flag)
 has certain constraints: 
-It only has an effect during the configure phase (in other words, if a
-file called stamp-configure exists, this option has no effect -- run
-make-kpkg clean or manually remove stamp-configure for it to have an
-effect). So, if you re-run make-kpkg with a different revision number,
-you have to reconfigure the kernel. 
-It may contain only alphanumerics and the characters + . (full stop,
-and plus) and should contain a digit.  NOTE: No hyphens allowed. (Look
-at Chapter 5 of the Programmers manual for details). Optionally, you
-may prepend the revision with a digit followed by a colon (:); this
-shall put your revision into a new epoch; (which makes older dpkg very
-confused), more on this later.
+a) It only has an effect during the configure phase (in other words, if a
+   file called stamp-configure exists, this option has no effect -- run
+   make-kpkg clean or manually remove stamp-configure for it to have an
+   effect). So, if you re-run make-kpkg with a different revision number,
+   you have to reconfigure the kernel. 
+b) It may contain only alphanumerics and the characters + . (full stop,
+   and plus) and should contain a digit.  NOTE: No hyphens allowed. (Look
+   at Chapter 5 of the Programmers manual for details). Optionally, you
+   may prepend the revision with a digit followed by a colon (:); this
+   shall put your revision into a new epoch; (which makes older dpkg very
+   confused), more on this later.
 
 You should _not_ use a "_" in the revision number! As tempting as it may
 seem, it actually interferes with the policy.
