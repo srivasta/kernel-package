@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Tue Sep  8 16:54:46 1998
+## Last Modified On : Tue Sep  8 17:01:36 1998
 ## Last Machine Used: tiamat.datasync.com
-## Update Count	    : 362
+## Update Count	    : 363
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.48 1998/09/08 21:54:54 srivasta Exp $
+## $Id: rules,v 1.49 1998/09/08 22:02:07 srivasta Exp $
 ###############################################################################
 
 # The version of kernel-package this belongs to
@@ -509,8 +509,8 @@ stamp-source: configure
 		debian/tmp-source/usr/doc/$(package)/copyright
 	echo "This was produced by kernel-package version $(kpkg_version)." > \
 	         debian/tmp-source/usr/doc/$(package)/Buildinfo
-	(cd debian/tmp-source/usr/doc/$(package); \
-         ln -s ../../src/$(package)/Documentation Documentation;)
+	-tar cf - Documentation | \
+            (cd debian/tmp-doc/usr/doc/$(package); umask 000; tar xsf -)
 	-tar cf - `echo * | sed -e 's/debian//g' -e 's/\.deb//g' ` \
 	| (cd debian/tmp-source/usr/src/$(package); umask 000; tar xsf -)
 	(cd debian/tmp-source/usr/src/$(package); \
