@@ -525,6 +525,28 @@ prend sa place (la variable minimal_swap dans
 .I /etc/kernel\-img.conf
 modifie ce comportement). Rien n'est fait lors de mises à jour.
 .IP
+Consultez la documentation à propos des variables de type «\ hook\ » dans 
+.B kernel\-img.conf(5).
+Ces variables peuvent indiquer des scripts qui 
+ajoutent ou suppriment une ligne dans le menu du grub à l'installation ou à la
+suppression de l'image du noyau. Un exemple de script pour ajouter des lignes
+au menu du grub est fourni dans le répertoire 
+.I /usr/share/doc/kernel\-package/.
+.IP
+En dehors de ces variables de type «\ hook\ » que l'administrateur peut définir,
+il existe un ensemble de répertoires dans lesquels des paquets, ou 
+l'administrateur, peuvent déposer des scripts. Ces répertoires sont 
+.I /etc/kernel/preinst.d/,
+.I /etc/kernel/postinst.d/,
+.I /etc/kernel/prerm.d/,
+et
+.I /etc/kernel/postrm.d/.
+Si ces répertoires existent, le paquet kernel-image lancera le programme
+.B run-parts
+sur ceux-ci, en passant la version en cours d'installation ou de suppression
+en tant qu'argument, durant la phase correspondante d'installation ou de 
+suppression.
+.IP
 À l'installation, vous aurez la possibilité de lancer le chargeur de démarrage
 .I LILO
 (ou des équivalents tels que
@@ -541,14 +563,6 @@ mérite une mention particulière ici, puisque grub n'a pas besoin d'être
 relancé après l'installation d'une image de noyau, et qu'une modification
 automatisée du contenu du menu est suffisante pour l'installation ou la
 suppression d'une image d'un noyau.
-.IP
-Consultez la documentation à propos des variables de type «\ hook\ » dans 
-.B kernel\-img.conf(5).
-Ces variables peuvent indiquer des scripts qui 
-ajoutent ou suppriment une ligne dans le menu du grub à l'installation ou à la
-suppression de l'image du noyau. Un exemple de script pour ajouter des lignes
-au menu du grub est fourni dans le répertoire 
-.I /usr/share/doc/kernel\-package/.
 .TP
 .B build
 Cette cible, utilisée par la cible
@@ -700,4 +714,4 @@ et la documentation complète du répertoire
 Cette page de manuel a été écrite par Manoj Srivastava <srivasta@debian.org>,
 pour le système Debian GNU/Linux.
 .SH TRADUCTION
-Sylvain Cherrier <sylvain.cherrier@free.fr> Juillet 2004.
+Sylvain Cherrier <sylvain.cherrier@free.fr> Octobre 2004.

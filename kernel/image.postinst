@@ -636,6 +636,8 @@ sub image_magic {
 	      print STDERR "Do you want me to create a link from " .
 		$realimageloc . "$kimage-$version to $kimage?[Yn] ";
 	      $answer=<STDIN>;
+              $answer =~ s/^\s+//;
+              $answer =~ s/\s+$//;
 	      $do_symlink = "No" if $answer =~ /n/i;
 
 	      if (open(CONF, ">$CONF_LOC"))
@@ -903,6 +905,8 @@ EOIMG
    my $answer='';
     print "Please select one of a, or b: ";
     $answer=<STDIN>;
+    $answer =~ s/^\s+//;
+    $answer =~ s/\s+$//;
     if ($answer =~ /^\s*a/i) {
       unlink "initrd";
     }
