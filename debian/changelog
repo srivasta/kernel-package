@@ -1,3 +1,17 @@
+kernel-package (7.02) frozen unstable; urgency=low
+
+  * Added a dependency on fileutiles >=4.0, since the package would fail
+    to install with older fileutils. This prevents a failure to install
+    when upgrading from slink. 
+  * Added a simple check on upppercase chars in the version
+    string. closes: Bug#61213
+  * The changes added in 7.00 are required to be in potato. The changes
+    were: Allow the official kernel-* package maintainer some leeway in
+    providing official control files (just like they can provide their own
+    changelog files now).
+
+ -- Manoj Srivastava <srivasta@debian.org>  Thu, 30 Mar 2000 10:15:12 -0600
+
 kernel-package (7.01) unstable; urgency=low
 
   * Added more documentation to the install time configuration file

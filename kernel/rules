@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.91 2000/03/21 07:04:45 srivasta Exp $
+## $Id: rules,v 1.92 2000/03/30 16:17:29 srivasta Exp $
 ###############################################################################
 
 #
@@ -528,6 +528,14 @@ TAR_SUFFIX := $(shell \
       else \
          echo gz; \
       fi )
+
+
+# Bug out if the version number id not all lowercase
+lc_version = $(shell echo $(version) | tr A-Z a-z)
+ifneq ($(strip $(version)),$(strip $(lc_version)))
+$(error Error. The version number $(strip $(version)) is not all lowercase)
+endif
+
 
 ifeq ($(strip $(IN_KERNEL_DIR)),)
 # Hah! Not in kernel directory!!
