@@ -4,9 +4,9 @@
 ## Created On       : Tue Nov 18 15:53:52 2003
 ## Created On Node  : glaurung.green-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Tue Nov 18 17:26:48 2003
+## Last Modified On : Tue Nov 18 17:56:39 2003
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count     : 10
+## Update Count     : 11
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : 
@@ -103,3 +103,6 @@ install:
 	# Hack, tell the   rules file what version of kernel package it is
 	sed -e             's/=K=V/$(version)/' kernel/rules > \
                               $(prefix)/usr/share/$(package)/rules
+
+clean distclean:
+	@echo nothing to do for clean
