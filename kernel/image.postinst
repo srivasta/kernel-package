@@ -5,14 +5,14 @@
 # Created On       : Sat Apr 27 05:55:26 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Tue Mar 21 01:07:46 2000
+# Last Modified On : Tue Mar 21 10:24:57 2000
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 137
+# Update Count     : 138
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
 # 
-#    $Id: image.postinst,v 1.43 2000/03/21 07:08:05 srivasta Exp $
+#    $Id: image.postinst,v 1.44 2000/03/21 16:38:04 srivasta Exp $
 #
 
 # 
@@ -55,10 +55,17 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
       chomp;
       s/\#.*$//g;
       next if /^\s*$/;
-      $do_symlink      = ""    if /do_symlinks\s*=\s*no/ig;
-      $no_symlink      = "Yes" if /no_symlinks\s*=\s*yes/ig;
-      $reverse_symlink = "Yes" if /no_symlinks\s*=\s*yes/ig;
-      $image_in_boot   = "Yes" if /image_in_boot\s*=\s*yes/ig;
+
+      $do_symlink      = "" if /do_symlinks\s*=\s*(no|false|0)\s*$/ig;
+      $no_symlink      = "" if /no_symlinks\s*=\s*(no|false|0)\s*$/ig;
+      $reverse_symlink = "" if /reverse_symlinks\s*=\s*(no|false|0)\s*$/ig;
+      $image_in_boot   = "" if /image_in_boot\s*=\s*(no|false|0)\s*$/ig;
+
+      $do_symlink      = "Yes" if /do_symlinks\s*=\s*(yes|true|1)\s*$/ig;
+      $no_symlink      = "Yes" if /no_symlinks\s*=\s*(yes|true|1)\s*$/ig;
+      $reverse_symlink = "Yes" if /reverse_symlinks\s*=\s*(yes|true|1)\s*$/ig;
+      $image_in_boot   = "Yes" if /image_in_boot\s*=\s*(yes|true|1)\s*$/ig;
+
       $image_dest      = "$1"  if /image_dest\s*=\s*(\S+)/ig;
     }
     close CONF;

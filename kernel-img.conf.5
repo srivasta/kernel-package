@@ -21,7 +21,7 @@
 .\" Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139,
 .\" USA.
 .\"
-.\" $Id: kernel-img.conf.5,v 1.1 2000/03/21 07:08:55 srivasta Exp $
+.\" $Id: kernel-img.conf.5,v 1.2 2000/03/21 16:38:03 srivasta Exp $
 .\"
 .TH KERNEL\-IMG.CONF 5 "Mar 21 2000" "Debian" "Debian GNU/Linux manual" 
 .\" NAME should be all caps, SECTION should be 1-8, maybe w/ subsection
@@ -39,7 +39,12 @@ installation, overriding the defaults built into the image itself.
 .PP
 The format of the file is a simple 
 .B VAR = VALUE 
-pair. This file is automatically created by the installation script if
+pair. Boolean values may be specified as
+.I Yes, True, 1,
+and
+.I No, False, 0,
+and are case insensitive. 
+This file is automatically created by the installation script if
 it does not exist, and niether does the symbolic link
 .I /vmlinuz.
 The script asks the user whether the symbolic link should be created, 
@@ -49,13 +54,13 @@ and stashes the answer into
 At the moment, the user modifiable variables supported are:
 .TP
 .B image_in_boot:  
-Set to True if you want the kernel image 
+Set to Yes if you want the kernel image 
 .I vmlinuz 
 in 
 .I /boot 
 rather than the default 
 .I /.  
-defaults to undefined.
+defaults to No.
 .TP
 .B do_symlink
 By default, the kernel image post installation script shall create or
@@ -72,9 +77,9 @@ not, the configuration scripts asks the user whether to create the
 symbolic link, and stashes the answer in a newly created
 .I /etc/kernel-img.conf.
 If the configuration file already exists, and 
-if this option is set to no, no symbolic link is ever created. This
+if this option is set to No, no symbolic link is ever created. This
 for people who have other means of booting their machines, and do not
-like the symbolic links cluttering up their / directory. 
+like the symbolic links cluttering up their / directory.  Defaults to Yes. 
 .TP
 .B no_symlink
 Whether to use symlinks to the 
@@ -84,14 +89,14 @@ Mutually exclusive to
 .I reverse_symlink. 
 Can be used with
 .I image_in_boot. 
-The image is placed in vmlinuz (instead of /boot/vmlinuz-X.X.XX). The
-old vmlinuz is moved to vmlinuz.old unconditionally. (Normally, that
+If set to Yes, the image is placed in vmlinuz (instead of /boot/vmlinuz-X.X.XX).
+The old vmlinuz is moved to vmlinuz.old unconditionally. (Normally, that
 is only done if the version of the new image differs from the old
 one). This restricts you to two images, unless you take additional
 action and save copies of older images. This is for people who have
 boot on a system that does not use symbolic links (and say, they use
 loadlin as a boot loader). This is a Hack.
-Defaults to  undefined (optional)
+Defaults to No. 
 .TP
 .B reverse_symlink
 Whether to use reverse symlinks (that is, the real file is the one
@@ -112,12 +117,13 @@ symlinks are left dangling. This is for people with
 boot on umsdos, and who can't see the link in dos, but
 do want to know the image version when in Linux. 
 This is a Hack.
-Defaults to  undefined (optional)
+Defaults to  No.
 .TP
 .B image_dest 
 If you want the image to be stored in elsewhere than
 .I /boot
-set this variable to the dir where you want the image. This may be of
+set this variable to the dir where you want the image. 
+Please note that this is not a Boolean variable.  This may be of
 help to
 .B loadlin
 users.Defaults to 

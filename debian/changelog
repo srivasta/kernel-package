@@ -1,3 +1,11 @@
+kernel-package (7.01) unstable; urgency=low
+
+  * Added more documentation to the install time configuration file
+    kernel-img.conf.5. Modified the image postinst to be more lax in
+    parsing configuration options
+
+ -- Manoj Srivastava <srivasta@debian.org>  Tue, 21 Mar 2000 10:37:46 -0600
+
 kernel-package (7.00) unstable; urgency=low
 
   * Allow the official kernel-* package maintainer some leeway in
