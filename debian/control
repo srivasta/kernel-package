@@ -5,7 +5,7 @@ Maintainer: Manoj Srivastava <srivasta@debian.org>
 Standards-Version: 3.5.7.1
 
 Package: kernel-package
-Description: Debian Linux kernel package build scripts.
+Description: A utility for building Linux kernel related Debian packages.
  This package provides the capability to create a debian kernel-image
  package by just running make-kpkg kernel_image in a kernel source
  directory tree.  It can also package the relevant kernel headers into

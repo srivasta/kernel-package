@@ -1,11 +1,19 @@
+kernel-package (8.018) unstable; urgency=low
+
+  * Fix the sparc patch I added yesterday.
+  * Thanks to Marc Haber, I think we have a handle on why make-kpkg seemed
+    to ignore errors.                                        closes: Bug#139276
+
+ -- Manoj Srivastava <srivasta@debian.org>  Tue, 24 Dec 2002 11:40:12 -0600
+
 kernel-package (8.017) unstable; urgency=low
 
-  * Hmm. move an apostrophe in hte man page.                closes: Bug#169521
+  * Hmm. move an apostrophe in hte man page.                 closes: Bug#169521
   * Add the currently running kernels configuration as a choice of last
     resort, to be used if there is no other way to get at a configuration
-    file.                                                   closes: Bug#171416
+    file.                                                    closes: Bug#171416
   * use the compressed target on IA64, resulting in much smaller images.
-    Thanks to Ian Wienand <ianw@gelato.unsw.edu.au>.        closes: Bug#173396
+    Thanks to Ian Wienand <ianw@gelato.unsw.edu.au>.         closes: Bug#173396
   * It's looking like 2.4 and 2.6 will have different targets and output
     locations for sparc. Made kernel-package aware of that.
   * Try and solve the removal of applied patches issue. untested, but

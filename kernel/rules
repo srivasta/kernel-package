@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Sat Nov  2 21:24:41 2002
+## Last Modified On : Tue Dec 24 11:36:22 2002
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 543
+## Update Count	    : 551
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.187 2002/12/23 23:31:21 srivasta Exp $
+## $Id: rules,v 1.188 2002/12/24 17:41:46 srivasta Exp $
 ###############################################################################
 
 ifdef KPKG_ARCH
@@ -99,6 +99,19 @@ KERNEL_ARCH:=$(architecture)
 DEBCONFIG = $(CONFDIR)/config
 IMAGEDIR=/boot
 INT_IMAGE_DESTDIR=debian/tmp-image$(IMAGEDIR)
+
+
+VERSION =$(shell egrep '^VERSION +=' Makefile 2>/dev/null | \
+ sed -e 's/[^0-9]*\([0-9]*\)/\1/')
+PATCHLEVEL =$(shell egrep '^PATCHLEVEL +=' Makefile 2>/dev/null | \
+ sed -e 's/[^0-9]*\([0-9]*\)/\1/')
+SUBLEVEL =$(shell egrep '^SUBLEVEL +=' Makefile 2>/dev/null | \
+ sed -e 's/[^0-9]*\([0-9]*\)/\1/')
+EXTRA_VERSION =$(shell egrep '^EXTRAVERSION +=' Makefile 2>/dev/null | \
+ sed -e 's/EXTRAVERSION *= *\([^ \t]*\)/\1/')
+HAVE_NEW_MODLIB =$(shell egrep '\(INSTALL_MOD_PATH\)' Makefile 2>/dev/null )
+
+
 
 ######################################################################
 ###          Architecture specific stuff                           ###
@@ -467,16 +480,6 @@ endif
 # NO_SRC_CHANGES =
 NO_SRC_CHANGES = yes
 
-VERSION =$(shell egrep '^VERSION +=' Makefile 2>/dev/null | \
- sed -e 's/[^0-9]*\([0-9]*\)/\1/')
-PATCHLEVEL =$(shell egrep '^PATCHLEVEL +=' Makefile 2>/dev/null | \
- sed -e 's/[^0-9]*\([0-9]*\)/\1/')
-SUBLEVEL =$(shell egrep '^SUBLEVEL +=' Makefile 2>/dev/null | \
- sed -e 's/[^0-9]*\([0-9]*\)/\1/')
-EXTRA_VERSION =$(shell egrep '^EXTRAVERSION +=' Makefile 2>/dev/null | \
- sed -e 's/EXTRAVERSION *= *\([^ \t]*\)/\1/')
-EXTRAVERSION =$(strip $(EXTRA_VERSION))
-HAVE_NEW_MODLIB =$(shell egrep '\(INSTALL_MOD_PATH\)' Makefile 2>/dev/null )
 
 # NOTE: FLAVOUR is now obsolete
 # If you want to have more than one kernel configuration per kernel
@@ -506,6 +509,7 @@ FLAV_ARG :=
 endif
 
 ## This is the replacement for FLAVOUR
+EXTRAVERSION =$(strip $(EXTRA_VERSION))
 ifneq ($(strip $(APPEND_TO_VERSION)),)
 iatv := $(strip $(APPEND_TO_VERSION))
 EXTRAV_ARG := EXTRAVERSION=${EXTRA_VERSION}${iatv}
@@ -821,6 +825,7 @@ ifneq ($(strip $(int_root_cmd)),)
 root_cmd := $(int_root_cmd)
 endif
 
+int_am_root  := $(shell [ $$(id -u) -eq 0 ] && echo "YES" )
 int_get_root := $(shell [ $$(id -u) -ne 0 ] && echo "$(ROOT_CMD)" )
 
 
@@ -1052,7 +1057,8 @@ export root_cmd FLAVOUR INT_SUBARCH APPEND_TO_VERSION UNSIGN_CHANGELOG  \
        ALL_PATCH_APPLY ALL_PATCH_UNPATCH DIR_PATCH_UNPATCH              \
        DIR_PATCH_APPLY VERSIONED_PATCH_DIR VERSIONED_ALL_PATCH_UNPATCH  \
        VERSIONED_ALL_PATCH_APPLY VERSIONED_DIR_PATCH_UNPATCH            \
-       VERSIONED_DIR_PATCH_APPLY
+       VERSIONED_DIR_PATCH_APPLY KPKG_SELECTED_PATCHES                  \
+       KPKG_SELECTED_MODULES
 
 
 ifeq ($(strip $(IN_KERNEL_DIR)),)
@@ -1275,12 +1281,14 @@ endif
 # file at this point
 
 clean:
-	@test $$(id -u) -eq 0 -o "X$(int_get_root)" != "X" || \
-		(echo "You may need root privileges - some parts may fail")
-	@test $$(id -u) -ne 0 && $(int_get_root) $(deb_rule) real_stamp_clean \
-                || true
-	@test $$(id -u) -eq 0 &&                 $(deb_rule) real_stamp_clean \
-                || true
+ifeq ($(strip $(int_am_root)),)
+ifeq ($(strip $(int_get_root)),)
+	@echo "You may need root privileges - some parts may fail"
+endif
+	$(int_get_root) $(deb_rule) real_stamp_clean 
+else
+	$(deb_rule) real_stamp_clean 
+endif
 
 # Perhaps a list of patches should be dumped to a file on patching? so we
 # only unpatch what we have applied? That would be changed, though saner,
@@ -1351,12 +1359,15 @@ binary-arch:  kernel_image  kernel_headers
 
 kernel-source kernel_source: stamp-source
 stamp-source: stamp-debian
-	@test $$(id -u) -eq 0 -o "X$(int_get_root)" != "X" || \
-		(echo need root privileges; exit 1)
-	@test $$(id -u) -ne 0 && $(int_get_root) $(deb_rule) real_stamp_source\
-                || true
-	@test $$(id -u) -eq 0 &&                 $(deb_rule) real_stamp_source\
-                || true
+ifeq ($(strip $(int_am_root)),)
+ifeq ($(strip $(int_get_root)),)
+	@echo need root privileges; exit 1
+else
+	$(int_get_root) $(deb_rule) real_stamp_source
+endif
+else
+	$(deb_rule) real_stamp_source
+endif
 
 real_stamp_source:
 ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
@@ -1443,14 +1454,15 @@ stamp-libc-kheaders: configure
 
 kernel-headers kernel_headers: stamp-headers
 stamp-headers: configure
-	@test $$(id -u) -eq 0 -o "X$(int_get_root)" != "X" || \
-		(echo need root privileges; exit 1)
-	@test $$(id -u) -ne 0 && \
-                                $(int_get_root) $(deb_rule) real_stamp_headers\
-                || true
-	@test $$(id -u) -eq 0 && \
-                                                $(deb_rule) real_stamp_headers\
-                || true
+ifeq ($(strip $(int_am_root)),)
+ifeq ($(strip $(int_get_root)),)
+	@echo need root privileges; exit 1
+else
+	$(int_get_root) $(deb_rule) real_stamp_headers
+endif
+else
+	$(deb_rule) real_stamp_headers
+endif
 
 real_stamp_headers:
 ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
@@ -1506,12 +1518,15 @@ endif
 
 kernel-doc kernel_doc: stamp-doc
 stamp-doc: stamp-debian
-	@test $$(id -u) -eq 0  -o "X$(int_get_root)" != "X" || \
-		(echo need root privileges; exit 1)
-	@test $$(id -u) -ne 0 && $(int_get_root) $(deb_rule) real_stamp_doc\
-                || true
-	@test $$(id -u) -eq 0 &&                 $(deb_rule) real_stamp_doc\
-                || true
+ifeq ($(strip $(int_am_root)),)
+ifeq ($(strip $(int_get_root)),)
+	@echo need root privileges; exit 1
+else
+	$(int_get_root) $(deb_rule) real_stamp_doc
+endif
+else
+	$(deb_rule) real_stamp_doc
+endif
 
 real_stamp_doc:
 ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
@@ -1559,12 +1574,15 @@ stamp-image: configure build kernel-image-deb
 # seems to create a working .deb with a kernel that gives the correct
 # user name (as opposed to root@...)
 kernel-image-deb:
-	@test $$(id -u) -eq 0  -o "X$(int_get_root)" != "X" || \
-		 (echo need root privileges; exit 1)
-	@test $$(id -u) -ne 0 && $(int_get_root) $(deb_rule) real_stamp_image\
-                || true
-	@test $$(id -u) -eq 0 &&                 $(deb_rule) real_stamp_image\
-                || true
+ifeq ($(strip $(int_am_root)),)
+ifeq ($(strip $(int_get_root)),)
+	@echo need root privileges; exit 1
+else
+	$(int_get_root) $(deb_rule) real_stamp_image
+endif
+else
+	$(deb_rule) real_stamp_image
+endif
 
 real_stamp_image:
 ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
