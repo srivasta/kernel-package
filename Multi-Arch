@@ -106,14 +106,14 @@ PATCH_VERSION=$(patch -v | head -1 | sed -e 's/[^0-9\.]//g')
 
 if dpkg --compare-versions $PATCH_VERSION \>= 2.2 
 then
-    PATCH_OPTIONS= -l -s -z -p1  
+    PATCH_OPTIONS="-l -s -z -p1"
 else
-    PATCH_OPTIONS= -l -s -b -p1
+    PATCH_OPTIONS="-l -s -b -p1"
 fi
 
 # Assume compressed patch
-zcat $PATCHDIR/$PATCHNAME | patch $PATCH_OPTIONS 
-# patch $PATCH_OPTIONS < $PATCHDIR/$PATCHNAME
+zcat $PATCHDIR/$PATCHNAME | patch `echo $PATCH_OPTIONS` 
+# patch `echo $PATCH_OPTIONS` < $PATCHDIR/$PATCHNAME
 
 echo "Removing empty files after patching" >&2
 find . -type f -size 0 -exec rm {} \; -print
@@ -145,14 +145,14 @@ PATCH_VERSION=$(patch -v | head -1 | sed -e 's/[^0-9\.]//g')
 
 if dpkg --compare-versions $PATCH_VERSION \>= 2.2 
 then
-    PATCH_OPTIONS= -l -s -z -p1  
+    PATCH_OPTIONS="-l -s -z -p1"
 else
-    PATCH_OPTIONS= -l -s -b -p1
+    PATCH_OPTIONS="-l -s -b -p1"
 fi
 
 # Is the patch compressed?
-zcat $PATCHDIR/$PATCHNAME | patch -R $PATCH_OPTIONS
-#patch -R $PATCH_OPTIONS < $PATCHDIR/$PATCHNAME
+zcat $PATCHDIR/$PATCHNAME | patch -R `echo $PATCH_OPTIONS`
+#patch -R `echo $PATCH_OPTIONS` < $PATCHDIR/$PATCHNAME
 
 echo "Removing empty files after unpatching" >&2
 find . -type f -size 0 -exec rm {} \; -print
