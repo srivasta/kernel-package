@@ -5,14 +5,14 @@
 # Created On       : Sat Apr 27 05:55:26 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Mon Jul 10 00:37:03 2000
+# Last Modified On : Mon Jul 10 23:11:52 2000
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 181
+# Update Count     : 189
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
 # 
-#    $Id: image.postinst,v 1.52 2000/07/10 06:25:18 srivasta Exp $
+#    $Id: image.postinst,v 1.53 2000/07/11 04:25:34 srivasta Exp $
 #
 
 # 
@@ -32,6 +32,7 @@ my $kimage          = "=K";	# Should be empty, mostly
 my $loader          = "=L";     # lilo, silo, quik, or nettrom
 my $image_dir       = "=D";     # where the image is located
 my $clobber_modules = '';       # target machine defined
+my $relative_links  = "";       # target machine defined
 
 my $Loader          = "LILO";
 $Loader             = "SILO"  if $loader =~ /silo/io;
@@ -85,7 +86,7 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
       $do_boot_enable  = '' if /do_boot_enable\s*=\s*(no|false|0)\s*$/ig;
       $do_bootfloppy   = '' if /do_bootfloppy\s*=\s*(no|false|0)\s*$/ig;
       $do_bootloader   = '' if /do_bootloader\s*=\s*(no|false|0)\s*$/ig;
-
+      $relative_links  = '' if /relative_links \s*=\s*(no|false|0)\s*$/ig;
 
       $do_symlink      = "Yes" if /do_symlinks\s*=\s*(yes|true|1)\s*$/ig;
       $no_symlink      = "Yes" if /no_symlinks\s*=\s*(yes|true|1)\s*$/ig;
@@ -96,6 +97,7 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
       $do_boot_enable  = "Yes" if /do_boot_enable\s*=\s*(yes|true|1)\s*$/ig;
       $do_bootfloppy   = "Yes" if /do_bootfloppy\s*=\s*(yes|true|1)\s*$/ig;
       $do_bootloader   = "Yes" if /do_bootloader\s*=\s*(yes|true|1)\s*$/ig;
+      $relative_links  = "Yes" if /relative_links\s*=\s*(yes|true|1)\s*$/ig;
 
       $image_dest      = "$1"  if /image_dest\s*=\s*(\S+)/ig;
     }
@@ -167,9 +169,74 @@ sub test_relative {
   chdir ($cwd) or die "Could not chdir to $params{'New Dir'}:$!";
   return $ok;
 }
+
+######################################################################
+######################################################################
+############
+######################################################################
+######################################################################
+sub CanonicalizePath {
+  my $path = join '/', @_;
+  my @work = split '/', $path;
+  my @out;
+  my $is_absolute;
+  
+  if (@work && $work[0] eq "") { $is_absolute = 1; shift @work; }
+  
+  while (@work) {
+    my $seg = shift @work;
+    if ($seg eq "." || $seg eq "") {
+    } elsif ($seg eq "..") {
+      if (@out && $out[-1] ne "..") {
+	pop @out;
+      } else {
+	# Leading "..", or "../..", etc.
+	push @out, $seg;
+      }
+    } else {
+      push @out, $seg;
+    }
+  }
+  
+  unshift @out, "" if $is_absolute;
+  return join('/', @out);
+}
+######################################################################
+######################################################################
+############
 ######################################################################
 ######################################################################
 
+sub spath {
+  my %params = @_;
+
+  die "Missing Required paramater 'Old'" unless $params{'Old'};
+  die "Missing Required paramater 'New'" unless  $params{'New'};
+
+  my @olddir  = split '/', CanonicalizePath $params{'Old'};
+  my @newdir  = split '/', CanonicalizePath $params{'New'};
+  my @outdir  = @olddir;
+
+  my $out = '';
+  my $i;
+  for ($i = 0; $i <= $#olddir && $i <= $#newdir; $i++) {
+    $out++ if ($olddir[$i] ne $newdir[$i]);
+    shift @outdir unless $out;
+    unshift @outdir, ".." if $out;
+  }
+  if ($#newdir > $#olddir) {
+    for ($i=$#olddir; $i < $#newdir; $i++) {
+      unshift @outdir, "..";
+    }
+  }
+  return join ('/', @outdir);
+}
+
+
+######################################################################
+######################################################################
+######################################################################
+######################################################################
 
 if ($move_image) {		# Maybe $image_dest is in on dos, or something?
   if (-e "$kimage-$version") {	# we should be in dir /, normally
@@ -191,6 +258,9 @@ if ($move_image) {		# Maybe $image_dest is in on dos, or something?
     my $Old = $image_dest;
     if (test_relative ('Old Dir' => $Old, 'New Dir' => $realimageloc)) {
       $Old   =~ s|^/*||o;
+    }
+    elsif ($relative_links) {
+      $Old = spath('Old' => "$Old", 'New' => "$realimageloc" );
     }
     symlink($Old . "$kimage-$version", 
 	    $realimageloc . "$kimage-$version")
@@ -231,6 +301,9 @@ elsif (-l "$kimage") {
     my $Old = $realimageloc;
     if (test_relative ('Old Dir' => $Old, 'New Dir' => `pwd`)) {
       $Old   =~ s|^/*||o;
+    }
+    elsif ($relative_links) {
+      $Old = spath('Old' => "$Old", 'New' => `pwd` );
     }
     if (! symlink($Old . "$kimage-$version", "$kimage")) {
       rename("$kimage.$$", "$kimage");
@@ -290,6 +363,9 @@ elsif (! -e "$kimage") {
       if (test_relative ('Old Dir' => $Old, 'New Dir' => $realimageloc)) {
 	$Old   =~ s|^/*||o;
       }
+      elsif ($relative_links) {
+	$Old = spath('Old' => "$Old", 'New' => $realimageloc);
+      }
       symlink($Old . "$kimage", $realimageloc . "$kimage-$version")
 	|| die("Failed to symbolic-link " . $realimageloc
 	       . "$kimage-$version to " . $image_dest . "$kimage .\n");
@@ -298,6 +374,9 @@ elsif (! -e "$kimage") {
       my $Old = $realimageloc;
       if (test_relative ('Old Dir' => $Old, 'New Dir' => $image_dest)) {
 	$Old   =~ s|^/*||o;
+      }
+      elsif ($relative_links) {
+	$Old = spath('Old' => "$Old", 'New' => $image_dest);
       }
       symlink($Old . "$kimage-$version", "$kimage") ||
 	die("Failed to symbolic-link " . $realimageloc
@@ -338,6 +417,9 @@ elsif ($reverse_symlink) {		# Maybe /$image_dest is on a dos system?
   my $old = $image_dest;
   if (test_relative ('Old Dir' => $Old, 'New Dir' => $realimageloc)) {
     $Old   =~ s|^/*||o;
+  }
+  elsif ($relative_links) {
+    $Old = spath('Old' => "$Old", 'New' => $realimageloc);
   }
   if (! symlink($Old . "$kimage", $realimageloc . "$kimage-$version")) {
     warn "Could not symlink " . $image_dest . "$kimage to $kimage-$version :$!";

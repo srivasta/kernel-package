@@ -21,7 +21,7 @@
 .\" Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139,
 .\" USA.
 .\"
-.\" $Id: kernel-img.conf.5,v 1.4 2000/05/07 17:07:38 srivasta Exp $
+.\" $Id: kernel-img.conf.5,v 1.5 2000/07/11 04:25:33 srivasta Exp $
 .\"
 .TH KERNEL\-IMG.CONF 5 "Mar 21 2000" "Debian" "Debian GNU/Linux manual" 
 .\" NAME should be all caps, SECTION should be 1-8, maybe w/ subsection
@@ -156,7 +156,7 @@ If
 is set, 
 .I /boot
 shall contain a symbolic link to the actual image.
-This option can be sueful to peopl using loadlin, who may need the
+This option can be useful to people using loadlin, who may need the
 image to be moved to a different, dos partition.
 This variable is unset by default.
 .TP
@@ -192,6 +192,12 @@ If set to NO, this prevents the postinst from running the boot
 loader. The user may still be asked to create a floppy, unless 
 .B do_bootfloppy
 is also set to NO. Defaults to Yes.
+.TP
+.B relative_links
+If set to yes, the kernel image postinst script shall go to extra
+ordinary lengths to ensure that the symbolic links are
+relative. Normally, the symbolic links are relative when it is easily
+determinable that relative links shall work. efaults to No.
 .SH FILES
 The file described here is
 .I /etc/kernel-img.conf.

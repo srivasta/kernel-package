@@ -1,3 +1,14 @@
+kernel-package (7.13) unstable; urgency=low
+
+  * Added a new configuration directive for the target machine, namely,
+    realtive_links. Normally, the kernel image postinst shall do a
+    relative link if possible, or else it shall make an absolute
+    link. With this directive, the postinst shall go to extraordinary
+    lengths to make sure that the link is relative. The previous release
+    also closed a but, namely: closes: Bug#65116
+
+ -- Manoj Srivastava <srivasta@debian.org>  Mon, 10 Jul 2000 23:14:04 -0500
+
 kernel-package (7.12) unstable; urgency=low
 
   * Fixed implementation of the --config target in make-kpkg, to allow
