@@ -12,7 +12,7 @@
 # HISTORY          :
 # Description      :
 #
-#    $Id: image.postinst,v 1.96 2002/02/21 04:53:49 srivasta Exp $
+#    $Id: image.postinst,v 1.97 2002/03/01 17:57:43 srivasta Exp $
 #
 
 #
@@ -31,7 +31,7 @@ my $do_bootfloppy   = "Yes";	# target machine defined
 my $do_bootloader   = "Yes";	# target machine defined
 my $move_image      = '';       # target machine defined
 my $kimage          = "=K";	# Should be empty, mostly
-my $loader          = "=L";     # lilo, silo, quik, palo, vmelilo, nettrom or arcboot
+my $loader          = "=L";     # lilo, silo, quik, palo, vmelilo, nettrom, arcboot or delo
 my $image_dir       = "=D";     # where the image is located
 my $clobber_modules = '';       # target machine defined
 my $relative_links  = "";       # target machine defined
@@ -57,6 +57,7 @@ $Loader             = "VMELILO"  if $loader =~ /^vmelilo/io;
 $Loader             = "ZIPL"     if $loader =~ /^zipl/io;
 $Loader             = "ELILO"    if $loader =~ /^elilo/io;
 $Loader             = "ARCBOOT"  if $loader =~ /^arcboot/io;
+$Loader             = "DELO"     if $loader =~ /^delo/io;
 
 # This should not point to /tmp, because of security risks.
 my $temp_file_name = "/var/log/$loader" . "_log.$$";
@@ -69,6 +70,7 @@ my @palotemplate    = ();
 my @vmelilotemplate = ();
 my @zipltemplate    = ();
 my @arcboottemplate = ();
+my @delotemplate    = ();
 my $bootdevice      = '';
 my $rootdevice      = '';
 my $rootdisk        = '';
@@ -161,6 +163,7 @@ $do_bootfloppy = "" if $loader =~ /^noloader/io;
 $do_bootfloppy = "" if $loader =~ /^zipl/io;
 $do_bootfloppy = "" if $loader =~ /^elilo/io;
 $do_bootfloppy = "" if $loader =~ /^arcboot/io;
+$do_bootfloppy = "" if $loader =~ /^delo/io;
 
 # We can't have boot floppies for initrd kernels
 $do_bootfloppy = "" if $initrd;
@@ -941,6 +944,7 @@ exit (0) if $loader =~ /yaboot/i; # yaboot does not have to be executed.
 exit (0) if $loader =~ /milo/i; # MILO does not have to be executed.
 exit (0) if $loader =~ /nettrom/i; # NETTROM does not have to be executed.
 exit (0) if $loader =~ /arcboot/i; # ARCBOOT does not have to be executed.
+exit (0) if $loader =~ /delo/i; # DELO does not have to be executed.
 
 exit (0) unless $loaderloc;
 
@@ -1125,7 +1129,7 @@ if ( ! -x "$loaderloc" ) {
                 );
 
 @arcboottemplate = (
-    "label=Linux\n",
+    "label=arcdefault\n",
     "image=" . $image_dest . "$kimage\n",
 );
 

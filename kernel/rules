@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.158 2002/02/27 18:49:00 srivasta Exp $
+## $Id: rules,v 1.159 2002/03/01 17:57:44 srivasta Exp $
 ###############################################################################
 
 ifdef KPKG_ARCH
@@ -420,8 +420,8 @@ endif
 ##### mipsel
 ifeq ($(strip $(architecture)),mipsel)
 kimage := vmlinux
-loaderdep=
-loader=
+loaderdep=delo
+loader=delo
 loaderdoc=
 target = boot
 NEED_DIRECT_GZIP_IMAGE=NO
@@ -1506,6 +1506,7 @@ ifdef MODULES_ENABLED
 ifeq  ($(strip $(HAVE_NEW_MODLIB)),)
 	$(mod_inst_cmds)
 else
+# could have also said DEPMOD=/bin/true instead of moving files
 ifneq ($(strip $(KERNEL_CROSS)),)
 	mv System.map System.precious
 endif

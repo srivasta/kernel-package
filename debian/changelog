@@ -1,3 +1,12 @@
+kernel-package (7.93) unstable; urgency=low
+
+  * Kernel-package currently has no proper bootloader handling for
+    mipsel. This patch, provided by (a modification by the origina;l
+    written by Guido Guenther <agx@debian.org>) Karsten Merker
+    <karsten@excalibur.cologne.de>, adds this capability.    closes: Bug#136331
+
+ -- Manoj Srivastava <srivasta@debian.org>  Fri,  1 Mar 2002 11:56:50 -0600
+
 kernel-package (7.92) unstable; urgency=low
 
   * Cross-compiling a PowerPC kernel fails after the modules_install step
