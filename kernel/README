@@ -1,5 +1,5 @@
 
-   $Id: README,v 1.63 2003/07/01 16:00:18 srivasta Exp $
+   $Id: README,v 1.64 2003/07/30 22:28:52 srivasta Exp $
 
 This is the Debian GNU/Linux prepackaged version of the Linux kernel.
 Linux was written by Linus Torvalds <Linus.Torvalds@cs.Helsinki.FI> and
@@ -71,7 +71,7 @@ in section misc.
  more detailed HOWTO)
 
 Phase ONE: Getting and configuring the kernel
- 1% cd <kernel source tree>
+ 1% cd <kernel source tree> (make sure you have write permission there)
  2% make config   # or make menuconfig or make xconfig and configure
 Phase TWO: Create a portable kernel image .deb file
  3% make-kpkg clean
@@ -138,15 +138,30 @@ create the full spectrum of packages for version 1.99.7 (and doubtless
 this size will go up in the future) [It has. Now even an gzipped kernel
 source is over 23MB].
 
+Make sure that the user who is building the kernel has adequate write
+permissions in the kernel source tree, and also has write permissions
+in MODULES_LOC and its parent directory, or is using sudo or some
+other means of getting these write permission while building.
+
 [ EXAMPLE
 So, suppose you have chosen /usr/local/src/kernel as the place to
 build kernels.
 % cd  /usr/local/src/kernel # or cd /path/to/where-ever/you/have/space
 % tar jvvfx /usr/src/kernel-source-2.4.20.tar.bz2
   (or, tar jvvfx /path/to/download/linux-2.4.20.tar.bz2)
+
+	The next two steps are optionsl, you only need them if you are
+ going to create third party modules (stuff in
+ /usr/src/module-name.tar.gz)
+
+ % export MODULE_LOC=/usr/local/src/kernel/modules
+ % tar jvvfx /usr/src/some-module.tar.gz
 ]
 
-Now, cd linux (wherever you have created the kernel sources).
+Now, cd linux (wherever you have created the kernel sources). Make
+sure you have the permission to write in that dir, or that you are
+using sudo or some other means of getting this write permission while
+building.
 
 Configuration File
 ------------- ----

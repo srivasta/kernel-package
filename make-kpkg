@@ -5,16 +5,16 @@
 # Created On       : Mon Jun 17 01:10:11 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Tue Jul  1 09:52:52 2003
+# Last Modified On : Wed Jul 30 17:01:52 2003
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 188
+# Update Count     : 190
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
 #
 #
 #
-#    $Id: make-kpkg,v 1.81 2003/07/01 16:00:18 srivasta Exp $
+#    $Id: make-kpkg,v 1.82 2003/07/30 22:28:52 srivasta Exp $
 #
 require 5.002;
 use strict;
@@ -29,7 +29,7 @@ make-kpkg - build Debian kernel packages from Linux kernel sources.
 ($main::MYNAME     = $main::0) =~ s|.*/||;
 $main::Author      = "Manoj Srivastava";
 $main::AuthorMail  = "srivasta\@debian.org";
-$main::Version     = '$Revision: 1.81 $ ';
+$main::Version     = '$Revision: 1.82 $ ';
 
 my $added_modules='';
 my $added_patches='';
@@ -302,7 +302,9 @@ package.
 
 This may result in a non-bootable kernel if the cramfs initrd patch
 has not been applied to kernel sources, or the mkinitrd is not
-configured to use something other than cramfs..
+configured to use something other than cramfs. Therefore, using this
+option causes make-kpkg to emit a warning, unless the environment
+variable INITRD_OK is set.
 
 =back
 
@@ -912,7 +914,7 @@ EOMSG
     $command .= " -n ";
   }
   if ($initrd) {
-    if (! -e 'debian/official') {
+    if (! (-e 'debian/official' || $ENC{INITRD_OK}) ) {
       print STDERR "Warning: You are using the initrd option, that may not\n";
       print STDERR "work unless you have applied the initrd cramfs patch to\n";
       print STDERR "the kernel, or modified mkinitrd not to use cramfs by\n";

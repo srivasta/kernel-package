@@ -22,7 +22,7 @@
 .\" USA.
 .\"
 .\"
-.\"    $Id: make-kpkg.8,v 1.74 2003/04/18 20:50:33 srivasta Exp $
+.\"    $Id: make-kpkg.8,v 1.75 2003/07/30 22:28:52 srivasta Exp $
 .\"
 .TH MAKE\-KPKG 1 "Nov 14 2002" "Debian" "Debian GNU/Linux manual"
 .SH NAME
@@ -304,7 +304,15 @@ Change the type of configure done from the default \f(CWoldconfig\fR.
 \f(CWxconfig\fR; or \f(CWold\fR, \f(CWmenu\fR, or \f(CWx\fR.
 .Sp
 This option is particularly useful when using \s-1PATCH_THE_KERNEL\s0 if some
-of the patches change what configuration options are available.
+of the patches change what configuration options are available. 
+.B Note
+however that 
+.BR make\-kpkg
+scans the config file at startup for some options, notably the fact
+that modules are enabled or not, so toggling the status during the
+delayed configuration results in an error. If needed, created the
+configuration file as close to the desired one before calling
+make\-kpkg with this switch.
 .TP
 .B \-\-targets
 Prints out a list of known targets. See the Section
@@ -344,7 +352,9 @@ to any non empty value.
 To avoid a warning at install time, please read kernel-img.conf(5),
 and add a 
 .I warn_initrd 
-directive in that file.
+directive in that file. To avoid the warning ar compile time, please
+set the environment variable 
+.B INITRD_OK.
 .TP
 .B \-\-zimage
 Makes a zImage kernel rather than a bzImage kernel (the default).
@@ -594,7 +604,8 @@ The following variables (documented above) affect
 .I ARCH_IN_NAME
 .I INITRD
 .I SOURCE_CLEAN_HOOK
-.I  MODULE_LOC
+.I MODULE_LOC
+.I INITRD_OK
 .SH FILES
 Apart from the runtime options, the 
 .I debian.rules

@@ -1,3 +1,22 @@
+kernel-package (8.043) unstable; urgency=low
+
+  * Changed rules to facilitate building 64 Bit kernels on spac32, and
+    vice versa. Patch from Ben Collins
+  * Do not compress files in kernel-doc marked as executable. This caused
+    lintian warnings.                                   closes: Bug#202177
+  * Optionally silence the warning message with interactive prompt for
+    --initrd switch (set INITRD_OK).                    closes: Bug#202406
+  * Document the fact that make-kpkg scans to configuration for some basic
+    config detaisl, namely, whetrher modules are enabled or not, so that
+    toggling the state in delayed configuration using the --config switch
+    is unsupported andshall cause the build to fail. The correct solution
+    is to create a .config file as close to the desired one using make
+    {x,meny,}config before calling make-kpkg (the --config switch is
+    mostly useful for answering any additional questions introduced by
+    patches).                                            closes: Bug#203112
+
+ -- Manoj Srivastava <srivasta@debian.org>  Wed, 30 Jul 2003 17:28:45 -0500
+
 kernel-package (8.042) unstable; urgency=low
 
   * Remove stamps late in the game, so unpatching has a chance to actually
