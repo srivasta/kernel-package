@@ -5,9 +5,9 @@
 # Created On       : Sat Apr 27 05:55:26 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Fri Dec  5 02:16:30 2003
-# Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 255
+# Last Modified On : Wed Feb 18 17:50:43 2004
+# Last Machine Used: glaurung.internal.golden-gryphon.com
+# Update Count     : 256
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
@@ -598,6 +598,8 @@ sub image_magic {
 
 	      if (open(CONF, ">$CONF_LOC"))
 		{
+		  print CONF "# Kernel Image management overrides\n";
+		  print CONF "# See kernel-img.cnf(5) for details\n";
 		  if ($loader =~ /palo/i)
 		    {
 		      print CONF "link_in_boot = Yes\n";
@@ -608,7 +610,6 @@ sub image_magic {
 		    }
 		  else
 		    {
-		      print CONF "# Do not create symbolic links in /\n";
 		      print CONF "do_symlinks = $do_symlink\n";
 		    }
 		  close CONF;
