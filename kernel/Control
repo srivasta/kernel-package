@@ -82,10 +82,11 @@ Package: kernel-uml-=V=SA
 Architecture: =A
 Section: base
 Priority: optional
-Provides: kernel-uml,  kernel-uml-=CV
+Provides: kernel-uml,  kernel-uml-=CV, user-mode-linux
 Depends: =I coreutils | fileutils (>= 4.0)
 Suggests: =L fdutils, kernel-doc-=V=SA | kernel-source-=V, uml-utilities
 Conflicts: user-mode-linux
+Replaces: user-mode-linux
 Description: Linux uml kernel binary image for version =V=SA.
  This package contains the Linux uml kernel image for version =V=SA
  and the modules built by the  packager.  
