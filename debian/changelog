@@ -1,3 +1,10 @@
+kernel-package (6.17) unstable; urgency=low
+
+  * It would help if I actually installed the new man page.
+  * Another teeny fix for powerpc sub archs
+
+ -- Manoj Srivastava <srivasta@debian.org>  Tue, 25 May 1999 15:52:27 -0500
+
 kernel-package (6.16) unstable; urgency=low
 
   * Another rules typo involving cross compilation
