@@ -22,7 +22,7 @@
 .\" USA.
 .\"
 .\"
-.\"    $Id: make-kpkg.8,v 1.3 1997/10/22 07:47:58 srivasta Exp $
+.\"    $Id: make-kpkg.8,v 1.4 1997/11/10 16:42:10 srivasta Exp $
 .\"
 .TH MAKE\-KPKG 8 "May 2 1997" "Debian" "Debian GNU/Linux manual"
 .SH NAME
@@ -83,6 +83,11 @@ Useful for people having problems with bzImage kernels.
 .B \-\-bzimage
 Makes a bzImage kernel. Useful for people who want a bzImage kernel on
 sites where the default is zImage kernels. 
+.TP
+.B \-\-rootcmd
+The command that provides a means of gaining super user ccess (for
+example, `sudo' or `fakeroot') as needed by dpkg-buildpackages's -r
+option. This is only relevant for the buildpackage target.
 .PP
 The options maybe shortened to the smallest unique string, and may
 be entered with either a \- or a \-\- prefix, and you may use a space

@@ -5,16 +5,16 @@
 # Created On       : Mon Jun 17 01:10:11 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Wed Oct 22 02:17:16 1997
+# Last Modified On : Sun Nov  9 02:10:25 1997
 # Last Machine Used: tiamat.datasync.com
-# Update Count     : 78
+# Update Count     : 86
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
 #
 #
 #
-#    $Id: make-kpkg,v 1.4 1997/10/22 07:47:58 srivasta Exp $
+#    $Id: make-kpkg,v 1.5 1997/11/10 16:42:09 srivasta Exp $
 #
 require 5.002;
 use strict;
@@ -29,15 +29,16 @@ make-kpkg - build Debian kernel packages from Linux kernel sources.
 ($main::MYNAME     = $main::0) =~ s|.*/||;
 $main::Author      = "Manoj Srivastava";
 $main::AuthorMail  = "srivasta\@debian.org";
-$main::Version     = '$Revision: 1.4 $';
+$main::Version     = '$Revision: 1.5 $ ';
 
-my $help_opt=0;
-my $revision=0;
-my $signature="";
-my $targ_opt=0;
-my $noexec;
-my $zimage;
-my $bzimage;
+my $help_opt=0; 
+my $revision=0; 
+my $signature="" ;
+my $targ_opt=0; 
+my $noexec; 
+my $zimage; 
+my $bzimage; 
+my $root_cmd; 
 
 my %option_ctl = ("help"       => \$help_opt,
 		  "noexec"     => \$noexec,
@@ -45,6 +46,7 @@ my %option_ctl = ("help"       => \$help_opt,
 		  "pgpsign=s"  => \$signature,
 		  "targets"    => \$targ_opt,
 		  "zimage"     => \$zimage,
+		  "rootcmd"    => \$root_cmd,
 		  "bzimage"    => \$bzimage
 		 );
 
@@ -132,6 +134,16 @@ Useful for people having problems with bzImage kernels.
 
 Makes a bzImage kernel. Useful for people who  want a bzImage kernel
 on sites where the default is zIm age kernels.
+
+=back
+
+=item B<--rootcmd>
+
+=over 2
+
+The command that provides a means of gaining super user ccess (for
+example, `sudo' or `fakeroot') as needed by dpkg-buildpackages's -r
+option. This is only relevant for the buildpackage target.
 
 =back
 
@@ -357,6 +369,8 @@ sub main (){
   my $ret;
   my $rules_file;
   my $target;
+  my $errors = "";
+  my $Targets = "";
 
   $rules_file = "/usr/lib/kernel-package/rules";
   
@@ -372,19 +386,31 @@ sub main (){
     print "$usage\n";
     exit 1;
   }
+  if ($root_cmd){
+    if ($root_cmd =~ m/^-/o){ 
+      $errors .= "The rootcmd option takes a simple command name\n" .
+	"Like sudo or fakeroot. The leading - confuses me.\n" .
+	  "rejecting rootcmd $root_cmd";
+    }
+    my $argstring = join (' ', @ARGV);
+    if ($target !~ m/buildpackage/o){
+      print STDERR "Warning: The rootcmd option (set to ($root_cmd)is\n"; 
+      print STDERR "only valid for the buildpackage target.\n"; 
+      print STDERR "Please hit return to continue\n";
+      my $ans = <>;
+    }
+  }
   # Fine. Now we check targets.
-  my $errors = "";
-  my $Targets = "";
   foreach $target (@ARGV){
     if ($Known_targets{$target}){
       $Targets .= "$target ";
     }
     else {
-      $errors .= "$target ";
+      $errors .= "Unknown target $target ";
     }
   }
   if ($errors){
-    print STDERR "Unknown target $errors\n";
+    print STDERR "Error: $errors\n";
     die "$targets_help\n";
   }
   # See if we are running in a linux kernel directory
@@ -419,6 +445,9 @@ EOERR1
   }
   if ($noexec){
     $command .= " -n ";
+  }
+  if ($root_cmd){
+     $command .= " ROOT_CMD=$root_cmd ";
   }
   if ($zimage){
     $command .= " IMAGE_TYPE=zImage ";
