@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Mon May 17 22:29:56 1999
+## Last Modified On : Thu May 20 11:12:03 1999
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 397
+## Update Count	    : 398
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.67 1999/05/20 04:57:41 srivasta Exp $
+## $Id: rules,v 1.68 1999/05/20 16:13:24 srivasta Exp $
 ###############################################################################
 
 # The version of kernel-package this belongs to
@@ -150,21 +150,21 @@ KERNEL_ARCH:=ppc
 kimage := zImage
 target = $(kimage)
 
-ifneq (,$(findstring $(SUBARCH)),APUs apus)
+ifneq (,$(findstring $(SUBARCH),APUs apus ))
 SUBARCH:=apus
 kimagesrc = arch/$(KERNEL_ARCH)/boot/$(kimage)
 kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
 DEBCONFIG = $(CONFDIR)/config.apus
 endif
 
-ifneq (,$(findstring $(SUBARCH)),BBOX bbox)
+ifneq (,$(findstring $(SUBARCH),BBOX bbox))
 SUBARCH:=bbox
 kimagesrc = arch/$(KERNEL_ARCH)/boot/$(kimage))
 kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
 DEBCONFIG = $(CONFDIR)/config.bbox
 endif
 
-ifneq (,$(findstring $(SUBARCH)),CHRP chrp)
+ifneq (,$(findstring $(SUBARCH),CHRP chrp))
 SUBARCH:=chrp
 loaderdep=quik
 loader=quik
@@ -174,14 +174,14 @@ kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
 DEBCONFIG = $(CONFDIR)/config.chrp
 endif
 
-ifneq (,$(findstring $(SUBARCH)),MBX mbx)
+ifneq (,$(findstring $(SUBARCH),MBX mbx))
 SUBARCH:=mbx
 kimagesrc = arch/$(KERNEL_ARCH)/boot/$(kimage))
 kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
 DEBCONFIG = $(CONFDIR)/config.mbx
 endif
 
-ifneq (,$(findstring $(SUBARCH)),Power pmac)
+ifneq (,$(findstring $(SUBARCH),Power pmac))
 SUBARCH:=pmac
 loaderdep=quik
 loader=quik
@@ -197,7 +197,7 @@ kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
 DEBCONFIG = $(CONFDIR)/config.chrp
 endif
 
-ifneq (,$(findstring $(SUBARCH)),PReP prep)
+ifneq (,$(findstring $(SUBARCH),PReP prep))
 SUBARCH:=prep
 kimagesrc = arch/$(KERNEL_ARCH)/coffboot/$(kimage)
 kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
