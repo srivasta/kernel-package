@@ -5,16 +5,16 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Mon Aug  4 12:36:50 1997
+## Last Modified On : Mon Aug  4 14:16:53 1997
 ## Last Machine Used: tiamat.datasync.com
-## Update Count	    : 114
+## Update Count	    : 115
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
 ##
 ###############################################################################
 
-#    $Id: rules,v 1.4 1997/08/04 18:08:13 srivasta Exp $
+#    $Id: rules,v 1.5 1997/08/04 19:17:15 srivasta Exp $
 
 
 # Please change the maintainer information, as well as the debian version
@@ -112,7 +112,7 @@ stamp-binary:
 	(cd kernel;        tar cf - * | \
            (cd $(SRCTOP)/debian/tmp/usr/lib/$(package);tar xf -))
 	# Hack, tell the rules file what version of kernel package it is
-	sed -e             's/=V/$(version)/' kernel/rules > \
+	sed -e             's/=K=V/$(version)/' kernel/rules > \
                               $(SRCTOP)/debian/tmp/usr/lib/$(package)/rules
 	dpkg-gencontrol
 	chown -R root.root debian/tmp

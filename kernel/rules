@@ -5,17 +5,17 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Mon Aug  4 14:05:49 1997
+## Last Modified On : Mon Aug  4 14:16:26 1997
 ## Last Machine Used: tiamat.datasync.com
-## Update Count	    : 187
+## Update Count	    : 189
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.8 1997/08/04 19:06:38 srivasta Exp $
+## $Id: rules,v 1.9 1997/08/04 19:17:27 srivasta Exp $
 ###############################################################################
 
 # The version of kernel-package this belongs to
-kpkg_version := =V
+kpkg_version := =K=V
 
 # The maintainer information.
 maintainer = Herbert Xu
