@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.75 1999/08/19 07:16:49 srivasta Exp $
+## $Id: rules,v 1.76 1999/08/31 04:26:58 srivasta Exp $
 ###############################################################################
 
 #
@@ -231,10 +231,18 @@ NEED_DIRECT_GZIP_IMAGE=YES
 kimagesrc = vmlinux
 kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
 DEBCONFIG = $(CONFDIR)/config.sparc
-# make-kpkg --subarch=sun4u --arch_in_name binary-arch
+# make-kpkg --subarch=sun4u binary-arch
 # to generate UltraSparc kernel packages.
 ifeq ($(SUBARCH),sun4u)
 KERNEL_ARCH=sparc64
+ARCH_IN_NAME=yes
+else
+machine = $(shell uname -m)
+ifeq ($(strip $(machine)),sparc64)
+SUBARCH=sun4u
+KERNEL_ARCH=sparc64
+ARCH_IN_NAME=yes
+endif
 endif
 endif
 

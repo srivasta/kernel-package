@@ -1,3 +1,12 @@
+kernel-package (6.23) unstable; urgency=low
+
+  * Added a smallish patch. This patch allows kernel-package to detect
+    whether it should build a sparc32 or sparc64 kernel on sparc
+    architectures. This shall allow for use of the FAKE_SPARC env to
+    decide which kernel to build. closes: Bug#43313
+
+ -- Manoj Srivastava <srivasta@debian.org>  Mon, 30 Aug 1999 23:20:26 -0500
+
 kernel-package (6.22) unstable; urgency=low
 
   * Removed bashims from the examples for multi-arch. Thanks to
