@@ -1,5 +1,5 @@
 
-    $Id: README,v 1.10 1997/12/01 19:53:11 srivasta Exp $
+    $Id: README,v 1.11 1998/01/21 09:24:46 srivasta Exp $
 
 This is the Debian Linux packaging scripts for the Linux kernel. 
 This package has been put together by Manoj Srivastava <srivasta@debian.org>.
@@ -61,7 +61,8 @@ someplace else.
 Some of the suggestions about where to unpack the kernel packages are
 a) /tmp/linux
 b) /var/tmp/linux
-c) /usr/src/linux-X.X.XX; where X.X.XX is the version number of the
+c) /usr/local/src/<whatever>
+d) /usr/src/linux-X.X.XX; where X.X.XX is the version number of the
    kernel. Remember to re-link /usr/src/linux to point to this
    directory, like: (cd /usr/src; rm linux; ln -s linux-X.X.XX) 
 
@@ -86,12 +87,18 @@ package while using dselect (or dpkg -BOGiE). You may also do this on the
 fly by setting the DEBIAN_REVISION environmental variable.
 
 The revision number (the argument supplied after the --revision flag)
-has certain constraints: it may contain only alphanumerics and the
-characters + . (full stop, and plus) and should contain a digit.
-NOTE: No hyphens allowed. (Look at Chapter 5 of the Programmers manual
-for details). Optionally, you may prepend the revision with a digit
-followed by a colon (:); this shall put your revision into a new
-epoch; (which makes older dpkg very confused), more on this later.
+has certain constraints: 
+It only has an effect during the configure phase (in other words, if a
+file called stamp-configure exists, this option has no effect -- run
+make-kpkg clean or manually remove stamp-configure for it to have an
+effect). So, if you re-run make-kpkg with a different revision number,
+you have to reconfigure the kernel. 
+It may contain only alphanumerics and the characters + . (full stop,
+and plus) and should contain a digit.  NOTE: No hyphens allowed. (Look
+at Chapter 5 of the Programmers manual for details). Optionally, you
+may prepend the revision with a digit followed by a colon (:); this
+shall put your revision into a new epoch; (which makes older dpkg very
+confused), more on this later.
 
 You should _not_ use a "_" in the revision number! As tempting as it may
 seem, it actually interferes with the policy.
@@ -154,7 +161,22 @@ This will install the kernel, the modules, the map file and do some other
 administrativia and finally it will ask you if you want to make a
 bootfloppy and if you want to run lilo now. 
 
-People who want to have multiple flavours of the same kernel version
+Now, there is a caveat: If you already have kernel 2.0.29 installed,
+and you have a freshly created custom 2.0.29 kernel, just installing
+the new 2.0.29 kernel shall install modules (as it should) in
+/lib/modules/2.0.29, which is where the old modules were! If you have
+added or removed modules relative to the old 2.0.29 kernel (very
+likely if your old kernel was the default gigantic generic kernel),
+then you shall have a mish-mash of modules in /lib/modules/2.0.29 ;-(
+
+Unfortunately, there is no reasonable solution; I suggest moving the
+old modules directory before installation, like so:
+
+	# mv /lib/modules/2.0.29 /lib/modules/2.0.29.save
+	# dpkg -i kernel-image-2.0.29_custom.1.0_i386.deb
+and later get rid of the .save directory.
+
+yesPeople who want to have multiple flavours of the same kernel version
 around should look at the file /usr/doc/kernel-package/Flavours.gz for
 details (Note: This involves modifying the kernel sources top level
 Makefile; not recommended unless you are *sure* you need it).
