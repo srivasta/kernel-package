@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Tue Sep  8 16:46:52 1998
+## Last Modified On : Tue Sep  8 16:54:46 1998
 ## Last Machine Used: tiamat.datasync.com
-## Update Count	    : 359
+## Update Count	    : 362
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.47 1998/09/08 21:48:34 srivasta Exp $
+## $Id: rules,v 1.48 1998/09/08 21:54:54 srivasta Exp $
 ###############################################################################
 
 # The version of kernel-package this belongs to
@@ -52,7 +52,7 @@ do_clean := YES
 
 # The default architecture (all if architecture independent)
 architecture:=$(shell dpkg --print-architecture)
-KERNEL_ARCH:=$(strip $(architecture))	#We may need to change this later
+KERNEL_ARCH:=$(architecture)
 DEBCONFIG = $(CONFDIR)/config
 IMAGE_DESTDIR=/boot
 INT_IMAGE_DESTDIR=debian/tmp-image$(IMAGE_DESTDIR)
@@ -84,7 +84,7 @@ loader=lilo
 loaderdoc=
 target = $(kimage)
 kimagesrc = vmlinux
-kimagedest = $(strip $(INT_IMAGE_DESTDIR)/vmlinuz-$(version))
+kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
 ifeq ($(strip $(GUESS_SUBARCH)),Amiga)
         DEBCONFIG= $(CONFDIR)/config.amiga
 else
@@ -651,8 +651,6 @@ else
 	$(MAKE) INSTALL_MOD_PATH=$(INSTALL_MOD_PATH) modules_install
 endif
 endif
-	@echo "starting to copy image. kimagesrc=[$(kimagesrc)]"
-	@echo "kernel_ARCH=[$(KERNEL_ARCH)]"
 ifeq ($(strip $(NEED_DIRECT_GZIP_IMAGE)),YES)
 	gzip -9vc $(kimagesrc) > $(kimagedest)
 else
