@@ -1,3 +1,10 @@
+kernel-package (8.061) unstable; urgency=low
+
+  * make make-kpkg parse extraversion values with non alphanumeric chars
+    in them, just like the rules file does.             closes: Bug#212477
+
+ -- Manoj Srivastava <srivasta@debian.org>  Wed, 24 Sep 2003 02:10:54 -0500
+
 kernel-package (8.060) unstable; urgency=low
 
   * The preinst, prerm, postrm -- were all parsing force_build_link from

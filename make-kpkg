@@ -5,16 +5,16 @@
 # Created On       : Mon Jun 17 01:10:11 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Tue Sep 23 10:41:06 2003
+# Last Modified On : Tue Sep 23 18:36:02 2003
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 203
+# Update Count     : 204
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
 #
 #
 #
-#    $Id: make-kpkg,v 1.91 2003/09/23 15:42:41 srivasta Exp $
+#    $Id: make-kpkg,v 1.92 2003/09/24 07:12:40 srivasta Exp $
 #
 require 5.002;
 use strict;
@@ -29,7 +29,7 @@ make-kpkg - build Debian kernel packages from Linux kernel sources.
 ($main::MYNAME     = $main::0) =~ s|.*/||;
 $main::Author      = "Manoj Srivastava";
 $main::AuthorMail  = "srivasta\@debian.org";
-$main::Version     = '$Revision: 1.91 $ ';
+$main::Version     = '$Revision: 1.92 $ ';
 
 my $added_modules='';
 my $added_patches='';
@@ -902,7 +902,7 @@ EOMSG
       }
 
       $temp_string = `egrep '^EXTRAVERSION +=' Makefile 2>/dev/null `;
-      if ($temp_string =~ m/EXTRAVERSION\s*=\s*(\w+)/) {
+      if ($temp_string =~ m/EXTRAVERSION\s*=\s*(\S+)/) {
 	$extra_version = $1;
       }
 
