@@ -1,3 +1,9 @@
+kernel-package (6.14) unstable; urgency=low
+
+  * Darn it!. Used () in regexp instead of [].
+
+ -- Manoj Srivastava <srivasta@debian.org>  Thu, 20 May 1999 23:54:53 -0500
+
 kernel-package (6.13) unstable; urgency=low
 
   * Typo fixes for powerpc stuff.

@@ -5,16 +5,16 @@
 # Created On       : Mon Jun 17 01:10:11 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Sat May 15 00:28:27 1999
+# Last Modified On : Thu May 20 23:54:21 1999
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 123
+# Update Count     : 124
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
 #
 #
 #
-#    $Id: make-kpkg,v 1.25 1999/05/19 16:54:01 srivasta Exp $
+#    $Id: make-kpkg,v 1.26 1999/05/21 04:55:10 srivasta Exp $
 #
 require 5.002;
 use strict;
@@ -29,7 +29,7 @@ make-kpkg - build Debian kernel packages from Linux kernel sources.
 ($main::MYNAME     = $main::0) =~ s|.*/||;
 $main::Author      = "Manoj Srivastava";
 $main::AuthorMail  = "srivasta\@debian.org";
-$main::Version     = '$Revision: 1.25 $ ';
+$main::Version     = '$Revision: 1.26 $ ';
 
 my $help_opt=0; 
 my $revision=0; 
@@ -557,7 +557,7 @@ EOERR1
   if ($revision){
     $command .= " DEBIAN_REVISION=$revision ";
 
-    if ($revision !~ m/^(\w\.\+)+$/o)
+    if ($revision !~ m/^[\w\.\+]+$/o)
       {
 	print STDERR " Error: The revision string may only contain\n";
 	print STDERR " alphanumerics and  the  characters  +  .\n";
