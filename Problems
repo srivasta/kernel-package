@@ -1,5 +1,5 @@
 
-    $Id: Problems,v 1.5 1997/12/01 19:52:02 srivasta Exp $
+    $Id: Problems,v 1.6 1998/03/05 22:37:58 srivasta Exp $
 
  This is an (incomplete) list of problems that people have encountered
  in the past while using kernel-package. Please remember to configure
@@ -96,8 +96,28 @@
        the documentation; and you can add epochs to your custom kernel
        just as well as the upstream maintainers.
 
-     i) The build keeps erring out. It fails with the following:
-	objdump:  illegal option -- k
+    i) The build keeps erring out. It fails with the following:
+       objdump:  illegal option -- k
 
 
 	rm `which encaps`
+
+    j) build fails with a bizzarre error talking about /bin/ls and tab
+       sizes = Text:
+make[3]: Leaving directory `/usr/src/kernel-source-2.0.32/arch/i386/math-emu'
+make[2]: Leaving directory `/usr/src/kernel-source-2.0.32/arch/i386/math-emu'
+ld -m elf_i386 -Ttext 0x100000 -e stext arch/i386/kernel/head.o init/main.o in
+it/version.o \
+        arch/i386/kernel/kernel.o arch/i386/mm/mm.o kernel/kernel.o mm/mm.o fs/fs.o ipc/ipc.o net/network.a \
+        fs/filesystems.a \
+        drivers/block/block.a drivers/char/char.a drivers/net/net.a drivers/cdrom/cdrom.a drivers/pci/pci.a arch/i386/math-emu/math.a \
+         /usr/src/kernel-source-2.0.32/arch/i386/lib/lib.a /usr/src/kernel-source-2.0.32/lib/lib.a /usr/src/kernel-source-2.0.32/arch/i386/lib/lib.a -o vmlinux
+/usr/src/kernel-source-2.0.32
+/bin/ls: invalid tab size: text
+make[1]: *** [vmlinux] Error 1
+make[1]: Leaving directory `/usr/src/kernel-source-2.0.32'
+make: *** [all] Error 2
+
+	make-kpkg --zimage <other options> kernel_image
+	This is truly a weird error message for machines that need
+	zImage rahter than the default bzImage
