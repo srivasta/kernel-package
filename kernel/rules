@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.105 2000/12/01 00:41:29 srivasta Exp $
+## $Id: rules,v 1.106 2000/12/19 06:33:16 srivasta Exp $
 ###############################################################################
 
 ifdef ARCH
@@ -26,7 +26,7 @@ export DEB_BUILD_GNU_TYPE  := $(shell dpkg-architecture $(ha) -qDEB_BUILD_GNU_TY
 export DEB_HOST_ARCH       := $(shell dpkg-architecture $(ha) -qDEB_HOST_ARCH)
 export DEB_HOST_GNU_CPU    := $(shell dpkg-architecture $(ha) -qDEB_HOST_GNU_CPU)
 export DEB_HOST_GNU_SYSTEM := $(shell dpkg-architecture $(ha) -qDEB_HOST_GNU_SYSTEM)
-export DEB_HOST_GNU_TYPE   := $(shell dpkg-architecture $(ha)-qDEB_HOST_GNU_TYPE)
+export DEB_HOST_GNU_TYPE   := $(shell dpkg-architecture $(ha) -qDEB_HOST_GNU_TYPE)
 
 
 #
@@ -707,14 +707,21 @@ TAR_SUFFIX := $(shell \
          echo gz; \
       fi )
 
+STOP_FOR_BIN86 = NO
 CONTROL=$(DEBDIR)/Control
+ifeq ($(strip $(architecture)),i386)
 NEED_BIN86 := $(shell if dpkg --compare-versions \
                   $(VERSION).$(PATCHLEVEL) lt 2.4 >/dev/null 2>&1; \
                   then echo YES; fi)
 ifeq ($(strip $(NEED_BIN86)),YES)
 CONTROL=$(DEBDIR)/Control.bin86
+HAVE_BIN86 := $(shell if test -x /usr/bin/as86; then echo YES; \
+                      else echo NO; fi )
+ifeq ($(strip $(HAVE_BIN86)),NO)
+STOP_FOR_BIN86 = YES
 endif
-
+endif
+endif
 
 # Bug out if the version number id not all lowercase
 lc_version = $(shell echo $(version) | tr A-Z a-z)
@@ -752,6 +759,16 @@ kernel-image kernel-doc kernel_doc stamp-doc buildpackage kernel-image-deb debia
 	@echo "$(HAVE_VALID_PACKAGE_VERSION)"
 	@echo ""
 	@echo "Please re-read the README file and try again."
+else
+ifeq ($(strip $(STOP_FOR__BIN86)),YES)
+# Hah! we need bin 86, but it aint here
+build configure clean binary kernel_source kernel-source kernel-headers\
+stamp-source kernel_headers stamp-headers kernel_image stamp-image \
+kernel-image kernel-doc kernel_doc stamp-doc buildpackage kernel-image-deb debian:
+	@echo "You Need to install the package bin86 before you can "
+	@echo "compile the kernel on this machine"
+	@echo ""
+	@echo "Please install bin86 and try again."
 else
 all build: configure stamp-build
 stamp-build:
@@ -1141,6 +1158,9 @@ ifeq ($(strip $(do_clean)),YES)
 	rm -f stamp-build
 endif
 	touch stamp-image
+
+# This for STOP_FOR_BIN86
+endif
 
 # This endif is for HAVE_VALID_PACKAGE_VERSION
 endif
