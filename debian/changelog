@@ -1,3 +1,9 @@
+kernel-package (8.016) unstable; urgency=low
+
+  * Added explanatory text to the make-kpkg manual page.     closes: Bug#169122
+
+ -- Manoj Srivastava <srivasta@debian.org>  Thu, 14 Nov 2002 17:30:40 -0600
+
 kernel-package (8.015) unstable; urgency=low
 
   * Fix typo in make-kpkg that prevented running code for detecting version
