@@ -5,16 +5,16 @@
 # Created On       : Sat Apr 27 05:42:43 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Mon Jun  2 15:13:59 1997
+# Last Modified On : Sat Dec 13 12:17:13 1997
 # Last Machine Used: tiamat.datasync.com
-# Update Count     : 9
+# Update Count     : 13
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
 # 
 # 
 #
-#    $Id: include.postinst,v 1.2 1997/06/03 03:33:19 srivasta Exp $
+#    $Id: include.postinst,v 1.3 1997/12/13 18:53:14 srivasta Exp $
 #
 
 
@@ -22,6 +22,7 @@ $|=1;
 
 # Predefined values:
 my $package="=P";
+my $version="=V";
 
 # Ignore all invocations uxcept when called on to configure.
 exit 0 unless ($ARGV[0] && $ARGV[0] =~ /configure/);
@@ -39,6 +40,20 @@ if (-e 'linux' && ! -l 'linux') {
        symbolic link, possibly from an old package or a left-over from a 
        user installed kernel. Please remove /usr/src/linux and try to
        reconfigure $package.  
+
+ Please Hit return to continue.
+EOF
+  $answer = <STDIN>;
+  exit 1;
+}
+
+if (-e "linux-$version" && ! -l "linux-$version" ) {
+  my $answer;
+  print STDERR <<"EOF";
+ Error configuring $package: /usr/src/linux-$version does not seem to
+       be a symbolic link, possibly from an old package or a left-over
+       from a user installed kernel. Please remove
+       /usr/src/linux-$version and try to reconfigure $package.
 
  Please Hit return to continue.
 EOF
@@ -93,7 +108,8 @@ if (! -d "$package") {
   my $answer;
   print STDERR "I could not find the directory /usr/src/$package.\n";
   print STDERR "This is very, very, wrong. I'm not changing the \n";
-  print STDERR "/usr/src/linux link.\n\n";
+  print STDERR "/usr/src/linux link (or the /usr/src/linux-$version \n";
+  print STDERR "link either). \n";
   print STDERR "Please Hit return to continue.\n";
   $answer = <STDIN>;
   exit 1;
@@ -108,9 +124,25 @@ ERR
       exit 1;
     }
   }
+  if (-e "linux-$version" ){
+    if (! unlink "linux-$version") {
+      print STDERR <<"ERR";
+  Could not remove /usr/src/linux-$version to relink:$!
+  Please change permissions and reconfigure $package.
+ERR
+      exit 1;
+    }
+  }
   if (! symlink $package, 'linux') {
     print STDERR <<"ERR";
   Could not link /usr/src/$package to /usr/src/linux.  
+  Please add the link by hand.
+ERR
+  ;
+  }
+  if (! symlink $package, "linux-$version") {
+    print STDERR <<"ERR";
+  Could not link /usr/src/$package to /usr/src/linux-$version.  
   Please add the link by hand.
 ERR
   ;

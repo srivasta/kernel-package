@@ -19,7 +19,7 @@ Package: kernel-source-=V
 Architecture: all
 Section: devel
 Priority: optional
-Provides: kernel-source, kernel-headers
+Provides: kernel-source, kernel-headers,  kernel-headers-=V
 Depends: binutils | gas
 Recommends: libc-dev, gcc
 Suggests: ncurses-dev, tk-dev

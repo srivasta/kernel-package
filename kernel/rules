@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Tue Dec  9 23:14:44 1997
+## Last Modified On : Sat Dec 13 12:08:13 1997
 ## Last Machine Used: tiamat.datasync.com
-## Update Count	    : 206
+## Update Count	    : 207
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.18 1997/12/10 05:30:26 srivasta Exp $
+## $Id: rules,v 1.19 1997/12/13 18:53:14 srivasta Exp $
 ###############################################################################
 
 # The version of kernel-package this belongs to
@@ -300,7 +300,7 @@ stamp-source: configure
 	$(make_directory) debian/tmp-source/DEBIAN
 	$(make_directory) debian/tmp-source/usr/src/$(package)
 	$(make_directory) debian/tmp-source/usr/doc/$(package)
-	sed -e 's/=P/$(package)/g' \
+	sed -e 's/=P/$(package)/g' -e 's/=V/$(version)/g' \
 	    $(DEBDIR)/include.postinst > debian/tmp-source/DEBIAN/postinst
 	chmod 755 debian/tmp-source/DEBIAN/postinst
 	sed -e 's/=P/$(package)/g' \
@@ -356,7 +356,7 @@ stamp-headers: configure
 	$(make_directory) debian/tmp-headers/DEBIAN
 	$(make_directory) debian/tmp-headers/usr/src/$(h_package)
 	$(make_directory) debian/tmp-headers/usr/doc/$(h_package)
-	sed -e 's/=P/$(h_package)/g' \
+	sed -e 's/=P/$(h_package)/g' -e 's/=V/$(version)/g' \
 		$(DEBDIR)/include.postinst > debian/tmp-headers/DEBIAN/postinst
 	chmod 755 debian/tmp-headers/DEBIAN/postinst
 	sed -e 's/=P/$(h_package)/g' \

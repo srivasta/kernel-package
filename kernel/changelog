@@ -1,5 +1,44 @@
 kernel-source-=V (=D) unstable; urgency=low
 
+  * Important changes for kernel-source-* and kernel-header-* packages: now
+    kernel-source-* packages also provide the exact kernel-header-* (libc6
+    need only depend on kernel-header-* now.
+  * The kernel-header-* and kernel-source-* packages now also maitain the
+    /usr/src/linux-X.YY.ZZ links (in addition to the /usr/src/linux links)
+    This is used in the libc6 package.
+
+ -- Manoj Srivastava <srivasta@debian.org>  Sat, 13 Dec 1997 12:46:47 -0600
+
+kernel-source-0.26 (1.01) unstable; urgency=low
+
+  * Added HAM modules to the module we know about, these were introduced
+    in 2.1.70.
+
+ -- Manoj Srivastava <srivasta@debian.org>  Tue,  9 Dec 1997 23:27:04 -0600
+
+kernel-source-0.25 (1.01) unstable; urgency=low
+
+  * Ignore unmounted devices while looking for a root file system. Much
+    thanks to Thomas Kocourek <tko@westgac3.dragon.com> for noticing
+    this. 
+  * Make sure that the copyright file for the kernel-doc package is not
+    compressed. closes:Bug#14403,Bug#14405
+  * Added internal utility kpkg-vercheck to test the validity of the
+    package version.
+
+ -- Manoj Srivastava <srivasta@debian.org>  Mon, 10 Nov 1997 10:37:08 -0600
+
+kernel-source-0.24 (1.01) unstable; urgency=low
+
+  * Install the README.headers in the right place for the source
+    package. closes:Bug#14552.
+  * Handle the new NLS_MODULES that have appeared in the newest 2.1.6x
+    kernels. closes:Bug#14527.
+
+ -- Manoj Srivastava <srivasta@debian.org>  Wed,  5 Nov 1997 23:30:48 -0600
+
+kernel-source-0.23 (1.-0) unstable; urgency=low
+
   * Added README.headers to the kernel-source package as well, since the
     information _is_ relevant to compiling kernels. Since kernel soiurce
     packages have higher visibility than kernel header packages, this may
