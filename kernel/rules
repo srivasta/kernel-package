@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Tue Sep  8 17:01:36 1998
+## Last Modified On : Thu Sep 17 10:27:21 1998
 ## Last Machine Used: tiamat.datasync.com
-## Update Count	    : 363
+## Update Count	    : 364
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.50 1998/09/11 17:37:37 srivasta Exp $
+## $Id: rules,v 1.51 1998/09/17 15:30:40 srivasta Exp $
 ###############################################################################
 
 # The version of kernel-package this belongs to
@@ -99,11 +99,11 @@ endif
 endif
 
 ifeq ($(strip $(architecture)),sparc)
-kimage := vmlinux
+kimage := vmlinuz
 loaderdep=silo
 loader=silo
 loaderdoc=SiloDefault
-target = $(kimage)
+target = vmlinux
 NEED_DIRECT_GZIP_IMAGE=YES
 kimagesrc = vmlinux
 kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
