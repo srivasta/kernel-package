@@ -22,7 +22,7 @@
 .\" USA.
 .\"
 .\"
-.\"    $Id: make-kpkg.8,v 1.6 1997/12/24 19:08:30 srivasta Exp $
+.\"    $Id: make-kpkg.8,v 1.7 1998/01/21 09:25:47 srivasta Exp $
 .\"
 .TH MAKE\-KPKG 8 "May 2 1997" "Debian" "Debian GNU/Linux manual"
 .SH NAME
@@ -46,7 +46,20 @@ Print out a usage message.
 .BR \-\-revision " number"
 Sets the Debian revision number for the packages produced to the argument
 .BR number.
-This has certain constraints: it may contain only
+This has certain constraints: It only has an effect during the
+configure phase (in other words, if a file called 
+.I stamp\-configure
+exists, this option has no effect \-\- run 
+.B make\-kpkg clean 
+or manually
+remove 
+.I stamp\-configure 
+for it to have an effect). So, if you re\-run 
+.B make\-kpkg 
+with a
+different revision number, 
+you have to reconfigure the kernel.
+It may contain only
 alphanumerics and the characters + . (full stop, and plus) and must
 contain a digit.
 .BR  NOTE:
