@@ -163,10 +163,11 @@
 
 	The reason I say that the solution is unraveling at the edges
  is that the kernel header files are getting to be quite architecture
- dependent. We still want to make libc6-dev include headers from a
- well known stable kernel source. But there is no one set of headers
- to install, since different architectures need different (sometimes
- radically different) files. 
+ dependent. We still want to make libc6-dev include headers (or depend
+ on a package that includes these headers) from a well known stable
+ kernel source. But there is no one set of headers to install, since
+ different architectures need different (sometimes radically
+ different) files.
 
 	If libc development packages continued to include kernel
  headers explicitly, we would need different headers for different
@@ -276,9 +277,10 @@
  again why a separation between the kernel and application headers was
  desirable, the decision was made to ship *ALL* headers, irrspective
  of architecture, for a particular kernel version in libc6 package
- itself. So, no external packages. So much for the elegance of the old
- libc6 method. We are now back to brute force, including all headers
- for every architecture. 
+ itself (and, later, in a package that libc-dev depends on -- namely,
+ linux-kernel-headers). So, no external packages. So much for the
+ elegance of the old libc6 method. We are now back to brute force,
+ including all headers for every architecture.
 
 
   Authors response to complaints that Debian is doing it's own thing

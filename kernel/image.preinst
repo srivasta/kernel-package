@@ -5,9 +5,9 @@
 # Created On       : Sun Jun 14 03:38:02 1998
 # Created On Node  : tiamat.datasync.com
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Tue Nov 18 16:28:47 2003
-# Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 58
+# Last Modified On : Thu Feb  5 12:20:06 2004
+# Last Machine Used: glaurung.internal.golden-gryphon.com
+# Update Count     : 60
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
@@ -87,7 +87,7 @@ exit 1 unless $ARGV[0] =~ /(install|upgrade)/;
 
 # Official images may silently upgrade
 if ($official_image =~ /^\s*YES\s*$/o
-    && $ARGV[0] =~ /upgrade/) {
+    && ($ARGV[0] =~ /upgrade/ || $arch =~ m/powerpc/)) {
     $silent_modules = 'Yes';
   }
 
@@ -271,7 +271,7 @@ got unpacked before I did, then this is pretty benign.  Unfortunately,
 I can't tell the difference.
 
 If /lib/modules/$version belongs to a old install of
-kenel-image-$version, then this is your last chance to abort the
+kernel-image-$version, then this is your last chance to abort the
 installation of this kernel image (nothing has been changed yet).
 
 If this directory is because of stand alone modules being installed

@@ -19,7 +19,7 @@ Firstly, you will need gcc, the libc development package (libc5-dev or
 libc6-dev at the time of writing), and, on Intel platforms, bin86. [If
 you use the menuconfig target of make, you will need ncursesX.X-dev,
 and make xconfig also requires either tkX.X-dev for 2.4.X kernels, or
-libqt3-mt-dev and g++ >= 3.0 for the new 2.6 kenel versions, and 2.6.X
+libqt3-mt-dev and g++ >= 3.0 for the new 2.6 kernel versions, and 2.6.X
 kernels also have an additional option, make gconfig, which requires
 libglade2-dev, and other packages these depend on]
 
@@ -955,7 +955,7 @@ haven't done anything with them yet, but they're installed.
      either at this point.
 
 6b. Exit and save your configuration. This will create a hidden file
-    named ".config" in the "/usr/local/src/kenel-source-2.4.18"
+    named ".config" in the "/usr/local/src/kernel-source-2.4.18"
     directory. You could edit this file directly to make changes to
     your configuration, but I wouldn't. All that this step (6 and 6b))
     has done is to set up this configuration file. This file is read

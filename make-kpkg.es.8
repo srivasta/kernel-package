@@ -28,8 +28,7 @@
 .\" (c) 2003 Software in the Public Interest
 .\" Esta traducción ha sido realizada por Rubén Porras Campo <nahoo@inicia.es>
 .\" Está basada en la página de manual original:
-.\" versión 1.10 del CVS de
-.\" /cvs/debian-doc/manpages/english/kernel-package/make-kpkg.8
+.\" versisn 8.079 de kernel-package
 .\" Revisada por Rudy Godoy <rudy@kernel-panik.org>
 
 .TH MAKE\-KPKG 1 "14 noviembre de 2002" "Debian" "manual Debian GNU/Linux"
@@ -100,7 +99,7 @@ para la mayoría de la gente, ya que no hay ningún tipo de comprobación del númer
 de versión, y dpkg y otros pueden atascar al final de la compilación a menos que
 uno sepa lo que está haciendo. Opcionalmente, puede anteponer a la revisión un
 dígito seguido de dos puntos (:). Por omisión es
-.B 1.00.Custom
+.B 10.00.Custom
 a menos que esté establecida la variable de entorno
 .B DEBIAN_REVISION_MANDATORY
 , en cuyo caso se genera un error si no se especifica un número de versión, bien
@@ -295,7 +294,7 @@ o
 .BR \-\-config " objetivo"
 Cambia el tipo de configuración hecha desde el \f(CWoldconfig\fR por omisión.
 \fIobjetivo\fR debe ser uno de \f(CWoldconfig\fR, \f(CWconfig\fR, \f(CWmenuconfig\fR,
-\f(CWxconfig\fR; o \f(CWold\fR, \f(CWmenu\fR, o \f(CWx\fR.
+\f(CWgconfig\fR, \f(CWxconfig\fR; o \f(CWold\fR, \f(CWmenu\fR, \f(CWg\fR o \f(CWx\fR.
 .Sp
 Esta opción es particularmente útil cuando se usa \s-1PATCH_THE_KERNEL\s0 por si
 alguno de los parches cambia las opciones de configuración disponibles.
@@ -341,6 +340,9 @@ paquete. No tiene efecto cuando
 El mismo efecto se puede conseguir estableciendo la
 variable de entorno
 .B INITRD
+a cualquier valor no nulo. Esta opcisn provoca un aviso, para evitar el aviso
+establezca la variable de entorno
+.B INITRD_OK
 a cualquier valor no nulo.
 Para evitar el aviso en tiempo de instalación, lea kernel-img.conf(5), y añada
 una directiva
@@ -385,6 +387,17 @@ introducirse además con el prefijo \- o \-\-, entre una opción y su valor se
 puede usar tanto un espacio como un símbolo '='. También puede usar la forma
 opción=valor; para más detalles sobre ésta y otras variantes soportadas, lea la
 página del manual Getopt::Long (3perl).
+.TP
+.B CONCURRENCY_LEVEL
+Si esta definida, esta variable establece el nivel de concurrencia usado por
+make para compilar el nzcleo y el conjunto de msdulos, usando la opcisn
+.I -j
+para el make del objetivo
+.B build
+de
+.B make-kpkg.
+Si se usa debe ser un entero (pequeqo).
+
 .SH OBJETIVOS
 .TP
 .B clean
@@ -605,6 +618,7 @@ Las siguientes variables (documentadas arriba) afectan a
 .I SOURCE_CLEAN_HOOK
 .I MODULE_LOC
 .I INITRD_OK
+.I CONCURRENCY_LEVEL
 .SH FICHEROS
 Aparte de las opciones de ejecución, el fichero 
 .I debian.rules

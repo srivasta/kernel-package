@@ -51,6 +51,21 @@ make\-kpkg --rootcmd fakeroot kernel_image
 .sp 1
 The Debian package file is created in the parent directory of the
 kernel source directory where this command is run.
+.PP
+Also, please note that some versions of gcc do not interact well with
+the kernel sources (gcc 2.95 has problems compiling the kernel without
+the flag 
+.I '-fno-strict-aliasing'. 
+This issue has been taken care of for
+recent kernels (2.2 and 2.4 series are fine) (I think you may have to
+edit the makefile for older kernels, or something).  You may control
+which version of gcc used in kernel compilation by setting the
+Makefile variables CC and HOSTCC in the top level kernel Makefile. You
+can do this simply by 
+.PP
+  % MAKEFLAGS="CC=gcc-2.95" make-kpkg ...
+.PP
+(please see the top level kernel Makefile for variables that can be set).
 .SH OPTIONS
 .B \-\-help
 Print out a usage message.

@@ -5,9 +5,9 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Sun Jan 11 11:54:53 2004
+## Last Modified On : Thu Feb  5 13:47:54 2004
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count	    : 655
+## Update Count	    : 658
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
@@ -124,6 +124,8 @@ HAS_ILLEGAL_EXTRA_VERSION =$(shell                         \
  and  the  characters  - +  . The current value is: $(EXTRA_VERSION). Aborting.)
   endif
 endif
+
+AM_OFFICIAL := $(shell if [ -f debian/official ]; then echo YES; fi )
 
 ######################################################################
 ###          Architecture specific stuff                           ###
@@ -361,7 +363,9 @@ ifeq ($(strip $(architecture)),sparc)
   NEED_DIRECT_GZIP_IMAGE = YES
   kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
   DEBCONFIG = $(CONFDIR)/config.sparc
-  ARCH_IN_NAME = YES
+  ifeq (,$(APPEND_TO_VERSION))
+    ARCH_IN_NAME = YES
+  endif
 
   ifeq (,$(KPKG_SUBARCH))
     ifeq (sparc64,$(strip $(shell uname -m)))
@@ -790,8 +794,6 @@ endif
 endif
 endif
 endif
-
-AM_OFFICIAL := $(shell if [ -f debian/official ]; then echo YES; fi )
 
 # Hmm. The version that we have computed *MUST* match the one that is in the
 # changelog.
@@ -1956,6 +1958,11 @@ endif
                         $(INT_IMAGE_DESTDIR)/System.map-$(version)
 	test ! -f System.map ||  chmod 644                                     \
                         $(INT_IMAGE_DESTDIR)/System.map-$(version)
+	# For LKCD enabled kernels
+	test ! -f Kerntypes ||  cp Kerntypes                                   \
+                        $(INT_IMAGE_DESTDIR)/Kerntypes-$(version)
+	test ! -f Kerntypes ||  chmod 644                                      \
+                        $(INT_IMAGE_DESTDIR)/Kerntypes-$(version)
 ifeq ($(strip $(delete_build_link)),YES)
 	rm -f $(IMAGE_TOP)/lib/modules/$(version)/build
 endif
