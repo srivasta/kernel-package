@@ -14,7 +14,7 @@
 #
 #
 #
-#    $Id: make-kpkg,v 1.30 1999/07/14 16:06:05 srivasta Exp $
+#    $Id: make-kpkg,v 1.31 1999/08/19 07:02:29 srivasta Exp $
 #
 require 5.002;
 use strict;
@@ -29,7 +29,7 @@ make-kpkg - build Debian kernel packages from Linux kernel sources.
 ($main::MYNAME     = $main::0) =~ s|.*/||;
 $main::Author      = "Manoj Srivastava";
 $main::AuthorMail  = "srivasta\@debian.org";
-$main::Version     = '$Revision: 1.30 $ ';
+$main::Version     = '$Revision: 1.31 $ ';
 
 my $help_opt=0; 
 my $revision=0; 
@@ -305,7 +305,7 @@ Use one of --zimage or --bzimage, or none, but not both.
 Option Format:
 The options may be shortened to the smallest unique string, and may
 be entered with either a - or a -- prefix, and you may use a space
-betweenan option string and a value.
+between an option string and a value.
 
 Version: $main::Version
 $main::Author <$main::AuthorMail>
@@ -517,7 +517,10 @@ sub main (){
   $rules_file = "/usr/share/kernel-package/rules";
   
   $ret = GetOptions(%option_ctl);
-  die "$usage\n" unless $ret;
+  if(!$ret) {
+	print "$usage\n" ;
+	exit 1;
+  }
   if ($help_opt || $targ_opt){
     print "$usage" if $help_opt;
     print "$targets_help" if $targ_opt;
@@ -566,7 +569,8 @@ sub main (){
   }
   if ($errors){
     print STDERR "Error: $errors\n";
-    die "$targets_help\n";
+    print "$targets_help\n";
+    exit 1;
   }
   # See if we are running in a linux kernel directory
   if (!(-d "drivers" && -d "kernel" && -d "fs" && -d "include/linux")){
