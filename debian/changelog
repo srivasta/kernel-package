@@ -1,3 +1,9 @@
+kernel-package (7.90) unstable; urgency=low
+
+  * clarified the --added-patches option.                    closes: Bug#135254
+
+ -- Manoj Srivastava <srivasta@debian.org>  Fri, 22 Feb 2002 14:05:45 -0600
+
 kernel-package (7.89) unstable; urgency=low
 
   * Bah. Make vars are $(BLAH), not $BLAH. Silly typos. Thanks for the
