@@ -255,6 +255,12 @@ créé et pointera sur /usr/src/kernel\-headers\-X.Y.ZZ, que ces en-têtes
 aient été installées ou non. Il n'y a pas de valeur par défaut, on ne crée 
 pas des liens symboliques potentiellement ballants par défaut.
 .TP
+.B relink_source_link
+Cette option manipule le lien «\ source\ » créé par les noyaux 
+récents. Si le lien est un lien ballant, il sera supprimé lors de 
+l'installation. La valeur par défaut est de re-lier (supprimer) le 
+lien «\ source\ » («\ YES\ »).
+.TP
 .B mkimage
 La valeur sera une commande pour créer une image initrd, un répertoire
 étant donné. Elle est passée au programme
