@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.54 1998/10/16 17:38:44 srivasta Exp $
+## $Id: rules,v 1.55 1998/10/16 18:54:56 srivasta Exp $
 ###############################################################################
 
 # The version of kernel-package this belongs to
@@ -454,7 +454,7 @@ endif
 	test -f .config || (test -f .config.save && \
 		            cp -pf .config.save .config) || \
 			true
-	test -f .config || cp -pf $(DEBDIR)/config .config
+	test -f .config || cp -pf $(CONFIG_FILE) .config
 
 
 clean:
