@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.134 2001/09/08 21:22:39 srivasta Exp $
+## $Id: rules,v 1.135 2001/09/08 23:57:06 srivasta Exp $
 ###############################################################################
 
 ifdef ARCH
@@ -902,7 +902,8 @@ $(error Error. The version number $(strip $(version)) is not all \
 endif
 
 # export variables
-export root_cmd FLAVOUR INT_SUBARCH APPEND_TO_VERSION UNSIGN_CHANGELOG  UNSIGN_SOURCE ROOT_CMD MODULE_LOC EXTRAVERSION
+export root_cmd FLAVOUR INT_SUBARCH APPEND_TO_VERSION UNSIGN_CHANGELOG  \
+       UNSIGN_SOURCE ROOT_CMD MODULE_LOC EXTRAVERSION
 
 
 ifeq ($(strip $(IN_KERNEL_DIR)),)
@@ -928,7 +929,8 @@ ifneq ($(strip $(HAVE_VALID_PACKAGE_VERSION)),YES)
 # Hah! Bogus version number
 build configure clean binary kernel_source kernel-source kernel-headers\
 stamp-source kernel_headers stamp-headers kernel_image stamp-image \
-kernel-image kernel-doc kernel_doc stamp-doc buildpackage kernel-image-deb debian:
+kernel-image kernel-doc kernel_doc stamp-doc buildpackage kernel-image-deb \
+debian:
 	@echo "Problems ecountered with the version number $(debian)."
 	@echo "$(HAVE_VALID_PACKAGE_VERSION)"
 	@echo ""
@@ -938,7 +940,8 @@ ifeq ($(strip $(STOP_FOR__BIN86)),YES)
 # Hah! we need bin 86, but it aint here
 build configure clean binary kernel_source kernel-source kernel-headers\
 stamp-source kernel_headers stamp-headers kernel_image stamp-image \
-kernel-image kernel-doc kernel_doc stamp-doc buildpackage kernel-image-deb debian:
+kernel-image kernel-doc kernel_doc stamp-doc buildpackage kernel-image-deb \
+debian:
 	@echo "You Need to install the package bin86 before you can "
 	@echo "compile the kernel on this machine"
 	@echo ""
@@ -1097,6 +1100,14 @@ endif
 # file at this point
 
 clean:
+	@test $$(id -u) -ne 0 -o "X$(int_get_root)" != "X"  || \
+		(echo need root priviledges; exit 1)
+	@test $$(id -u) -ne 0 && $(int_get_root) $(deb_rule) real_stamp_clean \
+                || true
+	@test $$(id -u) -eq 0 &&                 $(deb_rule) real_stamp_clean \
+                || true
+
+real_stamp_clean:
 ifeq ($(strip $(patch_the_kernel)),YES)
 ifneq ($(strip $(valid_unpatches)),)
 	-for patch in $(valid_unpatches) ; do              \
@@ -1143,7 +1154,7 @@ endif
             $(MAKE) $(FLAV_ARG) $(EXTRAV_ARG) ARCH=$(KERNEL_ARCH) distclean
 	test ! -f config.precious || mv -f config.precious .config
 	rm -rf $(DIRS_TO_CLEAN)
-	test -f stamp-building || test -f debian/official || rm -rf debian
+	-test -f stamp-building || test -f debian/official || rm -rf debian
 
 binary:       binary-indep binary-arch
 binary-indep: kernel_source kernel_doc
@@ -1152,8 +1163,14 @@ binary-arch:  kernel_image  kernel_headers
 
 kernel-source kernel_source: stamp-source
 stamp-source: debian
-	@test $(id -u) -ne 0 -o "X$(int_get_root)" != "X" || \
+	@test $$(id -u) -ne 0 -o "X$(int_get_root)" != "X"  || \
 		(echo need root priviledges; exit 1)
+	@test $$(id -u) -ne 0 && $(int_get_root) $(deb_rule) real_stamp_source\
+                || true
+	@test $$(id -u) -eq 0 &&                 $(deb_rule) real_stamp_source\
+                || true
+
+real_stamp_source:
 	test -f stamp-debian || $(deb_rule) debian
 	rm -rf $(SOURCE_TOP)
 	$(make_directory) $(SOURCE_TOP)/DEBIAN
@@ -1165,8 +1182,8 @@ stamp-source: debian
 	sed -e 's/=P/$(package)/g' -e 's/=V/$(version)/g' \
 	    $(DEBDIR)/include.prerm > $(SOURCE_TOP)/DEBIAN/prerm
 	chmod 755 $(SOURCE_TOP)/DEBIAN/prerm
-	$(install_file) debian/changelog      	 $(SOURCE_DOC)/changelog.Debian
-	gzip -9qf                             	 $(SOURCE_DOC)/changelog.Debian
+	$(install_file) debian/changelog         $(SOURCE_DOC)/changelog
+	gzip -9qf                             	 $(SOURCE_DOC)/changelog
 	$(install_file) $(DEBDIR)/README      	 $(SOURCE_DOC)/debian.README
 	gzip -9qf                             	 $(SOURCE_DOC)/debian.README
 	$(install_file) $(DEBDIR)/README.grub 	 $(SOURCE_DOC)/README.grub
@@ -1183,7 +1200,7 @@ stamp-source: debian
 	$(install_file) $(DEBDIR)/sample.module.control \
                                             $(SOURCE_DOC)/sample.module.control
 	gzip -9qf                           $(SOURCE_DOC)/sample.module.control
-	$(install_file) README   	           $(SOURCE_DOC)/README
+	$(install_file) README                     $(SOURCE_DOC)/README
 	gzip -9qf                                  $(SOURCE_DOC)/README
 	$(install_file) $(DEBDIR)/Flavours         $(SOURCE_DOC)/Flavours
 	gzip -9qf                                  $(SOURCE_DOC)/Flavours
@@ -1209,19 +1226,18 @@ stamp-source: debian
 	fi
 	if test -f README.Debian ; then \
            $(install_file) README.Debian $(SOURCE_DOC)/README.Debian.1st; \
-	   gzip -9qf $(SOURCE_DOC)/README.Debian.1st;\
+	   gzip -9qf                     $(SOURCE_DOC)/README.Debian.1st;\
 	fi
 	chmod -R og=rX $(SOURCE_TOP)
-	$(int_get_root) chown -R root.root $(SOURCE_TOP)/$(package)
+	chown -R root.root $(SOURCE_TOP)/$(package)
 	(cd $(SOURCE_TOP)/usr/src/; \
-           $(int_get_root) tar $(TAR_COMPRESSION) -cf \
-                                    $(package).tar.$(TAR_SUFFIX) $(package);\
-             $(int_get_root) rm -rf $(package);)
+           tar $(TAR_COMPRESSION) -cf $(package).tar.$(TAR_SUFFIX) $(package);\
+             rm -rf $(package);)
 	dpkg-gencontrol -isp -p$(package) -P$(SOURCE_TOP)/
 	chmod -R og=rX $(SOURCE_TOP)
-	$(int_get_root) chown -R root.root $(SOURCE_TOP)
-	$(int_get_root) dpkg --build $(SOURCE_TOP) $(DEB_DEST)
-	$(int_get_root) rm -f -r $(SOURCE_TOP)
+	chown -R root.root $(SOURCE_TOP)
+	dpkg --build $(SOURCE_TOP) $(DEB_DEST)
+	rm -f -r $(SOURCE_TOP)
 	touch stamp-source
 
 libc-kheaders libc_kheaders: stamp-libc-kheaders
@@ -1231,8 +1247,16 @@ stamp-libc-kheaders: configure
 
 kernel-headers kernel_headers: stamp-headers
 stamp-headers: configure
-	@test $(id -u) -ne 0 -o "X$(int_get_root)" != "X" || \
+	@test $$(id -u) -ne 0 -o "X$(int_get_root)" != "X"  || \
 		(echo need root priviledges; exit 1)
+	@test $$(id -u) -ne 0 && \
+                                $(int_get_root) $(deb_rule) real_stamp_headers\
+                || true
+	@test $$(id -u) -eq 0 && \
+                                                $(deb_rule) real_stamp_headers\
+                || true
+
+real_stamp_headers:
 	test -f stamp-configure || $(deb_rule) configure
 	rm -rf $(HEADER_TOP)
 	$(make_directory) $(HEADER_TOP)/DEBIAN
@@ -1243,19 +1267,19 @@ stamp-headers: configure
 	chmod 755 $(HEADER_TOP)/DEBIAN/postinst
 	sed -e 's/=P/$(h_package)/g' -e 's/=V/$(version)/g' \
 		$(DEBDIR)/include.prerm > $(HEADER_TOP)/DEBIAN/prerm
-	chmod 755 $(HEADER_TOP)/DEBIAN/prerm
+	chmod 755                         $(HEADER_TOP)/DEBIAN/prerm
 	$(install_file) $(DEBDIR)/copyright.headers $(HEADER_DOC)/copyright
-	$(install_file) debian/changelog         $(HEADER_DOC)/changelog.Debian
-	gzip -9qf                                $(HEADER_DOC)/changelog.Debian
+	$(install_file) debian/changelog         $(HEADER_DOC)/changelog
+	gzip -9qf                                $(HEADER_DOC)/changelog
 	$(install_file) $(DEBDIR)/README.headers $(HEADER_DOC)/debian.README
-	gzip -9qf $(HEADER_DOC)/debian.README
+	gzip -9qf                                $(HEADER_DOC)/debian.README
 	$(install_file) .config  	        $(HEADER_DOC)/config-$(version)
 	$(install_file) conf.vars  	        $(HEADER_DOC)/conf.vars 
 	gzip -9qf                               $(HEADER_DOC)/config-$(version)
 	gzip -9qf                               $(HEADER_DOC)/conf.vars
 	if test -f debian/official -a -f debian/README.Debian ; then \
            $(install_file) debian/README.Debian $(HEADER_SRC)/README.Debian ; \
-           gzip -9qf $(HEADER_SRC)/README.Debian ; \
+           gzip -9qf                            $(HEADER_SRC)/README.Debian ; \
            $(install_file) README.Debian $(HEADER_DOC)/README.Debian;\
 	   gzip -9qf                     $(HEADER_DOC)/README.Debian;\
 	fi
@@ -1269,21 +1293,27 @@ stamp-headers: configure
 	(cd $(HEADER_SRC)/include; rm -f asm; ln -s asm-$(KERNEL_ARCH) asm)
 	dpkg-gencontrol -DArchitecture=$(architecture) -isp \
                         -p$(h_package) -P$(HEADER_TOP)/
-	$(int_get_root) chown -R root.root $(HEADER_TOP)
-	$(int_get_root) chmod -R og=rX $(HEADER_TOP)
-	$(int_get_root) dpkg --build $(HEADER_TOP) $(DEB_DEST)
-	$(int_get_root) rm -rf $(HEADER_TOP)
+	chown -R root.root $(HEADER_TOP)
+	chmod -R og=rX $(HEADER_TOP)
+	dpkg --build $(HEADER_TOP) $(DEB_DEST)
+	rm -rf $(HEADER_TOP)
 	touch stamp-headers
 
 kernel-doc kernel_doc: stamp-doc
 stamp-doc: debian
-	@test $(id -u) -ne 0 -o "X$(int_get_root)" != "X" || \
+	@test $$(id -u) -eq 0  -o "X$(int_get_root)" != "X" || \
 		(echo need root priviledges; exit 1)
+	@test $$(id -u) -ne 0 && $(int_get_root) $(deb_rule) real_stamp_doc\
+                || true
+	@test $$(id -u) -eq 0 &&                 $(deb_rule) real_stamp_doc\
+                || true
+
+real_stamp_doc:
 	test -f stamp-debian || $(deb_rule) debian
 	rm -rf            $(DOC_TOP)
 	$(make_directory) $(DOC_TOP)/DEBIAN
 	$(make_directory) $(DOC_DOC)
-	$(install_file) debian/changelog          $(DOC_DOC)/changelog.Debian
+	$(install_file) debian/changelog          $(DOC_DOC)/changelog
 	$(install_file) $(DEBDIR)/README.doc      $(DOC_DOC)/README.Debian
 	echo "This was produced by kernel-package version $(kpkg_version)." > \
 	         $(DOC_DOC)/Buildinfo
@@ -1304,9 +1334,9 @@ stamp-doc: debian
 	chmod 755 $(DOC_TOP)/DEBIAN/prerm
 	dpkg-gencontrol -isp -p$(d_package) -P$(DOC_TOP)/
 	chmod -R og=rX $(DOC_TOP)
-	$(int_get_root) chown -R root.root $(DOC_TOP)
-	$(int_get_root) dpkg --build $(DOC_TOP) $(DEB_DEST)
-	$(int_get_root) rm -rf $(DOC_TOP)
+	chown -R root.root $(DOC_TOP)
+	dpkg --build $(DOC_TOP) $(DEB_DEST)
+	rm -rf $(DOC_TOP)
 	touch stamp-doc
 
 kernel-image kernel_image: stamp-image
@@ -1317,8 +1347,14 @@ stamp-image: configure build kernel-image-deb
 # seems to create a working .deb with a kernel that gives the correct
 # user name (as opposed to root@...)
 kernel-image-deb:
-	@test $(id -u) -ne 0 -o "X$(int_get_root)" != "X" || \
+	@test $$(id -u) -eq 0  -o  "X$(int_get_root)" != "X" || \
 		 (echo need root priviledges; exit 1)
+	@test $$(id -u) -ne 0 && $(int_get_root) $(deb_rule) real_stamp_image\
+                || true
+	@test $$(id -u) -eq 0 &&                 $(deb_rule) real_stamp_image\
+                || true
+
+real_stamp_image:
 	rm -f -r ./$(IMAGE_TOP) ./$(IMAGE_TOP).deb
 	test -f stamp-configure     || $(deb_rule) configure
 	test -f stamp-build         || $(deb_rule) build
@@ -1344,25 +1380,25 @@ kernel-image-deb:
 	sed -e 's/=V/$(version)/g'    -e 's/=L/$(loader)/g'          \
 	             $(DEBDIR)/image.prerm > $(IMAGE_TOP)/DEBIAN/prerm
 	chmod 755 $(IMAGE_TOP)/DEBIAN/prerm
-	$(install_file) Documentation/Changes 	  $(IMAGE_DOC)/
+	$(install_file) Documentation/Changes $(IMAGE_DOC)/
 	gzip -9qf $(IMAGE_DOC)/Changes 
-	$(install_file) debian/changelog          $(IMAGE_DOC)/changelog.Debian
-	gzip -9qf $(IMAGE_DOC)/changelog.Debian
+	$(install_file) debian/changelog        $(IMAGE_DOC)/changelog
+	gzip -9qf                               $(IMAGE_DOC)/changelog
 ifdef loaderdoc
-	$(install_file) $(DEBDIR)/$(loaderdoc)    $(IMAGE_DOC)/$(loaderdoc)
-	gzip -9qf $(IMAGE_DOC)/$(loaderdoc)
+	$(install_file) $(DEBDIR)/$(loaderdoc)  $(IMAGE_DOC)/$(loaderdoc)
+	gzip -9qf                               $(IMAGE_DOC)/$(loaderdoc)
 endif
-	$(install_file) $(DEBDIR)/README.image    $(IMAGE_DOC)/debian.README
-	gzip -9qf $(IMAGE_DOC)/debian.README
+	$(install_file) $(DEBDIR)/README.image  $(IMAGE_DOC)/debian.README
+	gzip -9qf                               $(IMAGE_DOC)/debian.README
 	$(install_file) $(DEBDIR)/copyright.image $(IMAGE_DOC)/copyright
 	echo "This was produced by kernel-package version $(kpkg_version)." > \
 	         $(IMAGE_DOC)/Buildinfo
-	$(install_file) .config          $(INT_IMAGE_DESTDIR)/config-$(version)
-	$(install_file) conf.vars                 $(IMAGE_DOC)/conf.vars
-	gzip -9qf $(IMAGE_DOC)/conf.vars
+	$(install_file) .config         $(INT_IMAGE_DESTDIR)/config-$(version)
+	$(install_file) conf.vars       $(IMAGE_DOC)/conf.vars
+	gzip -9qf                       $(IMAGE_DOC)/conf.vars
 	if test -f debian/official -a -f debian/README.Debian ; then \
-           $(install_file) debian/README.Debian $(IMAGE_DOC)/README.Debian ; \
-         gzip -9qf $(IMAGE_DOC)/README.Debian;\
+           $(install_file) debian/README.Debian  $(IMAGE_DOC)/README.Debian ; \
+         gzip -9qf                               $(IMAGE_DOC)/README.Debian;\
 	fi
 	if test -f README.Debian ; then \
            $(install_file) README.Debian $(IMAGE_DOC)/README.Debian.1st;\
@@ -1375,7 +1411,7 @@ ifdef MODULES_ENABLED
 ifeq  ($(strip $(HAVE_NEW_MODLIB)),)
 	$(mod_inst_cmds)
 else
-	$(MAKE) $(EXTRAV_ARG) INSTALL_MOD_PATH=$(INSTALL_MOD_PATH) \
+	$(MAKE) $(EXTRAV_ARG) INSTALL_MOD_PATH=$(INSTALL_MOD_PATH)           \
                 $(CROSS_ARG) modules_install
 endif
 endif
@@ -1389,23 +1425,23 @@ ifeq ($(strip $(HAVE_COFF_IMAGE)),YES)
 	cp $(coffsrc)   $(coffdest)
 	chmod 644       $(coffdest)
 endif
-	-test -f System.map &&  cp System.map \
+	-test -f System.map &&  cp System.map                                 \
                         $(INT_IMAGE_DESTDIR)/System.map-$(version)
-	-test -f System.map &&  chmod 644 \
+	-test -f System.map &&  chmod 644                                     \
                         $(INT_IMAGE_DESTDIR)/System.map-$(version)
 ifeq ($(strip $(delete_build_link)),YES)
 	rm -f $(IMAGE_TOP)/lib/modules/$(version)/build
 endif
-	dpkg-gencontrol -DArchitecture=$(architecture) -isp \
+	dpkg-gencontrol -DArchitecture=$(architecture) -isp                   \
                         -p$(i_package) -P$(IMAGE_TOP)/
 	chmod -R og=rX $(IMAGE_TOP)
-	$(int_get_root) chown -R root.root $(IMAGE_TOP)
-	$(int_get_root) dpkg --build $(IMAGE_TOP) $(DEB_DEST)
-	$(int_get_root) rm -f -r $(IMAGE_TOP)
+	chown -R root.root $(IMAGE_TOP)
+	dpkg --build $(IMAGE_TOP) $(DEB_DEST)
+	rm -f -r $(IMAGE_TOP)
 ifeq ($(strip $(do_clean)),YES)
-	$(int_get_root) $(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) \
+	$(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) \
                                 clean
-	$(int_get_root) rm -f stamp-build
+	rm -f stamp-build
 endif
 	touch stamp-image
 

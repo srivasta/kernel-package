@@ -174,7 +174,7 @@ EOF
       exit 1;
     }
   }
-  elsif ($silent_about_modules !~ m/YES/i) {
+  elsif ($silent_modules !~ m/YES/i) {
     print STDERR <<EOF;
 You are attempting to install a kernel image (version $version)
 However, the directory /lib/modules/$version still exists.  If this
