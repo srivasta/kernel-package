@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.169 2002/04/14 16:52:58 srivasta Exp $
+## $Id: rules,v 1.170 2002/04/21 22:37:50 srivasta Exp $
 ###############################################################################
 
 ifdef KPKG_ARCH
@@ -543,7 +543,8 @@ HEADER_SRC:= $(HEADER_TOP)/usr/src/$(h_package)
 
 
 FILES_TO_CLEAN  = modules/modversions.h modules/ksyms.ver debian/files \
-                  conf.vars scripts/cramfs/cramfsck scripts/cramfs/mkcramfs
+                  conf.vars scripts/cramfs/cramfsck scripts/cramfs/mkcramfs \
+                  applied_patches
 STAMPS_TO_CLEAN = stamp-build stamp-configure stamp-source stamp-image \
                   stamp-headers stamp-src stamp-diff stamp-doc \
                   stamp-buildpackage stamp-libc-kheaders stamp-debian \
@@ -1064,11 +1065,13 @@ stamp-debian:
 	-test ! -f stamp-debian && test ! -f debian/official && \
 	      rm -rf debian && $(make_directory) debian
 ifeq ($(strip $(patch_the_kernel)),YES)
+	test -f applied_patches && rm -f applied_patches
 ifneq ($(strip $(valid_patches)),)
 	-for patch in $(valid_patches) ; do            \
           if test -x  $$patch; then                    \
               if $$patch; then                         \
                   echo "Patch $$patch processed fine"; \
+		  echo "$$patch" >> applied_patches;   \
               else                                     \
                    echo "Patch $$patch  failed.";      \
                    echo "Hit return to Continue";      \
@@ -1081,24 +1084,30 @@ else
 	if [ -n "$(VERSIONED_PATCH_DIR)" -a                   \
              -d $(VERSIONED_DIR_PATCH_APPLY) ]; then          \
             run-parts --verbose $(VERSIONED_DIR_PATCH_APPLY); \
+	    (cd $(VERSIONED_DIR_PATCH_APPLY); ls -1) >>       \
+                                           applied_patches;   \
         else                                                  \
 	    true;                                             \
 	fi
 	if [ -n "$(VERSIONED_ALL_PATCH_DIR)" -a               \
              -d $(VERSIONED_ALL_PATCH_APPLY)  ]; then         \
             run-parts --verbose $(VERSIONED_ALL_PATCH_APPLY); \
+	    (cd $(VERSIONED_ALL_PATCH_APPLY); ls -1) >>       \
+                                           applied_patches;   \
         else                                                  \
 	    true;                                             \
 	fi
 	if [ -n "$(PATCH_DIR)" -a                             \
              -d $(DIR_PATCH_APPLY) ]; then                    \
             run-parts --verbose $(DIR_PATCH_APPLY);           \
+	    (cd $(DIR_PATCH_APPLY); ls -1) >> applied_patches;\
         else                                                  \
 	    true;                                             \
 	fi
 	if [ -n "$(ALL_PATCH_DIR)" -a                         \
              -d $(ALL_PATCH_APPLY)  ]; then                   \
             run-parts --verbose $(ALL_PATCH_APPLY);           \
+	    (cd $(ALL_PATCH_APPLY); ls -1) >> applied_patches;\
         else                                                  \
 	    true;                                             \
 	fi
@@ -1541,6 +1550,10 @@ ifeq ($(strip $(HAVE_COFF_IMAGE)),YES)
 	cp $(coffsrc)   $(coffdest)
 	chmod 644       $(coffdest)
 endif
+	-test -s applied_patches && cp applied_patches                        \
+                        $(INT_IMAGE_DESTDIR)/patches-$(version)
+	-test -s applied_patches && chmod 644                                 \
+                        $(INT_IMAGE_DESTDIR)/patches-$(version)
 	-test -f System.map &&  cp System.map                                 \
                         $(INT_IMAGE_DESTDIR)/System.map-$(version)
 	-test -f System.map &&  chmod 644                                     \
