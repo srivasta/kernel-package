@@ -5,14 +5,14 @@
 # Created On       : Sat Apr 27 05:55:26 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Fri Nov  2 00:58:50 2001
+# Last Modified On : Fri Nov  2 02:22:02 2001
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 217
+# Update Count     : 218
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
 #
-#    $Id: image.postinst,v 1.82 2001/11/02 08:16:21 srivasta Exp $
+#    $Id: image.postinst,v 1.83 2001/11/02 08:22:16 srivasta Exp $
 #
 
 #
@@ -362,7 +362,7 @@ sub image_magic {
 	    $force_move = 1;
 	  }
 	  else {
-	    warn "$old_target points to " "$realimageloc" . "$kimage-$version";
+	    warn "$old_target points to $realimageloc" . "$kimage-$version";
 	    $force_move = 0;
 	  }
 	}
