@@ -40,6 +40,20 @@ case "$1" in
 	    starget_dir=$(/bin/pwd);
 	    cd /
 
+	    link_target="../share/doc/$package_name";
+	    cd /usr/doc/;
+	    if [ -d ../share/doc/ ]; then
+		cd ../share/doc/
+		ltarget=$(/bin/pwd);
+		if [ "$starget_dir" = "$ltarget" ]; then
+		    link_target="../share/doc/$package_name";
+		else
+		    link_target="/usr/share/doc/$package_name";
+		fi
+	    else
+		link_target="/usr/share/doc/$package_name"
+	    fi
+
 	    # Well, make sure that we do not get tripped up by the symlink
 	    if [ -L /usr/doc/$package_name ]; then
 		rm -f /usr/doc/$package_name
@@ -84,14 +98,14 @@ EOF
 		    echo "/usr/doc/$package_name still exists"
 		    if [ -L /usr/doc/$package_name ]; then
 			echo "it is a symbolic link, overwriting"
-			ln -sf ../share/doc/$package_name /usr/doc/$package_name
+			ln -sf $link_target /usr/doc/$package_name
 		    else
 			echo "This is an error. Aborting"
 			exit 1
 		    fi
 		fi
 		# File unexists. Free to go ahead and create link
-		ln -sf ../share/doc/$package_name /usr/doc/$package_name
+		ln -sf $link_target /usr/doc/$package_name
 
 	    fi
 	fi

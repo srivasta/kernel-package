@@ -9,10 +9,10 @@ Architecture: any
 Section: devel
 Priority: optional
 Provides: kernel-headers
-Description: Header files related to a specific Linux kernel.
- This package provides kernel header files, for sites that want the latest
- kernel headers. Please read /usr/share/doc/kernel-headers-=V/debian.README.gz
- for details 
+Description: Header files related to Linux kernel version =V
+ This package provides kernel header files for version =V, for sites 
+ that want the latest kernel headers. Please read
+ /usr/share/doc/kernel-headers-=V/debian.README.gz for details
 
 Package: kernel-source-=V
 Architecture: all
@@ -22,8 +22,8 @@ Provides: kernel-source
 Depends: binutils, bzip2
 Recommends: libc-dev, gcc, make
 Suggests: ncurses-dev, tk-dev, kernel-package, bin86
-Description: Linux kernel source.
- This package provides the source code for the Linux kernel. 
+Description: Linux kernel source for version =V
+ This package provides the source code for the Linux kernel version =V.
  .
  You may configure the kernel to your setup by typing "make config"
  and following instructions, but you could get ncursesX.X-dev and
@@ -43,12 +43,12 @@ Architecture: =A
 Section: base
 Priority: optional
 Provides: kernel-image
-Suggests: =L fdutils, kernel-doc-=V
-Description: Linux kernel binary image.
- This package contains the Linux kernel image, the System.map file,
- and the modules built by the packager.  It also contains scripts that
- try to ensure that the system is not left in a unbootable state
- after an update.
+Suggests: =L fdutils, kernel-doc-=V=SA
+Description: Linux kernel binary image for version =V=SA.
+ This package contains the Linux kernel image for version =V=SA,
+ the corresponding System.map file, and the modules built by the
+ packager.  It also contains scripts that try to ensure that the
+ system is not left in a unbootable state after an update.
  .
  If you wish to update a bootdisk, or to use a bootloader to make
  installing and using the image easier, we suggest you install the latest
@@ -64,8 +64,8 @@ Architecture: all
 Section: doc
 Priority: optional
 Suggests: kernel-image-=V=SA
-Description: Linux kernel specific documentation.
- This package provides The various readme's in the kernel
+Description: Linux kernel specific documentation for version =V.
+ This package provides The various readme's in the =V kernel
  Documentation/ subdirectory: these typically contain kernel-specific
  installation notes for some drivers for example. See
  /usr/share/doc/kernel-doc-X.X.XX/Documentation/00-INDEX for a list of what

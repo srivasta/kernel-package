@@ -1,3 +1,15 @@
+kernel-package (6.41) unstable; urgency=low
+
+  * Added the version number of the kernel to both the short and the long
+    description, to help people decide what packages are installed and
+    which new ones they may wish to install. 
+  * Make sure one uses absolute symlinks where required, when creating
+    /usr/doc symlinks
+  * Do not make symlinks in / if the boot loader is not in the path. 
+    closes: Bug#60413
+
+ -- Manoj Srivastava <srivasta@debian.org>  Wed, 15 Mar 2000 01:00:02 -0600
+
 kernel-package (6.40) frozen unstable; urgency=low
 
   * Path up modules_install in the kernel_image target to include some new

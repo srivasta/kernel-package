@@ -12,7 +12,7 @@
 # HISTORY          : 
 # Description      : 
 # 
-#    $Id: image.postinst,v 1.39 2000/03/03 16:06:18 srivasta Exp $
+#    $Id: image.postinst,v 1.40 2000/03/15 07:14:53 srivasta Exp $
 #
 
 # 
@@ -240,6 +240,9 @@ EOFERR
   system("depmod -a $version");
 }
 
+my $linktarget;    
+$linktarget = "../share/doc/kernel-image-$version";
+
 if (-d "/usr/doc") {
   # Well, we still need to handle this, at least for the time being
   if (-d "/usr/share/doc/kernel-image-$version") {
@@ -249,13 +252,24 @@ if (-d "/usr/doc") {
     }
     my $targetdir;
     my $stargetdir;
-    
     if (-x '/bin/pwd') {
       chdir('/usr/doc/');
       $targetdir=`/bin/pwd`;
       chdir('/usr/share/doc/');
       $stargetdir=`/bin/pwd`;
       chdir('/');
+
+      chdir('/usr/doc');
+      if (-f '../share/doc/') {
+	chdir('../share/doc/');
+	my $ltarget=`/bin/pwd`;
+	if ($ltarget ne $stargetdir) {
+	  $linktarget = "/usr/share/doc/kernel-image-$version";
+	}
+      }
+      else {
+	$linktarget = "/usr/share/doc/kernel-image-$version";
+      }
     }
     if ($targetdir ne $stargetdir) {
       if (-d "/usr/doc/kernel-image-$version") {
@@ -298,8 +312,7 @@ EOFERRONE
 	if (-l "/usr/doc/kernel-image-$version") {
 	  print STDERR "It is a symbolic link. Overwriting\n";
 	  unlink "/usr/doc/kernel-image-$version";
-	  symlink "../share/doc/kernel-image-$version",
-	  "/usr/doc/kernel-image-$version";
+	  symlink $linktarget, "/usr/doc/kernel-image-$version";
 	}
 	else {
 	  print STDERR "This is an error. Aborting\n";
@@ -307,8 +320,7 @@ EOFERRONE
 	}
       }
       # File unexists. Free to go ahead and create link
-      symlink "../share/doc/kernel-image-$version",
-      "/usr/doc/kernel-image-$version";
+      symlink $linktarget,  "/usr/doc/kernel-image-$version";
     }
   }
 }
@@ -317,6 +329,13 @@ EOFERRONE
 exit (0) if $loader =~ /silo/i; # SILO does not have to be executed.
 exit (0) if $loader =~ /milo/i; # MILO does not have to be executed.
 exit (0) if $loader =~ /nettrom/i; # NETTROM does not have to be executed.
+
+
+my $loaderloc = `command -v $loader 2>/dev/null`;
+#my ($loaderloc) = grep -x, map "$_/$loader", map { length($_) ? $_ : "." }
+#  split /:/, $ENV{PATH};
+exit (0) unless $loaderloc;
+
 
 undef $rootdevice;
 undef $rootdisk;
