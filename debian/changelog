@@ -1,4 +1,4 @@
-kernel-package (7.10) unstable; urgency=hihg
+kernel-package (7.10) unstable; urgency=high
 
   * Forgot to set decent default for do_bootloader; and the default is not
     to run lilo. This can be disastrous; this is a hihg priority fix. 
