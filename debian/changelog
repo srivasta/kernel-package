@@ -1,3 +1,13 @@
+kernel-package (7.91) unstable; urgency=low
+
+  * When cross compiling, if System.map is present, and we call
+    modules_install, depmod is run. Howevr, we may call modules_install
+    when packaging the kernel, and depmod then fails. Therefore, if
+    KERNEL_CROSS is defined, move System.map put of the way before calling
+    modules_install, and move it back afterwards.           closes: Bug#135974
+
+ -- Manoj Srivastava <srivasta@debian.org>  Tue, 26 Feb 2002 21:40:27 -0600
+
 kernel-package (7.90) unstable; urgency=low
 
   * clarified the --added-patches option.                    closes: Bug#135254

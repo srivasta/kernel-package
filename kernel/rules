@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.156 2002/02/20 20:09:04 srivasta Exp $
+## $Id: rules,v 1.157 2002/02/27 03:40:42 srivasta Exp $
 ###############################################################################
 
 ifdef KPKG_ARCH
@@ -1495,8 +1495,14 @@ ifdef MODULES_ENABLED
 ifeq  ($(strip $(HAVE_NEW_MODLIB)),)
 	$(mod_inst_cmds)
 else
+ifneq ($(strip $(KERNEL_CROSS)),)
+	mv System.map System.precious
+endif
 	$(MAKE) $(EXTRAV_ARG) INSTALL_MOD_PATH=$(INSTALL_MOD_PATH)           \
                 $(CROSS_ARG) modules_install
+ifneq ($(strip $(KERNEL_CROSS)),)
+	mv System.precious System.map
+endif
 endif
 endif
 ifeq ($(strip $(NEED_DIRECT_GZIP_IMAGE)),YES)
