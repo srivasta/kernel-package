@@ -5,9 +5,9 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Mon Sep 27 23:38:00 2004
+## Last Modified On : Fri Oct  1 15:44:32 2004
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count	    : 708
+## Update Count	    : 714
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
@@ -598,7 +598,7 @@ ifeq ($(strip $(architecture)),um)
   kimage := linux
   target = linux
   kimagesrc  = $(strip linux)
-  kimagedest = $(INT_IMAGE_DESTDIR)/linux
+  kimagedest = $(INT_IMAGE_DESTDIR)/linux-$(version)
   loaderdep=
   loaderdoc=
   KERNEL_ARCH = um
@@ -720,6 +720,7 @@ SOURCE_TOP:= debian/tmp-source
 HEADER_TOP:= debian/tmp-headers
 IMAGE_TOP := debian/tmp-image
 DOC_TOP   := debian/tmp-doc
+MAN1DIR    = $(IMAGE_TOP)/usr/share/man/man1
 
 SOURCE_DOC:= $(SOURCE_TOP)/usr/share/doc/$(package)
 HEADER_DOC:= $(HEADER_TOP)/usr/share/doc/$(h_package)
@@ -728,7 +729,7 @@ DOC_DOC   := $(DOC_TOP)/usr/share/doc/$(d_package)
 
 SOURCE_SRC:= $(SOURCE_TOP)/usr/src/$(package)
 HEADER_SRC:= $(HEADER_TOP)/usr/src/$(h_package)
-
+UML_DIR   := $(IMAGE_TOP)/usr/lib/uml/modules
 
 
 FILES_TO_CLEAN  = modules/modversions.h modules/ksyms.ver debian/files \
@@ -1960,7 +1961,25 @@ ifneq ($(strip $(KERNEL_ARCH)),um)
 	             $(DEBDIR)/image.prerm > $(IMAGE_TOP)/DEBIAN/prerm
 	chmod 755 $(IMAGE_TOP)/DEBIAN/prerm
 else
-	$(make_directory) $(IMAGE_TOP)/usr/share/kernel-uml/modules
+	$(make_directory) $(UML_DIR)
+	$(make_directory) $(MAN1DIR)
+	sed -e 's/=V/$(version)/g'    -e 's/=B/$(link_in_boot)/g'   \
+            -e 's/=S/$(no_symlink)/g' -e 's/=R/$(reverse_symlink)/g' \
+            -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \
+            -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'        \
+            -e 's@=M@$(MKIMAGE)@g'    -e 's/=OF/$(AM_OFFICIAL)/g'    \
+            -e 's@=A@$(DEB_HOST_ARCH)@g'                             \
+             $(DEBDIR)/um.postinst > $(IMAGE_TOP)/DEBIAN/postinst
+	chmod 755 $(IMAGE_TOP)/DEBIAN/postinst
+	sed -e 's/=V/$(version)/g'    -e 's/=B/$(link_in_boot)/g'   \
+            -e 's/=S/$(no_symlink)/g' -e 's/=R/$(reverse_symlink)/g' \
+            -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \
+            -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'        \
+            -e 's@=M@$(MKIMAGE)@g'    -e 's/=OF/$(AM_OFFICIAL)/g'    \
+             $(DEBDIR)/um.prerm > $(IMAGE_TOP)/DEBIAN/prerm
+	chmod 755 $(IMAGE_TOP)/DEBIAN/prerm
+	$(install_file) $(DEBDIR)/linux.1 $(MAN1DIR)/linux-$(version).1
+	gzip -9fq       $(MAN1DIR)/linux-$(version).1
 endif
 	$(install_file) Documentation/Changes $(IMAGE_DOC)/
 	gzip -9qf $(IMAGE_DOC)/Changes
@@ -2067,7 +2086,7 @@ ifneq ($(strip $(KERNEL_ARCH)),um)
 	test ! -f System.map ||  chmod 644                             \
                         $(INT_IMAGE_DESTDIR)/System.map-$(version);    
 else
-	mv $(INSTALL_MOD_PATH)/lib/modules/* $(IMAGE_TOP)/usr/share/kernel-uml/modules/ -v
+	mv $(INSTALL_MOD_PATH)/lib/modules/* $(UML_DIR)/ -v
 	rm -rf $(INSTALL_MOD_PATH)/lib
 endif
 	# For LKCD enabled kernels

@@ -875,11 +875,13 @@ if ( -d "/lib/modules/$version" ) {
 # The initrd symlink should probably be in the same dir that the
 # symlinks are in
 if ($initrd) {
+  my $initrd_path = $realimageloc . "initrd.img-$version";
   my $ret = system("mkinitrd " .
                    ($mkimage ? "-m '$mkimage' " : "") .
-                   "-o " . $realimageloc . "initrd.img-$version " .
-		   "/lib/modules/$version");
+                   "-o $initrd_path.new /lib/modules/$version");
   die("Failed to create initrd image.\n") if $ret;
+  rename("$initrd_path.new", "$initrd_path")
+    or die("Failed to rename initrd ($initrd_path)\n");
 
   if (! defined $ARGV[1] || ! $ARGV[1] || $ARGV[1] =~ m/<unknown>/og) {
     image_magic("initrd.img", $image_dest) if $initrd;
