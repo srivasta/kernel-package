@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.88 2000/02/15 22:14:28 srivasta Exp $
+## $Id: rules,v 1.89 2000/02/29 06:27:15 srivasta Exp $
 ###############################################################################
 
 #
@@ -963,6 +963,27 @@ else
                   echo "Module $$module configured fine";           \
               else                                                  \
                    echo "Module $$module failed to configure";      \
+                   echo "Hit return to Continue?";                  \
+		   read ans;                                        \
+              fi;                                                   \
+	     );                                                     \
+	  fi;                                                       \
+        done
+endif
+
+modules-clean modules_clean: configure
+ifndef MODULES_ENABLED
+	@echo Modules not configured, so not making modules_config
+else
+	-for module in $(MODULE_LOC)/* ; do \
+          if test -d  $$module; then \
+	    (cd $$module; \
+              if ./debian/rules KVERS="$(version)" KSRC="$(SRCTOP)" \
+                             KMAINT="$(pgp)" KEMAIL="$(email)"      \
+                             KDREV="$(debian)" kdist_clean; then    \
+                  echo "Module $$module cleaned";                   \
+              else                                                  \
+                   echo "Module $$module failed to clean up";       \
                    echo "Hit return to Continue?";                  \
 		   read ans;                                        \
               fi;                                                   \

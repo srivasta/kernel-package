@@ -22,7 +22,7 @@
 .\" USA.
 .\"
 .\"
-.\"    $Id: make-kpkg.8,v 1.22 2000/02/15 22:14:27 srivasta Exp $
+.\"    $Id: make-kpkg.8,v 1.23 2000/02/29 06:27:13 srivasta Exp $
 .\"
 .TH MAKE\-KPKG 8 "May 2 1997" "Debian" "Debian GNU/Linux manual"
 .SH NAME
@@ -85,7 +85,7 @@ you may prepend the revision with a digit followed by a colon (:)
 .BR \-\-flavour\ foo
 Sets the kernel flavour to the argument \fBfoo\fR. The flavour is
 also appended to the package name. You need a patched Makefile to make
-this work propperly (see /usr/share/doc/kernel-package/\s-1FLAVOURS\s0.gz).
+this work propperly (see /usr/share/doc/kernel-package/\s-1Flavours\s0.gz).
 It may contain only alphanumerics and the characters \- + . (full
 stop, hyphen, and plus). Uppercase letter are also not permitted under
 the Policy for a new package. \fB\s-1NOTE\s0\fR: Hyphens are
@@ -277,6 +277,12 @@ but does not create the source or diff files, and does not create and sign
 a changes file. This is the only modules related option you need if
 you just want to compile the add on modules image files for
 installation on one or more machines.
+.TP
+.B modules_clean
+This target allows you to clean all packages under
+.B /usr/src/modules,
+and this sould be all that is needed to undo the effect of any of the
+other modules_ targets.
 .TP
 .B configure
 This target runs configure (actually,

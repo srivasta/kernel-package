@@ -5,16 +5,16 @@
 # Created On       : Sat Apr 27 05:42:43 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Tue Feb  8 19:46:02 2000
+# Last Modified On : Tue Feb 29 00:12:01 2000
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 30
+# Update Count     : 33
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
 # 
 # 
 #
-#    $Id: include.postinst,v 1.15 2000/02/09 01:47:07 srivasta Exp $
+#    $Id: include.postinst,v 1.16 2000/02/29 06:27:15 srivasta Exp $
 #
 
 
@@ -78,7 +78,7 @@ if ($stop_and_read) {
   $answer = <STDIN>;
 }
 
-if (-d "/usr/doc" && ! -l "/usr/doc") {
+if (-d "/usr/doc") {
   # Well, we still need to handle this, at least for the time being
   if (-d "/usr/share/doc/$package") {
     # So the new doc dir exists, goody
@@ -86,16 +86,28 @@ if (-d "/usr/doc" && ! -l "/usr/doc") {
     if (-l "/usr/doc/$package") {
       unlink "/usr/doc/$package";
     }
-    if (-d "/usr/doc/$package") {
-      print STDERR "Yikes! The old directory, /usr/doc/$package\n";
-      print STDERR "has not ben removed! This is an error; attempting\n";
-      print STDERR "repairs";
-      if (-f "/usr/doc/$package/.dhelp") {
-	unlink "/usr/doc/$package/.dhelp";
-	rmdir "/usr/doc/$package";
-      }
+    my $targetdir;
+    my $stargetdir;
+    
+    if (-x /bin/pwd) {
+      chdir('/usr/doc/');
+      $targetdir=`/bin/pwd`;
+      chdir('/usr/share/doc/');
+      $stargetdir=`/bin/pwd`;
+      chdir('/');
+    }
+    if ($targetdir ne $stargetdir) {
       if (-d "/usr/doc/$package") {
-	print STDERR <<"EOFERRONE";
+	print STDERR "Yikes! The old directory, /usr/doc/$package\n";
+	print STDERR "has not ben removed! This is an error; attempting\n";
+	print STDERR "repairs";
+	if (-f "/usr/doc/$package/.dhelp") {
+	  unlink "/usr/doc/$package/.dhelp";
+	  rmdir "/usr/doc/$package";
+	}
+	
+	if (-d "/usr/doc/$package") {
+	  print STDERR <<"EOFERRONE";
 Failed repairs. There are old files in /usr/doc/$package_name/ created
 by you or another script. I can copy them over to the new location
 /usr/share/doc/$package_name, if you wish, preserving your versions of
@@ -104,39 +116,40 @@ shall be created in /usr/share/doc/$package_name as needed.
 
 EOFERRONE
   ;
-	my $answer='';
-	print "Shall I copy the files over [Yn]?";
-	$answer=<STDIN>;
-	if ($answer =~ /^n/i) {
-	  print "Not copying over, aborting\n";
-	  exit 1;
+	  my $answer='';
+	  print "Shall I copy the files over [Yn]?";
+	  $answer=<STDIN>;
+	  if ($answer =~ /^n/i) {
+	    print "Not copying over, aborting\n";
+	    exit 1;
+	  }
+	  else {
+	    system "cp", "-a", "--backup=t",
+	    "/usr/doc/$package",
+	    "/usr/share/doc/$package/.." ||
+	      die "Error copying files over: $?";
+	    system "rm", "-rf", "/usr/doc/$package" ||
+	      die "Error removing old directory:$?";
+	  }
+	}
+      }
+      if (-e "/usr/doc/$package") {
+	print STDERR "/usr/doc/$package exists, but is not a directory\n";
+	if (-l "/usr/doc/$package") {
+	  print STDERR "It is a symbolic link. Overwriting\n";
+	  unlink "/usr/doc/$package";
+	  symlink "../share/doc/$package",
+	  "/usr/doc/$package";
 	}
 	else {
-	  system "cp", "-a", "--backup=t",
-	  "/usr/doc/$package",
-	  "/usr/share/doc/$package/.." ||
-	    die "Error copying files over: $?";
-	  system "rm", "-rf", "/usr/doc/$package" ||
-	    die "Error removing old directory:$?";
+	  print STDERR "This is an error. Aborting\n";
+	  exit 1;
 	}
       }
+      # File unexists. Free to go ahead and create link
+      symlink "../share/doc/$package",
+      "/usr/doc/$package";
     }
-    if (-e "/usr/doc/$package") {
-      print STDERR "/usr/doc/$package exists, but is not a directory\n";
-      if (-l "/usr/doc/$package") {
-	print STDERR "It is a symbolic link. Overwriting\n";
-	unlink "/usr/doc/$package";
-	symlink "../share/doc/$package",
-	"/usr/doc/$package";
-      }
-      else {
-	print STDERR "This is an error. Aborting\n";
-	exit 1;
-      }
-    }
-    # File unexists. Free to go ahead and create link
-    symlink "../share/doc/$package",
-    "/usr/doc/$package";
   }
 }
 

@@ -1,3 +1,13 @@
+kernel-package (6.39) frozen unstable; urgency=low
+
+  * Fix typo in man page (FLAVOURS-->Flavours). closes: Bug#58502
+  * Add support for cleaning out the modules directories, since we have
+    targets that build stand alone modules. closes: Bug#58733
+  * Fixed an upgrade bug when /usr/doc happens to be a symlink, and does
+    not point to /usr/share/doc. A couple of people were bitten by this. 
+
+ -- Manoj Srivastava <srivasta@debian.org>  Mon, 28 Feb 2000 22:27:05 -0600
+
 kernel-package (6.38) frozen unstable; urgency=low
 
   * Emphasize the need to run make-kpkg clean when attempting to change

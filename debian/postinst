@@ -13,37 +13,51 @@ set -e
 
 package_name=kernel-package
 
+
+if [ -z "package_name" ]; then
+    print >&2 "Internal Error. Please report a bug."
+    exit 1;
+fi
+
+#perl -e 'print readlink("/usr/doc/'$package_name'"), "\n"; '
 case "$1" in
   configure)
     # Configure this package.  If the package must prompt the user for
     # information, do it here.
 
-    cd /etc;
-    if [ -f /usr/sbin/kernel-packageconfig ]; then
-	/usr/sbin/kernel-packageconfig
-    else
-	echo "Garbled installation: Could not find /usr/sbin/kernel-packageconfig";
-	exit 1;
-    fi
-
-    if [ -d /usr/doc -a ! -h /usr/doc ]; then
-	# Well, we still need to handle this, at least for the time being
-	if [   -d /usr/share/doc/$package_name ]; then
+    if [ -d /usr/doc ]; then
+	# Well, we still need to handle this. At this point, /usr/doc
+	# can be a symlink
+	
+	if [  -d /usr/share/doc/$package_name ]; then
 	    # So the new doc dir exists, goody
+	    
+	    # well, either one of these is a symlink, they can be
+	    # pointing off _anywhere_
+	    cd /usr/doc/;
+	    target_dir=$(/bin/pwd);
+	    cd /usr/share/doc 
+	    starget_dir=$(/bin/pwd);
+	    cd /
+
 	    # Well, make sure that we do not get tripped up by the symlink
 	    if [ -L /usr/doc/$package_name ]; then
 		rm -f /usr/doc/$package_name
 	    fi
-	    if [ -d /usr/doc/$package_name ]; then
-		echo "Yikes! The old directory, /usr/doc/$package_name,"
-		echo "has not ben removed! This is an error; attempting"
-		echo "repairs."
-		if [ -f /usr/doc/$package_name/.dhelp ]; then
-		    rm -f /usr/doc/$package_name/.dhelp
-		    rmdir --ignore-fail-on-non-empty /usr/doc/$package_name/
-		fi
-		if [ -d /usr/doc/$package_name ]; then
-		    cat <<EOF 
+
+	    if [ "$target_dir" != "$starget_dir" ]; then
+		# Ok. The directories are in different locations
+	    	if [ -d /usr/doc/$package_name ]; then
+		    echo "Yikes! The old directory, /usr/doc/$package_name,"
+		    echo "has not ben removed! This is an error; attempting"
+		    echo "repairs."
+		    find /usr/doc/$package_name/ -type f -name .dhelp \
+			-exec rm {} \;
+		    find /usr/doc/$package_name/ -type d -depth \
+                	 -exec rmdir --ignore-fail-on-non-empty {} \;
+
+		    if [ -d /usr/doc/$package_name ]; then
+			cat <<EOF 
 Failed repairs. There are old files in /usr/doc/$package_name/ created
 by you or another script. I can copy them over to the new location
 /usr/share/doc/$package_name, if you wish, preserving your versions of
@@ -52,34 +66,37 @@ shall be created in /usr/share/doc/$package_name as needed.
 
 Shall I copy the files over [Yn]?
 EOF
-		    read answer;
-		    case "$answer" in
-			[Nn]*)
-			    echo "Not copying over, aborting";
-			    exit 1;
-			    ;;
-			*)
-			     cp -a --backup=t \
-				/usr/doc/$package_name  \
+			read answer;
+			case "$answer" in
+			    [Nn]*)
+				echo "Not copying over, aborting";
+				exit 1;
+				;;	
+			    *)
+				cp -a --backup=t /usr/doc/$package_name  \
 				    /usr/share/doc/$package_name/.. ;
-			    rm -rf /usr/doc/$package_name;
-		    esac
+				rm -rf /usr/doc/$package_name;
+			esac
+		    fi
 		fi
+
+		if [ -e /usr/doc/$package_name ]; then
+		    echo "/usr/doc/$package_name still exists"
+		    if [ -L /usr/doc/$package_name ]; then
+			echo "it is a symbolic link, overwriting"
+			ln -sf ../share/doc/$package_name /usr/doc/$package_name
+		    else
+			echo "This is an error. Aborting"
+			exit 1
+		    fi
+		fi
+		# File unexists. Free to go ahead and create link
+		ln -sf ../share/doc/$package_name /usr/doc/$package_name
+
 	    fi
-            if [ -e /usr/doc/$package_name ]; then
-                echo "/usr/doc/$package_name exists, but is not a directory"
-                if [ -L /usr/doc/$package_name ]; then
-                    echo "it is a symbolic link, overwriting"
-                    ln -sf ../share/doc/$package_name /usr/doc/$package_name
-                else
-                    echo "This is an error. Aborting"
-                    exit 1
-                fi
-            fi
-            # File unexists. Free to go ahead and create link
-	    ln -sf ../share/doc/$package_name /usr/doc/$package_name
 	fi
     fi
+
 
     # There are three sub-cases:
     if test "${2+set}" != set; then

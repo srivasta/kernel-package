@@ -60,17 +60,25 @@ USER INSTRUCTIONS
      4)   Install the two newly created deb files (you can use `dpkg -i
           file').
 
-        kernel-package provides for three targets for the use of
+     5)   Clean the source trees:
+		make-kpkg clean modules_clean
+
+        kernel-package provides for four targets for the use of
  stand-alone kernel modules packages.
 
 	The special targets to give to make-kpkg are:
- a) modules-image modules_image:   only generate module binary packages
+ a) modules-image modules_image:   only generate module binary
+				   packages. Please remember to clean
+				   the modules after the build; see
+				   the sample files for an example. 
  b) modules:                       generate the modules packages and
                                    sign them with dchanges (this
                                    creates the sorce and diff packages
                                    as well)
  c) modules-config modules_config: only configure the module
-
+ d) modules-clean  modules_clean:  Clean the modules source tree, and
+				   undo all changes made by the above
+				   cammands. 
 	
 	So, add to the 
 4% fakeroot make-kpkg --revision=custom.1.0 kernel_image 

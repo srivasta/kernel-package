@@ -49,7 +49,7 @@ kdist_config:
 	@echo Nothing to configure
 
 
-# the kdist_image target is called by make-kpgd modules_image. It is
+# the kdist_image target is called by make-kpkg modules_image. It is
 # responsible for compiling the module and creating the package. It
 # should also clean up after making the module. Please note we use a
 # seperate binary-modules target to make testing the package building
@@ -59,6 +59,12 @@ kdist_image:
 	$(MAKE) $(MFLAGS) debian/rules binary-modules
 	$(MAKE) $(MFLAGS) debian/rules clean
 
+# the kdist_clean target is called by make-kpkg modules_clean. It is
+# responsible for cleaning up any changes that have been made by the
+# other kdist_commands (except for the .deb files created).
+.PHONY: kdist_clean
+kdist_clean
+	$(MAKE) $(MFLAGS) debian/rules clean
 
 # the binary-source target creates the kernmod-source package. It does
 # this by copying the entire package source into debian/tmp and running
@@ -92,11 +98,10 @@ binary-source:
 # Generate the package
 	find debian/tmp -type f | grep -v "./DEBIAN" | xargs md5sum | \
 		sed -e 's#debian/tmp/##' > debian/tmp/DEBIAN/md5sums
-	
 	dpkg-gencontrol -p$(package)-source
 	dpkg --build debian/tmp ..
 
-# the binary-common target creates the kernmod-common package. 
+# the binary-common target creates the kernmod-common package.
 .PHONY: binary-common
 binary-common:
 # Perform some simple tests
@@ -113,7 +118,6 @@ binary-common:
 # Generate the package
 	find debian/tmp -type f | grep -v "./DEBIAN" | xargs md5sum | \
 		sed -e 's#debian/tmp/##' > debian/tmp/DEBIAN/md5sums
-	
 	dpkg-gencontrol -p$(package)-common
 	dpkg --build debian/tmp ..
 
@@ -137,6 +141,5 @@ binary-modules:
 
 	find debian/tmp -type f | grep -v "./DEBIAN" | xargs md5sum | \
 		sed -e 's#debian/tmp/##' > debian/tmp/DEBIAN/md5sums
-	
 	dpkg-gencontrol -p$(package)-common -v$(pversion)+$(KDREV)
 	dpkg --build debian/tmp ..
