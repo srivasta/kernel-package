@@ -1,5 +1,5 @@
 
-    $Id: README,v 1.30 2000/02/15 22:14:27 srivasta Exp $
+    $Id: README,v 1.31 2000/03/21 07:04:43 srivasta Exp $
 
 This is the Debian Linux packaging scripts for the Linux kernel. 
 This package has been put together by Manoj Srivastava <srivasta@debian.org>.
@@ -46,7 +46,7 @@ packages, but they are not strictly essential (though quite nice really).
 Phase ONE: Getting and configuring the kernel
  1% cd <kernel source tree>
  2% make config   # or make menuconfig or make xconfig and configure
-Phase TWO: Create a protable kernel image .deb file
+Phase TWO: Create a portable kernel image .deb file
  3% make-kpkg clean
  4% $Get_Root make-kpkg --revision=custom.1.0 kernel_image 
       (Get_Root is whatever you need to become root -- fakeroot or
@@ -104,7 +104,7 @@ a) It only has an effect during the configure phase (in other words,
    -- run make-kpkg clean or manually remove stamp-configure,
    stamp-debian, and debian/official for it to have an effect -- I
    strongly suggest make-kpkg clean unless you know what you are
-   doing).  Additionally, official source package maintianers provide
+   doing).  Additionally, official source package maintainers provide
    their own version numbers and data for the official uploads, and
    hence a number of things, including the Debian revision, is not
    modified by make-kpkg.  If you happen to have an official sources,
@@ -153,7 +153,7 @@ the a new build of the distribution default kernel appears in the archive.
 
 
 Unfortunately, this fails if the upstream maintainer uses epochs to
-correct a version misnumbering ;-(. The good news is that you can add
+correct a version mis numbering ;-(. The good news is that you can add
 your own epoch to your customized image, ugly though that may
 be. (--revision 1:custom.Y; the kernel image file shall remain
 kernel-image-X.X.XX-custom.Y.deb, but dpkg shall know that it should
@@ -236,7 +236,8 @@ debian:		The Debian revision of the kernel packages. Can be set
 		to 1.00.
 image_in_boot:	Set to True if you want the kernel image symlink (vmlinuz)
                 in /boot rather than the default /. Can be set from the
-		environment variable IMAGE_IN_BOOT. defaults to undefined.
+		environment variable IMAGE_IN_BOOT. defaults to
+		undefined. 
 kimage:		The kernel image type (i.e. zImage or bzImage). Can be
 		set from the environment variable IMAGE_TYPE. Defaults
 		to bzImage.
@@ -259,6 +260,11 @@ reverse_symlink Mutually exclusive to no_symlink. Can be used with
                 boot on umsdos, and who can't see the link in dos, but
                 do want to know the image version when in Linux. 
                 This is a Hack.
+image_dest    If you want the image to  be  stored  in  elsewhere
+              than  /boot  set this variable to the dir where you
+              want the image. This may  be  of  help  to  loadlin
+              users.Defaults  to  /boot.  This over rides all the
+              above methods.
 patch_the_kernel This is an experts only variable. If set to YES (ENV
                  variable PATCH_THE_KERNEL overrides this), the build
                  process causes run-parts to be run over
@@ -301,6 +307,63 @@ The value of a variable can be set so:
 
 Please see kernel-pkg.conf (5).
 
+However, most if these are done on the machine you compile on: but you
+may need to install generic kernel image packages from time to time,
+and you need control over where the image sticks the symbolic links
+and such. With this in mind, there is the configuration file
+/etc/kernel-img.conf which sits on the target machine (the machine
+that the dpkg -i is run on, which need not be the same machine the
+kernel was compiled on), and that allows you to tweak these variables: 
+
+This file is automatically created by the installation script if it
+does not exist, and neither does the symbolic link /vmlinuz.  The
+script asks the user whether the symbolic link should be created, and
+stashes the answer into /etc/kernel-img.conf
+
+
+no_symlink      Mutually exclusive to reverse_symlink. Can be used with
+                image_in_boot. The image is placed in vmlinuz (instead
+                of /boot/vmlinuz-X.X.XX). The old vmlinuz is moved to
+                vmlinuz.old unconditionally. (Normally, that is only
+                done if the version of the new image differs from the
+                old one). This restricts you to two images, unless you
+                take additional action and save copies of older
+                images. This is for people who have boot on a system
+                that does not use symlinks (and say, they use loadlin)
+                This is a Hack.
+reverse_symlink Mutually exclusive to no_symlink. Can be used with
+                image_in_boot. Just like no_symlink, except that the
+                /boot/vmlinuz-X.XX is symlinked to the real new
+                image, vmlinuz. This too restricts you to just two
+                images unless further action is taken. The older
+                symlinks are left dangling. This is for people with
+                boot on umsdos, and who can't see the link in dos, but
+                do want to know the image version when in Linux. 
+                This is a Hack.
+image_dest    If you want the image to  be  stored  in  elsewhere
+              than  /boot  set this variable to the dir where you
+              want the image. This may  be  of  help  to  loadlin
+              users.Defaults  to  /boot.  This over rides all the
+              above methods.
+do_symlink    By  default,  the  kernel  image  post installation
+              script shall create or update the /vmlinuz and
+              /vmlinuz.old symbolic links.  This is true if a /vmlinuz
+              link already exists, however, in absence of /vmlinuz,
+              the script looks to see if this configuration file
+              exists. If it does not, the config­ uration scripts asks
+              the user whether to create the symbolic link, and
+              stashes the answer in a newly created
+              /etc/kernel-img.conf.  If the configuration file already
+              exists, and if this option is set to no, no symbolic
+              link is ever created. This for people who have other
+              means of booting their machines, and do not like the
+              symbolic links cluttering up their / directory.
+image_in_boot:	Set to True if you want the kernel image symlink (vmlinuz)
+                in /boot rather than the default /. defaults to
+		undefined. 
+Please see kernel-img.conf (5).
+
+
 To generate a new kernel image, just run
 % make-kpkg clean
 % $Get_Root make-kpkg --revision=custom.1.0 kernel_image
@@ -342,7 +405,7 @@ With a custom .config file in place (created as above) run again:
 |     sudo are examples that come to mind).                             |
 |                                                                       |
 | For people who wish to see the user name (not root) when they do a    |
-| uname -a on the maschine when they install the kernel, there is a     |
+| uname -a on the machine when they install the kernel, there is a     |
 | trick:                                                                |
 |  % make config                                                        |
 |  % make-kpkg build                                                    |
@@ -402,7 +465,7 @@ files and the /lib/modules/X.X.XX directory that the previous kernel
 image contained.
 
 If you try to install the recompiled kernel image over the previous
-kernel image (same version and flavour), then the insta;ll scripts
+kernel image (same version and flavour), then the install scripts
 detect that, and ask you to move at least the /lib/modules/X.X.XX dir
 away. If you continue anyway, the files in /boot shall be over
 written. 
@@ -442,7 +505,7 @@ sources so that they may be kept in synchrony woth the kernel you
 run. If you have such a module source package, for example,
 pcmcia-source, then please read README.modules as well. If you don't
 never mind. (The file is in /usr/share/doc/kernel-source-X.X.XX/. If you
-don't have kernsel-source packages installed [that's OK]. there is a
+don't have kernel-source packages installed [that's OK]. there is a
 copy in /usr/share/kernel-package/README.modules).
 
 Have fun,
