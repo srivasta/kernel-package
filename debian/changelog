@@ -1,4 +1,4 @@
-kernel-package (8.13) unstable; urgency=low
+kernel-package (8.013) unstable; urgency=low
 
   * Incorporated kernel modules packager HOWTO.              closes: Bug#167483
   * Fix initrd handling for official kernels                 closes: Bug#167497
