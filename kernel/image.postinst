@@ -5,14 +5,14 @@
 # Created On       : Sat Apr 27 05:55:26 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Wed Mar 11 13:34:20 1998
+# Last Modified On : Sun Mar 15 15:44:20 1998
 # Last Machine Used: tiamat.datasync.com
-# Update Count     : 98
+# Update Count     : 99
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
 # 
-#    $Id: image.postinst,v 1.17 1998/03/11 20:03:09 srivasta Exp $
+#    $Id: image.postinst,v 1.18 1998/03/15 21:53:40 srivasta Exp $
 #
 
 # 
@@ -697,17 +697,17 @@ sub run_lilo (){
     if ($ret) {
       my $ans;
       print "There was an error with running $loader in test mode, a log is \n";
-      print "available in /tmp/$loader_log.$$. Please edit /etc/$loader.conf\n";
+      print "available in $temp_file_name. Please edit /etc/$loader.conf\n";
       print "manually and re-run $loader, or make other arrangements to boot \n";
       print "your machine. \n\t Please hit return to continue";
       $ans = <STDIN>;
       return $ret;
     }
-    unlink "/tmp/$loader_log.$$";
+    unlink "$temp_file_name";
     print "Testing successful. Installing the partition boot sector... \n";
   }
   
-  $ret = system("/sbin/$loader >/tmp/$loader_log.$$");
+  $ret = system("/sbin/$loader >$temp_file_name");
   if ($ret) {
     my $ans;
     print "There was an error with running $loader, a log file is \n";

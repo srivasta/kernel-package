@@ -1,3 +1,9 @@
+kernel-package (4.00) unstable; urgency=high
+
+  * Fix a thinko in lilo run that could be a security hole.
+
+ -- Manoj Srivastava <srivasta@debian.org>  Sun, 15 Mar 1998 15:49:30 -0600
+
 kernel-package (3.65) unstable; urgency=low
 
   * Rewrote /vmlinuz as symlink handling in image.postinst. This should
