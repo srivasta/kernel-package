@@ -1,1 +1,2 @@
 /etc/kernel-pkg.conf
+/etc/bash_completions.d/make_kpkg

@@ -5,9 +5,9 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Fri Jan 19 12:47:33 2001
+## Last Modified On : Tue Mar 19 23:15:34 2002
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 133
+## Update Count	    : 135
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
@@ -34,7 +34,7 @@ export DEB_HOST_GNU_TYPE   := $(shell dpkg-architecture $(ha) -qDEB_HOST_GNU_TYP
 #                          sed 's/^Version: *//')
 #
 
-#    $Id: rules,v 1.32 2002/03/16 07:40:28 srivasta Exp $
+#    $Id: rules,v 1.33 2002/03/20 05:17:43 srivasta Exp $
 
 
 # Please change the maintainer information, as well as the debian version
@@ -78,7 +78,7 @@ MAN1DIR = $(TMPTOP)/usr/share/man/man1
 MAN5DIR = $(TMPTOP)/usr/share/man/man5
 MAN8DIR = $(TMPTOP)/usr/share/man/man8
 LINTIANDIR:= $(TMPTOP)/usr/share/lintian/overrides
-
+BASH_DIR:= $(TMPTOP)/etc/bash_completion.d
 # install commands
 install_file=    install -p    -o root -g root -m 644
 install_program= install -p    -o root -g root -m 755
@@ -117,6 +117,7 @@ stamp-binary:
 	$(make_directory)  $(MAN8DIR)
 	$(make_directory)  $(DOCDIR)
 	$(make_directory)  $(LINTIANDIR)
+	$(make_directory)  $(BASH_DIR)
 	$(install_file)    debian/conffiles $(TMPTOP)/DEBIAN/conffiles
 	$(install_program) debian/postinst $(TMPTOP)/DEBIAN/postinst
 	$(install_program) debian/prerm $(TMPTOP)/DEBIAN/prerm
@@ -124,7 +125,7 @@ stamp-binary:
 	$(install_file)    README $(DOCDIR)/README
 	$(install_file)    kernel/Flavours $(DOCDIR)/Flavours
 	$(install_file)    Problems $(DOCDIR)/Problems
-	$(install_file)    _make-kpkg $(DOCDIR)/make-kpkg.bash_completions
+	$(install_file)    _make-kpkg $(BASHDIR)/make_kpkg
 	$(install_file)    Multi-Arch $(DOCDIR)/Multi-Arch
 	$(install_file)    Rationale $(DOCDIR)/Rationale
 	gzip -9fqr         $(DOCDIR)

@@ -2,10 +2,11 @@
 
 # Debian GNU/Linux make-kpkg(1) completion.
 # Copyright 2002 "Dr. Rafael Sepulveda" <drs@gnulinux.org.mx>
+#
 have make-kpkg &&
 _make-kpkg()
 {
-	local cur prev paroptions special i
+	local cur prev options paroptions special i
 
 	#check if we are in a kernel directory.
 	[[ -d "drivers" && -d "kernel" && -d "fs" && -d "include/linux" ]] || return 0
@@ -50,7 +51,7 @@ _make-kpkg()
 	    fi
 	done
 
-	COMPREPLY=( $( compgen -W "$paroptions" | grep ^$cur ) );
+	COMPREPLY=( $( compgen -W "$paroptions" | grep ^$cur ) )
 
  	return 0
 

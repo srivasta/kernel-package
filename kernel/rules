@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Tue Mar 19 22:39:26 2002
+## Last Modified On : Tue Mar 19 23:03:30 2002
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 518
+## Update Count	    : 519
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.162 2002/03/20 04:39:44 srivasta Exp $
+## $Id: rules,v 1.163 2002/03/20 05:17:43 srivasta Exp $
 ###############################################################################
 
 ifdef KPKG_ARCH
@@ -1141,18 +1141,27 @@ conf.vars:
 	@echo "MODFLAGS 	= $(MODFLAGS)"      >> .mak
 	@mv -f .mak $@
 
+dummy_do_dep:
+	+$(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) \
+                                 ARCH=$(KERNEL_ARCH) $(fast_dep) dep 
+
+stamp-kernel-configure: stamp_configure_dummy
+	$(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) \
+                                 ARCH=$(KERNEL_ARCH) $(config_target) 	
+	+$(deb_rule) dummy_do_dep
+	$(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) \
+                                 ARCH=$(KERNEL_ARCH) clean 
+	touch $@
+
 configure: debian stamp-configure
-stamp-configure: debian .config conf.vars
-	test -f stamp-debian || $(deb_rule) debian
-	test -f .config      || $(deb_rule) .config
-	-test ! -f stamp-configure \
-	  && $(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) \
-                                 ARCH=$(KERNEL_ARCH) $(config_target) \
-          && $(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) \
-                                 ARCH=$(KERNEL_ARCH) $(fast_dep) dep \
-          && $(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) \
-                                 ARCH=$(KERNEL_ARCH) clean && \
-              touch stamp-configure
+stamp-configure: debian .config conf.vars stamp-kernel-configure
+	$(deb_rule) $(filer-out conf.vars stamp-kernel-configure, $?)
+	touch $@
+
+stamp_configure_dummy: debian .config
+	$(deb_rule) $?
+
+
 
 .config:
 ifneq ($(strip $(use_saved_config)),NO)

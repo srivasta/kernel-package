@@ -1,3 +1,17 @@
+kernel-package (7.100) unstable; urgency=low
+
+  * Hmm. There was a bug report that said kernel-package does not call
+    make correctly when concurrency is set; however, this happens to be a
+    mischaracterization. The top level make call a recursive make: $(MAKE)
+    -j2; the level 2 make then calls another sub make, and the level 3
+    make spits out the error that it is running with -j1, as documneted. I
+    have cleaned up soe of the rules involved to get greater transparency
+    in the phenomena. Also, remove benign warning about not finding the
+    MODULES_LOC dir.                                         closes: Bug#139132
+  * Make the bash completions file go in the right place.
+
+ -- Manoj Srivastava <srivasta@debian.org>  Tue, 19 Mar 2002 23:11:59 -0600
+
 kernel-package (7.99) unstable; urgency=high
 
   * The last fix broke kernel-package.                       closes: Bug#138684
