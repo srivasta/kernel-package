@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Thu Oct 23 11:23:30 1997
+## Last Modified On : Wed Nov  5 23:28:24 1997
 ## Last Machine Used: tiamat.datasync.com
-## Update Count	    : 197
+## Update Count	    : 198
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.12 1997/10/25 07:00:46 srivasta Exp $
+## $Id: rules,v 1.13 1997/11/06 05:32:10 srivasta Exp $
 ###############################################################################
 
 # The version of kernel-package this belongs to
@@ -280,8 +280,6 @@ stamp-source: configure
 	sed -e 's/=P/$(package)/g' \
 		$(DEBDIR)/include.postrm > debian/tmp-source/DEBIAN/postrm
 	chmod 755 debian/tmp-source/DEBIAN/postrm
-	$(install_file) $(DEBDIR)/copyright.source \
-		debian/tmp-source/usr/doc/$(package)/copyright
 	$(install_file) debian/changelog \
 	         debian/tmp-source/usr/doc/$(package)/changelog.debian
 	gzip -9f debian/tmp-source/usr/doc/$(package)/changelog.debian
@@ -292,8 +290,8 @@ stamp-source: configure
 	         debian/tmp-source/usr/doc/$(package)/debian.README
 	gzip -9f debian/tmp-source/usr/doc/$(package)/debian.README
 	$(install_file) $(DEBDIR)/README.headers \
-	         debian/tmp-headers/usr/doc/$(package)/README.headers
-	gzip -9f debian/tmp-headers/usr/doc/$(package)/README.headers
+	         debian/tmp-source/usr/doc/$(package)/README.headers
+	gzip -9f debian/tmp-source/usr/doc/$(package)/README.headers
 	$(install_file) README \
 	         debian/tmp-source/usr/doc/$(package)/README
 	gzip -9f debian/tmp-source/usr/doc/$(package)/README
@@ -303,6 +301,8 @@ stamp-source: configure
 	$(install_file) $(DEBDIR)/Flavours \
 	         debian/tmp-source/usr/doc/$(package)/Flavours
 	gzip -9f debian/tmp-source/usr/doc/$(package)/Flavours
+	$(install_file) $(DEBDIR)/copyright.source \
+		debian/tmp-source/usr/doc/$(package)/copyright
 	echo "This was produced by kernel-package version $(kpkg_version)." > \
 	         debian/tmp-source/usr/doc/$(package)/Buildinfo
 	(cd debian/tmp-source/usr/doc/$(package); \
@@ -367,8 +367,6 @@ stamp-doc: configure
 	rm -rf            debian/tmp-doc
 	$(make_directory) debian/tmp-doc/DEBIAN
 	$(make_directory) debian/tmp-doc/usr/doc/$(d_package)
-	$(install_file) $(DEBDIR)/copyright.doc \
-		debian/tmp-doc/usr/doc/$(d_package)/copyright
 	$(install_file) debian/changelog \
 	         debian/tmp-doc/usr/doc/$(d_package)/changelog.debian
 	$(install_file) $(DEBDIR)/LinkPolicy \
@@ -380,6 +378,8 @@ stamp-doc: configure
 	-tar cf - Documentation | \
             (cd debian/tmp-doc/usr/doc/$(d_package); umask 000; tar xsf -)
 	-gzip -9fqr debian/tmp-doc/usr/doc/$(d_package)
+	$(install_file) $(DEBDIR)/copyright.doc \
+		debian/tmp-doc/usr/doc/$(d_package)/copyright
 	dpkg-gencontrol -pkernel-doc-$(version) -Pdebian/tmp-doc/
 	chown -R root.root debian/tmp-doc
 	chmod -R og=rX debian/tmp-doc
@@ -413,8 +413,6 @@ endif
 	sed -e 's/=V/$(version)/g' \
 	             $(DEBDIR)/image.prerm > debian/tmp-image/DEBIAN/prerm
 	chmod 755 debian/tmp-image/DEBIAN/prerm
-	$(install_file) $(DEBDIR)/copyright.image \
-		debian/tmp-image/usr/doc/$(i_package)/copyright
 	$(install_file) debian/changelog \
 	         debian/tmp-image/usr/doc/$(i_package)/changelog.debian
 	gzip -9f debian/tmp-image/usr/doc/$(i_package)/changelog.debian
@@ -426,6 +424,8 @@ endif
 	$(install_file) $(DEBDIR)/README.image \
 	         debian/tmp-image/usr/doc/$(i_package)/debian.README
 	gzip -9f debian/tmp-image/usr/doc/$(i_package)/debian.README
+	$(install_file) $(DEBDIR)/copyright.image \
+		debian/tmp-image/usr/doc/$(i_package)/copyright
 	echo "This was produced by kernel-package version $(kpkg_version)." > \
 	         debian/tmp-image/usr/doc/$(i_package)/Buildinfo
 ifdef MODULES_ENABLED
@@ -443,6 +443,10 @@ ifdef MODULES_ENABLED
               cd debian/tmp-image/lib/modules/$(version)/misc; \
 	      mv `cat ./FS_MODULES` ../fs; \
               mv ./FS_MODULES ../../../../usr/doc/$(i_package)/; fi)
+	(if [ -f modules/NLS_MODULES ]; then \
+              cd debian/tmp-image/lib/modules/$(version)/misc; \
+	      mv `cat ./NLS_MODULES` ../fs; \
+              mv ./NLS_MODULES ../../../../usr/doc/$(i_package)/; fi)
 	(if [ -f modules/NET_MODULES ]; then \
               cd debian/tmp-image/lib/modules/$(version)/misc; \
 	      mv `cat ./NET_MODULES` ../net; \
