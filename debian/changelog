@@ -7,7 +7,7 @@ kernel-package (3.59) unstable; urgency=low
   * Added the rationale, and install it in kernel-package kernel source
     packages. 
 
- --
+ -- Manoj Srivastava <srivasta@debian.org>  Wed, 18 Feb 1998 01:10:54 -0600
 
 kernel-package (3.58) unstable; urgency=low
 
