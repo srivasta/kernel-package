@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.83 2000/01/26 17:07:39 srivasta Exp $
+## $Id: rules,v 1.84 2000/01/27 05:57:16 srivasta Exp $
 ###############################################################################
 
 #
@@ -62,7 +62,7 @@ ifdef ARCH
     KERNEL_CROSS:=$(CROSS_COMPILE)-
   endif
 else
-  architecture:=$(shell dpkg --print-architecture)
+  architecture:=$(shell CC=$(HOSTCC) dpkg --print-architecture)
 endif
 
 KERNEL_ARCH:=$(architecture)
@@ -664,7 +664,7 @@ binary-arch:  kernel_image  kernel_headers
 
 kernel-source kernel_source: stamp-source
 stamp-source: debian
-	@test root = "`whoami`" || (echo need root priviledges; exit 1)
+	@test 0 = $(id | sed -e 's/(.*$//' -e 's/^uid=//') || (echo need root priviledges; exit 1)
 	test -f stamp-debian || $(deb_rule) debian
 	rm -rf debian/tmp-source
 	$(make_directory) debian/tmp-source/DEBIAN
@@ -739,7 +739,8 @@ stamp-libc-kheaders: configure
 
 kernel-headers kernel_headers: stamp-headers
 stamp-headers: configure
-	@test root = "`whoami`" || (echo need root priviledges; exit 1)
+	@test $(id | sed -e 's/(.*$//' -e 's/^uid=//') || \
+		(echo need root priviledges; exit 1)
 	test -f stamp-configure || $(deb_rule) configure
 	rm -rf debian/tmp-headers
 	$(make_directory) debian/tmp-headers/DEBIAN
@@ -775,7 +776,8 @@ stamp-headers: configure
 
 kernel-doc kernel_doc: stamp-doc
 stamp-doc: debian
-	@test root = "`whoami`" || (echo need root priviledges; exit 1)
+	@test $(id | sed -e 's/(.*$//' -e 's/^uid=//') || \
+		(echo need root priviledges; exit 1)
 	test -f stamp-debian || $(deb_rule) debian
 	rm -rf            debian/tmp-doc
 	$(make_directory) debian/tmp-doc/DEBIAN
@@ -806,7 +808,8 @@ stamp-image: configure build kernel-image-deb
 # seems to create a working .deb with a kernel that gives the correct
 # user name (as opposed to root@...)
 kernel-image-deb:
-	@test root = "`whoami`"     || (echo need root priviledges; exit 1)
+	@test $(id | sed -e 's/(.*$//' -e 's/^uid=//')    \
+		 || (echo need root priviledges; exit 1)
 	rm -f -r ./debian/tmp-image ./debian/tmp-image.deb
 	test -f stamp-configure     || $(deb_rule) configure
 	test -f stamp-build         || $(deb_rule) build

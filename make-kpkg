@@ -14,7 +14,7 @@
 #
 #
 #
-#    $Id: make-kpkg,v 1.33 1999/11/30 06:15:36 srivasta Exp $
+#    $Id: make-kpkg,v 1.34 2000/01/27 05:57:15 srivasta Exp $
 #
 require 5.002;
 use strict;
@@ -29,7 +29,7 @@ make-kpkg - build Debian kernel packages from Linux kernel sources.
 ($main::MYNAME     = $main::0) =~ s|.*/||;
 $main::Author      = "Manoj Srivastava";
 $main::AuthorMail  = "srivasta\@debian.org";
-$main::Version     = '$Revision: 1.33 $ ';
+$main::Version     = '$Revision: 1.34 $ ';
 
 my $help_opt=0; 
 my $revision=0; 
@@ -533,6 +533,18 @@ sub main (){
     exit 1;
   }
 
+  if ($ENV{'MAKEFLAGS'} =~ /-j/ || $ENV{'MAKEFLAGS'} =~ /--jobs/ ) {
+    $errors .= "The environment variable MAKEFLAGS contains the flag -j.\n" .
+      "Unfortunately, this is not supported at this time. Instead, please\n" .
+	"use the supported mechanism by setting CONCURRENCY_LEVEL\n" ;
+  }
+
+  if ($ENV{'MFLAGS'} =~ /-j/ || $ENV{'MFLAGS'} =~ /--jobs/ ) {
+    $errors .= "The environment variable MFLAGS contains the flag -j.\n" .
+      "Unfortunately, this is not supported at this time. Instead, please\n" .
+	"use the supported mechanism by setting CONCURRENCY_LEVEL\n" ;
+  }
+
   if ($root_cmd || $unsign_source || $unsign_changelog){
     if ($root_cmd){
       if ($root_cmd =~ m/^-/o){ 
@@ -614,7 +626,7 @@ EOERR1
 	exit 1;
       }
     
-    if (-f stamp-configure){
+    if (-f 'stamp-configure'){
       print STDERR "Warning: The $revision option only has an effect during\n"; 
       print STDERR "the configure phase -- in other words, since the file\n"; 
       print STDERR "stamp-configure exists, this option has no effect -- \n"; 
@@ -663,6 +675,20 @@ EOERR1
   elsif ($bzimage) {
     $command .= " IMAGE_TYPE=bzImage ";
   }
+
+  my $hostcc = $ENV{'HOSTCC'};
+  $hostcc .= " ";
+  if ($hostcc eq " ") { $hostcc = "gcc"; };
+
+  my $cc = $ENV{'CC'};
+  $cc .= " ";
+  if ($cc eq ' ') { $cc = $cross_compile; $cc .= "gcc "; };
+
+  $cc .= "-D__KERNEL__ -I";
+  chomp($cc .= `pwd`);
+  $cc .= "/include";
+
+  $command .= " CC=\"$cc\" HOSTCC=\"$hostcc\"";
   $command .= " $Targets";
   exec $command; 
 }
