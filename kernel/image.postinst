@@ -12,7 +12,7 @@
 # HISTORY          :
 # Description      :
 #
-#    $Id: image.postinst,v 1.90 2002/01/06 10:10:10 srivasta Exp $
+#    $Id: image.postinst,v 1.91 2002/01/13 06:48:19 srivasta Exp $
 #
 
 #
@@ -368,43 +368,56 @@ sub image_magic {
       else
 	{
 	  my $vmlinuz_target = readlink "$kimage";
-	  my $target = "$realimageloc" . "$kimage-$version";
+	  my $target = CanonicalizePath("$realimageloc" . "$kimage-$version");
+
 	  if (!defined($vmlinuz_target))
 	    {	# what, a dangling symlink?
 	      warn "The link "  . $image_dest . "$kimage is a dangling link\n";
 	      $force_move = 1;
 	    }
-	  elsif ($target !~ m/\Q$vmlinuz_target\E/)
+	  else
 	    {
-	      # I don't like this test either, since the link could be
-	      # convoluted.
-	      if (-l "$kimage.old")
+	      my $cwd;
+	      chomp ($cwd=`pwd`);
+	      if ($vmlinuz_target !~ m|^/|o)
 		{
-		  my $old_target = readlink "$kimage.old";
-		  if ("$old_target"  ne "$realimageloc" . "$kimage-$version")
+		  $vmlinuz_target = $cwd . "/" . $vmlinuz_target;
+		  $vmlinuz_target =~ s|/+|/|o;
+		}
+	      $vmlinuz_target = CanonicalizePath($vmlinuz_target);
+	      if ("$vmlinuz_target" ne "$target")
+		{
+		  if (-l "$kimage.old")
 		    {
-		      $force_move = 1;
+		      my $old_target = readlink "$kimage.old";
+		      if ($old_target !~ m|^/|o)
+			{
+			  $old_target = $cwd . "/" . $old_target;
+			  $old_target =~ s|/+|/|o;
+			}
+		      $old_target = CanonicalizePath($old_target);
+		      if ("$old_target"  ne "$target")
+			{
+			  $force_move = 1;
+			}
+		      else
+			{
+			  warn "$kimage.old --> $target -- doing nothing";
+			  $force_move = 0;
+			}
 		    }
 		  else
 		    {
-		      warn "$old_target points to $realimageloc" .
-			"$kimage-$version";
-		      $force_move = 0;
+		      $force_move = 1;
 		    }
 		}
 	      else
 		{
-		  $force_move = 1;
+		  warn "$vmlinuz_target points to $target -- doing nothing";
+		  $force_move = 0;
 		}
 	    }
-	  else 
-	    {
-	      warn "$vmlinuz_target points to $realimageloc" .
-		"$kimage-$version";
-	      $force_move = 0;
-	    }
 	}
-
       if ($force_move)
 	{      # don't clobber $kimage.old quite yet
 	  rename("$kimage", "$kimage.$$") ||

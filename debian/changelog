@@ -1,3 +1,13 @@
+kernel-package (7.81) unstable; urgency=low
+
+  * Hmm. The fix for Bug#126319 and Bug#126739 instead broke all kinds of
+    symlink creation, and really needed a lot more attention to detail. I
+    think that is in place now.                              closes: Bug#128885
+  * The initrd code has been revamped, and shoul no longer create postinst
+    scripts that mysteriously think they are initrd scripts. closes: Bug#97956
+
+ -- Manoj Srivastava <srivasta@debian.org>  Sun, 13 Jan 2002 00:46:09 -0600
+
 kernel-package (7.80) unstable; urgency=low
 
   * Fix a last remaing reference to the old initrd image in the post rm. 
