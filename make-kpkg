@@ -14,7 +14,7 @@
 #
 #
 #
-#    $Id: make-kpkg,v 1.87 2003/09/01 17:09:15 srivasta Exp $
+#    $Id: make-kpkg,v 1.88 2003/09/04 16:09:12 srivasta Exp $
 #
 require 5.002;
 use strict;
@@ -29,7 +29,7 @@ make-kpkg - build Debian kernel packages from Linux kernel sources.
 ($main::MYNAME     = $main::0) =~ s|.*/||;
 $main::Author      = "Manoj Srivastava";
 $main::AuthorMail  = "srivasta\@debian.org";
-$main::Version     = '$Revision: 1.87 $ ';
+$main::Version     = '$Revision: 1.88 $ ';
 
 my $added_modules='';
 my $added_patches='';
@@ -876,29 +876,58 @@ EOMSG
     }
     if (-f "include/linux/version.h" && ! -f 'debian/official' &&
         ! $ENV{"VERSION_H_OK"} && ! ($Targets =~ m/^\s*clean\s*$/ )) {
-      print STDERR "Warning: The file include/linux/version.h exists\n";
-      print STDERR "If it was created just now by calling make-kpkg with\n";
-      print STDERR "the --append_to_version option on a clean source tree,\n";
-      print STDERR "please ignore this message. \n";
-      print STDERR "";
-      print STDERR "However, if the file exists from a previous run, and\n";
-      print STDERR "it existed before the make-kpkg --append_to_version was\n";
-      print STDERR "called, (for example, If you did not run make-kpkg clean\n";
-      print STDERR "after configuring the kernel with make (menu|x)?config)\n";
-      print STDERR "the chances are that it does not contain the appended:\n";
-      print STDERR "\t\t\t\"$append_to_version\"\n";
-      print STDERR "Please check the value of macro UTS_RELEASE in the file\n";
-      print STDERR "include/linux/version.h to make sure it is correct.\n";
-      print STDERR "If it is not correct (or if you are not sure), I \n";
-      print STDERR "strongly recommend that you abort now, and run:\n";
-      print STDERR " % make-kpkg clean\n";
-      print STDERR " % make-kpkg ... --append_to_version $append_to_version kernel_image [modules_image]\n";
-      print STDERR "By default, I assume you know what you are doing, and I\n";
-      print STDERR "apologize for being so annoying. Should I abort[Ny]?\n";
-      my $ans = <STDIN>;
-      if ($ans =~ m/^\s*[Yy]/g) {
-        print STDERR " Aborting.\n";
-        exit 1;
+      open (VERSION, "include/linux/version.h") or
+	die "Could not read include/linux/version.h:$!";
+
+      my $temp_string         = '';
+      my $kernel_version      = '';
+      my $patch_level         = '';
+      my $sublevel            = '';
+      my $extra_version       = '';
+      my $uts_release_version = '';
+
+      $temp_string = `egrep '^VERSION +=' Makefile 2>/dev/null `;
+      if ($temp_string =~ m/^\D*(\d+)/) {
+	$kernel_version = $1;
+      }
+
+      $temp_string = `egrep '^PATCHLEVEL +=' Makefile 2>/dev/null `;
+      if ($temp_string =~ m/^\D*(\d+)/) {
+	$patch_level = $1;
+      }
+
+      $temp_string = `egrep '^SUBLEVEL +=' Makefile 2>/dev/null `;
+      if ($temp_string =~ m/^\D*(\d+)/) {
+	$sublevel =  $1;
+      }
+
+      $temp_string = `egrep '^EXTRAVERSION +=' Makefile 2>/dev/null `;
+      if ($temp_string =~ m/EXTRAVERSION\s*=\s*(\w+)/) {
+	$extra_version = $1;
+      }
+
+      while (<VERSION>) {
+	chomp;
+	m/^\s*define\s+UTS_RELEASE\s+(\S+)/ || next;
+	$uts_release_version = $1;
+      }
+
+      my $composite_version = $kernel_version . $patch_level . $sublevel .
+	$extra_version  . $append_to_version;
+      if ($flavour) {
+	$composite_version  .= "+" . $flavour;
+      }
+      if ($uts_release_version ne $composite_version) {
+	print STDERR "Warning: The file include/linux/version.h exists\n";
+	print STDERR "The contained UTS_VERSION string:\n";
+	print STDERR "\t\t\t\"$uts_release_version\"\n";
+	print STDERR "does not match expectations:\n";
+	print STDERR "\t\t\t\"$composite_version\"\n";
+	print STDERR "Please run:\n";
+	print STDERR " % make-kpkg clean\n";
+	print STDERR " % make-kpkg ... --append_to_version $append_to_version";
+	print STDERR " kernel_image [modules_image]\n";
+	exit 1;
       }
     }
     $command .= " APPEND_TO_VERSION=$append_to_version ";

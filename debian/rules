@@ -34,7 +34,7 @@ export DEB_HOST_GNU_TYPE   := $(shell dpkg-architecture $(ha) -qDEB_HOST_GNU_TYP
 #                          sed 's/^Version: *//')
 #
 
-#    $Id: rules,v 1.42 2003/08/22 17:19:26 srivasta Exp $
+#    $Id: rules,v 1.43 2003/09/04 16:09:12 srivasta Exp $
 
 
 # Please change the maintainer information, as well as the debian version
@@ -91,6 +91,7 @@ make_directory=  install -p -d -o root -g root -m 755
 # Builds the binary package.
 all build:
 	$(checkdir)
+	perl -wc make-kpkg
 	perl -wc kernel/image.preinst
 	perl -wc kernel/image.postinst
 	perl -wc kernel/image.postrm

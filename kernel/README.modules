@@ -27,14 +27,16 @@ USER INSTRUCTIONS
           symbolic link to the actual source tree if you must.
 
      2)   Get kernel sources from your favourite location. If you are
-          attempting t compile modules for an official kernel-image
-          package, amke sure you get the corresponding kernel sources
-          (Debian tends to patch the mainline kernel with useful
-          patches). Alternately, some modules have scripts that allow
-          you to just install the coresponding kernel-headers package,
-          and then point themodule building process to the location of
-          the kernel-headers (usually by adding the kernel-headers
-          directory to Make's include path). 
+          attempting to compile modules for an official kernel-image
+          package, make sure you get the corresponding kernel-source
+          package (Debian tends to patch the mainline kernel with
+          useful patches).
+
+          Alternately, some modules have scripts that allow you to
+          just install the coresponding kernel-headers package, and
+          then point themodule building process to the location of the
+          kernel-headers (usually by adding the kernel-headers
+          directory to Make's include path).
              NOTE: If you can't get the sources the kernel was
              compiled from [if it was a custom kernel, and the source
              tree was deleted], you can often get by by copying
@@ -67,8 +69,15 @@ USER INSTRUCTIONS
           kernel, you would use --revision myhost.2 and so on.  See
           /usr/share/doc/kernel-package/README.gz for more information on
           revision numbers.
-        b.If you are working with an official kernel image. just do a
-              make oldconfig; make dep.
+
+        b.If you are working with the official kernel-image and kernel-source,
+          you have to copy the config file from the kernel-image to the
+	 kernel-source first. If you have the kernel-image installed, 
+              cp /boot/config-X.X.XX /usr/src/kernel-source-X.X.XX/.config
+              make-kpkg --add-to-version <blah> configure
+          Where blah is derived from the name of the kernel image
+          kernel-image-X.X.XX-blah
+
           This shall create the header files that the module you are
           trying to compile likely needs. 
 

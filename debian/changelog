@@ -1,3 +1,12 @@
+kernel-package (8.055) unstable; urgency=low
+
+  * Updated README.modules to correct the procedure of building modules
+    destined for an official kernel-image package.   closes: Bug#208482
+  * Give in and let make-kpkg parse include/linux/version.h, so that it
+    either aborts, or proceeds silently, when the file is present.
+
+ -- Manoj Srivastava <srivasta@debian.org>  Thu,  4 Sep 2003 10:46:04 -0500
+
 kernel-package (8.054) unstable; urgency=low
 
   * Expaded the user instructions in README.modules to handle building
