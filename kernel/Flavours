@@ -1,0 +1,90 @@
+	     Multiple flavours of the same kernel version
+             ======== ======== == === ==== ====== =======
+
+	There is an expressed need from people to have several
+ alternative flavors of a single kernel version around. It is
+ certainly useful to have a backup flavour of a kernel version around
+ when one is experimenting with device driver variations (it may not
+ be possible to run a different version of a kernel and hence have
+ that as a backup). 
+
+	Unfortunately, this is more complicated than it initially
+ appears, since the presence of possibly incompatible modules has to
+ be addressed.
+
+	Firstly, the modules from different flavours have to be
+ installed in separate directories, the modutils have to be made aware
+ of this alternative dorectory, and also, the kernel (and klogd)
+ should be able to load the right set of symbols from a System.map
+ file (which are different enough in different flavours that klogd
+ refuses to load the wrong one).
+	
+	The proper way to address this may well be to modify the
+ kernel version in some fashion (Note: this would involve modifying
+ the kernel source's top level Makefile). Unfortunately, SUBLEVEL
+ needs to stay numeric (and under 255, as far as I can tell), so it is
+ a wee bit more complex than just modifying the SUBLEVEL variable.
+
+	The solution seems to be to add a FLAVOUR field to the end of
+ UTS_RELEASE, which uname then reads properly. As of 2.1.47, this
+ variable is used purely for output purposes (nothing seems to parse
+ it). 
+
+	This way, the user has to modify the kernel Makefile (an sample
+ patch is provided below) to read, say, "FLAVOUR := speed_hack", and
+ the kernel would be installed as /boot/vmlinuz-2.0.30-speed_hack, the
+ modules would be installed under /lib/modules/2.0.30-speed_hack,
+ uname -r would report the version as 2.0.30-speed_hack.
+
+	The patch provided below is from the Makefile for 2.1.47
+ kernel, and may not apply cleanly on other Makefiles. It is
+ recommended that you use it purely as a guideline, and modify the
+ Makefile manually. 
+
+	This effort has been based on the ideas and work of Bill
+ Mitchell <mitchell@mozcom.com> and Noel Maddy <ncm@biostat.hfh.edu>. 
+
+======================================================================
+--- Makefile.dist	Mon Aug  4 12:18:57 1997
++++ Makefile	Mon Aug  4 12:24:55 1997
+@@ -2,6 +2,22 @@
+ PATCHLEVEL = 1
+ SUBLEVEL = 47
+ 
++# This is an example only: Uncomment the FLAVOUR line below and name
++# this flavour.
++#
++# If you want to have more than one kernel configuration per kernel
++# version, set FLAVOUR -- it will be appended to UTS_RELEASE in
++# version.h (separated by a hyphen)
++#
++#FLAVOUR = speed_hack
++
++ifneq ($(strip $(FLAVOUR)),)
++INT_FLAV := -$(FLAVOUR)
++else
++INT_FLAV :=
++endif
++
++
+ ARCH := $(shell uname -m | sed -e s/i.86/i386/ -e s/sun4u/sparc64/)
+ 
+ #
+@@ -244,7 +260,7 @@
+ 	@mv -f .ver $@
+ 
+ include/linux/version.h: ./Makefile
+-	@echo \#define UTS_RELEASE \"$(VERSION).$(PATCHLEVEL).$(SUBLEVEL)\" > .ver
++	@echo \#define UTS_RELEASE \"$(VERSION).$(PATCHLEVEL).$(SUBLEVEL)$(INT_FLAV)\" > .ver
+ 	@echo \#define LINUX_VERSION_CODE `expr $(VERSION) \\* 65536 + $(PATCHLEVEL) \\* 256 + $(SUBLEVEL)` >> .ver
+ 	@mv -f .ver $@
+ 
+@@ -289,7 +305,7 @@
+ 
+ modules_install:
+ 	@( \
+-	MODLIB=/lib/modules/$(VERSION).$(PATCHLEVEL).$(SUBLEVEL); \
++	MODLIB=/lib/modules/$(VERSION).$(PATCHLEVEL).$(SUBLEVEL)$(INT_FLAV); \
+ 	cd modules; \
+ 	MODULES=""; \
+ 	inst_mod() { These="`cat $$1`"; MODULES="$$MODULES $$These"; \
