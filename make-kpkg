@@ -14,7 +14,7 @@
 #
 #
 #
-#    $Id: make-kpkg,v 1.22 1999/01/22 15:14:11 srivasta Exp $
+#    $Id: make-kpkg,v 1.23 1999/01/22 15:32:24 srivasta Exp $
 #
 require 5.002;
 use strict;
@@ -29,7 +29,7 @@ make-kpkg - build Debian kernel packages from Linux kernel sources.
 ($main::MYNAME     = $main::0) =~ s|.*/||;
 $main::Author      = "Manoj Srivastava";
 $main::AuthorMail  = "srivasta\@debian.org";
-$main::Version     = '$Revision: 1.22 $ ';
+$main::Version     = '$Revision: 1.23 $ ';
 
 my $help_opt=0; 
 my $revision=0; 
@@ -48,7 +48,7 @@ my %option_ctl = ("help"         => \$help_opt,
 		  "revision=s"   => \$revision,
 		  "flavour=s"    => \$flavour,
 		  "subarch=s"    => \$subarch,
-		  "arch_in_name" => \$subinname,
+		  "arch_in_name" => \$arch_in_name,
 		  "pgpsign=s"    => \$signature,
 		  "targets"      => \$targ_opt,
 		  "zimage"       => \$zimage,
