@@ -5,14 +5,14 @@
 # Created On       : Sat May 15 11:05:13 1999
 # Created On Node  : glaurung.green-gryphon.com
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Tue Apr 24 02:48:56 2001
+# Last Modified On : Wed Jul  4 13:03:32 2001
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 16
+# Update Count     : 17
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
 # 
-#     $Id: image.postrm,v 1.7 2001/04/25 07:19:22 srivasta Exp $
+#     $Id: image.postrm,v 1.8 2001/07/05 04:21:26 srivasta Exp $
 #
 
 
@@ -184,6 +184,9 @@ if (-x "$postrm_hook") {
 	    warn "User hook script $postrm_hook failed";
 }
 
+if (-d "/lib/modules/$version" ) {
+  system ("rmdir", "/lib/modules/$version");
+}
 
 exit 0;
 

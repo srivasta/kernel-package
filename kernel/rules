@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Sat May 12 13:46:19 2001
+## Last Modified On : Wed Jul  4 22:26:41 2001
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 476
+## Update Count	    : 478
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.120 2001/05/12 18:55:52 srivasta Exp $
+## $Id: rules,v 1.121 2001/07/05 04:21:27 srivasta Exp $
 ###############################################################################
 
 ifdef ARCH
@@ -171,7 +171,7 @@ GUESS_SUBARCH:=pmac
 endif
 endif
 
-ifeq (,$(findstring $(SUBARCH),apus bbox chrp mbx pmac prep APUs BBOX CHRP MBX PReP ))
+ifeq (,$(findstring $(SUBARCH),apus chrp mbx pmac prep Amiga APUs CHRP MBX PReP ))
 SUBARCH:=$(GUESS_SUBARCH)
 endif
 
@@ -181,18 +181,11 @@ ifneq (,$(findstring $(SUBARCH),APUs apus Amiga))
 SUBARCH:=apus
 kimage := zImage
 target = $(kimage)
-kimagesrc = arch/$(KERNEL_ARCH)/boot/$(kimage)
+kimagesrc = $(shell if [ -d arch/$(KERNEL_ARCH)/boot/images ]; then \
+	echo arch/$(KERNEL_ARCH)/boot/vmapus ; else \
+	echo arch/$(KERNEL_ARCH)/boot/$(kimage) ; fi)
 kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
 DEBCONFIG = $(CONFDIR)/config.apus
-endif
-
-ifneq (,$(findstring $(SUBARCH),BBOX bbox))
-SUBARCH:=bbox
-kimage := zImage
-target = $(kimage)
-kimagesrc = arch/$(KERNEL_ARCH)/boot/$(kimage)
-kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
-DEBCONFIG = $(CONFDIR)/config.bbox
 endif
 
 ifneq (,$(findstring $(SUBARCH),CHRP chrp))
@@ -202,7 +195,9 @@ loader=quik
 loaderdoc=QuikDefault
 kimage := zImage
 target = $(kimage)
-kimagesrc = arch/$(KERNEL_ARCH)/chrpboot/$(kimage)
+kimagesrc = $(shell if [ -d arch/$(KERNEL_ARCH)/chrpboot ]; then \
+	echo arch/$(KERNEL_ARCH)/chrpboot/$(kimage) ; else \
+	echo arch/$(KERNEL_ARCH)/boot/images/$(kimage).chrp ; fi)
 kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
 DEBCONFIG = $(CONFDIR)/config.chrp
 endif
@@ -211,7 +206,9 @@ ifneq (,$(findstring $(SUBARCH),MBX mbx))
 SUBARCH:=mbx
 kimage := zImage
 target = $(kimage)
-kimagesrc = arch/$(KERNEL_ARCH)/boot/$(kimage))
+kimagesrc = $(shell if [ -d arch/$(KERNEL_ARCH)/mbxboot ]; then \
+	echo arch/$(KERNEL_ARCH)/mbxboot/$(kimage) ; else \
+	echo arch/$(KERNEL_ARCH)/boot/images/zvmlinux.embedded; fi)
 kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
 DEBCONFIG = $(CONFDIR)/config.mbx
 endif
@@ -222,11 +219,13 @@ target := zImage
 loaderdep=quik
 loader=quik
 loaderdoc=QuikDefault
-kimagesrc=vmlinux
+kimagesrc = vmlinux
 kimage := vmlinux
 kimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
 HAVE_COFF_IMAGE = YES
-coffsrc=arch/$(KERNEL_ARCH)/coffboot/vmlinux.coff
+coffsrc = $(shell if [ -d arch/$(KERNEL_ARCH)/coffboot ]; then \
+	echo arch/$(KERNEL_ARCH)/coffboot/$(kimage).coff ; else \
+	echo arch/$(KERNEL_ARCH)/boot/images/$(kimage).coff ; fi)
 coffdest=$(INT_IMAGE_DESTDIR)/vmlinux.coff-$(version)
 DEBCONFIG = $(CONFDIR)/config.pmac
 endif
@@ -235,7 +234,9 @@ ifneq (,$(findstring $(SUBARCH),PReP prep))
 SUBARCH:=prep
 kimage := zImage
 target = $(kimage)
-kimagesrc = arch/$(KERNEL_ARCH)/boot/$(kimage)
+kimagesrc = $(shell if [ -d arch/$(KERNEL_ARCH)/boot/images ]; then \
+	echo arch/$(KERNEL_ARCH)/boot/images/$(kimage).prep ; else \
+	echo arch/$(KERNEL_ARCH)/boot/$(kimage) ; fi)
 kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
 DEBCONFIG = $(CONFDIR)/config.prep
 endif
@@ -348,7 +349,7 @@ endif
 ##### ia64
 ifeq ($(strip $(architecture)),ia64)
 kimage := vmlinux
-loaderdep=lilo-efi
+loaderdep=elilo
 loader=
 loaderdoc=
 target=$(kimage)
@@ -358,7 +359,31 @@ kimagedest=$(INT_IMAGE_DESTDIR)/vmlinux-$(version)
 DEBCONFIG=$(CONFDIR)/config.$(SUBARCH)
 endif
 
+##### mips
+ifeq ($(strip $(architecture)),mips)
+kimage := boot
+loaderdep=
+loader=
+loaderdoc=
+target = $(kimage)
+NEED_DIRECT_GZIP_IMAGE=NO
+kimagesrc = $(strip arch/$(KERNEL_ARCH)/boot/vmlinux.ecoff)
+kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
+DEBCONFIG= $(CONFDIR)/config.$(SUBARCH)
+endif
 
+##### mipsel
+ifeq ($(strip $(architecture)),mipsel)
+kimage := boot
+loaderdep=
+loader=
+loaderdoc=
+target = $(kimage)
+NEED_DIRECT_GZIP_IMAGE=NO
+kimagesrc = $(strip arch/$(KERNEL_ARCH)/boot/vmlinux.ecoff)
+kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
+DEBCONFIG= $(CONFDIR)/config.$(SUBARCH)
+endif
 
 ######################################################################
 ######################################################################
@@ -1061,6 +1086,9 @@ stamp-source: debian
 	$(install_file) $(DEBDIR)/README \
 	          debian/tmp-source/usr/share/doc/$(package)/debian.README
 	gzip -9qf debian/tmp-source/usr/share/doc/$(package)/debian.README
+	$(install_file) $(DEBDIR)/README.grub \
+	          debian/tmp-source/usr/share/doc/$(package)/README.grub
+	gzip -9qf debian/tmp-source/usr/share/doc/$(package)/README.grub
 	$(install_file) $(DEBDIR)/README.headers \
 	          debian/tmp-source/usr/share/doc/$(package)/README.headers
 	gzip -9qf debian/tmp-source/usr/share/doc/$(package)/README.headers
@@ -1071,12 +1099,12 @@ stamp-source: debian
 	          debian/tmp-source/usr/share/doc/$(package)/README.modules
 	gzip -9qf debian/tmp-source/usr/share/doc/$(package)/README.modules
 	$(install_file) $(DEBDIR)/sample.module.rules \
-	          debian/tmp-source/usr/share/doc/$(package)/sample.module.rules
+	         debian/tmp-source/usr/share/doc/$(package)/sample.module.rules
 	gzip -9qf debian/tmp-source/usr/share/doc/$(package)/sample.module.rules
 	$(install_file) $(DEBDIR)/sample.module.control \
-                 debian/tmp-source/usr/share/doc/$(package)/sample.module.control
+               debian/tmp-source/usr/share/doc/$(package)/sample.module.control
 	gzip -9qf \
-                 debian/tmp-source/usr/share/doc/$(package)/sample.module.control
+               debian/tmp-source/usr/share/doc/$(package)/sample.module.control
 	$(install_file) README \
 	          debian/tmp-source/usr/share/doc/$(package)/README
 	gzip -9qf debian/tmp-source/usr/share/doc/$(package)/README

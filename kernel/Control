@@ -2,7 +2,7 @@ Source: kernel-source-=V
 Section: devel
 Priority: optional
 Maintainer:  =M
-Standards-Version: 3.0.1.0
+Standards-Version: 3.5.2.0
 
 Package: kernel-headers-=V
 Architecture: any

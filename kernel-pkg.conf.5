@@ -21,7 +21,7 @@
 .\" Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139,
 .\" USA.
 .\"
-.\" $Id: kernel-pkg.conf.5,v 1.23 2001/05/12 18:55:52 srivasta Exp $
+.\" $Id: kernel-pkg.conf.5,v 1.24 2001/07/05 04:21:26 srivasta Exp $
 .\"
 .TH KERNEL\-PKG.CONF 5 "Jan  7 1997" "Debian" "Debian GNU/Linux manual" 
 .\" NAME should be all caps, SECTION should be 1-8, maybe w/ subsection
@@ -31,18 +31,18 @@ kernel\-pkg.conf \- site wide configuration file for make\-kpkg
 .SH SYNOPSIS
 .I /etc/kernel\-pkg.conf
 or
-.I ~/kernel\-pkg.conf
+.I ~/.kernel\-pkg.conf
 .SH "DESCRIPTION"
 The file 
 .I /etc/kernel\-pkg.conf
 or
-.I ~/kernel\-pkg.conf
+.I ~/.kernel\-pkg.conf
 is actually a 
 .BR Makefile
 snippet included during the kernel packages build process, and hence
 you may put any legal Makefile directive in that file (just make very
 sure you know what you are doing).  If the per user configuration file
-.I ~/kernel\-pkg.conf
+.I ~/.kernel\-pkg.conf
 exists, it is laoded in favour of the system wide confguration file
 .I /etc/kernel\-pkg.conf.
 .PP
@@ -347,7 +347,7 @@ This overrides all the above methods.
 The file described here is
 .I /etc/kernel-pkg.conf.
 or
-.I ~/kernel-pkg.conf.
+.I ~/.kernel-pkg.conf.
 .SH "SEE ALSO"
 .BR make-kpkg (8),
 .BR kernel-img.conf (5),

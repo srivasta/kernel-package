@@ -1,3 +1,40 @@
+kernel-package (7.44) unstable; urgency=low
+
+  * There was a problem  while installing a kernel with no modules created
+    with a new, more helpful kernel-package, which tries to run depmod
+    during install (This helps people who are replacing the running kernel
+    with a new kernel with the same version).  I have now fixed the
+    postinst to check whether the directory exists before calling depmod.
+                                                            closes: Bug#99105
+  * Fixed spelling errors in make-kpkg(1).                  closes: Bug#99454
+  * Remove empty /lib/modules/$version dir in postinst if empty. dpkg did
+    not remove the directory, obviously since there were files it was not
+    aware of created by depmod, however these were removed by the postrm
+    correctly, but it neglected to remove the empty directory. 
+                                                             closes: Bug#99880 
+  * Fixed another typo in the image postinst.                closes: Bug#101524
+  * Changed the loaderdep= field for IA-64 to be 'elilo' instead of
+    'lilo-efi'.                                              closes: Bug#100321
+  * make kernel-pkg.conf(5) refer to ~/.kernel-pkg.conf, and not
+    ~/kernel-pkg.conf.                                       closes: Bug#100709
+  * make-kpkg doesn't work with 2.4.5 and up on PowerPC, since all of the
+    *boot directories were merged, renamed and moved around. The included
+    fixes this, and also removed the BeBox target bits.  BeBox isn't
+    supported in Linux 2.2.x or 2.4.x                        closes: Bug#103032
+  * Added support for mips and mipsel                        closes: Bug#102043
+  * Added postrm grub example script, and config file. Added a README baed
+    on the bug report                                        closes: Bug#103531
+  * Now add documentation to the effect that if one runs make (menu|x)?config
+    to configure the kernel, it creates `include/linux/version.h', which
+    contains the kernel version without_ the append_to_version data. This
+    file won't be updated by the make-kpkg run (make-kpkg creates
+    version.h if it doesn't exist, but doesn't touch if exists), so the
+    final kernel will _not_ have the append_to_version data in its version
+    number. Now kernel-package moans about the file, and allows you to
+    abort early.                                   closes: Bug#97202, Bug#98908
+  
+ -- Manoj Srivastava <srivasta@debian.org>  Wed,  4 Jul 2001 23:10:48 -0500
+
 kernel-package (7.43) unstable; urgency=low
 
   * Added a local ~/.kernel-pkg.conf for per user configuration. 

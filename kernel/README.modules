@@ -125,7 +125,7 @@ MODULE Packaging hints
                   discretion. 
    h) UNSIGN_CHANGELOG  A boolean
    i) UNSIGN_SOURCE     A boolean
-   j) ROOT_CMD          a program, like dufo or fakeroot
+   j) ROOT_CMD          a program, like sudo or fakeroot
    k) root_cmd This is a misnomer. That variable actually holds arguments
                for dpkg, specifically, -uc -us -r<blah>, or any
                combination thereof, asd requested by the user. This

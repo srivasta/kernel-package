@@ -22,7 +22,7 @@
 .\" USA.
 .\"
 .\"
-.\"    $Id: make-kpkg.8,v 1.37 2001/05/12 18:55:52 srivasta Exp $
+.\"    $Id: make-kpkg.8,v 1.38 2001/07/05 04:21:26 srivasta Exp $
 .\"
 .TH MAKE\-KPKG 1 "May 2 1997" "Debian" "Debian GNU/Linux manual"
 .SH NAME
@@ -90,8 +90,8 @@ followed by a colon (:).
 This argument (
 .B foo
 ) is appended to the value of the  EXTRAVERSION variable present in
-the kernel Makfile. Since EXTRAVERSION is a component of the kernel
-versoin, it is also added to the Debian package name, and, as such
+the kernel Makefile. Since EXTRAVERSION is a component of the kernel
+version, it is also added to the Debian package name, and, as such
 must obey the policy governing the package name. That means it may
 contain only 
 .B  lowercase
@@ -99,6 +99,25 @@ alphanumerics and the characters - + . (full stop, hyphen, and
 plus). Uppercase letters are not permitted under the Policy for a new
 package.  This over rides the environment variable
 .B APPEND_TO_VERSION
+Please  note  that you \fB\s-1must\s0\fR run a 
+.B make-kpkg 
+.I clean
+after configuring the kernel using 
+.I make (x|menu)?config, 
+since that creates the file
+.I include/linux/version.h
+.B without 
+the 
+.I append_to_version
+data (foo). This file won't be updated by the make-kpkg run (make-kpkg
+creates version.h if it doesn't exist, but doesn't touch if exists),
+so the final kernel will _not_ have the append_to_version data in its
+version number it shall look for the modules and symbols in all the
+wrong places. The simpliest solution is either to remove
+include/linux/version.h after configuring and before compiling, or
+running 
+.B make-kpkg clean
+after configuring, before compiling.
 .TP
 .BR \-\-flavour\ foo
 This option is now deprecated in favour of 

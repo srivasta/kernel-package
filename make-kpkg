@@ -5,16 +5,16 @@
 # Created On       : Mon Jun 17 01:10:11 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Sun Apr 29 10:51:27 2001
+# Last Modified On : Wed Jul  4 22:53:31 2001
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 163
+# Update Count     : 168
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
 #
 #
 #
-#    $Id: make-kpkg,v 1.57 2001/05/12 16:56:47 srivasta Exp $
+#    $Id: make-kpkg,v 1.58 2001/07/05 04:21:26 srivasta Exp $
 #
 require 5.002;
 use strict;
@@ -29,7 +29,7 @@ make-kpkg - build Debian kernel packages from Linux kernel sources.
 ($main::MYNAME     = $main::0) =~ s|.*/||;
 $main::Author      = "Manoj Srivastava";
 $main::AuthorMail  = "srivasta\@debian.org";
-$main::Version     = '$Revision: 1.57 $ ';
+$main::Version     = '$Revision: 1.58 $ ';
 
 my $added_modules='';
 my $added_patches='';
@@ -63,7 +63,6 @@ my %option_ctl = ("help"            	=> \$help_opt,
 		  "added-patches=s" 	=> \$added_patches,
 		  "added_patches=s" 	=> \$added_patches,
 		  "append-to-version=s" => \$append_to_version,
-		  "append_to_version=s" => \$append_to_version,
                   "arch=s"          	=> \$arch,
                   "config=s"        	=> \$config_target,
                   "cross_compile=s" 	=> \$cross_compile,
@@ -137,12 +136,16 @@ newer than the one installed on the system.
 =item B<--append_to_version> foo
 
 This argument (B<foo>) is appended to the value of the EXTRAVERSION
-variable present in the kernel Makfile. Since EXTRAVERSION is a
-component of the kernel versoin, it is also added to the Debian
+variable present in the kernel Makefile. Since EXTRAVERSION is a
+component of the kernel version, it is also added to the Debian
 package name, and, as such must obey the policy governing the package
 name. That means it may contain only B<lowercase> alphanumerics and
 the characters - + . (full stop, hyphen, and plus). Uppercase letters
 are not permitted under the Policy for a new package.
+
+Please note that you must run a B<make-kpkg clean> after configuring
+the kernel using make (x|menu)?config, since that creates
+include/linux/version.h without the appended version I<foo>. 
 
 =back
 
@@ -365,7 +368,8 @@ usage: $main::MYNAME [options] target [target ...]
  --append-to-version foo
  --append_to_version foo an additional kernel sub-version. ([-a-z.+0-9])
                          Does not require editing the kernel Makefile
-                         over rides env var APPEND_TO_VERSION
+                         over rides env var APPEND_TO_VERSION. 
+                         requires a make-kpg clean
  --added-modules foo
  --added_modules foo   Comma/space separated list of add on modules
                        affected by the modules_<blah> targets
@@ -834,6 +838,20 @@ EOERR1
       print STDERR "I have $append_to_version, which shall be dissallowed \n";
       print STDERR "by the packaging tools. Aborting.\n";
       exit 1;
+    }
+    if (-f "include/linux/version.h" ) {
+      print STDERR "Error: The file include/linux/version.h exists\n";
+      print STDERR "The chances are that it does not contain the appended\n";
+      print STDERR "version $append_to_version\n";
+      print STDERR "If that is the case (or if you are not sure), I \n";
+      print STDERR "strongly recommend that you abort now. By default,\n";
+      print STDERR "though, I assume you know what you are doing\n";
+      print STDERR "Should I abort[Ny]?\n";
+      my $ans = <STDIN>;
+      if ($ans =~ m/^\s*[Yy]g/) {
+	print STDERR " Aborting.\n";
+	exit 1;
+      }
     }
     $command .= " APPEND_TO_VERSION=$append_to_version ";
   }
