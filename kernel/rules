@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Tue Jul 31 01:26:44 2001
+## Last Modified On : Wed Aug  1 22:15:31 2001
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 485
+## Update Count	    : 487
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.129 2001/07/31 06:43:54 srivasta Exp $
+## $Id: rules,v 1.130 2001/08/02 03:21:29 srivasta Exp $
 ###############################################################################
 
 ifdef ARCH
@@ -193,6 +193,7 @@ KERNEL_ARCH:=ppc
 
 ifneq (,$(findstring $(SUBARCH),APUs apus Amiga))
 SUBARCH:=apus
+loader := NoLoader
 kimage := vmapus.gz
 target = zImage
 kimagesrc = $(shell if [ -d arch/$(KERNEL_ARCH)/boot/images ]; then \
@@ -218,6 +219,7 @@ endif
 
 ifneq (,$(findstring $(SUBARCH),MBX mbx))
 SUBARCH:=mbx
+loader := NoLoader
 kimage := zImage
 target = $(kimage)
 kimagesrc = $(shell if [ -d arch/$(KERNEL_ARCH)/mbxboot ]; then \
@@ -252,6 +254,7 @@ endif
 
 ifneq (,$(findstring $(SUBARCH),PReP prep))
 SUBARCH:=prep
+loader := NoLoader
 kimage := zImage
 target = $(kimage)
 kimagesrc = $(shell if [ -d arch/$(KERNEL_ARCH)/boot/images ]; then \
@@ -343,8 +346,8 @@ endif
 ##### S/390
 ifeq ($(strip $(architecture)),s390)
 kimage := image
-loaderdep=
-loader=
+loaderdep=zipl
+loader=zipl
 loaderdoc=
 target = $(kimage)
 NEED_DIRECT_GZIP_IMAGE=NO

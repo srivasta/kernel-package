@@ -1,3 +1,19 @@
+kernel-package (7.58) unstable; urgency=low
+
+  * Incorporated s390 specific patches.                      closes: Bug#107402
+
+ -- Manoj Srivastava <srivasta@debian.org>  Wed,  1 Aug 2001 22:21:18 -0500
+
+kernel-package (7.57) unstable; urgency=low
+
+  * Apparently, the APUS folks do not have a boot loader. So far, they had
+    been saying no to all blandishments from the kernel image package to
+    let it run lilo for them. This has now been corrected, thanks to a
+    nifty patch from Colin Walters <walters@cis.ohio-state.edu>. This
+    should do it.                                            closes: Bug#107278
+
+ -- Manoj Srivastava <srivasta@debian.org>  Tue, 31 Jul 2001 20:33:20 -0500
+
 kernel-package (7.56) unstable; urgency=low
 
   * an initial patch which at least prevents the generated postinst from

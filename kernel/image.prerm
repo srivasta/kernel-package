@@ -5,15 +5,15 @@
 # Created On       : Fri May 17 03:28:59 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Sun Jul  9 18:00:03 2000
+# Last Modified On : Wed Aug  1 22:14:40 2001
 # Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 63
+# Update Count     : 64
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
 # 
 #
-#    $Id: image.prerm,v 1.11 2001/07/13 18:10:26 srivasta Exp $
+#    $Id: image.prerm,v 1.12 2001/08/02 03:21:28 srivasta Exp $
 #
 # 
 #use strict;
@@ -78,7 +78,7 @@ exit 0 unless ($ARGV[0] && $ARGV[0] =~ /remove/) ;
 # Paranoid check to make sure that the correct value is put in there
 if (! $kimage)                    { $kimage = "vmlinuz";} # Hmm. empty
 elsif ($kimage =~ m/^b?zImage$/o) { $kimage = "vmlinuz";} # these produce vmlinuz
-elsif ($kimage =~ m/^Image$/o)    { my $nop = $kimage;  }
+elsif ($kimage =~ m/^[iI]mage$/o) { my $nop = $kimage;  }
 elsif ($kimage =~ m/^vmlinux$/o)  { my $nop = $kimage;  }
 else                              { $kimage = "vmlinuz";} # Default
 
