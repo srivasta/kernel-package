@@ -1,5 +1,5 @@
 
-    $Id: README,v 1.18 1998/07/17 04:48:01 srivasta Exp $
+    $Id: README,v 1.19 1998/09/08 19:47:32 srivasta Exp $
 
 This is the Debian Linux packaging scripts for the Linux kernel. 
 This package has been put together by Manoj Srivastava <srivasta@debian.org>.
@@ -40,9 +40,9 @@ packages, but they are not strictly essential (though quite nice really).
 1% cd <kernel source tree>
 2% make config   # or make menuconfig or make xconfig and configure
 3% make-kpkg clean
-4% make-kpkg --rootcmd fakeroot --revision=custom.1.0 kernel_image 
-5% dpkg -i ../kernel-image-X.XXX_1.0_<arch>.deb
-6% shutdown -r now # If and only if LILO worked or you have a means of
+4% fakeroot make-kpkg --revision=custom.1.0 kernel_image 
+5# dpkg -i ../kernel-image-X.XXX_1.0_<arch>.deb
+6# shutdown -r now # If and only if LILO worked or you have a means of
                    # booting the new kernel. YOU HAVE BEEN WARNED!!
 
  With the addition of fakeroot ( a really nice program, I recommend
@@ -153,12 +153,12 @@ has entered the garden of eden, and we must forever use epochs to
 guard against forced upgrades.
 
 So, try using an epoch for your custom packages: 
-  make-kpkg --rootcmd fakeroot --revision=3:custom.1.0 kernel_image
+   fakeroot make-kpkg  --revision=3:custom.1.0 kernel_image
 
 And the next time when you build a kernel, because you just bought a new
 sound card or you discovered that you suddenly want masquerading in your
 kernel enabled, you'll type: 
-  make-kpkg --rootcmd fakeroot --revision=3:custom.2.0 kernel_image
+   fakeroot make-kpkg --revision=3:custom.2.0 kernel_image
 
 When make-kpkg is finished, you'll have 
 kernel-image-2.0.29_custom.1.0_i386.deb and all it takes now is to
@@ -276,7 +276,7 @@ Please see kernel-pkg.conf (5).
 
 To generate a new kernel image, just run
 % make-kpkg clean
-% make-kpkg --rootcmd fakeroot --revision custom.1.0 kernel_image
+% fakeroot make-kpkg --revision custom.1.0 kernel_image
 
 This will create a default kernel image (as in the image package or
 available on the boot disks.  The kernel image package produced will
@@ -297,19 +297,19 @@ have a .config file, just copy it to this directory, and you are go.
 
 With a custom .config file in place (created as above) run again:
 % make-kpkg clean
-% make-kpkg --rootcmd fakeroot --revision custom.1.0 kernel_image
+% fakeroot make-kpkg --revision custom.1.0 kernel_image
 
 To create a source or header package, run
 % make-kpkg clean
-% make-kpkg --rootcmd fakeroot --revision custom.1.0 kernel_source
-% make-kpkg --rootcmd fakeroot --revision custom.1.0 kernel_headers
+% fakeroot make-kpkg --revision custom.1.0 kernel_source
+% fakeroot make-kpkg --revision custom.1.0 kernel_headers
 Note: You only need one of these.
 
 Similarly, the documentation package is built by:
-% make-kpkg --rootcmd fakeroot --revision=custom.1.0 kernel_doc
+% fakeroot make-kpkg --revision=custom.1.0 kernel_doc
 
 Or if you want to generate the whole package, 
-% make-kpkg --rootcmd fakeroot --revision custom.1.0 \
+% fakeroot make-kpkg --revision custom.1.0 \
             -pgpsign "Your pgp id" buildpackage
 Note that this needs a pgp key.
 
