@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Tue Apr 21 12:25:58 1998
+## Last Modified On : Tue Apr 21 12:34:21 1998
 ## Last Machine Used: tiamat.datasync.com
-## Update Count	    : 259
+## Update Count	    : 260
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.33 1998/04/21 17:26:27 srivasta Exp $
+## $Id: rules,v 1.34 1998/04/21 17:34:29 srivasta Exp $
 ###############################################################################
 
 # The version of kernel-package this belongs to
@@ -431,29 +431,28 @@ libc-kheaders libc_kheaders: stamp-libc-kheaders
 stamp-libc-kheaders: configure
 	@test root = "`whoami`" || (echo need root priviledges; exit 1)
 	test -f stamp-configure || $(deb_rule) configure
-	rm -rf debian/tmp-kheaders
-	$(make_directory) debian/tmp-kheaders/DEBIAN
-	$(make_directory) debian/tmp-kheaders/usr/include
-	$(make_directory) debian/tmp-kheaders/usr/src/$(l_package)
-	$(make_directory) debian/tmp-kheaders/usr/doc/$(l_package)
-	$(install_file) debian/changelog \
+	rm -rf                     debian/tmp-kheaders
+	$(make_directory)          debian/tmp-kheaders/DEBIAN
+	$(make_directory)          debian/tmp-kheaders/usr/include
+	$(make_directory)          debian/tmp-kheaders/usr/doc/$(l_package)
+	$(install_file)            debian/changelog \
 	         debian/tmp-kheaders/usr/doc/$(l_package)/changelog.debian
-	$(install_file) $(DEBDIR)/README.headers \
+	$(install_file)            $(DEBDIR)/README.headers \
 	         debian/tmp-kheaders/usr/doc/$(l_package)/debian.README
 	echo "This was produced by kernel-package version $(kpkg_version)." > \
 	         debian/tmp-kheaders/usr/doc/$(l_package)/Buildinfo
-	(cd include; tar cf - linux asm-$(KERNEL_ARCH) ) | \
-            (cd debian/tmp-kheaders/usr/include/; umask 000; tar xsf -)
+	(cd include;               tar cf - linux asm-$(KERNEL_ARCH) ) | \
+                 (cd debian/tmp-kheaders/usr/include/; umask 000; tar xsf -)
 	(cd debian/tmp-kheaders/usr/include/; mv asm-$(KERNEL_ARCH) asm)
-	gzip -9qf debian/tmp-kheaders/usr/doc/
-	$(install_file) $(DEBDIR)/copyright.headers \
-		debian/tmp-kheaders/usr/doc/$(l_package)/copyright
-	dpkg-gencontrol -p$(l_package) -Pdebian/tmp-kheaders/
-	chown -R root.root debian/tmp-kheaders
-	chmod -R og=rX debian/tmp-kheaders
-	dpkg --build debian/tmp-kheaders $(DEB_DEST)
-	rm -rf debian/tmp-kheaders
-	touch stamp-libc-kheaders
+	gzip -9qfr                 debian/tmp-kheaders/usr/doc/
+	$(install_file)            $(DEBDIR)/copyright.headers \
+		  debian/tmp-kheaders/usr/doc/$(l_package)/copyright
+	dpkg-gencontrol            -p$(l_package) -Pdebian/tmp-kheaders/
+	chown -R                   root.root debian/tmp-kheaders
+	chmod -R og=rX    	   debian/tmp-kheaders
+	dpkg --build      	   debian/tmp-kheaders $(DEB_DEST)
+	rm -rf            	   debian/tmp-kheaders
+	touch             	   stamp-libc-kheaders
 
 
 kernel-headers kernel_headers: stamp-headers
