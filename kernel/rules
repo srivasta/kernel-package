@@ -5,22 +5,29 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Mon Oct  4 00:11:48 2004
+## Last Modified On : Wed Oct 20 00:16:07 2004
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count	    : 717
+## Update Count	    : 725
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
 ## arch-tag: aa70d4e5-79bf-405c-95ec-5fa9f7ae7b69
 ###############################################################################
 
-ifdef KPKG_ARCH
-  ifneq ($(strip $(KPKG_ARCH)),um)
-    ha:=-a$(KPKG_ARCH)
+DPKG_ARCH := dpkg-architecture
+
+ifneq ($(strip $(KPKG_ARCH)),um)
+  ifneq ($(strip $(KPKG_ARCH)),xen)
+    MAKING_VIRTUAL_IMAGE:=YES
   endif
 endif
 
-DPKG_ARCH := dpkg-architecture
+ifdef KPKG_ARCH
+  ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
+      ha:=-a$(KPKG_ARCH)
+  endif
+endif
+
 # set the dpkg-architecture vars
 export DEB_BUILD_ARCH      := $(shell $(DPKG_ARCH) $(ha) -qDEB_BUILD_ARCH)
 export DEB_BUILD_GNU_CPU   := $(shell $(DPKG_ARCH) $(ha) -qDEB_BUILD_GNU_CPU)
@@ -87,7 +94,7 @@ else
 endif
 
 ifndef CROSS_COMPILE
-  ifneq ($(strip $(KPKG_ARCH)),um)
+  ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
     ifneq ($(strip $(architecture)),$(strip $(DEB_BUILD_ARCH)))
       KERNEL_CROSS:=$(architecture)-$(strip $(DEB_HOST_GNU_SYSTEM))-
     endif
@@ -605,6 +612,7 @@ ifeq ($(strip $(architecture)),mipsel)
   endif
 endif
 
+# usermode linux
 ifeq ($(strip $(architecture)),um)
   DEBCONFIG = $(CONFDIR)/config.um
   kimage := linux
@@ -618,6 +626,44 @@ ifeq ($(strip $(architecture)),um)
   architecture = i386
   IMAGEDIR = /usr/bin
 endif
+
+# xen-linux
+ifeq ($(strip $(architecture)),xen)
+  KERNEL_ARCH = xen
+  architecture = i386
+
+  ifeq (,$(findstring $(KPKG_SUBARCH),xen0 xenu))
+       KPKG_SUBARCH:=xen0
+  endif
+  DEBCONFIG = $(CONFDIR)/config.$(KPKG_SUBARCH)
+
+  ifneq ($(shell if [ $(VERSION)  -ge  2 ]  && [ $(PATCHLEVEL) -ge 5 ] &&    \
+                    [ $(SUBLEVEL) -ge 41 ]; then echo new;                   \
+               elif [ $(VERSION)  -ge  2 ]  && [ $(PATCHLEVEL) -ge 6 ]; then \
+                                            echo new;                        \
+               elif [ $(VERSION)  -ge  3 ]; then echo new; fi),)
+    target    = vmlinuz
+  else
+    target    = bzImage
+  endif
+  kimage := $(target)
+ 
+  ifeq (,$(filter xen0,$(KPKG_SUBARCH)))
+     # only domain-0 are bootable via xen so only domain0 subarch needs grub and xen-vm
+     loaderdep=grub,xen-vm
+     loader=grub
+     loaderdoc=
+  else
+     loaderdep=
+     loader=
+     loaderdoc=
+  endif
+ 
+  kimagesrc = $(kimage)
+  kimagedest = $(INT_IMAGE_DESTDIR)/xen-linux-$(version)
+endif
+
+
 ######################################################################
 ######################################################################
 
@@ -724,7 +770,11 @@ h_package := kernel-headers-$(version)
 ifeq ($(strip $(KERNEL_ARCH)),um)
 	i_package := kernel-uml-$(version)$(INT_SUBARCH)
 else
+  ifeq ($(strip $(KERNEL_ARCH)),xen)
+	i_package := kernel-$(KPKG_SUBARCH)-$(version)
+  else
 	i_package := kernel-image-$(version)$(INT_SUBARCH)
+  endif
 endif
 d_package := kernel-doc-$(version)
 l_package := libc-kheaders
@@ -1603,7 +1653,7 @@ ifeq ($(shell if [ $(VERSION) -ge 2 ] && [ $(PATCHLEVEL) -ge 5 ]; then \
 	$(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) \
                                  ARCH=$(KERNEL_ARCH) clean 
 else
-ifneq ($(strip $(KERNEL_ARCH)),um)
+ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 	$(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) \
                                 ARCH=$(KERNEL_ARCH) prepare
 endif
@@ -1700,7 +1750,7 @@ else
 endif
 
 real_stamp_source:
-ifeq ($(strip $(KERNEL_ARCH)),um)
+ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 	echo done >  stamp-source
 else
 ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
@@ -1800,7 +1850,7 @@ else
 endif
 
 real_stamp_headers:
-ifeq ($(strip $(KERNEL_ARCH)),um)
+ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 	echo done >  stamp-headers
 else
 ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
@@ -1815,6 +1865,7 @@ endif
 	$(make_directory) $(HEADER_TOP)/DEBIAN
 	$(make_directory) $(HEADER_SRC)
 	$(make_directory) $(HEADER_DOC)
+	$(make_directory) $(HEADER_SRC)/arch/$(KERNEL_ARCH)
 	sed -e 's/=P/$(h_package)/g' -e 's/=V/$(version)/g' \
 		$(DEBDIR)/include.postinst > $(HEADER_TOP)/DEBIAN/postinst
 	chmod 755 $(HEADER_TOP)/DEBIAN/postinst
@@ -1849,6 +1900,10 @@ endif
 	         $(HEADER_DOC)/Buildinfo
 	chmod 0644 $(HEADER_DOC)/Buildinfo
 	$(install_file) Makefile       $(HEADER_SRC)
+	test ! -e Rules.make || $(install_file) Rules.make     $(HEADER_SRC)
+	test ! -e arch/$(KERNEL_ARCH)/Makefile ||                              \
+            $(install_file) arch/$(KERNEL_ARCH)/Makefile $(HEADER_SRC)/arch/$(KERNEL_ARCH)
+	test ! -e Rules.make || $(install_file) Rules.make     $(HEADER_SRC)
 ifneq ($(strip $(int_follow_symlinks_in_src)),)
 	-tar cfh - include |        (cd $(HEADER_SRC); umask 000; tar xsf -)
 	(cd $(HEADER_SRC)/include; rm -rf asm; ln -s asm-$(KERNEL_ARCH) asm)
@@ -1884,7 +1939,7 @@ else
 endif
 
 real_stamp_doc:
-ifeq ($(strip $(KERNEL_ARCH)),um)
+ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 	echo done >  stamp-doc
 else
 ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
@@ -1969,6 +2024,7 @@ endif
 	$(make_directory) $(IMAGE_TOP)/$(IMAGEDIR)
 	$(make_directory) $(IMAGE_DOC)
 ifneq ($(strip $(KERNEL_ARCH)),um)
+  ifneq ($(strip $(KERNEL_ARCH)),xen)
 	sed -e 's/=V/$(version)/g'    -e 's/=B/$(link_in_boot)/g'   \
             -e 's/=S/$(no_symlink)/g' -e 's/=R/$(reverse_symlink)/g' \
             -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \
@@ -1985,14 +2041,29 @@ ifneq ($(strip $(KERNEL_ARCH)),um)
              $(DEBDIR)/image.postrm > $(IMAGE_TOP)/DEBIAN/postrm
 	chmod 755 $(IMAGE_TOP)/DEBIAN/postrm
 	sed -e 's/=V/$(version)/g'    -e 's/=L/$(loader)/g'          \
-	    -e 's/=I/$(INITRD)/g'     -e 's/=OF/$(AM_OFFICIAL)/g'    \
+             -e 's/=I/$(INITRD)/g'     -e 's/=OF/$(AM_OFFICIAL)/g'    \
              -e 's@=M@$(MKIMAGE)@g'    -e 's@=A@$(DEB_HOST_ARCH)@g'   \
 	             $(DEBDIR)/image.preinst > $(IMAGE_TOP)/DEBIAN/preinst
 	chmod 755 $(IMAGE_TOP)/DEBIAN/preinst
 	sed -e 's/=V/$(version)/g'    -e 's/=L/$(loader)/g'          \
              -e 's@=M@$(MKIMAGE)@g'    -e 's/=OF/$(AM_OFFICIAL)/g'    \
-	             $(DEBDIR)/image.prerm > $(IMAGE_TOP)/DEBIAN/prerm
+             $(DEBDIR)/image.prerm > $(IMAGE_TOP)/DEBIAN/prerm
 	chmod 755 $(IMAGE_TOP)/DEBIAN/prerm
+  else
+	sed -e 's/=V/$(version)/g'    -e 's/=B/$(link_in_boot)/g'   \
+            -e 's/=S/$(no_symlink)/g' -e 's/=R/$(reverse_symlink)/g' \
+            -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \
+            -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'        \
+            -e 's@=M@$(MKIMAGE)@g'    -e 's/=OF/$(AM_OFFICIAL)/g'    \
+            -e 's@=A@$(DEB_HOST_ARCH)@g'                             \
+            -e 's/=SA/$(KPKG_SUBARCH)/g'                              \
+             $(DEBDIR)/xen.postinst > $(IMAGE_TOP)/DEBIAN/postinst
+	chmod 755 $(IMAGE_TOP)/DEBIAN/postinst
+	sed -e 's/=V/$(version)/g'    -e 's/=L/$(loader)/g'          \
+             -e 's@=M@$(MKIMAGE)@g'    -e 's/=OF/$(AM_OFFICIAL)/g'    \
+             $(DEBDIR)/xen.prerm > $(IMAGE_TOP)/DEBIAN/prerm
+	chmod 755 $(IMAGE_TOP)/DEBIAN/prerm
+  endif
 else
 	$(make_directory) $(UML_DIR)
 	$(make_directory) $(MAN1DIR)
@@ -2338,3 +2409,15 @@ endef
 # USB_MODULES			X
 
 .PHONY: binary binary-arch binary-indep clean debian modules modules_image
+
+test:
+	echo version: $(version)
+	echo KPKG_ARCH: $(KPKG_ARCH)
+	echo $(DEB_BUILD_ARCH)
+	echo $(DEB_BUILD_GNU_CPU)
+	echo $(DEB_BUILD_GNU_TYPE)
+	echo $(DEB_HOST_ARCH)
+	echo $(DEB_HOST_GNU_CPU)
+	echo $(DEB_HOST_GNU_SYSTEM)
+	echo $(DEB_HOST_GNU_TYPE)
+	echo $(DEB_BUILD_GNU_SYSTEM)
