@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Sat May 15 11:24:02 1999
+## Last Modified On : Mon May 17 22:29:56 1999
 ## Last Machine Used: glaurung.green-gryphon.com
-## Update Count	    : 395
+## Update Count	    : 397
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.65 1999/05/15 16:27:50 srivasta Exp $
+## $Id: rules,v 1.66 1999/05/18 03:30:09 srivasta Exp $
 ###############################################################################
 
 # The version of kernel-package this belongs to
@@ -723,12 +723,12 @@ stamp-image: configure build
             -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \
             -e 's,=D,$(IMAGE_DESTDIR),g'                             \
              $(DEBDIR)/image.postinst > debian/tmp-image/DEBIAN/postinst
-	chmod 755 debian/tmp-image/DEBIAN/postrm
+	chmod 755 debian/tmp-image/DEBIAN/postinst
 	sed -e 's/=V/$(version)/g'    -e 's/=B/$(image_in_boot)/g'   \
             -e 's/=S/$(no_symlink)/g' -e 's/=R/$(reverse_symlink)/g' \
             -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \
             -e 's,=D,$(IMAGE_DESTDIR),g'                             \
-             $(DEBDIR)/image.postinst > debian/tmp-image/DEBIAN/postinst
+             $(DEBDIR)/image.postrm > debian/tmp-image/DEBIAN/postrm
 	chmod 755 debian/tmp-image/DEBIAN/postrm
 	sed -e 's/=V/$(version)/g'    -e 's/=L/$(loader)/g'          \
 	             $(DEBDIR)/image.preinst > debian/tmp-image/DEBIAN/preinst
