@@ -1,5 +1,5 @@
 
-    $Id: README,v 1.9 1997/11/10 16:40:30 srivasta Exp $
+    $Id: README,v 1.10 1997/12/01 19:53:11 srivasta Exp $
 
 This is the Debian Linux packaging scripts for the Linux kernel. 
 This package has been put together by Manoj Srivastava <srivasta@debian.org>.
@@ -35,7 +35,7 @@ packages, but they are not strictly essential (though quite nice really).
 1% cd <kernel source tree>
 2% make config   # or make menuconfig or make xconfig and configure
 3% make-kpkg clean
-4% make-kpkg -r=custom.1.0 kernel_image
+4% make-kpkg -revision=custom.1.0 kernel_image
 5% dpkg -i ../kernel-image-X.XXX_1.0_<arch>.deb
 6% shutdown -r now # If and only if LILO worked or you have a means of
                    # booting the new kernel. YOU HAVE BEEN WARNED!!
@@ -138,12 +138,12 @@ has entered the garden of eden, and we must forever use epochs to
 guard against forced upgrades.
 
 So, try using an epoch for your custom packages: 
-  make-kpkg -r=3:custom.1.0 kernel_image
+  make-kpkg -revision=3:custom.1.0 kernel_image
 
 And the next time when you build a kernel, because you just bought a new
 soundcard or you discovered that you suddenly want masquerading in your
 kernel enabled, you'll type: 
-  make-kpkg -r=3:custom.2.0 kernel_image
+  make-kpkg -revision=3:custom.2.0 kernel_image
 
 When make-kpkg is finished, you'll have 
 kernel-image-2.0.29_custom.1.0_i386.deb and all it takes now is to
@@ -265,7 +265,7 @@ To create a source or header package, run
 Note: You only need one of these.
 
 Similarly, the documentation package is built by:
-% make-kpkg -r=custom.1.0 kernel_doc
+% make-kpkg -revision=custom.1.0 kernel_doc
 
 Or if you want to generate the whole package, 
 % make-kpkg -revision custom.1.0 -signature "Your pgp id" dist
