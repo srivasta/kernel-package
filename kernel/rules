@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.192 2003/03/06 23:04:20 srivasta Exp $
+## $Id: rules,v 1.193 2003/03/22 18:59:09 srivasta Exp $
 ###############################################################################
 
 ifdef KPKG_ARCH
@@ -630,7 +630,7 @@ DIR_PATCH_UNPATCH = $(PATCH_DIR)/unpatch
 DEB_DEST := ..
 SRCTOP := $(shell if [ "$$PWD" != "" ]; then echo $$PWD; else pwd; fi)
 INSTALL_MOD_PATH=$(SRCTOP)/$(IMAGE_TOP)
-
+MODDIR ?= $(SRCTOP)/..
 
 install_file=    install -p    -o root -g root -m 644
 install_program= install -p    -o root -g root -m 755
@@ -1729,6 +1729,7 @@ endif
 	    (cd $$module;                                           \
               if ./debian/rules KVERS="$(version)" KSRC="$(SRCTOP)" \
                              KMAINT="$(pgp)" KEMAIL="$(email)"      \
+                             MODDIR="$(MODDIR)"                     \
                              KDREV="$(debian)" kdist_image; then    \
                   echo "Module $$module processed fine";            \
               else                                                  \
@@ -1754,6 +1755,7 @@ endif
 	    (cd $$module;                                           \
               if ./debian/rules KVERS="$(version)" KSRC="$(SRCTOP)" \
                              KMAINT="$(pgp)" KEMAIL="$(email)"      \
+                             MODDIR="$(MODDIR)"                     \
                              KDREV="$(debian)" kdist; then          \
                   echo "Module $$module processed fine";            \
               else                                                  \
@@ -1779,6 +1781,7 @@ endif
 	    (cd $$module;                                           \
               if ./debian/rules KVERS="$(version)" KSRC="$(SRCTOP)" \
                              KMAINT="$(pgp)" KEMAIL="$(email)"      \
+                             MODDIR="$(MODDIR)"                     \
                              KDREV="$(debian)" kdist_configure; then\
                   echo "Module $$module configured fine";           \
               else                                                  \
@@ -1800,6 +1803,7 @@ else
 	    (cd $$module; \
               if ./debian/rules KVERS="$(version)" KSRC="$(SRCTOP)" \
                              KMAINT="$(pgp)" KEMAIL="$(email)"      \
+                             MODDIR="$(MODDIR)"                     \
                              KDREV="$(debian)" kdist_clean; then    \
                   echo "Module $$module cleaned";                   \
               else                                                  \

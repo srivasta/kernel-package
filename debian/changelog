@@ -1,3 +1,16 @@
+kernel-package (8.023) unstable; urgency=low
+
+  * Export MODDIR to modules so that they have an idea where to put the
+    final debs, rather than just $(KSRC)/... This allows people building
+    the .debs to be able to specify where the modules .debs go to. Also
+    mentioned all the variables that are set in README.modules, since that
+    file was out of date.                                    closes: Bug#185279
+  * Also add MODULE_LOC to the list of ENVIRONMENT VARIABLES in the
+    make-kpkg man page (it was already documented in the manual page, just
+    not in the list)                                         closes: Bug#185859
+
+ -- Manoj Srivastava <srivasta@acm.org>  Sat, 22 Mar 2003 12:58:48 -0600
+
 kernel-package (8.022) unstable; urgency=low
 
   * Mention CC and HOSTCC in the README files.
