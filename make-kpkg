@@ -5,16 +5,16 @@
 # Created On       : Mon Jun 17 01:10:11 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Sun Nov  9 02:10:25 1997
+# Last Modified On : Mon Dec  1 13:44:51 1997
 # Last Machine Used: tiamat.datasync.com
-# Update Count     : 86
+# Update Count     : 87
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
 #
 #
 #
-#    $Id: make-kpkg,v 1.5 1997/11/10 16:42:09 srivasta Exp $
+#    $Id: make-kpkg,v 1.6 1997/12/01 19:53:30 srivasta Exp $
 #
 require 5.002;
 use strict;
@@ -29,7 +29,7 @@ make-kpkg - build Debian kernel packages from Linux kernel sources.
 ($main::MYNAME     = $main::0) =~ s|.*/||;
 $main::Author      = "Manoj Srivastava";
 $main::AuthorMail  = "srivasta\@debian.org";
-$main::Version     = '$Revision: 1.5 $ ';
+$main::Version     = '$Revision: 1.6 $ ';
 
 my $help_opt=0; 
 my $revision=0; 
@@ -172,6 +172,12 @@ usage: $main::MYNAME [options] target [target ...]
  --bzimage             Create a kernel using bzImage (in case the site
                        wide default is zimage, as set in
                        /etc/kernel-pkg.conf) 
+ --rootcmd method      A command that provides a means of gaining
+              	       super user ccess (for example, `sudo' or
+              	       `fakeroot') as needed by dpkg-buildpackages's
+              	       -r option.  This is only relevant for the
+              	       buildpackage target.
+
 Use one of --zimage or --bzimage, or none, but not both.
 
 Option Format:
