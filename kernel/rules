@@ -398,6 +398,21 @@ ifeq ($(strip $(architecture)),sparc)
   endif
 endif
 
+##### amd64
+ifeq ($(strip $(architecture)),amd64)
+  KERNEL_ARCH=x86_64
+  kimage := bzImage
+  loaderdep=lilo (>= 19.1) | grub
+  loader=lilo
+  loaderdoc=LiloDefault
+  target = $(kimage)
+  kimagesrc = $(strip arch/$(KERNEL_ARCH)/boot/$(kimage))
+  kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
+  DEBCONFIG= $(CONFDIR)/config.$(KPKG_SUBARCH)
+  kelfimagesrc = vmlinux
+  kelfimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
+endif
+
 
 ##### i386 and such
 ifeq ($(strip $(architecture)),i386)

@@ -5,9 +5,9 @@
 # Created On       : Sat Apr 27 05:42:43 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Wed Aug 27 00:49:59 2003
-# Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 40
+# Last Modified On : Wed Feb 18 16:44:36 2004
+# Last Machine Used: glaurung.internal.golden-gryphon.com
+# Update Count     : 41
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
@@ -32,6 +32,7 @@ chomp($architecture = `dpkg --print-installation-architecture`);
 $architecture = "ppc" if $architecture eq "powerpc";
 $architecture = "parisc" if $architecture eq "hppa";
 $architecture = "mips" if $architecture eq "mipsel";
+$architecture = "x86_64" if $architecture eq "amd64";
 
 my $stop_and_read     = 0;
 my $have_conffile     = "";
