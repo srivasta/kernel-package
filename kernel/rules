@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.157 2002/02/27 03:40:42 srivasta Exp $
+## $Id: rules,v 1.158 2002/02/27 18:49:00 srivasta Exp $
 ###############################################################################
 
 ifdef KPKG_ARCH
@@ -184,6 +184,8 @@ endif
 
 ### PowerPC
 ifneq ($(strip $(filter ppc powerpc,$(architecture))),)
+ifeq ($(DEB_BUILD_ARCH),powerpc)
+# This is only meaningful when building on a PowerPC
 GUESS_SUBARCH:=$(shell awk '/machine/ { print $$3}' /proc/cpuinfo)
 ifneq (,$(findstring Power,$(GUESS_SUBARCH)))
 GUESS_SUBARCH:=pmac
@@ -191,6 +193,9 @@ else
 ifneq (,$(findstring iMac,$(GUESS_SUBARCH)))
 GUESS_SUBARCH:=pmac
 endif
+endif
+else
+GUESS_SUBARCH:=pmac
 endif
 
 ifeq (,$(findstring $(KPKG_SUBARCH),apus chrp mbx pmac prep Amiga APUs CHRP MBX PReP ))
@@ -240,6 +245,8 @@ endif
 ifneq (,$(findstring $(KPKG_SUBARCH),pmac))
 KPKG_SUBARCH:=pmac
 target := zImage
+ifeq ($(DEB_BUILD_ARCH),powerpc)
+# This is only meaningful when building on a PowerPC
 ifneq (,$(shell grep NewWorld /proc/cpuinfo))
 loaderdep=yaboot
 loader=yaboot
@@ -248,6 +255,10 @@ else
 loaderdep=quik
 loader=quik
 loaderdoc=QuikDefault
+endif
+else
+loaderdep=yaboot
+loader=yaboot
 endif
 kimagesrc = vmlinux
 kimage := vmlinux
@@ -1499,7 +1510,7 @@ ifneq ($(strip $(KERNEL_CROSS)),)
 	mv System.map System.precious
 endif
 	$(MAKE) $(EXTRAV_ARG) INSTALL_MOD_PATH=$(INSTALL_MOD_PATH)           \
-                $(CROSS_ARG) modules_install
+                $(CROSS_ARG) ARCH=$(KERNEL_ARCH) modules_install
 ifneq ($(strip $(KERNEL_CROSS)),)
 	mv System.precious System.map
 endif

@@ -1,3 +1,13 @@
+kernel-package (7.92) unstable; urgency=low
+
+  * Cross-compiling a PowerPC kernel fails after the modules_install step
+    because ARCH isn't passed.  There are also some other places where the
+    PowerPC logic assumes you're running on the target (not
+    cross-compiling). Thanks to "Eric C. Cooper" <ecc@cmu.edu> for the
+    patch.                                                   closes: Bug#136080
+
+ -- Manoj Srivastava <srivasta@debian.org>  Wed, 27 Feb 2002 12:48:18 -0600
+
 kernel-package (7.91) unstable; urgency=low
 
   * When cross compiling, if System.map is present, and we call
