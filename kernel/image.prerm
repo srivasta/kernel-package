@@ -13,7 +13,7 @@
 # Description      : 
 # 
 #
-#    $Id: image.prerm,v 1.18 2002/09/01 01:15:04 srivasta Exp $
+#    $Id: image.prerm,v 1.19 2003/08/10 09:42:04 srivasta Exp $
 #
 # 
 #use strict;
@@ -40,6 +40,7 @@ my $postrm_hook     = '';       #Normally we do not
 my $preinst_hook    = '';       #Normally we do not
 my $prerm_hook      = '';       #Normally we do not
 my $minimal_swap    = '';       # Do not swap symlinks
+my $ignore_depmod_err = '';	# normally we do not
 
 my $Loader          = "NoLOADER"; # 
 $Loader             = "LILO"     if $loader =~ /^lilo/io;
@@ -124,6 +125,7 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
       $silent_modules  = '' if /silent_modules\s*=\s*(no|false|0)\s*$/ig;
       $silent_loader   = '' if /silent_loader\s*=\s*(no|false|0)\s*$/ig;
       $minimal_swap    = '' if /minimal_swap\s*=\s*(no|false|0)\s*$/ig;
+      $ignore_depmod_err = '' if /ignore_depmod_err\s*=\s*(no|false|0)\s*$/ig;
 
 
       $do_symlink      = "Yes" if /do_symlinks\s*=\s*(yes|true|1)\s*$/ig;
@@ -142,6 +144,7 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
       $silent_modules  = 'Yes' if /silent_modules\s*=\s*(yes|true|1)\s*$/ig;
       $silent_loader   = 'Yes' if /silent_loader\s*=\s*(yes|true|1)\s*$/ig;
       $minimal_swap    = 'Yes' if /minimal_swap\s*=\s*(yes|true|1)\s*$/ig;
+      $ignore_depmod_err = 'Yes' if /ignore_depmod_err\s*=\s*(yes|true|1)\s*$/ig;
 
       $image_dest      = "$1"  if /image_dest\s*=\s*(\S+)/ig;
       $postinst_hook   = "$1"  if /postinst_hook\s*=\s*(\S+)/ig;

@@ -21,7 +21,7 @@
 .\" Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139,
 .\" USA.
 .\"
-.\" $Id: kernel-img.conf.5,v 1.20 2003/04/18 20:50:33 srivasta Exp $
+.\" $Id: kernel-img.conf.5,v 1.21 2003/08/10 09:42:03 srivasta Exp $
 .\"
 .TH KERNEL\-IMG.CONF 5 "Mar 21 2000" "Debian" "Debian GNU/Linux manual" 
 .\" NAME should be all caps, SECTION should be 1-8, maybe w/ subsection
@@ -320,6 +320,10 @@ the boot loader is run is unaffected by this option ( see
 to see how to control whether the boot loader is run or not, and the
 absense of the configuration file will also make the install process
 voluble and interactive).
+.TP ignore_depmod_error
+If set, does not prompt to continue after a depmod problem in the
+postinstall script. This facilitates automated installs, though it may
+mask a problem with the kernel image. A diagnostic is still issued.
 .SH FILES
 The file described here is
 .I /etc/kernel-img.conf.

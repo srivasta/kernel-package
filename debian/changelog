@@ -2,8 +2,10 @@ kernel-package (8.045) unstable; urgency=low
 
   * Fix missing double quotes in the rules file. I don't know how this
     escaped testing ...                              closes: Bug#204797
+  * Make the prompting to continue after a depmod problem optional in the
+    kernel package postinstall script
 
- -- Manoj Srivastava <srivasta@debian.org>  Sun, 10 Aug 2003 04:16:23 -0500
+ -- Manoj Srivastava <srivasta@debian.org>  Sun, 10 Aug 2003 04:41:14 -0500
 
 kernel-package (8.044) unstable; urgency=low
 
