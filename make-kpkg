@@ -5,16 +5,16 @@
 # Created On       : Mon Jun 17 01:10:11 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Mon Jun  2 15:22:09 1997
+# Last Modified On : Wed Jun 18 13:11:27 1997
 # Last Machine Used: tiamat.datasync.com
-# Update Count     : 76
+# Update Count     : 77
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
 #
 #
 #
-#    $Id: make-kpkg,v 1.2 1997/06/03 03:41:33 srivasta Exp $
+#    $Id: make-kpkg,v 1.3 1997/06/18 18:14:13 srivasta Exp $
 #
 require 5.002;
 use strict;
@@ -29,7 +29,7 @@ make-kpkg - build Debian kernel packages from Linux kernel sources.
 ($main::MYNAME     = $main::0) =~ s|.*/||;
 $main::Author      = "Manoj Srivastava";
 $main::AuthorMail  = "srivasta\@debian.org";
-$main::Version     = '$Revision: 1.2 $';
+$main::Version     = '$Revision: 1.3 $';
 
 my $help_opt=0;
 my $revision=0;
@@ -245,16 +245,15 @@ included in the Linux kernel.
 
 This target produces a Debian package of the Linux kernel source
 image, and any modules configured in the kernel configuration file
-I<.config>.  If there is no I<.config> file in the kernel source directory,
-a default configuration is provided similar to the one used to create
-the B<Debian> boot-floppies.  The package produced updates the
-I</boot/psdatabase> file at install time, it also update symbolic links
-in the root directory to point to the new kernel image in I</boot>.  It
-also offers to run the Linux loader, B<LILO>, creating a configuration
-file for B<LILO> if needed.  It also offers to put the new kernel on a
-floppy, formatting the floppy if needed.  On deletion, the package
-checks the version of the kernel running, and refuses to delete a
-running kernel.
+I<.config>.  If there is no I<.config> file in the kernel source
+directory, a default configuration is provided similar to the one used
+to create the B<Debian> boot-floppies.  The package produced updates
+the symbolic links in the root directory to point to the new kernel
+image in I</boot>.  It also offers to run the Linux loader, B<LILO>,
+creating a configuration file for B<LILO> if needed.  It also offers
+to put the new kernel on a floppy, formatting the floppy if needed.
+On deletion, the package checks the version of the kernel running, and
+refuses to delete a running kernel.
 
 =back
 

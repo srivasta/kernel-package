@@ -1,5 +1,13 @@
 kernel-source-=V (=D) unstable; urgency=low
 
+  * No longer carries around an extra uncompressed kernel image, and does
+    not anymore create /boot/psdatabase-X.X.XX. The psdatabase file does
+    not seem to be required anymore.
+
+ -- Manoj Srivastava <srivasta@debian.org>  Wed, 18 Jun 1997 13:05:33 -0500
+
+kernel-source-0.17 (1.01) unstable; urgency=low
+
   * Added patches to support m68k from "Frank Neumann"
     <Frank.Neumann@Informatik.Uni-Oldenburg.DE>.
   * Added patched to support sparcs from Eric Delaunay

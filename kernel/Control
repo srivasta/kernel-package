@@ -45,8 +45,7 @@ Suggests: lilo (>= 19.1), fdutils, kernel-doc-=V
 Description: Linux kernel binary image.
  This package contains the Linux kernel image, the System.map file,
  and the modules built by the packager.  It also contains scripts that
- update the symbols in the /boot/psdatabase file for /bin/ps et al.,
- and tries to ensure that the system is not left in a unbootable state
+ try to ensure that the system is not left in a unbootable state
  after an update.
  .
  If you wish to update a bootdisk, or to use a bootloader to make

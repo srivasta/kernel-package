@@ -1,5 +1,5 @@
 
-    $Id: README.image,v 1.2 1997/06/03 03:26:31 srivasta Exp $
+    $Id: README.image,v 1.3 1997/06/18 18:17:01 srivasta Exp $
 
  This is the Debian GNU/Linux prepackaged version of the Linux kernel
  binary image and modules. Linux was written by Linus Torvalds
@@ -11,6 +11,5 @@
 
  This package contains the Linux kernel image, the System.map file,
  and the modules built by the packager.  It also contains scripts that
- update the symbols in the /boot/psdatabase file for /bin/ps et al.,
- and tries to ensure that the system is not left in a unbootable state
+ try to ensure that the system is not left in a unbootable state
  after an update.
