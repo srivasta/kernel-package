@@ -21,7 +21,7 @@
 .\" Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139,
 .\" USA.
 .\"
-.\" $Id: kernel-pkg.conf.5,v 1.10 1999/01/08 05:30:43 srivasta Exp $
+.\" $Id: kernel-pkg.conf.5,v 1.11 1999/07/14 15:26:09 srivasta Exp $
 .\"
 .TH KERNEL\-PKG.CONF 5 "Jan  7 1997" "Debian" "Debian GNU/Linux manual" 
 .\" NAME should be all caps, SECTION should be 1-8, maybe w/ subsection
@@ -53,6 +53,8 @@ the
 .IR postinst.
 Can be over\-ridden by the environment variable 
 .B KPKG_MAINTAINER.
+Please note that any apostrophes "'" shall have to be quoted like so:
+maintainer = John O'\\''Brien. Yes, this is ugly, but this works.
 .TP
 .B email:          
 The email address of that person.  Set up at package installation by
@@ -179,7 +181,13 @@ as needed by
 is used to call dpkg-buildpackage with the proper options. The
 environment variable 
 .B ROOT_CMD
-over-rides this.
+over-rides this. The environment variable
+.B UNSIGN_SOURCE
+adds to this command an option to have dpkg-buildpackage not sign the
+source, similarily, the environment variable
+.B UNSIGN_CHANGELOG 
+adds to this command an option to have dpkg-buildpackage not sign the
+changelog.
 .TP
 .B do_clean	
 Set to anything but YES, this shall forego the make clean done in the

@@ -1,5 +1,5 @@
 
-    $Id: README,v 1.22 1999/06/01 18:05:56 srivasta Exp $
+    $Id: README,v 1.23 1999/07/14 15:26:09 srivasta Exp $
 
 This is the Debian Linux packaging scripts for the Linux kernel. 
 This package has been put together by Manoj Srivastava <srivasta@debian.org>.
@@ -96,9 +96,9 @@ a) It only has an effect during the configure phase (in other words, if a
    make-kpkg clean or manually remove stamp-configure for it to have an
    effect). So, if you re-run make-kpkg with a different revision number,
    you have to reconfigure the kernel. 
-b) It may contain only alphanumerics and the characters + . (full stop,
-   and plus) and should contain a digit.  NOTE: No hyphens allowed. (Look
-   at Chapter 5 of the Programmers manual for details). Optionally, you
+b) It may contain only alphanumerics and the characters + . - (full stop,
+   hyphen, and plus) and should contain a digit.  (Look at Chapter 5 
+   of the Programmers manual for details). Optionally, you
    may prepend the revision with a digit followed by a colon (:); this
    shall put your revision into a new epoch; (which makes older dpkg very
    confused), more on this later.
@@ -200,7 +200,10 @@ you may put any legal Makefile directive in that file (just make very
 sure you know what you are doing ;-).
 
 	At the moment, the user modifiable variables supported are:
-maintainer:	Local kernel-* package maintainer
+maintainer:	Local kernel-* package maintainer.  Please note that
+                any apostrophes "'" shall have to be quoted like so: 
+                maintainer = John O'\\''Brien. 
+                Yes, this is ugly, but this works.
 email:          The email address of that person.
 pgp:            Name to search for in the pgp database _iff_ separate
                 modules (like pcmcia etc) are being built in
@@ -299,6 +302,25 @@ have a .config file, just copy it to this directory, and you are go.
 With a custom .config file in place (created as above) run again:
 % make-kpkg clean
 % fakeroot make-kpkg --revision=custom.1.0 kernel_image
+
+|-----------------------------------------------------------------------|
+|                           Special needs                               |
+| Or, for people who want to minimize time spent in fakeroot (for       |
+| whatever reasons that maybe -- I think that the separate step as      |
+| non-fake-root is not required, but that is a personal opinion)        |
+| % make-kpkg clean                                                     |
+| % make-kpkg  --revision=custom.1.0 build                              |
+| % fakeroot make-kpkg --revision=custom.1.0 kernel_image               |
+|                                                                       |
+| For people who wish to see the user name (not root) when they do a    |
+| uname -a on the maschine when they install the kernel, there is a     |
+| trick:                                                                |
+|  % make config                                                        |
+|  % make-kpkg build                                                    |
+|  % fakeroot make -f debian/rules kernel-image-deb                     |
+| shall generate a kernel image with the user name of the user embedded |
+| in it.                                                                |
+-------------------------------------------------------------------------
 
 To create a source or header package, run
 % make-kpkg clean

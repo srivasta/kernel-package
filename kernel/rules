@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.72 1999/06/01 18:05:24 srivasta Exp $
+## $Id: rules,v 1.73 1999/07/14 15:26:10 srivasta Exp $
 ###############################################################################
 
 #
@@ -347,7 +347,7 @@ STAMPS_TO_CLEAN = stamp-build stamp-configure stamp-source stamp-image \
 DIRS_TO_CLEAN   = debian/tmp-source debian/tmp-headers debian/tmp-image
 
 CONFLOC    :=/etc/kernel-pkg.conf
-LIBLOC     :=/usr/lib/kernel-package
+LIBLOC     :=/usr/share/kernel-package
 
 ifeq ($(strip $(MODULE_LOC)),)
 MODULE_LOC =/usr/src/modules
@@ -356,16 +356,20 @@ endif
 DEBDIR      = $(LIBLOC)
 DEBDIR_NAME = $(shell basename $(DEBDIR))
 
-ifeq ($(strip $(CONFDIR)),)
-CONFDIR     = $(DEBDIR)/Config
-endif
-
 ifeq ($(strip $(PATCH_DIR)),)
 PATCH_DIR         = /usr/src/kernel-patches/$(architecture)
 endif
 
 DIR_PATCH_APPLY   = $(PATCH_DIR)/apply
 DIR_PATCH_UNPATCH = $(PATCH_DIR)/unpatch
+
+ifeq ($(strip $(CONFDIR)),)
+ifeq ($(strip $(patch_the_kernel)),YES)
+CONFDIR     = $(PATCH_DIR)
+else
+CONFDIR     = $(DEBDIR)/Config
+endif
+endif
 
 # The destination of all .deb files
 # (suggested by Rob Browning <osiris@cs.utexas.edu>)
@@ -420,9 +424,16 @@ patch_the_kernel = $(PATCH_THE_KERNEL)
 endif
 
 ifneq ($(strip $(ROOT_CMD)),)
-root_cmd = $(ROOT_CMD)
+root_cmd := $(root_cmd) $(ROOT_CMD)
 endif
 
+ifneq ($(strip $(UNSIGN_SOURCE)),)
+root_cmd := $(root_cmd) -us
+endif
+
+ifneq ($(strip $(UNSIGN_CHANGELOG)),)
+root_cmd := $(root_cmd) -uc
+endif
 
 ifneq ($(strip $(CLEAN_SOURCE)),)
 do_clean = $(CLEAN_SOURCE)
@@ -464,7 +475,7 @@ ifeq ($(strip $(IN_KERNEL_DIR)),)
 build configure clean binary kernel_source kernel-source kernel-headers\
 stamp-source kernel_headers stamp-headers kernel_image stamp-image \
 kernel-image kernel-doc kernel_doc stamp-doc buildpackage \
-libc_kheaders libc-kheaders stamp-libc-kheaders:
+libc_kheaders libc-kheaders stamp-libc-kheaders kernel-image-deb:
 	@echo "You should invoke this command from the top level directory of"
 	@echo "a linux kernel source directory tree, and as far as I can tell,"
 	@echo "the current directory:"
@@ -482,7 +493,7 @@ ifneq ($(strip $(HAVE_VALID_PACKAGE_VERSION)),YES)
 # Hah! Bogus version number
 build configure clean binary kernel_source kernel-source kernel-headers\
 stamp-source kernel_headers stamp-headers kernel_image stamp-image \
-kernel-image kernel-doc kernel_doc stamp-doc buildpackage:
+kernel-image kernel-doc kernel_doc stamp-doc buildpackage kernel-image-deb:
 	@echo "Problems ecountered with the version number $(debian)."
 	@echo "$(HAVE_VALID_PACKAGE_VERSION)"
 	@echo ""
@@ -713,7 +724,13 @@ stamp-doc: configure
 	touch stamp-doc
 
 kernel-image kernel_image: stamp-image
-stamp-image: configure build
+stamp-image: configure build kernel-image-deb
+# % make config
+# % make-kpkg build
+# % sudo make -f debian/rules kernel-image-deb
+# seems to create a working .deb with a kernel that gives the correct
+# user name (as opposed to root@...)
+kernel-image-deb:
 	@test root = "`whoami`" || (echo need root priviledges; exit 1)
 	rm -f -r ./debian/tmp-image ./debian/tmp-image.deb
 	test -f stamp-configure || $(deb_rule) configure

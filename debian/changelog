@@ -1,3 +1,27 @@
+kernel-package (6.20) unstable; urgency=low
+
+  * moved make-kpkg to /usr/bin. closes: Bug#39428
+  * Fixed man page for makle-kpkg. closes: Bug#39233
+  * Mention the fact that a broken grep can also cause strangely numberred
+    packages. 
+  * Fix readme, since it disaalowed hyphens, though they were acceptable
+    (the version with hyphens is thought to have a debian revision). 
+    closes: Bug#39397
+  * Added -uc and -us options to make-kpkg to pass on to
+    dpkg-buildpackage (this may be opening a can of worms -- I may have to
+    implement a dpkg-buildpackage options option)
+  * Added documentation for people who want to minimize the time spent as
+    fake root, and who want to see the users name (not root) when they run
+    uname -a. Provide a secret exra target for thos folks to use. 
+  * Removed mention of link manipulation in /usr/src, since kernel-package
+    no longer does that. closes: Bug#40430
+  * Moved make-kpkg to /usr/bin from /usr/sbin, since building debs can
+    all be done in user space. closes: Bug#39428
+  * Partially moved to policy 3.0.0.0 (no /usr/doc/ move yet)
+  * depends on perl5, as per new perl policy.
+
+ -- Manoj Srivastava <srivasta@debian.org>  Wed, 14 Jul 1999 10:24:03 -0500
+
 kernel-package (6.19) unstable; urgency=low
 
   * In the postrm, change return 0 to exit 0. closes: Bug#38770

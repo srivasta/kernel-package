@@ -22,7 +22,7 @@
 .\" USA.
 .\"
 .\"
-.\"    $Id: make-kpkg.8,v 1.16 1999/06/01 18:05:56 srivasta Exp $
+.\"    $Id: make-kpkg.8,v 1.17 1999/07/14 15:26:09 srivasta Exp $
 .\"
 .TH MAKE\-KPKG 8 "May 2 1997" "Debian" "Debian GNU/Linux manual"
 .SH NAME
@@ -46,29 +46,23 @@ Print out a usage message.
 .BR \-\-revision " number"
 Sets the Debian revision number for the packages produced to the argument
 .BR number.
-This has certain constraints: It only has an effect during the
-configure phase (in other words, if a file called 
+This has certain constraints: the --revision option only has an effect
+during the configure phase (in other words, if a file called
 .I stamp\-configure
 exists, this option has no effect \-\- run 
 .B make\-kpkg clean 
-or manually
-remove 
+or manually remove
 .I stamp\-configure 
 for it to have an effect). So, if you re\-run 
 .B make\-kpkg 
-with a
-different revision number, 
-you have to reconfigure the kernel.
-Secondly, it may contain only
-alphanumerics and the characters + . (full stop, and plus) and must
-contain a digit.
-.BR  NOTE:
-No hyphens allowed. (Look at Chapter 5 of the Programmers manual for
-details). Optionally, you may prepend the revision with a digit
-followed by a colon (:) 
+with a different revision number, you have to reconfigure the kernel.
+Secondly, it may contain only alphanumerics and the characters +
+. - (full stop, hyphen, and plus) and must contain a digit. (Look at
+Chapter 5 of the Programmers manual for details). Optionally,
+you may prepend the revision with a digit followed by a colon (:)
 .TP
 .BR \-\-flavour\ foo
-Sets the kernel flavour to the argument \fBnumber\fR. The flavour is
+Sets the kernel flavour to the argument \fBfoo\fR. The flavour is
 also appended to the package name. You need a patched Makefile to make
 this work propperly (see /usr/doc/kernel-package/\s-1FLAVOURS\s0.gz).
 It may contain only alphanumerics and the characters \- + . (full
@@ -93,23 +87,21 @@ compiling.
 Some architectures (the Alpha, and the m68k) require a different
 kernel for each subarchitecture. This option provides a way of
 specifying it as an argument to \fBmake-kpkg\fR. \fBPlease note\fR
-that additional 
-support for sub architectures may be required in the kernel sources to
-actually make this do anything.
+that additional support for sub architectures may be required in the
+kernel sources to actually make this do anything.
 .TP
 .BR \-\-subarch\ foo
 Some architectures (the Alpha, and the m68k) require a different
 kernel for each subarchitecture. This option provides a way of
 specifying it as an argument to \fBmake-kpkg\fR. \fBPlease note\fR
-that additional 
-support for sub architectures may be required in the kernel sources to
-actually make this do anything.
+that additional support for sub architectures may be required in the
+kernel sources to actually make this do anything.
 .TP
 .BR \-\-arch_in_name
 This option uses an extended name for the kernel image package by
 embedding the subarchitecture in the image name, so one could write a
 script to create multiple subarchitectures one after the other. You
-may also do this by setting the environment variable 
+may also do this by setting the environment variable
 .B ARCH_IN_NAME. 
 \fBPlease note\fR that only the package
 .I name
@@ -121,7 +113,7 @@ Set the string used to sign the
 file for any external modules in 
 .IR /usr/src/modules/
 using PGP. This option will override the builtin default and the site
-wide customizations stored in the file 
+wide customizations stored in the file
 .IR /etc/kernel-pkg.conf.
 .TP
 .B \-\-targets
@@ -149,6 +141,16 @@ sites where the default is zImage kernels.
 The command that provides a means of gaining super user access (for
 example, `sudo' or `fakeroot') as needed by dpkg-buildpackages's -r
 option. This is only relevant for the buildpackage target.
+.TP
+.B \-\-us
+This option is passed to dpkg-buildpackage, and directs that package
+not to sign the source. This is only relevant for the buildpackage
+target.  
+.TP
+.B \-\-uc
+This option is passed to dpkg-buildpackage, and directs that package
+not to sign the changelog. This is only relevant for the buildpackage
+target.  
 .PP
 The options maybe shortened to the smallest unique string, and may
 be entered with either a \- or a \-\- prefix, and you may use a space
@@ -158,10 +160,9 @@ or an = symbol between an option string and a value.
 .B clean
 Cleans the kernel source directory of all files created by target
 .B build,
-and runs a make distclean. (Please look at a Linux kernel Makefile for 
-details).
-Please note that although we take care of the list of current kernel 
-configuration contained in the file
+and runs a make distclean. (Please look at a Linux kernel Makefile for
+details).  Please note that although we take care of the list of
+current kernel configuration contained in the file
 .I .config,
 the file 
 .I include/linux/autoconf.h
@@ -176,56 +177,36 @@ and produces the complete package using
 .B dpkg-buildpackage
 .TP
 .B binary
-This target produces all four 
-Debian
-kernel packages by running the targets
+This target produces all four Debian kernel packages by running the
+targets
 .B kernel_source, kernel_headers, kernel_doc
 and
 .B kernel_image.
 .TP
 .B kernel_source
-This target produces a debianised package of the 
-Linux
-kernel sources. The package produced also has scripts called at install 
-and delete times that manage the symbolic link
-.I /usr/src/linux
-and ensure that the link is pointed at the latest source/header package on
-the system.
+This target produces a debianised package of the Linux kernel sources.
 .TP
 .B kernel_headers
-This target produces a 
-Debian
-package containing the header files included in the 
-Linux
-kernel. The package produced also has scripts called at install 
-and delete times that manage the symbolic link
-.I /usr/src/linux
-and ensure that the link is pointed at the latest source/header package on
-the system.
+This target produces a Debian package containing the header files
+included in the Linux kernel.
 .TP
 .B kernel_doc
-This target produces a 
-Debian
-package containing the documentation included in the 
-Linux kernel. 
+This target produces a Debian package containing the documentation
+included in the Linux kernel.
 .TP
 .B kernel_image
-This target produces a 
-Debian
-package of the 
-Linux
-kernel source image, and any modules configured in the kernel configuration
-file
+This target produces a Debian package of the Linux kernel source
+image, and any modules configured in the kernel configuration file
 .I .config.
 If there is no 
 .I .config
-file in the kernel source directory, a default configuration is provided
-similar to the one used to create the 
+file in the kernel source directory, a default configuration is
+provided similar to the one used to create the
 .B Debian
 boot\-floppies.  The package produced updates the 
 .I /boot/psdatabase
-file at install time, it also update symbolic links in the root directory
-to point to the new kernel image in
+file at install time, it also update symbolic links in the root
+directory to point to the new kernel image in
 .I /boot.
 On installation, it also offers to run the Linux loader,
 .I LILO,

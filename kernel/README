@@ -1,5 +1,5 @@
 
-   $Id: README,v 1.23 1999/06/01 18:05:24 srivasta Exp $
+   $Id: README,v 1.24 1999/07/14 15:26:10 srivasta Exp $
 
 This is the Debian GNU/Linux prepackaged version of the Linux kernel.
 Linux was written by Linus Torvalds <Linus.Torvalds@cs.Helsinki.FI> and
@@ -116,12 +116,12 @@ a) It only has an effect during the configure phase (in other words, if a
    make-kpkg clean or manually remove stamp-configure for it to have an
    effect). So, if you re-run make-kpkg with a different revision number,
    you have to reconfigure the kernel. 
-b) It may contain only alphanumerics and the characters + . (full stop,
-   and plus) and should contain a digit.  NOTE: No hyphens allowed. (Look
-   at Chapter 5 of the Programmers manual for details). Optionally, you
+b) It may contain only alphanumerics and the characters + . (full
+   stop, hyphen, and plus) and should contain a digit.  (Look at
+   Chapter 5 of the Programmers manual for details). Optionally, you
    may prepend the revision with a digit followed by a colon (:); this
-   shall put your revision into a new epoch; (which makes older dpkg very
-   confused), more on this later.
+   shall put your revision into a new epoch; (which makes older dpkg
+   very confused), more on this later.
 
 You should _not_ use a "_" in the revision number! As tempting as it may
 seem, it actually interferes with the policy.
@@ -199,8 +199,8 @@ mish-mash of modules in /lib/modules/2.0.29 ;-(
 Unfortunately, there is no reasonable solution; I suggest moving the
 old modules directory before installation, like so (need to be root):
 
-	# mv /lib/modules/2.0.29 /lib/modules/2.0.29.save
-	# dpkg -i kernel-image-2.0.29_custom.1.0_i386.deb
+        # mv /lib/modules/2.0.29 /lib/modules/2.0.29.save
+        # dpkg -i kernel-image-2.0.29_custom.1.0_i386.deb
 and later get rid of the .save directory.
 
 People who want to have multiple flavours of the same kernel version
@@ -219,22 +219,25 @@ snippet included during the kernel packages build process, and hence
 you may put any legal Makefile directive in that file (just make very
 sure you know what you are doing ;-).
 
-	At the moment, the user modifiable variables supported are:
-maintainer:	Local kernel-* package maintainer
+        At the moment, the user modifiable variables supported are:
+maintainer:     Local kernel-* package maintainer.  Please note that
+                any apostrophes "'" shall have to be quoted like so: 
+                maintainer = John O'\\''Brien. 
+                Yes, this is ugly, but this works.
 email:          The email address of that person.
 pgp:            Name to search for in the pgp database _iff_ separate
                 modules (like pcmcia etc) are being built in
                 /usr/src/modules/*. Can be set from environment
                 variable PGP_SIGNATURE. Defaults to maintainer.
-debian:		The Debian revision of the kernel packages. Can be set
-		from the environment variable DEBIAN_REVISION, defaults
-		to 1.00.
-image_in_boot:	Set to True if you want the kernel image symlink (vmlinuz)
+debian:         The Debian revision of the kernel packages. Can be set
+                from the environment variable DEBIAN_REVISION, defaults
+                to 1.00.
+image_in_boot:  Set to True if you want the kernel image symlink (vmlinuz)
                 in /boot rather than the default /. Can be set from the 
-		environment variable IMAGE_IN_BOOT. defaults to undefined.
-kimage:		The kernel image type (i.e. zImage or bzImage). Can be
-		set from the environment variable IMAGE_TYPE. Defaults
-		to bzImage.
+                environment variable IMAGE_IN_BOOT. defaults to undefined.
+kimage:         The kernel image type (i.e. zImage or bzImage). Can be
+                set from the environment variable IMAGE_TYPE. Defaults
+                to bzImage.
 no_symlink      Mutually exclusive to reverse_symlink. Can be used with
                 image_in_boot. The image is placed in vmlinuz (instead
                 of /boot/vmlinuz-X.X.XX). The old vmlinuz is moved to
@@ -269,7 +272,7 @@ root_cmd         This should be set to a means of gaining super user
                  to call dpkg-buildpackage with the proper
                  options. The environment variable ROOT_CMD over-rides
                  this.
-do_clean	 Set to anything but YES, this shall forego the make
+do_clean         Set to anything but YES, this shall forego the make
                  clean done in the kernel source tree after building
                  the kernel image package. The environment variable
                  CLEAN_SOURCE over-rides this.
@@ -320,6 +323,24 @@ With a custom .config file in place (created as above) run again:
 % make-kpkg clean
 % fakeroot make-kpkg --revision=custom.1.0 kernel_image
 
+|-----------------------------------------------------------------------|
+|                           Special needs                               |
+| Or, for people who want to minimize time spent in fakeroot (for       |
+| whatever reasons that maybe -- I think that the separate step as      |
+| non-fake-root is not required, but that is a personal opinion)        |
+| % make-kpkg clean                                                     |
+| % make-kpkg  --revision=custom.1.0 build                              |
+| % fakeroot make-kpkg --revision=custom.1.0 kernel_image               |
+|                                                                       |
+| For people who wish to see the user name (not root) when they do a    |
+| uname -a on the maschine when they install the kernel, there is a     |
+| trick:                                                                |
+|  % make config                                                        |
+|  % make-kpkg build                                                    |
+|  % fakeroot make -f debian/rules kernel-image-deb                     |
+| shall generate a kernel image with the user name of the user embedded |
+| in it.                                                                |
+-------------------------------------------------------------------------
 
 To create a source or header package, run
 % make-kpkg clean
@@ -381,7 +402,7 @@ recompile.
 
 Tecras and other notebooks 
 --------------------------
-	  (Many thanks to Philip Hands <phil@hands.com> and
+          (Many thanks to Philip Hands <phil@hands.com> and
            Avery Pennarun <apenwarr@worldvisions.ca> for this explanation)
 
 Tecras and other notebooks, and some PCs have a problem where they
@@ -414,7 +435,7 @@ copy in /usr/lib/kernel-package/README.modules).
 
 Have fun,
 
-	Manoj Srivastava
+        Manoj Srivastava
 
 Foot note 1:
   For an explanation on why this synchronization is required, consider
