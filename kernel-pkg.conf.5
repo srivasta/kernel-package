@@ -21,7 +21,7 @@
 .\" Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139,
 .\" USA.
 .\"
-.\" $Id: kernel-pkg.conf.5,v 1.8 1998/05/11 06:54:17 srivasta Exp $
+.\" $Id: kernel-pkg.conf.5,v 1.9 1998/09/08 19:53:23 srivasta Exp $
 .\"
 .TH KERNEL\-PKG.CONF 5 "Jan  7 1997" "Debian" "Debian GNU/Linux manual" 
 .\" NAME should be all caps, SECTION should be 1-8, maybe w/ subsection
@@ -203,6 +203,25 @@ create a subtle instablity in all code compiled on your machine. You
 have been warned. The environment variable 
 .B MAKE_LIBC_HEADERS
 over-rides this.
+.TP
+.B CONFDIR
+This variable should be set to a directory which contains architecture
+specific 
+.I .config
+files (look at
+.I /usr/lib/kernel-package/Config
+for examples). This is useful for people who need to compile for
+several architectures. Defaults to 
+.I /usr/lib/kernel-package/Config
+.TP
+.B IMAGE_DESTDIR
+If you want the image to be stored in elsewhere than
+.I /boot
+set this variable to the dir where you want the image. This may be of
+help to
+.B loadlin
+users.Defaults to 
+.I /boot.
 .PP
 The value of a variable can be set so:
 .IP a)
