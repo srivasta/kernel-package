@@ -1,3 +1,12 @@
+kernel-package (3.44) unstable; urgency=low
+
+  * Install the README.headers in the right place for the source
+    package. closes:Bug#14552.
+  * Handle the new NLS_MODULES that have appeared in the newest 2.1.6x
+    kernels. closes:Bug#14527.
+
+ -- Manoj Srivastava <srivasta@debian.org>  Wed,  5 Nov 1997 23:30:48 -0600
+
 kernel-package (3.43) unstable; urgency=low
 
   * Added README.headers to the kernel-source package as well, since the
