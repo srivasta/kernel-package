@@ -5,14 +5,14 @@
 # Created On       : Sat Apr 27 05:55:26 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Thu Jun 11 15:02:35 1998
+# Last Modified On : Tue Sep  8 13:42:00 1998
 # Last Machine Used: tiamat.datasync.com
-# Update Count     : 103
+# Update Count     : 106
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
 # 
-#    $Id: image.postinst,v 1.23 1998/06/11 20:24:21 srivasta Exp $
+#    $Id: image.postinst,v 1.24 1998/09/08 19:49:11 srivasta Exp $
 #
 
 # 
@@ -25,10 +25,19 @@ my $no_symlink      = "=S";	# Should be empty, mostly
 my $reverse_symlink = "=R";	# Should be empty, mostly
 my $kimage          = "=K";	# Should be empty, mostly
 my $loader          = "=L";     # lilo, silo, or quik
+my $image_dest      = "=D";     # where the image is located
 
 my $Loader          = "LILO";
 $Loader             = "SILO"  if $loader =~ /silo/io;
 $Loader             = "QUIK"  if $loader =~ /quik/io;
+
+if (! $image_dest) {
+  $image_dest         = "boot"  
+}
+else {
+  $image_dest  =~ s|^/||o;
+}
+
 
 # This should not point to /tmp, because of security risks.
 my $temp_file_name = "/var/log/$loader" . "_log.$$";
@@ -40,10 +49,11 @@ my $rootdevice = '';
 my $rootdisk = '';
 my $rootpartition = '';
 my $imagedir = "/";
-my $realimageloc = "boot/";
+my $realimageloc = "$image_dest/";
+
 
 if ($image_in_boot) {
-  $imagedir = "/boot/";
+  $imagedir = "/$image_dest/";
   $realimageloc = "";
 }
 
@@ -101,7 +111,7 @@ if (-l "$kimage") {
     
     if (! symlink($realimageloc . "$kimage-$version", "$kimage")) {
       rename("$kimage.$$", "$kimage");
-      die("Failed to symbolic-link /boot/$kimage-$version to "
+      die("Failed to symbolic-link /$image_dest/$kimage-$version to "
 	  . $imagedir . "$kimage .\n"); 
     }
     
@@ -114,41 +124,41 @@ elsif (! -e "$kimage") {
   warn "$imagedir" . "$kimage does not exist. Installing from scratch, eh?\n";
   if ($no_symlink) {
     if (! rename($realimageloc . "$kimage-$version", "$kimage")) {
-      die("Failed to move /boot/$kimage-$version to "
+      die("Failed to move /$image_dest/$kimage-$version to "
 	  . $imagedir . "$kimage .\n"); 
     }
   }
   elsif ($reverse_symlink) {
     if (! rename($realimageloc . "$kimage-$version", "$kimage")) {
-      die("Failed to move /boot/$kimage-$version to "
+      die("Failed to move /$image_dest/$kimage-$version to "
 	  . $imagedir . "$kimage .\n"); 
     }
   }
   else {
     if (! symlink($realimageloc . "$kimage-$version", "$kimage")) {
-      die("Failed to symbolic-link /boot/$kimage-$version to "
+      die("Failed to symbolic-link /$image_dest/$kimage-$version to "
 	  . $imagedir . "$kimage .\n");
     }
   }
 }
-elsif ($no_symlink) {		# Maybe /boot is on a dos system?
+elsif ($no_symlink) {		# Maybe /$image_dest is on a dos system?
   rename("$kimage", "$kimage.$$") || 
       die "failed to move " . $imagedir . "$kimage:$!";
   if (! rename($realimageloc . "$kimage-$version", "$kimage")) {
     rename("$kimage.$$", "$kimage");
-    die("Failed to move /boot/$kimage-$version to "
+    die("Failed to move /$image_dest/$kimage-$version to "
 	. $imagedir . "$kimage .\n"); 
   }
   
   # Ok, now we may clobber the previous .old files
   rename("$kimage.$$", "$kimage.old");
 } 
-elsif ($reverse_symlink) {		# Maybe /boot is on a dos system?
+elsif ($reverse_symlink) {		# Maybe /$image_dest is on a dos system?
   rename("$kimage", "$kimage.$$") || 
       die "failed to move " . $imagedir . "$kimage:$!";
   if (! rename($realimageloc . "$kimage-$version", "$kimage")) {
     rename("$kimage.$$", "$kimage");
-    die("Failed to move /boot/$kimage-$version to "
+    die("Failed to move /$image_dest/$kimage-$version to "
 	. $imagedir . "$kimage .\n"); 
   }
   
