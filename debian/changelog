@@ -1,3 +1,14 @@
+kernel-package (3.43) unstable; urgency=low
+
+  * Added README.headers to the kernel-source package as well, since the
+    information _is_ relevant to compiling kernels. Since kernel soiurce
+    packages have higher visibility than kernel header packages, this may
+    help avoid some FAQs from being asked.
+  * Expand on epoch numbers on standard kernel packages. Now the README
+    file actually encourages epochs (horrors).
+
+ -- Manoj Srivastava <srivasta@debian.org>  Sat, 25 Oct 1997 01:59:19 -0500
+
 kernel-package (3.42) unstable; urgency=low
 
   * Changed image postinst not to use the obsolete -d option to

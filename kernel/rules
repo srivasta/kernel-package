@@ -5,13 +5,13 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Tue Sep 16 17:04:50 1997
+## Last Modified On : Thu Oct 23 11:23:30 1997
 ## Last Machine Used: tiamat.datasync.com
-## Update Count	    : 196
+## Update Count	    : 197
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.11 1997/09/18 05:02:15 srivasta Exp $
+## $Id: rules,v 1.12 1997/10/25 07:00:46 srivasta Exp $
 ###############################################################################
 
 # The version of kernel-package this belongs to
@@ -291,6 +291,9 @@ stamp-source: configure
 	$(install_file) $(DEBDIR)/README \
 	         debian/tmp-source/usr/doc/$(package)/debian.README
 	gzip -9f debian/tmp-source/usr/doc/$(package)/debian.README
+	$(install_file) $(DEBDIR)/README.headers \
+	         debian/tmp-headers/usr/doc/$(package)/README.headers
+	gzip -9f debian/tmp-headers/usr/doc/$(package)/README.headers
 	$(install_file) README \
 	         debian/tmp-source/usr/doc/$(package)/README
 	gzip -9f debian/tmp-source/usr/doc/$(package)/README

@@ -1,5 +1,20 @@
 kernel-source-=V (=D) unstable; urgency=low
 
+  * Added README.headers to the kernel-source package as well, since the
+    information _is_ relevant to compiling kernels. Since kernel soiurce
+    packages have higher visibility than kernel header packages, this may
+    help avoid some FAQs from being asked.
+  * Changed image postinst not to use the obsolete -d option to
+    superformat. Removed extra spaces from the exec option, so that it is
+    more likely to work. Noticed by Joost Kooij <kooij@mpn.cp.philips.com>
+  * Note that the proposed two level versioning scheme fails if standard
+    kernels use epochs. Further note that one may introduce epochs even in
+    custom kernels. 
+
+ -- Manoj Srivastava <srivasta@debian.org>  Thu, 23 Oct 1997 12:19:51 -0500
+
+kernel-source-0.22 (1.01) unstable; urgency=low
+
   * Handle obsolete /System.map and /System.old links left around by older
     kernel-package packages. All the programs that look at the information
     in the map files (including top, ps, and klogd) also will look at

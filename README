@@ -1,5 +1,5 @@
 
-    $Id: README,v 1.7 1997/10/22 07:47:58 srivasta Exp $
+    $Id: README,v 1.8 1997/10/25 07:00:45 srivasta Exp $
 
 This is the Debian Linux packaging scripts for the Linux kernel. 
 This package has been put together by Manoj Srivastava <srivasta@debian.org>.
@@ -93,17 +93,37 @@ for details). Optionally, you may prepend the revision with a digit
 followed by a colon (:); this shall put your revision into a new
 epoch; (which makes older dpkg very confused), more on this later.
 
-This is because dpkg imposes an ordering on version numbers, so that
-it can tell whether packages are being up or downgraded and so that
-dselect can tell whether a package it finds available is newer than
-the one installed on the system.
+You should _not_ use a "_" in the revision number! As tempting as it may
+seem, it actually interferes with the policy.
+
+The revision number is required because dpkg imposes an ordering on
+version numbers, so that it can tell whether packages are being up or
+downgraded and so that dselect can tell whether a package it finds
+available is newer than the one installed on the system. Dselect uses
+an option that prevents a package from being downgraded, for example.
+
+Packaged kernel-images in the distribution also have a version number -
+not at all coincidentally coinciding with the kernel version, because it
+is used to reflect the upstream version number. Note that the kernel
+version is also part of the package's name, thus it appears twice in the
+package's file name. It also gets a debian revision number relating to
+differences in builds. It then looks like: 
+  kernel-image-2.0.29_2.0.29-8.deb
 
 I've found that using a two-level scheme where the major level starts
-with a letter nicely does the job, (--revision custom.Y, so the image
-package become kernel-image-X.X.XX-custom.Y.deb), and dselect and dpkg
--BOGiE will refuse to downgrade to a generic kernel (don't give the
-BGO arguments to dpkg if you actually do want to downgrade
-later). 
+with a letter nicely does the job -- unless epochs are used,
+(--revision custom.Y, so the image package become
+kernel-image-X.X.XX-custom.Y.deb), and dselect and dpkg -BOGiE will
+refuse to downgrade to a generic kernel (don't give the BGO arguments
+to dpkg if you actually do want to downgrade later).
+
+The reason for telling kernel-package that the package has a version
+"custom-x.y.whatever.you-want.to+add.more-just.do.not+use.an=underscore" 
+is that to dpkg that is always a higher version number than any version
+number starting with a numeral ( eg. "a" > "2" like "b" > "a". ) This way,
+dselect will not try to upgrade your "roll-it-yourself" kernel-image when
+the a new build of the distribution default kernel appears in the archive. 
+
 
 Unfortunately, this fails if the upstream maintainer uses epochs to
 correct a version misnumbering;-(. The good news is that you can add
@@ -116,6 +136,23 @@ knows. Choose your epoch, if you must use it, wisely. I fear, though,
 that with the introduction of epochs in kernel image versions shame
 has entered the garden of eden, and we must forever use epochs to
 guard against forced upgrades.
+
+So, try using an epoch for your custom packages: 
+  make-kpkg -r=3:custom.1.0 kernel_image
+
+And the next time when you build a kernel, because you just bought a new
+soundcard or you discovered that you suddenly want masquerading in your
+kernel enabled, you'll type: 
+  make-kpkg -r=3:custom.2.0 kernel_image
+
+When make-kpkg is finished, you'll have 
+kernel-image-2.0.29_custom.1.0_i386.deb and all it takes now is to
+install the package:
+  dpkg -i kernel-image-2.0.29_custom.1.0_i386.deb
+
+This will install the kernel, the modules, the map file and do some other
+administrativia and finally it will ask you if you want to make a
+bootfloppy and if you want to run lilo now. 
 
 People who want to have multiple flavours of the same kernel version
 around should look at the file /usr/doc/kernel-package/Flavours.gz for
