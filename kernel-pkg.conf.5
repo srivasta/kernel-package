@@ -21,7 +21,7 @@
 .\" Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139,
 .\" USA.
 .\"
-.\" $Id: kernel-pkg.conf.5,v 1.3 1997/07/29 22:52:56 srivasta Exp $
+.\" $Id: kernel-pkg.conf.5,v 1.4 1997/08/04 18:07:14 srivasta Exp $
 .\"
 .TH KERNEL\-PKG.CONF 5 "Jan  7 1997" "Debian" "Debian GNU/Linux manual" 
 .\" NAME should be all caps, SECTION should be 1-8, maybe w/ subsection
@@ -91,8 +91,6 @@ Defaults to
 .B image_in_boot:  
 Set to True if you want the kernel image 
 .I vmlinuz 
-and
-.I System.map 
 in 
 .I /boot 
 rather than the default 
@@ -119,9 +117,7 @@ Defaults to
 .B no_symlink
 Whether to use symlinks to the 
 .I image
-and 
-.I System.map 
-files. Can be over\-ridden by the environment variable
+file. Can be over\-ridden by the environment variable
 .B NO_SYMLINK
 Mutualy exclusive to 
 .I reverse_symlink. 
@@ -140,9 +136,7 @@ Defaults to  undefined (optional)
 Whether to use reverse symlinks (that is, the real file is the one
 without the version number, and the numberd version is the link) to the 
 .I image
-and 
-.I System.map 
-files. Can be over\-ridden by the environment variable
+file. Can be over\-ridden by the environment variable
 .B REVERSE_SYMLINK
 Mutualy exclusive to 
 .I no_symlink.
