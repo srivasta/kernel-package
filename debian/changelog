@@ -1,4 +1,4 @@
-kernel-package (8.6) unstable; urgency=low
+kernel-package (8.006) unstable; urgency=low
 
   * Fix typo in postrm. closes: Bug#156579, Bug#156927, Bug#156853, Bug#157132
   * Also closes: Bug#157101, Bug#157087, Bug#156292
