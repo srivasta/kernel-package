@@ -14,7 +14,7 @@
 #
 #
 #
-#    $Id: make-kpkg,v 1.89 2003/09/06 01:42:27 srivasta Exp $
+#    $Id: make-kpkg,v 1.90 2003/09/08 10:43:52 srivasta Exp $
 #
 require 5.002;
 use strict;
@@ -29,7 +29,7 @@ make-kpkg - build Debian kernel packages from Linux kernel sources.
 ($main::MYNAME     = $main::0) =~ s|.*/||;
 $main::Author      = "Manoj Srivastava";
 $main::AuthorMail  = "srivasta\@debian.org";
-$main::Version     = '$Revision: 1.89 $ ';
+$main::Version     = '$Revision: 1.90 $ ';
 
 my $added_modules='';
 my $added_patches='';
@@ -908,8 +908,8 @@ EOMSG
 
       while (<VERSION>) {
 	chomp;
-	m/^\s*#define\s+UTS_RELEASE\s+(\S+)/ || next;
-	$uts_release_version = $1;
+	m/^\s*#define\s+UTS_RELEASE\s+("?)(\S+)\1/ || next;
+	$uts_release_version = $2;
       }
 
       my $composite_version = "$kernel_version.$patch_level.$sublevel" .

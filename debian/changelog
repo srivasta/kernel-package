@@ -1,3 +1,14 @@
+kernel-package (8.057) unstable; urgency=low
+
+  * Fixed an error in the kernel-img.conf man page. (.TP -> .TP .B).
+    Thanks to Nicolas François <nicolas.francois@centraliens.net>
+                                                    closes: Bug#209066
+  * Make make-kpkg remove the " from UTS Versions.  closes: Bug#209067
+  * README.modules typo fix: --add-to-version -> --append-to-version
+                                                    closes: Bug#209108
+
+ -- Manoj Srivastava <srivasta@debian.org>  Mon,  8 Sep 2003 05:42:58 -0500
+
 kernel-package (8.056) unstable; urgency=low
 
   * Updated the preinst to separate out the LILO instructions. 
