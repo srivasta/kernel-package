@@ -1,3 +1,14 @@
+kernel-package (3.32) unstable; urgency=low
+
+  * First version to be built with cvs-buildpackage.
+  * Added patches to support m68k from "Frank Neumann"
+    <Frank.Neumann@Informatik.Uni-Oldenburg.DE>.
+  * Added patched to support sparcs from Eric Delaunay
+    <delaunay@lix.polytechnique.fr> 
+  * This fixes Bug#10231.
+
+ -- Manoj Srivastava <srivasta@debian.org>  Mon,  2 Jun 1997 18:38:57 -0500
+
 kernel-package (3.31) unstable; urgency=low
 
   * Added a version number to the dependecy on dpkg-dev, we now require at
