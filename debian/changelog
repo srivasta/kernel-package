@@ -1,3 +1,11 @@
+kernel-package (6.21) unstable; urgency=low
+
+  * Added documentation about potential gcc problems with the kernel
+    compiles. Added a stamp-build stamp (thanks to Chris Butler
+    <chrisb@sandy.force9.co.uk>). 
+
+ -- Manoj Srivastava <srivasta@debian.org>  Thu, 15 Jul 1999 15:20:53 -0500
+
 kernel-package (6.20) unstable; urgency=low
 
   * moved make-kpkg to /usr/bin. closes: Bug#39428

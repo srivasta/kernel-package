@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.73 1999/07/14 15:26:10 srivasta Exp $
+## $Id: rules,v 1.74 1999/07/15 20:16:13 srivasta Exp $
 ###############################################################################
 
 #
@@ -499,7 +499,8 @@ kernel-image kernel-doc kernel_doc stamp-doc buildpackage kernel-image-deb:
 	@echo ""
 	@echo "Please re-read the README file and try again."
 else
-all build: configure
+all build: configure stamp-build
+stamp-build:
 # Builds the binary package.
 # debian.config contains the current idea of what the image should
 # have.

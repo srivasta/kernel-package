@@ -1,5 +1,5 @@
 
-    $Id: README,v 1.24 1999/07/14 16:06:05 srivasta Exp $
+    $Id: README,v 1.25 1999/07/15 20:16:12 srivasta Exp $
 
 This is the Debian Linux packaging scripts for the Linux kernel. 
 This package has been put together by Manoj Srivastava <srivasta@debian.org>.
@@ -31,6 +31,12 @@ base:         gzip, shellutils, and grep.
 
 Some of these packages are marked essential, and hence are going to be
 present on your machine already. Others you have to check and install.
+
+Also, please note that some versions of gcc do not interact well with
+the kernel sources (the upcoming gcc 2.95 has problems compiling the
+kernel without the flag '-fno-strict-aliasing' (I think you may have
+to edit the makefile for this, or something). This is an universal
+problem, hopefully there shall be a compromise somewhere. 
 
 Of course, pretty GUI front ends to kernel configuration require more
 packages, but they are not strictly essential (though quite nice really). 
