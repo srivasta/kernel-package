@@ -14,7 +14,7 @@
 #
 #
 #
-#    $Id: make-kpkg,v 1.56 2001/04/29 16:02:44 srivasta Exp $
+#    $Id: make-kpkg,v 1.57 2001/05/12 16:56:47 srivasta Exp $
 #
 require 5.002;
 use strict;
@@ -29,7 +29,7 @@ make-kpkg - build Debian kernel packages from Linux kernel sources.
 ($main::MYNAME     = $main::0) =~ s|.*/||;
 $main::Author      = "Manoj Srivastava";
 $main::AuthorMail  = "srivasta\@debian.org";
-$main::Version     = '$Revision: 1.56 $ ';
+$main::Version     = '$Revision: 1.57 $ ';
 
 my $added_modules='';
 my $added_patches='';
@@ -116,8 +116,13 @@ exists) for it to have an effect). I suggest you run make-kpkg clean
 unless you know what you are doing. Secondly, it may contain only
 alphanumerics and the characters + . (full stop, and plus)
 and must contain a digit. B<NOTE>: No hyphens allowed. (Look at the
-Debian policy manual for details). Optionally, you may prepend the
-revision with a digit followed by a colon (:)
+Debian policy manual for details). I<Actually, that is a lie: official 
+kernel and modules maintainers have special dispensation to use hyphens,
+but it is strongly deprecated for most people, since we do no sanitization
+of the version number, and dpkg and friends may choke on it at the end
+of the compile unless one knows what one is doing.> 
+
+Optionally, you may prepend the revision with a digit followed by a colon (:)
 
 This is because  B<dpkg> imposes an ordering on version numbers,
 so that it can tell whether packages are being up- or downgraded and
@@ -739,13 +744,22 @@ EOERR1
   if ($revision){
     $command .= " DEBIAN_REVISION=$revision ";
 
-    if ($revision !~ m/^(\d+:)?[a-zA-Z\d\.\+]+$/o) {
+    if ($revision !~ m/^(\d+:)?[a-zA-Z\d\.\+\-]+$/o) {
       print STDERR " Error: The revision string may only contain\n";
       print STDERR " alphanumerics and  the  characters  +  .\n";
       print STDERR " If epochs are used, the colon : is also allowed\n";
       print STDERR " The current value is: $revision\n";
       print STDERR " Aborting.\n";
       exit 1;
+    }
+
+    if ($revision =~ m/\-/o) {
+      print STDERR " I note you are using a hyphen in the revision number.\n";
+      print STDERR " Please ensure that the upstream and debian revision\n";
+      print STDERR " numbers are policy compliant enough that dpkg and\n";
+      print STDERR " shall not choke on them at the end of the compile\n";
+      print STDERR " Please hit return to continue\n";
+      my $ans = <STDIN>;
     }
 
     if ($revision !~ m/^(\d+:)?.*?\d.*$/){

@@ -1,3 +1,19 @@
+kernel-package (7.42) unstable; urgency=low
+
+  * Softened the stance about hyphens in revision strings that was adopted
+    in 7.28. The documentation still strongly deprecates the use of
+    hyphens in the revision, since no checks are in place to ensure the
+    resulting version is legal. Now, a warning is generated at the
+    beginning warniong that this may cause a problem at the tail end of a
+    long compile, and the user is responsible for selecting a version
+    string that shall not cause dpkg and friends to choke. This is at the
+    request of the official pcmlcia-modules maintainer (Hi Brian)
+  * On investigation, it appears that bug 97202 is the same as 96784, and
+    both were fixed by the previousl upload (we needed to export
+    EXTRAVERSION) closes: Bug#97202
+
+ -- Manoj Srivastava <srivasta@debian.org>  Sat, 12 May 2001 11:53:00 -0500
+
 kernel-package (7.41) unstable; urgency=low
 
   * Also export EXTRAVERSION. This is useful if EXTRAVERSION was deduced
