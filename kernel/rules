@@ -1874,9 +1874,9 @@ endif
 ifneq ($(shell if [ $(VERSION) -ge 2 ] && [ $(PATCHLEVEL) -ge 5 ]; then \
                   echo new;fi),)
 	find -name Kconfig -print0 | xargs -0r cat | \
-	     (umask 000 ; cat > $(DOC_DOC)/Kconfig.collected
+	     (umask 000 ; cat > $(DOC_DOC)/Kconfig.collected)
 # removing if empty should be faster than running find twice
-	if ! test -s $(DOC_DOC)/Kconfig.collected) ; then \
+	if ! test -s $(DOC_DOC)/Kconfig.collected ; then \
 	    rm -f $(DOC_DOC)/Kconfig.collected ;          \
          fi
 endif

@@ -734,7 +734,7 @@ sub main (){
   # See if we are running in a linux kernel directory
   if (!(-d "drivers" && -d "kernel" && -d "fs" && -d "include/linux")){
     my @other_targets = grep (! m/^modules/, @ARGV);
-    if ($#other_targets == -1 || ! -d "include/linux") {
+    if ($#other_targets != -1 || ! -d "include/linux") {
       print STDERR <<EOERR;
 We do not seem to be in a top level linux kernel source directory
 tree. Since we are trying to make a kernel package, that does not make
