@@ -1,5 +1,5 @@
 
-    $Id: README,v 1.19 1998/09/08 19:47:32 srivasta Exp $
+    $Id: README,v 1.20 1998/10/14 06:02:31 srivasta Exp $
 
 This is the Debian Linux packaging scripts for the Linux kernel. 
 This package has been put together by Manoj Srivastava <srivasta@debian.org>.
@@ -24,7 +24,7 @@ depend on]
 
 The packages suggested are:
 devel:        gcc, libc5-dev/libc6-dev, binutils, make, and, for intel
-              x86 platforms, bin86 (non-intel platforms don't need
+              x86 platforms, bin86 (non-Intel platforms don't need
               this).
 interpreters: awk, which is contained in either the mawk or gawk packages
 base:         gzip, shellutils, and grep.
@@ -52,20 +52,6 @@ packages, but they are not strictly essential (though quite nice really).
 Unpacking kernel sources:
 -------------------------
 
-On a debian system, /usr/src/linux always either contains 
-include/{linux,asm} or points to a directory which contains
-those subdirectories, usually a directory with the full kernel
-source or a directory with just the kernel headers.
-
-Debian has standardized on /usr/src/linux being a link (that is the
-case if you install released debian kernel packages, and has been
-for a while now).
-
-If you like living on the edge and compiling your own kernel 
-packages ;-), you have to follow the convention of letting
-/usr/src/linux be a link, and unpack the pristine kernel sources
-someplace else.
-
 Some of the suggestions about where to unpack the kernel packages are
 a) /tmp/linux
 b) /var/tmp/linux
@@ -85,14 +71,19 @@ this size will go up in the future).
 
 Now, cd linux (wherever you have created the kernel sources).
 
+Versions and revisions
+---------------------
+
 The version number is deduced from the kernel Makefile directly. to
 ensure that the version numbers are in sync(1), so you don't have to
 worry about that.
 
-It has been suggested that you renumber the revision number in such a
-way that a generic kernel image package will not override the custom
-package while using dselect (or dpkg -BOGiE). You may also do this on the
-fly by setting the DEBIAN_REVISION environmental variable.
+Then, remember to change the revision number (using the --revision
+option of make-kpkg).  It has been suggested that you renumber the
+revision number in such a way that a generic kernel image package will
+not override the custom package while using dselect (or dpkg
+-BOGiE). You may also do this on the fly by setting the
+DEBIAN_REVISION environmental variable.
 
 The revision number (the argument supplied after the --revision flag)
 has certain constraints: 
@@ -129,7 +120,7 @@ I've found that using a two-level scheme where the major level starts
 with a letter nicely does the job -- unless epochs are used,
 (--revision custom.Y, so the image package become
 kernel-image-X.X.XX-custom.Y.deb), and dselect and dpkg -BOGiE will
-refuse to downgrade to a generic kernel (don't give the BGO arguments
+refuse to downgrade to a generic kernel (don't give the BOG arguments
 to dpkg if you actually do want to downgrade later).
 
 The reason for telling kernel-package that the package has a version
@@ -153,12 +144,12 @@ has entered the garden of eden, and we must forever use epochs to
 guard against forced upgrades.
 
 So, try using an epoch for your custom packages: 
-   fakeroot make-kpkg  --revision=3:custom.1.0 kernel_image
+  fakeroot make-kpkg --revision=3:custom.1.0 kernel_image
 
 And the next time when you build a kernel, because you just bought a new
 sound card or you discovered that you suddenly want masquerading in your
 kernel enabled, you'll type: 
-   fakeroot make-kpkg --revision=3:custom.2.0 kernel_image
+  fakeroot make-kpkg --revision=3:custom.2.0 kernel_image
 
 When make-kpkg is finished, you'll have 
 kernel-image-2.0.29_custom.1.0_i386.deb and all it takes now is to
@@ -196,7 +187,7 @@ official package, unless, of course, you happen to be the maintainer
 (Hi Herbert). The file /etc/kernel-pkg.conf is actually a Makefile
 snippet included during the kernel packages build process, and hence
 you may put any legal Makefile directive in that file (just make very
-sure you know what you are doing ;-).  
+sure you know what you are doing ;-).
 
 	At the moment, the user modifiable variables supported are:
 maintainer:	Local kernel-* package maintainer
@@ -276,7 +267,7 @@ Please see kernel-pkg.conf (5).
 
 To generate a new kernel image, just run
 % make-kpkg clean
-% fakeroot make-kpkg --revision custom.1.0 kernel_image
+% fakeroot make-kpkg --revision=custom.1.0 kernel_image
 
 This will create a default kernel image (as in the image package or
 available on the boot disks.  The kernel image package produced will
@@ -297,20 +288,20 @@ have a .config file, just copy it to this directory, and you are go.
 
 With a custom .config file in place (created as above) run again:
 % make-kpkg clean
-% fakeroot make-kpkg --revision custom.1.0 kernel_image
+% fakeroot make-kpkg --revision=custom.1.0 kernel_image
 
 To create a source or header package, run
 % make-kpkg clean
-% fakeroot make-kpkg --revision custom.1.0 kernel_source
-% fakeroot make-kpkg --revision custom.1.0 kernel_headers
+% fakeroot make-kpkg --revision=custom.1.0 kernel_source
+% fakeroot make-kpkg --revision=custom.1.0 kernel_headers
 Note: You only need one of these.
 
 Similarly, the documentation package is built by:
 % fakeroot make-kpkg --revision=custom.1.0 kernel_doc
 
 Or if you want to generate the whole package, 
-% fakeroot make-kpkg --revision custom.1.0 \
-            -pgpsign "Your pgp id" buildpackage
+% fakeroot make-kpkg --revision=custom.1.0 \
+            --pgpsign="Your pgp ID" buildpackage
 Note that this needs a pgp key.
 
 A note on LILO: the kernel-image install-scripts arrange to have
@@ -321,7 +312,7 @@ lines in your lilo.conf (please read documentation on LILO for
 details)
 
 Conversely, people who wish to tightly control the versions in
-LILO.conf (believe me, people, this gets to be a pain in the neck
+lilo.conf (believe me, people, this gets to be a pain in the neck
 fast) can use image = /boot/vmlinuz-X.X.XX.
 
 So that loadlin people don't feel left out, all this talk about LILO
@@ -336,6 +327,38 @@ in /). for instance, you could:
 
         So you don't have the image taking up space, but still leave a
 target for the /vmlinuz symlink.
+
+Tecras and other notebooks 
+--------------------------
+	  (Many thanks to Philip Hands <phil@hands.com> and
+           Avery Pennarun <apenwarr@worldvisions.ca> for this explanation)
+
+Tecras and other notebooks, and some PCs have a problem where they
+fail to flush the cache when switching on the a20 gate (IIRC), which
+is provoked by bzImage kernels, but not by zimage kernels. 
+
+bzImage files are actually "big zImage" not "bzipped Image".  bzImage
+kernels can be as large as you like, but because they need to decompress
+into extended memory, they aggravate this problem.  zImage kernels just
+compress into conventional memory, so they never need to touch the a20 gate,
+but they hit the 640k limit.
+
+There are two solutions that I know of:
+
+  1) apply a patch, which flushes the cache.  Unfortunately this
+     causes other machines to crash so is not universally applicable
+     (hence the tecra disks being segragated from the mainstream)
+
+  2) build a zimage, rather than bzimage kernel.  This seems to get
+     round the problem. use the --zimage option to make-kpkg, or even
+     set this as the default in /etc/kernel-pkg.conf.
+
+
+There some add on modules that hook into make-kpkg and the kernel
+sources so that they may be kept in synchrony woth the kernel you
+run. If you have such a mosule source package, for example,
+pcmcia-source, then please read README.modules as well. If you don't
+never mind.
 
 Have fun,
 
