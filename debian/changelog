@@ -1,3 +1,13 @@
+kernel-package (6.38) unstable; urgency=low
+
+  * Emphasize the need to run make-kpkg clean when attempting to change
+    either a version number or a flavour -- or else the old values may
+    come back to bite you. closes: Bug#57934
+  * Added example files for module writers, Thanks to Wichert Akkerman
+    <wichert@cistron.nl> 
+
+ -- Manoj Srivastava <srivasta@debian.org>  Tue, 15 Feb 2000 15:56:12 -0600
+
 kernel-package (6.37) frozen unstable; urgency=low
 
   * Forgot to make the last upload to frozen. For the release manager:

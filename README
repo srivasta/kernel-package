@@ -1,5 +1,5 @@
 
-    $Id: README,v 1.29 2000/01/26 09:43:52 srivasta Exp $
+    $Id: README,v 1.30 2000/02/15 22:14:27 srivasta Exp $
 
 This is the Debian Linux packaging scripts for the Linux kernel. 
 This package has been put together by Manoj Srivastava <srivasta@debian.org>.
@@ -99,11 +99,20 @@ DEBIAN_REVISION environmental variable.
 
 The revision number (the argument supplied after the --revision flag)
 has certain constraints: 
-a) It only has an effect during the configure phase (in other words, if a
-   file called stamp-configure exists, this option has no effect -- run
-   make-kpkg clean or manually remove stamp-configure for it to have an
-   effect). So, if you re-run make-kpkg with a different revision number,
-   you have to reconfigure the kernel. 
+a) It only has an effect during the configure phase (in other words,
+   if a file called stamp-configure exists, this option has no effect
+   -- run make-kpkg clean or manually remove stamp-configure,
+   stamp-debian, and debian/official for it to have an effect -- I
+   strongly suggest make-kpkg clean unless you know what you are
+   doing).  Additionally, official source package maintianers provide
+   their own version numbers and data for the official uploads, and
+   hence a number of things, including the Debian revision, is not
+   modified by make-kpkg.  If you happen to have an official sources,
+   (that would mean that the file debian/official exists), and want to
+   use your own revision number, make sure you remove debian/official
+   before running make-kpkg clean for this option to have an effect.
+   So, if you want to re-run make-kpkg with a different revision
+   number, you have to make sure you start with a clean slate.
 b) It may contain only alphanumerics and the characters + . - (full stop,
    hyphen, and plus) and should contain a digit.  (Look at Chapter 5 
    of the Programmers manual for details). Optionally, you
@@ -156,6 +165,7 @@ has entered the garden of eden, and we must forever use epochs to
 guard against forced upgrades.
 
 So, try using an epoch for your custom packages: 
+  make-kpkg clean
   $Get_Root make-kpkg --revision=3:custom.1.0 kernel_image
       (Get_Root is whatever you need to become root -- fakeroot or
       sudo are examples that come to mind).

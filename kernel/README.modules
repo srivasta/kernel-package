@@ -92,6 +92,10 @@ MODULE Packaging hints
  c) KMAINT Contains the Name of the maintainer to pass to PGP
  d) KEMAIL Caontains the email address of the maintainer
 
+	Please have a look at the sample files for creating a
+ dependent modules package, sample.module.rules and
+ sample.module.control.
+
 	Have fun,
 
 	manoj

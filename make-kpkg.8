@@ -22,7 +22,7 @@
 .\" USA.
 .\"
 .\"
-.\"    $Id: make-kpkg.8,v 1.21 2000/02/01 07:59:09 srivasta Exp $
+.\"    $Id: make-kpkg.8,v 1.22 2000/02/15 22:14:27 srivasta Exp $
 .\"
 .TH MAKE\-KPKG 8 "May 2 1997" "Debian" "Debian GNU/Linux manual"
 .SH NAME
@@ -53,7 +53,11 @@ exists, this option has no effect \-\- run
 .B make\-kpkg clean 
 or manually remove
 .I stamp\-configure 
-for it to have an effect). 
+and 
+.I stamp-debian
+for it to have an effect -- I strongly suggest you run
+.B make\-kpkg clean 
+unless you know what you are doing). 
 Additionally, official source package maintianers provide their own
 version numbers and data for the official uploads, and hence a number
 of things, including the
@@ -65,14 +69,15 @@ file
 .I debian/official
 exists), and want to use your own revision number,
 make sure you remove
-.I debian/changelog
-and
 .I debian/official
+before running  
+.B make\-kpkg clean 
 for this option to have an effect.
-So, if you re\-run 
+So, if you want to re\-run 
 .B make\-kpkg 
-with a different revision number, you have to reconfigure the kernel.
-Secondly, it may contain only alphanumerics and the characters +
+with a different revision number, you have to make sure you start with
+a clean slate.
+Secondly, the version may contain only alphanumerics and the characters +
 . - (full stop, hyphen, and plus) and must contain a digit. (Look at
 Chapter 5 of the Programmers manual for details). Optionally,
 you may prepend the revision with a digit followed by a colon (:)
@@ -88,6 +93,7 @@ discouraged.  (Look at Chapters 4 and 5 of the Programmers manual for
 details). Please note that you shall need to 
 .B make-kpkg 
 .I clean
+.B FIRST
 if you wish to recompile the kernel-image using a flavour.
 .TP
 .BR \-\-arch\ foo

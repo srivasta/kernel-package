@@ -1,0 +1,142 @@
+#! /usr/bin/make -f
+
+# Name of package
+package		= kernmod
+# KSRC is the location of the kernel source. This is the default value,
+# when make-kpkg is used it will supply to real value
+KSRC		= /usr/src/linux
+# KDREV is the package-revision, as given to make-kpkg by the user.
+# Just put a simply default value in here which we use when we test
+# the packagebuilding without make-kpkg
+KDREV		= "test"
+
+# Now we need to get the kernel-version somehow
+kversion	= $(shell sed -ne '1,5s/VERSION = //p' $(KSRC)/Makefile )
+kplevel		= $(shell sed -ne '1,5s/PATCHLEVEL = //p' $(KSRC)/Makefile )
+ksublevel	= $(shell sed -ne '1,5s/SUBLEVEL = //p' $(KSRC)/Makefile )
+kextra		= $(shell sed -ne '1,5s/EXTRAVERSION = //p' $(KSRC)/Makefile )
+KVERS		= $(kversion).$(kplevel).$(ksublevel)$(kextra)
+
+# We also need the package version
+#pversion	= $(shell sed -ne '1s/.*\((.*)\).*/\1/' debian/changelog)
+
+# MODDIR is the place where the final .deb package should be made. This is the
+# default value, when make-kpkg is used it will supply to real value
+MODDIR		= ..
+
+# Lets define the standard targets first
+
+.PHONY: binary
+binary: binary-indep binary-arch
+
+# Please note that I've put binary-common with binary-indep here. For
+# package where binaries are in binary-common this should be moved to
+# binary-arch
+.PHONY: binary-indep
+binary-indep: binary-source binary-common
+
+# For binary-arch we do nothing so autobuilder don't try to build the
+# kernel modules.
+.PHONY: binary-arch
+binary-arch:
+
+
+# The kdist_configure target is called by make-kpkg modules_config. It
+# should configure the module so it is ready for compilation (mostly
+# useful for calling configure)
+.PHONY: kdist_config
+kdist_config:
+	@echo Nothing to configure
+
+
+# the kdist_image target is called by make-kpgd modules_image. It is
+# responsible for compiling the module and creating the package. It
+# should also clean up after making the module. Please note we use a
+# seperate binary-modules target to make testing the package building
+# easier
+.PHONY: kdist_image
+kdist_image:
+	$(MAKE) $(MFLAGS) debian/rules binary-modules
+	$(MAKE) $(MFLAGS) debian/rules clean
+
+
+# the binary-source target creates the kernmod-source package. It does
+# this by copying the entire package source into debian/tmp and running
+# clean in the copy
+.PHONY: binary-source
+binary-source:
+# Perform some simple tests
+	test -f debian/rules
+	test `id -u` = 0
+
+# Initialize some things
+	-rm -rf debian/tmp debian/substvars
+	install -d -m 755 -o root -g root debian/tmp
+
+# Copy the entire source to the proper location
+	install -d -m 755 -o root -g root debian/tmp/usr/src/modules/$(package)
+	find . \( -name \*.o -path ./debian/tmp \) -prune -o print | \
+		cpio -admp debian/tmp/usr/src/modules/$(package)
+	( cd debiam/tmp/usr/src/modules/$(package) ; \
+	  $(MAKE) $(MFLAGS) -f debian/rules clean )
+
+# Install the usual stuff now. Note that we symlink the doc-directory
+# to the kernmod-modules directory so we have all the docs in a single
+# place.
+	install -d -m 755 -o root -g root debian/tmp/usr/doc
+	ln -s $(package)-modules debian/tmp/usr/doc/$(package)-source
+
+	install -d -m 755 -o root -g root debian/tmp/DEBIAN
+	install -p -m 644 -o root -g root debian/control debian/tmp/DEBIAN/
+
+# Generate the package
+	find debian/tmp -type f | grep -v "./DEBIAN" | xargs md5sum | \
+		sed -e 's#debian/tmp/##' > debian/tmp/DEBIAN/md5sums
+	
+	dpkg-gencontrol -p$(package)-source
+	dpkg --build debian/tmp ..
+
+# the binary-common target creates the kernmod-common package. 
+.PHONY: binary-common
+binary-common:
+# Perform some simple tests
+	test -f debian/rules
+	test `id -u` = 0
+
+# Initialize some things
+	-rm -rf debian/tmp debian/substvars
+	install -d -m 755 -o root -g root debian/tmp
+
+	@echo TODO: put everything you want to put in the kernmod-common
+	@echo package in here
+
+# Generate the package
+	find debian/tmp -type f | grep -v "./DEBIAN" | xargs md5sum | \
+		sed -e 's#debian/tmp/##' > debian/tmp/DEBIAN/md5sums
+	
+	dpkg-gencontrol -p$(package)-common
+	dpkg --build debian/tmp ..
+
+# the binary-modules target creates the kernmod-modules-XXX package.
+.PHONY: binary-modules
+binary-modules:
+# Perform some simple tests
+	test -f debian/rules
+	test `id -u` = 0
+
+# Initialize some things
+	-rm -rf debian/tmp debian/substvars
+	install -d -m 755 -o root -g root debian/tmp
+
+	@echo TODO: put everything you want to put in the kernmod-common
+	@echo package in here
+
+# Generate the package
+	echo "kpkg:Package-Version=$(pversion)+$(KDREV)" >> debian/substvars
+	echo "kpkg:Kernel-Version=$(KVERS)" >> debian/substvars
+
+	find debian/tmp -type f | grep -v "./DEBIAN" | xargs md5sum | \
+		sed -e 's#debian/tmp/##' > debian/tmp/DEBIAN/md5sums
+	
+	dpkg-gencontrol -p$(package)-common -v$(pversion)+$(KDREV)
+	dpkg --build debian/tmp ..
