@@ -1,3 +1,11 @@
+kernel-package (6.06) unstable; urgency=low
+
+  * Removed an extra packaging of the Documentation tree (quite
+    benign). closes: BUG#32682
+
+
+ -- Manoj Srivastava <srivasta@debian.org>  Mon,  1 Feb 1999 01:18:26 -0600
+
 kernel-package (6.05) frozen unstable; urgency=high
 
   * This fixes a bug introduced in the previous upload to frozen, in the
