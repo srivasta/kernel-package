@@ -28,7 +28,7 @@ kpkg-vercheck - Test if a package version is valid
 ($MYNAME     = $main::0) =~ s|.*/||;
 $Author      = "Manoj Srivastava";
 $AuthorMail  = "srivasta\@debian.org";
-$Version     = '$Revision: 1.1 $';
+$Version     = '$Revision: 1.2 $';
 
 =head1 SYNOPSIS
 
@@ -150,7 +150,7 @@ there is no epoch then colons are not allowed.
   }
 
   if ($version =~ m/$upstream_pat/o) {
-    print "Yes\n";
+    print "YES\n";
     exit 0;
   }
   else {
