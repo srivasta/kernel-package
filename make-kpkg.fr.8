@@ -133,8 +133,14 @@ est aussi ajouté au nom du paquet Debian, et en tant que tel, doit répondre
 aux contraintes de la charte concernant les noms de paquets. Ce qui veut dire
 qu'il ne doit contenir que des caractères alphanumériques 
 .B  minuscules
-et les caractères -, + et . (trait d'union, plus et point). Les lettres majuscules ne sont
-pas autorisées par la Charte pour un nouveau paquet. Cet argument a priorité
+et les caractères -, + et . (trait d'union, plus et point). Les lettres
+majuscules ne sont pas autorisées par la Charte pour un nouveau paquet. Si la 
+variable d'environnement 
+.B IGNORE_UPPERCASE_VERSION
+est définie, make-kpkg écrira le numéro de version défini dans le Makefile ou 
+dans le fichier 
+.I localversion
+en minuscules. Cet argument a priorité
 sur la variable d'environnement
 .B APPEND_TO_VERSION.
 Notez bien que vous \fB\s-1devez\s0\fR lancer 
@@ -207,10 +213,10 @@ Le comportement par défaut compile tous les modules qui sont dans
 .B MODULE_LOC,
 quand les cibles modules_truc sont demandées.
 .TP
-.BR \-\-added\-patches\ foo
+.BR \-\-added\-patches\ truc
 .TP
-.BR \-\-added_patches\ foo
-Cet argument doit être une liste de patches additionnels pour les sources
+.BR \-\-added_patches\ truc
+Cet argument (truc) doit être une liste de patches additionnels pour les sources
 du noyau séparés par des virgules. L'option de configuration 
 .I patch_the_kernel
 sera alors automatiquement réglée à YES. 
@@ -253,7 +259,7 @@ quand vous n'en vouliez aucun, puisque vous n'avez pas spécifié l'option
 added_patches), vous pouvez régler la variable PATCH_THE_KERNEL à 
 .I AUTO,
 et dans ce cas, PATCH_THE_KERNEL sera réglé à YES quand vous demanderez 
-.BR \-\-added\-patches\ foo, 
+.BR \-\-added\-patches\ truc, 
 et pas dans le cas inverse.  
 De plus, notez que si un quelconque patch installe un script dans le répertoire
 .I ./debian/image.d/,
@@ -267,7 +273,7 @@ et la version du noyau sera transmise par la variable d'environnement
 C'est un des systèmes utilisés par le patch pour insérer, par exemple, des
 fichiers supplémentaires dans l'image.
 .TP
-.BR \-\-arch\ foo
+.BR \-\-arch\ truc
 Pratique pour définir l'architecture quand vous utilisez la compilation
 croisée.
 Si vous ne faites pas de compilation croisée, l'architecture est 
@@ -275,14 +281,14 @@ automatiquement déterminée. On peut obtenir le même résultat en réglant la
 variable d'environnement 
 .B KPKG_ARCH
 .TP
-.BR \-\-cross\-compile\ foo
+.BR \-\-cross\-compile\ truc
 .TP
-.BR \-\-cross_compile\ foo
+.BR \-\-cross_compile\ truc
 Pratique pour définir la cible quand vous faites de la compilation croisée.
 On peut obtenir le même résultat en réglant la variable d'environnement
 .B CROSS_COMPILE
 .TP
-.BR \-\-subarch\ foo
+.BR \-\-subarch\ truc
 Certaines architectures (comme Alpha, ou m68k) ont besoin de noyaux différents
 pour chacune des sous\-architectures. Cette option offre un moyen de le 
 spécifier en tant qu'argument de \fBmake\-kpkg\fR. \fBNotez bien\fR
@@ -671,6 +677,7 @@ Les variables suivantes (décrites plus haut) affectent
 .I MODULE_LOC
 .I INITRD_OK
 .I CONCURRENCY_LEVEL
+.I IGNORE_UPPERCASE_VERSION
 .SH FICHIERS
 Outre les options de lancement, le fichier
 .I debian.rules
