@@ -11,7 +11,7 @@
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
-## $Id: rules,v 1.164 2002/03/21 17:11:21 srivasta Exp $
+## $Id: rules,v 1.165 2002/03/23 17:39:35 srivasta Exp $
 ###############################################################################
 
 ifdef KPKG_ARCH
@@ -1571,7 +1571,7 @@ endif
 
 
 # only generate module image packages
-modules-image modules_image: configure stamp-image
+modules-image modules_image: configure 
 ifndef MODULES_ENABLED
 	@echo Modules not configured, so not making $@
 else
@@ -1596,7 +1596,7 @@ endif
 endif
 
 # generate the modules packages and sign them
-modules: configure stamp-image
+modules: configure 
 ifndef MODULES_ENABLED
 	@echo Modules not configured, so not making $@
 else
