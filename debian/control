@@ -2,7 +2,7 @@ Source: kernel-package
 Priority: optional
 Section: misc
 Maintainer: Manoj Srivastava <srivasta@debian.org>
-Standards-Version: 2.1.2.2
+Standards-Version: 2.4.0.0
 
 Package: kernel-package
 Description: Debian Linux kernel package build scripts.
