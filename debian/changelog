@@ -1,3 +1,10 @@
+kernel-package (8.002) unstable; urgency=low
+
+  * Fixed a couple of spelling errors in the man page.       closes: Bug#146010
+  * Move the run parts for extra files into the image target.
+
+ -- Manoj Srivastava <srivasta@debian.org>  Mon,  6 May 2002 09:54:41 -0500
+
 kernel-package (8.001) unstable; urgency=low
 
   * Do not talk about lilo optional flags unless we are using lilo
