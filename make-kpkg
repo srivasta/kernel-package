@@ -5,9 +5,9 @@
 # Created On       : Mon Jun 17 01:10:11 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Sun Jun 20 00:28:32 2004
+# Last Modified On : Wed Apr 13 01:16:43 2005
 # Last Machine Used: glaurung.internal.golden-gryphon.com
-# Update Count     : 220
+# Update Count     : 221
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
@@ -744,7 +744,8 @@ sub main (){
     exit 1;
   }
   # See if we are running in a linux kernel directory
-  if (!(-d "drivers" && -d "kernel" && -d "fs" && -d "include/linux")){
+  if ((!(-d "drivers" && -d "kernel" && -d "fs" && -d "include/linux"))
+      && (!(-d "dev" && -d "kern" && -d "fs" && -d "i386/include"))){
     my @other_targets = grep (! m/^modules/, @ARGV);
     if ($#other_targets != -1 || ! -d "include/linux") {
       print STDERR <<EOERR;
