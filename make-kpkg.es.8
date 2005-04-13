@@ -28,7 +28,7 @@
 .\" (c) 2003 Software in the Public Interest
 .\" Esta traducción ha sido realizada por Rubén Porras Campo <nahoo@inicia.es>
 .\" Está basada en la página de manual original:
-.\" versión 1.21 del CVS de
+.\" versión 1.22 del CVS de
 .\" /cvs/debian-doc/manpages/english/kernel-package/make-kpkg.8
 .\" Revisada por Rudy Godoy <rudy@kernel-panik.org>
 
@@ -354,9 +354,9 @@ está generando un paquete del tipo
 , realizará cualquier acción necesaria para que el núcleo se pueda cargar usando
 .B initrd.  
 .B NOTA:
-en los núcleos antiguos, esto requiere un parche, que no es estándar, cramfs de
-initrd a las fuentes del núcleo, (a menos que la configuración del mkinitrd haya
-sido modificada para no usar cramfs) o se generará una imagen del núcleo
+en los núcleos antiguos, esto requiere un parche (que no es estándar) cramfs de
+initrd a las fuentes del núcleo, (a menos que la configuración del mkinitrd se
+haya modificado para no usar cramfs) o se generará una imagen del núcleo
 imposible de arrancar. El parche normalmente se encontraba en las fuentes del
 núcleo proporcionadas por Debian. Algunas arquitecturas todavía necesitan
 parches para arreglar problemas con cramfs. Esta opción puede implicar

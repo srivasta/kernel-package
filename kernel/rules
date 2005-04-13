@@ -5,9 +5,9 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Mon Mar 28 17:18:23 2005
+## Last Modified On : Mon Apr 11 19:47:49 2005
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count	    : 777
+## Update Count	    : 779
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
@@ -2430,7 +2430,10 @@ endif
 		 read ans;                                        \
               fi;                                                   \
 	     );                                                    \
-	  fi;                                                      \
+	  else                                                      \
+               echo "Module $$module does not exist";               \
+               echo "Hit return to Continue?";                      \
+	  fi;                                                       \
         done
 endif
 
@@ -2462,10 +2465,13 @@ endif
                       echo "against $$module.";                     \
                    fi;                                              \
                    echo "Hit return to Continue?";                  \
-		 read ans;                                        \
+		 read ans;                                          \
               fi;                                                   \
-	     );                                                    \
-	  fi;                                                      \
+	     );                                                     \
+	  else                                                      \
+               echo "Module $$module does not exist";               \
+               echo "Hit return to Continue?";                      \
+	  fi;                                                       \
         done
 endif
 
@@ -2494,6 +2500,9 @@ endif
 		 read ans;                                        \
               fi;                                                   \
 	     );                                                    \
+	  else                                                      \
+               echo "Module $$module does not exist";               \
+               echo "Hit return to Continue?";                      \
 	  fi;                                                      \
         done
 endif
@@ -2516,10 +2525,13 @@ else
               else                                                  \
                    echo "Module $$module failed to clean up";       \
                    echo "Hit return to Continue?";                  \
-		 read ans;                                        \
+		 read ans;                                          \
               fi;                                                   \
-	     );                                                    \
-	  fi;                                                      \
+	     );                                                     \
+	  else                                                      \
+               echo "Module $$module does not exist";               \
+               echo "Hit return to Continue?";                      \
+	  fi;                                                       \
         done
 endif
 
