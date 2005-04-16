@@ -5,9 +5,9 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Wed Apr 13 01:39:14 2005
+## Last Modified On : Fri Apr 15 19:10:59 2005
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count	    : 805
+## Update Count	    : 806
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
@@ -48,8 +48,8 @@ export DEB_BUILD_GNU_SYSTEM:= $(shell $(DPKG_ARCH) $(ha) -qDEB_BUILD_GNU_SYSTEM)
 kpkg_version := =K=V
 
 # The maintainer information.
-maintainer = Debian Kernel Team                                                
-email= debian-kernel@lists.debian.org  
+maintainer = Debian Kernel Team
+email= debian-kernel@lists.debian.org
 
 pgp=$(maintainer)
 
@@ -117,9 +117,9 @@ ifdef KPKG_ARCH
 else
   #architecture:=$(shell CC=$(HOSTCC) dpkg --print-gnu-build-architecture)
   #architecture:=$(DEB_HOST_ARCH)
-  architecture:=$(DEB_HOST_GNU_CPU)                                            
-  ifeq ($(architecture), x86_64)                                               
-    architecture:=amd64                                                        
+  architecture:=$(DEB_HOST_GNU_CPU)
+  ifeq ($(architecture), x86_64)
+    architecture:=amd64
   endif
 endif
 
@@ -128,7 +128,7 @@ ifndef CROSS_COMPILE
     ifneq ($(strip $(architecture)),$(strip $(DEB_BUILD_ARCH)))
       #KERNEL_CROSS:=$(architecture)-$(strip $(DEB_HOST_GNU_SYSTEM))-
       KERNEL_CROSS:=$(DEB_HOST_GNU_TYPE)-
-      ifeq ($(architecture), amd64)                                               
+      ifeq ($(architecture), amd64)
         KERNEL_CROSS:=$(architecture)-$(strip $(DEB_HOST_GNU_SYSTEM))-
       endif
     endif
@@ -153,9 +153,9 @@ empty:=
 space:= $(empty) $(empty)
 
 
-ifeq ($(DEB_HOST_GNU_SYSTEM), kfreebsd-gnu)                                    
+ifeq ($(DEB_HOST_GNU_SYSTEM), kfreebsd-gnu)
   PMAKE = PATH=/usr/lib/freebsd/:$(CURDIR)/bin:$(PATH) WERROR= MAKEFLAGS= freebsd-make
-endif                                                                          
+endif
 
 # Install rules
 install_file=    install -p    -o root -g root -m 644
@@ -184,18 +184,18 @@ ifeq ($(DEB_HOST_GNU_SYSTEM), linux)
   EXTRA_VERSION:=$(shell $(MAKE) $(CROSS_ARG) --no-print-directory -sf $(DEBDIR)/kernel_version.mk debian_EXTRAVERSION)
   LOCALVERSION :=$(shell $(MAKE) $(CROSS_ARG) --no-print-directory -sf $(DEBDIR)/kernel_version.mk debian_LOCALVERSION)
 else
-  ifeq ($(DEB_HOST_GNU_SYSTEM), kfreebsd-gnu)                                    
+  ifeq ($(DEB_HOST_GNU_SYSTEM), kfreebsd-gnu)
     VERSION        =$(shell grep '^REVISION=' conf/newvers.sh | \
-      sed -e 's/[^0-9]*\([0-9]\)\..*/\1/')                                          
+      sed -e 's/[^0-9]*\([0-9]\)\..*/\1/')
     PATCHLEVEL =$(shell grep '^REVISION=' conf/newvers.sh |     \
-     sed -e 's/[^0-9]*[0-9]*\.\([0-9]*\)[^0-9]*/\1/')                              
-    SUBLEVEL =0                                                                    
+     sed -e 's/[^0-9]*[0-9]*\.\([0-9]*\)[^0-9]*/\1/')
+    SUBLEVEL =0
     EXTRA_VERSION =$(shell grep '^RELEASE=' conf/newvers.sh |   \
-     sed -e 's/[^0-9]*\([0-9]*\)[^0-9]*/\1/')                                      
+     sed -e 's/[^0-9]*\([0-9]*\)[^0-9]*/\1/')
     LOCALVERSION = $(subst $(space),,                           \
        $(shell cat /dev/null $(localversion_files)) $(CONFIG_LOCALVERSION))
-  endif                                                                          
-endif                                                                          
+  endif
+endif
 
 
 
@@ -571,11 +571,11 @@ ifeq ($(strip $(architecture)),i386)
     kelfimagesrc = vmlinux
     kelfimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
   else
-    loaderdep=grub | grub2                                                       
-    loader=grub   
+    loaderdep=grub | grub2
+    loader=grub
     ifeq ($(DEB_HOST_GNU_SYSTEM), kfreebsd-gnu)
-      kimagesrc = $(strip $(KERNEL_ARCH)/compile/GENERIC/kernel)                   
-      kimagedest = $(INT_IMAGE_DESTDIR)/kfreebsd-$(version)                   
+      kimagesrc = $(strip $(KERNEL_ARCH)/compile/GENERIC/kernel)
+      kimagedest = $(INT_IMAGE_DESTDIR)/kfreebsd-$(version)
     endif
   endif
 endif
@@ -739,9 +739,9 @@ ifeq ($(strip $(architecture)),mipsel)
   ifeq (,$(kimage))
     kimage := vmlinux
   endif
-  ifeq (,$(kimagesrc))                                                              
-    kimagesrc := $(kimage)                                                          
-  endif                          
+  ifeq (,$(kimagesrc))
+    kimagesrc := $(kimage)
+  endif
 
   NEED_DIRECT_GZIP_IMAGE = NO
   kimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
@@ -1856,12 +1856,12 @@ else
 endif
 
 stamp-kernel-configure: stamp-debian .config
-ifeq ($(DEB_HOST_GNU_SYSTEM), kfreebsd-gnu)                                    
-	mkdir -p bin                                                            
-	ln -sf `which gcc-3.4` bin/cc                                           
-	cd $(architecture)/conf && freebsd-config GENERIC                       
-endif                                                                          
-ifeq ($(DEB_HOST_GNU_SYSTEM), linux)                       
+ifeq ($(DEB_HOST_GNU_SYSTEM), kfreebsd-gnu)
+	mkdir -p bin
+	ln -sf `which gcc-3.4` bin/cc
+	cd $(architecture)/conf && freebsd-config GENERIC
+endif
+ifeq ($(DEB_HOST_GNU_SYSTEM), linux)
 	$(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) \
                                  ARCH=$(KERNEL_ARCH) $(config_target)
 ifeq ($(shell if [ $(VERSION) -ge 2 ] && [ $(PATCHLEVEL) -ge 5 ]; then \
@@ -1921,11 +1921,11 @@ ifeq ($(DEB_HOST_GNU_SYSTEM), linux)
 else
 	rm -f .config
   ifeq ($(DEB_HOST_GNU_SYSTEM), kfreebsd-gnu)
-	rm -rf bin                                                              
+	rm -rf bin
 	if test -e $(architecture)/compile/GENERIC ; then     \
 	  $(PMAKE) -C $(architecture)/compile/GENERIC clean ; \
-	fi                                                                      
-  endif      
+	fi
+  endif
 endif
 ifeq ($(strip $(patch_the_kernel)),YES)
 	$(deb_rule) unpatch_now
@@ -2078,13 +2078,13 @@ else
 	$(deb_rule) real_stamp_headers
 endif
 
-ifeq ($(DEB_HOST_GNU_SYSTEM), linux)                                           
-  config = .config                                                               
+ifeq ($(DEB_HOST_GNU_SYSTEM), linux)
+  config = .config
 else
-  ifeq ($(DEB_HOST_GNU_SYSTEM), kfreebsd-gnu)                                    
-    config = $(architecture)/conf/GENERIC                                          
-  endif                                 
-endif                                 
+  ifeq ($(DEB_HOST_GNU_SYSTEM), kfreebsd-gnu)
+    config = $(architecture)/conf/GENERIC
+  endif
+endif
 
 
 real_stamp_headers:
