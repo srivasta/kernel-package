@@ -468,7 +468,21 @@ and produces the complete package using
 .B binary
 This target produces all four Debian kernel packages by running the
 targets
-.B kernel_source, kernel_headers, kernel_doc
+.B binary-indep 
+and
+.B binary-arch.
+.TP
+.B binary-indep
+This target produces the arch independent packages by running the
+targets
+.B kernel_source
+and
+.B kernel_doc.
+.TP
+.B binary-arch
+This target produces the arch dependent packages by running the
+targets
+.B kernel_headers
 and
 .B kernel_image.
 .TP
