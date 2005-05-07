@@ -374,7 +374,8 @@ a cualquier valor no nulo.
 Para evitar el aviso en tiempo de instalación, lea kernel\-img.conf(5), y añada
 una directiva
 .I warn_initrd 
-en ese fichero.
+en ese fichero. Para configurar initrd consulte
+.I mkinitrd (8).
 .TP
 .B \-\-zimage
 Crea una imagen del núcleo del tipo zImage en vez de bzImage (predeterminada).
@@ -707,6 +708,7 @@ y es recomendable que uno lo lea antes de usar esta utilidad.
 .SH "VÉASE TAMBIÉN"
 .BR kernel\-pkg.conf (5),
 .BR kernel\-img.conf (5),
+.BR mkinitrd (8),
 .BR Getopt::Long (3perl),
 .BR dpkg\-deb (1),
 .BR dpkg\-source (1),

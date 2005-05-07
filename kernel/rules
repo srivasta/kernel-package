@@ -5,9 +5,9 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Sun May  1 13:57:13 2005
+## Last Modified On : Sat May  7 02:40:22 2005
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count	    : 807
+## Update Count	    : 812
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
@@ -32,13 +32,27 @@ endif
 # set the dpkg-architecture vars
 export DEB_BUILD_ARCH      := $(shell $(DPKG_ARCH) $(ha) -qDEB_BUILD_ARCH)
 export DEB_BUILD_GNU_CPU   := $(shell $(DPKG_ARCH) $(ha) -qDEB_BUILD_GNU_CPU)
+export DEB_BUILD_GNU_SYSTEM:= $(shell $(DPKG_ARCH) $(ha) -qDEB_BUILD_GNU_SYSTEM)
 export DEB_BUILD_GNU_TYPE  := $(shell $(DPKG_ARCH) $(ha) -qDEB_BUILD_GNU_TYPE)
 export DEB_HOST_ARCH       := $(shell $(DPKG_ARCH) $(ha) -qDEB_HOST_ARCH)
+export DEB_HOST_ARCH_OS    := $(shell $(DPKG_ARCH) $(ha) -qDEB_HOST_ARCH_OS     \
+                                2>/dev/null|| true)
 export DEB_HOST_GNU_CPU    := $(shell $(DPKG_ARCH) $(ha) -qDEB_HOST_GNU_CPU)
 export DEB_HOST_GNU_SYSTEM := $(shell $(DPKG_ARCH) $(ha) -qDEB_HOST_GNU_SYSTEM)
 export DEB_HOST_GNU_TYPE   := $(shell $(DPKG_ARCH) $(ha) -qDEB_HOST_GNU_TYPE)
-export DEB_BUILD_GNU_SYSTEM:= $(shell $(DPKG_ARCH) $(ha) -qDEB_BUILD_GNU_SYSTEM)
 
+# arrgh. future proofing
+ifeq ($(DEB_HOST_GNU_SYSTEM), linux)
+  DEB_HOST_GNU_SYSTEM=linux-gnu
+endif
+ifeq ($(DEB_HOST_ARCH_OS),)
+  ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
+    DEB_HOST_ARCH_OS := linux
+  endif
+  ifeq ($(DEB_HOST_GNU_SYSTEM), kfreebsd-gnu)
+    DEB_HOST_ARCH_OS := kfreebsd
+  endif
+endif
 #
 # VERSION=$(shell LC_ALL=C dpkg-parsechangelog | grep ^Version: | \
 #                          sed 's/^Version: *//')
@@ -126,10 +140,10 @@ endif
 ifndef CROSS_COMPILE
   ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
     ifneq ($(strip $(architecture)),$(strip $(DEB_BUILD_ARCH)))
-      #KERNEL_CROSS:=$(architecture)-$(strip $(DEB_HOST_GNU_SYSTEM))-
+      #KERNEL_CROSS:=$(architecture)-$(strip $(DEB_HOST_ARCH_OS))-
       KERNEL_CROSS:=$(DEB_HOST_GNU_TYPE)-
       ifeq ($(architecture), amd64)
-        KERNEL_CROSS:=$(architecture)-$(strip $(DEB_HOST_GNU_SYSTEM))-
+        KERNEL_CROSS:=$(architecture)-$(strip $(DEB_HOST_ARCH_OS))-
       endif
     endif
   endif
@@ -163,7 +177,7 @@ install_program= install -p    -o root -g root -m 755
 make_directory=  install -p -d -o root -g root -m 755
 deb_rule = $(MAKE) -f $(DEBDIR)/rules
 
-ifeq ($(DEB_HOST_GNU_SYSTEM), linux)
+ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
   # localversion_files := $(wildcard localversion*)
   # VERSION =$(shell grep -E '^VERSION +=' Makefile 2>/dev/null | \
   #  sed -e 's/[^0-9]*\([0-9]*\)/\1/')
@@ -560,7 +574,7 @@ ifeq ($(strip $(architecture)),i386)
     KPKG_SUBARCH:=$(GUESS_SUBARCH)
   endif
   DEBCONFIG= $(CONFDIR)/config.$(KPKG_SUBARCH)
-  ifeq ($(DEB_HOST_GNU_SYSTEM), linux)
+  ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
     kimage := bzImage
     loaderdep=lilo (>= 19.1) | grub
     loader=lilo
@@ -917,7 +931,7 @@ UTS_RELEASE_VERSION=$(shell if [ -f include/linux/version.h ]; then             
 version = $(VERSION).$(PATCHLEVEL).$(SUBLEVEL)$(EXTRAVERSION)$(iatv)$(INT_FLAV)$(LOCALVERSION)
 
 # See if we are being run in the kernel directory
-ifeq ($(DEB_HOST_GNU_SYSTEM), linux)
+ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
   IN_KERNEL_DIR := $(shell if test -d drivers && test -d kernel && test -d fs && test \
                                    -d include/linux ; then                            \
                                       echo YES;                                       \
@@ -1704,7 +1718,7 @@ ifneq ($(strip $(UTS_RELEASE_VERSION)), $(strip $(version)))
 	fi
 endif
 	-test -f stamp-configure || $(deb_rule) configure
-ifeq ($(DEB_HOST_GNU_SYSTEM), linux)
+ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
 	$(MAKE) $(do_parallel) $(EXTRAV_ARG) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) \
 	                    $(CROSS_ARG) $(target)
   ifneq ($(strip $(shell grep -E ^[^\#]*CONFIG_MODULES $(CONFIG_FILE))),)
@@ -1832,7 +1846,7 @@ endif
 	@echo "Debian Revision  = $(debian)"        >> .mak
 	@echo "KPKG_ARCH        = $(KPKG_ARCH)"        >> .mak
 # Fetch the rest of the information from the kernel's Makefile
-ifeq ($(DEB_HOST_GNU_SYSTEM), linux)
+ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
 	@$(MAKE) --no-print-directory -sf $(DEBDIR)/kernel_version.mk  ARCH=$(KERNEL_ARCH) \
           $(CROSS_ARG) debian_conf_var              >> .mak
 endif
@@ -1846,7 +1860,7 @@ endif
 	@rm -f .mak
 
 dummy_do_dep:
-ifeq ($(DEB_HOST_GNU_SYSTEM), linux)
+ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
 	+$(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) \
                                  ARCH=$(KERNEL_ARCH) $(fast_dep) dep
 else
@@ -1861,7 +1875,7 @@ ifeq ($(DEB_HOST_GNU_SYSTEM), kfreebsd-gnu)
 	ln -sf `which gcc-3.4` bin/cc
 	cd $(architecture)/conf && freebsd-config GENERIC
 endif
-ifeq ($(DEB_HOST_GNU_SYSTEM), linux)
+ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
 	$(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) \
                                  ARCH=$(KERNEL_ARCH) $(config_target)
 ifeq ($(shell if [ $(VERSION) -ge 2 ] && [ $(PATCHLEVEL) -ge 5 ]; then \
@@ -1913,7 +1927,7 @@ endif
 # only unpatch what we have applied? That would be changed, though saner,
 # behaviour
 real_stamp_clean:
-ifeq ($(DEB_HOST_GNU_SYSTEM), linux)
+ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
 	test ! -f .config || cp -pf .config config.precious
 	-test -f Makefile && \
             $(MAKE) $(FLAV_ARG) $(EXTRAV_ARG) $(CROSS_ARG) ARCH=$(KERNEL_ARCH) distclean
@@ -2078,7 +2092,7 @@ else
 	$(deb_rule) real_stamp_headers
 endif
 
-ifeq ($(DEB_HOST_GNU_SYSTEM), linux)
+ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
   config = .config
 else
   ifeq ($(DEB_HOST_GNU_SYSTEM), kfreebsd-gnu)
@@ -2343,7 +2357,7 @@ else
 	$(install_file) $(DEBDIR)/linux.1 $(MAN1DIR)/linux-$(version).1
 	gzip -9fq       $(MAN1DIR)/linux-$(version).1
 endif
-ifeq ($(DEB_HOST_GNU_SYSTEM), linux)
+ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
 	$(install_file) Documentation/Changes $(IMAGE_DOC)/
 	gzip -9qf $(IMAGE_DOC)/Changes
 endif
@@ -2384,7 +2398,7 @@ ifneq ($(filter kfreebsd-gnu, $(DEB_HOST_GNU_SYSTEM)):$(strip $(shell grep -E ^[
 	$(mod_inst_cmds)
   else
 # could have also said DEPMOD=/bin/true instead of moving files
-    ifeq ($(DEB_HOST_GNU_SYSTEM), linux)
+    ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
       ifneq ($(strip $(KERNEL_CROSS)),)
 	mv System.map System.precious
       endif
