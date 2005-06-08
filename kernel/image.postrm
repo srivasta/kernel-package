@@ -5,9 +5,9 @@
 # Created On       : Sat May 15 11:05:13 1999
 # Created On Node  : glaurung.green-gryphon.com
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Wed Jun  8 02:20:31 2005
+# Last Modified On : Wed Jun  8 03:01:55 2005
 # Last Machine Used: glaurung.internal.golden-gryphon.com
-# Update Count     : 43
+# Update Count     : 44
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
@@ -18,6 +18,7 @@
 
 # 
 #use strict; #for debugging
+use Cwd 'abs_path';
 
 $|=1;
 # Predefined values:
@@ -237,7 +238,9 @@ sub image_magic {
     # There is a symbolic link
     my $force_move = 0;
     my $vmlinuz_target = readlink "$kimage";
-    if (!defined($vmlinuz_target)) {
+    my $real_target = '';
+    $real_target = abs_path($vmlinuz_target) if defined ($vmlinuz_target);
+    if (!defined($vmlinuz_target) || ! -f "$real_target") {
       # what, a dangling symlink?
       warn "The link "  . $image_dest . "$kimage is a damaged link\n";
       # Remove the dangling link

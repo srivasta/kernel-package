@@ -8,6 +8,11 @@
 	* image.postrm:
 		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-1
 		  Add kernel_arch variable  
+		  Use Cwd from Perl-base for abs_path
+		  (image_magic):
+			  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-3
+			  Use abs_path to get to the real target,
+			  and test for existence.
 
 	* image.preinst:
 		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-1
@@ -16,6 +21,18 @@
 	* image.postinst:
 		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-1 
 	          Add kernel_arch variable
+		  Use Cwd from Perl-base for abs_path
+		  (fix_build_link):
+			  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-3
+				  Use abs_path to get to the real target,
+				  and test for  existence.
+		  (fix_source_link):
+			  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-3
+			  Use abs_path to get to the real
+			  target, and test for  existence.
+		  (image_magic):
+			  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-3
+			  Use abs_path to get to the real target, and test for  existence.
 
 	* image.prerm:
 		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-1 
