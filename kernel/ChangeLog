@@ -1,5 +1,26 @@
 2005-06-08  Manoj Srivastava  <srivasta@debian.org>
 
+	* rules
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-1
+		  Make sure that the kernel-arch variables in maintainer
+			  scripts are initialized correctly. 
+	
+	* image.postrm:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-1
+		  Add kernel_arch variable  
+
+	* image.preinst:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-1
+		  Add kernel_arch variable 
+
+	* image.postinst:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-1 
+	          Add kernel_arch variable
+
+	* image.prerm:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-1 
+	          Add kernel_arch variable
+
 	* rules (DOC_MAN):
 		  srivasta@debian.org--etch/kernel-package--devel--9.0--base-0
 		  specify location of the manual pages produced by the

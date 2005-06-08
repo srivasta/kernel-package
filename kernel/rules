@@ -5,9 +5,9 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Wed Jun  8 02:00:10 2005
+## Last Modified On : Wed Jun  8 02:14:21 2005
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count	    : 816
+## Update Count	    : 821
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
@@ -1811,12 +1811,12 @@ endif
                 -e 's/=L/$(int_loaderdep) /g' -e 's/=I/$(initrddep)/g'     \
                 -e 's/=CV/$(VERSION).$(PATCHLEVEL)/g'                      \
                 -e 's/=M/$(maintainer) <$(email)>/g'                       \
-                -e 's/=ST/$(INT_STEM)/g'                                   \
+                -e 's/=ST/$(INT_STEM)/g'      -e 's/=B/$(KERNEL_ARCH)/g' \
 		         $(CONTROL)> debian/control
 	-test ! -f stamp-debian && test ! -f debian/official &&               \
 	   sed -e 's/=V/$(version)/g' -e 's/=D/$(debian)/g'                   \
 	    -e 's/=A/$(DEB_HOST_ARCH)/g' -e 's/=M/$(maintainer) <$(email)>/g' \
-            -e 's/=ST/$(INT_STEM)/g'                                          \
+            -e 's/=ST/$(INT_STEM)/g'     -e 's/=B/$(KERNEL_ARCH)/g'           \
 		$(DEBDIR)/changelog > debian/changelog
 	-test ! -f debian/rules &&                                       \
 	   install -p -m 755 $(DEBDIR)/rules debian/rules
@@ -2052,7 +2052,7 @@ endif
 	   gzip -9qf $(SOURCE_DOC)/README.Debian;\
 	else \
 	    sed -e 's/=V/$(version)/g' -e 's/=A/$(DEB_HOST_ARCH)/g'       \
-             -e 's/=ST/$(INT_STEM)/g'                                     \
+             -e 's/=ST/$(INT_STEM)/g'  -e 's/=B/$(KERNEL_ARCH)/g'       \
                  $(DEBDIR)/README.source >  $(SOURCE_SRC)/README.Debian ; \
 	fi
 	if test -f README.Debian ; then                                   \
@@ -2301,7 +2301,7 @@ ifneq ($(strip $(KERNEL_ARCH)),um)
             -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'        \
             -e 's@=M@$(MKIMAGE)@g'    -e 's/=OF/$(AM_OFFICIAL)/g'    \
             -e 's@=A@$(DEB_HOST_ARCH)@g'                             \
-            -e 's/=S/$(no_symlink)/g'                                \
+            -e 's/=S/$(no_symlink)/g'  -e 's@=B@$(KERNEL_ARCH)@g'    \
              $(DEBDIR)/image.postinst > $(IMAGE_TOP)/DEBIAN/postinst
 	chmod 755 $(IMAGE_TOP)/DEBIAN/postinst
 	sed -e 's/=V/$(version)/g'    -e 's/=B/$(link_in_boot)/g'    \
@@ -2310,7 +2310,7 @@ ifneq ($(strip $(KERNEL_ARCH)),um)
             -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'        \
             -e 's@=M@$(MKIMAGE)@g'    -e 's/=OF/$(AM_OFFICIAL)/g'    \
             -e 's@=A@$(DEB_HOST_ARCH)@g'                             \
-            -e 's/=S/$(no_symlink)/g'                                \
+            -e 's/=S/$(no_symlink)/g' -e 's@=B@$(KERNEL_ARCH)@g'     \
              $(DEBDIR)/image.postrm > $(IMAGE_TOP)/DEBIAN/postrm
 	chmod 755 $(IMAGE_TOP)/DEBIAN/postrm
 	sed -e 's/=V/$(version)/g'    -e 's/=B/$(link_in_boot)/g'    \
@@ -2319,7 +2319,7 @@ ifneq ($(strip $(KERNEL_ARCH)),um)
             -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'        \
             -e 's@=M@$(MKIMAGE)@g'    -e 's/=OF/$(AM_OFFICIAL)/g'    \
             -e 's@=A@$(DEB_HOST_ARCH)@g'                             \
-            -e 's/=S/$(no_symlink)/g'                                \
+            -e 's/=S/$(no_symlink)/g' -e 's@=B@$(KERNEL_ARCH)@g'     \
              $(DEBDIR)/image.preinst > $(IMAGE_TOP)/DEBIAN/preinst
 	chmod 755 $(IMAGE_TOP)/DEBIAN/preinst
 	sed -e 's/=V/$(version)/g'    -e 's/=B/$(link_in_boot)/g'    \
@@ -2328,7 +2328,7 @@ ifneq ($(strip $(KERNEL_ARCH)),um)
             -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'        \
             -e 's@=M@$(MKIMAGE)@g'    -e 's/=OF/$(AM_OFFICIAL)/g'    \
             -e 's@=A@$(DEB_HOST_ARCH)@g'                             \
-            -e 's/=S/$(no_symlink)/g'                                \
+            -e 's/=S/$(no_symlink)/g' -e 's@=B@$(KERNEL_ARCH)@g'     \
              $(DEBDIR)/image.prerm > $(IMAGE_TOP)/DEBIAN/prerm
 	chmod 755 $(IMAGE_TOP)/DEBIAN/prerm
   else
@@ -2338,7 +2338,7 @@ ifneq ($(strip $(KERNEL_ARCH)),um)
             -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'        \
             -e 's@=M@$(MKIMAGE)@g'    -e 's/=OF/$(AM_OFFICIAL)/g'    \
             -e 's@=A@$(DEB_HOST_ARCH)@g'                             \
-            -e 's/=S/$(no_symlink)/g'                                \
+            -e 's/=S/$(no_symlink)/g' -e 's@=B@$(KERNEL_ARCH)@g'     \
              $(DEBDIR)/xen.postinst > $(IMAGE_TOP)/DEBIAN/postinst
 	chmod 755 $(IMAGE_TOP)/DEBIAN/postinst
 	sed -e 's/=V/$(version)/g'    -e 's/=B/$(link_in_boot)/g'    \
@@ -2347,7 +2347,7 @@ ifneq ($(strip $(KERNEL_ARCH)),um)
             -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'        \
             -e 's@=M@$(MKIMAGE)@g'    -e 's/=OF/$(AM_OFFICIAL)/g'    \
             -e 's@=A@$(DEB_HOST_ARCH)@g'                             \
-            -e 's/=S/$(no_symlink)/g'                                \
+            -e 's/=S/$(no_symlink)/g' -e 's@=B@$(KERNEL_ARCH)@g'     \
              $(DEBDIR)/xen.prerm > $(IMAGE_TOP)/DEBIAN/prerm
 	chmod 755 $(IMAGE_TOP)/DEBIAN/prerm
   endif
@@ -2358,9 +2358,9 @@ else
             -e 's/=ST/$(INT_STEM)/g'  -e 's/=R/$(reverse_symlink)/g' \
             -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \
             -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'        \
-            -e 's@=M@$(MKIMAGE)@g'    -e 's/=OF/$(AM_OFFICIAL)/g'    \
+            -e 's@=M@$(MKIMAGE)@g'    -e 's@=B@$(KERNEL_ARCH)@g'     \
             -e 's@=A@$(DEB_HOST_ARCH)@g'                             \
-            -e 's/=S/$(no_symlink)/g'                                \
+            -e 's/=S/$(no_symlink)/g' -e 's/=OF/$(AM_OFFICIAL)/g'    \
               $(DEBDIR)/um.postinst > $(IMAGE_TOP)/DEBIAN/postinst
 	chmod 755 $(IMAGE_TOP)/DEBIAN/postinst
 	sed -e 's/=V/$(version)/g'    -e 's/=B/$(link_in_boot)/g'    \
@@ -2369,7 +2369,7 @@ else
             -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'        \
             -e 's@=M@$(MKIMAGE)@g'    -e 's/=OF/$(AM_OFFICIAL)/g'    \
             -e 's@=A@$(DEB_HOST_ARCH)@g'                             \
-            -e 's/=S/$(no_symlink)/g'                                \
+            -e 's/=S/$(no_symlink)/g' -e 's@=B@$(KERNEL_ARCH)@g'     \
               $(DEBDIR)/um.prerm > $(IMAGE_TOP)/DEBIAN/prerm
 	chmod 755 $(IMAGE_TOP)/DEBIAN/prerm
 	$(install_file) $(DEBDIR)/linux.1 $(MAN1DIR)/linux-$(version).1

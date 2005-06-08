@@ -5,9 +5,9 @@
 # Created On       : Fri May 17 03:28:59 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Thu Mar 17 21:05:00 2005
+# Last Modified On : Wed Jun  8 02:21:05 2005
 # Last Machine Used: glaurung.internal.golden-gryphon.com
-# Update Count     : 69
+# Update Count     : 70
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
@@ -45,6 +45,8 @@ my $ignore_depmod_err = '';	# normally we do not
 my $relink_build_link = 'YES';	# There is no harm in checking the link
 my $force_build_link = '';	# There is no harm in checking the link
 my $official_image    = "=OF";      # only true for official images
+my $arch              = "=A";  #  should be same as dpkg --print-installation-architecture
+my $kernel_arch       = "=B";
 
 my $Loader          = "NoLOADER"; # 
 $Loader             = "LILO"     if $loader =~ /^lilo/io;

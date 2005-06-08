@@ -5,9 +5,9 @@
 # Created On       : Sat May 15 11:05:13 1999
 # Created On Node  : glaurung.green-gryphon.com
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Mon May  2 00:53:37 2005
+# Last Modified On : Wed Jun  8 02:20:31 2005
 # Last Machine Used: glaurung.internal.golden-gryphon.com
-# Update Count     : 41
+# Update Count     : 43
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
@@ -48,6 +48,8 @@ my $ignore_depmod_err = '';	# normally we do not
 my $relink_build_link = 'YES';	# There is no harm in checking the link
 my $force_build_link  = '';	# we shall not create a dangling link
 my $official_image    = "=OF";      # only true for official images
+my $arch              = "=A";  #  should be same as dpkg --print-installation-architecture
+my $kernel_arch       = "=B";
 
 my $Loader          = "NoLOADER"; # 
 $Loader             = "LILO"     if $loader =~ /^lilo/io;

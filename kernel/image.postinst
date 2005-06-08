@@ -5,9 +5,9 @@
 # Created On       : Sat Apr 27 05:55:26 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Thu Mar 17 21:03:19 2005
+# Last Modified On : Wed Jun  8 02:16:41 2005
 # Last Machine Used: glaurung.internal.golden-gryphon.com
-# Update Count     : 269
+# Update Count     : 270
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
@@ -50,7 +50,8 @@ my $relink_src_link   = 'YES';  # There is no harm in checking the link
 my $relink_build_link = 'YES';  # There is no harm in checking the link
 my $force_build_link  = '';     # There is no harm in checking the link
 my $official_image    = "=OF";      # only true for official images
-my $arch            = "=A";  #  should be same as dpkg --print-installation-architecture
+my $arch              = "=A";  #  should be same as dpkg --print-installation-architecture
+my $kernel_arch       = "=B";
 
 my $package_name    = "=ST-image-$version";
 
