@@ -1,5 +1,12 @@
 2005-06-08  Manoj Srivastava  <srivasta@debian.org>
 
+	* README (so):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-5
+		  Remove cramfs patch warning in a couple of places (we
+		  used to tell people to be sure to apply the cramfs patch
+		  or tell mkinitrd not to use cramfs, and this is not
+		  longer required for modern kernels)
+
 	* rules
 		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-1
 		  Make sure that the kernel-arch variables in maintainer
