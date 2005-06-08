@@ -5,9 +5,9 @@
 # Created On       : Sat Apr 27 05:55:26 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Wed Jun  8 02:49:48 2005
+# Last Modified On : Wed Jun  8 03:39:25 2005
 # Last Machine Used: glaurung.internal.golden-gryphon.com
-# Update Count     : 276
+# Update Count     : 280
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
@@ -227,7 +227,7 @@ chdir("$image_dest") or die "could not chdir to $image_dest:$!\n";
 # Paranoid check to make sure that the correct value is put in there
 if (! $kimage) {
   $kimage = "vmlinuz";
-}                                                         # Hmm. empty
+}                               # Hmm. empty
 elsif ($kimage =~ m/^b?zImage$/o) {
   $kimage = "vmlinuz";
 }                               # these produce vmlinuz
@@ -548,8 +548,6 @@ sub image_magic {
                 } else {
                   warn "$kimage.old --> $target -- doing nothing";
                   $force_move = 0;
-                } else {
-                  $force_move = 1;
                 }
               } else {
                 $force_move = 1;
@@ -597,178 +595,179 @@ sub image_magic {
           unlink "$kimage.$$";
         }
       }
-    } elsif (! -e "$kimage") {
-      # Hmm. Pristine system? How can that be?
-      # Possibly they do not want a link here. (we should be in /
-      # here[$image_dest, really]
-      warn "$image_dest" .
-        "$kimage does not exist. Installing from scratch, eh?\n";
-      warn "Or maybe you don't want a symbolic link here. Hmm? Lets See.\n";
-      if ($no_symlink) {
-        my $ret = system("cp -a --backup=t " . $realimageloc .
-                         "$kimage-$version "   . " $kimage");
-        if ($ret) {
-          die("Failed to copy " . $realimageloc . "$kimage-$version to "
-              . $image_dest . "$kimage .\n");
-        }
-      } elsif ($reverse_symlink) {
-        my $ret = system("mv -f " . $realimageloc . "$kimage-$version "
-                         . "$kimage");
-        if ($ret) {
-          die("Failed to move " . $realimageloc . "$kimage-$version to "
-              . $image_dest . "$kimage .\n");
-        }
-      } else {
-        if (! $have_conffile) {
-          my $answer='';
-          $do_symlink = "Yes";
-          print STDERR "I notice that you do not have $kimage symbolic\n";
-          print STDERR "link. I can create one for you, and it shall be\n";
-          print STDERR "updated by newer kernel image packages. This is\n";
-          print STDERR "useful if you use a boot loader like lilo.\n";
-          print STDERR "Do you want me to create a link from " .
-            $realimageloc . "$kimage-$version to $kimage?[Yn] ";
-          $answer=<STDIN>;
-          $answer =~ s/^\s+//;
-          $answer =~ s/\s+$//;
-          $do_symlink = "No" if $answer =~ /n/i;
-
-          if (open(CONF, ">$CONF_LOC")) {
-            print CONF "# Kernel Image management overrides\n";
-            print CONF "# See kernel-img.conf(5) for details\n";
-            if ($loader =~ /palo/i) {
-              print CONF "link_in_boot = Yes\n";
-              print CONF "do_symlinks = Yes\n";
-              print CONF "relative_links = Yes\n";
-              print CONF "do_bootfloppy = No\n";
-              print CONF "do_bootloader = No\n";
-            } else {
-              print CONF "do_symlinks = $do_symlink\n";
-            }
-            close CONF;
-          }
-          $have_conffile = "Yes";
-        }
+    }
+  } elsif (! -e "$kimage") {
+    # Hmm. Pristine system? How can that be?
+    # Possibly they do not want a link here. (we should be in /
+    # here[$image_dest, really]
+    warn "$image_dest" .
+      "$kimage does not exist. Installing from scratch, eh?\n";
+    warn "Or maybe you don't want a symbolic link here. Hmm? Lets See.\n";
+    if ($no_symlink) {
+      my $ret = system("cp -a --backup=t " . $realimageloc .
+                       "$kimage-$version "   . " $kimage");
+      if ($ret) {
+        die("Failed to copy " . $realimageloc . "$kimage-$version to "
+            . $image_dest . "$kimage .\n");
       }
-
-      if (! $no_symlink && $do_symlink =~ /Yes/i) {
-        if ($reverse_symlink) {
-          my $Old = $image_dest;
-          if (test_relative ('Old Dir' => $Old,
-                             'New Dir' => $realimageloc,
-                             'Test File' => "$kimage")) {
-            $Old   =~ s|^/*||o;
-          } elsif ($relative_links) {
-            $Old = spath('Old' => "$Old", 'New' => $realimageloc);
-          }
-          symlink($Old . "$kimage", $realimageloc . "$kimage-$version")
-            || die("Failed to symbolic-link " . $realimageloc
-                   . "$kimage-$version to " . $image_dest . "$kimage .\n");
-        } else {
-          my $Old = $realimageloc;
-          if (test_relative ('Old Dir' => $Old,
-                             'New Dir' => $image_dest,
-                             'Test File' => "$kimage-$version")) {
-            $Old   =~ s|^/*||o;
-          } elsif ($relative_links) {
-            $Old = spath('Old' => "$Old", 'New' => $image_dest);
-          }
-          symlink($Old . "$kimage-$version", "$kimage") ||
-            die("Failed to symbolic-link " . $realimageloc
-                . "$kimage-$version to "  . $image_dest . "$kimage .\n");
-        }
+    } elsif ($reverse_symlink) {
+      $ret = system("mv -f " . $realimageloc . "$kimage-$version "
+                    . "$kimage");
+      if ($ret) {
+        die("Failed to move " . $realimageloc . "$kimage-$version to "
+            . $image_dest . "$kimage .\n");
       }
-    } elsif (-e "$kimage" && $no_symlink) # OK, $kimage exists -- but is not a link
-      {                       # Maybe /$image_dest is on a dos system?
-        rename("$kimage", "$kimage.$$") ||
-          die "failed to move " . $image_dest . "$kimage:$!";
-
-        my $ret = system("cp -a --backup=t " . $realimageloc
-                         . "$kimage-$version " . "$kimage");
-
-        if ($ret) {
-          if (-e "$kimage.$$") {
-            rename("$kimage.$$", "$kimage");
+    } else {
+      if (! $have_conffile) {
+        my $answer='';
+        $do_symlink = "Yes";
+        print STDERR "I notice that you do not have $kimage symbolic\n";
+        print STDERR "link. I can create one for you, and it shall be\n";
+        print STDERR "updated by newer kernel image packages. This is\n";
+        print STDERR "useful if you use a boot loader like lilo.\n";
+        print STDERR "Do you want me to create a link from " .
+          $realimageloc . "$kimage-$version to $kimage?[Yn] ";
+        $answer=<STDIN>;
+        $answer =~ s/^\s+//;
+        $answer =~ s/\s+$//;
+        $do_symlink = "No" if $answer =~ /n/i;
+        
+        if (open(CONF, ">$CONF_LOC")) {
+          print CONF "# Kernel Image management overrides\n";
+          print CONF "# See kernel-img.conf(5) for details\n";
+          if ($loader =~ /palo/i) {
+            print CONF "link_in_boot = Yes\n";
+            print CONF "do_symlinks = Yes\n";
+            print CONF "relative_links = Yes\n";
+            print CONF "do_bootfloppy = No\n";
+            print CONF "do_bootloader = No\n";
+          } else {
+            print CONF "do_symlinks = $do_symlink\n";
           }
-          die("Failed to copy " . $realimageloc . "$kimage-$version to "
-              . $image_dest . "$kimage .\n");
+          close CONF;
         }
-
-        # Ok, now we may clobber the previous .old files
-        if (-e "$kimage.$$") {
-          rename("$kimage.$$", "$kimage.old");
-        }
-      } elsif (-e "$kimage" && $reverse_symlink) { # Maybe /$image_dest is on a dos system?
-        rename("$kimage", "$kimage.$$") ||
-          die "failed to move " . $image_dest . "$kimage:$!";
-        my $ret = system("mv -f " . $realimageloc . "$kimage-$version "
-                         . $image_dest . "$kimage");
-        if ($ret) {
-          if (-e "$kimage.$$") {
-            rename("$kimage.$$", "$kimage");
-          }
-          die("Failed to move " . $realimageloc . "$kimage-$version to "
-              . $image_dest . "$kimage .\n");
-        }
-
+        $have_conffile = "Yes";
+      }
+    }
+    
+    if (! $no_symlink && $do_symlink =~ /Yes/i) {
+      if ($reverse_symlink) {
         my $Old = $image_dest;
-        if (test_relative ('Old Dir' => $Old, 'New Dir' => $realimageloc,
+        if (test_relative ('Old Dir' => $Old,
+                           'New Dir' => $realimageloc,
                            'Test File' => "$kimage")) {
           $Old   =~ s|^/*||o;
         } elsif ($relative_links) {
           $Old = spath('Old' => "$Old", 'New' => $realimageloc);
         }
-        if ($use_hard_links =~ m/YES/i) {
-          if (! link($Old . "$kimage", $realimageloc . "$kimage-$version")) {
-            warn "Could not link " . $image_dest .
-              "$kimage to $kimage-$version :$!";
-          }
-        } else {
-          if (! symlink($Old . "$kimage", $realimageloc . "$kimage-$version")) {
-            warn "Could not symlink " . $image_dest .
-              "$kimage to $kimage-$version :$!";
-          }
-        }
-
-        # Ok, now we may clobber the previous .old files
-        if (-e "$kimage.$$") {
-          rename("$kimage.$$", "$kimage.old");
-        }
-      } elsif (-f "$kimage" && $use_hard_links =~ m/YES/i ) {
-        # Ok then. this ought to be a hard link, and hence fair game
-        # don't clobber $kimage.old quite yet
-        rename("$kimage", "$kimage.$$") ||
-          die "failed to move " . $image_dest . "$kimage:$!";
-        my $Old = $realimageloc;
-        my $cwd;
-        chomp($cwd=`pwd`);
-        if (test_relative ('Old Dir' => $Old, 'New Dir' => $cwd,
+        symlink($Old . "$kimage", $realimageloc . "$kimage-$version")
+          || die("Failed to symbolic-link " . $realimageloc
+                 . "$kimage-$version to " . $image_dest . "$kimage .\n");
+      } else {
+        $Old = $realimageloc;
+        if (test_relative ('Old Dir' => $Old,
+                           'New Dir' => $image_dest,
                            'Test File' => "$kimage-$version")) {
           $Old   =~ s|^/*||o;
         } elsif ($relative_links) {
-          $Old = spath('Old' => "$Old", 'New' => $cwd);
+          $Old = spath('Old' => "$Old", 'New' => $image_dest);
         }
-        if (! link($Old . "$kimage-$version", "$kimage")) {
+        symlink($Old . "$kimage-$version", "$kimage") ||
+          die("Failed to symbolic-link " . $realimageloc
+              . "$kimage-$version to "  . $image_dest . "$kimage .\n");
+      }
+    }
+  } elsif (-e "$kimage" && $no_symlink) # OK, $kimage exists -- but is not a link
+    {                         # Maybe /$image_dest is on a dos system?
+      rename("$kimage", "$kimage.$$") ||
+        die "failed to move " . $image_dest . "$kimage:$!";
+      
+      my $ret = system("cp -a --backup=t " . $realimageloc
+                       . "$kimage-$version " . "$kimage");
+      
+      if ($ret) {
+        if (-e "$kimage.$$") {
           rename("$kimage.$$", "$kimage");
-          die("Failed to link " . $realimageloc . "$kimage-$version to "
-              . $image_dest . "$kimage .\n");
         }
-
-        # Ok, now we may clobber the previous .old file
+        die("Failed to copy " . $realimageloc . "$kimage-$version to "
+            . $image_dest . "$kimage .\n");
+      }
+      
+      # Ok, now we may clobber the previous .old files
+      if (-e "$kimage.$$") {
         rename("$kimage.$$", "$kimage.old");
       }
-  }
+    } elsif (-e "$kimage" && $reverse_symlink) { # Maybe /$image_dest is on a dos system?
+      rename("$kimage", "$kimage.$$") ||
+        die "failed to move " . $image_dest . "$kimage:$!";
+      my $ret = system("mv -f " . $realimageloc . "$kimage-$version "
+                       . $image_dest . "$kimage");
+      if ($ret) {
+        if (-e "$kimage.$$") {
+          rename("$kimage.$$", "$kimage");
+        }
+        die("Failed to move " . $realimageloc . "$kimage-$version to "
+            . $image_dest . "$kimage .\n");
+      }
+      
+      my $Old = $image_dest;
+      if (test_relative ('Old Dir' => $Old, 'New Dir' => $realimageloc,
+                         'Test File' => "$kimage")) {
+        $Old   =~ s|^/*||o;
+      } elsif ($relative_links) {
+        $Old = spath('Old' => "$Old", 'New' => $realimageloc);
+      }
+      if ($use_hard_links =~ m/YES/i) {
+        if (! link($Old . "$kimage", $realimageloc . "$kimage-$version")) {
+          warn "Could not link " . $image_dest .
+            "$kimage to $kimage-$version :$!";
+        }
+      } else {
+        if (! symlink($Old . "$kimage", $realimageloc . "$kimage-$version")) {
+          warn "Could not symlink " . $image_dest .
+            "$kimage to $kimage-$version :$!";
+        }
+      }
+      
+      # Ok, now we may clobber the previous .old files
+      if (-e "$kimage.$$") {
+        rename("$kimage.$$", "$kimage.old");
+      }
+    } elsif (-f "$kimage" && $use_hard_links =~ m/YES/i ) {
+      # Ok then. this ought to be a hard link, and hence fair game
+      # don't clobber $kimage.old quite yet
+      rename("$kimage", "$kimage.$$") ||
+        die "failed to move " . $image_dest . "$kimage:$!";
+      my $Old = $realimageloc;
+      my $cwd;
+      chomp($cwd=`pwd`);
+      if (test_relative ('Old Dir' => $Old, 'New Dir' => $cwd,
+                         'Test File' => "$kimage-$version")) {
+        $Old   =~ s|^/*||o;
+      } elsif ($relative_links) {
+        $Old = spath('Old' => "$Old", 'New' => $cwd);
+      }
+      if (! link($Old . "$kimage-$version", "$kimage")) {
+        rename("$kimage.$$", "$kimage");
+        die("Failed to link " . $realimageloc . "$kimage-$version to "
+            . $image_dest . "$kimage .\n");
+      }
+      
+      # Ok, now we may clobber the previous .old file
+      rename("$kimage.$$", "$kimage.old");
+    }
+}
 
-  ######################################################################
-  ######################################################################
-  ######################################################################
-  ######################################################################
+######################################################################
+######################################################################
+######################################################################
+######################################################################
 
-  if ( -f "$modules_base/$version/modules.dep" ) {
-    my $running = '';
-    chop($running=`uname -r`);
-    if ($running eq $version) {
-      print STDERR <<"EOFERR";
+if ( -f "$modules_base/$version/modules.dep" ) {
+  my $running = '';
+  chop($running=`uname -r`);
+  if ($running eq $version) {
+    print STDERR <<"EOFERR";
 
  You are attempting to install a kernel version that is the same as
  the version you are currently running (version $running). The modules
@@ -787,75 +786,75 @@ sub image_magic {
  that too much. You need to reboot soon.
 
 EOFERR
-      ;
-      if ($silent_modules !~ m/YES/i) {
-        my $answer='';
-        print "Please Hit return to continue.  ";
-        $answer=<STDIN>;
-      }
+    ;
+    if ($silent_modules !~ m/YES/i) {
+      my $answer='';
+      print "Please Hit return to continue.  ";
+      $answer=<STDIN>;
     }
   }
+}
 
-  # We may not have any modules installed
-  if ( -d "$modules_base/$version" ) {
-    my $ret = system("depmod -a -F $realimageloc/System.map-$version $version");
-    my $exit_value  = $? >> 8;
-    my $signal_num  = $? & 127;
-    my $dumped_core = $? & 128;
-    if ($ret) {
-      if ( -f "$modules_base/$version/modules.dep") {
-        unlink "$modules_base/$version/modules.dep" unless $initrd;
-      }
-      print "There was a problem running depmod.  This may be benign, \n";
-      print "(You may have versioned symbol names, for instance).\n";
-      print "Or this could be an error.\n";
-      print "\tdepmod exited with return value $exit_value\n";
-      print "\tdepmod got a signal $signal_num \n" if $signal_num ;
-      print "\tdepmod dumped core \n" if $dumped_core ;
-      if ($initrd) {
-        print "Since this image uses initrd, I am not deleting the file\n";
-        print "$modules_base/$version/modules.dep. However, there is no\n";
-        print "guarantee that the file is valid. I would strongly advice\n";
-        print "you to either abort and fix the errors in depmod, or \n";
-        print "regenerate the initrd image with a known good modules.dep\n";
-        print "file. I repeat, an initrd kernel image with a bad modules.dep\n";
-        print "shall fail to boot.\n";
-      } else {
-        print "In any case, since depmod is run at install time, \n";
-        print "we could just defer running depmod\n";
-      }
-
-      if (! $ignore_depmod_err) {
-        if (&ask( "Would you like to abort now")) {
-          exit (1);
-        } else {
-          print STFERR "Ok, continuing as directed\n";
-        }
-      }
+# We may not have any modules installed
+if ( -d "$modules_base/$version" ) {
+  my $ret = system("depmod -a -F $realimageloc/System.map-$version $version");
+  my $exit_value  = $? >> 8;
+  my $signal_num  = $? & 127;
+  my $dumped_core = $? & 128;
+  if ($ret) {
+    if ( -f "$modules_base/$version/modules.dep") {
+      unlink "$modules_base/$version/modules.dep" unless $initrd;
     }
-  }
-
-
-
-  # The initrd symlink should probably be in the same dir that the
-  # symlinks are in
-  if ($initrd) {
-    my $initrd_path = $realimageloc . "initrd.img-$version";
-    my $ret = system("mkinitrd " .
-                     ($mkimage ? "-m '$mkimage' " : "") .
-                     "-o $initrd_path.new $modules_base/$version");
-    die("Failed to create initrd image.\n") if $ret;
-    rename("$initrd_path.new", "$initrd_path")
-      or die("Failed to rename initrd ($initrd_path)\n");
-
-    if (! defined $ARGV[1] || ! $ARGV[1] || $ARGV[1] =~ m/<unknown>/og) {
-      image_magic("initrd.img", $image_dest) if $initrd;
+    print "There was a problem running depmod.  This may be benign, \n";
+    print "(You may have versioned symbol names, for instance).\n";
+    print "Or this could be an error.\n";
+    print "\tdepmod exited with return value $exit_value\n";
+    print "\tdepmod got a signal $signal_num \n" if $signal_num ;
+    print "\tdepmod dumped core \n" if $dumped_core ;
+    if ($initrd) {
+      print "Since this image uses initrd, I am not deleting the file\n";
+      print "$modules_base/$version/modules.dep. However, there is no\n";
+      print "guarantee that the file is valid. I would strongly advice\n";
+      print "you to either abort and fix the errors in depmod, or \n";
+      print "regenerate the initrd image with a known good modules.dep\n";
+      print "file. I repeat, an initrd kernel image with a bad modules.dep\n";
+      print "shall fail to boot.\n";
     } else {
-      print STDERR "Not touching initrd symlinks since we are being reinstalled ($ARGV[1])\n";
+      print "In any case, since depmod is run at install time, \n";
+      print "we could just defer running depmod\n";
     }
 
-    if ($initrd && -l "initrd" ) {
-      print STDERR <<"EOIMG";
+    if (! $ignore_depmod_err) {
+      if (&ask( "Would you like to abort now")) {
+        exit (1);
+      } else {
+        print STFERR "Ok, continuing as directed\n";
+      }
+    }
+  }
+}
+
+
+
+# The initrd symlink should probably be in the same dir that the
+# symlinks are in
+if ($initrd) {
+  my $initrd_path = $realimageloc . "initrd.img-$version";
+  my $ret = system("mkinitrd " .
+                   ($mkimage ? "-m '$mkimage' " : "") .
+                   "-o $initrd_path.new $modules_base/$version");
+  die("Failed to create initrd image.\n") if $ret;
+  rename("$initrd_path.new", "$initrd_path")
+    or die("Failed to rename initrd ($initrd_path)\n");
+
+  if (! defined $ARGV[1] || ! $ARGV[1] || $ARGV[1] =~ m/<unknown>/og) {
+    image_magic("initrd.img", $image_dest) if $initrd;
+  } else {
+    print STDERR "Not touching initrd symlinks since we are being reinstalled ($ARGV[1])\n";
+  }
+
+  if ($initrd && -l "initrd" ) {
+    print STDERR <<"EOIMG";
 
 I note that you have an old initrd symbolic link in place. The name of
 the symbolic link is being changed to initrd.img I have two options
@@ -863,22 +862,22 @@ here.  I can: (A) delete the old symbolic link (default).  You shall
 need to update the boot loader (b) Igore it and do nothing
 
 EOIMG
-      ;
-      my $answer='';
-      print "Please select one of a, or b: ";
-      $answer=<STDIN>;
-      $answer =~ s/^\s+//;
-      $answer =~ s/\s+$//;
-      if ($answer =~ /^\s*a/i) {
-        unlink "initrd";
-      } else {
-        print STDERR
-          "Please note that initrd points to the wrong image now\n";
-      }
+    ;
+    my $answer='';
+    print "Please select one of a, or b: ";
+    $answer=<STDIN>;
+    $answer =~ s/^\s+//;
+    $answer =~ s/\s+$//;
+    if ($answer =~ /^\s*a/i) {
+      unlink "initrd";
+    } else {
+      print STDERR
+        "Please note that initrd points to the wrong image now\n";
     }
+  }
 
-    if ($initrd && -l "$image_dir/initrd" && ! $link_in_boot) {
-      print STDERR <<"EOIMG";
+  if ($initrd && -l "$image_dir/initrd" && ! $link_in_boot) {
+    print STDERR <<"EOIMG";
 I note that you have an old $image_dir/initrd symbolic link in place.
 The location of the symbolic link is now the same location as the kernel
 image symbolic links, names, in $image_dest.  I have two options here.
@@ -887,49 +886,49 @@ I can:
       boot loader
  (b) Igore it and do nothing
 EOIMG
-      ;
-      my $answer='';
-      print "Please select one of a, or b: ";
-      $answer=<STDIN>;
-      if ($answer =~ /^\s*a/i) {
-        unlink "$image_dir/initrd";
-      } else {
-        print STDERR
-          "Please note that $image_dir/initrd points to the wrong image now\n";
-      }
+    ;
+    my $answer='';
+    print "Please select one of a, or b: ";
+    $answer=<STDIN>;
+    if ($answer =~ /^\s*a/i) {
+      unlink "$image_dir/initrd";
+    } else {
+      print STDERR
+        "Please note that $image_dir/initrd points to the wrong image now\n";
     }
-  } else {                      # Not making an initrd emage
-    if (-l "initrd.img") {
-      # Ooh, last image was an initrd image? in any case, we should move it. 
-      my $target = readlink "initrd.img";
-      my $real_target = '';
-      $real_target = abs_path($target) if defined ($target);
+  }
+} else {                        # Not making an initrd emage
+  if (-l "initrd.img") {
+    # Ooh, last image was an initrd image? in any case, we should move it. 
+    my $target = readlink "initrd.img";
+    my $real_target = '';
+    $real_target = abs_path($target) if defined ($target);
 
-      if (!defined($target) || ! -f "$real_target") {
-        # Eh. dangling link. can safely be removed.
+    if (!defined($target) || ! -f "$real_target") {
+      # Eh. dangling link. can safely be removed.
+      unlink("initrd.img");
+    } else {
+      if (-l "initrd.img.old" || ! -e "initrd.img.old" ) {
+        rename("initrd.img", "initrd.img.old");
+      } else {
+        warn "initrd.img.old is not a symlink, not clobbering\n";
         unlink("initrd.img");
-      } else {
-        if (-l "initrd.img.old" || ! -e "initrd.img.old" ) {
-          rename("initrd.img", "initrd.img.old");
-        } else {
-          warn "initrd.img.old is not a symlink, not clobbering\n";
-          unlink("initrd.img");
-        }
       }
-
     }
-  }
 
-  # Only change the symlinks if we are not being upgraded
-  if (! defined $ARGV[1] || ! $ARGV[1] || $ARGV[1] =~ m/<unknown>/og) {
-    image_magic($kimage, $image_dest);
-  } else {
-    print STDERR "Not updating image symbolic links since we are being updated ($ARGV[1])\n";
   }
+}
 
-  # We used to have System.* files in /
-  if (-e "/System.map" || -e "/System.old") {
-    print STDERR <<"EOMAP";
+# Only change the symlinks if we are not being upgraded
+if (! defined $ARGV[1] || ! $ARGV[1] || $ARGV[1] =~ m/<unknown>/og) {
+  image_magic($kimage, $image_dest);
+} else {
+  print STDERR "Not updating image symbolic links since we are being updated ($ARGV[1])\n";
+}
+
+# We used to have System.* files in /
+if (-e "/System.map" || -e "/System.old") {
+  print STDERR <<"EOMAP";
  I notice that you have System.map symbolic links in /. These were
  installed by older kernel image packages. However, all the programs
  that look at the information in the map files (including top, ps, and
@@ -946,46 +945,46 @@ EOIMG
 
  I can delete these symbolic links for you, if you wish.
 EOMAP
-    ;
-    if ( &ask_y("Would you like to delete the obsolete links now" ) ) {
-      unlink '/System.map' if -e '/System.map';
-      unlink '/System.old' if -e '/System.old';
-      print STFERR "Obsolete links removed.\n";
-    } else {
-      print STFERR
-        "Ok, not deleting the files. Please remember to remove them manually.\n";
-    }
+  ;
+  if ( &ask_y("Would you like to delete the obsolete links now" ) ) {
+    unlink '/System.map' if -e '/System.map';
+    unlink '/System.old' if -e '/System.old';
+    print STFERR "Obsolete links removed.\n";
+  } else {
+    print STFERR
+      "Ok, not deleting the files. Please remember to remove them manually.\n";
   }
+}
 
-  my $linktarget;
-  $linktarget = "../share/doc/=ST-image-$version";
-
-
-  ## Run user hook script here, if any
-  if (-x "$postinst_hook") {
-    system ("$postinst_hook", $version, $realimageloc . "$kimage-$version") &&
-      warn "User hook script $postinst_hook failed";
-  }
-
-  if (-d "/etc/kernel/postinst.d") {
-    system ("run-parts", "--verbose", "--exit-on-error", "--arg=$version",
-            "--arg=$realimageloc" . "$kimage-$version",
-            "/etc/kernel/postinst.d") &&
-              die "Failed to process /etc/kernel/postinst.d";
-  }
-
-  if (-d "/etc/kernel/postinst.d/$version") {
-    system ("run-parts", "--verbose", "--exit-on-error", "--arg=$version",
-            "--arg=$realimageloc" . "$kimage-$version",
-            "/etc/kernel/postinst.d/$version") &&
-              die "Failed to process /etc/kernel/postinst.d/$version";
-  }
+my $linktarget;
+$linktarget = "../share/doc/=ST-image-$version";
 
 
-  exit (0) unless $do_boot_enable; # Exit if explicitly asked to
+## Run user hook script here, if any
+if (-x "$postinst_hook") {
+  system ("$postinst_hook", $version, $realimageloc . "$kimage-$version") &&
+    warn "User hook script $postinst_hook failed";
+}
 
-  if ($loader =~ /noloader/io) {
-    print STDERR << "MSGEND";
+if (-d "/etc/kernel/postinst.d") {
+  system ("run-parts", "--verbose", "--exit-on-error", "--arg=$version",
+          "--arg=$realimageloc" . "$kimage-$version",
+          "/etc/kernel/postinst.d") &&
+            die "Failed to process /etc/kernel/postinst.d";
+}
+
+if (-d "/etc/kernel/postinst.d/$version") {
+  system ("run-parts", "--verbose", "--exit-on-error", "--arg=$version",
+          "--arg=$realimageloc" . "$kimage-$version",
+          "/etc/kernel/postinst.d/$version") &&
+            die "Failed to process /etc/kernel/postinst.d/$version";
+}
+
+
+exit (0) unless $do_boot_enable; # Exit if explicitly asked to
+
+if ($loader =~ /noloader/io) {
+  print STDERR << "MSGEND";
 I have determined no bootloader is required for your architecure.  This is
 either because there is no boot loader for your architecture, or because I
 did not change anything that would cause the boot loader to be run.  However,
@@ -994,255 +993,255 @@ please report a bug against the kernel-package package.
 
 Done.
 MSGEND
-    ;
-    exit (0);
+  ;
+  exit (0);
+}
+
+
+exit (0) if $loader =~ /silo/i; # SILO does not have to be executed.
+exit (0) if $loader =~ /yaboot/i; # yaboot does not have to be executed.
+exit (0) if $loader =~ /milo/i;   # MILO does not have to be executed.
+exit (0) if $loader =~ /nettrom/i; # NETTROM does not have to be executed.
+exit (0) if $loader =~ /arcboot/i; # ARCBOOT does not have to be executed.
+exit (0) if $loader =~ /delo/i; # DELO does not have to be executed.
+if ($official_image =~ /^\s*YES\s*$/o) {
+  exit (0) if $loader =~ /quik/i; # maintainer asked quik invocation to be ignored
+}
+
+exit (0) unless $loaderloc;
+
+
+undef $rootdevice;
+undef $rootdisk;
+undef $rootpartition;
+undef $bootdevice;
+
+open(FSTAB, "</etc/fstab") || die "Could not open /etc/fstab:$!";
+
+my $line = '';
+while ( $line=<FSTAB> ) {
+  my $device;
+  my $filesystem;
+  my $ftype;
+  my $foption;
+  my $islilo;
+
+  if ( $line =~ m/^\#/ ) {
+    next;
   }
 
+  # ignore leading spaces.
+  $line =~ s/^\s+//og;
 
-  exit (0) if $loader =~ /silo/i; # SILO does not have to be executed.
-  exit (0) if $loader =~ /yaboot/i; # yaboot does not have to be executed.
-  exit (0) if $loader =~ /milo/i; # MILO does not have to be executed.
-  exit (0) if $loader =~ /nettrom/i; # NETTROM does not have to be executed.
-  exit (0) if $loader =~ /arcboot/i; # ARCBOOT does not have to be executed.
-  exit (0) if $loader =~ /delo/i; # DELO does not have to be executed.
-  if ($official_image =~ /^\s*YES\s*$/o) {
-    exit (0) if $loader =~ /quik/i; # maintainer asked quik invocation to be ignored
+  #  ($device,$filesystem)=split(/[ \t]+/, $line);
+  ($device,$filesystem,$ftype,$foption)=split(/[ \t]+/, $line);
+
+  if ($device =~ m/^(LABEL|UUID)=/) {
+    # Hmm. using labels in fstab.
+    $device = `mount -nfv $device 2>/dev/null`;
+    chomp($device);
+    $device =~ s/ on\s+.*$//g;
+    next if $device =~ m|^\s*$|;
   }
 
-  exit (0) unless $loaderloc;
+  next unless $device =~ m|^/dev/|; #ignore NFS and proc systems
 
+  next if $device =~ m|^/dev/fd|;    #ignore floppy drives
+  next if $device =~ m|^/dev/pty|;   #ignore Pseudo-TTY masters
+  next if $device =~ m|^/dev/tty|;   #ignore Pseudo-TTY slaves
+  next if $device =~ m|^/dev/cu|;    #ignore obsolete device
+  next if $device =~ m|^/dev/lp|;    #ignore printers
+  next if $device =~ m|^/dev/vcs|;   #ignore Virtual console capture
 
-  undef $rootdevice;
-  undef $rootdisk;
-  undef $rootpartition;
-  undef $bootdevice;
+  next if $filesystem =~ m|^none$|; #swap? in any case, do not run dd
+  next if $ftype      =~ m|^none$|; #ignore unknown file types
+  next if $foption    =~ m|noauto|; #any FS not mounted at bootup time
+  next if $foption    =~ m|bind|;   #ignore bind mounts
 
-  open(FSTAB, "</etc/fstab") || die "Could not open /etc/fstab:$!";
+  # Looking at linux/Documentation/devices.txt, We see that really we
+  # should be looking for /dev/hd* (hard disk),  /dev/sd*. What about
+  # metadisk devices? ram drives? I think I'll just leave this mess
+  # well enough alone.
 
-  my $line = '';
-  while ( $line=<FSTAB> ) {
-    my $device;
-    my $filesystem;
-    my $ftype;
-    my $foption;
-    my $islilo;
-
-    if ( $line =~ m/^\#/ ) {
-      next;
-    }
-
-    # ignore leading spaces.
-    $line =~ s/^\s+//og;
-
-    #  ($device,$filesystem)=split(/[ \t]+/, $line);
-    ($device,$filesystem,$ftype,$foption)=split(/[ \t]+/, $line);
-
-    if ($device =~ m/^(LABEL|UUID)=/) {
-      # Hmm. using labels in fstab.
-      $device = `mount -nfv $device 2>/dev/null`;
-      chomp($device);
-      $device =~ s/ on\s+.*$//g;
-      next if $device =~ m|^\s*$|;
-    }
-
-    next unless $device =~ m|^/dev/|; #ignore NFS and proc systems
-
-    next if $device =~ m|^/dev/fd|; #ignore floppy drives
-    next if $device =~ m|^/dev/pty|; #ignore Pseudo-TTY masters
-    next if $device =~ m|^/dev/tty|; #ignore Pseudo-TTY slaves
-    next if $device =~ m|^/dev/cu|;  #ignore obsolete device
-    next if $device =~ m|^/dev/lp|;  #ignore printers
-    next if $device =~ m|^/dev/vcs|; #ignore Virtual console capture
-
-    next if $filesystem =~ m|^none$|; #swap? in any case, do not run dd
-    next if $ftype      =~ m|^none$|; #ignore unknown file types
-    next if $foption    =~ m|noauto|; #any FS not mounted at bootup time
-    next if $foption    =~ m|bind|;   #ignore bind mounts
-
-    # Looking at linux/Documentation/devices.txt, We see that really we
-    # should be looking for /dev/hd* (hard disk),  /dev/sd*. What about
-    # metadisk devices? ram drives? I think I'll just leave this mess
-    # well enough alone.
-
-    if ( $filesystem =~ m!^/$! ) {
-      $rootdevice = $device;
-    }
-    unless ($loader =~ /vmelilo/io) {
-      $islilo=`dd if=$device ibs=1 skip=2 count=4 2>/dev/null`;
-      if ($islilo =~ /$Loader/o) {
-        $bootdevice = $device;
-      }
-    }
-    if (defined($rootdevice) && defined($bootdevice)) {
-      last;
+  if ( $filesystem =~ m!^/$! ) {
+    $rootdevice = $device;
+  }
+  unless ($loader =~ /vmelilo/io) {
+    $islilo=`dd if=$device ibs=1 skip=2 count=4 2>/dev/null`;
+    if ($islilo =~ /$Loader/o) {
+      $bootdevice = $device;
     }
   }
-  close(FSTAB);
-
-  if (! defined($rootdevice)) {
-    my $answer;
-    print "Could not find where the current root file system is mounted!\n";
-    print "Please make some arrangements for your system to boot the new\n";
-    print "kernel (like running LILO, loadlin, SILO, QUIK, VMELILO, or  \n";
-    print "getting a boot floppy).                                      \n";
-    print "Please hit return to continue.                               \n";
-    $answer = <STDIN>;
-    exit (0);
-  } else {
-    $rootdisk = $rootdevice;
-    $rootdisk =~ s/[0-9]+$//;
-    $rootpartition = $rootdevice;
-    $rootpartition =~ s/$rootdisk//;
+  if (defined($rootdevice) && defined($bootdevice)) {
+    last;
   }
+}
+close(FSTAB);
 
-  print "A new kernel image has been installed, and usually that means  \n";
-  print "that some action has to be taken to make sure that the new     \n";
-  print "kernel image is used next time the machine boots. Usually,     \n";
-  print "this entails running a ``bootloader'' like SILO, loadlin, LILO,\n";
-  print "ELILO, QUIK, VMELILO, ZIPL, or booting from a floppy.   (Some  \n";
-  print "boot loader, like grub, for example, do not need to be run on  \n";
-  print "each new image install, so please ignore this if you are using \n";
-  print "such a boot loader).\n\n";
+if (! defined($rootdevice)) {
+  my $answer;
+  print "Could not find where the current root file system is mounted!\n";
+  print "Please make some arrangements for your system to boot the new\n";
+  print "kernel (like running LILO, loadlin, SILO, QUIK, VMELILO, or  \n";
+  print "getting a boot floppy).                                      \n";
+  print "Please hit return to continue.                               \n";
+  $answer = <STDIN>;
+  exit (0);
+} else {
+  $rootdisk = $rootdevice;
+  $rootdisk =~ s/[0-9]+$//;
+  $rootpartition = $rootdevice;
+  $rootpartition =~ s/$rootdisk//;
+}
 
-  if ( ! -x "$loaderloc" ) {
-    print "Hmm. $Loader";
-    printf " (LInux LOader)"                     if $loader =~ /^lilo/i;
-    printf " (Efi LInux LOader)"                 if $loader =~ /^elilo/i;
-    printf " (Sparc Improved Linux lOader)"      if $loader =~ /^silo/i;
-    printf " (QUIK: PowerMac Boot Loader)"       if $loader =~ /^quik/i;
-    printf " (yaboot: PowerMac Boot Loader)"     if $loader =~ /^yaboot/i;
-    printf " (PALO: PA-RISC Boot Loader)"        if $loader =~ /^palo/i;
-    printf " (VMELILO: m68k VME Boot Loader)"    if $loader =~ /^vmelilo/i;
-    printf " (ZIPL: s390 & zSeries Boot Loader)" if $loader =~ /^zipl/i;
-    printf " (ARCBOOT: MIPS SGI IP22  Boot Loader)" if $loader =~ /^arcboot/i;
-    printf ", which is the boot loader I    \n";
-    print "have additional help for, is not installed (it is, after all,\n";
-    print "just one of many options). I am assuming you have made some  \n";
-    print "other arrangements for your system to boot the new kernel.   \n";
-    print "Please hit return to continue.                               \n";
-    my $answer = <STDIN>;
-    exit (0) unless defined $rootdevice;
-    exit (0) if $loader =~ /^silo/i; # No idea how to make non SILO floppies
-    exit (0) if $loader =~ /^quik/i;
-    exit (0) if $loader =~ /^yaboot/i;
-    exit (0) if $loader =~ /^palo/i; # No such thing as PALO floppies
-    exit (0) if $loader =~ /^vmelilo/i;
-    exit (0) if $loader =~ /^zipl/i;
-    exit (0) if $loader =~ /^arcboot/i;
+print "A new kernel image has been installed, and usually that means  \n";
+print "that some action has to be taken to make sure that the new     \n";
+print "kernel image is used next time the machine boots. Usually,     \n";
+print "this entails running a ``bootloader'' like SILO, loadlin, LILO,\n";
+print "ELILO, QUIK, VMELILO, ZIPL, or booting from a floppy.   (Some  \n";
+print "boot loader, like grub, for example, do not need to be run on  \n";
+print "each new image install, so please ignore this if you are using \n";
+print "such a boot loader).\n\n";
 
-    if ($do_bootfloppy) {
-      print "I can make a non-LILO diskette instead, but it won't be as useful.\n";
+if ( ! -x "$loaderloc" ) {
+  print "Hmm. $Loader";
+  printf " (LInux LOader)"                     if $loader =~ /^lilo/i;
+  printf " (Efi LInux LOader)"                 if $loader =~ /^elilo/i;
+  printf " (Sparc Improved Linux lOader)"      if $loader =~ /^silo/i;
+  printf " (QUIK: PowerMac Boot Loader)"       if $loader =~ /^quik/i;
+  printf " (yaboot: PowerMac Boot Loader)"     if $loader =~ /^yaboot/i;
+  printf " (PALO: PA-RISC Boot Loader)"        if $loader =~ /^palo/i;
+  printf " (VMELILO: m68k VME Boot Loader)"    if $loader =~ /^vmelilo/i;
+  printf " (ZIPL: s390 & zSeries Boot Loader)" if $loader =~ /^zipl/i;
+  printf " (ARCBOOT: MIPS SGI IP22  Boot Loader)" if $loader =~ /^arcboot/i;
+  printf ", which is the boot loader I    \n";
+  print "have additional help for, is not installed (it is, after all,\n";
+  print "just one of many options). I am assuming you have made some  \n";
+  print "other arrangements for your system to boot the new kernel.   \n";
+  print "Please hit return to continue.                               \n";
+  my $answer = <STDIN>;
+  exit (0) unless defined $rootdevice;
+  exit (0) if $loader =~ /^silo/i; # No idea how to make non SILO floppies
+  exit (0) if $loader =~ /^quik/i;
+  exit (0) if $loader =~ /^yaboot/i;
+  exit (0) if $loader =~ /^palo/i; # No such thing as PALO floppies
+  exit (0) if $loader =~ /^vmelilo/i;
+  exit (0) if $loader =~ /^zipl/i;
+  exit (0) if $loader =~ /^arcboot/i;
 
-      if (&ask_y("Would you like to create a boot floppy now")) {
-        &makefloppy();
-      }
+  if ($do_bootfloppy) {
+    print "I can make a non-LILO diskette instead, but it won't be as useful.\n";
+
+    if (&ask_y("Would you like to create a boot floppy now")) {
+      &makefloppy();
     }
-    exit(0);
   }
+  exit(0);
+}
 
-  @boilerplate = (
-                  "compact\n",
-                  "install=/boot/boot.b",
-                  "\nmap=/boot/map\n",
-                  "vga=normal\n",
-                  "delay=20\n",
-                  "image=" . $image_dest . "$kimage\n",
-                  "label = Linux\n",
-                  "read-only\n"
-                 );
+@boilerplate = (
+                "compact\n",
+                "install=/boot/boot.b",
+                "\nmap=/boot/map\n",
+                "vga=normal\n",
+                "delay=20\n",
+                "image=" . $image_dest . "$kimage\n",
+                "label = Linux\n",
+                "read-only\n"
+               );
 
-  @silotemplate = (
-                   "partition=$rootpartition\n",
-                   "root=$rootdevice\n",
-                   "timeout=100\n",
-                   "image=" . $image_dest . "$kimage\n",
-                   "\tlabel = Linux\n",
-                   "\tread-only\n",
-                   "other=1\n",
-                   "\tbootblock=" . $rootpartition .  "/boot/old.b\n",
-                   "\tlabel = oldsys\n"
-                  );
+@silotemplate = (
+                 "partition=$rootpartition\n",
+                 "root=$rootdevice\n",
+                 "timeout=100\n",
+                 "image=" . $image_dest . "$kimage\n",
+                 "\tlabel = Linux\n",
+                 "\tread-only\n",
+                 "other=1\n",
+                 "\tbootblock=" . $rootpartition .  "/boot/old.b\n",
+                 "\tlabel = oldsys\n"
+                );
 
-  @quiktemplate = (
-                   "partition=$rootpartition\n",
-                   "root=$rootdevice\n",
-                   "timeout=100\n",
-                   "image=" . $image_dest . "$kimage\n",
-                   "\tlabel = Linux\n",
-                   "\tread-only\n",
-                   "other=1\n",
-                   "\tbootblock=" . $rootpartition .  "/boot/old.b\n",
-                   "\tlabel=oldsys\n"
-                  );
+@quiktemplate = (
+                 "partition=$rootpartition\n",
+                 "root=$rootdevice\n",
+                 "timeout=100\n",
+                 "image=" . $image_dest . "$kimage\n",
+                 "\tlabel = Linux\n",
+                 "\tread-only\n",
+                 "other=1\n",
+                 "\tbootblock=" . $rootpartition .  "/boot/old.b\n",
+                 "\tlabel=oldsys\n"
+                );
 
-  @palotemplate = (
-                   "# See /usr/share/doc/palo/README.html and run 'palo --help' for\n",
-                   "# more information\n\n",
-                   "# $rootdevice $rootdisk $rootpartition $bootdevice\n",
-                   "--init-partitioned=$rootdisk\n",
-                   "--bootloader=/usr/share/palo/iplboot\n",
-                   "--recoverykernel=" . $image_dest . "$kimage\n",
-                   "--commandline=$rootpartition" . $image_dest . "$kimage root=$rootdevice\n",
-                  );
+@palotemplate = (
+                 "# See /usr/share/doc/palo/README.html and run 'palo --help' for\n",
+                 "# more information\n\n",
+                 "# $rootdevice $rootdisk $rootpartition $bootdevice\n",
+                 "--init-partitioned=$rootdisk\n",
+                 "--bootloader=/usr/share/palo/iplboot\n",
+                 "--recoverykernel=" . $image_dest . "$kimage\n",
+                 "--commandline=$rootpartition" . $image_dest . "$kimage root=$rootdevice\n",
+                );
 
-  @vmelilotemplate = (
-                      "default   = Linux\n",
-                      "delay     = 2\n",
-                      "\n",
-                      "[boot]\n",
-                      "label     = Linux\n",
-                      "image     = " . $image_dest . "$kimage\n",
-                      "read-only\n"
-                     );
+@vmelilotemplate = (
+                    "default   = Linux\n",
+                    "delay     = 2\n",
+                    "\n",
+                    "[boot]\n",
+                    "label     = Linux\n",
+                    "image     = " . $image_dest . "$kimage\n",
+                    "read-only\n"
+                   );
 
-  @zipltemplate = (
-                   "[defaultboot]\n",
-                   "default=debian\n",
-                   "\n",
-                   "[debian]\n",
-                   "target=/boot\n",
-                   "image=" . $image_dest . "$kimage\n",
-                   "parmfile=/boot/parmfile\n"
-                  );
+@zipltemplate = (
+                 "[defaultboot]\n",
+                 "default=debian\n",
+                 "\n",
+                 "[debian]\n",
+                 "target=/boot\n",
+                 "image=" . $image_dest . "$kimage\n",
+                 "parmfile=/boot/parmfile\n"
+                );
 
-  @arcboottemplate = (
-                      "label=arcdefault\n",
-                      "image=" . $image_dest . "$kimage\n",
-                     );
+@arcboottemplate = (
+                    "label=arcdefault\n",
+                    "image=" . $image_dest . "$kimage\n",
+                   );
 
-  if ($loader =~ /^zipl/io) {
-    $install_boot_method = "VM-reader or a boot tape";
-  } else {
-    $install_boot_method = "a boot floppy";
-  }
-
-
-  # creating some info about kernel and initrd
-  my $ksize=sprintf("%.0f",(stat($realimageloc .
-                                 "$kimage-$version"))[7]/1024)."kB";
-  my $initrdsize='';
-  if ($initrd) {
-    $initrdsize=sprintf("%.0f",(stat($realimageloc .
-                                     "initrd.img-$version"))[7]/1024)."kB";
-  }
+if ($loader =~ /^zipl/io) {
+  $install_boot_method = "VM-reader or a boot tape";
+} else {
+  $install_boot_method = "a boot floppy";
+}
 
 
-  print STDERR <<"EOMSG";
+# creating some info about kernel and initrd
+my $ksize=sprintf("%.0f",(stat($realimageloc .
+                               "$kimage-$version"))[7]/1024)."kB";
+my $initrdsize='';
+if ($initrd) {
+  $initrdsize=sprintf("%.0f",(stat($realimageloc .
+                                   "initrd.img-$version"))[7]/1024)."kB";
+}
+
+
+print STDERR <<"EOMSG";
 A new kernel image has been installed at $realimageloc$kimage-$version
  (Size: $ksize)
 
 EOMSG
-  ;
+;
 
-  if ($initrd) {
-    print STDERR <<"EOMSGA";
+if ($initrd) {
+  print STDERR <<"EOMSGA";
 
  Initial rootdisk image: ${realimageloc}initrd.img-$version (Size: $initrdsize)
 EOMSGA
-    ;
-  }
+  ;
+}
 
-  print STDERR <<"EOMSGB";
+print STDERR <<"EOMSGB";
 
 Symbolic links, unless otherwise specified, can be found in $image_dest
 
@@ -1250,10 +1249,10 @@ $Loader sets up your system to boot Linux directly from your hard
 disk, without the need for booting from $install_boot_method.
 
 EOMSGB
-  ;
+;
 
-  if ($do_bootloader) {
-    print STDERR <<"EOMSGC";
+if ($do_bootloader) {
+  print STDERR <<"EOMSGC";
 
 WARNING
 If you are keeping another operating system or another version
@@ -1265,57 +1264,57 @@ go ahead and install the boot block here. If it does not work, you
 can still boot this system from $install_boot_method.
 
 EOMSGC
-    ;
+  ;
+}
+
+if ($do_bootfloppy) {
+  if (&ask("Would you like to create a boot floppy now")) {
+    &makefloppy();
   }
+}
 
-  if ($do_bootfloppy) {
-    if (&ask("Would you like to create a boot floppy now")) {
-      &makefloppy();
-    }
-  }
-
-  exit 0 unless $do_bootloader;
+exit 0 unless $do_bootloader;
 
 
-  if (-T "/etc/$loader.conf") {
-    # Trust and use the existing lilo.conf.
-    print "You already have a $Loader configuration in /etc/$loader.conf\n";
-    if ($silent_loader) {
-      my $ret = &run_lilo();
-      exit $ret;
-    } elsif ( &ask_y("Install a boot block using the existing /etc/$loader.conf")) {
-      my $ret = &run_lilo();
-      exit $ret;
-    } elsif ($loader =~ /^elilo/io) {
-      print "I don't know how to create an elilo.conf file from scratch,\n";
-      print "sorry.  elilo can do that for you, if you invoke it with the\n";
-      print "correct options.  Aborting.\n";
-      exit(0);
-    } else {
-      if (&ask("Wipe out your old $Loader configuration and make a new one")) {
-        my $ret = system("savelog /etc/$loader.conf");
-        if ($ret) {
-          print "There was a problem saving a copy of your /etc/$loader.conf\n";
-          print "Since this could have grave repercussions, I am aborting.\n";
-          exit(0);
-        }
-      } else {
-        exit (0);
-      }
-    }
+if (-T "/etc/$loader.conf") {
+  # Trust and use the existing lilo.conf.
+  print "You already have a $Loader configuration in /etc/$loader.conf\n";
+  if ($silent_loader) {
+    my $ret = &run_lilo();
+    exit $ret;
+  } elsif ( &ask_y("Install a boot block using the existing /etc/$loader.conf")) {
+    my $ret = &run_lilo();
+    exit $ret;
   } elsif ($loader =~ /^elilo/io) {
     print "I don't know how to create an elilo.conf file from scratch,\n";
     print "sorry.  elilo can do that for you, if you invoke it with the\n";
     print "correct options.  Aborting.\n";
     exit(0);
+  } else {
+    if (&ask("Wipe out your old $Loader configuration and make a new one")) {
+      my $ret = system("savelog /etc/$loader.conf");
+      if ($ret) {
+        print "There was a problem saving a copy of your /etc/$loader.conf\n";
+        print "Since this could have grave repercussions, I am aborting.\n";
+        exit(0);
+      }
+    } else {
+      exit (0);
+    }
   }
+} elsif ($loader =~ /^elilo/io) {
+  print "I don't know how to create an elilo.conf file from scratch,\n";
+  print "sorry.  elilo can do that for you, if you invoke it with the\n";
+  print "correct options.  Aborting.\n";
+  exit(0);
+}
 
-  if (! &ask_y("Do you wish to set up Linux to boot from the hard disk")) {
-    exit (0);
-  }
+if (! &ask_y("Do you wish to set up Linux to boot from the hard disk")) {
+  exit (0);
+}
 
-  if ($loader =~ /^lilo/io) {
-    print <<EOF;
+if ($loader =~ /^lilo/io) {
+  print <<EOF;
 
 You must do three things to make the Linux system boot from the hard
 disk. Install a partition boot record, install a master boot record,
@@ -1323,142 +1322,142 @@ and set the partition active. You will be asked to perform each of
 these tasks. You may skip any or all of them, and perform them
 manually later on
 EOF
-    ;
+  ;
 
+}
+
+# If we get this far, we need to make a new lilo conf, and run lilo
+&make_liloconf();
+
+{ my $q;
+  if ($loader =~ /vmelilo/io) {
+    $q = "Install a boot block on $bootdevice";
+  } else {
+    $q = "Install a partition boot block on partition $bootdevice";
   }
-
-  # If we get this far, we need to make a new lilo conf, and run lilo
-  &make_liloconf();
-
-  { my $q;
-    if ($loader =~ /vmelilo/io) {
-      $q = "Install a boot block on $bootdevice";
-    } else {
-      $q = "Install a partition boot block on partition $bootdevice";
-    }
-    if (&ask_y($q)) {
-      my $ret = &run_lilo();
-      exit $ret if $ret;
-    }
+  if (&ask_y($q)) {
+    my $ret = &run_lilo();
+    exit $ret if $ret;
   }
+}
 
-  if ($loader =~ /^lilo/io) {
-    print "\n";
-    print "A master boot record is required to run the partition boot record.\n";
-    if (-f "/boot/mbr.b") {
-      print "If you are already using a boot manager, and want to keep it,\n";
-      print "answer \"no\" to the following question. If you don't know\n";
-      print "what a boot manager is or whether you have one, answer \"yes\".\n";
-      if ( &ask_y("Install a master boot record (/boot/mbr.b) on $rootdisk")) {
-        my $ret = system("dd if=/boot/mbr.b of=$rootdisk bs=444 count=1");
-        if ($ret) {
-          print "There was a problem copying the master boot record.\n";
-          print "Please run \"dd if=/boot/mbr.b of=$rootdisk bs=444 count=1\"\n";
-          print "by hand. Please hit return to continue.\n";
-          my $ans = <STDIN>;
-        }
-      }
-    } else {
-      print "However, you do not have /boot/mbr.b, a common location of a \n";
-      print "backup copy of the mbr.  I hope that your master boot record or \n";
-      print "boot manager does boot the active partition.  If not, you have\n";
-      print "to acquire the package mbr and install it. Please hit return to\n";
-      print "proceed.\n";
-      my $ans = <STDIN>;
-    }
-    print "\n";
-    print "The master boot record will boot the active partition.\n";
-    print "If you want your system to boot another operating system,\n";
-    print "such as DOS or Windows, by default, answer \"no\" to the following\n";
-    print "question. You may still use your boot manager or the master\n";
-    print "boot record to boot Linux. If you want the system to boot Linux.\n";
-    print "by default, answer \"yes\".\n";
-    if ( &ask_y("Make $rootdevice the active partition") ) {
-      my $ret = system("/sbin/activate $rootdisk $rootpartition");
+if ($loader =~ /^lilo/io) {
+  print "\n";
+  print "A master boot record is required to run the partition boot record.\n";
+  if (-f "/boot/mbr.b") {
+    print "If you are already using a boot manager, and want to keep it,\n";
+    print "answer \"no\" to the following question. If you don't know\n";
+    print "what a boot manager is or whether you have one, answer \"yes\".\n";
+    if ( &ask_y("Install a master boot record (/boot/mbr.b) on $rootdisk")) {
+      my $ret = system("dd if=/boot/mbr.b of=$rootdisk bs=444 count=1");
       if ($ret) {
-        print "There was an error trying to activate $rootdevice.\n";
-        print "Please run \"/sbin/activate $rootdisk $rootpartition\"\n";
-        print "by hand. Please hit return to proceed.\n";
+        print "There was a problem copying the master boot record.\n";
+        print "Please run \"dd if=/boot/mbr.b of=$rootdisk bs=444 count=1\"\n";
+        print "by hand. Please hit return to continue.\n";
         my $ans = <STDIN>;
       }
-    } else {
-      print "\n";
-      print "OK. If you installed the master boot record, and the partition\n";
-      print "boot record, you may boot Linux by holding down the shift key\n";
-      print "as the system boots, and then pressing the $rootpartition key\n";
-      print "when you see the \"1234F:\" prompt.\n";
-      print "";
-      print "For more information, see /usr/share/doc/mbr/README, and the files\n";
-      print "in the /usr/share/doc/$loader directory.\n";
     }
   } else {
-    if (-f "/boot/old.b") {
-      print "$loader has overwritten the original boot loader and saved it under\n";
-      print "/boot/old.b.  You can boot your old system (if any) using the\n";
-      print "oldsys label at the $loader prompt.\n";
+    print "However, you do not have /boot/mbr.b, a common location of a \n";
+    print "backup copy of the mbr.  I hope that your master boot record or \n";
+    print "boot manager does boot the active partition.  If not, you have\n";
+    print "to acquire the package mbr and install it. Please hit return to\n";
+    print "proceed.\n";
+    my $ans = <STDIN>;
+  }
+  print "\n";
+  print "The master boot record will boot the active partition.\n";
+  print "If you want your system to boot another operating system,\n";
+  print "such as DOS or Windows, by default, answer \"no\" to the following\n";
+  print "question. You may still use your boot manager or the master\n";
+  print "boot record to boot Linux. If you want the system to boot Linux.\n";
+  print "by default, answer \"yes\".\n";
+  if ( &ask_y("Make $rootdevice the active partition") ) {
+    my $ret = system("/sbin/activate $rootdisk $rootpartition");
+    if ($ret) {
+      print "There was an error trying to activate $rootdevice.\n";
+      print "Please run \"/sbin/activate $rootdisk $rootpartition\"\n";
+      print "by hand. Please hit return to proceed.\n";
+      my $ans = <STDIN>;
     }
+  } else {
+    print "\n";
+    print "OK. If you installed the master boot record, and the partition\n";
+    print "boot record, you may boot Linux by holding down the shift key\n";
+    print "as the system boots, and then pressing the $rootpartition key\n";
+    print "when you see the \"1234F:\" prompt.\n";
+    print "";
+    print "For more information, see /usr/share/doc/mbr/README, and the files\n";
+    print "in the /usr/share/doc/$loader directory.\n";
+  }
+} else {
+  if (-f "/boot/old.b") {
+    print "$loader has overwritten the original boot loader and saved it under\n";
+    print "/boot/old.b.  You can boot your old system (if any) using the\n";
+    print "oldsys label at the $loader prompt.\n";
+  }
+}
+
+sub ask {
+  my $answer;
+  print @_,"? [No] ";
+  $answer=<STDIN>;
+  return ( $answer =~ /^\s*y/i );
+}
+
+sub ask_y {
+  my $answer;
+  print @_,"? [Yes] ";
+  $answer=<STDIN>;
+  return ( $answer !~ /^\s*n/i );
+}
+
+sub makefloppy {
+  my $answer;
+  my $done = 0;
+  my $drive = 0;
+  my $imageloc = '';
+
+  return unless $do_bootfloppy;
+
+  if ($no_symlink || $reverse_symlink) {
+    $imageloc = $image_dest . $kimage;
+  } else {
+    $imageloc = $realimageloc . "$kimage-$version";
   }
 
-  sub ask {
-    my $answer;
-    print @_,"? [No] ";
-    $answer=<STDIN>;
-    return ( $answer =~ /^\s*y/i );
+  if (-e $imageloc) {
+    my ($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size,
+        $atime,$mtime,$ctime,$blksize,$blocks)
+      = stat ($imageloc);
+    if ($size >= 520192) {
+      print STDERR "Please note that the system size is $size\n";
+      print STDERR "This is greater than the size that the kernel\n";
+      print STDERR "loader supports on i386 machines. What this\n";
+      print STDERR "means is that you need to use lilo to boot\n";
+      print STDERR "this kernel on i386 machines; the floppy is\n";
+      print STDERR "not going to be sufficient by itself on an \n";
+      print STDERR "i386 box. Of course, things may have changed since\n";
+      print STDERR "July 2000, when this diagnostic was written. Your\n";
+      print STDERR "Mileage may indeed vary. Please consider yourselves\n";
+      print STDERR "warned.\n";
+      print STDERR "Please hit return to continue.";
+      $answer=<STDIN>;
+    }
+  } else {
+    print STDERR "Ulp!. I couldn't find the image where I expected\n";
+    print STDERR "it to be, namely, $imageloc\n";
+    print STDERR "You shall have to create the floppy manually, I'm\n";
+    print STDERR "afraid, using commands like\n";
+    print STDERR "\tdd if=/path/to/$kimage-$version of=/dev/fd$drive\n";
+    print STDERR "\trdev /dev/fd$drive $rootdevice\n";
+    print STDERR "\trdev -R /dev/fd$drive 1\n";
+    print STDERR "Aborting\n";
+    return;
   }
 
-  sub ask_y {
-    my $answer;
-    print @_,"? [Yes] ";
-    $answer=<STDIN>;
-    return ( $answer !~ /^\s*n/i );
-  }
 
-  sub makefloppy {
-    my $answer;
-    my $done = 0;
-    my $drive = 0;
-    my $imageloc = '';
-
-    return unless $do_bootfloppy;
-
-    if ($no_symlink || $reverse_symlink) {
-      $imageloc = $image_dest . $kimage;
-    } else {
-      $imageloc = $realimageloc . "$kimage-$version";
-    }
-
-    if (-e $imageloc) {
-      my ($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size,
-          $atime,$mtime,$ctime,$blksize,$blocks)
-        = stat ($imageloc);
-      if ($size >= 520192) {
-        print STDERR "Please note that the system size is $size\n";
-        print STDERR "This is greater than the size that the kernel\n";
-        print STDERR "loader supports on i386 machines. What this\n";
-        print STDERR "means is that you need to use lilo to boot\n";
-        print STDERR "this kernel on i386 machines; the floppy is\n";
-        print STDERR "not going to be sufficient by itself on an \n";
-        print STDERR "i386 box. Of course, things may have changed since\n";
-        print STDERR "July 2000, when this diagnostic was written. Your\n";
-        print STDERR "Mileage may indeed vary. Please consider yourselves\n";
-        print STDERR "warned.\n";
-        print STDERR "Please hit return to continue.";
-        $answer=<STDIN>;
-      }
-    } else {
-      print STDERR "Ulp!. I couldn't find the image where I expected\n";
-      print STDERR "it to be, namely, $imageloc\n";
-      print STDERR "You shall have to create the floppy manually, I'm\n";
-      print STDERR "afraid, using commands like\n";
-      print STDERR "\tdd if=/path/to/$kimage-$version of=/dev/fd$drive\n";
-      print STDERR "\trdev /dev/fd$drive $rootdevice\n";
-      print STDERR "\trdev -R /dev/fd$drive 1\n";
-      print STDERR "Aborting\n";
-      return;
-    }
-
-
-    print <<EO_MSG_A;
+  print <<EO_MSG_A;
 
 This process needs a formatted floppy. Please note that an unformatted
 floppy will cause this process to fail, and may well need a reboot to
@@ -1472,33 +1471,33 @@ second floppy drive which is drive 1, or /dev/fd1, or B:.
 in doubt, accept the default [0], which should work in most cases.
 
 EO_MSG_A
-    ;
+  ;
 
-    print "Which floppy drive [0-7] do you want to use? [0] ";
-    $answer=<STDIN>;
-    if ($answer =~ m/^\s*(\d+)\s*$/) {
-      $drive = $1;
-    }
-    print "\nOk, using drive at /dev/fd$drive.\n\n";
+  print "Which floppy drive [0-7] do you want to use? [0] ";
+  $answer=<STDIN>;
+  if ($answer =~ m/^\s*(\d+)\s*$/) {
+    $drive = $1;
+  }
+  print "\nOk, using drive at /dev/fd$drive.\n\n";
 
-    if (-x "/usr/bin/superformat") {
-      print "If there is no formatted floppy available, I could attempt\n";
-      print "to format it for you.\n";
-      if (&ask("Do you wish me to format the floppy")) {
-        my $ret;
-        my $format_command = '/usr/bin/superformat';
+  if (-x "/usr/bin/superformat") {
+    print "If there is no formatted floppy available, I could attempt\n";
+    print "to format it for you.\n";
+    if (&ask("Do you wish me to format the floppy")) {
+      my $ret;
+      my $format_command = '/usr/bin/superformat';
 
-        print "Insert a floppy diskette into your boot drive \n";
-        print "(/dev/fd$drive) and press <Return> when ready:";
-        $answer=<STDIN>;
-      FMTFLOPPY: while (! $done) {
-        DOFORMAT:{
-            $ret = system $format_command, "/dev/fd$drive";
-            last DOFORMAT if $ret;
-            $done = 1;
-          }
-          if (! $done) {
-            print <<EO_MSG_B;
+      print "Insert a floppy diskette into your boot drive \n";
+      print "(/dev/fd$drive) and press <Return> when ready:";
+      $answer=<STDIN>;
+    FMTFLOPPY: while (! $done) {
+      DOFORMAT:{
+          $ret = system $format_command, "/dev/fd$drive";
+          last DOFORMAT if $ret;
+          $done = 1;
+        }
+        if (! $done) {
+          print <<EO_MSG_B;
 
 There was a problem formatting the floppy diskette in /dev/fd$drive
 
@@ -1521,215 +1520,215 @@ fdutils may help, or maybe you need to run
 manually which _may_ work. Or else, try a new floppy.
 
 EO_MSG_B
-            ;
+          ;
 
 
-            if (! &ask_y("Would you like to try again")) {
+          if (! &ask_y("Would you like to try again")) {
+            print "\n";
+            print "If there are no pre-formatted floppies available, \n";
+            print "you should stop right here. \n";
+            if (! &ask_y("Do you have a blank pre-formatted floppy")) {
+              print "Ok, aborting.\n";
               print "\n";
-              print "If there are no pre-formatted floppies available, \n";
-              print "you should stop right here. \n";
-              if (! &ask_y("Do you have a blank pre-formatted floppy")) {
-                print "Ok, aborting.\n";
-                print "\n";
-                return 1;
-              }
-              print "\n";
-              last FMTFLOPPY;
+              return 1;
             }
+            print "\n";
+            last FMTFLOPPY;
           }
         }
       }
-    } else {
-      print "If there are no pre-formatted floppies available, you\n";
-      print "should stop right here. \n";
-      if (! &ask_y("Do you have a blank pre-formatted floppy")) {
-        print "Ok, aborting.\n";
-        return 1;
-      }
     }
-    if (!$done) {
+  } else {
+    print "If there are no pre-formatted floppies available, you\n";
+    print "should stop right here. \n";
+    if (! &ask_y("Do you have a blank pre-formatted floppy")) {
+      print "Ok, aborting.\n";
+      return 1;
+    }
+  }
+  if (!$done) {
+    print "\n";
+    print "Insert a (formatted) floppy diskette into your boot drive\n";
+    print "(/dev/fd$drive) and press <Return> when ready:";
+    $answer=<STDIN>;
+  }
+  $done=0;
+  while (! $done) {
+  MKBOOT:{
+      my $ret;
+
+      if ($loader =~ /^lilo/io) {
+        if (-e "$imageloc") {
+          $ret = system '/bin/dd', "if=$imageloc", "of=/dev/fd$drive";
+          last MKBOOT if $ret;
+          $ret = system '/usr/sbin/rdev', "/dev/fd$drive", "$rootdevice";
+          last MKBOOT if $ret;
+          $ret = system '/usr/sbin/rdev', '-R', "/dev/fd$drive", '1';
+        } else {
+          print STDERR "Ulp!. I couldn't find the image where I expected\n";
+          print STDERR "it to be, namely, $imageloc\n";
+          print STDERR "You shall have to create the floppy manually, I'm\n";
+          print STDERR "afraid, using commands like\n";
+          print STDERR "\tdd if=/path/to/$kimage-$version of=/dev/fd$drive\n";
+          print STDERR "\trdev /dev/fd$drive $rootdevice\n";
+          print STDERR "\trdev -R /dev/fd$drive 1\n";
+          print STDERR "Aborting\n";
+          return;
+        }
+      } else {
+        $ret = &silo_floppy( $drive );
+      }
+      last MKBOOT if $ret;
+      $done = 1;
       print "\n";
-      print "Insert a (formatted) floppy diskette into your boot drive\n";
-      print "(/dev/fd$drive) and press <Return> when ready:";
-      $answer=<STDIN>;
     }
-    $done=0;
-    while (! $done) {
-    MKBOOT:{
-        my $ret;
-
-        if ($loader =~ /^lilo/io) {
-          if (-e "$imageloc") {
-            $ret = system '/bin/dd', "if=$imageloc", "of=/dev/fd$drive";
-            last MKBOOT if $ret;
-            $ret = system '/usr/sbin/rdev', "/dev/fd$drive", "$rootdevice";
-            last MKBOOT if $ret;
-            $ret = system '/usr/sbin/rdev', '-R', "/dev/fd$drive", '1';
-          } else {
-            print STDERR "Ulp!. I couldn't find the image where I expected\n";
-            print STDERR "it to be, namely, $imageloc\n";
-            print STDERR "You shall have to create the floppy manually, I'm\n";
-            print STDERR "afraid, using commands like\n";
-            print STDERR "\tdd if=/path/to/$kimage-$version of=/dev/fd$drive\n";
-            print STDERR "\trdev /dev/fd$drive $rootdevice\n";
-            print STDERR "\trdev -R /dev/fd$drive 1\n";
-            print STDERR "Aborting\n";
-            return;
-          }
-        } else {
-          $ret = &silo_floppy( $drive );
-        }
-        last MKBOOT if $ret;
+    if (! $done) {
+      print "\nThere was a problem creating the boot diskette in \n";
+      print "/dev/fd$drive\n.";
+      print "Please make sure that you inserted the diskette into the\n";
+      print "correct drive and that the diskette is not write-protected.\n";
+      print "In some rare cases, it may mean a problem with the\n";
+      print "Floppy or the drive it self.\n";
+      if (! &ask_y("Would you like to try again")) {
         $done = 1;
+      } else {
+        # don't display the next message if no more tries
         print "\n";
-      }
-      if (! $done) {
-        print "\nThere was a problem creating the boot diskette in \n";
-        print "/dev/fd$drive\n.";
-        print "Please make sure that you inserted the diskette into the\n";
-        print "correct drive and that the diskette is not write-protected.\n";
-        print "In some rare cases, it may mean a problem with the\n";
-        print "Floppy or the drive it self.\n";
-        if (! &ask_y("Would you like to try again")) {
-          $done = 1;
-        } else {
-          # don't display the next message if no more tries
-          print "\n";
-          print "Insert a (formatted) floppy diskette into your boot drive\n";
-          print "/dev/fd$drive and press <Return> when ready:";
-          $answer=<STDIN>;
-        }
+        print "Insert a (formatted) floppy diskette into your boot drive\n";
+        print "/dev/fd$drive and press <Return> when ready:";
+        $answer=<STDIN>;
       }
     }
   }
+}
 
-  sub silo_floppy {
-    my $drive = shift;
-    my $mountpoint = "/var/lib/kernel.mntpoint.$$";
-    my $ret = system '/sbin/mke2fs', "/dev/fd$drive";
-    return $ret if $ret;
-    $ret = mkdir $mountpoint, 0755;
-    return $ret if $ret;
-    $ret = system '/bin/mount', '-t', 'ext2', "/dev/fd$drive", $mountpoint;
-    do { rmdir $mountpoint; return $ret } if $ret;
-    do {
-      mkdir $mountpoint . "/boot", 0755;
-      last unless system '/bin/cp', '/boot/first.b', $mountpoint . '/boot';
-      last unless system '/bin/cp', '/boot/second.b', $mountpoint . '/boot';
-      if ($no_symlink || $reverse_symlink) {
-        $ret = system '/bin/cp', $image_dest . $kimage, $mountpoint . '/linux';
-      } else {
-        $ret = system '/bin/cp', "$realimageloc" . "$kimage-$version",
-          $mountpoint . '/linux';
-      }
-      last if $ret;
-      mkdir( $mountpoint . "/etc", 0755 ) || last;
-      open SILO, ">$mountpoint/etc/silo.conf" || last;
-      print SILO
-        "partition=1\n",
-          "root=/dev/fd$drive\n",
-            "read-write\n",
-              "timeout=100\n",  # 10s
-                "image = /linux\n",
-                  "\tlabel = Linux\n",
-                    "\tappend=root=$rootdevice\n";
-      close SILO;
-      $ret = system '/sbin/silo', '-r', $mountpoint;
-    };
-    system '/bin/umount', $mountpoint;
-    rmdir $mountpoint;
-    return $ret;
-  }
-
-
-  sub make_liloconf {
-    # Create a lilo.conf if one doesn't exist.
-    print STDERR "I'll try and create a bootloader configuration filefor \n";
-    print STDERR "$loader. However, please note that this is merely a best\n";
-    print STDERR "effort attempt, the file /etc/$loader.conf should really\n";
-    print STDERR "be checked by a human.\n";
-
-    if (!defined($bootdevice)) {
-      if ($loader =~ /vmelilo/io) {
-        print "\nPutting the boot record on to $rootdisk which is\n";
-        print "the device where the root file system lives.\n\n";
-        $bootdevice = $rootdisk;
-      } else {
-        print "\nHmm... I can't determine which partition to put the \n";
-        print "partition boot record on. I'm defaulting to the $rootdevice\n";
-        print "which is where the root file system lives.\n";
-        $bootdevice = $rootdevice;
-      }
-    }
-
-    open(CONF, ">/etc/$loader.conf");
-    if ($loader =~ /^lilo/io) {
-      print CONF "boot=".$bootdevice, "\n", "root=".$rootdevice, "\n",
-        @boilerplate;
-      if ($initrd) {
-        print CONF "initrd=" . $image_dest . "initrd.img\n";
-      }
-    } elsif ($loader =~ /^vmelilo/io) {
-      print CONF "boot      = $bootdevice\n",
-        "root      = $rootdevice\n",
-          @vmelilotemplate;
-    } elsif ($loader =~ /^quik/io) {
-      print CONF @quiktemplate;
-    } elsif ($loader =~ /^palo/io) {
-      print CONF @palotemplate;
-    } elsif ($loader =~ /^zipl/io) {
-      print CONF @zipltemplate;
+sub silo_floppy {
+  my $drive = shift;
+  my $mountpoint = "/var/lib/kernel.mntpoint.$$";
+  my $ret = system '/sbin/mke2fs', "/dev/fd$drive";
+  return $ret if $ret;
+  $ret = mkdir $mountpoint, 0755;
+  return $ret if $ret;
+  $ret = system '/bin/mount', '-t', 'ext2', "/dev/fd$drive", $mountpoint;
+  do { rmdir $mountpoint; return $ret } if $ret;
+  do {
+    mkdir $mountpoint . "/boot", 0755;
+    last unless system '/bin/cp', '/boot/first.b', $mountpoint . '/boot';
+    last unless system '/bin/cp', '/boot/second.b', $mountpoint . '/boot';
+    if ($no_symlink || $reverse_symlink) {
+      $ret = system '/bin/cp', $image_dest . $kimage, $mountpoint . '/linux';
     } else {
-      print CONF @silotemplate;
+      $ret = system '/bin/cp', "$realimageloc" . "$kimage-$version",
+        $mountpoint . '/linux';
     }
-    close(CONF);
-    chmod("/etc/$loader.conf", 0644);
-    chown("/etc/$loader.conf", 0, 0);
+    last if $ret;
+    mkdir( $mountpoint . "/etc", 0755 ) || last;
+    open SILO, ">$mountpoint/etc/silo.conf" || last;
+    print SILO
+      "partition=1\n",
+        "root=/dev/fd$drive\n",
+          "read-write\n",
+            "timeout=100\n",    # 10s
+              "image = /linux\n",
+                "\tlabel = Linux\n",
+                  "\tappend=root=$rootdevice\n";
+    close SILO;
+    $ret = system '/sbin/silo', '-r', $mountpoint;
+  };
+  system '/bin/umount', $mountpoint;
+  rmdir $mountpoint;
+  return $ret;
+}
+
+
+sub make_liloconf {
+  # Create a lilo.conf if one doesn't exist.
+  print STDERR "I'll try and create a bootloader configuration filefor \n";
+  print STDERR "$loader. However, please note that this is merely a best\n";
+  print STDERR "effort attempt, the file /etc/$loader.conf should really\n";
+  print STDERR "be checked by a human.\n";
+
+  if (!defined($bootdevice)) {
+    if ($loader =~ /vmelilo/io) {
+      print "\nPutting the boot record on to $rootdisk which is\n";
+      print "the device where the root file system lives.\n\n";
+      $bootdevice = $rootdisk;
+    } else {
+      print "\nHmm... I can't determine which partition to put the \n";
+      print "partition boot record on. I'm defaulting to the $rootdevice\n";
+      print "which is where the root file system lives.\n";
+      $bootdevice = $rootdevice;
+    }
   }
 
-  sub run_lilo (){
-    my $ret;
-    if ($loader =~ /^lilo/io or $loader =~ /vmelilo/io) {
-      print "Testing $loader.conf ... \n";
-      unlink $temp_file_name;   # security
-      $ret = system("$loaderloc -t >$temp_file_name 2>&1");
-      if ($ret) {
-        my $ans;
-        print "An error occurred while running $loader in test mode, a log is\n";
-        print "available in $temp_file_name. Please edit /etc/$loader.conf\n";
-        print "manually and re-run $loader, or make other arrangements to boot \n";
-        print "your machine. \n\t Please hit return to continue";
-        $ans = <STDIN>;
-        return $ret;
-      }
-      unlink "$temp_file_name";
-      print "Testing successful.\n";
-      print "Installing the ";
-      print "partition " if $loader =~ /^lilo/io;
-      print "boot sector... \n";
+  open(CONF, ">/etc/$loader.conf");
+  if ($loader =~ /^lilo/io) {
+    print CONF "boot=".$bootdevice, "\n", "root=".$rootdevice, "\n",
+      @boilerplate;
+    if ($initrd) {
+      print CONF "initrd=" . $image_dest . "initrd.img\n";
     }
+  } elsif ($loader =~ /^vmelilo/io) {
+    print CONF "boot      = $bootdevice\n",
+      "root      = $rootdevice\n",
+        @vmelilotemplate;
+  } elsif ($loader =~ /^quik/io) {
+    print CONF @quiktemplate;
+  } elsif ($loader =~ /^palo/io) {
+    print CONF @palotemplate;
+  } elsif ($loader =~ /^zipl/io) {
+    print CONF @zipltemplate;
+  } else {
+    print CONF @silotemplate;
+  }
+  close(CONF);
+  chmod("/etc/$loader.conf", 0644);
+  chown("/etc/$loader.conf", 0, 0);
+}
 
-    if ($loader =~ /^elilo/io) {
-      $ret = system("$loaderloc 2>&1 | tee $temp_file_name");
-    } else {
-      $ret = system("$loaderloc >$temp_file_name 2>&1");
-    }
-
+sub run_lilo (){
+  my $ret;
+  if ($loader =~ /^lilo/io or $loader =~ /vmelilo/io) {
+    print "Testing $loader.conf ... \n";
+    unlink $temp_file_name;     # security
+    $ret = system("$loaderloc -t >$temp_file_name 2>&1");
     if ($ret) {
       my $ans;
-      print "There was an error with running $loader, a log file is \n";
-      print "available in file $temp_file_name.  Please edit /etc/$loader.conf\n";
+      print "An error occurred while running $loader in test mode, a log is\n";
+      print "available in $temp_file_name. Please edit /etc/$loader.conf\n";
       print "manually and re-run $loader, or make other arrangements to boot \n";
       print "your machine. \n\t Please hit return to continue";
       $ans = <STDIN>;
       return $ret;
     }
-    unlink $temp_file_name;
-    print "Installation successful.\n";
-    return 0;
+    unlink "$temp_file_name";
+    print "Testing successful.\n";
+    print "Installing the ";
+    print "partition " if $loader =~ /^lilo/io;
+    print "boot sector... \n";
   }
 
-  exit 0;
+  if ($loader =~ /^elilo/io) {
+    $ret = system("$loaderloc 2>&1 | tee $temp_file_name");
+  } else {
+    $ret = system("$loaderloc >$temp_file_name 2>&1");
+  }
 
-  __END__
+  if ($ret) {
+    my $ans;
+    print "There was an error with running $loader, a log file is \n";
+    print "available in file $temp_file_name.  Please edit /etc/$loader.conf\n";
+    print "manually and re-run $loader, or make other arrangements to boot \n";
+    print "your machine. \n\t Please hit return to continue";
+    $ans = <STDIN>;
+    return $ret;
+  }
+  unlink $temp_file_name;
+  print "Installation successful.\n";
+  return 0;
+}
+
+exit 0;
+
+__END__
 
