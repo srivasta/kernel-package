@@ -1,0 +1,10 @@
+2005-06-08  Manoj Srivastava  <srivasta@debian.org>
+
+	* rules (DOC_MAN):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--base-0
+		  specify location of the manual pages produced by the
+		  kernel-doc packages.
+	* rules (real_stamp_doc):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--base-0
+		  Create the man page directory. Clean up the Docbook area
+			  in /usr/share/doc. Remember to gunzip the HTML docs.

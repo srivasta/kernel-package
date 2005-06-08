@@ -5,9 +5,9 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Sat May  7 02:40:22 2005
+## Last Modified On : Wed Jun  8 02:00:10 2005
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count	    : 812
+## Update Count	    : 816
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
@@ -1015,6 +1015,7 @@ SOURCE_DOC:= $(SOURCE_TOP)/usr/share/doc/$(package)
 HEADER_DOC:= $(HEADER_TOP)/usr/share/doc/$(h_package)
 IMAGE_DOC := $(IMAGE_TOP)/usr/share/doc/$(i_package)
 DOC_DOC   := $(DOC_TOP)/usr/share/doc/$(d_package)
+DOC_MAN   := $(DOC_TOP)/usr/share/man/man9
 
 SOURCE_SRC:= $(SOURCE_TOP)/usr/src/$(package)
 HEADER_SRC:= $(HEADER_TOP)/usr/src/$(h_package)
@@ -2201,6 +2202,7 @@ endif
 	rm -rf            $(DOC_TOP)
 	$(make_directory) $(DOC_TOP)/DEBIAN
 	$(make_directory) $(DOC_DOC)
+	$(make_directory) $(DOC_MAN)
 	$(install_file) debian/changelog          $(DOC_DOC)/changelog.Debian
 	$(install_file) $(DEBDIR)/README.doc      $(DOC_DOC)/README.Debian
 	echo "This was produced by kernel-package version $(kpkg_version)." > \
@@ -2216,10 +2218,25 @@ ifneq ($(strip $(shell if [ -x /usr/bin/db2html ]; then echo YSE; fi)),)
 	$(MAKE)  mandocs htmldocs
 endif
 	-tar cf - Documentation | (cd $(DOC_DOC); umask 000; tar xsf -)
-ifneq ($(shell if [ $(VERSION) -ge 2 ] && [ $(PATCHLEVEL) -ge 5 ]; then \
-                  echo new;fi),)
-	find -name Kconfig -print0 | xargs -0r cat | \
-	     (umask 000 ; cat > $(DOC_DOC)/Kconfig.collected)
+	test ! -d $(DOC_DOC)/Documentation/DocBook ||                            \
+	   rm -f   $(DOC_DOC)/Documentation/DocBook/Makefile                     \
+	           $(DOC_DOC)/Documentation/DocBook/*.sgml                       \
+	           $(DOC_DOC)/Documentation/DocBook/*.tmpl                       \
+	           $(DOC_DOC)/Documentation/DocBook/.*.sgml.cmd
+	test ! -d $(DOC_DOC)/Documentation/DocBook ||                            \
+	   find $(DOC_DOC)/Documentation/DocBook -name "*.9" -exec mv {}         \
+	        $(DOC_MAN) \;
+	test ! -d $(DOC_DOC)/Documentation/DocBook ||                            \
+	   find $(DOC_DOC)/Documentation/DocBook -name "*.9.gz" -exec mv {}      \
+	        $(DOC_MAN) \;
+	test ! -d $(DOC_DOC)/Documentation/DocBook/man ||                       \
+	   rm -rf $(DOC_DOC)/Documentation/DocBook/man
+	test ! -d $(DOC_DOC)/Documentation/DocBook ||                           \
+	   mv $(DOC_DOC)/Documentation/DocBook $(DOC_DOC)/html
+	ifneq ($(shell if [ $(VERSION) -ge 2 ] && [ $(PATCHLEVEL) -ge 5 ]; then \
+	                  echo new;fi),)
+		find -name Kconfig -print0 | xargs -0r cat | \
+		     (umask 000 ; cat > $(DOC_DOC)/Kconfig.collected)
 # removing if empty should be faster than running find twice
 	if ! test -s $(DOC_DOC)/Kconfig.collected ; then \
 	    rm -f $(DOC_DOC)/Kconfig.collected ;          \
@@ -2231,6 +2248,7 @@ ifneq ($(strip $(doc_clean_hook)),)
 endif
 	-gzip -9qfr $(DOC_DOC)
 	-find $(DOC_DOC) -type f -name \*.gz -perm +111 -exec gunzip {} \;
+	-find $(DOC_DOC)/html       -type f -name \*.gz -exec gunzip {} \;
 	$(install_file) $(DEBDIR)/copyright.doc $(DOC_DOC)/copyright
 	sed -e 's/=P/$(d_package)/g' -e 's/=V/$(version)/g' \
 		$(DEBDIR)/src.postinst > $(DOC_TOP)/DEBIAN/postinst
