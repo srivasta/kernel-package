@@ -5,9 +5,9 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Wed Jun  8 02:14:21 2005
+## Last Modified On : Wed Jun  8 03:06:39 2005
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count	    : 821
+## Update Count	    : 822
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
@@ -1168,9 +1168,12 @@ saved_version := $(shell if test -f debian/changelog; then \
                      perl -nle 'print /^$(INT_STEM)-source-(\S+)/; exit 0' \
                           debian/changelog;\
                   fi; )
+# Warn people about version mismatches, unless they are running an
+# "official" version, in which case they can shoot themselves in the
+# foot if they so desire
 ifneq ($(strip $(saved_version)),)
 ifneq ($(strip $(saved_version)),$(strip $(version)))
-HAVE_VERSION_MISMATCH=YES
+HAVE_VERSION_MISMATCH:=$(shell if test ! -f debian/official;then echo YES; fi; )
 endif
 endif
 endif
