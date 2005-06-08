@@ -28,7 +28,7 @@
 .\" (c) 2003 Software in the Public Interest
 .\" Esta traducción ha sido realizada por Rubén Porras Campo <nahoo@inicia.es>
 .\" Está basada en la página de manual original:
-.\" versión 1.22 del CVS de
+.\" versión 1.24 del CVS de
 .\" /cvs/debian-doc/manpages/english/kernel-package/make-kpkg.8
 .\" Revisada por Rudy Godoy <rudy@kernel-panik.org>
 
@@ -455,8 +455,23 @@ para producir el paquete completo usando
 .B dpkg\-buildpackage
 .TP
 .B binary
-Este objetivo produce los cuatro paquetes del núcleo de Debian ejecutando los objetivos
-.B kernel_source, kernel_headers, kernel_doc
+Este objetivo produce los cuatro paquetes del núcleo de Debian ejecutando los
+objetivos
+.B binary-indep
+y
+.B binary-arch.
+.TP
+.B binary-indep
+Este objetivo produce los paquetes independientes de la arquitectura ejecutando
+los objetivos
+.B kernel_source
+y
+.B kernel_doc.
+.TP
+.B binary-arch
+Este objetivo produce los paquetes dependientes de la arquitectura ejecutando
+los objetivos
+.B kernel_headers
 y
 .B kernel_image.
 .TP
