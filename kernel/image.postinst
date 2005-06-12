@@ -225,19 +225,14 @@ if ($official_image =~ /^\s*YES\s*$/o && $arch =~ m/powerpc/) {
 chdir("$image_dest") or die "could not chdir to $image_dest:$!\n";
 
 # Paranoid check to make sure that the correct value is put in there
-if (! $kimage) {
-  $kimage = "vmlinuz";
-}                               # Hmm. empty
-elsif ($kimage =~ m/^b?zImage$/o) {
-  $kimage = "vmlinuz";
-}                               # these produce vmlinuz
-elsif ($kimage =~ m/^[iI]mage$/o) {
-  my $nop = $kimage;
-} elsif ($kimage =~ m/^vmlinux$/o) {
-  my $nop = $kimage;
-} else {
-  $kimage = "vmlinuz";
-}                               # Default
+if    (! $kimage)                 { $kimage = "vmlinuz"; } # Hmm. empty
+elsif ($kimage =~ m/^b?zImage$/o) { $kimage = "vmlinuz"; } # these produce vmlinuz
+elsif ($kimage =~ m/^[iI]mage$/o) { my $nop = $kimage;   }
+elsif ($kimage =~ m/^vmlinux$/o)  { my $nop = $kimage;   }
+else                              { $kimage = "vmlinuz"; } # Default
+
+$ENV{KERNEL_ARCH}=$kernel_arch if $kernel_arch;
+
 
 die "Internal Error: Could not find image (" . $realimageloc
   . "$kimage-$version)\n" unless -e $realimageloc

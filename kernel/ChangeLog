@@ -1,3 +1,21 @@
+2005-06-12  Manoj Srivastava  <srivasta@debian.org>
+
+	* image.prerm:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-8
+		  Export KERNEL_ARCH
+
+	* image.preinst:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-8
+		  Export KERNEL_ARCH  
+
+	* image.postrm:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-8
+		  Export KERNEL_ARCH 
+
+	* image.postinst:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-8
+		  Export KERNEL_ARCH 
+
 2005-06-08  Manoj Srivastava  <srivasta@debian.org>
 
 	* README (so):

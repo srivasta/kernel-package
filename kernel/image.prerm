@@ -169,6 +169,8 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
 }
 
 
+$ENV{KERNEL_ARCH}=$kernel_arch if $kernel_arch;
+
 #check to see if we are trying to remove a running kernel
 # if so we abort right now.
 chop($running=`uname -r`);

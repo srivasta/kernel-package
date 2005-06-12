@@ -166,6 +166,9 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
 if ($do_initrd)    {   $warn_initrd = '';   }
 if (!$warn_initrd) {   $do_initrd   = "YES";}
 
+$ENV{KERNEL_ARCH}=$kernel_arch if $kernel_arch;
+
+
 # About to upgrade this package from version $2 TO THIS VERSION.
 # "prerm upgrade" has already been called for the old version of
 # this package.
