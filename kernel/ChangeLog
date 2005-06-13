@@ -31,6 +31,11 @@
 		  value). Also, set up so that we capture that value if
 		  dpkg provides it, but do not error out if we have an
 		  older dpkg version.
+		  
+		 powerpc64 does not need to be crosscompiled.
+
+		  powerpc64 does not need -apowerpc64 passed in into
+		  dpkg-architecture.  
 
 2005-06-12  Manoj Srivastava  <srivasta@debian.org>
 

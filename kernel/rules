@@ -5,9 +5,9 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Wed Jun  8 04:13:04 2005
+## Last Modified On : Mon Jun 13 01:11:32 2005
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count	    : 824
+## Update Count	    : 827
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
@@ -24,8 +24,10 @@ ifeq ($(strip $(KPKG_ARCH)),xen)
 endif
 
 ifdef KPKG_ARCH
-  ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
+  ifneq ($(strip $(KPKG_ARCH)),powerpc64)
+    ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
       ha:=-a$(KPKG_ARCH)
+    endif
   endif
 endif
 
@@ -144,12 +146,14 @@ else
 endif
 
 ifndef CROSS_COMPILE
-  ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
-    ifneq ($(strip $(architecture)),$(strip $(DEB_BUILD_ARCH)))
-      #KERNEL_CROSS:=$(architecture)-$(strip $(DEB_HOST_ARCH_OS))-
-      KERNEL_CROSS:=$(DEB_HOST_GNU_TYPE)-
-      ifeq ($(architecture), amd64)
-        KERNEL_CROSS:=$(architecture)-$(strip $(DEB_HOST_ARCH_OS))-
+  ifneq ($(strip $(KPKG_ARCH)),powerpc64)
+    ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
+      ifneq ($(strip $(architecture)),$(strip $(DEB_BUILD_ARCH)))
+        #KERNEL_CROSS:=$(architecture)-$(strip $(DEB_HOST_ARCH_OS))-
+        KERNEL_CROSS:=$(DEB_HOST_GNU_TYPE)-
+        ifeq ($(architecture), amd64)
+          KERNEL_CROSS:=$(architecture)-$(strip $(DEB_HOST_ARCH_OS))-
+        endif
       endif
     endif
   endif
