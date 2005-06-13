@@ -35,7 +35,9 @@ export DEB_BUILD_GNU_CPU   := $(shell $(DPKG_ARCH) $(ha) -qDEB_BUILD_GNU_CPU)
 export DEB_BUILD_GNU_SYSTEM:= $(shell $(DPKG_ARCH) $(ha) -qDEB_BUILD_GNU_SYSTEM)
 export DEB_BUILD_GNU_TYPE  := $(shell $(DPKG_ARCH) $(ha) -qDEB_BUILD_GNU_TYPE)
 export DEB_HOST_ARCH       := $(shell $(DPKG_ARCH) $(ha) -qDEB_HOST_ARCH)
-export DEB_HOST_ARCH_OS    := $(shell $(DPKG_ARCH) $(ha) -qDEB_HOST_ARCH_OS     \
+export DEB_HOST_ARCH_OS    := $(shell $(DPKG_ARCH) $(ha) -qDEB_HOST_ARCH_OS      \
+                                2>/dev/null|| true)
+export DEB_HOST_ARCH_CPU   := $(shell $(DPKG_ARCH) $(ha) -qDEB_HOST_ARCH_CPU     \
                                 2>/dev/null|| true)
 export DEB_HOST_GNU_CPU    := $(shell $(DPKG_ARCH) $(ha) -qDEB_HOST_GNU_CPU)
 export DEB_HOST_GNU_SYSTEM := $(shell $(DPKG_ARCH) $(ha) -qDEB_HOST_GNU_SYSTEM)
@@ -131,7 +133,11 @@ ifdef KPKG_ARCH
 else
   #architecture:=$(shell CC=$(HOSTCC) dpkg --print-gnu-build-architecture)
   #architecture:=$(DEB_HOST_ARCH)
-  architecture:=$(DEB_HOST_GNU_CPU)
+  ifeq (,$(DEB_HOST_ARCH_CPU))
+    architecture:=$(DEB_HOST_GNU_CPU)
+  else
+    architecture:=$(DEB_HOST_ARCH_CPU)
+  endif
   ifeq ($(architecture), x86_64)
     architecture:=amd64
   endif
