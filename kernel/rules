@@ -2507,7 +2507,10 @@ ifneq ($(strip $(KERNEL_ARCH)),um)
 	test ! -f System.map ||  chmod 644                             \
                         $(INT_IMAGE_DESTDIR)/System.map-$(version);
 else
-	mv $(INSTALL_MOD_PATH)/lib/modules/* $(UML_DIR)/ -v
+	if [ -d $(INSTALL_MOD_PATH)/lib/modules ] ; then               \
+          find $(INSTALL_MOD_PATH)/lib/modules/ -type f -print0 |      \
+	   xargs -0r mv {} $(UML_DIR)/ ;                               \
+        fi
 	rm -rf $(INSTALL_MOD_PATH)/lib
 endif
 	# For LKCD enabled kernels
