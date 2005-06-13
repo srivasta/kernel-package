@@ -202,6 +202,13 @@ of the kernel image, and the second argument being the
 of the kernel image itself. Errors in the script shall produce a
 warning message, but shall be otherwise ignored.
 .TP
+.B ramdisk
+Set this variable to a executable that creates an initial RAM
+disk. This only has any effect if installing a kernel-image that uses
+an initail RAM disk. The command so pointed must be drop-in compatible
+with
+.I mkinitrd.
+.TP
 .B src_postinst_hook 
 Unlike the other hook variables, this is meant for a script run during
 the post inst of a docs, headers or a source package. Using this hook
