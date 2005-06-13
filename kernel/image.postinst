@@ -530,8 +530,8 @@ sub image_magic {
             if (-l "$kimage.old") {
               my $old_target = readlink "$kimage.old";
               my $real_old_target = '';
-              $real_old_target = abs_path($old_target)
-                if defined ($old_target);
+              $real_old_target=abs_path($old_target) if defined ($old_target);
+
               if ($real_old_target  && -f "$real_old_target") {
                 if ($old_target !~ m|^/|o) {
                   $old_target = $cwd . "/" . $old_target;
@@ -540,55 +540,60 @@ sub image_magic {
                 $old_target = CanonicalizePath($old_target);
                 if ("$old_target"  ne "$target") {
                   $force_move = 1;
-                } else {
+                } else {        # The .old points to the current
                   warn "$kimage.old --> $target -- doing nothing";
                   $force_move = 0;
                 }
-              } else {
+              } else { # Well, the old link does not exist -- so we move
                 $force_move = 1;
               }
-            } else {
+
+            } else {            # No .old link -- OK to move
               $force_move = 1;
             }
-          } else {
-            warn "$vmlinuz_target points to $target -- doing nothing";
-            $force_move = 0;
+          } else {              # ok, minimal swap is no-- so we move.
+            $force_move = 1;
           }
+        } else {                # already have proper link
+          warn "$vmlinuz_target points to $target -- doing nothing";
+          $force_move = 0;
+        }
+      }                         # known target
+    }                           # we like links
+
+
+    if ($force_move) {        # don't clobber $kimage.old quite yet
+      rename("$kimage", "$kimage.$$") ||
+        die "failed to move " . $image_dest . "$kimage:$!";
+      my $Old = $realimageloc;
+      my $cwd;
+      chomp($cwd=`pwd`);
+      if (test_relative ('Old Dir' => $Old, 'New Dir' => $cwd,
+                         'Test File' => "$kimage-$version")) {
+        $Old   =~ s|^/*||o;
+      } elsif ($relative_links) {
+        $Old = spath('Old' => "$Old", 'New' => $cwd);
+      }
+      if ($use_hard_links =~ m/YES/i) {
+        if (! link($Old . "$kimage-$version", "$kimage")) {
+          rename("$kimage.$$", "$kimage");
+          die("Failed to link " . $realimageloc .
+              "$kimage-$version to "  . $image_dest . "$kimage .\n");
+        }
+      } else {
+        if (! symlink($Old . "$kimage-$version", "$kimage")) {
+          rename("$kimage.$$", "$kimage");
+          die("Failed to symbolic-link " . $realimageloc .
+              "$kimage-$version to " . $image_dest . "$kimage .\n");
         }
       }
-      if ($force_move) {        # don't clobber $kimage.old quite yet
-        rename("$kimage", "$kimage.$$") ||
-          die "failed to move " . $image_dest . "$kimage:$!";
-        my $Old = $realimageloc;
-        my $cwd;
-        chomp($cwd=`pwd`);
-        if (test_relative ('Old Dir' => $Old, 'New Dir' => $cwd,
-                           'Test File' => "$kimage-$version")) {
-          $Old   =~ s|^/*||o;
-        } elsif ($relative_links) {
-          $Old = spath('Old' => "$Old", 'New' => $cwd);
-        }
-        if ($use_hard_links =~ m/YES/i) {
-          if (! link($Old . "$kimage-$version", "$kimage")) {
-            rename("$kimage.$$", "$kimage");
-            die("Failed to link " . $realimageloc .
-                "$kimage-$version to "  . $image_dest . "$kimage .\n");
-          }
-        } else {
-          if (! symlink($Old . "$kimage-$version", "$kimage")) {
-            rename("$kimage.$$", "$kimage");
-            die("Failed to symbolic-link " . $realimageloc .
-                "$kimage-$version to " . $image_dest . "$kimage .\n");
-          }
-        }
-
-        # Ok, now we may clobber the previous .old file
-        if (-l "$kimage.old" || ! -e "$kimage.old" ) {
-          rename("$kimage.$$", "$kimage.old");
-        } else {
-          warn "$kimage.old is not a symlink, not clobbering\n";
-          unlink "$kimage.$$";
-        }
+      
+      # Ok, now we may clobber the previous .old file
+      if (-l "$kimage.old" || ! -e "$kimage.old" ) {
+        rename("$kimage.$$", "$kimage.old");
+      } else {
+        warn "$kimage.old is not a symlink, not clobbering\n";
+        unlink "$kimage.$$";
       }
     }
   } elsif (! -e "$kimage") {
