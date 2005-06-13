@@ -1,9 +1,28 @@
 2005-06-13  Manoj Srivastava  <srivasta@debian.org>
 
+	* image.prerm:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-8
+		  Use $ramdisk instead of mkinitrd. Set the default value
+		  of $ramdisk to be mkinitrd. 
+
+	* image.preinst:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-8
+		  Use $ramdisk instead of mkinitrd. Set the default value
+		  of $ramdisk to be mkinitrd. 
+
+	* image.postrm:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-8
+		  Use $ramdisk instead of mkinitrd. Set the default value
+		  of $ramdisk to be mkinitrd. 
+
 	* image.postinst (image_magic):
 		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-8
 		  Add missing close curly brace (added an else clause as
 		  well). 
+	  (image_magic):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-8
+		  Use $ramdisk instead of mkinitrd. Set the default value
+		  of $ramdisk to be mkinitrd. 
 
 	* rules:
 		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-8
