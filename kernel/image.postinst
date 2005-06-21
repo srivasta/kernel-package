@@ -5,9 +5,9 @@
 # Created On       : Sat Apr 27 05:55:26 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Wed Jun  8 03:39:25 2005
+# Last Modified On : Tue Jun 21 14:28:22 2005
 # Last Machine Used: glaurung.internal.golden-gryphon.com
-# Update Count     : 280
+# Update Count     : 295
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
@@ -96,6 +96,8 @@ my $CONF_LOC        = '/etc/kernel-img.conf';
 
 # Ignore all invocations except when called on to configure.
 exit 0 unless $ARGV[0] =~ /configure/;
+
+my $DEBUG = 0;
 
 # Do some preliminary sanity checks here to ensure we actually have an
 # valid image dir
@@ -465,7 +467,8 @@ sub really_move_image {
         || die("Failed to symbolic-link " . $image_dest .
                "$kimage-$version to " . $realimageloc .
                "$kimage-$version .\n");
-    } else {
+    }
+    else {
       symlink($Old . "$kimage-$version",
               $realimageloc . "$kimage-$version")
         || die("Failed to link " . $image_dest .
@@ -500,6 +503,7 @@ sub image_magic {
 
   if (-l "$kimage") {           # There is a symbolic link
     my $force_move = 0;
+    warn "DEBUG: There is a symlink for $kimage\n" if $DEBUG;
 
     if ($no_symlink || $reverse_symlink) { # we do not want links, yet we have a symbolic link here!
       warn "found a symbolic link in " . $image_dest . "$kimage \n" .
@@ -509,7 +513,8 @@ sub image_magic {
       # make sure we change this state of affairs
       $force_move = 1;
     } else {
-      # OK. We found symlink, and we should have a symlink here.
+      warn "DEBUG: OK. We found symlink, and we should have a symlink here.\n"
+        if $DEBUG;
       my $vmlinuz_target = readlink "$kimage";
       my $real_target = '';
       my $target = CanonicalizePath("$realimageloc" . "$kimage-$version");
@@ -519,7 +524,10 @@ sub image_magic {
         warn "The link "  . $image_dest . "$kimage is a dangling link" .
           "to $real_target\n";
         $force_move = 1;
-      } else {                  # Found where the link points to
+      }
+      else {
+        warn "DEBUG: Found where the link $kimage points to ($vmlinuz_target)\n" if $DEBUG;
+        warn "DEBUG: ($vmlinuz_target) is really ($real_target)\n" if $DEBUG;
         my $cwd;
         chomp ($cwd=`pwd`);
         if ($vmlinuz_target !~ m|^/|o) {
@@ -528,8 +536,11 @@ sub image_magic {
         }
         $vmlinuz_target = CanonicalizePath($vmlinuz_target);
         if ("$vmlinuz_target" ne "$target") {
+          warn "DEBUG: We need to handle this.\n" if $DEBUG;
           if ($minimal_swap) {
+            warn "DEBUG: Minimal swap.\n" if $DEBUG;
             if (-l "$kimage.old") {
+              warn "DEBUG: There is an old link at $kimage.old\n" if $DEBUG;
               my $old_target = readlink "$kimage.old";
               my $real_old_target = '';
               $real_old_target=abs_path($old_target) if defined ($old_target);
@@ -542,22 +553,33 @@ sub image_magic {
                 $old_target = CanonicalizePath($old_target);
                 if ("$old_target"  ne "$target") {
                   $force_move = 1;
-                } else {        # The .old points to the current
+                  warn "DEBUG: The old link ($old_target) does not point to us ($target)\n"
+                    if $DEBUG;
+                } 
+                else {        # The .old points to the current
                   warn "$kimage.old --> $target -- doing nothing";
                   $force_move = 0;
                 }
-              } else { # Well, the old link does not exist -- so we move
+              } 
+              else { 
+                warn "DEBUG: Well, the old link does not exist -- so we move\n"
+                  if $DEBUG;
                 $force_move = 1;
               }
-
-            } else {            # No .old link -- OK to move
+            } 
+            else {
+              warn "DEBUG: No .old link -- OK to move\n"
+                if $DEBUG;
               $force_move = 1;
             }
-          } else {              # ok, minimal swap is no-- so we move.
+          } 
+          else {
+            warn "DEBUG: ok, minimal swap is no-- so we move.\n"
+              if $DEBUG;
             $force_move = 1;
           }
         } else {                # already have proper link
-          warn "$vmlinuz_target points to $target -- doing nothing";
+          warn "$kimage($vmlinuz_target) points to $target ($real_target) -- doing nothing";
           $force_move = 0;
         }
       }                         # known target
@@ -582,7 +604,8 @@ sub image_magic {
           die("Failed to link " . $realimageloc .
               "$kimage-$version to "  . $image_dest . "$kimage .\n");
         }
-      } else {
+      } 
+      else {
         if (! symlink($Old . "$kimage-$version", "$kimage")) {
           rename("$kimage.$$", "$kimage");
           die("Failed to symbolic-link " . $realimageloc .
@@ -612,9 +635,10 @@ sub image_magic {
         die("Failed to copy " . $realimageloc . "$kimage-$version to "
             . $image_dest . "$kimage .\n");
       }
-    } elsif ($reverse_symlink) {
-      $ret = system("mv -f " . $realimageloc . "$kimage-$version "
-                    . "$kimage");
+    } 
+    elsif ($reverse_symlink) {
+      my $ret = system("mv -f " . $realimageloc . "$kimage-$version "
+                       . "$kimage");
       if ($ret) {
         die("Failed to move " . $realimageloc . "$kimage-$version to "
             . $image_dest . "$kimage .\n");
@@ -665,8 +689,9 @@ sub image_magic {
         symlink($Old . "$kimage", $realimageloc . "$kimage-$version")
           || die("Failed to symbolic-link " . $realimageloc
                  . "$kimage-$version to " . $image_dest . "$kimage .\n");
-      } else {
-        $Old = $realimageloc;
+      }
+      else {
+        my $Old = $realimageloc;
         if (test_relative ('Old Dir' => $Old,
                            'New Dir' => $image_dest,
                            'Test File' => "$kimage-$version")) {

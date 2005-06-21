@@ -1,3 +1,13 @@
+2005-06-21  Manoj Srivastava  <srivasta@debian.org>
+
+	* image.postinst (image_magic):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-15
+		  Added a whole slew of debugging statements to help
+		  diagnose issues people have, along with a new variable,
+		  DEBUG, normally set to 0. Also, fixed an informational
+		  message to have way more information than it used to
+		  provide. 
+
 2005-06-13  Manoj Srivastava  <srivasta@debian.org>
 
 	* image.prerm:
