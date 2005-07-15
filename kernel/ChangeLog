@@ -3,6 +3,15 @@
 	* rules:
 		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-16
 		  Typo fix: tihs -< this
+	  (real_stamp_headers):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-16
+		  Added stuff that is required to create an image
+		  file from just the header files. This includes,
+		  amongst other things, Module.symvers, scripts/,
+		  Makefiles, Kconfig files,
+		  arch/$(KERNEL_ARCH)/kernel/asm-offsets.s. Hopefully,
+		  this is all that is needed to allow the
+		  compilation of third party modules. 
 
 	* image.postinst (image_magic):
 		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-16

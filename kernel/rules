@@ -2132,6 +2132,7 @@ endif
 	$(make_directory) $(HEADER_SRC)
 	$(make_directory) $(HEADER_DOC)
 	$(make_directory) $(HEADER_SRC)/arch/$(KERNEL_ARCH)
+	$(make_directory) $(HEADER_SRC)/arch/$(KERNEL_ARCH)/kernel/
 	sed -e 's/=P/$(h_package)/g' -e 's/=V/$(version)/g' \
 		$(DEBDIR)/include.postinst > $(HEADER_TOP)/DEBIAN/postinst
 	chmod 755 $(HEADER_TOP)/DEBIAN/postinst
@@ -2169,14 +2170,28 @@ endif
 	test ! -e Rules.make || $(install_file) Rules.make     $(HEADER_SRC)
 	test ! -e arch/$(KERNEL_ARCH)/Makefile ||                              \
             $(install_file) arch/$(KERNEL_ARCH)/Makefile $(HEADER_SRC)/arch/$(KERNEL_ARCH)
-	test ! -e Rules.make || $(install_file) Rules.make     $(HEADER_SRC)
+	test ! -e Rules.make     || $(install_file) Rules.make     $(HEADER_SRC)
+	test ! -e Module.symvers || $(install_file) Module.symvers $(HEADER_SRC)
 ifneq ($(strip $(int_follow_symlinks_in_src)),)
 	-tar cfh - include |        (cd $(HEADER_SRC); umask 000; tar xsf -)
+	-tar cfh - scripts |        (cd $(HEADER_SRC); umask 000; tar xsf -)
 	(cd $(HEADER_SRC)/include; rm -rf asm; ln -s asm-$(KERNEL_ARCH) asm)
+	find . -path './scripts/*' -prune -o -path './Documentation/*' -prune -o  \
+               -path './debian/*'  -prune -o -type f                              \
+               \( -name Makefile -o -name 'Kconfig*' \) -print |                  \
+                  cpio -pdL --preserve-modification-time $(HEADER_SRC);
 else
 	-tar cf - include |        (cd $(HEADER_SRC); umask 000; tar xsf -)
+	-tar cf - scripts |        (cd $(HEADER_SRC); umask 000; tar xsf -)
 	(cd $(HEADER_SRC)/include; rm -f asm; ln -s asm-$(KERNEL_ARCH) asm)
+	find . -path './scripts/*' -prune -o -path './Documentation/*' -prune -o  \
+               -path './debian/*'  -prune -o -type f                              \
+               \( -name Makefile -o -name 'Kconfig*' \) -print |                  \
+                  cpio -pd --preserve-modification-time $(HEADER_SRC);
 endif
+	test ! -e arch/$(KERNEL_ARCH)/kernel/asm-offsets.s ||                     \
+           $(install_file)               arch/$(KERNEL_ARCH)/kernel/asm-offsets.s \
+                           $(HEADER_SRC)/arch/$(KERNEL_ARCH)/kernel/asm-offsets.s
 	$(install_file) .config  	        $(HEADER_SRC)/.config
 	echo $(debian)                    > $(HEADER_SRC)/$(INT_STEM)-headers.revision
 ifneq ($(strip $(header_clean_hook)),)
