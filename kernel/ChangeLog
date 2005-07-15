@@ -1,3 +1,13 @@
+2005-07-15  Manoj Srivastava  <srivasta@debian.org>
+
+	* rules:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-16
+		  Typo fix: tihs -< this
+
+	* image.postinst (image_magic):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-16
+		  Typo fix: Igore -> Ignore 
+
 2005-06-21  Manoj Srivastava  <srivasta@debian.org>
 
 	* image.postinst (image_magic):

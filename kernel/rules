@@ -1650,12 +1650,12 @@ endif
 ifeq (,$(strip $(kimagedest)))
 $(error Error. I do not know where the kernel image goes to [kimagedest undefined]\
  The usual case for this is that I could not determine which arch or subarch \
- tihs machine belongs to. Please specify a subarch, and try again.)
+ this machine belongs to. Please specify a subarch, and try again.)
 endif
 ifeq (,$(strip $(kimagesrc)))
 $(error Error. I do not know where the kernel image goes to [kimagesrc undefined]\
  The usual case for this is that I could not determine which arch or subarch \
- tihs machine belongs to. Please specify a subarch, and try again.)
+ this machine belongs to. Please specify a subarch, and try again.)
 endif
 
 # export variables
