@@ -2534,7 +2534,7 @@ ifneq ($(strip $(KERNEL_ARCH)),um)
 else
 	if [ -d $(INSTALL_MOD_PATH)/lib/modules ] ; then               \
           find $(INSTALL_MOD_PATH)/lib/modules/ -type f -print0 |      \
-	   xargs -0r mv {} $(UML_DIR)/ ;                               \
+	   xargs -0ri mv {} $(UML_DIR)/ ;                               \
         fi
 	rm -rf $(INSTALL_MOD_PATH)/lib
 endif

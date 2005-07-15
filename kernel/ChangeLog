@@ -12,6 +12,9 @@
 		  arch/$(KERNEL_ARCH)/kernel/asm-offsets.s. Hopefully,
 		  this is all that is needed to allow the
 		  compilation of third party modules. 
+	  (IMAGE_TOP):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-16
+		  When using {} in xargs, we also need -i. 
 
 	* image.postinst (image_magic):
 		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-16
