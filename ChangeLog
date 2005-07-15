@@ -1,3 +1,14 @@
+2005-07-15  Manoj Srivastava  <srivasta@debian.org>
+
+	* make-kpkg.8:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-19
+		  In preparation for non-linux kernels in the
+		  distribution, kernel-package has had a switch to allow
+		  the packages to be named linux-* instead of
+		  kernel-*. However, this has remained largely
+		  undocumented. Added documentation for the --stem option
+		  for make-kpkg. 
+
 2005-06-13  Manoj Srivastava  <srivasta@debian.org>
 
 	* kernel-img.conf.5:

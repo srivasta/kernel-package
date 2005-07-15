@@ -401,6 +401,13 @@ or
 The command that provides a means of gaining super user access (for
 example, `sudo' or `fakeroot') as needed by dpkg\-buildpackage's -r
 option. 
+.B \-\-stem foo
+Call the packages foo\-* instead of kernel\-*. This is useful in
+helping transition from calling the packages kernel\-* ro linux\-*
+packages, in preparation for non\-linux kernels in the
+distribution. The default remains kernel; this may change in the
+future. 
+.TP
 .TP
 .B \-\-us
 This option is passed to dpkg\-buildpackage, and directs that package
