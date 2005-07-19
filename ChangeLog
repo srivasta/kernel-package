@@ -11,6 +11,10 @@
 		  now been added to the kernel arerandconfig,
 		  defconfig, allmodconfig, allyesconfig,
 		  allnoconfig. 
+	  (main):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-22
+		  Since we modified the regular expression for the
+		  config target, we need to adjust the check as well.
 
 2005-07-15  Manoj Srivastava  <srivasta@debian.org>
 

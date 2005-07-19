@@ -4,6 +4,15 @@
 		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-21
 		  Added new rules that call mkvmlinuz creation rules
 		  during kernel-image build
+	  (real_stamp_headers):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-21
+		  Since the scripts dir Makefile started nuking ./debian
+		  directories willy-nilly, we have been moving it out of
+		  place and replacing it with an innocuous
+		  replacement. Now that we are shipping the scripts dir in
+		  the headers package, and since the headers package does
+		  not have a ./debian directory we care about, we undo the
+		  move and ship the upstream Makefile.  
 
 2005-07-15  Manoj Srivastava  <srivasta@debian.org>
 

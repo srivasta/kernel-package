@@ -2217,6 +2217,13 @@ ifneq ($(strip $(int_follow_symlinks_in_src)),)
 else
 	-tar cf - include |        (cd $(HEADER_SRC); umask 000; tar xsf -)
 	-tar cf - scripts |        (cd $(HEADER_SRC); umask 000; tar xsf -)
+	# Undo the move away of the scripts dir Makefile
+	test ! -f $(HEADER_SRC)/scripts/package/Makefile.dist ||                  \
+           mv -f $(HEADER_SRC)/scripts/package/Makefile.dist                      \
+                 $(HEADER_SRC)/scripts/package/Makefile
+	test ! -f $(HEADER_SRC)/scripts/package/builddeb.dist ||                  \
+           mv -f $(HEADER_SRC)/scripts/package/builddeb.dist                      \
+                 $(HEADER_SRC)/scripts/package/builddeb
 	(cd $(HEADER_SRC)/include; rm -f asm; ln -s asm-$(KERNEL_ARCH) asm)
 	find . -path './scripts/*' -prune -o -path './Documentation/*' -prune -o  \
                -path './debian/*'  -prune -o -type f                              \

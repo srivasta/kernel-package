@@ -696,7 +696,7 @@ sub main (){
     print "use --help to display command line syntax help.\n";
     exit 1;
   }
-  $config_target .= 'config' unless $1;
+  $config_target = 'config' unless $2;
 
   if ($ENV{'MAKEFLAGS'} && 
       ($ENV{'MAKEFLAGS'} =~ /-j/ || $ENV{'MAKEFLAGS'} =~ /--jobs/ )) {
