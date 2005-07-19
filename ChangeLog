@@ -1,3 +1,17 @@
+2005-07-19  Manoj Srivastava  <srivasta@debian.org>
+
+	* make-kpkg.8:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-22
+		  Document new configure targets.
+
+	* make-kpkg (main):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-22
+		  Permit the new configuration targets now available in
+		  the kernel Makefile. The new config targets that have
+		  now been added to the kernel arerandconfig,
+		  defconfig, allmodconfig, allyesconfig,
+		  allnoconfig. 
+
 2005-07-15  Manoj Srivastava  <srivasta@debian.org>
 
 	* make-kpkg.8:
