@@ -327,15 +327,30 @@ endif
 
 ##### PowerPC64
 ifeq ($(strip $(architecture)), powerpc64)
-  KERNEL_ARCH=ppc64
   kimage := vmlinux
-  loader=NoLoader
-  target = $(kimage)
   kimagesrc = vmlinux
   kimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
   DEBCONFIG= $(CONFDIR)/config.$(KPKG_SUBARCH)
-  kelfimagesrc = vmlinux
-  kelfimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
+  loader=NoLoader
+  ifneq (,$(findstring $(KPKG_SUBARCH), powerpc powerpc64))
+    ifneq (,$(findstring $(KPKG_SUBARCH), powerpc64))
+      KERNEL_ARCH:=ppc64
+    endif
+    ifneq (,$(findstring $(KPKG_SUBARCH), powerpc))
+      KERNEL_ARCH:=ppc
+      NEED_IMAGE_POST_PROCESSING = YES
+      IMAGE_POST_PROCESS_TARGET := mkvmlinuz_support_install
+      IMAGE_POST_PROCESS_DIR    := arch/ppc/boot
+      INSTALL_MKVMLINUZ_PATH = $(SRCTOP)/$(IMAGE_TOP)/usr/lib/kernel-image-${version}
+    endif
+    target := zImage
+    loaderdep=mkvmlinuz
+  else
+    KERNEL_ARCH=ppc64
+    target = $(kimage)
+    kelfimagesrc  = vmlinux
+    kelfimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
+  endif
 endif
 
 ### PowerPC
@@ -363,11 +378,30 @@ ifneq ($(strip $(filter ppc powerpc,$(architecture))),)
     #endif
   endif
 
-  ifeq (,$(findstring $(KPKG_SUBARCH),apus prpmc chrp mbx pmac prep Amiga APUs CHRP MBX PReP chrp-rs6k nubus ))
+  ifeq (,$(findstring $(KPKG_SUBARCH),apus prpmc chrp mbx pmac prep Amiga APUs CHRP MBX PReP chrp-rs6k nubus powerpc powerpc64 ))
     KPKG_SUBARCH:=$(GUESS_SUBARCH)
   endif
 
   KERNEL_ARCH:=ppc
+
+  ifneq (,$(findstring $(KPKG_SUBARCH), powerpc powerpc64))
+    ifneq (,$(findstring $(KPKG_SUBARCH), powerpc64))
+      KERNEL_ARCH:=ppc64
+    endif
+    ifneq (,$(findstring $(KPKG_SUBARCH), powerpc))
+      KERNEL_ARCH:=ppc
+      NEED_IMAGE_POST_PROCESSING = YES
+      IMAGE_POST_PROCESS_TARGET := mkvmlinuz_support_install
+      IMAGE_POST_PROCESS_DIR    := arch/ppc/boot
+      INSTALL_MKVMLINUZ_PATH = $(SRCTOP)/$(IMAGE_TOP)/usr/lib/kernel-image-${version}
+    endif
+    target := zImage
+    loaderdep=mkvmlinuz
+    kimagesrc = vmlinux
+    kimage := vmlinux
+    kimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
+    DEBCONFIG= $(CONFDIR)/config.$(KPKG_SUBARCH)
+  endif
 
   ifneq (,$(findstring $(KPKG_SUBARCH),APUs apus Amiga))
     KPKG_SUBARCH:=apus
@@ -2518,6 +2552,12 @@ endif
 		IMAGE_TOP=$(IMAGE_TOP) STEM=$(INT_STEM) version=$(version)    \
 			debian/post-install;                                  \
 	fi
+ifeq ($(strip $(NEED_IMAGE_POST_PROCESSING)),YES)
+	if test grep $(IMAGE_POST_PROCESS_TARGET) $(IMAGE_POST_PROCESS_DIR)/Makefile 2>&1 >/dev/null; then \
+	    $(MAKE) INSTALL_MKVMLINUZ=$(INSTALL_MKVMLINUZ_PATH) 		            \
+	    ARCH=$(KERNEL_ARCH) -C $(IMAGE_POST_PROCESS_DIR) $(IMAGE_POST_PROCESS_TARGET    \
+	fi
+endif
 ifneq ($(strip $(image_clean_hook)),)
 	(cd $(IMAGE_TOP);              \
                test -x $(image_clean_hook) && $(image_clean_hook))
