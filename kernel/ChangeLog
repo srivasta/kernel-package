@@ -1,5 +1,9 @@
 2005-07-23  Manoj Srivastava  <srivasta@debian.org>
 
+	* rules (IMAGE_TOP):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-26
+		  Add missing ;
+
 	* image.postinst (test_relative):
 		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-25
 		  Added tracing statements to the function. 

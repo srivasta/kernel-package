@@ -5,9 +5,9 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Mon Jun 13 01:11:32 2005
+## Last Modified On : Sat Jul 23 16:13:56 2005
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count	    : 827
+## Update Count	    : 828
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
@@ -2562,7 +2562,7 @@ endif
 ifeq ($(strip $(NEED_IMAGE_POST_PROCESSING)),YES)
 	if test grep $(IMAGE_POST_PROCESS_TARGET) $(IMAGE_POST_PROCESS_DIR)/Makefile 2>&1 >/dev/null; then \
 	    $(MAKE) INSTALL_MKVMLINUZ=$(INSTALL_MKVMLINUZ_PATH) 		            \
-	    ARCH=$(KERNEL_ARCH) -C $(IMAGE_POST_PROCESS_DIR) $(IMAGE_POST_PROCESS_TARGET)   \
+	    ARCH=$(KERNEL_ARCH) -C $(IMAGE_POST_PROCESS_DIR) $(IMAGE_POST_PROCESS_TARGET);  \
 	fi
 endif
 ifneq ($(strip $(image_clean_hook)),)
