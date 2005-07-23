@@ -1,3 +1,30 @@
+2005-07-23  Manoj Srivastava  <srivasta@debian.org>
+
+	* image.postinst (test_relative):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-25
+		  Added tracing statements to the function. 
+	  (really_move_image):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-25
+		  Ditto 
+	  (really_reverse_link):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-25
+		  Ditto. 
+	  (move_p):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-25
+		  Ditto. 
+	  (really_move_link):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-25
+		  Ditto. 
+	  (handle_missing_link):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-25
+		  Ditto 
+	  (handle_non_symlinks):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-25
+		  Ditto 
+	  (image_magic):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-25
+		  Fix a typo (quote string). Also add debugging trace. 
+
 2005-07-20  Manoj Srivastava  <srivasta@debian.org>
 
 	* rules (IMAGE_TOP):
