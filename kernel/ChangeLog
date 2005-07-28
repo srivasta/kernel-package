@@ -1,3 +1,10 @@
+2005-07-28  Manoj Srivastava  <srivasta@debian.org>
+
+	* rules:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-27
+		  recognize the official architecture name
+		  'ppc64', requested by Andreas Jochens  
+
 2005-07-23  Manoj Srivastava  <srivasta@debian.org>
 
 	* rules (IMAGE_TOP):

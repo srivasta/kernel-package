@@ -5,9 +5,9 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Sat Jul 23 16:13:56 2005
+## Last Modified On : Thu Jul 28 00:18:43 2005
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count	    : 828
+## Update Count	    : 829
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
@@ -326,7 +326,7 @@ ifeq ($(strip $(architecture)),arm)
 endif
 
 ##### PowerPC64
-ifeq ($(strip $(architecture)), powerpc64)
+ifneq ($(strip $(filter ppc64 powerpc64,$(architecture))),)  
   kimage := vmlinux
   kimagesrc = vmlinux
   kimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
