@@ -405,7 +405,7 @@ example, `sudo' or `fakeroot') as needed by dpkg\-buildpackage's -r
 option. 
 .B \-\-stem foo
 Call the packages foo\-* instead of kernel\-*. This is useful in
-helping transition from calling the packages kernel\-* ro linux\-*
+helping transition from calling the packages kernel\-* to linux\-*
 packages, in preparation for non\-linux kernels in the
 distribution. The default remains kernel; this may change in the
 future. 
@@ -503,9 +503,9 @@ source tree should remain intact. The environment variables
 .B HEADER_CLEAN_HOOK
 and
 .B DOC_CLEAN_HOOK
-are similiar. The should point tp executables, then that executable
+are similar. They should point to executables, then that executable
 shall be run from the temporary (top) directory of the kernel headers
-and coumentation just before packaging respectively, so people may
+and documentation just before packaging respectively, so people may
 take any action they see fit. This also has no effect on anything
 other than the sources that are being packaged.
 .TP

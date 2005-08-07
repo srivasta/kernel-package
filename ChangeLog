@@ -1,8 +1,17 @@
 2005-08-07  Manoj Srivastava  <srivasta@debian.org>
 
+	* make-kpkg.8:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-32
+		  change ro -> to
+
+	* kernel-pkg.conf.5:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-32
+		  A large set6 of typographical corrections.
+
 	* kernel-img.conf.5 (Caveat):
 		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-30
 		  Fix typo in man page relink_source_link -> relink_src_link 
+		  Various other typo fixes as well.
 
 2005-07-19  Manoj Srivastava  <srivasta@debian.org>
 

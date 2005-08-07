@@ -205,7 +205,7 @@ warning message, but shall be otherwise ignored.
 .B ramdisk
 Set this variable to a executable that creates an initial RAM
 disk. This only has any effect if installing a kernel-image that uses
-an initail RAM disk. The command so pointed must be drop-in compatible
+an initial RAM disk. The command so pointed must be drop-in compatible
 with
 .I mkinitrd.
 .TP
@@ -292,7 +292,7 @@ determinable that relative links shall work. Defaults to No.
 .B do_initrd
 Set to YES to prevent the
 .I kernel\-image
-post installation script from issueing a warning when installing an
+post installation script from issuing a warning when installing an
 initrd kernel. This assumes you have correctly set up your boot loader
 to be able to boot the initrd image. Default: no. This is deprecated
 in favour of the more descriptive
@@ -302,7 +302,7 @@ option (please note that the sense of the option is inverted).
 .B warn_initrd
 Set to NO to prevent the
 .I kernel\-image
-post installation script from issueing a warning when installing an
+post installation script from issuing a warning when installing an
 initrd kernel. This assumes you have correctly set up your boot loader
 to be able to boot the initrd image. This is now preferred to 
 .B do_initrd,
@@ -367,18 +367,18 @@ package, in which case problems may arise with leftover modules in that
 dir tree, or the directory may legitimately exist due to a independent
 modules package being installed for this kernel version that has
 already been unpacked.  In this latter case the existence of the
-directory is benign.  If you set this varable, you shall no longer be
+directory is benign.  If you set this variable, you shall no longer be
 given a chance to abort if a preexisting modules directory 
 .I /lib/modules/$version
 is detected.  This is unset be default.
 .TP
 .B silent_loader
 If set, this option shall cause the question asked before running the
-boot laoder in the installation process to be skipped. Whether or not
+boot loader in the installation process to be skipped. Whether or not
 the boot loader is run is unaffected by this option ( see
 .B do_bootloader
 to see how to control whether the boot loader is run or not, and the
-absense of the configuration file will also make the install process
+absence of the configuration file will also make the install process
 voluble and interactive).
 .TP 
 .B ignore_depmod_err

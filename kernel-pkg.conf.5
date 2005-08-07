@@ -43,7 +43,7 @@ snippet included during the kernel packages build process, and hence
 you may put any legal Makefile directive in that file (just make very
 sure you know what you are doing).  If the per user configuration file
 .I ~/.kernel\-pkg.conf
-exists, it is loaded in favour of the system wide confguration file
+exists, it is loaded in favour of the system wide configuration file
 .I /etc/kernel\-pkg.conf.
 .PP
 All the variables have reasonable default values, and maybe
@@ -135,13 +135,13 @@ Whether to use symlinks to the
 .I image
 file. Can be overridden by the environment variable
 .B NO_SYMLINK
-Mutualy exclusive to 
+Mutually exclusive to 
 .I reverse_symlinks. 
 Can be used with
 .I link_in_boot. 
 The image is placed in vmlinuz (instead of /boot/vmlinuz\-X.X.XX). The
 old vmlinuz is moved to vmlinuz.old unconditionally. (Normally, that
-is only done if the version of the new image differes from the old
+is only done if the version of the new image differs from the old
 one). This restricts you to two images, unless you take additional
 action and save copies of older images. This is for people who have
 .I /boot
@@ -151,7 +151,7 @@ Defaults to  undefined (optional)
 .TP
 .B reverse_symlinks
 Whether to use reverse symlinks (that is, the real file is the one
-without the version number, and the numberd version is the link) to the 
+without the version number, and the numbered version is the link) to the 
 .I image
 file. Can be overridden by the environment variable
 .B REVERSE_SYMLINK
@@ -222,10 +222,10 @@ as needed by
 overrides this. Use the environment variable
 .B UNSIGN_SOURCE
 to pass an option to dpkg\-buildpackage to not sign the
-source, similarily, use the environment variable
+source; similarly, use the environment variable
 .B UNSIGN_CHANGELOG 
 to pass an option to dpkg\-buildpackage to not sign the
-changelog. Again, this variable is only usefule for the
+changelog. Again, this variable is only useful for the
 .I buildpackage
 target. Set the  environment variable 
 .B ROOT_CMD
@@ -324,7 +324,7 @@ unless you know what you are doing, since a mismatch between the
 headers you package and 
 .I libc6 
 may well 
-create a subtle instablity in all code compiled on your machine. You
+create a subtle instability in all code compiled on your machine. You
 have been warned. The environment variable 
 .B MAKE_LIBC_HEADERS
 overrides this.
