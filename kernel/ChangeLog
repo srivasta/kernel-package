@@ -1,3 +1,9 @@
+2005-08-07  Manoj Srivastava  <srivasta@debian.org>
+
+	* rules (IMAGE_TOP):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-28
+		  Remove redundant grep 
+
 2005-07-28  Manoj Srivastava  <srivasta@debian.org>
 
 	* rules:

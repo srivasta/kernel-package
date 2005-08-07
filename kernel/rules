@@ -2560,7 +2560,7 @@ endif
 			debian/post-install;                                  \
 	fi
 ifeq ($(strip $(NEED_IMAGE_POST_PROCESSING)),YES)
-	if test grep $(IMAGE_POST_PROCESS_TARGET) $(IMAGE_POST_PROCESS_DIR)/Makefile 2>&1 >/dev/null; then \
+	if grep $(IMAGE_POST_PROCESS_TARGET) $(IMAGE_POST_PROCESS_DIR)/Makefile 2>&1 >/dev/null; then \
 	    $(MAKE) INSTALL_MKVMLINUZ=$(INSTALL_MKVMLINUZ_PATH) 		            \
 	    ARCH=$(KERNEL_ARCH) -C $(IMAGE_POST_PROCESS_DIR) $(IMAGE_POST_PROCESS_TARGET);  \
 	fi
