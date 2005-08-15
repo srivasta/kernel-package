@@ -5,9 +5,9 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Thu Jul 28 00:18:43 2005
+## Last Modified On : Mon Aug 15 18:14:05 2005
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count	    : 829
+## Update Count	    : 830
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
@@ -1063,7 +1063,7 @@ DOC_MAN   := $(DOC_TOP)/usr/share/man/man9
 
 SOURCE_SRC:= $(SOURCE_TOP)/usr/src/$(package)
 HEADER_SRC:= $(HEADER_TOP)/usr/src/$(h_package)
-UML_DIR   := $(IMAGE_TOP)/usr/lib/uml/modules
+UML_DIR   := $(IMAGE_TOP)/usr/lib/uml/modules-$(version)
 
 
 FILES_TO_CLEAN  = modules/modversions.h modules/ksyms.ver debian/files \

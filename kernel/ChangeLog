@@ -1,3 +1,12 @@
+2005-08-15  Manoj Srivastava  <srivasta@debian.org>
+
+	* rules (UML_DIR):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-33
+		  When building with --arch=um, the kernel modules are not
+		  placed in a version specific directory, but rather are
+		  placed directly under /usr/lib/uml/modules/ and thus
+		  prevents multiple uml packages from being installed. 
+
 2005-08-07  Manoj Srivastava  <srivasta@debian.org>
 
 	* include.postinst:
