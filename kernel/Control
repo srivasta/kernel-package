@@ -21,7 +21,7 @@ Priority: optional
 Provides: =ST-source, =ST-source-=CV
 Depends: binutils, bzip2
 Recommends: libc-dev, gcc, make
-Suggests: libncurses-dev | ncurses-dev, kernel-package
+Suggests: libncurses-dev | ncurses-dev, kernel-package, xmlto
 Description: Linux kernel source for version =V
  This package provides the source code for the Linux kernel version =V.
  .
@@ -77,6 +77,16 @@ Description: Linux kernel specific documentation for version =V.
  contents.  Please also read the Changes file, as it contains
  information about the problems which may result by upgrading your
  kernel.
+
+Package: =ST-manual-=V
+Architecture: all
+Section: doc
+Priority: optional
+Provides: =ST-manual-=CV
+Conflicts: =ST-manual-=CV
+Suggests: =ST-image-=V=SA
+Description: Linux kernel section 9 manual pages for version =V.
+ This package provides various Section 9 manual pages included with the kernel. 
 
 Package: kernel-uml-=V=SA
 Architecture: =A

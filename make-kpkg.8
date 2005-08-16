@@ -475,7 +475,8 @@ and
 .B binary-indep
 This target produces the arch independent packages by running the
 targets
-.B kernel_source
+.B kernel_source,
+.B kernel_manual
 and
 .B kernel_doc.
 .TP
@@ -513,9 +514,18 @@ other than the sources that are being packaged.
 This target produces a Debian package containing the header files
 included in the Linux kernel.
 .TP
+.B kernel_manual
+This target produces a Debian package containing the section 9
+manual pages included in the Linux kernel. Please note thatthis is not
+really an independent target; calling this shall also invoke the 
+.I kernel_doc
+target, and creates a kernel-doc package at the same time.
+.TP
 .B kernel_doc
 This target produces a Debian package containing the documentation
-included in the Linux kernel.
+included in the Linux kernel. This can be called independently of the 
+.I kernel_manual
+target, but not the other way around.
 .TP
 .B kernel_image
 This target produces a Debian package of the Linux kernel source

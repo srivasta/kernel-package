@@ -5,9 +5,9 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Mon Aug 15 18:14:05 2005
+## Last Modified On : Mon Aug 15 23:24:03 2005
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count	    : 830
+## Update Count	    : 848
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
@@ -1047,12 +1047,14 @@ else
   endif
 endif
 d_package := $(INT_STEM)-doc-$(version)
+m_package := $(INT_STEM)-manual-$(version)
 l_package := libc-kheaders
 
 SOURCE_TOP:= debian/tmp-source
 HEADER_TOP:= debian/tmp-headers
 IMAGE_TOP := debian/tmp-image
 DOC_TOP   := debian/tmp-doc
+MAN_TOP   := debian/tmp-man
 MAN1DIR    = $(IMAGE_TOP)/usr/share/man/man1
 
 SOURCE_DOC:= $(SOURCE_TOP)/usr/share/doc/$(package)
@@ -1060,6 +1062,8 @@ HEADER_DOC:= $(HEADER_TOP)/usr/share/doc/$(h_package)
 IMAGE_DOC := $(IMAGE_TOP)/usr/share/doc/$(i_package)
 DOC_DOC   := $(DOC_TOP)/usr/share/doc/$(d_package)
 DOC_MAN   := $(DOC_TOP)/usr/share/man/man9
+MAN_DOC   := $(MAN_TOP)/usr/share/doc/$(m_package)
+MAN_MAN   := $(MAN_TOP)/usr/share/man/man9
 
 SOURCE_SRC:= $(SOURCE_TOP)/usr/src/$(package)
 HEADER_SRC:= $(HEADER_TOP)/usr/src/$(h_package)
@@ -1070,7 +1074,7 @@ FILES_TO_CLEAN  = modules/modversions.h modules/ksyms.ver debian/files \
                   conf.vars scripts/cramfs/cramfsck scripts/cramfs/mkcramfs \
                   applied_patches debian/buildinfo
 STAMPS_TO_CLEAN = stamp-build stamp-configure stamp-source stamp-image \
-                  stamp-headers stamp-src stamp-diff stamp-doc \
+                  stamp-headers stamp-src stamp-diff stamp-doc stamp-manual \
                   stamp-buildpackage stamp-libc-kheaders stamp-debian \
                   stamp-patch stamp-kernel-configure
 DIRS_TO_CLEAN   = $(SOURCE_TOP) $(HEADER_TOP) $(IMAGE_TOP) $(DOC_TOP)
@@ -1706,8 +1710,8 @@ ifeq ($(strip $(IN_KERNEL_DIR)),)
 # Hah! Not in kernel directory!!
 build configure clean binary kernel_source kernel-source kernel-headers\
 stamp-source kernel_headers stamp-headers kernel_image stamp-image \
-kernel-image kernel-doc kernel_doc stamp-doc buildpackage \
-libc_kheaders libc-kheaders stamp-libc-kheaders kernel-image-deb debian:
+kernel-image kernel-doc kernel_doc kernel-manual kernel_manual stamp-doc stamp-manual \
+buildpackage libc_kheaders libc-kheaders stamp-libc-kheaders kernel-image-deb debian:
 	@echo "You should invoke this command from the top level directory of"
 	@echo "a linux kernel source directory tree, and as far as I can tell,"
 	@echo "the current directory:"
@@ -1725,8 +1729,8 @@ ifneq ($(strip $(HAVE_VALID_PACKAGE_VERSION)),YES)
 # Hah! Bogus version number
 build configure clean binary kernel_source kernel-source kernel-headers\
 stamp-source kernel_headers stamp-headers kernel_image stamp-image \
-kernel-image kernel-doc kernel_doc stamp-doc buildpackage kernel-image-deb \
-debian:
+kernel-image kernel-doc kernel_doc kernel-manual kernel_manual stamp-doc stamp-manual \
+buildpackage kernel-image-deb debian:
 	@echo "Problems ecountered with the version number $(debian)."
 	@echo "$(HAVE_VALID_PACKAGE_VERSION)"
 	@echo ""
@@ -1736,8 +1740,8 @@ ifeq ($(strip $(STOP_FOR__BIN86)),YES)
 # Hah! we need bin 86, but it aint here
 build configure clean binary kernel_source kernel-source kernel-headers\
 stamp-source kernel_headers stamp-headers kernel_image stamp-image \
-kernel-image kernel-doc kernel_doc stamp-doc buildpackage kernel-image-deb \
-debian:
+kernel-image kernel-doc kernel_doc kernel-manual kernel_manual stamp-doc stamp-manual \
+buildpackage kernel-image-deb debian:
 	@echo "You Need to install the package bin86 before you can "
 	@echo "compile the kernel on this machine"
 	@echo ""
@@ -2023,7 +2027,7 @@ endif
 
 
 binary:       binary-indep binary-arch
-binary-indep: kernel_source kernel_doc
+binary-indep: kernel_source kernel_doc kernel_manual
 binary-arch:  kernel_image  kernel_headers
 
 
@@ -2248,8 +2252,68 @@ endif
 	echo done >  stamp-headers
 endif
 
+kernel-manual kernel_manual: stamp-manual-prep stamp-manual
+stamp-manual: stamp-debian stamp-manual-prep 
+ifeq ($(strip $(int_am_root)),)
+ifeq ($(strip $(ROOT_CMD)),)
+	@echo need root privileges; exit 1
+else
+	$(ROOT_CMD) $(deb_rule) real_stamp_manual
+endif
+else
+	$(deb_rule) real_stamp_manual
+endif
+
+stamp-manual-prep: stamp-debian 
+ifeq ($(strip $(int_am_root)),)
+ifeq ($(strip $(ROOT_CMD)),)
+	@echo need root privileges; exit 1
+else
+	$(ROOT_CMD) $(deb_rule) real_stamp_manual_prep
+endif
+else
+	$(deb_rule) real_stamp_manual_prep
+endif
+
+real_stamp_manual_prep:
+ifneq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
+	echo done >  stamp-manual-prep
+else
+ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
+	@(echo "The changelog says we are creating $(saved_version), but I thought the version is $(version)"; exit 1)
+endif
+	test -f stamp-debian || $(deb_rule) debian
+	rm -rf            $(MAN_TOP)
+	$(make_directory) $(MAN_TOP)/DEBIAN
+	$(make_directory) $(MAN_DOC)
+	$(make_directory) $(MAN_MAN)
+	$(install_file)   debian/changelog        $(MAN_DOC)/changelog.Debian
+	echo done >  stamp-manual-prep
+endif
+
+real_stamp_manual: stamp-debian stamp-manual-prep stamp-doc
+ifneq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
+	echo done >  stamp-manual
+else
+ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
+	@(echo "The changelog says we are creating $(saved_version), but I thought the version is $(version)"; exit 1)
+endif
+	test -f stamp-debian || $(deb_rule) debian
+	-gunzip -qfr $(MAN_MAN)
+	find $(MAN_MAN) -type f -size 0 -exec rm {} \;
+	-gzip -9qfr $(MAN_MAN)
+	-gzip -9qfr $(MAN_DOC)
+	$(install_file) $(DEBDIR)/copyright.doc $(MAN_DOC)/copyright
+	dpkg-gencontrol -isp -p$(m_package) -P$(MAN_TOP)/
+	chmod -R og=rX $(MAN_TOP)
+	chown -R root:root $(MAN_TOP)
+	dpkg --build $(MAN_TOP) $(DEB_DEST)
+	rm -rf $(MAN_TOP)
+	echo done >  stamp-manual
+endif
+
 kernel-doc kernel_doc: stamp-doc
-stamp-doc: stamp-debian
+stamp-doc: stamp-debian stamp-manual-prep
 ifeq ($(strip $(int_am_root)),)
 ifeq ($(strip $(ROOT_CMD)),)
 	@echo need root privileges; exit 1
@@ -2294,10 +2358,10 @@ endif
 	           $(DOC_DOC)/Documentation/DocBook/.*.sgml.cmd
 	test ! -d $(DOC_DOC)/Documentation/DocBook ||                            \
 	   find $(DOC_DOC)/Documentation/DocBook -name "*.9" -exec mv {}         \
-	        $(DOC_MAN) \;
+	        $(MAN_MAN) \;
 	test ! -d $(DOC_DOC)/Documentation/DocBook ||                            \
 	   find $(DOC_DOC)/Documentation/DocBook -name "*.9.gz" -exec mv {}      \
-	        $(DOC_MAN) \;
+	        $(MAN_MAN) \;
 	test ! -d $(DOC_DOC)/Documentation/DocBook/man ||                       \
 	   rm -rf $(DOC_DOC)/Documentation/DocBook/man
 	test ! -d $(DOC_DOC)/Documentation/DocBook ||                           \

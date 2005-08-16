@@ -5,9 +5,9 @@
 # Created On       : Mon Jun 17 01:10:11 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Wed Jun  8 03:13:00 2005
+# Last Modified On : Mon Aug 15 18:22:00 2005
 # Last Machine Used: glaurung.internal.golden-gryphon.com
-# Update Count     : 224
+# Update Count     : 226
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
@@ -479,9 +479,9 @@ produces the complete package using B<dpkg-buildpackage>.
 
 =over 3
 
-This target produces all four Debian kernel packages by running the
-targets B<kernel_source>, B<kernel_headers>, B<kernel_doc> and
-B<kernel_image>.
+This target produces all five Debian kernel packages by running the
+targets B<kernel_source>, B<kernel_headers>, B<kernel_manual>,
+B<kernel_doc> and B<kernel_image>.
 
 =back
 
@@ -515,6 +515,15 @@ source/header package on the system.
 
 This target produces a Debian package containing the documentation
 included in the Linux kernel.
+
+=back
+
+=item B<kernel_manual>
+
+=over 3
+
+This target produces a Debian package containing the section 9 manual
+pages included in the Linux kernel.
 
 =back
 
@@ -619,6 +628,8 @@ my %Known_targets=
    "kernel-source"  => 3,
    "kernel_headers" => 3,
    "kernel-headers" => 3,
+   "kernel-manual" => 3,
+   "kernel_manual" => 3,
    "libc-kheaders"  => 3,
    "kernel_doc"     => 3,
    "kernel-doc"     => 3,
@@ -647,6 +658,7 @@ my $targets_help =<<EOTRGT;
 |       binary-indep               |                                          |
 |            kernel_source         |                                          |
 |            kernel_doc            |                                          |
+|            kernel_manual         |                                          |
 |       binary-arch                |                                          |
 |            kernel_headers        |                                          |
 |            kernel_image          | Builds build                             |
