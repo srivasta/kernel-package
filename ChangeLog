@@ -1,3 +1,11 @@
+2005-08-31  Manoj Srivastava  <srivasta@debian.org>
+
+	* _make-kpkg:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-36
+		  Added new option stem to the completion 
+		  Pared down the config options
+		  Completed the list of available targets
+
 2005-08-15  Manoj Srivastava  <srivasta@debian.org>
 
 	* make-kpkg.8:

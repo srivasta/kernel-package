@@ -5,9 +5,9 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Mon Aug 15 23:24:03 2005
+## Last Modified On : Tue Aug 30 21:35:02 2005
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count	    : 848
+## Update Count	    : 849
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
@@ -700,27 +700,34 @@ endif
 ifeq ($(strip $(architecture)),mips)
   # SGI ELF32
   ifneq (,$(filter r4k-ip22 r5k-ip22 r5k-ip32 r10k-ip32,$(strip $(KPKG_SUBARCH))))
-    kimage := vmlinux
     loaderdep = arcboot
     loader = arcboot
     loaderdoc =
   endif
   # SGI ELF64
   ifneq (,$(filter r10k-ip27 r10k-ip28 r10k-ip30,$(strip $(KPKG_SUBARCH))))
+  # pre 2.6.11 the image name was vmlinux.64
+  ifneq ($(shell if [ $(VERSION)  -ge  2 ]  && [ $(PATCHLEVEL) -ge 6 ] &&    \
+                    [ $(SUBLEVEL) -ge 11 ]; then echo new;                   \
+               elif [ $(VERSION)  -ge  2 ]  && [ $(PATCHLEVEL) -ge 7 ]; then \
+                                            echo new;                        \
+               elif [ $(VERSION)  -ge  3 ]; then echo new; fi),)
+    kimage := vmlinux
+  else
     kimage := vmlinux.64
+  endif
     loaderdep = arcboot
     loader = arcboot
     loaderdoc =
   endif
   # Broadcom SWARM
   ifneq (,$(filter sb1-swarm-bn,$(strip $(KPKG_SUBARCH))))
-    kimage := vmlinux
     loaderdep = sibyl
     loader = sibyl
     loaderdoc =
   endif
 
-  # Default value for e.g. a generic header package
+  # Default value
   ifeq (,$(kimage))
     kimage := vmlinux
   endif
@@ -729,7 +736,6 @@ ifeq ($(strip $(architecture)),mips)
   endif
 
   NEED_DIRECT_GZIP_IMAGE = NO
-  kimagesrc = $(kimage)
   kimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
 
   ifneq ($(shell if [ $(VERSION)  -ge  2 ]  && [ $(PATCHLEVEL) -ge 5 ] &&    \
@@ -754,32 +760,24 @@ endif
 ifeq ($(strip $(architecture)),mipsel)
   # DECstations
   ifneq (,$(filter r3k-kn02 r4k-kn04,$(strip $(KPKG_SUBARCH))))
-    kimage := vmlinux
-    kimagesrc = $(kimage)
     loaderdep = delo
     loader = delo
     loaderdoc =
   endif
   # Cobalt
   ifneq (,$(filter r5k-cobalt,$(strip $(KPKG_SUBARCH))))
-    kimage := vmlinux
-    kimagesrc = $(kimage)
     loaderdep = colo
     loader = colo
     loaderdoc =
   endif
   # LASAT
   ifneq (,$(filter r5k-lasat,$(strip $(KPKG_SUBARCH))))
-    kimage := vmlinux
-    kimagesrc = $(kimage)
     loaderdep =
     loader =
     loaderdoc =
   endif
   # Broadcom SWARM
   ifneq (,$(filter sb1-swarm-bn,$(strip $(KPKG_SUBARCH))))
-    kimage := vmlinux
-    kimagesrc = $(kimage)
     loaderdep = sibyl
     loader = sibyl
     loaderdoc =
@@ -793,7 +791,7 @@ ifeq ($(strip $(architecture)),mipsel)
     loaderdoc =
   endif
 
-  # Default value for e.g. a generic header package
+  # Default value
   ifeq (,$(kimage))
     kimage := vmlinux
   endif

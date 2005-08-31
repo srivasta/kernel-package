@@ -5,9 +5,9 @@
 # Created On       : Fri Nov 14 11:25:07 2003
 # Created On Node  : glaurung.green-gryphon.com
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Wed Oct 20 00:38:27 2004
+# Last Modified On : Wed Aug 31 09:27:17 2005
 # Last Machine Used: glaurung.internal.golden-gryphon.com
-# Update Count     : 38
+# Update Count     : 42
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
@@ -45,6 +45,9 @@ initrd="=I";        # initrd kernel
 mkimage="=M";        # command to generate the initrd image
 official_image="=OF";      # only true for official images
 subarch="=SA";          # should be xen0 or xenu 
+ramdisk='/usr/sbin/mkinitrd'    # Tool to create initial ram fs.
+realimageloc="/$image_dir/";
+realimageloc=$(echo $realimageloc | sed -e 's|^/*|/|o' -e 's|/+|/|o')
 
 package_name="kernel-$subarch-$version";
 
@@ -119,121 +122,126 @@ fi
 
 
 case "$1" in
-  configure)
-    # Configure this package.  If the package must prompt the user for
-    # information, do it here.
-    # Install emacs lisp files
-    ##:if [ -x  /usr/lib/emacsen-common/emacs-package-install ]; then
-    ##:    /usr/lib/emacsen-common/emacs-package-install $package_name
-    ##:fi
+    configure)
+        
+        # Configure this package.  If the package must prompt the user for
+        # information, do it here.
+        # Install emacs lisp files
+        ##:if [ -x  /usr/lib/emacsen-common/emacs-package-install ]; then
+        ##:    /usr/lib/emacsen-common/emacs-package-install $package_name
+        ##:fi
 
 
-    # Activate menu-methods script
-    # chmod a+x /etc/menu-methods/${package_name}
+        # Activate menu-methods script
+        # chmod a+x /etc/menu-methods/${package_name}
 
-    # Update ld.so cache
-    ##: ldconfig
+        # Update ld.so cache
+        ##: ldconfig
 
-    # Make our version of a program available
-    #update-alternatives                                                        \
-    
-    #       --install /usr/bin/linux linux /usr/bin/linux-$version 100          \
-    #       --slave   /usr/share/man/man1/linux.1.gz linux.1.gz                 \
-    #                 /usr/share/man/man1/linux-${version}.1.gz
+        # Make our version of a program available
+        #update-alternatives                                                        \
+        
+        #       --install /usr/bin/linux linux /usr/bin/linux-$version 100          \
+        #       --slave   /usr/share/man/man1/linux.1.gz linux.1.gz                 \
+        #                 /usr/share/man/man1/linux-${version}.1.gz
 
-    # Tell ucf that the file in /usr/share/foo is the latest
-    # maintainer version, and let it handle how to manage the real
-    # confuguration file in /etc. This is how a static configuration
-    # file can be handled:
-    ##:if which ucf >/dev/null 2>&1; then
-    ##:  ucf /usr/share/${package_name}/configuration /etc/${package_name}.conf
-    ##:fi
+        # Tell ucf that the file in /usr/share/foo is the latest
+        # maintainer version, and let it handle how to manage the real
+        # confuguration file in /etc. This is how a static configuration
+        # file can be handled:
+        ##:if which ucf >/dev/null 2>&1; then
+        ##:  ucf /usr/share/${package_name}/configuration /etc/${package_name}.conf
+        ##:fi
 
-    ### We could also do this on the fly. The following is from Tore
-    ### Anderson:
-    
-    #. /usr/share/debconf/confmodule
+        ### We could also do this on the fly. The following is from Tore
+        ### Anderson:
+        
+        #. /usr/share/debconf/confmodule
 
-    ### find out what the user answered.
-    #  db_get foo/run_on_boot
-    #  run_on_boot=$RET
-    #  db_stop
+        ### find out what the user answered.
+        #  db_get foo/run_on_boot
+        #  run_on_boot=$RET
+        #  db_stop
 
-    ### safely create a temporary file to generate our suggested
-    ### configuration file.
-    #    tempfile=`tempfile`
-    #    cat << _eof > $tempfile
-    ### Configuration file for Foo.
+        ### safely create a temporary file to generate our suggested
+        ### configuration file.
+        #    tempfile=`tempfile`
+        #    cat << _eof > $tempfile
+        ### Configuration file for Foo.
 
-    ### this was answered by you, the user in a debconf dialogue
-    #  RUNONBOOT=$run_on_boot
+        ### this was answered by you, the user in a debconf dialogue
+        #  RUNONBOOT=$run_on_boot
 
-    ### this was not, as it has a sane default value.
-    #  COLOUROFSKY=blue
+        ### this was not, as it has a sane default value.
+        #  COLOUROFSKY=blue
 
-    #_eof
+        #_eof
 
-    ### Note that some versions of debconf do not release stdin, so
-    ### the following invocation of ucf may not work, since the stdin
-    ### is never coneected to ucfr.
+        ### Note that some versions of debconf do not release stdin, so
+        ### the following invocation of ucf may not work, since the stdin
+        ### is never coneected to ucfr.
 
-    ### now, invoke ucf, which will take care of the rest, and ask
-    ### the user if he wants to update his file, if it is modified.
-    #ucf $tempfile /etc/foo.conf
+        ### now, invoke ucf, which will take care of the rest, and ask
+        ### the user if he wants to update his file, if it is modified.
+        #ucf $tempfile /etc/foo.conf
 
-    ### done! now we'll just clear up our cruft.
-    #rm -f $tempfile
+        ### done! now we'll just clear up our cruft.
+        #rm -f $tempfile
+
+        if [ -n "$initrd" ]; then
+            echo "Please manually create an initrd image"
+        fi
+        
 
 
+        # There are three sub-cases:
+        if test "${2+set}" != set; then
+            # We're being installed by an ancient dpkg which doesn't remember
+            # which version was most recently configured, or even whether
+            # there is a most recently configured version.
+	    : echo nop
+        elif test -z "$2" -o "$2" = "<unknown>"; then
+            # The package has not ever been configured on this system, or was
+            # purged since it was last configured.
+            : echo nop
 
-    # There are three sub-cases:
-    if test "${2+set}" != set; then
-      # We're being installed by an ancient dpkg which doesn't remember
-      # which version was most recently configured, or even whether
-      # there is a most recently configured version.
-	: echo nop
-    elif test -z "$2" -o "$2" = "<unknown>"; then
-      # The package has not ever been configured on this system, or was
-      # purged since it was last configured.
-      : echo nop
+        else
+            # Version $2 is the most recently configured version of this
+            # package.
+	    : echo nop
+        fi 
+        ;;
+    abort-upgrade)
+        # Back out of an attempt to upgrade this package FROM THIS VERSION
+        # to version $2.  Undo the effects of "prerm upgrade $2".
+        ##: 
 
-    else
-      # Version $2 is the most recently configured version of this
-      # package.
-	: echo nop
-    fi 
-    ;;
-  abort-upgrade)
-    # Back out of an attempt to upgrade this package FROM THIS VERSION
-    # to version $2.  Undo the effects of "prerm upgrade $2".
-    ##:
+        ;;
+    abort-remove)
+        if test "$2" != in-favour; then
+            echo "$0: undocumented call to \`postinst $*'" 1>&2
+            exit 0
+        fi
+        # Back out of an attempt to remove this package, which was due to
+        # a conflict with package $3 (version $4).  Undo the effects of
+        # "prerm remove in-favour $3 $4".
+        ##:
 
-    ;;
-  abort-remove)
-    if test "$2" != in-favour; then
-      echo "$0: undocumented call to \`postinst $*'" 1>&2
-      exit 0
-    fi
-    # Back out of an attempt to remove this package, which was due to
-    # a conflict with package $3 (version $4).  Undo the effects of
-    # "prerm remove in-favour $3 $4".
-    ##:
+        ;;
+    abort-deconfigure)
+        if test "$2" != in-favour -o "$5" != removing; then
+            echo "$0: undocumented call to \`postinst $*'" 1>&2
+            exit 0
+        fi
+        # Back out of an attempt to deconfigure this package, which was
+        # due to package $6 (version $7) which we depend on being removed
+        # to make way for package $3 (version $4).  Undo the effects of
+        # "prerm deconfigure in-favour $3 $4 removing $6 $7".
+        ##:
 
-    ;;
-  abort-deconfigure)
-    if test "$2" != in-favour -o "$5" != removing; then
-      echo "$0: undocumented call to \`postinst $*'" 1>&2
-      exit 0
-    fi
-    # Back out of an attempt to deconfigure this package, which was
-    # due to package $6 (version $7) which we depend on being removed
-    # to make way for package $3 (version $4).  Undo the effects of
-    # "prerm deconfigure in-favour $3 $4 removing $6 $7".
-    ##:
-
-    ;;
-  *) echo "$0: didn't understand being called with \`$1'" 1>&2
-     exit 0;;
+        ;;
+    *) echo "$0: didn't understand being called with \`$1'" 1>&2
+        exit 0;;
 esac
 
 # Install doc base documentation

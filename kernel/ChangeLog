@@ -1,3 +1,13 @@
+2005-08-31  Manoj Srivastava  <srivasta@debian.org>
+
+	* xen.postinst (realimageloc):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-36
+		  Start working on an initrd creation on install 
+
+	* rules (loaderdoc):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-36
+		  Fixed the name of the mips image
+
 2005-08-15  Manoj Srivastava  <srivasta@debian.org>
 
 	* Control (Description):
