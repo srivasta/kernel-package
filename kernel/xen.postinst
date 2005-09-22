@@ -5,9 +5,9 @@
 # Created On       : Fri Nov 14 11:25:07 2003
 # Created On Node  : glaurung.green-gryphon.com
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Wed Aug 31 09:27:17 2005
+# Last Modified On : Thu Sep 22 13:34:57 2005
 # Last Machine Used: glaurung.internal.golden-gryphon.com
-# Update Count     : 42
+# Update Count     : 43
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
@@ -47,7 +47,7 @@ official_image="=OF";      # only true for official images
 subarch="=SA";          # should be xen0 or xenu 
 ramdisk='/usr/sbin/mkinitrd'    # Tool to create initial ram fs.
 realimageloc="/$image_dir/";
-realimageloc=$(echo $realimageloc | sed -e 's|^/*|/|o' -e 's|/+|/|o')
+realimageloc=$(echo $realimageloc | sed -e 's|^/*|/|' -e 's|/+|/|g')
 
 package_name="kernel-$subarch-$version";
 
