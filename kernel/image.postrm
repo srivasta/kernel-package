@@ -5,9 +5,9 @@
 # Created On       : Sat May 15 11:05:13 1999
 # Created On Node  : glaurung.green-gryphon.com
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Wed Jun  8 03:01:55 2005
+# Last Modified On : Thu Sep 22 13:52:29 2005
 # Last Machine Used: glaurung.internal.golden-gryphon.com
-# Update Count     : 44
+# Update Count     : 45
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
@@ -292,31 +292,19 @@ if ($ARGV[0] !~ /upgrade/) {
 
 # Ignore all invocations uxcept when called on to purge.
 exit 0 unless $ARGV[0] =~ /purge/;
+my @files_to_remove = qw{
+                         modules.dep modules.isapnpmap modules.pcimap
+                         modules.usbmap modules.parportmap
+                         modules.generic_string modules.ieee1394map
+                         modules.ieee1394map modules.pnpbiosmap
+                         modules.alias modules.ccwmap modules.inputmap
+                         modules.symbols
+                       };
 
-if (-f "/lib/modules/$version/modules.dep") {
-  unlink "/lib/modules/$version/modules.dep";
-}
-if (-f "/lib/modules/$version/modules.isapnpmap") {
-  unlink "/lib/modules/$version/modules.isapnpmap";
-}
-if (-f "/lib/modules/$version/modules.pcimap") {
-  unlink "/lib/modules/$version/modules.pcimap";
-}
-if (-f "/lib/modules/$version/modules.usbmap") {
-  unlink "/lib/modules/$version/modules.usbmap";
-}
-
-if (-f "/lib/modules/$version/modules.parportmap") {
-  unlink "/lib/modules/$version/modules.parportmap";
-}
-if (-f "/lib/modules/$version/modules.generic_string") {
-  unlink "/lib/modules/$version/modules.generic_string";
-}
-if (-f "/lib/modules/$version/modules.ieee1394map") {
-  unlink "/lib/modules/$version/modules.ieee1394map";
-}
-if (-f "/lib/modules/$version/modules.pnpbiosmap") {
-  unlink "/lib/modules/$version/modules.pnpbiosmap";
+foreach my $extra_file (@files_to_remove) {
+  if (-f "/lib/modules/$version/$extra_file") {
+    unlink "/lib/modules/$version/$extra_file";
+  }
 }
 
 if (-d "/lib/modules/$version" ) {
