@@ -5,9 +5,9 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Tue Aug 30 21:35:02 2005
+## Last Modified On : Thu Sep 22 13:45:41 2005
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count	    : 849
+## Update Count	    : 850
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
@@ -698,8 +698,18 @@ endif
 
 ##### mips
 ifeq ($(strip $(architecture)),mips)
-  # SGI ELF32
+  # SGI ELF32: 64bit kernel, but firmware needs ELF32 for netboot
+  # (the on-disk loader could do both).
   ifneq (,$(filter r4k-ip22 r5k-ip22 r5k-ip32 r10k-ip32,$(strip $(KPKG_SUBARCH))))
+  ifneq ($(shell if [ $(VERSION)  -ge  2 ]  && [ $(PATCHLEVEL) -ge 6 ] &&    \
+                    [ $(SUBLEVEL) -ge 11 ]; then echo new;                   \
+               elif [ $(VERSION)  -ge  2 ]  && [ $(PATCHLEVEL) -ge 7 ]; then \
+                                            echo new;                        \
+               elif [ $(VERSION)  -ge  3 ]; then echo new; fi),)
+    kimage := vmlinux.32
+  else
+    kimage := vmlinux
+  endif
     loaderdep = arcboot
     loader = arcboot
     loaderdoc =
