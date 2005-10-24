@@ -1,3 +1,21 @@
+2005-10-24  Manoj Srivastava  <srivasta@debian.org>
+
+	* rules:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-42
+		  In the long run, make-kpkg should be a thin wrapper that
+		  merely populates                   a few environment
+		  variables, and then calls make. One should be  able to
+		  just grab the ./debian directory, and be able to
+		  re-create the .debpackages even on machines where
+		  kernel-package is not installed. Also started on the
+		  first step towards making ./debian/rules more modular,
+		  by eliminating many instances in which we were calling
+		  make recursively, when a simple target dependency does
+		  the work.  This should allow us to separate out the
+		  target dependencies required by the policy from the
+		  grunt work done to actually create the kernel-image
+		  package.  
+
 2005-10-23  Manoj Srivastava  <srivasta@debian.org>
 
 	* rules (kimagesrc):

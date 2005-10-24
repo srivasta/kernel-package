@@ -5,9 +5,9 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Sun Oct 23 19:00:42 2005
+## Last Modified On : Mon Oct 24 15:16:03 2005
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count	    : 851
+## Update Count	    : 894
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
@@ -72,10 +72,10 @@ email= debian-kernel@lists.debian.org
 pgp=$(maintainer)
 
 # Where we read our config information from
-CONFLOC    :=$(shell if test -f ~/.kernel-pkg.conf; then\
-                        echo ~/.kernel-pkg.conf; \
-                     else \
-                        echo /etc/kernel-pkg.conf; \
+CONFLOC    :=$(shell if test -f ~/.kernel-pkg.conf; then \
+                        echo ~/.kernel-pkg.conf;         \
+                     else                                \
+                        echo /etc/kernel-pkg.conf;       \
                      fi)
 # Where the package libs are stored
 LIBLOC     :=/usr/share/kernel-package
@@ -84,17 +84,29 @@ ifeq ($(strip $(MODULE_LOC)),)
 MODULE_LOC =/usr/src/modules
 endif
 #
-DEBDIR      = $(LIBLOC)
-DEBDIR_NAME = $(shell basename $(DEBDIR))
+define which_debdir
+DEBDIR=$(shell if test -d ./debian/; then echo ./debian; else echo $(LIBLOC); fi)
+endef
 
-DEBIAN_FILES = kernel_version.mk config kpkg-vercheck Control Control.bin86 rules \
-               README README.grub README.headers README.tecra README.modules      \
-               sample.module.control Flavours Rationale copyright.source          \
-               README.Debian src.postinst README.source include.postinst          \
-               copyright.headers README.headers README.doc copyright.doc          \
-               src.postinst image.postinst image.postrm image.preinst image.prerm \
-               xen.postinst xen.prerm um.postinst um.prerm linux.1 $(loaderdoc)   \
-               README.image copyright.image
+define deb_rule
+$(eval $(which_debdir))
+run_command=$(MAKE) -f $(DEBDIR)/rules
+endef
+
+DEBIAN_FILES =ChangeLog         Control                 Control.bin86          \
+              Control.libc      Flavours                HOWTO-Linux-2.6-Woody  \
+              LiloDefault       LinkPolicy              QuikDefault            \
+              README            README.doc              README.grub            \
+              README.headers    README.image            README.modules         \
+              README.source     README.tecra            Rationale              \
+              SiloDefault       VmeliloDefault          config                 \
+              copyright.doc     copyright.headers       copyright.image        \
+              copyright.source  image.postinst          image.postrm           \
+              image.preinst     image.prerm             include.postinst       \
+              kernel_grub_rm.sh kernel_version.mk       kpkg-vercheck          \
+              kpkg_grub.conf    linux.1                 sample.module.control  \
+              src.postinst      um.postinst             um.prerm               \
+              xen.postinst      xen.prerm               $(loaderdoc)
 DEBIAN_DIRS  = Config
 
 #  Package specific stuff
@@ -185,7 +197,6 @@ endif
 install_file=    install -p    -o root -g root -m 644
 install_program= install -p    -o root -g root -m 755
 make_directory=  install -p -d -o root -g root -m 755
-deb_rule = $(MAKE) -f $(DEBDIR)/rules
 
 ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
   # localversion_files := $(wildcard localversion*)
@@ -202,6 +213,7 @@ ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
 
   # Could have used :=, but some patches do seem to patch the
   # Makefile. perhaps deferring the rule makes that better
+  $(eval $(which_debdir))
   VERSION      :=$(shell $(MAKE) $(CROSS_ARG) --no-print-directory -sf $(DEBDIR)/kernel_version.mk debian_VERSION)
   PATCHLEVEL   :=$(shell $(MAKE) $(CROSS_ARG) --no-print-directory -sf $(DEBDIR)/kernel_version.mk debian_PATCHLEVEL)
   SUBLEVEL     :=$(shell $(MAKE) $(CROSS_ARG) --no-print-directory -sf $(DEBDIR)/kernel_version.mk debian_SUBLEVEL)
@@ -1432,12 +1444,14 @@ else
 ifeq ($(strip $(patch_the_kernel)),yes)
 CONFDIR     = $(PATCH_DIR)
 else
+$(eval $(which_debdir))
 CONFDIR     = $(DEBDIR)/Config
 endif
 endif
 endif
 
 # The file which has local configuration
+$(eval $(which_debdir))
 CONFIG_FILE := $(shell if test -e .config ; then \
                            echo .config; \
                        elif test -e $(DEBCONFIG) ; then \
@@ -1655,6 +1669,7 @@ endif
 endif
 
 # See if the version numbers are valid
+$(eval $(which_debdir))
 HAVE_VALID_PACKAGE_VERSION := $(shell \
       if test -x $(DEBDIR)/kpkg-vercheck; then \
 	$(DEBDIR)/kpkg-vercheck $(debian) ; \
@@ -1676,13 +1691,13 @@ TAR_SUFFIX := $(shell \
       fi )
 
 STOP_FOR_BIN86 = NO
-CONTROL=$(DEBDIR)/Control
+CONTROL=$(LIBLOC)/Control
 ifeq ($(strip $(architecture)),i386)
 NEED_BIN86 := $(shell if dpkg --compare-versions \
                   $(VERSION).$(PATCHLEVEL) lt 2.4 >/dev/null 2>&1; \
                   then echo YES; fi)
 ifeq ($(strip $(NEED_BIN86)),YES)
-CONTROL=$(DEBDIR)/Control.bin86
+CONTROL=$(LIBLOC)/Control.bin86
 HAVE_BIN86 := $(shell if test -x /usr/bin/as86; then echo YES; \
                       else echo NO; fi )
 ifeq ($(strip $(HAVE_BIN86)),NO)
@@ -1756,72 +1771,6 @@ buildpackage kernel-image-deb debian:
 	@echo "Please install bin86 and try again."
 else
 all build: debian configure stamp-build
-stamp-build:
-# Builds the binary package.
-# debian.config contains the current idea of what the image should
-# have.
-ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
-	@(echo "The changelog says we are creating $(saved_version), but I thought the version is $(version)"; exit 1)
-endif
-ifneq ($(strip $(UTS_RELEASE_VERSION)), $(strip $(version)))
-	if [ -f include/linux/version.h ]; then                                          \
-             uts_ver=$$(grep 'define UTS_RELEASE' include/linux/version.h |                \
-                perl -nle  'm/^\s*\#define\s+UTS_RELEASE\s+("?)(\S+)\1/g && print $$2;'); \
-	    if [ "X$$uts_ver" != "X$(strip $(UTS_RELEASE_VERSION))" ]; then              \
-                echo "The UTS Release version in include/linux/version.h";                \
-	        echo "     \"$$uts_ver\" ";                                               \
-                echo "does not match current version " ;                                  \
-                echo "     \"$(strip $(version))\" " ;                                    \
-                echo "Reconfiguring." ;                                                   \
-                touch Makefile;                                                           \
-             fi;                                                                          \
-	fi
-endif
-	-test -f stamp-configure || $(deb_rule) configure
-ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
-	$(MAKE) $(do_parallel) $(EXTRAV_ARG) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) \
-	                    $(CROSS_ARG) $(target)
-  ifneq ($(strip $(shell grep -E ^[^\#]*CONFIG_MODULES $(CONFIG_FILE))),)
-	$(MAKE) $(do_parallel) $(EXTRAV_ARG) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) \
-	                    $(CROSS_ARG) modules
-  endif
-else
-  ifeq ($(DEB_HOST_GNU_SYSTEM), kfreebsd-gnu)
-	$(PMAKE) -C $(architecture)/compile/GENERIC
-  endif
-endif
-	COLUMNS=150 dpkg -l 'gcc*' perl dpkg 'libc6*' binutils ldso make dpkg-dev |\
-         awk '$$1 ~ /[hi]i/ { printf("%s-%s\n", $$2, $$3) }'   > debian/buildinfo
-	@echo this was built on a machine with the kernel: >> debian/buildinfo
-	uname -a >> debian/buildinfo
-	echo using the compiler: >> debian/buildinfo
-	grep LINUX_COMPILER include/linux/compile.h | \
-           sed -e 's/.*LINUX_COMPILER "//' -e 's/"$$//' >> debian/buildinfo
-ifneq ($(strip $(shell test -f version.Debian && cat version.Debian)),)
-	echo kernel source package used: >> debian/buildinfo
-	COLUMNS=150 dpkg -l kernel-source-$(shell test -f version.Debian &&               \
-                                              cat version.Debian | sed -e 's/-.*$$//') |  \
-	 awk '$$1 ~ /[hi]i/ { printf("%s-%s\n", $$2, $$3) }' >> debian/buildinfo
-endif
-	echo applied kernel patches: >> debian/buildinfo
-ifneq ($(strip $(valid_patches)),)
-	COLUMNS=150 dpkg -l $(shell echo $(valid_patches) | tr ' ' '\n' |                 \
-                              sed -ne 's/^.*\/\(.*\)/kernel-patch-\1/p') |                \
-	      awk '$$1 ~ /[hi]i/  { printf("%s-%s\n", $$2, $$3) }' >> debian/buildinfo
-endif
-	echo done >  $@
-
-buildpackage: clean stamp-buildpackage
-stamp-buildpackage: configure
-ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
-	@(echo "The changelog says we are creating $(saved_version), but I thought the version is $(version)"; exit 1)
-endif
-	test -f stamp-configure || $(deb_rule) configure
-	echo 'Building Package' > stamp-building
-	dpkg-buildpackage -nc $(strip $(int_root_cmd)) $(strip $(int_us)) $(strip $(int_uc))  \
-             -m"$(maintainer) <$(email)>" -k"$(pgp)"
-	rm -f stamp-building
-	echo done >  $@
 
 # stamp-debian and stamp-configure used to be a single target. Now
 # they are split - the reason is that arch-indep packages need to be
@@ -1831,6 +1780,7 @@ endif
 # breaks down.  I think the cleanest way out of this is to only deal
 # with config files when necessary, and thus the split. Herbert Xu
 debian: stamp-debian
+
 stamp-debian:
 ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
 	@(echo "The changelog says we are creating $(saved_version), but I thought the version is $(version)"; exit 1)
@@ -1841,8 +1791,8 @@ endif
 	test ! -e scripts/package/Makefile || \
             (mv -f scripts/package/Makefile scripts/package/Makefile.dist && \
                (echo "# Dummy file "; echo "help:") >  scripts/package/Makefile)
-	@test -f $(DEBDIR)/rules || \
-            echo Error: Could not find $(DEBDIR)/rules
+	@test -f $(LIBLOC)/rules || \
+            echo Error: Could not find $(LIBLOC)/rules
 	-test ! -f stamp-debian && test ! -f debian/official && \
 	      rm -rf ./debian && mkdir ./debian
 ifeq ($(strip $(patch_the_kernel)),YES)
@@ -1876,13 +1826,30 @@ endif
 	   sed -e 's/=V/$(version)/g' -e 's/=D/$(debian)/g'                   \
 	    -e 's/=A/$(DEB_HOST_ARCH)/g' -e 's/=M/$(maintainer) <$(email)>/g' \
             -e 's/=ST/$(INT_STEM)/g'     -e 's/=B/$(KERNEL_ARCH)/g'           \
-		$(DEBDIR)/changelog > debian/changelog
+		$(LIBLOC)/changelog > debian/changelog
 	-test ! -f debian/rules &&                                       \
-	   install -p -m 755 $(DEBDIR)/rules debian/rules
-#	-test ! -f stamp-debian && test ! -f debian/official &&              \
-#	for file in $(DEBIAN_FILES); do cp -f  $(LIBLOC)/$$file ./debian/; done
-#	for dir  in $(DEBIAN_DIRS);  do cp -af $(LIBLOC)/$$dir  ./debian/; done
+	   install -p -m 755 $(LIBLOC)/rules debian/rules
+	-test ! -f stamp-debian && test ! -f debian/official &&              \
+	for file in $(DEBIAN_FILES); do cp -f  $(LIBLOC)/$$file ./debian/; done
+	for dir  in $(DEBIAN_DIRS);  do cp -af $(LIBLOC)/$$dir  ./debian/; done
 	echo done >  $@
+
+.config: stamp-debian
+ifneq ($(strip $(use_saved_config)),NO)
+	test -f .config || test ! -f .config.save || \
+		            cp -pf .config.save .config
+endif
+	test -f .config || test ! -f $(CONFIG_FILE) || \
+		            cp -pf $(CONFIG_FILE) .config
+	$(eval $(which_debdir))
+	test -f .config || test ! -f $(DEBDIR)/config || \
+		            cp -pf $(DEBDIR)/config  .config
+ifeq ($(strip $(have_new_config_target)),)
+	test -f .config || (echo "*** Need a config file .config" && false)
+endif
+# if $(have_new_config_target) is set, then we need not have a .config
+# file at this point
+
 
 conf.vars: Makefile .config
 	@rm -f .mak
@@ -1906,6 +1873,7 @@ endif
 	@echo "Debian Revision  = $(debian)"        >> .mak
 	@echo "KPKG_ARCH        = $(KPKG_ARCH)"        >> .mak
 # Fetch the rest of the information from the kernel's Makefile
+	$(eval $(which_debdir))
 ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
 	@$(MAKE) --no-print-directory -sf $(DEBDIR)/kernel_version.mk  ARCH=$(KERNEL_ARCH) \
           $(CROSS_ARG) debian_conf_var              >> .mak
@@ -1918,6 +1886,7 @@ endif
 # will get us the right answer
 	@sed -e 's%$(shell $(MAKE) --no-print-directory -sf $(DEBDIR)/kernel_version.mk debian_TOPDIR)%$$(TOPDIR)%g' .mak     > conf.vars
 	@rm -f .mak
+
 
 dummy_do_dep:
 ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
@@ -1958,65 +1927,64 @@ stamp-configure: stamp-debian .config conf.vars stamp-kernel-configure
 
 
 
-.config:
-ifneq ($(strip $(use_saved_config)),NO)
-	test -f .config || test ! -f .config.save || \
-		            cp -pf .config.save .config
+stamp-build: stamp-debian stamp-configure
+# Builds the binary package.
+# debian.config contains the current idea of what the image should
+# have.
+ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
+	@(echo "The changelog says we are creating $(saved_version), but I thought the version is $(version)"; exit 1)
 endif
-	test -f .config || test ! -f $(CONFIG_FILE) || \
-		            cp -pf $(CONFIG_FILE) .config
-	test -f .config || test ! -f $(DEBDIR)/config || \
-		            cp -pf $(DEBDIR)/config  .config
-ifeq ($(strip $(have_new_config_target)),)
-	test -f .config || (echo "*** Need a config file .config" && false)
+ifneq ($(strip $(UTS_RELEASE_VERSION)), $(strip $(version)))
+	if [ -f include/linux/version.h ]; then                                          \
+             uts_ver=$$(grep 'define UTS_RELEASE' include/linux/version.h |                \
+                perl -nle  'm/^\s*\#define\s+UTS_RELEASE\s+("?)(\S+)\1/g && print $$2;'); \
+	    if [ "X$$uts_ver" != "X$(strip $(UTS_RELEASE_VERSION))" ]; then              \
+                echo "The UTS Release version in include/linux/version.h";                \
+	        echo "     \"$$uts_ver\" ";                                               \
+                echo "does not match current version " ;                                  \
+                echo "     \"$(strip $(version))\" " ;                                    \
+                echo "Reconfiguring." ;                                                   \
+                touch Makefile;                                                           \
+             fi;                                                                          \
+	fi
 endif
-# if $(have_new_config_target) is set, then we need not have a .config
-# file at this point
-
-clean:
-ifeq ($(strip $(int_am_root)),)
-ifeq ($(strip $(ROOT_CMD)),)
-	@echo "You may need root privileges - some parts may fail"
-endif
-	$(ROOT_CMD) $(deb_rule) real_stamp_clean
+ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
+	$(MAKE) $(do_parallel) $(EXTRAV_ARG) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) \
+	                    $(CROSS_ARG) $(target)
+  ifneq ($(strip $(shell grep -E ^[^\#]*CONFIG_MODULES $(CONFIG_FILE))),)
+	$(MAKE) $(do_parallel) $(EXTRAV_ARG) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) \
+	                    $(CROSS_ARG) modules
+  endif
 else
-	$(deb_rule) real_stamp_clean
+  ifeq ($(DEB_HOST_GNU_SYSTEM), kfreebsd-gnu)
+	$(PMAKE) -C $(architecture)/compile/GENERIC
+  endif
 endif
+	COLUMNS=150 dpkg -l 'gcc*' perl dpkg 'libc6*' binutils ldso make dpkg-dev |\
+         awk '$$1 ~ /[hi]i/ { printf("%s-%s\n", $$2, $$3) }'   > debian/buildinfo
+	@echo this was built on a machine with the kernel: >> debian/buildinfo
+	uname -a >> debian/buildinfo
+	echo using the compiler: >> debian/buildinfo
+	grep LINUX_COMPILER include/linux/compile.h | \
+           sed -e 's/.*LINUX_COMPILER "//' -e 's/"$$//' >> debian/buildinfo
+ifneq ($(strip $(shell test -f version.Debian && cat version.Debian)),)
+	echo kernel source package used: >> debian/buildinfo
+	COLUMNS=150 dpkg -l kernel-source-$(shell test -f version.Debian &&               \
+                                              cat version.Debian | sed -e 's/-.*$$//') |  \
+	 awk '$$1 ~ /[hi]i/ { printf("%s-%s\n", $$2, $$3) }' >> debian/buildinfo
+endif
+	echo applied kernel patches: >> debian/buildinfo
+ifneq ($(strip $(valid_patches)),)
+	COLUMNS=150 dpkg -l $(shell echo $(valid_patches) | tr ' ' '\n' |                 \
+                              sed -ne 's/^.*\/\(.*\)/kernel-patch-\1/p') |                \
+	      awk '$$1 ~ /[hi]i/  { printf("%s-%s\n", $$2, $$3) }' >> debian/buildinfo
+endif
+	echo done >  $@
+
 
 # Perhaps a list of patches should be dumped to a file on patching? so we
 # only unpatch what we have applied? That would be changed, though saner,
 # behaviour
-real_stamp_clean:
-ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
-	test ! -f .config || cp -pf .config config.precious
-	-test -f Makefile && \
-            $(MAKE) $(FLAV_ARG) $(EXTRAV_ARG) $(CROSS_ARG) ARCH=$(KERNEL_ARCH) distclean
-	test ! -f config.precious || mv -f config.precious .config
-else
-	rm -f .config
-  ifeq ($(DEB_HOST_GNU_SYSTEM), kfreebsd-gnu)
-	rm -rf bin
-	if test -e $(architecture)/compile/GENERIC ; then     \
-	  $(PMAKE) -C $(architecture)/compile/GENERIC clean ; \
-	fi
-  endif
-endif
-ifeq ($(strip $(patch_the_kernel)),YES)
-	$(deb_rule) unpatch_now
-endif
-ifeq ($(strip $(NO_UNPATCH_BY_DEFAULT)),)
-	test ! -f stamp-patch || $(deb_rule) unpatch_now
-endif
-	-test -f stamp-building || test -f debian/official || rm -rf debian
-	# work around idiocy in recent kernel versions
-	test ! -e scripts/package/builddeb.dist || \
-            mv -f scripts/package/builddeb.dist scripts/package/builddeb
-	test ! -e scripts/package/Makefile.dist || \
-            mv -f scripts/package/Makefile.dist scripts/package/Makefile
-	rm -f $(FILES_TO_CLEAN) $(STAMPS_TO_CLEAN)
-	rm -rf $(DIRS_TO_CLEAN)
-
-
 unpatch_now:
 ifneq ($(strip $(valid_unpatches)),)
 	-for patch in $(valid_unpatches) ; do              \
@@ -2033,6 +2001,63 @@ ifneq ($(strip $(valid_unpatches)),)
 	rm -f stamp-patch
 endif
 
+real_stamp_clean:
+	@echo running clean
+ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
+	test ! -f .config || cp -pf .config config.precious
+	-test -f Makefile && \
+            $(MAKE) $(FLAV_ARG) $(EXTRAV_ARG) $(CROSS_ARG) ARCH=$(KERNEL_ARCH) distclean
+	test ! -f config.precious || mv -f config.precious .config
+else
+	rm -f .config
+  ifeq ($(DEB_HOST_GNU_SYSTEM), kfreebsd-gnu)
+	rm -rf bin
+	if test -e $(architecture)/compile/GENERIC ; then     \
+	  $(PMAKE) -C $(architecture)/compile/GENERIC clean ; \
+	fi
+  endif
+endif
+	$(eval $(deb_rule))
+ifeq ($(strip $(patch_the_kernel)),YES)
+	$(run_command) unpatch_now
+endif
+ifeq ($(strip $(NO_UNPATCH_BY_DEFAULT)),)
+	test ! -f stamp-patch || $(run_command) unpatch_now
+endif
+	-test -f stamp-building || test -f debian/official || rm -rf debian
+	# work around idiocy in recent kernel versions
+	test ! -e scripts/package/builddeb.dist || \
+            mv -f scripts/package/builddeb.dist scripts/package/builddeb
+	test ! -e scripts/package/Makefile.dist || \
+            mv -f scripts/package/Makefile.dist scripts/package/Makefile
+	rm -f $(FILES_TO_CLEAN) $(STAMPS_TO_CLEAN)
+	rm -rf $(DIRS_TO_CLEAN)
+
+
+clean:
+ifeq ($(strip $(int_am_root)),)
+	$(eval $(deb_rule))
+ifeq ($(strip $(ROOT_CMD)),)
+	@echo "You may need root privileges - some parts may fail"
+endif
+	$(ROOT_CMD) $(run_command) real_stamp_clean
+else
+	$(run_command) real_stamp_clean
+endif
+
+
+
+buildpackage: clean stamp-buildpackage
+stamp-buildpackage: stamp-configure
+ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
+	@(echo "The changelog says we are creating $(saved_version), but I thought the version is $(version)"; exit 1)
+endif
+	echo 'Building Package' > stamp-building
+	dpkg-buildpackage -nc $(strip $(int_root_cmd)) $(strip $(int_us)) $(strip $(int_uc))  \
+             -m"$(maintainer) <$(email)>" -k"$(pgp)"
+	rm -f stamp-building
+	echo done >  $@
+
 
 binary:       binary-indep binary-arch
 binary-indep: kernel_source kernel_doc kernel_manual
@@ -2041,28 +2066,29 @@ binary-arch:  kernel_image  kernel_headers
 
 kernel-source kernel_source: stamp-source
 stamp-source: stamp-debian
+	$(eval $(deb_rule))
 ifeq ($(strip $(int_am_root)),)
 ifeq ($(strip $(ROOT_CMD)),)
 	@echo need root privileges; exit 1
 else
-	$(ROOT_CMD) $(deb_rule) real_stamp_source
+	$(ROOT_CMD) $(run_command) real_stamp_source
 endif
 else
-	$(deb_rule) real_stamp_source
+	$(run_command) real_stamp_source
 endif
 
-real_stamp_source:
+real_stamp_source: stamp-debian
 ifneq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 	echo done >  stamp-source
 else
 ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
 	@(echo "The changelog says we are creating $(saved_version), but I thought the version is $(version)"; exit 1)
 endif
-	test -f stamp-debian || $(deb_rule) debian
 	rm -rf $(SOURCE_TOP)
 	$(make_directory) $(SOURCE_TOP)/DEBIAN
 	$(make_directory) $(SOURCE_SRC)
 	$(make_directory) $(SOURCE_DOC)
+	$(eval $(which_debdir))
 	sed -e 's/=P/$(package)/g' -e 's/=V/$(version)/g' \
 	    $(DEBDIR)/src.postinst > $(SOURCE_TOP)/DEBIAN/postinst
 	chmod 755 $(SOURCE_TOP)/DEBIAN/postinst
@@ -2142,14 +2168,15 @@ stamp-libc-kheaders: configure
 
 kernel-headers kernel_headers: stamp-headers
 stamp-headers: configure
+	$(eval $(deb_rule))
 ifeq ($(strip $(int_am_root)),)
 ifeq ($(strip $(ROOT_CMD)),)
 	@echo need root privileges; exit 1
 else
-	$(ROOT_CMD) $(deb_rule) real_stamp_headers
+	$(ROOT_CMD) $(run_command) real_stamp_headers
 endif
 else
-	$(deb_rule) real_stamp_headers
+	$(run_command) real_stamp_headers
 endif
 
 ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
@@ -2161,7 +2188,7 @@ else
 endif
 
 
-real_stamp_headers:
+real_stamp_headers: stamp-configure
 ifneq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 	echo done >  stamp-headers
 else
@@ -2172,13 +2199,13 @@ ifneq ($(strip $(UTS_RELEASE_VERSION)),$(strip $(version)))
 	@echo "The UTS Release version in include/linux/version.h $(UTS_RELEASE_VERSION) does not match current version $(version), reconfiguring"
 	touch Makefile
 endif
-	test -f stamp-configure || $(deb_rule) configure
 	rm -rf $(HEADER_TOP)
 	$(make_directory) $(HEADER_TOP)/DEBIAN
 	$(make_directory) $(HEADER_SRC)
 	$(make_directory) $(HEADER_DOC)
 	$(make_directory) $(HEADER_SRC)/arch/$(KERNEL_ARCH)
 	$(make_directory) $(HEADER_SRC)/arch/$(KERNEL_ARCH)/kernel/
+	$(eval $(which_debdir))
 	sed -e 's/=P/$(h_package)/g' -e 's/=V/$(version)/g' \
 		$(DEBDIR)/include.postinst > $(HEADER_TOP)/DEBIAN/postinst
 	chmod 755 $(HEADER_TOP)/DEBIAN/postinst
@@ -2262,35 +2289,36 @@ endif
 
 kernel-manual kernel_manual: stamp-manual-prep stamp-manual
 stamp-manual: stamp-debian stamp-manual-prep 
+	$(eval $(deb_rule))
 ifeq ($(strip $(int_am_root)),)
 ifeq ($(strip $(ROOT_CMD)),)
 	@echo need root privileges; exit 1
 else
-	$(ROOT_CMD) $(deb_rule) real_stamp_manual
+	$(ROOT_CMD) $(run_command) real_stamp_manual
 endif
 else
-	$(deb_rule) real_stamp_manual
+	$(run_command) real_stamp_manual
 endif
 
 stamp-manual-prep: stamp-debian 
+	$(eval $(deb_rule))
 ifeq ($(strip $(int_am_root)),)
 ifeq ($(strip $(ROOT_CMD)),)
 	@echo need root privileges; exit 1
 else
-	$(ROOT_CMD) $(deb_rule) real_stamp_manual_prep
+	$(ROOT_CMD) $(run_command) real_stamp_manual_prep
 endif
 else
-	$(deb_rule) real_stamp_manual_prep
+	$(run_command) real_stamp_manual_prep
 endif
 
-real_stamp_manual_prep:
+real_stamp_manual_prep: stamp-debian 
 ifneq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 	echo done >  stamp-manual-prep
 else
 ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
 	@(echo "The changelog says we are creating $(saved_version), but I thought the version is $(version)"; exit 1)
 endif
-	test -f stamp-debian || $(deb_rule) debian
 	rm -rf            $(MAN_TOP)
 	$(make_directory) $(MAN_TOP)/DEBIAN
 	$(make_directory) $(MAN_DOC)
@@ -2306,7 +2334,6 @@ else
 ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
 	@(echo "The changelog says we are creating $(saved_version), but I thought the version is $(version)"; exit 1)
 endif
-	test -f stamp-debian || $(deb_rule) debian
 	-gunzip -qfr $(MAN_MAN)
 	find $(MAN_MAN) -type f -size 0 -exec rm {} \;
 	-gzip -9qfr $(MAN_MAN)
@@ -2322,24 +2349,25 @@ endif
 
 kernel-doc kernel_doc: stamp-doc
 stamp-doc: stamp-debian stamp-manual-prep
+	$(eval $(deb_rule))
 ifeq ($(strip $(int_am_root)),)
 ifeq ($(strip $(ROOT_CMD)),)
 	@echo need root privileges; exit 1
 else
-	$(ROOT_CMD) $(deb_rule) real_stamp_doc
+	$(ROOT_CMD) $(run_command) real_stamp_doc
 endif
 else
-	$(deb_rule) real_stamp_doc
+	$(run_command) real_stamp_doc
 endif
 
-real_stamp_doc:
+real_stamp_doc: stamp-debian 
 ifneq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 	echo done >  stamp-doc
 else
 ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
 	@(echo "The changelog says we are creating $(saved_version), but I thought the version is $(version)"; exit 1)
 endif
-	test -f stamp-debian || $(deb_rule) debian
+	$(eval $(which_debdir))	
 	rm -rf            $(DOC_TOP)
 	$(make_directory) $(DOC_TOP)/DEBIAN
 	$(make_directory) $(DOC_DOC)
@@ -2409,18 +2437,19 @@ stamp-image: configure build kernel-image-deb
 # % sudo make -f debian/rules kernel-image-deb
 # seems to create a working .deb with a kernel that gives the correct
 # user name (as opposed to root@...)
-kernel-image-deb:
+kernel-image-deb: stamp-debian stamp-configure
+	$(eval $(deb_rule))
 ifeq ($(strip $(int_am_root)),)
 ifeq ($(strip $(ROOT_CMD)),)
 	@echo need root privileges; exit 1
 else
-	$(ROOT_CMD) $(deb_rule) real_stamp_image
+	$(ROOT_CMD) $(run_command) real_stamp_image
 endif
 else
-	$(deb_rule) real_stamp_image
+	$(run_command) real_stamp_image
 endif
 
-real_stamp_image:
+real_stamp_image: stamp-debian stamp-configure
 ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
 	@(echo "The changelog says we are creating $(saved_version), but I thought the version is $(version)"; exit 1)
 endif
@@ -2429,8 +2458,7 @@ ifneq ($(strip $(UTS_RELEASE_VERSION)),$(strip $(version)))
 	touch Makefile
 endif
 	rm -f -r ./$(IMAGE_TOP) ./$(IMAGE_TOP).deb
-	test -f stamp-configure     || $(deb_rule) configure
-	test -f stamp-build         || $(deb_rule) build
+	$(eval $(which_debdir))
 	$(make_directory) $(IMAGE_TOP)/DEBIAN
 	$(make_directory) $(IMAGE_TOP)/$(IMAGEDIR)
 	$(make_directory) $(IMAGE_DOC)
