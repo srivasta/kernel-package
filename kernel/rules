@@ -5,9 +5,9 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Tue Oct 25 02:55:03 2005
+## Last Modified On : Tue Oct 25 12:06:11 2005
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count	    : 904
+## Update Count	    : 925
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
@@ -339,7 +339,7 @@ ifeq ($(strip $(architecture)),arm)
 endif
 
 ##### PowerPC64
-ifneq ($(strip $(filter ppc64 powerpc64,$(architecture))),)  
+ifneq ($(strip $(filter ppc64 powerpc64,$(architecture))),)
   kimage := vmlinux
   kimagesrc = vmlinux
   kimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
@@ -1432,62 +1432,69 @@ ifneq ($(strip $(IMAGE_CLEAN_HOOK)),)
 image_clean_hook=$(IMAGE_CLEAN_HOOK)
 endif
 
-# 
+#
 # INITRD tools.
-# 
+#
 initrdcmd:=
 initrddep:=
+
 ifneq ($(strip $(INITRD)),)
- ifneq ($(strip $(INITRD_CMD)),)
-   initrdcmd := $(strip $(INITRD_CMD))
- else
-  ifneq ($(shell if [ $(VERSION)  -eq  2 ] && [ $(PATCHLEVEL) -eq 6 ] &&    \
-                    [ $(SUBLEVEL) -lt  8 ]; then echo old;                  \
-               elif [ $(VERSION)  -eq  2 ] && [ $(PATCHLEVEL) -le 6 ]; then \
-                                            echo old;                       \
-               elif [ $(VERSION)  -lt  2 ]; then echo old; fi),)
-     initrdcmd := mkinitrd 
-   else
-     ifneq ($(shell if [ $(VERSION)  -eq  2 ] && [ $(PATCHLEVEL) -eq 6 ] &&  \
-                       [ $(SUBLEVEL) -ge  8 ]; then echo old;                \
-                  elif [ $(VERSION)  -eq  2 ] && [ $(PATCHLEVEL) -eq 6 ]&&   \
-                       [ $(SUBLEVEL) -le 12 ]; then echo old; fi),)
-       initrdcmd := mkinitrd mkinitrd.yaird 
-     else
-       initrdcmd := mkinitrd.yaird mkinitramfs
-     endif
-   endif
- endif
- #setup initrd dependencies
- ifneq(,$(findstring initrd-tools,$(initrdcmd)))
-   initrddep := initrd-tools (>= 0.1.84)
- endif
- ifneq(,$(findstring yaird,$(initrdcmd)))
-   ifneq(,$(strip $(initrddep)))
-     initrddep := $(initrddep) | yaird (>= 0.1.11)
-   else
-     initrddep := yaird (>= 0.0.11-8)
-   endif
- endif
- ifneq(,$(findstring mkinitramfs,$(initrdcmd)))
-   ifneq(,$(strip $(initrddep)))
-     initrddep := $(initrddep) | initramfs-tools (>= 0.35)
-   else
-     initrddep := initramfs-tools (>= 0.35)
-   endif
- endif
- # By this time initrddep is not empty, so we can dispense with the emptiness test
- ifneq(,$(findstring yaird,$(initrdcmd)))
-   initrddep := $(initrddep) | linux-initramfs-tools
- else
-   ifneq(,$(findstring mkinitramfs,$(initrdcmd)))
-     initrddep := $(initrddep) | linux-initramfs-tools
-   endif
- endif
- initrddep := $(initrddep), # There is a blank here
+  ifneq ($(strip $(INITRD_CMD)),)
+    initrdcmd := $(strip $(INITRD_CMD))
+  else
+    ifneq ($(shell if [ $(VERSION)  -eq  2 ] && [ $(PATCHLEVEL) -eq 6 ] &&    \
+                      [ $(SUBLEVEL) -lt  8 ]; then                            \
+                        echo old;                                             \
+                 elif [ $(VERSION)  -eq  2 ] && [ $(PATCHLEVEL) -le 6 ]; then \
+                        echo old;                                             \
+                 elif [ $(VERSION)  -lt  2 ]; then                            \
+                        echo old;                                             \
+                 fi),)
+      initrdcmd := mkinitrd
+    else
+      ifneq ($(shell if [ $(VERSION)  -eq  2 ] && [ $(PATCHLEVEL) -eq 6 ] &&  \
+                        [ $(SUBLEVEL) -ge  8 ]; then                          \
+                          echo old;                                           \
+                   elif [ $(VERSION)  -eq  2 ] && [ $(PATCHLEVEL) -eq 6 ] &&  \
+                        [ $(SUBLEVEL) -le 12 ]; then                          \
+                          echo old;                                           \
+                   fi),)
+        initrdcmd := mkinitrd mkinitrd.yaird
+      else
+        initrdcmd := mkinitrd.yaird mkinitramfs
+      endif
+    endif
+  endif
+  ifneq (,$(findstring initrd-tools, $(initrdcmd)))
+    initrddep := initrd-tools (>= 0.1.84)
+  endif
+  #setup initrd dependencies
+  ifneq (,$(findstring yaird,$(initrdcmd)))
+    ifneq (,$(strip $(initrddep)))
+      initrddep := $(initrddep) | yaird (>= 0.1.11)
+    else
+      initrddep := yaird (>= 0.0.11-8)
+    endif
+  endif
+  ifneq (,$(findstring mkinitramfs,$(initrdcmd)))
+    ifneq (,$(strip $(initrddep)))
+      initrddep := $(initrddep) | initramfs-tools (>= 0.35)
+    else
+      initrddep := initramfs-tools (>= 0.35)
+    endif
+  endif
+  # By this time initrddep is not empty, so we can dispense with the emptiness test
+  ifneq (,$(findstring yaird,$(initrdcmd)))
+    initrddep := $(initrddep) | linux-initramfs-tools
+  else
+    ifneq (,$(findstring mkinitramfs,$(initrdcmd)))
+      initrddep := $(initrddep) | linux-initramfs-tools
+    endif
+  endif
+  initrddep := $(initrddep), # There is a blank here
 else
- initrdcmd :=
- initrddep :=
+  initrdcmd :=
+  initrddep :=
 endif
 
 ifeq ($(strip $(CONFDIR)),)
@@ -2341,7 +2348,7 @@ endif
 endif
 
 kernel-manual kernel_manual: stamp-manual-prep stamp-manual
-stamp-manual: stamp-debian stamp-manual-prep 
+stamp-manual: stamp-debian stamp-manual-prep
 	$(eval $(deb_rule))
 ifeq ($(strip $(int_am_root)),)
 ifeq ($(strip $(ROOT_CMD)),)
@@ -2353,7 +2360,7 @@ else
 	$(run_command) real_stamp_manual
 endif
 
-stamp-manual-prep: stamp-debian 
+stamp-manual-prep: stamp-debian
 	$(eval $(deb_rule))
 ifeq ($(strip $(int_am_root)),)
 ifeq ($(strip $(ROOT_CMD)),)
@@ -2365,7 +2372,7 @@ else
 	$(run_command) real_stamp_manual_prep
 endif
 
-real_stamp_manual_prep: stamp-debian 
+real_stamp_manual_prep: stamp-debian
 ifneq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 	echo done >  stamp-manual-prep
 else
@@ -2413,14 +2420,14 @@ else
 	$(run_command) real_stamp_doc
 endif
 
-real_stamp_doc: stamp-debian 
+real_stamp_doc: stamp-debian
 ifneq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 	echo done >  stamp-doc
 else
 ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
 	@(echo "The changelog says we are creating $(saved_version), but I thought the version is $(version)"; exit 1)
 endif
-	$(eval $(which_debdir))	
+	$(eval $(which_debdir))
 	rm -rf            $(DOC_TOP)
 	$(make_directory) $(DOC_TOP)/DEBIAN
 	$(make_directory) $(DOC_DOC)
