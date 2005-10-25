@@ -1,5 +1,9 @@
 2005-10-25  Manoj Srivastava  <srivasta@debian.org>
 
+	* make-kpkg.8:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-45
+		  typo fix.
+
 	* kernel-pkg.conf.5:
 		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-44
 		  Document the fact that one can provide the default
