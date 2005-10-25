@@ -5,9 +5,9 @@
 # Created On       : Fri May 17 03:28:59 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Wed Jun  8 02:21:05 2005
+# Last Modified On : Mon Oct 24 18:21:54 2005
 # Last Machine Used: glaurung.internal.golden-gryphon.com
-# Update Count     : 70
+# Update Count     : 73
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
@@ -47,7 +47,8 @@ my $force_build_link = '';	# There is no harm in checking the link
 my $official_image    = "=OF";      # only true for official images
 my $arch              = "=A";  #  should be same as dpkg --print-installation-architecture
 my $kernel_arch       = "=B";
-my $ramdisk           = '/usr/sbin/mkinitrd';  # Tool to create initial ram fs.
+my $ramdisk           = "=MK";  # List of tools to create initial ram fs.
+my $initrddep         = "=MD";  # List of dependencies for such tools
 
 my $Loader          = "NoLOADER"; # 
 $Loader             = "LILO"     if $loader =~ /^lilo/io;
@@ -163,7 +164,7 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
       $preinst_hook    = "$1"  if /preinst_hook\s*=\s*(\S+)/ig;
       $prerm_hook      = "$1"  if /prerm_hook\s*=\s*(\S+)/ig;
       $mkimage         = "$1"  if /mkimage\s*=\s*(.+)$/ig;
-      $ramdisk         = "$1"  if /ramdisk\s*=\s*(\S+)/ig;
+      $ramdisk         = "$1"  if /ramdisk\s*=\s*(.+)$/ig;
     }
     close CONF;
     $have_conffile = "Yes";

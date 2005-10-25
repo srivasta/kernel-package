@@ -1,3 +1,25 @@
+2005-10-25  Manoj Srivastava  <srivasta@debian.org>
+
+	* kernel-pkg.conf.5:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-44
+		  Document the fact that one can provide the default
+		  values for the list by setting INITRD_CMD, but this list
+		  can be overridden by the one in
+		  kernel-img.conf.5. However, the defaults are set to a
+		  subset of "mkinitrd mkinitrd.yaird mkinitramfs", the
+		  subset being decided based on the version of the kernel
+		  being built, so one should refrain from setting this
+		  manually -- unless one knows what one is doing. 
+
+	* kernel-img.conf.5:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-44
+		  Document the fact that the ramdisk variable can now be a
+		  space separated list of init ram disk creation commands,
+		  which  need to also support the --supported-host-version
+		  and  --supported-target-version options, just like
+		  mkinitrd does.  This is the list tried at installation
+		  time. 
+
 2005-08-31  Manoj Srivastava  <srivasta@debian.org>
 
 	* _make-kpkg:

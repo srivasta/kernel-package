@@ -5,9 +5,9 @@
 # Created On       : Sat Apr 27 05:55:26 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Thu Sep 22 13:57:56 2005
+# Last Modified On : Tue Oct 25 03:03:09 2005
 # Last Machine Used: glaurung.internal.golden-gryphon.com
-# Update Count     : 323
+# Update Count     : 327
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
@@ -53,7 +53,8 @@ my $force_build_link  = '';    # There is no harm in checking the link
 my $official_image    = "=OF";  # only true for official images
 my $arch              = "=A"; #  should be same as dpkg --print-installation-architecture
 my $kernel_arch       = "=B";
-my $ramdisk           = '/usr/sbin/mkinitrd';  # Tool to create initial ram fs.
+my $ramdisk           = "=MK";  # List of tools to create initial ram fs.
+my $initrddep         = "=MD";  # List of dependencies for such tools
 
 my $package_name    = "=ST-image-$version";
 
@@ -168,7 +169,7 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
       $preinst_hook    = "$1"  if /preinst_hook\s*=\s*(\S+)/ig;
       $prerm_hook      = "$1"  if /prerm_hook\s*=\s*(\S+)/ig;
       $mkimage         = "$1"  if /mkimage\s*=\s*(.+)$/ig;
-      $ramdisk         = "$1"  if /ramdisk\s*=\s*(\S+)/ig;
+      $ramdisk         = "$1"  if /ramdisk\s*=\s*(.+)$/ig;
     }
     close CONF;
     $have_conffile = "Yes";
@@ -969,11 +970,37 @@ if ( -d "$modules_base/$version" ) {
 
 
 
+sub find_inird_tool {
+  my $hostversion = shift;
+  my $version = shift;
+  my @ramdisks =
+    grep {
+      my $args = 
+        "$_ " .
+          "--supported-host-version=$hostversion " .
+            "--supported-target-version=$version " .
+              "1>/dev/null 2>&1"
+                ;
+      system($args) == 0;
+    }
+      split (/[:,\s]+/, $ramdisk);
+}
+
 # The initrd symlink should probably be in the same dir that the
 # symlinks are in
 if ($initrd) {
+  chomp (my $hostversion = `uname -r`);
+  my @ramdisklist;
+  @ramdisklist = find_inird_tool($hostversion, $version, $ramdisk) if $ramdisk;
+  die "Failed to find suitable ramdisk generation tool for kernel version \n" .
+    "$version on running kernel $hostversion in $ramdisk\n"
+      if $#ramdisklist < 0;
+  my $ramdisk_cmd = shift @ramdisklist;
+  print STDERR "Using $ramdisk_cmd to build the ramdisk.\n";
+  print STDERR "Other valid candidates: @ramdisklist\n" if $#ramdisklist > 0;
+
   my $initrd_path = $realimageloc . "initrd.img-$version";
-  my $ret = system("$ramdisk " .
+  my $ret = system("$ramdisk_cmd " .
                    ($mkimage ? "-m '$mkimage' " : "") .
                    "-o $initrd_path.new $modules_base/$version");
   die("Failed to create initrd image.\n") if $ret;

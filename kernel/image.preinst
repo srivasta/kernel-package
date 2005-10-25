@@ -5,9 +5,9 @@
 # Created On       : Sun Jun 14 03:38:02 1998
 # Created On Node  : tiamat.datasync.com
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Thu Sep 22 14:01:04 2005
+# Last Modified On : Tue Oct 25 02:48:19 2005
 # Last Machine Used: glaurung.internal.golden-gryphon.com
-# Update Count     : 72
+# Update Count     : 84
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
@@ -51,7 +51,8 @@ my $force_build_link  = '';	 # There is no harm in checking the link
 my $official_image    = "=OF"; # only true for official images
 my $arch              = "=A";  #  should be same as dpkg --print-installation-architecture
 my $kernel_arch       = "=B";
-my $ramdisk           = '/usr/sbin/mkinitrd';  # Tool to create initial ram fs.
+my $ramdisk           = "=MK";  # List of tools to create initial ram fs.
+my $initrddep         = "=MD";  # List of dependencies for such tools
 
 
 my $Loader          = "NoLOADER"; #
@@ -157,7 +158,7 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
       $preinst_hook    = "$1"  if /preinst_hook\s*=\s*(\S+)/ig;
       $prerm_hook      = "$1"  if /prerm_hook\s*=\s*(\S+)/ig;
       $mkimage         = "$1"  if /mkimage\s*=\s*(.+)$/ig;
-      $ramdisk         = "$1"  if /ramdisk\s*=\s*(\S+)/ig;
+      $ramdisk         = "$1"  if /ramdisk\s*=\s*(.+)$/ig;
     }
     close CONF;
     $have_conffile = "Yes";
@@ -175,6 +176,22 @@ $ENV{KERNEL_ARCH}=$kernel_arch if $kernel_arch;
 # "prerm upgrade" has already been called for the old version of
 # this package.
 
+sub find_inird_tool {
+  my $hostversion = shift;
+  my $version = shift;
+  my @ramdisks =
+    grep {
+      my $args = 
+        "$_ " .
+          "--supported-host-version=$hostversion " .
+            "--supported-target-version=$version " .
+              "1>/dev/null 2>&1"
+                ;
+      system($args) == 0;
+    }
+      split (/[:,\s]+/, $ramdisk);
+}
+
 # For some versions of kernel-package, we had this warning in the
 # postinst, but the rules did not really interpolate the value in.
 # Here is a sanity check.
@@ -182,13 +199,21 @@ my $pattern = "=" . "I";
 $initrd=~ s/^$pattern$//;
 
 if ($initrd) {
-  if (! -e $ramdisk) {
+  chomp (my $hostversion = `uname -r`);
+  my @ramdisklist;
+  @ramdisklist = find_inird_tool($hostversion, $version, $ramdisk) if $ramdisk;
+  if ($#ramdisklist < 0) {
     print STDERR <<EOERROR;
 
 You are attempting to install an initrd kernel image (version
-$version) but you do not seem to have a $ramdisk 
-command. This will break the installation, unless initrd-tools are
-also being installed right now.
+$version) on a machine currently running kernel version
+$hostversion.
+
+I have been unable to find a suitable tool for generating initrd images
+(I looked at the list "$ramdisk")
+This will break the installation, unless such tools are also being installed
+right now in the same run. (This means, one from the following list
+$initrddep)
 
 EOERROR
   ;

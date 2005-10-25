@@ -5,9 +5,9 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Mon Oct 24 15:16:03 2005
+## Last Modified On : Tue Oct 25 02:55:03 2005
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count	    : 894
+## Update Count	    : 904
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
@@ -247,6 +247,7 @@ HAS_ILLEGAL_EXTRA_VERSION =$(shell                         \
 endif
 
 AM_OFFICIAL := $(shell if [ -f debian/official ]; then echo YES; fi )
+
 
 ######################################################################
 ###          Architecture specific stuff                           ###
@@ -1431,10 +1432,62 @@ ifneq ($(strip $(IMAGE_CLEAN_HOOK)),)
 image_clean_hook=$(IMAGE_CLEAN_HOOK)
 endif
 
+# 
+# INITRD tools.
+# 
+initrdcmd:=
+initrddep:=
 ifneq ($(strip $(INITRD)),)
-initrddep := initrd-tools (>= 0.1.48), # there is a space here
+ ifneq ($(strip $(INITRD_CMD)),)
+   initrdcmd := $(strip $(INITRD_CMD))
+ else
+  ifneq ($(shell if [ $(VERSION)  -eq  2 ] && [ $(PATCHLEVEL) -eq 6 ] &&    \
+                    [ $(SUBLEVEL) -lt  8 ]; then echo old;                  \
+               elif [ $(VERSION)  -eq  2 ] && [ $(PATCHLEVEL) -le 6 ]; then \
+                                            echo old;                       \
+               elif [ $(VERSION)  -lt  2 ]; then echo old; fi),)
+     initrdcmd := mkinitrd 
+   else
+     ifneq ($(shell if [ $(VERSION)  -eq  2 ] && [ $(PATCHLEVEL) -eq 6 ] &&  \
+                       [ $(SUBLEVEL) -ge  8 ]; then echo old;                \
+                  elif [ $(VERSION)  -eq  2 ] && [ $(PATCHLEVEL) -eq 6 ]&&   \
+                       [ $(SUBLEVEL) -le 12 ]; then echo old; fi),)
+       initrdcmd := mkinitrd mkinitrd.yaird 
+     else
+       initrdcmd := mkinitrd.yaird mkinitramfs
+     endif
+   endif
+ endif
+ #setup initrd dependencies
+ ifneq(,$(findstring initrd-tools,$(initrdcmd)))
+   initrddep := initrd-tools (>= 0.1.84)
+ endif
+ ifneq(,$(findstring yaird,$(initrdcmd)))
+   ifneq(,$(strip $(initrddep)))
+     initrddep := $(initrddep) | yaird (>= 0.1.11)
+   else
+     initrddep := yaird (>= 0.0.11-8)
+   endif
+ endif
+ ifneq(,$(findstring mkinitramfs,$(initrdcmd)))
+   ifneq(,$(strip $(initrddep)))
+     initrddep := $(initrddep) | initramfs-tools (>= 0.35)
+   else
+     initrddep := initramfs-tools (>= 0.35)
+   endif
+ endif
+ # By this time initrddep is not empty, so we can dispense with the emptiness test
+ ifneq(,$(findstring yaird,$(initrdcmd)))
+   initrddep := $(initrddep) | linux-initramfs-tools
+ else
+   ifneq(,$(findstring mkinitramfs,$(initrdcmd)))
+     initrddep := $(initrddep) | linux-initramfs-tools
+   endif
+ endif
+ initrddep := $(initrddep), # There is a blank here
 else
-initrddep :=
+ initrdcmd :=
+ initrddep :=
 endif
 
 ifeq ($(strip $(CONFDIR)),)
@@ -2468,8 +2521,9 @@ ifneq ($(strip $(KERNEL_ARCH)),um)
             -e 's/=ST/$(INT_STEM)/g'  -e 's/=R/$(reverse_symlink)/g' \
             -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \
             -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'        \
+            -e 's/=MD/$(initrddep)/g'                                \
+            -e 's@=MK@$(initrdcmd)@g' -e 's@=A@$(DEB_HOST_ARCH)@g'   \
             -e 's@=M@$(MKIMAGE)@g'    -e 's/=OF/$(AM_OFFICIAL)/g'    \
-            -e 's@=A@$(DEB_HOST_ARCH)@g'                             \
             -e 's/=S/$(no_symlink)/g'  -e 's@=B@$(KERNEL_ARCH)@g'    \
              $(DEBDIR)/image.postinst > $(IMAGE_TOP)/DEBIAN/postinst
 	chmod 755 $(IMAGE_TOP)/DEBIAN/postinst
@@ -2477,8 +2531,9 @@ ifneq ($(strip $(KERNEL_ARCH)),um)
             -e 's/=ST/$(INT_STEM)/g'  -e 's/=R/$(reverse_symlink)/g' \
             -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \
             -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'        \
+            -e 's/=MD/$(initrddep)/g'                                \
+            -e 's@=MK@$(initrdcmd)@g' -e 's@=A@$(DEB_HOST_ARCH)@g'   \
             -e 's@=M@$(MKIMAGE)@g'    -e 's/=OF/$(AM_OFFICIAL)/g'    \
-            -e 's@=A@$(DEB_HOST_ARCH)@g'                             \
             -e 's/=S/$(no_symlink)/g' -e 's@=B@$(KERNEL_ARCH)@g'     \
              $(DEBDIR)/image.postrm > $(IMAGE_TOP)/DEBIAN/postrm
 	chmod 755 $(IMAGE_TOP)/DEBIAN/postrm
@@ -2486,17 +2541,19 @@ ifneq ($(strip $(KERNEL_ARCH)),um)
             -e 's/=ST/$(INT_STEM)/g'  -e 's/=R/$(reverse_symlink)/g' \
             -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \
             -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'        \
+            -e 's/=MD/$(initrddep)/g'                                \
+            -e 's@=MK@$(initrdcmd)@g' -e 's@=A@$(DEB_HOST_ARCH)@g'   \
             -e 's@=M@$(MKIMAGE)@g'    -e 's/=OF/$(AM_OFFICIAL)/g'    \
-            -e 's@=A@$(DEB_HOST_ARCH)@g'                             \
             -e 's/=S/$(no_symlink)/g' -e 's@=B@$(KERNEL_ARCH)@g'     \
              $(DEBDIR)/image.preinst > $(IMAGE_TOP)/DEBIAN/preinst
 	chmod 755 $(IMAGE_TOP)/DEBIAN/preinst
 	sed -e 's/=V/$(version)/g'    -e 's/=B/$(link_in_boot)/g'    \
             -e 's/=ST/$(INT_STEM)/g'  -e 's/=R/$(reverse_symlink)/g' \
             -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \
+            -e 's@=MK@$(initrdcmd)@g' -e 's@=A@$(DEB_HOST_ARCH)@g'   \
             -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'        \
+            -e 's/=MD/$(initrddep)/g'                                \
             -e 's@=M@$(MKIMAGE)@g'    -e 's/=OF/$(AM_OFFICIAL)/g'    \
-            -e 's@=A@$(DEB_HOST_ARCH)@g'                             \
             -e 's/=S/$(no_symlink)/g' -e 's@=B@$(KERNEL_ARCH)@g'     \
              $(DEBDIR)/image.prerm > $(IMAGE_TOP)/DEBIAN/prerm
 	chmod 755 $(IMAGE_TOP)/DEBIAN/prerm
@@ -2505,8 +2562,9 @@ ifneq ($(strip $(KERNEL_ARCH)),um)
             -e 's/=ST/$(INT_STEM)/g'  -e 's/=R/$(reverse_symlink)/g' \
             -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \
             -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'        \
+            -e 's/=MD/$(initrddep)/g'                                \
+            -e 's@=MK@$(initrdcmd)@g' -e 's@=A@$(DEB_HOST_ARCH)@g'   \
             -e 's@=M@$(MKIMAGE)@g'    -e 's/=OF/$(AM_OFFICIAL)/g'    \
-            -e 's@=A@$(DEB_HOST_ARCH)@g'                             \
             -e 's/=S/$(no_symlink)/g' -e 's@=B@$(KERNEL_ARCH)@g'     \
              $(DEBDIR)/xen.postinst > $(IMAGE_TOP)/DEBIAN/postinst
 	chmod 755 $(IMAGE_TOP)/DEBIAN/postinst
@@ -2514,8 +2572,9 @@ ifneq ($(strip $(KERNEL_ARCH)),um)
             -e 's/=ST/$(INT_STEM)/g'  -e 's/=R/$(reverse_symlink)/g' \
             -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \
             -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'        \
+            -e 's/=MD/$(initrddep)/g'                                \
+            -e 's@=MK@$(initrdcmd)@g' -e 's@=A@$(DEB_HOST_ARCH)@g'   \
             -e 's@=M@$(MKIMAGE)@g'    -e 's/=OF/$(AM_OFFICIAL)/g'    \
-            -e 's@=A@$(DEB_HOST_ARCH)@g'                             \
             -e 's/=S/$(no_symlink)/g' -e 's@=B@$(KERNEL_ARCH)@g'     \
              $(DEBDIR)/xen.prerm > $(IMAGE_TOP)/DEBIAN/prerm
 	chmod 755 $(IMAGE_TOP)/DEBIAN/prerm
@@ -2527,8 +2586,9 @@ else
             -e 's/=ST/$(INT_STEM)/g'  -e 's/=R/$(reverse_symlink)/g' \
             -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \
             -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'        \
+            -e 's/=MD/$(initrddep)/g'                                \
+            -e 's@=MK@$(initrdcmd)@g' -e 's@=A@$(DEB_HOST_ARCH)@g'   \
             -e 's@=M@$(MKIMAGE)@g'    -e 's@=B@$(KERNEL_ARCH)@g'     \
-            -e 's@=A@$(DEB_HOST_ARCH)@g'                             \
             -e 's/=S/$(no_symlink)/g' -e 's/=OF/$(AM_OFFICIAL)/g'    \
               $(DEBDIR)/um.postinst > $(IMAGE_TOP)/DEBIAN/postinst
 	chmod 755 $(IMAGE_TOP)/DEBIAN/postinst
@@ -2536,8 +2596,9 @@ else
             -e 's/=ST/$(INT_STEM)/g'  -e 's/=R/$(reverse_symlink)/g' \
             -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \
             -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'        \
+            -e 's/=MD/$(initrddep)/g'                                \
+            -e 's@=MK@$(initrdcmd)@g' -e 's@=A@$(DEB_HOST_ARCH)@g'   \
             -e 's@=M@$(MKIMAGE)@g'    -e 's/=OF/$(AM_OFFICIAL)/g'    \
-            -e 's@=A@$(DEB_HOST_ARCH)@g'                             \
             -e 's/=S/$(no_symlink)/g' -e 's@=B@$(KERNEL_ARCH)@g'     \
               $(DEBDIR)/um.prerm > $(IMAGE_TOP)/DEBIAN/prerm
 	chmod 755 $(IMAGE_TOP)/DEBIAN/prerm

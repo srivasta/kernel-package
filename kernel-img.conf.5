@@ -203,11 +203,22 @@ of the kernel image itself. Errors in the script shall produce a
 warning message, but shall be otherwise ignored.
 .TP
 .B ramdisk
-Set this variable to a executable that creates an initial RAM
-disk. This only has any effect if installing a kernel-image that uses
-an initial RAM disk. The command so pointed must be drop-in compatible
-with
+Set this variable to a space separated list of executables that create
+an initial RAM disk. This only has any effect if installing a
+kernel-image that uses an initial RAM disk. The commands so pointed
+must be drop-in compatible with
 .I mkinitrd.
+Using the command line options
+.I --supported-host-version
+and
+.I --supported-target-version, 
+these executables are queried at installation time to see if the
+combination of the currently running kernel as host kernel, and the
+kernel version being installed as the target kernel, and removed from
+the list if not.  The first viable tool is used to create the actual
+initial RAM disk. The install shall fail if no suitable tool is found.
+Defaults to a subset of
+.I "mkinitrd mkinitrd.yaird mkinitramfs"
 .TP
 .B src_postinst_hook 
 Unlike the other hook variables, this is meant for a script run during

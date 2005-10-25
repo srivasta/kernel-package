@@ -1,3 +1,50 @@
+2005-10-25  Manoj Srivastava  <srivasta@debian.org>
+
+	* rules (initrddep):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-42
+		  Calculate the initrd_cmd list, unless one has already
+		  been provided by the user, using the version numbers of
+		  the kernel being packaged, and then calculate the list
+		  of dependencies based on the list of commands
+		  selected. Also, propagate the list of  initrd commands
+		  and dependencies to the maintainer scripts as well. 
+
+	* image.prerm:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-44
+		  Added new variable for the initrd dependency, and also
+		  modified the variable ramdisk to be a space separated
+		  list of commands, not just a single command. 
+
+	* image.preinst:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-44
+		  Added new variable for the initrd dependency, and also
+		  modified the variable ramdisk to be a space separated
+		  list of commands, not just a single command. 
+	  (find_inird_tool):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-44
+		  Added function to determine the list of viable
+		  initrd creation tools present on the target
+		  system, and use it to select which tool to use
+		  for creating the ram fs. 
+
+	* image.postrm:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-44
+		  Added new variable for the initrd dependency, and also
+		  modified the variable ramdisk to be a space separated
+		  list of commands, not just a single command. 
+
+	* image.postinst:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-44
+		  Added new variable for the initrd dependency, and also
+		  modified the variable ramdisk to be a space separated
+		  list of commands, not just a single command. 
+	  (find_inird_tool):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-44
+		  Added function to determine the list of viable
+		  initrd creation tools present on the target
+		  system, and use it to select which tool to use
+		  for creating the ram fs. 
+
 2005-10-24  Manoj Srivastava  <srivasta@debian.org>
 
 	* rules:
