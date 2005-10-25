@@ -5,9 +5,9 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Tue Oct 25 12:06:11 2005
+## Last Modified On : Tue Oct 25 13:19:45 2005
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count	    : 925
+## Update Count	    : 926
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
@@ -1445,7 +1445,7 @@ ifneq ($(strip $(INITRD)),)
     ifneq ($(shell if [ $(VERSION)  -eq  2 ] && [ $(PATCHLEVEL) -eq 6 ] &&    \
                       [ $(SUBLEVEL) -lt  8 ]; then                            \
                         echo old;                                             \
-                 elif [ $(VERSION)  -eq  2 ] && [ $(PATCHLEVEL) -le 6 ]; then \
+                 elif [ $(VERSION)  -eq  2 ] && [ $(PATCHLEVEL) -lt 6 ]; then \
                         echo old;                                             \
                  elif [ $(VERSION)  -lt  2 ]; then                            \
                         echo old;                                             \
