@@ -1,3 +1,11 @@
+2005-10-28  Manoj Srivastava  <srivasta@debian.org>
+
+	* Makefile (install):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-48
+		  Adjust for the reorganization of the files, since the
+		  source files are no longer in their previous
+		  locations. Keep the destination mostly the same. 
+
 2005-10-25  Manoj Srivastava  <srivasta@debian.org>
 
 	* make-kpkg.8:

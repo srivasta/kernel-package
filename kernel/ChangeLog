@@ -1,3 +1,45 @@
+2005-10-28  Manoj Srivastava  <srivasta@debian.org>
+
+	* rules:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-48
+			  This is the one file that has faced the brunt of
+	                  the changes. Large chunks of it have been moved
+	                  out into separate chunks included in this file.
+	                  The major addition has been are mechanisms to
+  			  allow the file to be broken up. The parts
+	                  removed are
+			     o) dpkg-architecture variable are now moved 
+			        out to ruleset/common/archvars.mk 
+			     o) The variables set in the file have mostly 
+			        been moved to ruleset/local-vars.mk, which 
+			        shall be further broken up into smaller 
+	                        parts
+			     o) For example, the per arch variable 
+			        settings have already been moved out of  
+			        ruleset/local-vars.mk into 
+	                        ruleset/architecture.mk -- and shall be 
+	                        further fragmented into files in 
+	                        ruleset/arches/, so that it would be
+	                        easier to delegate ownership to domain
+	                        experts.
+			     o) The action/rules part of the file have
+	                        been broken out to ruleset/local.mk -- and
+			        shall be broken out into 
+	                        ruleset/common/targets.mk (which contain 
+	                        policy mandated targets,and their 
+	                        dependencies, and ruleset/actual_rules.mk,
+			        where the grunt work shall be done. It may
+			        make sense to further divide 
+	                        ruleset/actual_rules.mk into separate
+	                        files for images, headers, doc, and manual
+	                        packages. At a later stage, actually
+	                        installing files into 
+	                        ./debian/tmp-<something> shall be
+	                        separated out from the subsequent
+	                        packaging into separate targets 
+	                        (probably in the same file), to allow 
+	                        finer granularity for debugging.
+
 2005-10-25  Manoj Srivastava  <srivasta@debian.org>
 
 	* rules (initrddep):
