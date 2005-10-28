@@ -5,14 +5,16 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Fri Oct 28 00:39:12 2005
+## Last Modified On : Fri Oct 28 16:15:55 2005
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count	    : 972
+## Update Count	    : 973
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
 ## arch-tag: aa70d4e5-79bf-405c-95ec-5fa9f7ae7b69
 ###############################################################################
+# Where the package libs are stored
+LIBLOC     :=/usr/share/kernel-package
 
 define which_debdir
 DEBDIR=$(shell if test -f ./debian/ruleset/kernel_version.mk; then echo ./debian;     \

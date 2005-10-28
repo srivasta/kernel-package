@@ -4,9 +4,9 @@
 ## Created On       : Fri Oct 28 00:37:02 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Fri Oct 28 08:25:28 2005
+## Last Modified On : Fri Oct 28 16:15:54 2005
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 4
+## Update Count     : 5
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : 
@@ -22,8 +22,6 @@ CONFLOC    :=$(shell if test -f ~/.kernel-pkg.conf; then \
                      else                                \
                         echo /etc/kernel-pkg.conf;       \
                      fi)
-# Where the package libs are stored
-LIBLOC     :=/usr/share/kernel-package
 # Default location of the modules
 ifeq ($(strip $(MODULE_LOC)),)
 MODULE_LOC =/usr/src/modules

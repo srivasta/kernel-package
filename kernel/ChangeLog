@@ -1,5 +1,8 @@
 2005-10-28  Manoj Srivastava  <srivasta@debian.org>
 
+	* ruleset/local-vars.mk: Moved the definition of LIBLOC out of
+		  here to the rules file. 
+
 	* rules:
 		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-48
 			  This is the one file that has faced the brunt of
@@ -39,6 +42,9 @@
 	                        packaging into separate targets 
 	                        (probably in the same file), to allow 
 	                        finer granularity for debugging.
+			(LIBLOC):
+				srivasta@debian.org--etch/kernel-package--devel--9.0--patch-48
+				We need the definition early 
 
 2005-10-25  Manoj Srivastava  <srivasta@debian.org>
 
