@@ -4,9 +4,9 @@
 ## Created On       : Tue Nov 18 15:53:52 2003
 ## Created On Node  : glaurung.green-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Fri Oct 28 08:32:41 2005
+## Last Modified On : Fri Oct 28 15:42:33 2005
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 23
+## Update Count     : 25
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : 
@@ -51,16 +51,18 @@ all build: check
 
 check:
 	perl -wc make-kpkg
-	perl -wc kernel/image.preinst
-	perl -wc kernel/image.postinst
-	perl -wc kernel/image.postrm
-	perl -wc kernel/image.prerm
-	perl -wc kernel/include.postinst
-	bash -n kernel/kernel_grub_conf.sh
-	bash -n kernel/kernel_grub_rm.sh
-	bash -n kernel/sample.posthook.sh
-	bash -n kernel/um.postinst
-	bash -n kernel/um.prerm
+	perl -wc kernel/pkg/image/preinst
+	perl -wc kernel/pkg/image/postinst
+	perl -wc kernel/pkg/image/postrm
+	perl -wc kernel/pkg/image/prerm
+	perl -wc kernel/pkg/headers/postinst
+	bash -n kernel/examples/kernel_grub_conf.sh
+	bash -n kernel/examples/kernel_grub_rm.sh
+	bash -n kernel/examples/sample.posthook.sh
+	bash -n kernel/pkg/virtual/um/postinst
+	bash -n kernel/pkg/virtual/um/prerm
+	bash -n kernel/pkg/virtual/xen/postinst
+	bash -n kernel/pkg/virtual/xen/prerm
 
 install:
 	$(make_directory)  $(MAN1DIR)
