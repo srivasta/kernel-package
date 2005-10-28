@@ -4,9 +4,9 @@
 ## Created On       : Tue Nov 18 15:53:52 2003
 ## Created On Node  : glaurung.green-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Fri Oct 28 15:42:33 2005
+## Last Modified On : Fri Oct 28 15:48:40 2005
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 25
+## Update Count     : 26
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : 
@@ -74,7 +74,7 @@ install:
 	$(make_directory)  $(FR_MAN1DIR)
 	$(make_directory)  $(FR_MAN5DIR)
 	$(make_directory)  $(FR_MAN8DIR)
-	$(make_directory)  $(DOCDIR)
+	$(make_directory)  $(DOCDIR)/examples
 	$(make_directory)  $(BASH_DIR)
 	$(make_directory)  $(prefix)/usr/bin
 	$(make_directory)  $(prefix)/usr/sbin
