@@ -4,9 +4,9 @@
 ## Created On       : Fri Oct 28 00:37:46 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Fri Oct 28 00:37:59 2005
+## Last Modified On : Sat Oct 29 00:09:40 2005
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 1
+## Update Count     : 4
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : 
@@ -688,6 +688,8 @@ endif
 	sed -e 's/=P/$(d_package)/g' -e 's/=V/$(version)/g' \
 		$(DEBDIR)/pkg/doc/postinst >        $(DOC_TOP)/DEBIAN/postinst
 	chmod 755                                   $(DOC_TOP)/DEBIAN/postinst
+	-rmdir   $(DOC_MAN)/man9
+	-rmdir   $(DOC_MAN)
 	dpkg-gencontrol -isp -p$(d_package)       -P$(DOC_TOP)/
 	chmod -R og=rX                              $(DOC_TOP)
 	chown -R root:root                          $(DOC_TOP)
@@ -825,12 +827,12 @@ endif
 	$(install_file) debian/changelog        $(IMAGE_DOC)/changelog.Debian
 	gzip -9qf                               $(IMAGE_DOC)/changelog.Debian
 ifdef loaderdoc
-	$(install_file) $(DEBDIR)/docs/ImageLoaders$(loaderdoc)  $(IMAGE_DOC)/$(loaderdoc)
+	$(install_file) $(DEBDIR)/docs/ImageLoaders/$(loaderdoc) $(IMAGE_DOC)/$(loaderdoc)
 	gzip -9qf                                                $(IMAGE_DOC)/$(loaderdoc)
 endif
-	$(install_file) $(DEBDIR)/pkg/image/README   $(IMAGE_DOC)/debian.README
-	gzip -9qf                                    $(IMAGE_DOC)/debian.README
-	$(install_file) $(DEBDIR)/pkg/image/copyrigh $(IMAGE_DOC)/copyright
+	$(install_file) $(DEBDIR)/pkg/image/README    $(IMAGE_DOC)/debian.README
+	gzip -9qf                                     $(IMAGE_DOC)/debian.README
+	$(install_file) $(DEBDIR)/pkg/image/copyright $(IMAGE_DOC)/copyright
 	echo "This was produced by kernel-package version $(kpkg_version)." > \
 	           $(IMAGE_DOC)/Buildinfo
 	chmod 0644 $(IMAGE_DOC)/Buildinfo
