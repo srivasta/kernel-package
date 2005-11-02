@@ -1,3 +1,35 @@
+############################ -*- Mode: Makefile -*- ###########################
+## kernel_version.mk --- 
+## Author           : Manoj Srivastava ( srivasta@glaurung.internal.golden-gryphon.com ) 
+## Created On       : Mon Oct 31 18:12:22 2005
+## Created On Node  : glaurung.internal.golden-gryphon.com
+## Last Modified By : Manoj Srivastava
+## Last Modified On : Mon Oct 31 18:12:22 2005
+## Last Machine Used: glaurung.internal.golden-gryphon.com
+## Update Count     : 0
+## Status           : Unknown, Use with caution!
+## HISTORY          : 
+## Description      : 
+## 
+## arch-tag: 8ae3064b-78fe-4dfb-9460-a43660d0e0ca
+## 
+## 
+## This program is free software; you can redistribute it and/or modify
+## it under the terms of the GNU General Public License as published by
+## the Free Software Foundation; either version 2 of the License, or
+## (at your option) any later version.
+##
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU General Public License for more details.
+##
+## You should have received a copy of the GNU General Public License
+## along with this program; if not, write to the Free Software
+## Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+##
+###############################################################################
+
 # The purpose of this snippet of makefile is to easily and accurately
 # extract out the kernel version information.
 

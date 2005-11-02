@@ -1,3 +1,30 @@
+2005-11-02  Manoj Srivastava  <srivasta@debian.org>
+
+	* rules:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-53
+			  Continued the process of skeletonizing the top
+			  level Makefile. Moved some more variables into
+			  their own files, and also  moved the top level
+			  policy mandated targets into a separate file (so
+			  one does  not have to worry about proper
+			  dependency relations between those targets).  
+
+2005-11-01  Manoj Srivastava  <srivasta@debian.org>
+
+	* Control (Build-Depends):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-53
+		  Added build dependencies on po-debconf and gettext, in
+		  preparation for the forthcoming debconfication of the
+		  kernel packages. 
+		  (Recommends):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-53
+		  Add recommendations for  po-debconf and gettext in the
+		  source package. 
+		  (Pre-Depends):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-53
+		  Made the image package pre-depend on debconf,since the 
+		  preinst shall be using debconf to ask questions. 
+
 2005-10-28  Manoj Srivastava  <srivasta@debian.org>
 
 	* ruleset/local-vars.mk: Moved the definition of LIBLOC out of

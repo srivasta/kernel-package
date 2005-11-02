@@ -679,11 +679,13 @@ EOTRGT
 sub main (){
   my $ret;
   my $rules_file;
+  my $alt_rules_file;
   my $target;
   my $errors = "";
   my $Targets = "";
 
-  $rules_file = "/usr/share/kernel-package/rules";
+  $rules_file = "debian/rules";
+  $alt_rules_file = "/usr/share/kernel-package/ruleset/minimal.mk";
 
   $ret = GetOptions(%option_ctl);
   if(!$ret) {
@@ -776,18 +778,11 @@ EOERR2
     }
   }
 
-  if (-f "stamp-debian" && -d "debian" && -x "debian/rules" &&
-      ! -f "debian/official") {
-    if ($Targets !~ /^debian|configure/o) {
-      $rules_file = "debian/rules";
-    }
-  }
-
-  if (! -x "$rules_file"){
+  if ( ! -e "$alt_rules_file"){
     print STDERR <<EOERR1;
     Could not locate the rules file (Normally found at the location
- $rules_file), which would seem an
- impossibility. I give up.
+ /usr/share/kernel-package/rules), which would seem an impossibility.
+ I give up.
 EOERR1
      ;
     die "Could not find rules file\n";
@@ -809,23 +804,30 @@ EOERR3
   }
 
   # Fine. Just do it!
+  my $alt_cmd = "make -f $alt_rules_file " 
+    unless -f "debian/ruleset/kernel_version.mk";
   my $command = "$rules_file ";
   if ($signature){
     $command .= "  PGP_SIGNATURE=$signature ";
   }
-
+  if ($Targets =~ m/^\s*clean\s*$/) {
+    $alt_cmd  .= "clean " unless -f "debian/ruleset/kernel_version.mk";
+  }
+  else {
+    $alt_cmd  .= "debian" unless -f "debian/ruleset/kernel_version.mk";
+  }
   if ($revision) {
     if ($Targets !~ m/^\s*clean\s*$/) { # No need to do all this for just clean
       if (-e "debian/changelog") {
-	open(INPUT, "debian/changelog") or die "Can not open debian/changelog";
-	my $line=<INPUT>;
-	close INPUT;
-	chomp $line;
-	my $version = '';
-	$line =~ m/\((\S+)\)/;
-	$version = $1;
-	if ($revision && $version ne $revision) {
-	  print STDERR <<"EOMSG";
+        open(INPUT, "debian/changelog") or die "Can not open debian/changelog";
+        my $line=<INPUT>;
+        close INPUT;
+        chomp $line;
+        my $version = '';
+        $line =~ m/\((\S+)\)/;
+        $version = $1;
+        if ($revision && $version ne $revision) {
+          print STDERR <<"EOMSG";
 I note that you are using the --revision flag with the value
    $revision.
 However, the ./debian/changelog file exists, and has a different value
@@ -838,7 +840,6 @@ EOMSG
       }
       
       $command .= " DEBIAN_REVISION=$revision ";
-
       if ($revision !~ m/^(\d+:)?[a-zA-Z\d\.\+\-]+$/o) {
 	print STDERR " Error: The revision string may only contain\n";
 	print STDERR " alphanumerics and  the  characters  +  .\n";
@@ -891,142 +892,172 @@ EOMSG
     }
   }
 
-  if ($flavour){
-    my $makefile_flavour = `grep FLAVOUR Makefile`;
-    if (! $makefile_flavour) {
-      print STDERR " Error: The top level makefile has not been edited\n";
-      print STDERR " to define FLAVOUR. Please read FLAVOURS.gz\n";
-      exit 1;
+  if ($Targets !~ m/^\s*clean\s*$/) {
+    if ($flavour){
+      my $makefile_flavour = `grep FLAVOUR Makefile`;
+      if (! $makefile_flavour) {
+        print STDERR " Error: The top level makefile has not been edited\n";
+        print STDERR " to define FLAVOUR. Please read FLAVOURS.gz\n";
+        exit 1;
+      }
+      if ($flavour !~ m/^[a-z\d\.\-\+]+$/o) {
+        print STDERR " Error: The flavour variable may only contain\n";
+        print STDERR " lowercase alphanumerics and  the  characters  - +  .\n";
+        print STDERR " The current value is: $flavour\n";
+        print STDERR " Aborting.\n";
+        exit 1;
+      }
+      if ($flavour =~ m/[A-Z]+/o){
+        print STDERR "Error: Uppercase letters are not allowed in\n";
+        print STDERR "the flavour variable, since the flavour becomes\n";
+        print STDERR "part of the kernel-image name; and package names\n";
+        print STDERR "may only cantain lowercase alphanumerics.\n";
+        print STDERR "I have $flavour, which shall be dissallowed by the\n";
+        print STDERR "packaging tools. Aborting.\n";
+        exit 1;
+      }
+      $command .= " FLAVOUR=$flavour ";
+      $alt_cmd .= " FLAVOUR=$flavour "
+        unless -f "debian/ruleset/kernel_version.mk";
     }
-    if ($flavour !~ m/^[a-z\d\.\-\+]+$/o) {
-      print STDERR " Error: The flavour variable may only contain\n";
-      print STDERR " lowercase alphanumerics and  the  characters  - +  .\n";
-      print STDERR " The current value is: $flavour\n";
-      print STDERR " Aborting.\n";
-      exit 1;
+
+    if ($append_to_version) {
+      if ($append_to_version !~ m/^[a-z\d\.\-\+]+$/o) {
+        print STDERR " Error: The extended version may only contain\n";
+        print STDERR " lowercase alphanumerics and  the  characters  - +  .\n";
+        print STDERR " The current value is: $append_to_version\n";
+        print STDERR " Aborting.\n";
+        exit 1;
+      }
+      if ($append_to_version =~ m/[A-Z]+/o){
+        print STDERR "Error: Uppercase letters are not allowed in\n";
+        print STDERR "the extended version, since the version becomes\n";
+        print STDERR "part of the kernel-image name; and package names\n";
+        print STDERR "may only contain lowercase alphanumerics.\n";
+        print STDERR "I have $append_to_version, which shall be dissallowed \n";
+        print STDERR "by the packaging tools. Aborting.\n";
+        exit 1;
+      }
+
+      if (-f "include/linux/version.h" && ! -f 'debian/official' &&
+          ! $ENV{"VERSION_H_OK"} && ! ($Targets =~ m/^\s*clean\s*$/ )) {
+        open (VERSION, "include/linux/version.h") or
+          die "Could not read include/linux/version.h:$!";
+
+        my $temp_string         = '';
+        my $kernel_version      = '';
+        my $patch_level         = '';
+        my $sublevel            = '';
+        my $extra_version       = '';
+        my $uts_release_version = '';
+
+        $temp_string = `egrep '^VERSION +=' Makefile 2>/dev/null `;
+        if ($temp_string =~ m/^\D*(\d+)/) {
+          $kernel_version = $1;
+        }
+
+        $temp_string = `egrep '^PATCHLEVEL +=' Makefile 2>/dev/null `;
+        if ($temp_string =~ m/^\D*(\d+)/) {
+          $patch_level = $1;
+        }
+
+        $temp_string = `egrep '^SUBLEVEL +=' Makefile 2>/dev/null `;
+        if ($temp_string =~ m/^\D*(\d+)/) {
+          $sublevel =  $1;
+        }
+
+        $temp_string = `egrep '^EXTRAVERSION +=' Makefile 2>/dev/null `;
+        if ($temp_string =~ m/EXTRAVERSION\s*=\s*(\S+)/) {
+          $extra_version = $1;
+        }
+
+        while (<VERSION>) {
+          chomp;
+          m/^\s*#define\s+UTS_RELEASE\s+("?)(\S+)\1/ || next;
+          $uts_release_version = $2;
+        }
+
+        my $composite_version = "$kernel_version.$patch_level.$sublevel" .
+          $extra_version  . $append_to_version;
+        if ($flavour) {
+          $composite_version  .= "+" . $flavour;
+        }
+        if ($uts_release_version ne $composite_version) {
+          print STDERR "Warning: The file include/linux/version.h exists\n";
+          print STDERR "The contained UTS_VERSION string:\n";
+          print STDERR "\t\t\t\"$uts_release_version\"\n";
+          print STDERR "does not match expectations:\n";
+          print STDERR "\t\t\t\"$composite_version\"\n";
+          print STDERR "I'll try and recover\n";
+          system ("touch", "Makefile") == 0
+            or die "touch Makefile failed:$?";
+        }
+      }
+      $command .= " APPEND_TO_VERSION=$append_to_version ";
+      $alt_cmd .= " APPEND_TO_VERSION=$append_to_version "
+        unless -f "debian/ruleset/kernel_version.mk";
     }
-    if ($flavour =~ m/[A-Z]+/o){
-      print STDERR "Error: Uppercase letters are not allowed in\n";
-      print STDERR "the flavour variable, since the flavour becomes\n";
-      print STDERR "part of the kernel-image name; and package names\n";
-      print STDERR "may only cantain lowercase alphanumerics.\n";
-      print STDERR "I have $flavour, which shall be dissallowed by the\n";
-      print STDERR "packaging tools. Aborting.\n";
-      exit 1;
-    }
-    $command .= " FLAVOUR=$flavour ";
   }
 
-  if ($append_to_version){
-    if ($append_to_version !~ m/^[a-z\d\.\-\+]+$/o) {
-      print STDERR " Error: The extended version may only contain\n";
-      print STDERR " lowercase alphanumerics and  the  characters  - +  .\n";
-      print STDERR " The current value is: $append_to_version\n";
-      print STDERR " Aborting.\n";
-      exit 1;
-    }
-    if ($append_to_version =~ m/[A-Z]+/o){
-      print STDERR "Error: Uppercase letters are not allowed in\n";
-      print STDERR "the extended version, since the version becomes\n";
-      print STDERR "part of the kernel-image name; and package names\n";
-      print STDERR "may only contain lowercase alphanumerics.\n";
-      print STDERR "I have $append_to_version, which shall be dissallowed \n";
-      print STDERR "by the packaging tools. Aborting.\n";
-      exit 1;
-    }
-    if (-f "include/linux/version.h" && ! -f 'debian/official' &&
-        ! $ENV{"VERSION_H_OK"} && ! ($Targets =~ m/^\s*clean\s*$/ )) {
-      open (VERSION, "include/linux/version.h") or
-	die "Could not read include/linux/version.h:$!";
-
-      my $temp_string         = '';
-      my $kernel_version      = '';
-      my $patch_level         = '';
-      my $sublevel            = '';
-      my $extra_version       = '';
-      my $uts_release_version = '';
-
-      $temp_string = `egrep '^VERSION +=' Makefile 2>/dev/null `;
-      if ($temp_string =~ m/^\D*(\d+)/) {
-	$kernel_version = $1;
-      }
-
-      $temp_string = `egrep '^PATCHLEVEL +=' Makefile 2>/dev/null `;
-      if ($temp_string =~ m/^\D*(\d+)/) {
-	$patch_level = $1;
-      }
-
-      $temp_string = `egrep '^SUBLEVEL +=' Makefile 2>/dev/null `;
-      if ($temp_string =~ m/^\D*(\d+)/) {
-	$sublevel =  $1;
-      }
-
-      $temp_string = `egrep '^EXTRAVERSION +=' Makefile 2>/dev/null `;
-      if ($temp_string =~ m/EXTRAVERSION\s*=\s*(\S+)/) {
-	$extra_version = $1;
-      }
-
-      while (<VERSION>) {
-	chomp;
-	m/^\s*#define\s+UTS_RELEASE\s+("?)(\S+)\1/ || next;
-	$uts_release_version = $2;
-      }
-
-      my $composite_version = "$kernel_version.$patch_level.$sublevel" .
-	$extra_version  . $append_to_version;
-      if ($flavour) {
-	$composite_version  .= "+" . $flavour;
-      }
-      if ($uts_release_version ne $composite_version) {
-	print STDERR "Warning: The file include/linux/version.h exists\n";
-	print STDERR "The contained UTS_VERSION string:\n";
-	print STDERR "\t\t\t\"$uts_release_version\"\n";
-	print STDERR "does not match expectations:\n";
-	print STDERR "\t\t\t\"$composite_version\"\n";
-	print STDERR "I'll try and recover\n";
-	system ("touch", "Makefile") == 0
-	  or die "touch Makefile failed:$?";
-      }
-    }
-    $command .= " APPEND_TO_VERSION=$append_to_version ";
-  }
   if ($arch){
     $command .= " KPKG_ARCH=$arch ";
+    $alt_cmd .= " KPKG_ARCH=$arch  "
+      unless -f "debian/ruleset/kernel_version.mk";
   }
   if ($config_target ne 'oldconfig') {
     $command .= " CONFIG_TARGET=$config_target ";
   }
   if ($cross_compile){
     $command .= " CROSS_COMPILE=$cross_compile ";
+    $alt_cmd .= " CROSS_COMPILE=$cross_compile "
+      unless -f "debian/ruleset/kernel_version.mk";
   }
   if ($subarch){
     $command .= " KPKG_SUBARCH=$subarch ";
+    $alt_cmd .= " KPKG_SUBARCH=$subarch "
+      unless -f "debian/ruleset/kernel_version.mk";
   }
   if ($added_modules) {
-    $command .= " KPKG_SELECTED_MODULES=\"$added_modules\"";
+    $command .= " KPKG_SELECTED_MODULES=\"$added_modules\" ";
+    $alt_cmd .= " KPKG_SELECTED_MODULES=\"$added_modules\" "
+      unless -f "debian/ruleset/kernel_version.mk";
   }
   if ($added_patches) {
-    $command .= " KPKG_SELECTED_PATCHES=\"$added_patches\"";
+    $command .= " KPKG_SELECTED_PATCHES=\"$added_patches\" ";
+    $alt_cmd .= " KPKG_SELECTED_PATCHES=\"$added_patches\" "
+      unless -f "debian/ruleset/kernel_version.mk";
   }
   if ($arch_in_name){
     $command .= " ARCH_IN_NAME=YES ";
+    $alt_cmd .= " ARCH_IN_NAME=YES "
+      unless -f "debian/ruleset/kernel_version.mk";
   }
   if ($stem) {
     $command .= " KPKG_STEM=$stem ";
+    $alt_cmd .= " KPKG_STEM=$stem "
+      unless -f "debian/ruleset/kernel_version.mk";
   }
   if ($noexec){
     $command .= " -n ";
+    $alt_cmd .= " -n "
+      unless -f "debian/ruleset/kernel_version.mk";
   }
   if ($initrd) {
     $command .= " INITRD=YES ";
+    $alt_cmd .= " INITRD=YES "
+      unless -f "debian/ruleset/kernel_version.mk";
   }
   if ($mkimage) {
     my $temp_string = $mkimage;
     $temp_string =~ s/\$/$$/g;
     $command .= " MKIMAGE='$temp_string' ";
+    $alt_cmd .= " MKIMAGE='$temp_string' "
+      unless -f "debian/ruleset/kernel_version.mk";
   }
   if ($root_cmd){
      $command .= " ROOT_CMD=$root_cmd ";
+     $alt_cmd .= " ROOT_CMD=$root_cmd "
+       unless -f "debian/ruleset/kernel_version.mk";
   }
   if ($unsign_changelog){
     $command .= " UNSIGN_CHANGELOG=YES ";
@@ -1061,6 +1092,31 @@ EOMSG
   #$command .= " CC=\"$cc\" HOSTCC=\"$hostcc\"";
   $command .= " $Targets";
   # print STDERR $command;
+
+  if (! -f "debian/ruleset/kernel_version.mk" && "$alt_cmd" !~ /^\s*$/) {
+    print STDERR "exec $alt_cmd\n";
+    if ($Targets =~ m/^\s*clean\s*$/ || $Targets =~ m/^\s*debian\s*$/ ) {
+      # There is no ./debian, and we do need to preserve .config, and so on
+      exec $alt_cmd;
+    }
+    else {
+      # We call system, and not exec, since we are just creating a
+      # ./debian dir here, _then_ we go and do the real command.
+      system ($alt_cmd) == 0
+        or die "Failed to create a ./debian directory: $!";
+    }
+  }
+  # ./debian/rules had better be present now
+  if (! -x "$rules_file"){
+    print STDERR <<EOERR19;
+    Could not locate the rules file (Normally found at the location
+ $rules_file), which would seem an
+ impossibility. I give up.
+EOERR19
+     ;
+    die "Could not find rules file\n";
+  }
+  print STDERR "exec $command\n";
   exec $command;
 }
 

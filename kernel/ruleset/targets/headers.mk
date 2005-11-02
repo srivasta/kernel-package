@@ -1,0 +1,136 @@
+######################### -*- Mode: Makefile-Gmake -*- ########################
+## headers.mk --- 
+## Author           : Manoj Srivastava ( srivasta@glaurung.internal.golden-gryphon.com ) 
+## Created On       : Mon Oct 31 16:23:51 2005
+## Created On Node  : glaurung.internal.golden-gryphon.com
+## Last Modified By : Manoj Srivastava
+## Last Modified On : Mon Oct 31 16:23:51 2005
+## Last Machine Used: glaurung.internal.golden-gryphon.com
+## Update Count     : 0
+## Status           : Unknown, Use with caution!
+## HISTORY          : 
+## Description      : This file is responsible for creating the kernel-headers packages 
+## 
+## arch-tag: 2280e193-fbb3-4990-ac8c-d0504ee9bab5
+## 
+## 
+## This program is free software; you can redistribute it and/or modify
+## it under the terms of the GNU General Public License as published by
+## the Free Software Foundation; either version 2 of the License, or
+## (at your option) any later version.
+##
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU General Public License for more details.
+##
+## You should have received a copy of the GNU General Public License
+## along with this program; if not, write to the Free Software
+## Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+##
+###############################################################################
+
+install/$(h_package): conf.vars .config stamp-conf/kernel build/kernel
+	$(REASON)
+ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
+  ifneq ($(strip $(UTS_RELEASE_VERSION)),$(strip $(version)))
+	@echo "The UTS Release version in include/linux/version.h"
+	@echo "  $(UTS_RELEASE_VERSION)"
+	@echo "does not match current version $(version)."
+	@echo "Reconfiguring."
+	touch Makefile
+  endif
+	rm -rf $(TMPTOP)
+	$(make_directory) $(SRCDIR)
+	$(make_directory) $(DOCDIR)
+	$(make_directory) $(SRCDIR)/arch/$(KERNEL_ARCH)
+	$(make_directory) $(SRCDIR)/arch/$(KERNEL_ARCH)/kernel/
+	$(eval $(which_debdir))
+	$(install_file) debian/changelog                $(DOCDIR)/changelog.Debian
+	$(install_file) $(DEBDIR)/pkg/headers/README    $(DOCDIR)/debian.README
+	$(install_file) $(config)  	                $(DOCDIR)/config-$(version)
+	$(install_file) conf.vars  	                $(DOCDIR)/conf.vars
+	$(install_file) CREDITS                         $(DOCDIR)/
+	$(install_file) MAINTAINERS                     $(DOCDIR)/
+	$(install_file) REPORTING-BUGS                  $(DOCDIR)/
+	$(install_file) README                          $(DOCDIR)/
+	if test -f debian/official && test -f           debian/README.Debian ; then   \
+           $(install_file) debian/README.Debian         $(DOCDIR)/README.Debian;  \
+           $(install_file) README.Debian                $(DOCDIR)/README.Debian;  \
+	fi
+	if test -f README.Debian ; then                                                 \
+           $(install_file) README.Debian                $(DOCDIR)/README.Debian.1st;\
+	fi
+	gzip -9qfr                                      $(DOCDIR)/
+	echo "This was produced by kernel-package version: $(kpkg_version)." >         \
+	                                                   $(DOCDIR)/Buildinfo
+	chmod 0644                                         $(DOCDIR)/Buildinfo
+	$(install_file) $(DEBDIR)/pkg/headers/copyright    $(DOCDIR)/copyright
+	$(install_file) Makefile                           $(SRCDIR)
+	test ! -e Rules.make || $(install_file) Rules.make $(SRCDIR)
+	test ! -e arch/$(KERNEL_ARCH)/Makefile ||                              \
+                                $(install_file) arch/$(KERNEL_ARCH)/Makefile   \
+                                                     $(SRCDIR)/arch/$(KERNEL_ARCH)
+	test ! -e Rules.make     || $(install_file) Rules.make     $(SRCDIR)
+	test ! -e Module.symvers || $(install_file) Module.symvers $(SRCDIR)
+  ifneq ($(strip $(int_follow_symlinks_in_src)),)
+	-tar cfh - include       |   (cd $(SRCDIR); umask 000; tar xsf -)
+	-tar cfh - scripts       |   (cd $(SRCDIR); umask 000; tar xsf -)
+	(cd $(SRCDIR)/include;   rm -rf asm; ln -s asm-$(KERNEL_ARCH) asm)
+	find . -path './scripts/*'   -prune -o -path './Documentation/*' -prune -o  \
+               -path './debian/*'    -prune -o -type f                              \
+               \( -name Makefile -o  -name 'Kconfig*' \) -print  |                  \
+                  cpio -pdL --preserve-modification-time $(SRCDIR);
+  else
+	-tar cf - include |        (cd $(SRCDIR); umask 000; tar xsf -)
+	-tar cf - scripts |        (cd $(SRCDIR); umask 000; tar xsf -)
+	# Undo the move away of the scripts dir Makefile
+	test ! -f $(SRCDIR)/scripts/package/Makefile.dist ||                  \
+           mv  -f $(SRCDIR)/scripts/package/Makefile.dist                     \
+                  $(SRCDIR)/scripts/package/Makefile
+	test ! -f $(SRCDIR)/scripts/package/builddeb.dist ||                  \
+           mv  -f $(SRCDIR)/scripts/package/builddeb.dist                     \
+                  $(SRCDIR)/scripts/package/builddeb
+	(cd       $(SRCDIR)/include; rm -f asm; ln -s asm-$(KERNEL_ARCH) asm)
+	find . -path './scripts/*' -prune -o -path './Documentation/*' -prune -o  \
+               -path './debian/*'  -prune -o -type f                              \
+               \( -name Makefile -o -name 'Kconfig*' \) -print |                  \
+                  cpio -pd --preserve-modification-time $(SRCDIR);
+  endif
+	test ! -e arch/$(KERNEL_ARCH)/kernel/asm-offsets.s ||                     \
+           $(install_file)               arch/$(KERNEL_ARCH)/kernel/asm-offsets.s \
+                           $(SRCDIR)/arch/$(KERNEL_ARCH)/kernel/asm-offsets.s
+	$(install_file) .config  	        $(SRCDIR)/.config
+	echo $(debian)                    > $(SRCDIR)/$(INT_STEM)-headers.revision
+  ifneq ($(strip $(header_clean_hook)),)
+	(cd $(SRCDIR); test -x $(header_clean_hook) && $(header_clean_hook))
+  endif
+endif
+
+debian/$(h_package): testroot
+	$(REASON)
+ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
+	$(make_directory) $(TMPTOP)/DEBIAN
+	$(eval $(deb_rule))
+	sed -e 's/=P/$(package)/g' -e 's/=V/$(version)/g' \
+		$(DEBDIR)/pkg/headers/postinst >        $(TMPTOP)/DEBIAN/postinst
+	chmod 755                                       $(TMPTOP)/DEBIAN/postinst
+	dpkg-gencontrol -isp -DArchitecture=$(DEB_HOST_ARCH) -p$(package) \
+                                          -P$(TMPTOP)/
+	chown -R root:root                  $(TMPTOP)
+	chmod -R og=rX                      $(TMPTOP)
+	dpkg --build                        $(TMPTOP) $(DEB_DEST)
+	rm -rf                              $(TMPTOP)
+endif
+
+binary/$(h_package): 
+	$(REASON)
+ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
+	$(require_root)
+	$(eval $(deb_rule))
+	$(root_run_command) debian/$(package)
+endif
+
+#Local variables:
+#mode: makefile
+#End:

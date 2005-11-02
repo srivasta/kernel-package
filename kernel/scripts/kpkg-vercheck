@@ -72,6 +72,8 @@ the upstream-version may not contain any colons.
 
 =cut
 
+  warn "nothing to work on --- version is empty [$version]" unless $version;
+
   # Test if we have epochs
   if ($version =~ m/\:/og) {
     $have_epochs = 1;

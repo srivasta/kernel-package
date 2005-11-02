@@ -1,3 +1,34 @@
+2005-11-02  Manoj Srivastava  <srivasta@debian.org>
+
+	* make-kpkg (main):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-53
+		  Create an alternate command (including an alternate
+		  rules file, the minimal one) in case ./debian has not
+		  yet been populated. This means that the default rules
+		  file for the main command  is always fixed to be
+		  ./debian/rules, and we now just check
+		  /usr/share/kernel-package/rules for existence. If
+		  ./debian is not populated, the alternate command is
+		  built up, according to the  following logic: if the
+		  target is clean or debian, we just set the alternate
+		  command accordingly. If the target is anything else,
+		  then the alternate command is set to be debian -- so
+		  that ./debian is properly populated first. So, id
+		  ./debian is not populated, and the command is  clean or
+		  debian, just the alternate command is run. If the target
+		  was  anything else (with an un-populated ./debian), then
+		  first the alternate  command is run to populate
+		  ./debian, then the normal command is run using the newly
+		  created ./debian. 
+
+2005-11-01  Manoj Srivastava  <srivasta@debian.org>
+
+	* Makefile (DOCFILES):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-53
+		  Removed package specific readme files (which really do
+		  not belong in kernel-package documentation, and added
+		  new docs that had been neglected. 
+
 2005-10-28  Manoj Srivastava  <srivasta@debian.org>
 
 	* Makefile (install):

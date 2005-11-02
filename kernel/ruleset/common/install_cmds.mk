@@ -1,18 +1,17 @@
 ######################### -*- Mode: Makefile-Gmake -*- ########################
-## local-vars.mk --- 
+## install_cmds.mk --- 
 ## Author           : Manoj Srivastava ( srivasta@glaurung.internal.golden-gryphon.com ) 
-## Created On       : Fri Oct 28 00:37:02 2005
+## Created On       : Mon Oct 31 18:12:48 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Fri Oct 28 16:15:54 2005
+## Last Modified On : Mon Oct 31 18:12:48 2005
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 5
+## Update Count     : 0
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
-## Description      : 
-##
-## arch-tag: 429a30d9-86ea-4641-bae8-29988a017daf
-##
+## Description      : helps install files, scripts, and programs as part of packaging 
+## 
+## arch-tag: a38b6a93-2539-4034-9060-ae94d5c8a071
 ## 
 ## This program is free software; you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -30,32 +29,11 @@
 ##
 ###############################################################################
 
-
-FILES_TO_CLEAN  = modules/modversions.h modules/ksyms.ver debian/files \
-                  conf.vars scripts/cramfs/cramfsck scripts/cramfs/mkcramfs \
-                  applied_patches debian/buildinfo
-STAMPS_TO_CLEAN = stamp-build stamp-configure stamp-image \
-                  stamp-headers stamp-src stamp-diff stamp-doc stamp-manual \
-                  stamp-buildpackage stamp-debian \
-                  stamp-patch stamp-kernel-configure
-DIRS_TO_CLEAN   = 
-
-
-$(eval $(which_debdir))
-include $(DEBDIR)/ruleset/misc/defaults.mk
-include $(DEBDIR)/ruleset/misc/version_vars.mk
-include $(DEBDIR)/ruleset/architecture.mk
-include $(DEBDIR)/ruleset/misc/pkg_names.mk
-# Include any site specific overrides here.
--include $(CONFLOC)
-
-$(eval $(which_debdir))
-include $(DEBDIR)/ruleset/misc/config.mk
-include $(DEBDIR)/ruleset/misc/initrd.mk
-include $(DEBDIR)/ruleset/misc/patches.mk
-include $(DEBDIR)/ruleset/misc/modules.mk
-include $(DEBDIR)/ruleset/misc/checks.mk
-
+# install commands
+install_file   = install -p     -m 644
+install_script = install -p     -m 755
+install_program= install -p     -m 755
+make_directory = install -p -d  -m 755
 
 #Local variables:
 #mode: makefile

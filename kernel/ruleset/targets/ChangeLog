@@ -1,0 +1,36 @@
+2005-11-02  Manoj Srivastava  <srivasta@debian.org>
+
+	* target.mk:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-53
+		  This file provides the commands commaon to a number of
+		  packages built, and also includes the files providing
+		  commands to build each of the packages we create. 
+
+	* source.mk:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-53
+		  This file is responsible forcreating the kernel-source
+		  packages  
+
+	* sanity_check.mk: This contains a sanity check that must be
+		  passed before creating a kernel package
+
+	* manual.mk:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-53
+		  This file is responsible for creating the kernel-manual
+		  packages  
+
+	* image.mk:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-53
+		  This file is responsible for creating the kernel-image
+		  packages
+
+	* headers.mk:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-53
+		  This file is responsible for creating the kernel-headers
+		  packages  
+
+	* doc.mk:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-53
+		  This file is responsible for creating  the kernel-doc
+		  packages  
+

@@ -1,18 +1,18 @@
 ######################### -*- Mode: Makefile-Gmake -*- ########################
-## local-vars.mk --- 
+## hppa.mk --- 
 ## Author           : Manoj Srivastava ( srivasta@glaurung.internal.golden-gryphon.com ) 
-## Created On       : Fri Oct 28 00:37:02 2005
+## Created On       : Mon Oct 31 18:31:10 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Fri Oct 28 16:15:54 2005
+## Last Modified On : Mon Oct 31 18:31:10 2005
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 5
+## Update Count     : 0
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
-## Description      : 
-##
-## arch-tag: 429a30d9-86ea-4641-bae8-29988a017daf
-##
+## Description      : handle the architecture specific variables.
+## 
+## arch-tag: e9f24b0e-ce5f-48c6-87f5-ab44b059be3d
+## 
 ## 
 ## This program is free software; you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -30,32 +30,18 @@
 ##
 ###############################################################################
 
-
-FILES_TO_CLEAN  = modules/modversions.h modules/ksyms.ver debian/files \
-                  conf.vars scripts/cramfs/cramfsck scripts/cramfs/mkcramfs \
-                  applied_patches debian/buildinfo
-STAMPS_TO_CLEAN = stamp-build stamp-configure stamp-image \
-                  stamp-headers stamp-src stamp-diff stamp-doc stamp-manual \
-                  stamp-buildpackage stamp-debian \
-                  stamp-patch stamp-kernel-configure
-DIRS_TO_CLEAN   = 
-
-
-$(eval $(which_debdir))
-include $(DEBDIR)/ruleset/misc/defaults.mk
-include $(DEBDIR)/ruleset/misc/version_vars.mk
-include $(DEBDIR)/ruleset/architecture.mk
-include $(DEBDIR)/ruleset/misc/pkg_names.mk
-# Include any site specific overrides here.
--include $(CONFLOC)
-
-$(eval $(which_debdir))
-include $(DEBDIR)/ruleset/misc/config.mk
-include $(DEBDIR)/ruleset/misc/initrd.mk
-include $(DEBDIR)/ruleset/misc/patches.mk
-include $(DEBDIR)/ruleset/misc/modules.mk
-include $(DEBDIR)/ruleset/misc/checks.mk
-
+kimage := vmlinux
+loaderdep=palo
+loader=palo
+loaderdoc=
+target=$(kimage)
+NEED_DIRECT_GZIP_IMAGE=NO
+# Override arch name because hppa uses arch/parisc not arch/hppa
+KERNEL_ARCH := parisc
+kimagesrc=$(kimage)
+kimagedest=$(INT_IMAGE_DESTDIR)/vmlinux-$(version)
+# This doesn't seem to work, but the other archs do it...
+DEBCONFIG=$(CONFDIR)/config.$(KPKG_SUBARCH)
 
 #Local variables:
 #mode: makefile

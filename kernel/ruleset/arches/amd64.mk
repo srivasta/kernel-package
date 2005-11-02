@@ -1,18 +1,18 @@
 ######################### -*- Mode: Makefile-Gmake -*- ########################
-## local-vars.mk --- 
+## amd64.mk --- 
 ## Author           : Manoj Srivastava ( srivasta@glaurung.internal.golden-gryphon.com ) 
-## Created On       : Fri Oct 28 00:37:02 2005
+## Created On       : Mon Oct 31 18:31:11 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Fri Oct 28 16:15:54 2005
+## Last Modified On : Mon Oct 31 18:31:11 2005
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 5
+## Update Count     : 0
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
-## Description      : 
-##
-## arch-tag: 429a30d9-86ea-4641-bae8-29988a017daf
-##
+## Description      : handle the architecture specific variables.
+## 
+## arch-tag: 0429f056-d3a2-43d3-a02b-78bf0f655633
+## 
 ## 
 ## This program is free software; you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -30,32 +30,17 @@
 ##
 ###############################################################################
 
-
-FILES_TO_CLEAN  = modules/modversions.h modules/ksyms.ver debian/files \
-                  conf.vars scripts/cramfs/cramfsck scripts/cramfs/mkcramfs \
-                  applied_patches debian/buildinfo
-STAMPS_TO_CLEAN = stamp-build stamp-configure stamp-image \
-                  stamp-headers stamp-src stamp-diff stamp-doc stamp-manual \
-                  stamp-buildpackage stamp-debian \
-                  stamp-patch stamp-kernel-configure
-DIRS_TO_CLEAN   = 
-
-
-$(eval $(which_debdir))
-include $(DEBDIR)/ruleset/misc/defaults.mk
-include $(DEBDIR)/ruleset/misc/version_vars.mk
-include $(DEBDIR)/ruleset/architecture.mk
-include $(DEBDIR)/ruleset/misc/pkg_names.mk
-# Include any site specific overrides here.
--include $(CONFLOC)
-
-$(eval $(which_debdir))
-include $(DEBDIR)/ruleset/misc/config.mk
-include $(DEBDIR)/ruleset/misc/initrd.mk
-include $(DEBDIR)/ruleset/misc/patches.mk
-include $(DEBDIR)/ruleset/misc/modules.mk
-include $(DEBDIR)/ruleset/misc/checks.mk
-
+KERNEL_ARCH=x86_64
+kimage := bzImage
+loaderdep=lilo (>= 19.1) | grub
+loader=lilo
+loaderdoc=LiloDefault
+target = $(kimage)
+kimagesrc = $(strip arch/$(KERNEL_ARCH)/boot/$(kimage))
+kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
+DEBCONFIG= $(CONFDIR)/config.$(KPKG_SUBARCH)
+kelfimagesrc = vmlinux
+kelfimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
 
 #Local variables:
 #mode: makefile

@@ -12,7 +12,26 @@
 ## HISTORY	    :
 ## Description	    :
 ## arch-tag: aa70d4e5-79bf-405c-95ec-5fa9f7ae7b69
+## 
+## This program is free software; you can redistribute it and/or modify
+## it under the terms of the GNU General Public License as published by
+## the Free Software Foundation; either version 2 of the License, or
+## (at your option) any later version.
+##
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU General Public License for more details.
+##
+## You should have received a copy of the GNU General Public License
+## along with this program; if not, write to the Free Software
+## Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+##
 ###############################################################################
+
+# The version of kernel-package this belongs to
+kpkg_version := =K=V
+
 # Where the package libs are stored
 LIBLOC     :=/usr/share/kernel-package
 
@@ -23,31 +42,22 @@ endef
 
 define deb_rule
 $(eval $(which_debdir))
-run_command=$(MAKE) -f $(DEBDIR)/rules
+  run_command=$(MAKE) -f $(DEBDIR)/rules
+  ifeq ($(strip $(int_am_root)),)
+    root_run_command=$(ROOT_CMD) $(MAKE) -f $(DEBDIR)/rules
+  else
+    root_run_command=$(MAKE) -f $(DEBDIR)/rules
+  endif
 endef
 
 # determine  the architecture for package building
 $(eval $(which_debdir))
 include $(DEBDIR)/ruleset/common/archvars.mk
-
-# The version of kernel-package this belongs to
-kpkg_version := =K=V
-
-# The maintainer information.
-maintainer = Debian Kernel Team
-email= debian-kernel@lists.debian.org
-
-pgp=$(maintainer)
-
-# This package is what we get after removing the psuedo dirs we use in rules
-this_pkg = $(filter-out %/,$(subst /,/ ,$@))
-
-# Location of the source dir
-SRCTOP     := $(shell if [ "$$PWD" != "" ]; then echo $$PWD; else pwd; fi)
-
-
+# Set variables with information extracted from control and changelog files
+include $(DEBDIR)/ruleset/common/pkgvars.mk
+# Install commands
+include $(DEBDIR)/ruleset/common/install_cmds.mk
 # Do the local variable setting here
-$(eval $(which_debdir))
 include $(DEBDIR)/ruleset/local-vars.mk
 
 # export variables
@@ -57,17 +67,18 @@ export root_cmd FLAVOUR INT_SUBARCH APPEND_TO_VERSION UNSIGN_CHANGELOG  \
        DIR_PATCH_APPLY VERSIONED_PATCH_DIR VERSIONED_ALL_PATCH_UNPATCH  \
        VERSIONED_ALL_PATCH_APPLY VERSIONED_DIR_PATCH_UNPATCH            \
        VERSIONED_DIR_PATCH_APPLY KPKG_SELECTED_PATCHES                  \
-       KPKG_SELECTED_MODULES CONCURRENCY_LEVEL
+       KPKG_SELECTED_MODULES CONCURRENCY_LEVEL kpkg_version
 
 all:
+	$(eval $(which_debdir))
 	@echo nothing to be done.
 
 $(eval $(which_debdir))
+include $(DEBDIR)/ruleset/common/targets.mk
 include $(DEBDIR)/ruleset/local.mk
 
-.PHONY: binary binary-arch binary-indep clean debian modules modules_image
-
 test:
+	$(eval $(which_debdir))
 	echo version: $(version)
 	echo KPKG_ARCH: $(KPKG_ARCH)
 	echo $(DEB_BUILD_ARCH)

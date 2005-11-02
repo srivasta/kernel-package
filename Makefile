@@ -19,8 +19,7 @@ CONFLOC    := /etc/kernel-pkg.conf
 LIBLOC     := /usr/share/kernel-package
 MODULE_LOC := /usr/src/modules
 
-DOCFILES = README.doc README.headers README.image README.modules \
-           README.source README.tecra 
+DOCFILES = README.modules README.tecra README.grub Flavours HOWTO-Linux-2.6-Woody Rationale
 EXAMPLES = sample.kernel-img.conf kernel_grub_conf.sh sample.posthook.sh
 
 # where kernel-package files go to

@@ -1,18 +1,18 @@
 ######################### -*- Mode: Makefile-Gmake -*- ########################
-## local-vars.mk --- 
+## uml.mk --- 
 ## Author           : Manoj Srivastava ( srivasta@glaurung.internal.golden-gryphon.com ) 
-## Created On       : Fri Oct 28 00:37:02 2005
+## Created On       : Mon Oct 31 18:30:26 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Fri Oct 28 16:15:54 2005
+## Last Modified On : Mon Oct 31 18:30:26 2005
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 5
+## Update Count     : 0
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
-## Description      : 
-##
-## arch-tag: 429a30d9-86ea-4641-bae8-29988a017daf
-##
+## Description      : handle the architecture specific variables.
+## 
+## arch-tag: 5d5079a2-4726-4e2d-8226-6e8edc22bea8
+## 
 ## 
 ## This program is free software; you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -30,32 +30,30 @@
 ##
 ###############################################################################
 
-
-FILES_TO_CLEAN  = modules/modversions.h modules/ksyms.ver debian/files \
-                  conf.vars scripts/cramfs/cramfsck scripts/cramfs/mkcramfs \
-                  applied_patches debian/buildinfo
-STAMPS_TO_CLEAN = stamp-build stamp-configure stamp-image \
-                  stamp-headers stamp-src stamp-diff stamp-doc stamp-manual \
-                  stamp-buildpackage stamp-debian \
-                  stamp-patch stamp-kernel-configure
-DIRS_TO_CLEAN   = 
+DEBCONFIG = $(CONFDIR)/config.um
 
 
-$(eval $(which_debdir))
-include $(DEBDIR)/ruleset/misc/defaults.mk
-include $(DEBDIR)/ruleset/misc/version_vars.mk
-include $(DEBDIR)/ruleset/architecture.mk
-include $(DEBDIR)/ruleset/misc/pkg_names.mk
-# Include any site specific overrides here.
--include $(CONFLOC)
+ifneq ($(shell if [ $(VERSION)  -ge  2 ]  && [ $(PATCHLEVEL) -ge 6 ] &&    \
+                  [ $(SUBLEVEL) -ge 9 ]; then echo new;                   \
+             elif [ $(VERSION)  -ge  2 ]  && [ $(PATCHLEVEL) -ge r ]; then \
+                                          echo new;                        \
+             elif [ $(VERSION)  -ge  3 ]; then echo new; fi),)
+  target  = vmlinux
+  kimage := vmlinux
+else
+  target  = linux
+  kimage := linux
+endif
 
-$(eval $(which_debdir))
-include $(DEBDIR)/ruleset/misc/config.mk
-include $(DEBDIR)/ruleset/misc/initrd.mk
-include $(DEBDIR)/ruleset/misc/patches.mk
-include $(DEBDIR)/ruleset/misc/modules.mk
-include $(DEBDIR)/ruleset/misc/checks.mk
 
+kimagesrc  = $(strip $(kimage))
+INT_IMAGE_DESTDIR=$(DOCDIR)
+IMAGEDIR = /usr/bin
+kimagedest = $(TMPTOP)/$(IMAGEDIR)/linux-$(version)
+loaderdep=
+loaderdoc=
+KERNEL_ARCH = um
+architecture = i386
 
 #Local variables:
 #mode: makefile

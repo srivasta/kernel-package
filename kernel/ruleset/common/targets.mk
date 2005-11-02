@@ -9,7 +9,8 @@
 ## Update Count     : 46
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
-## Description      : 
+## Description      : The top level targets mandated by policy, as well as
+##                    their dependencies.
 ## 
 ## arch-tag: a81086a7-00f7-4355-ac56-8f38396935f4
 ## 
@@ -63,34 +64,47 @@ prebuild:
 #######################################################################
 
 # Work here
-CONFIG-common:: testdir
+CONFIG-common:: testdir 
+	$(REASON)
 
 stamp-arch-conf:  testdir CONFIG-common
+	$(REASON)
 	@touch $@
 stamp-indep-conf: testdir CONFIG-common
+	$(REASON)
 	@touch $@
 
 # Work here
 CONFIG-arch::  stamp-arch-conf
+	$(REASON)
 CONFIG-indep:: stamp-indep-conf
+	$(REASON)
 
 STAMPS_TO_CLEAN += stamp-arch-conf stamp-indep-conf
 # Work here
 $(patsubst %,CONFIG/%,$(DEB_ARCH_PACKAGES))  :: CONFIG/% : testdir CONFIG-arch  
+	$(REASON)
 $(patsubst %,CONFIG/%,$(DEB_INDEP_PACKAGES)) :: CONFIG/% : testdir CONFIG-indep 
+	$(REASON)
 
 stamp-configure-arch:  $(patsubst %,CONFIG/%,$(DEB_ARCH_PACKAGES))
+	$(REASON)
 	@touch $@
 stamp-configure-indep: $(patsubst %,CONFIG/%,$(DEB_INDEP_PACKAGES))
+	$(REASON)
 	@touch $@
 
 configure-arch:  stamp-configure-arch
+	$(REASON)
 configure-indep: stamp-configure-indep
+	$(REASON)
 
 stamp-configure: configure-arch configure-indep
+	$(REASON)
 	@touch $@
 
 configure: stamp-configure
+	$(REASON)
 
 STAMPS_TO_CLEAN += stamp-configure-arch stamp-configure-indep stamp-configure
 #######################################################################
@@ -101,33 +115,47 @@ STAMPS_TO_CLEAN += stamp-configure-arch stamp-configure-indep stamp-configure
 
 # Work here
 BUILD-common:: testdir
+	$(REASON)
 
 stamp-arch-build:  testdir BUILD-common $(patsubst %,CONFIG/%,$(DEB_ARCH_PACKAGES))  
+	$(REASON)
 	@touch $@
 stamp-indep-build: testdir BUILD-common $(patsubst %,CONFIG/%,$(DEB_INDEP_PACKAGES)) 
+	$(REASON)
 	@touch $@
 
 STAMPS_TO_CLEAN += stamp-arch-build stamp-indep-build
 # sync. Work here
 BUILD-arch::  testdir stamp-arch-build
+	$(REASON)
+
 BUILD-indep:: testdir stamp-indep-build
+	$(REASON)
 
 # Work here
 $(patsubst %,BUILD/%,$(DEB_ARCH_PACKAGES))  :: BUILD/% : testdir BUILD-arch  
+	$(REASON)
 $(patsubst %,BUILD/%,$(DEB_INDEP_PACKAGES)) :: BUILD/% : testdir BUILD-indep 
+	$(REASON)
 
-stamp-build-arch:  $(patsubst %,BUILD/%,$(DEB_ARCH_PACKAGES))
+stamp-build-arch:  $(patsubst %,BUILD/%,$(DEB_ARCH_PACKAGES)) 
+	$(REASON)
 	@touch $@
 stamp-build-indep: $(patsubst %,BUILD/%,$(DEB_INDEP_PACKAGES))
+	$(REASON)
 	@touch $@
 
 build-arch:  stamp-build-arch
+	$(REASON)
 build-indep: stamp-build-indep
+	$(REASON)
 
 stamp-build: build-arch build-indep 
+	$(REASON)
 	@touch $@
 
 build: stamp-build
+	$(REASON)
 
 # Work here
 POST-BUILD-arch-stamp::
@@ -140,34 +168,48 @@ STAMPS_TO_CLEAN += stamp-build-arch stamp-build-indep stamp-build
 #######################################################################
 #######################################################################
 # Work here
-INST-common:: testdir
+INST-common:: testdir 
+	$(REASON)
 
 stamp-arch-inst:  testdir POST-BUILD-arch-stamp  INST-common $(patsubst %,BUILD/%,$(DEB_ARCH_PACKAGES))    
+	$(REASON)
 	@touch $@
 stamp-indep-inst: testdir POST-BUILD-indep-stamp INST-common $(patsubst %,BUILD/%,$(DEB_INDEP_PACKAGES)) 
+	$(REASON)
 	@touch $@
 
 STAMPS_TO_CLEAN += stamp-arch-inst stamp-indep-inst
+
 # sync. Work here
 INST-arch::  testdir stamp-arch-inst
+	$(REASON)
 INST-indep:: testdir stamp-indep-inst
+	$(REASON)
 
 # Work here
 $(patsubst %,INST/%,$(DEB_ARCH_PACKAGES))  :: INST/% : testdir testroot INST-arch  
+	$(REASON)
 $(patsubst %,INST/%,$(DEB_INDEP_PACKAGES)) :: INST/% : testdir testroot INST-indep 
+	$(REASON)
 
 stamp-install-arch:  $(patsubst %,INST/%,$(DEB_ARCH_PACKAGES))
+	$(REASON)
 	@touch $@
 stamp-install-indep: $(patsubst %,INST/%,$(DEB_INDEP_PACKAGES))
+	$(REASON)
 	@touch $@
 
 install-arch:  stamp-install-arch
+	$(REASON)
 install-indep: stamp-install-indep
+	$(REASON)
 
 stamp-install: install-indep install-arch
+	$(REASON)
 	@touch $@
 
 install: stamp-install
+	$(REASON)
 
 STAMPS_TO_CLEAN += stamp-install stamp-install-arch stamp-install-indep
 #######################################################################
@@ -177,35 +219,50 @@ STAMPS_TO_CLEAN += stamp-install stamp-install-arch stamp-install-indep
 #######################################################################
 # Work here
 BIN-common:: testdir testroot 
+	$(REASON)
 
 stamp-arch-bin:  testdir testroot BIN-common  $(patsubst %,INST/%,$(DEB_ARCH_PACKAGES))
+	$(REASON)
 	@touch $@
 stamp-indep-bin: testdir testroot BIN-common  $(patsubst %,INST/%,$(DEB_INDEP_PACKAGES))
+	$(REASON)
 	@touch $@
 
 STAMPS_TO_CLEAN += stamp-arch-bin stamp-indep-bin
 # sync Work here
 BIN-arch::  testdir testroot  stamp-arch-bin
+	$(REASON)
 BIN-indep:: testdir testroot  stamp-indep-bin
+	$(REASON)
 
 # Work here
 $(patsubst %,BIN/%,$(DEB_ARCH_PACKAGES))  :: BIN/% : testdir testroot BIN-arch  
+	$(REASON)
 $(patsubst %,BIN/%,$(DEB_INDEP_PACKAGES)) :: BIN/% : testdir testroot BIN-indep 
+	$(REASON)
 
 
-stamp-binary-arch:  $(patsubst %,BIN/%,$(DEB_ARCH_PACKAGES)) 
+stamp-binary-arch:  $(patsubst %,BIN/%,$(DEB_ARCH_PACKAGES))
+	$(REASON)
 	@touch $@
 stamp-binary-indep: $(patsubst %,BIN/%,$(DEB_INDEP_PACKAGES))
+	$(REASON)
 	@touch $@
 # required
 binary-arch:  stamp-binary-arch
+	$(REASON)
 binary-indep: stamp-binary-indep
+	$(REASON)
 
 stamp-binary: binary-indep binary-arch
+	$(REASON)
 	@touch $@
 
 # required
 binary: stamp-binary
+	$(REASON)
+	@echo $(DEB_ARCH_PACKAGES)
+	@echo $(DEB_INDEP_PACKAGES)
 
 STAMPS_TO_CLEAN += stamp-binary stamp-binary-arch stamp-binary-indep
 #######################################################################
@@ -215,26 +272,34 @@ STAMPS_TO_CLEAN += stamp-binary stamp-binary-arch stamp-binary-indep
 #######################################################################
 # Work here
 CLN-common:: testdir 
+	$(REASON)
 # sync Work here
 CLN-arch::  testdir CLN-common
+	$(REASON)
+
 CLN-indep:: testdir CLN-common
+	$(REASON)
+
 # Work here
 $(patsubst %,CLEAN/%,$(DEB_ARCH_PACKAGES))  :: CLEAN/% : testdir CLN-arch
+	$(REASON)
 $(patsubst %,CLEAN/%,$(DEB_INDEP_PACKAGES)) :: CLEAN/% : testdir CLN-indep
+	$(REASON)
 
-clean-arch:  $(patsubst %,CLEAN/%,$(DEB_ARCH_PACKAGES))   
+clean-arch:  $(patsubst %,CLEAN/%,$(DEB_ARCH_PACKAGES))
+	$(REASON)
 clean-indep: $(patsubst %,CLEAN/%,$(DEB_INDEP_PACKAGES))
+	$(REASON)
 
-stamp-clean: clean-indep clean-arch
+stamp-clean: clean-indep clean-arch 
 	$(checkdir)
-	-test -f Makefile && $(MAKE) distclean
-	-rm -f  $(FILES_TO_CLEAN) $(STAMPS_TO_CLEAN)
-	-rm -rf $(DIRS_TO_CLEAN)
+	$(REASON)
 	-rm -f core `find . \( -name '*.orig' -o -name '*.rej' -o -name '*~'     \
 	         -o -name '*.bak' -o -name '#*#' -o -name '.*.orig'              \
 		 -o -name '.*.rej' -o -name '.SUMS' -o -size 0 \) -print` TAGS
 
 clean: stamp-clean
+	$(REASON)
 
 
 #######################################################################
@@ -255,3 +320,6 @@ clean: stamp-clean
         $(patsubst %,CLEAN/%, $(DEB_INDEP_PACKAGES)) $(patsubst %,CLEAN/%, $(DEB_ARCH_PACKAGES)) \
         implode explode prebuild checkpo
 
+#Local variables:
+#mode: makefile
+#End:
