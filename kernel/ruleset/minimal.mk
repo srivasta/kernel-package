@@ -48,6 +48,14 @@ include $(DEBDIR)/ruleset/misc/defaults.mk
 -include $(CONFLOC)
 include $(DEBDIR)/ruleset/misc/config.mk
 
+FILES_TO_CLEAN  = modules/modversions.h modules/ksyms.ver conf.vars \
+                  scripts/cramfs/cramfsck scripts/cramfs/mkcramfs applied_patches 
+STAMPS_TO_CLEAN = stamp-build stamp-configure stamp-image stamp-headers   \
+                  stamp-src stamp-diff stamp-doc stamp-manual stamp-patch \
+                  stamp-buildpackage stamp-debian stamp-kernel-configure
+DIRS_TO_CLEAN   = 
+
+
 # The assumption is that we have already cleaned out the source tree;
 # we are only concerned now with running clean and saving the .config
 # file
@@ -68,6 +76,7 @@ else
 	fi
   endif
 endif
+	rm -f $(FILES_TO_CLEAN) $(STAMPS_TO_CLEAN)
 
 debian: minimal_debian
 minimal_debian:
