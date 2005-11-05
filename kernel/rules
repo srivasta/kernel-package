@@ -57,6 +57,8 @@ include $(DEBDIR)/ruleset/common/archvars.mk
 include $(DEBDIR)/ruleset/common/pkgvars.mk
 # Install commands
 include $(DEBDIR)/ruleset/common/install_cmds.mk
+# we use debconf
+include $(DEBDIR)/ruleset/common/debconf.mk
 # Do the local variable setting here
 include $(DEBDIR)/ruleset/local-vars.mk
 

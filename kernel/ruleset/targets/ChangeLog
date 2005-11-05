@@ -1,3 +1,10 @@
+2005-11-03  Manoj Srivastava  <srivasta@debian.org>
+
+	* image.mk (debian/$(i_package)):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-55
+		  Add a config script, and a templates.master file for
+		  debconf, with the proper substitutions.  
+
 2005-11-02  Manoj Srivastava  <srivasta@debian.org>
 
 	* target.mk:

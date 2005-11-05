@@ -49,6 +49,7 @@ my $arch              = "=A";  #  should be same as dpkg --print-installation-ar
 my $kernel_arch       = "=B";
 my $ramdisk           = "=MK";  # List of tools to create initial ram fs.
 my $initrddep         = "=MD";  # List of dependencies for such tools
+my $package_name    = "=ST-image-$version";
 
 my $Loader          = "NoLOADER"; # 
 $Loader             = "LILO"     if $loader =~ /^lilo/io;

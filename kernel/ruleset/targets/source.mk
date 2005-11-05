@@ -31,7 +31,7 @@
 ###############################################################################
 
 
-install/$(s_package): stamp-conf/debian
+install/$(s_package): 
 	$(REASON)
 ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 	rm -rf $(TMPTOP)
@@ -104,7 +104,7 @@ ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 	dpkg --build                                 $(TMPTOP) $(DEB_DEST)
 endif
 
-binary/$(s_package): testdir stamp-conf/debian 
+binary/$(s_package): testdir
 	$(REASON)
 ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 	$(require_root)

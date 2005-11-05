@@ -30,7 +30,7 @@
 ##
 ###############################################################################
 
-install/$(i_package): conf.vars .config stamp-conf/kernel build/kernel
+install/$(i_package): 
 	$(REASON)
 ifneq ($(strip $(UTS_RELEASE_VERSION)),$(strip $(version)))
 	@echo "The UTS Release version in include/linux/version.h"
@@ -197,7 +197,6 @@ endif
 ifeq ($(strip $(delete_build_link)),YES)
 	rm -f $(TMPTOP)/lib/modules/$(version)/build
 endif
-	echo done >  stamp-$(package)
 
 debian/$(i_package): testroot
 	$(REASON)
@@ -214,6 +213,16 @@ ifneq ($(strip $(KERNEL_ARCH)),um)
             -e 's/=S/$(no_symlink)/g'  -e 's@=B@$(KERNEL_ARCH)@g'    \
          $(DEBDIR)/pkg/image/postinst > $(TMPTOP)/DEBIAN/postinst
 	chmod 755 $(TMPTOP)/DEBIAN/postinst
+	sed -e 's/=V/$(version)/g'    -e 's/=B/$(link_in_boot)/g'    \
+            -e 's/=ST/$(INT_STEM)/g'  -e 's/=R/$(reverse_symlink)/g' \
+            -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \
+            -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'        \
+            -e 's/=MD/$(initrddep)/g'                                \
+            -e 's@=MK@$(initrdcmd)@g' -e 's@=A@$(DEB_HOST_ARCH)@g'   \
+            -e 's@=M@$(MKIMAGE)@g'    -e 's/=OF/$(AM_OFFICIAL)/g'    \
+            -e 's/=S/$(no_symlink)/g'  -e 's@=B@$(KERNEL_ARCH)@g'    \
+         $(DEBDIR)/pkg/image/config > $(TMPTOP)/DEBIAN/config
+	chmod 755 $(TMPTOP)/DEBIAN/config
 	sed -e 's/=V/$(version)/g'    -e 's/=B/$(link_in_boot)/g'    \
             -e 's/=ST/$(INT_STEM)/g'  -e 's/=R/$(reverse_symlink)/g' \
             -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \
@@ -244,6 +253,17 @@ ifneq ($(strip $(KERNEL_ARCH)),um)
             -e 's/=S/$(no_symlink)/g' -e 's@=B@$(KERNEL_ARCH)@g'     \
          $(DEBDIR)/pkg/image/prerm > $(TMPTOP)/DEBIAN/prerm
 	chmod 755 $(TMPTOP)/DEBIAN/prerm
+	sed -e 's/=V/$(version)/g'    -e 's/=B/$(link_in_boot)/g'    \
+            -e 's/=ST/$(INT_STEM)/g'  -e 's/=R/$(reverse_symlink)/g' \
+            -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \
+            -e 's@=MK@$(initrdcmd)@g' -e 's@=A@$(DEB_HOST_ARCH)@g'   \
+            -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'        \
+            -e 's/=MD/$(initrddep)/g'                                \
+            -e 's@=M@$(MKIMAGE)@g'    -e 's/=OF/$(AM_OFFICIAL)/g'    \
+            -e 's/=S/$(no_symlink)/g' -e 's@=B@$(KERNEL_ARCH)@g'     \
+          $(DEBDIR)/templates.in   > ./debian/templates.master
+	$(INSTALL_TEMPLATE)
+	$(install_file) ./debian/templates.master $(TMPTOP)/DEBIAN/templates
   else
 	sed -e 's/=V/$(version)/g'    -e 's/=B/$(link_in_boot)/g'    \
             -e 's/=ST/$(INT_STEM)/g'  -e 's/=R/$(reverse_symlink)/g' \
@@ -288,7 +308,7 @@ else
           $(DEBDIR)/pkg/virtual/um/prerm > $(TMPTOP)/DEBIAN/prerm
 	chmod 755 $(TMPTOP)/DEBIAN/prerm
 endif
-	dpkg-gencontrol -DArchitecture=$(DEB_HOST_ARCH) -isp                   \
+	dpkg-gencontrol -DArchitecture=$(DEB_HOST_ARCH) -isp         \
                         -p$(package) -P$(TMPTOP)/
 	chmod -R og=rX                 $(TMPTOP)
 	chown -R root:root             $(TMPTOP)

@@ -50,10 +50,11 @@ all build: check
 
 check:
 	perl -wc make-kpkg
-	perl -wc kernel/pkg/image/preinst
-	perl -wc kernel/pkg/image/postinst
+	-perl -wc kernel/pkg/image/preinst
+	-perl -wc kernel/pkg/image/postinst
 	perl -wc kernel/pkg/image/postrm
 	perl -wc kernel/pkg/image/prerm
+	perl -wc kernel/pkg/image/config
 	perl -wc kernel/pkg/headers/postinst
 	bash -n kernel/examples/kernel_grub_conf.sh
 	bash -n kernel/examples/kernel_grub_rm.sh
@@ -85,6 +86,7 @@ install:
 	$(install_file)    Problems                          $(DOCDIR)/Problems
 	$(install_file)    Multi-Arch                        $(DOCDIR)/Multi-Arch
 	$(install_file)    Rationale                         $(DOCDIR)/Rationale
+	$(install_file)    debian/NEWS.Debian                $(DOCDIR)/
 	$(install_file)    _make-kpkg                        $(BASH_DIR)/make_kpkg
 	gzip -9fqr         $(DOCDIR)
 	(cd $(DOCDIR);     for file in $(DOCFILES); do                  \

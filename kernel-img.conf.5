@@ -162,9 +162,8 @@ overrides)
 .B postinst_hook 
 Set this variable to a script to be executed during installation after
 all the symbolic 
-links are created, but before running the bootloader or offering to
-create a floppy. This script shall be called with two arguments,
-the first being the
+links are created, but before running the bootloader. This script
+shall be called with two arguments, the first being the
 .I version
 of the kernel image, and the second argument being the
 .I location
@@ -267,32 +266,9 @@ out of the way if it is the same version as the image being
 installed. Use at your own risk.
 This variable is unset by default.
 .TP
-.B do_boot_enable
-If set to NO, this short circuits all attempts to create
-boot floppies, run lilo, etc. This has the additional
-side effect that the postinst is silent. Setting both
-.B do_bootfloppy
-and 
-.B do_bootloader
-to NO implies setting
-.B do_boot_enable 
-to NO. Defaults to Yes.
-.TP
-.B do_bootfloppy
-If set to NO, this prevents the postinst from asking
-questions about creating a boot floppy. and no boot
-floppy is created. The bootloader shall still be run.
-This may cut down on the interaction the postinst has.
-(It still prompts before formatting 
-.I /dev/fd0) 
-Defaults
-to Yes.
-.TP
 .B do_bootloader
 If set to NO, this prevents the postinst from running the boot
-loader. The user may still be asked to create a floppy, unless 
-.B do_bootfloppy
-is also set to NO. Defaults to Yes.
+loader.  Defaults to Yes.
 .TP
 .B relative_links
 If set to yes, the kernel image postinst script shall go to extra

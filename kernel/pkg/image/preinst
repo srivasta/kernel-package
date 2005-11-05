@@ -17,6 +17,10 @@
 #
 #use strict; #for debugging
 
+use Debconf::Client::ConfModule qw(:all);
+version('2.0');
+my $capb=capb("backup");
+
 $|=1;
 
 # Predefined values:
@@ -53,7 +57,7 @@ my $arch              = "=A";  #  should be same as dpkg --print-installation-ar
 my $kernel_arch       = "=B";
 my $ramdisk           = "=MK";  # List of tools to create initial ram fs.
 my $initrddep         = "=MD";  # List of dependencies for such tools
-
+my $package_name    = "=ST-image-$version";
 
 my $Loader          = "NoLOADER"; #
 $Loader             = "LILO"     if $loader =~ /^lilo/io;
@@ -171,7 +175,6 @@ if (!$warn_initrd) {   $do_initrd   = "YES";}
 
 $ENV{KERNEL_ARCH}=$kernel_arch if $kernel_arch;
 
-
 # About to upgrade this package from version $2 TO THIS VERSION.
 # "prerm upgrade" has already been called for the old version of
 # this package.
@@ -203,76 +206,119 @@ if ($initrd) {
   my @ramdisklist;
   @ramdisklist = find_inird_tool($hostversion, $version, $ramdisk) if $ramdisk;
   if ($#ramdisklist < 0) {
-    print STDERR <<EOERROR;
+    my $ret;
+    my $seen;
+    my $text = "${package_name}/preinst/initrd-$version";
+    ($ret,$seen) = fset ("$text", 'seen', 'false');
+    die "Error setting debconf flags in $text: $seen" if $ret;
 
-You are attempting to install an initrd kernel image (version
-$version) on a machine currently running kernel version
-$hostversion.
+    ($ret,$seen) = subst("$text", 'hostversion', "$hostversion");
+    die "Error setting debconf substitutions in $text: $seen" if $ret;
 
-I have been unable to find a suitable tool for generating initrd images
-(I looked at the list "$ramdisk")
-This will break the installation, unless such tools are also being installed
-right now in the same run. (This means, one from the following list
-$initrddep)
+    ($ret,$seen) = subst("$text", 'ramdisk', "$ramdisk");
+    die "Error setting debconf substitutions in $text: $seen" if $ret;
 
-EOERROR
-  ;
+    ($ret,$seen) = subst("$text", 'initrddep', "$initrddep");
+    die "Error setting debconf substitutions in $text: $seen" if $ret;
+
+    ($ret,$seen) = input('medium', "$text");
+    if ($ret && $ret != 30 ) {
+      die "Error setting debconf question $text: $seen";
+    }
+
+    ($ret,$seen) = go ();
+    if ($ret && $ret != 30 ) {
+      die "Error asking debconf question $text: $seen";
+    }
+    # I no longer claim this question
+    ($ret,$seen) = unregister("$text");
+    die "Error unregistering debconf question $text: $seen" if $ret;
     warn "Could not find $ramdisk.";
   }
 }
 
 
 if ($initrd && !$do_initrd) {
-    print STDERR <<EOF;
+  my $ret;
+  my $seen;
+  my $answer;
+  my $invisible = 0;
+  my $question = "${package_name}/preinst/bootloader-initrd-$version";
+  if ($loader =~ m/^lilo/i) {
+    $question = "${package_name}/preinst/lilo-initrd-$version";
+  }
+  elsif ($loader =~ m/^elilo/i) {
+    $question = "${package_name}/preinst/elilo-initrd-$version";
+  }
+  ($ret,$seen) = fset ("$question", 'seen', 'false');
+  die "Error setting debconf flags in $question: $seen" if $ret;
 
-You are attempting to install an initrd kernel image (version $version)
-This will not work unless you have configured your boot loader to use
-initrd. (An initrd image is a kernel image that expects to use an INITial
-Ram Disk to mount a minimal root file system into RAM and use that for
-booting).
+  ($ret,$seen) = input('critical', "$question");
+  if ($ret && $ret != 30 ) {
+    die "Error setting debconf question $question: $seen";
+  }
+  $invisible = $ret if $ret == 30;
 
-EOF
-    if ($loader =~ m/^lilo/i) {
-      print STDERR "   As a reminder, in order to configure LILO, you need\n";
-      print STDERR "   to add an 'initrd=/initrd.img' to the image=/vmlinuz\n";
-      print STDERR "   stanza of your /etc/lilo.conf\n";
-    }
-    elsif ($loader =~ m/^elilo/i) {
-      print STDERR "   As a reminder, in order to configure ELILO, you need\n";
-      print STDERR "   to add an 'initrd=/initrd.img' to the image=/vmlinuz\n";
-      print STDERR "   stanza of your /etc/elilo.conf\n";
-    }
-    print STDERR <<EOF;
+  ($ret,$seen) = go ();
+  if ($ret && $ret != 30 ) {
+    die "Error asking debconf question $question: $seen";
+  }
 
-I repeat, You need to configure your boot loader -- please read your
-bootloader documentation for details on how to add initrd images.
+  ($ret,$answer) = get("$question");
+  die "Error retreiving answer for $question: $answer" if $ret;
 
-If you have already done so, and you wish to get rid of this message,
-please put
-  "do_initrd = Yes"
-in /etc/kernel-img.conf. Note that this is optional, but if you do not,
-you will continue to see this message whenever you install a kernel
-image using initrd.
-EOF
-    if (-f "/etc/lilo.conf"){
-      my $ramdisk_found = 0;
-      open (CONF, "/etc/lilo.conf")  or warn "Can't open /etc/lilo.conf: $!";
-      while (<CONF>) {
-	chomp;
-	if (m/^(\s*ramdisk\s*=\s*0)/g) {
-	  print STDERR
-	    "In addition, the line\n\t\"$1\"\nshould be removed or commented.";
-	  last;
-	}
+  my $note = "${package_name}/preinst/lilo-has-ramdisk";
+  if (-f "/etc/lilo.conf"){
+    my $ramdisk_found = 0;
+    open (CONF, "/etc/lilo.conf")  or warn "Can't open /etc/lilo.conf: $!";
+    while (<CONF>) {
+      chomp;
+      if (m/^(\s*ramdisk\s*=\s*0)/g) {
+        my $line = $1;
+
+        ($ret,$seen) = fset ("$note", 'seen', 'false');
+        die "Error setting debconf flags in $note: $seen" if $ret;
+
+        $ret = subst("$note", 'LINE', "$line");
+        die "Error setting debconf substitutions in $note: $seen" if $ret;
+
+        ($ret,$seen) = input('medium', "$note");
+        if ($ret && $ret != 30 ) {
+          die "Error setting debconf note $note: $seen";
+        }
+
+        ($ret,$seen) = go ();
+        if ($ret && $ret != 30 ) {
+          die "Error asking debconf question $note: $seen";
+        }
+        last;
       }
-      close CONF;
     }
-    print STDERR "Do you want to stop now? [Y/n]";
-    my $answer = <STDIN>;
-    $answer =~ s/^\s+//;
-    $answer =~ s/\s+$//;
-    print STDERR "Ok, Aborting\n" unless $answer =~ /^n/i;
-    exit 1 unless  $answer =~ /^n/i;
+    close CONF;
+  }
+  $answer =~ s/^\s+//;
+  $answer =~ s/\s+$//;
+  print STDERR "Ok, Aborting\n" unless $answer =~ /^(f|n)/i;
+  if ($answer !~ /^(f|n)/i && $invisible) {
+    my $note = "${package_name}/preinst/abort-install-$version";
+
+    ($ret,$seen) = fset ("$note", 'seen', 'false');
+    die "Error setting debconf flags in $note: $seen" if $ret;
+
+    ($ret,$seen) = fset ("$note", 'seen', 'false');
+    die "Error setting debconf flags in $note: $seen" if $ret;
+
+    ($ret,$seen) = input('critical', "$note");
+    if ($ret && $ret != 30 ) {
+      die "Error setting debconf note $note: $seen";
+    }
+
+    ($ret,$seen) = go ();
+    if ($ret && $ret != 30 ) {
+      die "Error asking debconf question $note: $seen";
+    }
+  }
+  exit 1 unless  $answer =~ /^(f|n)/i;
 }
 
 
@@ -316,56 +362,86 @@ if ($official_image =~ /^\s*YES\s*$/o && check($version)) {
 if (-d "$modules_base/$version") {
   if ($clobber_modules) {
     my $ret = system("mv $modules_base/$version $modules_base/${version}_$$");
+    my $seen;
     if ($ret) {
-      print STDERR <<EOF;
-You are attempting to install a kernel image (version $version)
-However, the directory $modules_base/$version still exists.
+      my $note = "${package_name}/preinst/failed-to-move-modules-$version";
 
-As you have instructed, an attempt was made to move the directory out
-of the way. Unfortunately, There was a problem moving
-$modules_base/$version to $modules_base/${version}_$$.
+      ($ret,$seen) = fset ("$note", 'seen', 'false');
+      die "Error setting debconf flags in $note: $seen" if $ret;
 
-I suggest you move $modules_base/$version out of the way manually,
-and then try re-installing this image.
+      ($ret,$seen) = fset ("$note", 'seen', 'false');
+      die "Error setting debconf flags in $note: $seen" if $ret;
 
-I am aborting.
-EOF
-      ;
+      $ret = subst("$note", 'modules_base', "$modules_base");
+      die "Error setting debconf substitutions in $note: $seen" if $ret;
+
+      $ret = subst("$note", 'dest', "${version}_$$");
+      die "Error setting debconf substitutions in $note: $seen" if $ret;
+
+      ($ret,$seen) = input('critical', "$note");
+      if ($ret && $ret != 30 ) {
+        die "Error setting debconf note $note: $seen";
+      }
+
+      ($ret,$seen) = go ();
+      if ($ret && $ret != 30 ) {
+        die "Error asking debconf question $note: $seen";
+      }
       exit 1;
     }
   }
   elsif ($silent_modules !~ m/YES/i) {
-    print STDERR <<EOF;
-You are attempting to install a kernel image (version $version)
-However, the directory $modules_base/$version still exists.  If this
-directory belongs to a previous =ST-image-$version package, and if
-you have deselected some modules, or installed standalone modules
-packages, this could be bad. However, if this directory exists because
-you are also installing some stand alone modules right now, and they
-got unpacked before I did, then this is pretty benign.  Unfortunately,
-I can not tell the difference.
+    my $ret;
+    my $seen;
+    my $answer;
+    my $question = "${package_name}/preinst/overwriting-modules-$version";
 
-If $modules_base/$version belongs to a old install of
-=ST-image-$version, then this is your last chance to abort the
-installation of this kernel image (nothing has been changed yet).
+    ($ret,$seen) = fset ("$question", 'seen', 'false');
+    die "Error setting debconf flags in $question: $seen" if $ret;
 
-If this directory is because of stand alone modules being installed
-right now, or if it does belong to an older =ST-image-$version
-package but you know what you are doing, and if you feel that this
-image should be installed despite this anomaly, Please answer n to the
-question.
+    $ret = subst("$question", 'modules_base', "$modules_base");
+    die "Error setting debconf substitutions in $question: $seen" if $ret;
 
-Otherwise, I suggest you move $modules_base/$version out of the way,
-perhaps to $modules_base/$version.old or something, and then try
-re-installing this image.
-EOF
-  ;
-    print STDERR "Do you want to stop now? [Y/n]";
-    my $answer = <STDIN>;
+    $ret = subst("$question", 'package', "$package_name");
+    die "Error setting debconf substitutions in $question: $seen" if $ret;
+
+    ($ret,$seen) = input('critical', "$question");
+    if ($ret && $ret != 30 ) {
+      die "Error setting debconf question $question: $seen";
+    }
+    $invisible = $ret if $ret == 30;
+
+    ($ret,$seen) = go ();
+    if ($ret && $ret != 30 ) {
+      die "Error asking debconf question $question: $seen";
+    }
+
+    ($ret,$answer) = get("$question");
+    die "Error retreiving answer for $question: $answer" if $ret;
+
     $answer =~ s/^\s+//;
     $answer =~ s/\s+$//;
-    print STDERR "Ok, Aborting\n" unless $answer =~ /^n/i;
-    exit 1 unless  $answer =~ /^n/i;
+    print STDERR "Ok, Aborting\n" unless $answer =~ /^(f|n)/i;
+    if ($answer !~ /^(f|n)/i && $invisible) {
+      my $note = "${package_name}/preinst/abort-overwrite-$version";
+
+      ($ret,$seen) = fset ("$note", 'seen', 'false');
+      die "Error setting debconf flags in $note: $seen" if $ret;
+
+      ($ret,$seen) = fset ("$note", 'seen', 'false');
+      die "Error setting debconf flags in $note: $seen" if $ret;
+
+      ($ret,$seen) = input('critical', "$note");
+      if ($ret && $ret != 30 ) {
+        die "Error setting debconf note $note: $seen";
+      }
+
+      ($ret,$seen) = go ();
+      if ($ret && $ret != 30 ) {
+        die "Error asking debconf question $note: $seen";
+      }
+    }
+    exit 1 unless  $answer =~ /^(f|n)/i;
   }
   else {
     print STDERR <<EOF;
@@ -379,30 +455,28 @@ if ( -f "$modules_base/$version/modules.dep" ) {
   my $running = '';
   chop($running=`uname -r`);
   if ($running eq $version) {
-    print STDERR <<"EOFERR";
+    my $note = "${package_name}/preinst/already-running-this-$version";
 
- You are attempting to install a kernel version that is the same as
- the version you are currently running (version $running). The modules
- list is quite likely to have been changed, and the modules dependency
- file $modules_base/$version/modules.dep needs to be re-built. It can
- not be built correctly right now, since the module list for the
- running kernel are likely to be different from the kernel installed.
- I am creating a new modules.dep file, but that may not be
- correct. It shall be regenerated correctly at next reboot.
+    ($ret,$seen) = fset ("$note", 'seen', 'false');
+    die "Error setting debconf flags in $note: $seen" if $ret;
 
- I repeat: you have to reboot in order for the modules file to be
- created correctly. Until you reboot, it may be impossible to load
- some modules. Reboot as soon as this install is finished (Do not
- reboot right now, since you may not be able to boot back up until
- installation is over, but boot immediately after). I can not stress
- that too much. You need to reboot soon.
+    ($ret,$seen) = fset ("$note", 'seen', 'false');
+    die "Error setting debconf flags in $note: $seen" if $ret;
 
-EOFERR
-    ;
-    if ($silent_modules !~ m/YES/i) {
-      my $answer='';
-      print "Please Hit return to continue.  ";
-      $answer=<STDIN>;
+    $ret = subst("$note", 'modules_base', "$modules_base");
+    die "Error setting debconf substitutions in $note: $seen" if $ret;
+
+    $ret = subst("$note", 'running', "$running");
+    die "Error setting debconf substitutions in $note: $seen" if $ret;
+
+    ($ret,$seen) = input('critical', "$note");
+    if ($ret && $ret != 30 ) {
+      die "Error setting debconf note $note: $seen";
+    }
+
+    ($ret,$seen) = go ();
+    if ($ret && $ret != 30 ) {
+      die "Error asking debconf question $note: $seen";
     }
   }
 }
@@ -427,4 +501,8 @@ if (-d "/etc/kernel/preinst.d/$version") {
             die "Failed to process /etc/kernel/preinst.d/$version";
 }
 
-exit 0
+exit 0;
+
+__END__
+
+

@@ -1,0 +1,40 @@
+2005-11-03  Manoj Srivastava  <srivasta@debian.org>
+
+	* config:  New file. This contains all the questions, usually
+		  acted upon during the postinst, that can be asked before
+		  the package is unpacked.  
+
+	* prerm:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-55
+		  Added variable $package_name  
+
+	* preinst (check):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-55
+		  This is the other file to have undergone
+		  debconfication. All the questions asked are still here
+		  -- we just use debconf to ask the user. Also, the
+		  priority, and need to brak non-interactive installs was
+		  re-evaluated, and the preinst breaks in far fewer cases
+		  than it did before. 
+
+	* postrm:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-55
+		  Added variable $package_name  
+
+	* postinst:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-55
+		  This file has been greatly changed. Firstly, it uses
+		  debconf; and gets rid of the code that generated boot
+		  floppies and created lilo.conf (that latter was probably
+		  illegal under current policy anyway.)A number of
+		  questions have been moved to the config file
+		  (create-kimage-link-$version, old-initrd-link,
+		  old-dir-initrd-link,  old-system-map-link) while others
+		  are asked conditionally in the  postinst (depmod-error,
+		  depmod-error-initrd, bootloader-test-error,
+		  bootloader-error). The postinst has also become far less
+		  verbose; the  users are far better educated a decade
+		  after this was written, and there are other sources of
+		  information about booting than the postinst of a kernel
+		  image. 
+

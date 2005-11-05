@@ -31,18 +31,15 @@
 ###############################################################################
 
 
-prep/$(m_package):
+# Only dependencies that have not been registered into the ladder
+# created in rulesets/common/targets.mk
+install/$(m_package): install/$(d_package) 
 	$(REASON)
 ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 	rm -rf            $(TMPTOP)
 	$(make_directory) $(DOCDIR)
 	$(make_directory) $(MANDIR)/man9
 	$(install_file)   debian/changelog    $(DOCDIR)/changelog.Debian
-endif
-
-install/$(m_package): stamp-conf/debian  prep/$(m_package) install/$(d_package) 
-	$(REASON)
-ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 	test ! -d $(TMP_MAN) || find $(TMP_MAN) -type f -exec mv {} $(MAN9DIR) \;
 	-gunzip -qfr $(MANDIR)
 	find $(MANDIR) -type f -size 0 -exec rm {} \;

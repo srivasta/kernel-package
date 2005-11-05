@@ -81,7 +81,7 @@ endif
 debian: minimal_debian
 minimal_debian:
 	$(REASON)
-	mkdir debian
+	test -d debian || mkdir debian
 	sed -e 's/=V/$(version)/g'         -e 's/=D/$(debian)/g'        \
 	       -e 's/=A/$(DEB_HOST_ARCH)/g'   -e 's/=SA/$(INT_SUBARCH)/g'  \
                 -e 's/=L/$(int_loaderdep) /g' -e 's/=I/$(initrddep)/g'     \

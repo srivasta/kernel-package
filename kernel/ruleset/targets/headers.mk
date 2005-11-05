@@ -30,7 +30,7 @@
 ##
 ###############################################################################
 
-install/$(h_package): conf.vars .config stamp-conf/kernel build/kernel
+install/$(h_package):
 	$(REASON)
 ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
   ifneq ($(strip $(UTS_RELEASE_VERSION)),$(strip $(version)))

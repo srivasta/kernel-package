@@ -33,7 +33,7 @@
 ###############################################################################
 
 
-.config: stamp-conf/debian
+.config: testdir 
 	$(REASON)
 ifneq ($(strip $(use_saved_config)),NO)
 	test -f .config || test ! -f .config.save || \
@@ -51,7 +51,7 @@ endif
 # file at this point
 
 
-conf.vars: Makefile .config
+conf.vars: testdir Makefile .config
 	$(REASON)
 	@rm -f .mak
 	@touch .mak
@@ -85,8 +85,7 @@ endif
 	@sed -e 's%$(shell $(MAKE) --no-print-directory -sf $(DEBDIR)/ruleset/kernel_version.mk debian_TOPDIR)%$$(TOPDIR)%g' .mak     > conf.vars
 	@rm -f .mak
 
-
-stamp-conf/dummy_do_dep:
+debian/dummy_do_dep:
 	$(REASON)
 ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
 	+$(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) \
@@ -98,7 +97,7 @@ else
 endif
 
 
-stamp-conf/kernel: stamp-conf/debian .config
+debian/stamp-kernel-conf: .config Makefile
 	$(REASON)
 ifeq ($(DEB_HOST_GNU_SYSTEM), kfreebsd-gnu)
 	mkdir -p bin
@@ -110,7 +109,7 @@ ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
                 $(config_target)
   ifeq ($(shell if [ $(VERSION) -ge 2 ] && [ $(PATCHLEVEL) -ge 5 ]; then \
                   echo new;fi),)
-	+$(MAKE) -f ./debian/rules stamp-conf/dummy_do_dep
+	+$(MAKE) -f ./debian/rules debian/dummy_do_dep
 	$(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) \
                                  ARCH=$(KERNEL_ARCH) clean
   else
@@ -120,8 +119,10 @@ ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
     endif
   endif
 endif
+	echo done > $@
+STAMPS_TO_CLEAN += debian/stamp-kernel-conf
 
-stamp-conf/debian:
+debian/stamp-conf:
 	$(REASON)
 ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
 	@echo "The changelog says we are creating $(saved_version)."
@@ -181,8 +182,9 @@ endif
              cp -af $(LIBLOC)/$$dir  ./debian/;                                 \
            done
 	echo done >  stamp-debian
+	echo done >  $@
 
-STAMPS_TO_CLEAN += stamp-patch
+STAMPS_TO_CLEAN += stamp-patch debian/stamp-conf
 STAMPS_TO_CLEAN += stamp-debian
 
 # Perhaps a list of patches should be dumped to a file on patching? so we
@@ -239,7 +241,7 @@ endif
 	rm -rf $(DIRS_TO_CLEAN)
 
 
-build/kernel: sanity_check
+debian/stamp-build-kernel: sanity_check debian/stamp-kernel-conf
 	$(REASON)
 # Builds the binary package.
 # debian.config contains the current idea of what the image should
@@ -294,7 +296,9 @@ ifneq ($(strip $(valid_patches)),)
                               sed -ne 's/^.*\/\(.*\)/kernel-patch-\1/p') |                \
 	      awk '$$1 ~ /[hi]i/  { printf("%s-%s\n", $$2, $$3) }' >> debian/buildinfo
 endif
+	echo done > $@
 
+STAMPS_TO_CLEAN += debian/stamp-build-kernel
 
 $(eval $(which_debdir))
 include $(DEBDIR)/ruleset/targets/sanity_check.mk

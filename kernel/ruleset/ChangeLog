@@ -1,3 +1,10 @@
+2005-11-03  Manoj Srivastava  <srivasta@debian.org>
+
+	* local.mk (CLEAN/$(i_package)):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-53
+		  Ensure that the templates.master, and the templates, are
+		  created even on clean, for the kernel image package. 
+
 2005-11-02  Manoj Srivastava  <srivasta@debian.org>
 
 	* modules.mk:

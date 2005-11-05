@@ -36,10 +36,17 @@ $(eval $(which_debdir))
 include $(DEBDIR)/ruleset/targets/target.mk
 
 
-CONFIG-common:: stamp-conf/debian .config conf.vars testdir stamp-conf/kernel
+CONFIG-common:: debian/stamp-conf
+	$(REASON)
+CONFIG-arch:: .config 
+	$(REASON)
+CONFIG-indep:: conf.vars debian/stamp-kernel-conf
 	$(REASON)
 
-BUILD-arch:: build/kernel
+
+BUILD-common:: sanity_check 
+	$(REASON)
+BUILD-arch:: debian/stamp-build-kernel
 	$(REASON)
 
 BIN/$(s_package):: binary/$(s_package)
@@ -74,6 +81,22 @@ CLEAN/$(s_package)::
 	-rm -rf $(TMPTOP)
 CLEAN/$(i_package)::
 	-rm -rf $(TMPTOP)
+ifneq ($(strip $(KERNEL_ARCH)),um)
+  ifneq ($(strip $(KERNEL_ARCH)),xen)
+	-test -d ./debian &&                                         \
+	sed -e 's/=V/$(version)/g'    -e 's/=B/$(link_in_boot)/g'    \
+            -e 's/=ST/$(INT_STEM)/g'  -e 's/=R/$(reverse_symlink)/g' \
+            -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \
+            -e 's@=MK@$(initrdcmd)@g' -e 's@=A@$(DEB_HOST_ARCH)@g'   \
+            -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'        \
+            -e 's/=MD/$(initrddep)/g'                                \
+            -e 's@=M@$(MKIMAGE)@g'    -e 's/=OF/$(AM_OFFICIAL)/g'    \
+            -e 's/=S/$(no_symlink)/g' -e 's@=B@$(KERNEL_ARCH)@g'     \
+          $(DEBDIR)/templates.in   > ./debian/templates.master
+	-test -d ./debian &&          $(INSTALL_TEMPLATE)
+  endif
+endif
+
 CLEAN/$(d_package)::
 	-rm -rf $(TMPTOP)
 CLEAN/$(m_package)::
@@ -90,30 +113,55 @@ ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
 	exit 1
 endif
 	echo 'Building Package' > stamp-building
-	@echo DEB_SOURCE_PACKAGE=$(DEB_SOURCE_PACKAGE)
-	@echo DEB_PACKAGES=$(DEB_PACKAGES)
-	@echo DEB_INDEP_PACKAGES=$(DEB_INDEP_PACKAGES)
-	@echo DEB_ARCH_PACKAGES=$(DEB_ARCH_PACKAGES)
-	@echo DEB_ISNATIVE=$(DEB_ISNATIVE)
-	@echo DEB_VERSION=$(DEB_VERSION)
 	dpkg-buildpackage -nc $(strip $(int_root_cmd)) $(strip $(int_us))  \
                $(strip $(int_uc)) -m"$(maintainer) <$(email)>" -k"$(pgp)"
 	rm -f stamp-building
 	echo done >  $@
+STAMPS_TO_CLEAN += stamp-buildpackage
 
-debian:  stamp-conf/debian
-
-kernel-source  kernel_source:  sanity_check install/$(s_package) binary/$(s_package) 
-	$(REASON)
-kernel-headers kernel_headers: sanity_check install/$(h_package) binary/$(h_package) 
-	$(REASON)
-kernel-manual  kernel_manual:  sanity_check install/$(m_package) binary/$(m_package) 
-	$(REASON)
-kernel-doc     kernel_doc:     sanity_check install/$(d_package) binary/$(d_package) 
-	$(REASON)
-kernel-image   kernel_image:   sanity_check install/$(i_package) binary/$(i_package) 
+# All of these are targets that insert themselves into the normal flow
+# of policy specified targets, so they must hook themselves into the
+# stream.            
+debian:  stamp-indep-conf
 	$(REASON)
 
+# For the following, that means that we must make sure that the configure and 
+# corresponding build targets are all done before the packages are built.
+kernel-source  kernel_source:  stamp-configure stamp-build-indep stamp-kernel-source
+	$(REASON)
+
+stamp-kernel-source: install/$(s_package) binary/$(s_package) 
+	$(REASON)
+	echo done > $@
+STAMPS_TO_CLEAN += stamp-kernel-source
+
+kernel-manual  kernel_manual:  stamp-configure stamp-build-indep stamp-kernel-manual
+	$(REASON)
+stamp-kernel-manual: install/$(m_package) binary/$(m_package) 
+	$(REASON)
+	echo done > $@
+STAMPS_TO_CLEAN += stamp-kernel-manual
+
+kernel-doc     kernel_doc:     stamp-configure stamp-build-indep stamp-kernel-doc
+	$(REASON)
+stamp-kernel-doc: install/$(d_package) binary/$(d_package) 
+	$(REASON)
+	echo done > $@
+STAMPS_TO_CLEAN += stamp-kernel-doc
+
+kernel-headers kernel_headers: stamp-configure stamp-build-arch stamp-kernel-headers
+	$(REASON)
+stamp-kernel-headers: install/$(h_package) binary/$(h_package) 
+	$(REASON)
+	echo done > $@
+STAMPS_TO_CLEAN += stamp-kernel-headers
+
+kernel-image   kernel_image:   stamp-configure stamp-build-arch stamp-kernel-image
+	$(REASON)
+stamp-kernel-image: install/$(i_package) binary/$(i_package) 
+	$(REASON)
+	echo done > $@
+STAMPS_TO_CLEAN += stamp-kernel-image
 
 libc-kheaders libc_kheaders: 
 	$(REASON)
