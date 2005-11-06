@@ -247,11 +247,11 @@ Type: Note
 Description: Error running the boot loader in test mode.
  An error occurred while running the boot loader ${loader} in test mode.
  A log is available in ${temp_file_name}. Please edit /etc/${loader}.conf
- manually and re-run $loader, or make other arrangements to boot your machine.
+ manually and re-run ${loader}, or make other arrangements to boot your machine.
 
 Template: =ST-image-=V/postinst/bootloader-error-=V
 Type: Note
 Description: Error running the boot loader in test mode.
  An error occurred while running the boot loader ${loader}.
  A log is available in ${temp_file_name}. Please edit /etc/${loader}.conf
- manually and re-run $loader, or make other arrangements to boot your machine.
+ manually and re-run ${loader}, or make other arrangements to boot your machine.

@@ -1,3 +1,9 @@
+2005-11-05  Manoj Srivastava  <srivasta@debian.org>
+
+	* templates.in (Template):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-56
+		  Minor typo fix: $loader -> ${loader} 
+
 2005-11-03  Manoj Srivastava  <srivasta@debian.org>
 
 	* templates.in (Template):
