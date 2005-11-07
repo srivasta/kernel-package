@@ -1,3 +1,15 @@
+2005-11-06  Manoj Srivastava  <srivasta@debian.org>
+
+	* prerm:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-55
+		  Use debconf to ask questions.  
+		  Removed a bunch of obsolete variables.
+		  One of the questions now asked using debconf is the one
+		  when we are trying to remove the kernel version
+		  we are running, the other is the question asked if we
+		  have a valid entry for the version being removed in the
+		  boot loader configuration. 
+
 2005-11-05  Manoj Srivastava  <srivasta@debian.org>
 
 	* postinst:

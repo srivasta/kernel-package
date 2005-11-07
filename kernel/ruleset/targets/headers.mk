@@ -43,6 +43,7 @@ ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 	rm -rf $(TMPTOP)
 	$(make_directory) $(SRCDIR)
 	$(make_directory) $(DOCDIR)
+	$(make_directory) $(TMPTOP)/etc/kernel/postinst.d
 	$(make_directory) $(SRCDIR)/arch/$(KERNEL_ARCH)
 	$(make_directory) $(SRCDIR)/arch/$(KERNEL_ARCH)/kernel/
 	$(eval $(which_debdir))
@@ -102,6 +103,8 @@ ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
                            $(SRCDIR)/arch/$(KERNEL_ARCH)/kernel/asm-offsets.s
 	$(install_file) .config  	        $(SRCDIR)/.config
 	echo $(debian)                    > $(SRCDIR)/$(INT_STEM)-headers.revision
+	$(install_program) $(DEBDIR)/pkg/headers/create_link                      \
+                           $(TMPTOP)/etc/kernel/postinst.d/create_link-$(version)
   ifneq ($(strip $(header_clean_hook)),)
 	(cd $(SRCDIR); test -x $(header_clean_hook) && $(header_clean_hook))
   endif
@@ -115,6 +118,7 @@ ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 	sed -e 's/=P/$(package)/g' -e 's/=V/$(version)/g' \
 		$(DEBDIR)/pkg/headers/postinst >        $(TMPTOP)/DEBIAN/postinst
 	chmod 755                                       $(TMPTOP)/DEBIAN/postinst
+        echo "/etc/kernel/postinst.d/create_link-$(version)" > $(TMPTOP)/DEBIAN/conffiles
 	dpkg-gencontrol -isp -DArchitecture=$(DEB_HOST_ARCH) -p$(package) \
                                           -P$(TMPTOP)/
 	chown -R root:root                  $(TMPTOP)

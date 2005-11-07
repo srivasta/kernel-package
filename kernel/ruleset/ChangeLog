@@ -1,3 +1,10 @@
+2005-11-06  Manoj Srivastava  <srivasta@debian.org>
+
+	* minimal.mk (minimal_debian):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-53
+		  Do not ever write the control or the changelog if they
+		  are already there. (probably the  official version).
+
 2005-11-03  Manoj Srivastava  <srivasta@debian.org>
 
 	* local.mk (CLEAN/$(i_package)):

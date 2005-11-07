@@ -49,20 +49,21 @@ make_directory = install -p -d -o root -g root -m 755
 all build: check
 
 check:
-	perl -wc make-kpkg
+	perl  -wc make-kpkg
 	-perl -wc kernel/pkg/image/preinst
 	-perl -wc kernel/pkg/image/postinst
-	perl -wc kernel/pkg/image/postrm
-	perl -wc kernel/pkg/image/prerm
-	perl -wc kernel/pkg/image/config
-	perl -wc kernel/pkg/headers/postinst
-	bash -n kernel/examples/kernel_grub_conf.sh
-	bash -n kernel/examples/kernel_grub_rm.sh
-	bash -n kernel/examples/sample.posthook.sh
-	bash -n kernel/pkg/virtual/um/postinst
-	bash -n kernel/pkg/virtual/um/prerm
-	bash -n kernel/pkg/virtual/xen/postinst
-	bash -n kernel/pkg/virtual/xen/prerm
+	perl  -wc kernel/pkg/image/postrm
+	perl  -wc kernel/pkg/image/prerm
+	perl  -wc kernel/pkg/image/config
+	perl  -wc kernel/pkg/headers/postinst
+	bash  -n  kernel/pkg/headers/create_link
+	bash  -n  kernel/pkg/virtual/um/postinst
+	bash  -n  kernel/pkg/virtual/um/prerm
+	bash  -n  kernel/pkg/virtual/xen/postinst
+	bash  -n  kernel/pkg/virtual/xen/prerm
+	bash  -n  kernel/examples/kernel_grub_conf.sh
+	bash  -n  kernel/examples/kernel_grub_rm.sh
+	bash  -n  kernel/examples/sample.posthook.sh
 
 install:
 	$(make_directory)  $(MAN1DIR)

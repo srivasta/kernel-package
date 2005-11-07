@@ -35,7 +35,7 @@ set -e
 
 # Predefined values:
 version="=V";
-link_in_boot="=B";   # Should be empty, mostly
+link_in_boot="=IB";   # Should be empty, mostly
 no_symlink="=S";   # Should be empty, mostly
 reverse_symlink="=R";   # Should be empty, mostly
 kimage="=K";   # Should be empty, mostly

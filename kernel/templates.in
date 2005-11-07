@@ -255,3 +255,32 @@ Description: Error running the boot loader in test mode.
  An error occurred while running the boot loader ${loader}.
  A log is available in ${temp_file_name}. Please edit /etc/${loader}.conf
  manually and re-run ${loader}, or make other arrangements to boot your machine.
+
+Template: =ST-image-=V/prerm/removing-running-kernel-=V
+Type: Boolean
+Default: True
+Description: Do you want to abort removal now?
+ You are running a kernel (version ${running}) and attempting to remove
+ the same version. This is a potentially disastrous action. Not only
+ will /boot/vmlinuz-${running} be removed, making it impossible to boot
+ it, (you will have to take action to change your boot loader to boot
+ a new kernel), it will also remove all modules under the directory
+ /lib/modules/${running}. Just having a copy of the kernel image is not
+ enough, you will have to replace the modules too.
+ .
+ I repeat, this is very dangerous. If at all in doubt, answer Yes. If
+ you know exactly what you are doing, and are prepared to hose your
+ system, then answer No.
+
+Template: =ST-image-=V/prerm/would-invalidate-boot-loader-=V
+Type: Boolean
+Default: True
+Description: Do you want to abort removal now?
+ You have a valid /etc/${loader}.conf file that mentions
+ ${kimage}-=V.  Removing =ST-image-=V would invalidate
+ that file. (you will have to edit /etc/${loader}.conf or re-target
+ symbolic links mentioned there (typically, /vmlinuz and /vmlinuz.old)
+ to not refer to ${kimage}-=V and will have to re-run ${loader}). 
+
+ I repeat: you shall have to make changes to your boot loader setup
+ and will have to re-run ${loader}.

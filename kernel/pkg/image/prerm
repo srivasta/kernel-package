@@ -17,11 +17,14 @@
 #
 # 
 #use strict;
+use Debconf::Client::ConfModule qw(:all);
+version('2.0');
+my $capb=capb("backup");
 
 $|=1;
 # Predefined values:
 my $version         = "=V";
-my $link_in_boot   = "=B";	# Should be empty, mostly
+my $link_in_boot    = "=IB";	# Should be empty, mostly
 my $no_symlink      = "=S";	# Should be empty, mostly
 my $reverse_symlink = "=R";	# Should be empty, mostly
 my $do_symlinks     = "Yes";	# target machine defined
@@ -67,15 +70,6 @@ $Loader             = "ELILO"    if $loader =~ /^elilo/io;
 my $temp_file_name = "/var/log/$loader" . "_log.$$";
 
 #known variables
-my @boilerplate     = ();
-my @silotemplate    = ();
-my @quiktemplate    = ();
-my @palotemplate    = ();
-my @vmelilotemplate = ();
-my $bootdevice      = '';
-my $rootdevice      = '';
-my $rootdisk        = '';
-my $rootpartition   = '';
 my $image_dest      = "/";
 my $realimageloc    = "/$image_dir/";
 my $have_conffile   = "";
@@ -88,9 +82,12 @@ my $silent_loader   = '';
 $realimageloc  =~ s|^/*|/|o;
 $realimageloc  =~ s|/+|/|o;
 
+my $DEBUG = 0;
 
 # Variables used
 my $image='';
+my $ret=0;
+my $seen='';
 my $answer='';
 my $running = '';
 my $WouldInvalidate = 0;
@@ -179,35 +176,32 @@ $ENV{KERNEL_ARCH}=$kernel_arch if $kernel_arch;
 # if so we abort right now.
 chop($running=`uname -r`);
 if ($running eq $version) {
-  print STDERR <<"EOFERR";
+  my $question = "${package_name}/prerm/removing-running-kernel-$version";
 
-  You are running a kernel (version $running) and attempting to remove
-  the same version. This is a potentially disastrous action. Not only
-  will /boot/vmlinuz-$running be removed, making it impossible to boot
-  it, (you will have to take action to change your boot loader to boot
-  a new kernel), it will also remove all modules under the directory 
-  /lib/modules/$running. Just having a copy of the kernel image is not
-  enough, you will have to replace the modules too.
+  ($ret,$seen) = fset ("$question", 'seen', 'false');
+  die "Error setting debconf flags in $question: $seen" if $ret;
 
-    I repeat, this is very dangerous. If at all in doubt, answer
-    no. If you know exactly what you are doing, and are prepared to
-    hose your system, then answer Yes.
-EOFERR
-  
-  my $done = 0;
-  while (!$done) {
-    print "Remove the running kernel image (not recommended) [No]? ";
-    $answer=<STDIN>;
-    if ($answer !~ /^\s*[Yy]/o) {
-      exit 1; #Operation not permitted
-    }
-    if ($answer =~ /yes/io) {
-      $done = 1;
-      print "Ok, proceeding with removing running kernel image.\n";
-      last;
-    }
-    print "Please answer yes or no.\n\n";
-    $done = 0;
+  $ret = subst("$question", 'running', "$running");
+  die "Error setting debconf substitutions in $question: $seen" if $ret;
+
+  ($ret,$seen) = input('critical', "$question");
+  if ($ret && $ret != 30 ) {
+    die "Error setting debconf question $question: $seen";
+  }
+
+  ($ret,$seen) = go ();
+  if ($ret && $ret != 30 ) {
+    die "Error asking debconf question $question: $seen";
+  }
+
+  ($ret,$answer) = get("$question");
+  die "Error retreiving answer for $question: $answer" if $ret;
+
+  if ($answer =~ /^(y|t)/i) {
+    exit 1; #Operation not permitted
+  }
+  else {
+     print STFERR "Ok, proceeding with removing running kernel image.\n";
   }
 }
 
@@ -259,32 +253,37 @@ if (-f "/etc/$loader.conf") { #I know, could be a link, but ..
   }
   close (LILO);
   if ($WouldInvalidate) {
-    print STDERR <<"EOF";
+    my $question = "${package_name}/prerm/would-invalidate-boot-loader-$version";
 
- You have a valid /etc/$loader.conf file that mentions
- $kimage-$version.  Removing =ST-image-$version would invalidate
- that file. (you will have to edit /etc/$loader.conf or re-target
- symbolic links mentioned there (typically, /vmlinuz and /vmlinuz.old)
- to not refer to $kimage-$version and will have to re-run $loader). 
+    ($ret,$seen) = fset ("$question", 'seen', 'false');
+    die "Error setting debconf flags in $question: $seen" if $ret;
 
- I repeat: you shall have to make changes to your boot loader setup
- and will have to re-run $loader.
+    $ret = subst("$question", 'loader', "$loader");
+    die "Error setting debconf substitutions in $question: $seen" if $ret;
 
-EOF
-  ;
-    if (&ask("Are you sure you want to remove =ST-image-$version")) {
-      print STDERR <<"EOG";
+    $ret = subst("$question", 'kimage', "$kimage");
+    die "Error setting debconf substitutions in $question: $seen" if $ret;
 
-Remember to edit /etc/$loader.conf and re-run $loader, or Make other
-arrangements to boot your machine.
+    ($ret,$seen) = input('critical', "$question");
+    if ($ret && $ret != 30 ) {
+      die "Error setting debconf question $question: $seen";
+    }
 
-EOG
-;
-      &success();
+    ($ret,$seen) = go ();
+    if ($ret && $ret != 30 ) {
+      die "Error asking debconf question $question: $seen";
+    }
+
+    ($ret,$answer) = get("$question");
+    die "Error retreiving answer for $question: $answer" if $ret;
+
+    if ($answer =~ /^(y|t)/i) {
+      print STDERR "\nNot removing =ST-image-$version.\n";
+      exit 1; #Operation not permitted
     }
     else {
-      print STDERR "\nNot removing =ST-image-$version.\n";
-      exit 1;
+      print STFERR "Ok, proceeding with removing running kernel image.\n";
+      &success();
     }
   }
 }
@@ -293,12 +292,6 @@ sub success () {
     -f "/lib/modules/$version/modules.dep"  && 
       unlink "/lib/modules/$version/modules.dep";
     exit 0;
-}
-
-sub ask {
-    print @_,"? [Yes] ";
-    $answer=<STDIN>;
-    return ( $answer !~ /^[Nn].*/ );
 }
 
 &success();

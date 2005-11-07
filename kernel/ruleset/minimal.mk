@@ -82,18 +82,20 @@ debian: minimal_debian
 minimal_debian:
 	$(REASON)
 	test -d debian || mkdir debian
-	sed -e 's/=V/$(version)/g'         -e 's/=D/$(debian)/g'        \
-	       -e 's/=A/$(DEB_HOST_ARCH)/g'   -e 's/=SA/$(INT_SUBARCH)/g'  \
-                -e 's/=L/$(int_loaderdep) /g' -e 's/=I/$(initrddep)/g'     \
-                -e 's/=CV/$(VERSION).$(PATCHLEVEL)/g'                      \
-                -e 's/=M/$(maintainer) <$(email)>/g'                       \
-                -e 's/=ST/$(INT_STEM)/g'      -e 's/=B/$(KERNEL_ARCH)/g'   \
+	test -f debian/control || sed         -e 's/=V/$(version)/g'        \
+                -e 's/=D/$(debian)/g'         -e 's/=A/$(DEB_HOST_ARCH)/g'  \
+	        -e 's/=SA/$(INT_SUBARCH)/g'   -e 's/=L/$(int_loaderdep) /g' \
+                -e 's/=I/$(initrddep)/g'                                    \
+                -e 's/=CV/$(VERSION).$(PATCHLEVEL)/g'                       \
+                -e 's/=M/$(maintainer) <$(email)>/g'                        \
+                -e 's/=ST/$(INT_STEM)/g'      -e 's/=B/$(KERNEL_ARCH)/g'    \
 		         $(CONTROL) > debian/control
-	sed -e 's/=V/$(version)/g' -e 's/=D/$(debian)/g'                   \
-	    -e 's/=A/$(DEB_HOST_ARCH)/g' -e 's/=M/$(maintainer) <$(email)>/g' \
-            -e 's/=ST/$(INT_STEM)/g'     -e 's/=B/$(KERNEL_ARCH)/g'           \
-		$(LIBLOC)/changelog > debian/changelog
-	install -p -m 755 $(LIBLOC)/rules debian/rules
+	test -f debian/changelog ||  sed -e 's/=V/$(version)/g'             \
+	    -e 's/=D/$(debian)/g'        -e 's/=A/$(DEB_HOST_ARCH)/g'       \
+            -e 's/=ST/$(INT_STEM)/g'     -e 's/=B/$(KERNEL_ARCH)/g'         \
+	    -e 's/=M/$(maintainer) <$(email)>/g' 	                    \
+             $(LIBLOC)/changelog > debian/changelog
+	test -f debian/rules || install -p -m 755 $(LIBLOC)/rules debian/rules
 	for file in $(DEBIAN_FILES); do                                      \
             cp -f  $(LIBLOC)/$$file ./debian/;                               \
         done
