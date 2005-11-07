@@ -103,9 +103,17 @@ ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
                            $(SRCDIR)/arch/$(KERNEL_ARCH)/kernel/asm-offsets.s
 	$(install_file) .config  	        $(SRCDIR)/.config
 	echo $(debian)                    > $(SRCDIR)/$(INT_STEM)-headers.revision
-#	$(install_program) $(DEBDIR)/pkg/headers/create_link                      \
-#                           $(TMPTOP)/etc/kernel/postinst.d/create_link-$(version)
-	$(install_program) $(DEBDIR)/pkg/headers/create_link  $(DOCDIR)/examples/
+	sed -e 's/=V/$(version)/g'    -e 's/=IB/$(link_in_boot)/g'   \
+            -e 's/=ST/$(INT_STEM)/g'  -e 's/=R/$(reverse_symlink)/g' \
+            -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \
+            -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'        \
+            -e 's/=MD/$(initrddep)/g'                                \
+            -e 's@=MK@$(initrdcmd)@g' -e 's@=A@$(DEB_HOST_ARCH)@g'   \
+            -e 's@=M@$(MKIMAGE)@g'    -e 's/=OF/$(AM_OFFICIAL)/g'    \
+            -e 's/=S/$(no_symlink)/g'  -e 's@=B@$(KERNEL_ARCH)@g'    \
+            $(DEBDIR)/pkg/headers/create_link  > $(DOCDIR)/examples/
+#         $(DEBDIR)/pkg/headers/create_link  >                        \
+#                $(TMPTOP)/etc/kernel/postinst.d/create_link-$(version)
   ifneq ($(strip $(header_clean_hook)),)
 	(cd $(SRCDIR); test -x $(header_clean_hook) && $(header_clean_hook))
   endif
@@ -116,7 +124,14 @@ debian/$(h_package): testroot
 ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 	$(make_directory) $(TMPTOP)/DEBIAN
 	$(eval $(deb_rule))
-	sed -e 's/=P/$(package)/g' -e 's/=V/$(version)/g' \
+	sed -e 's/=V/$(version)/g'    -e 's/=IB/$(link_in_boot)/g'   \
+            -e 's/=ST/$(INT_STEM)/g'  -e 's/=R/$(reverse_symlink)/g' \
+            -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \
+            -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'        \
+            -e 's/=MD/$(initrddep)/g' -e 's/=P/$(package)/g'         \
+            -e 's@=MK@$(initrdcmd)@g' -e 's@=A@$(DEB_HOST_ARCH)@g'   \
+            -e 's@=M@$(MKIMAGE)@g'    -e 's/=OF/$(AM_OFFICIAL)/g'    \
+            -e 's/=S/$(no_symlink)/g'  -e 's@=B@$(KERNEL_ARCH)@g'    \
 		$(DEBDIR)/pkg/headers/postinst >        $(TMPTOP)/DEBIAN/postinst
 	chmod 755                                       $(TMPTOP)/DEBIAN/postinst
 #	echo "/etc/kernel/postinst.d/create_link-$(version)" > $(TMPTOP)/DEBIAN/conffiles

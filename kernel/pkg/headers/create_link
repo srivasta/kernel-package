@@ -45,7 +45,7 @@ fi
 # We need to be run as root
 test $(id -u) = 0 || (echo need root priviledges; exit 1)
 
-if [ -d "/usr/src/$package_name" ]; then
+if [ -d "/lib/modules/$version" ] && [ -d "/usr/src/$package_name" ]; then
     ln -s "/usr/src/$package_name" "/lib/modules/$version/build"
 fi
 
