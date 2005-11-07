@@ -95,7 +95,7 @@ minimal_debian:
             -e 's/=ST/$(INT_STEM)/g'     -e 's/=B/$(KERNEL_ARCH)/g'         \
 	    -e 's/=M/$(maintainer) <$(email)>/g' 	                    \
              $(LIBLOC)/changelog > debian/changelog
-	test -f debian/rules || install -p -m 755 $(LIBLOC)/rules debian/rules
+	install -p -m 755 $(LIBLOC)/rules debian/rules
 	for file in $(DEBIAN_FILES); do                                      \
             cp -f  $(LIBLOC)/$$file ./debian/;                               \
         done
