@@ -111,7 +111,7 @@ ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
             -e 's@=MK@$(initrdcmd)@g' -e 's@=A@$(DEB_HOST_ARCH)@g'   \
             -e 's@=M@$(MKIMAGE)@g'    -e 's/=OF/$(AM_OFFICIAL)/g'    \
             -e 's/=S/$(no_symlink)/g'  -e 's@=B@$(KERNEL_ARCH)@g'    \
-            $(DEBDIR)/pkg/headers/create_link  > $(DOCDIR)/examples/
+            $(DEBDIR)/pkg/headers/create_link  > $(DOCDIR)/examples/create_link
 #         $(DEBDIR)/pkg/headers/create_link  >                        \
 #                $(TMPTOP)/etc/kernel/postinst.d/create_link-$(version)
   ifneq ($(strip $(header_clean_hook)),)

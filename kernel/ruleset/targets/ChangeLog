@@ -5,6 +5,8 @@
 		  Add a whole slew of variables to the list of those to be
 		  interpolated into the postinst and the create_link
 		  script.  
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-55
+		  typo fix. 
 
 2005-11-06  Manoj Srivastava  <srivasta@debian.org>
 
