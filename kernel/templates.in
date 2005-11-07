@@ -281,6 +281,6 @@ Description: Do you want to abort removal now?
  that file. (you will have to edit /etc/${loader}.conf or re-target
  symbolic links mentioned there (typically, /vmlinuz and /vmlinuz.old)
  to not refer to ${kimage}-=V and will have to re-run ${loader}). 
-
+ .
  I repeat: you shall have to make changes to your boot loader setup
  and will have to re-run ${loader}.

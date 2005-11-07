@@ -118,7 +118,7 @@ ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 	sed -e 's/=P/$(package)/g' -e 's/=V/$(version)/g' \
 		$(DEBDIR)/pkg/headers/postinst >        $(TMPTOP)/DEBIAN/postinst
 	chmod 755                                       $(TMPTOP)/DEBIAN/postinst
-        echo "/etc/kernel/postinst.d/create_link-$(version)" > $(TMPTOP)/DEBIAN/conffiles
+	echo "/etc/kernel/postinst.d/create_link-$(version)" > $(TMPTOP)/DEBIAN/conffiles
 	dpkg-gencontrol -isp -DArchitecture=$(DEB_HOST_ARCH) -p$(package) \
                                           -P$(TMPTOP)/
 	chown -R root:root                  $(TMPTOP)
