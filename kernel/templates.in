@@ -1,5 +1,5 @@
 Template: =ST-image-=V/preinst/initrd-=V
-Type: Text
+Type: text
 Description: You are installing a kernel with an initrd image
  You are attempting to install an initrd kernel image (version
  =V) on a machine currently running kernel version
@@ -12,8 +12,8 @@ Description: You are installing a kernel with an initrd image
  ${initrddep})
 
 Template: =ST-image-=V/preinst/bootloader-initrd-=V
-Type: Boolean
-Default: True
+Type: boolean
+Default: true
 Description: Do you want to abort now?
  You are attempting to install an initrd kernel image (version =V)
  This will not work unless you have configured your boot loader to use
@@ -32,8 +32,8 @@ Description: Do you want to abort now?
  image using initrd.
 
 Template: =ST-image-=V/preinst/lilo-initrd-=V
-Type: Boolean
-Default: True
+Type: boolean
+Default: true
 Description: Do you want to abort now?
  You are attempting to install an initrd kernel image (version =V)
  This will not work unless you have configured your boot loader to use
@@ -55,8 +55,8 @@ Description: Do you want to abort now?
  image using initrd.
 
 Template: =ST-image-=V/preinst/elilo-initrd-=V
-Type: Boolean
-Default: True
+Type: boolean
+Default: true
 Description: Do you want to abort now?
  You are attempting to install an initrd kernel image (version =V)
  This will not work unless you have configured your boot loader to use
@@ -78,7 +78,7 @@ Description: Do you want to abort now?
  image using initrd.
 
 Template: =ST-image-=V/preinst/lilo-has-ramdisk
-Type: Text
+Type: text
 Description: Lilo has a ramdisk line, which should be commented or removed
  I have found a line
  ${LINE}
@@ -86,7 +86,7 @@ Description: Lilo has a ramdisk line, which should be commented or removed
  initrd/initramfs.
 
 Template: =ST-image-=V/preinst/abort-install-=V
-Type: Note
+Type: note
 Description: Aborting install since loading an initrd kernel image
  You are attempting to install an initrd kernel image (version
  =V) This will not work unless you have configured your boot
@@ -98,7 +98,7 @@ Description: Aborting install since loading an initrd kernel image
 
 
 Template: =ST-image-=V/preinst/failed-to-move-modules-=V
-Type: Note
+Type: note
 Description: Failed to move modules out of the way, aborting
  You are attempting to install a kernel image (version =V)
  However, the directory ${modules_base}/=V still exists.
@@ -113,8 +113,8 @@ Description: Failed to move modules out of the way, aborting
  I am aborting.
 
 Template: =ST-image-=V/preinst/overwriting-modules-=V
-Type: Boolean
-Default: True
+Type: boolean
+Default: true
 Description: Stop install since the kernel-image is already installed?
  You are attempting to install a kernel image (version =V)
  However, the directory ${modules_base}/=V still exists.  If this
@@ -140,7 +140,7 @@ Description: Stop install since the kernel-image is already installed?
  re-installing this image.
 
 Template: =ST-image-=V/preinst/abort-overwrite-=V
-Type: Note
+Type: note
 Description: Aborting install since modules exist
  You are attempting to install an initrd kernel image (version
  =V). However, the corresponding modules directory exists, 
@@ -151,7 +151,7 @@ Description: Aborting install since modules exist
 
 
 Template: =ST-image-=V/preinst/already-running-this-=V
-Type: Note
+Type: note
 Description: The kernel version running is the same as the one being installed
  You are attempting to install a kernel version that is the same as
  the version you are currently running (version ${running}). The modules
@@ -170,8 +170,8 @@ Description: The kernel version running is the same as the one being installed
  that too much. You need to reboot soon.
 
 Template: =ST-image-=V/postinst/create-kimage-link-=V
-Type: Boolean
-Default: True
+Type: boolean
+Default: true
 Description: Create a symbolic link to the current kernel image?
  I notice that you do not have ${kimage} symbolic link. I can create one 
  for you, and it shall be updated by newer kernel image packages. This is
@@ -185,8 +185,8 @@ Description: Image symbolic link destination is a directory, aborting
  exists here, my assumptions are way off, and I am aborting.
 
 Template: =ST-image-=V/postinst/depmod-error-=V
-Type: Boolean
-Default: False
+Type: boolean
+Default: false
 Description: Do you want to abort now?
  This may be benign, (You may have versioned symbol names, for instance).
  Or this could be an error. depmod exited with return value ${exit_value}
@@ -195,8 +195,8 @@ Description: Do you want to abort now?
  since depmod is run at install time, we could just defer running depmod.
 
 Template: =ST-image-=V/postinst/depmod-error-initrd-=V
-Type: Boolean
-Default: False
+Type: boolean
+Default: false
 Description: Do you want to abort now?
  This may be benign, (You may have versioned symbol names, for instance).
  Or this could be an error. depmod exited with return value ${exit_value}
@@ -209,8 +209,8 @@ Description: Do you want to abort now?
  shall fail to boot.
 
 Template: =ST-image-=V/postinst/old-initrd-link-=V
-Type: Boolean
-Default: True
+Type: boolean
+Default: true
 Description: Should the old initrd link be deleted now?
  I note that you have an old initrd symbolic link in place. The name of
  the symbolic link is being changed to initrd.img. If the old link is
@@ -218,8 +218,8 @@ Description: Should the old initrd link be deleted now?
  place, it will point to the wrong image.
 
 Template: =ST-image-=V/postinst/old-dir-initrd-link-=V
-Type: Boolean
-Default: True
+Type: boolean
+Default: true
 Description: Should the old initrd link be deleted now?
  I note that you have an old ${image_dir}/initrd symbolic link in
  place.  The location of the symbolic link is now the same location as
@@ -228,8 +228,8 @@ Description: Should the old initrd link be deleted now?
  is left in place, it will point to the wrong image.
 
 Template: =ST-image-=V/postinst/old-system-map-link-=V
-Type: Boolean
-Default: True
+Type: boolean
+Default: true
 Description: Should the old /System.map link be deleted now?
  You have /System.map symbolic link. These were installed by ancient 
  kernel image packages. However, all the programs that look at the 
@@ -243,22 +243,22 @@ Description: Should the old /System.map link be deleted now?
  will be wrong. Not having /System.map at all prevents this.
 
 Template: =ST-image-=V/postinst/bootloader-test-error-=V
-Type: Note
+Type: note
 Description: Error running the boot loader in test mode.
  An error occurred while running the boot loader ${loader} in test mode.
  A log is available in ${temp_file_name}. Please edit /etc/${loader}.conf
  manually and re-run ${loader}, or make other arrangements to boot your machine.
 
 Template: =ST-image-=V/postinst/bootloader-error-=V
-Type: Note
+Type: note
 Description: Error running the boot loader in test mode.
  An error occurred while running the boot loader ${loader}.
  A log is available in ${temp_file_name}. Please edit /etc/${loader}.conf
  manually and re-run ${loader}, or make other arrangements to boot your machine.
 
 Template: =ST-image-=V/prerm/removing-running-kernel-=V
-Type: Boolean
-Default: True
+Type: boolean
+Default: true
 Description: Do you want to abort removal now?
  You are running a kernel (version ${running}) and attempting to remove
  the same version. This is a potentially disastrous action. Not only
@@ -273,8 +273,8 @@ Description: Do you want to abort removal now?
  system, then answer No.
 
 Template: =ST-image-=V/prerm/would-invalidate-boot-loader-=V
-Type: Boolean
-Default: True
+Type: boolean
+Default: true
 Description: Do you want to abort removal now?
  You have a valid /etc/${loader}.conf file that mentions
  ${kimage}-=V.  Removing =ST-image-=V would invalidate
