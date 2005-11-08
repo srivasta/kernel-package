@@ -2,7 +2,7 @@ Source: =ST-source-=V
 Section: devel
 Priority: optional
 Maintainer:  =M
-Build-Depends: po-debconf, gettext
+Build-Depends: po-debconf, gettext, file
 Standards-Version: 3.5.9.0
 
 Package: =ST-headers-=V
@@ -11,7 +11,9 @@ Depends: ${shlibs:Depends}
 Section: devel
 Priority: optional
 Provides: =ST-headers, =ST-headers-=CV
-Description: Header files related to Linux kernel version =V
+Description: Header files related to Linux kernel, specifically,
+ version =V
+ .
  This package provides kernel header files for version =V, for sites 
  that want the latest kernel headers. Please read
  /usr/share/doc/=ST-headers-=V/debian.README.gz for details
@@ -21,7 +23,7 @@ Architecture: all
 Section: devel
 Priority: optional
 Provides: =ST-source, =ST-source-=CV
-Depends: binutils, bzip2
+Depends: binutils, bzip2, file
 Recommends: libc6-dev | libc-dev, gcc, make, po-debconf, gettext
 Suggests: libncurses-dev | ncurses-dev, kernel-package, xmlto
 Description: Linux kernel source for version =V
@@ -49,7 +51,7 @@ Provides: =ST-image,  =ST-image-=CV
 Pre-Depends: debconf (>= 0.2.17) | debconf-2.0
 Depends: =I coreutils | fileutils (>= 4.0)
 Suggests: =L fdutils, =ST-doc-=V=SA | =ST-source-=V 
-Description: Linux kernel binary image for version =V=SA.
+Description: Linux kernel binary image for version =V=SA
  This package contains the Linux kernel image for version =V=SA,
  the corresponding System.map file, and the modules built by the
  packager.  It also contains scripts that try to ensure that the

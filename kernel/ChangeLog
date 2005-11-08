@@ -14,6 +14,9 @@
 			  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-53
 			  Break up a line since it likely causes the
 			  exceeds width  warning.  
+		  (Description):
+			  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-53
+			  Split line to avoid going over 80 chars 
 
 	* templates.in (Type):
 		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-56

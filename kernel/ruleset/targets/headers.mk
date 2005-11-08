@@ -114,6 +114,19 @@ ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
             $(DEBDIR)/pkg/headers/create_link  > $(DOCDIR)/examples/create_link
 #         $(DEBDIR)/pkg/headers/create_link  >                        \
 #                $(TMPTOP)/etc/kernel/postinst.d/create_link-$(version)
+  ifeq (,$(findstring nostrip,$(DEB_BUILD_OPTIONS)))
+	find $(TMPTOP) -type f | while read i; do                                         \
+           if file -b $$i | egrep -q "^ELF.*executable"; then                             \
+             strip --strip-all --remove-section=.comment --remove-section=.note $$i;      \
+           fi;                                                                            \
+         done
+	find $(TMPTOP) -type f | while read i; do                                         \
+           if file -b $$i | egrep -q "^ELF.*shared object"; then                          \
+             strip --strip-unneeded --remove-section=.comment --remove-section=.note $$i; \
+           fi;                                                                            \
+         done
+  endif
+
   ifneq ($(strip $(header_clean_hook)),)
 	(cd $(SRCDIR); test -x $(header_clean_hook) && $(header_clean_hook))
   endif
@@ -136,7 +149,7 @@ ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 	chmod 755                                       $(TMPTOP)/DEBIAN/postinst
 #	echo "/etc/kernel/postinst.d/create_link-$(version)" > $(TMPTOP)/DEBIAN/conffiles
 	k=`find $(TMPTOP) -type f | ( while read i; do                    \
-          if file -b $$i | egrep -q "^ELF.*executable.*dynamically linked" ; then 
+          if file -b $$i | egrep -q "^ELF.*executable.*dynamically linked" ; then \
             j="$$j $$i";                                                  \
            fi;                                                            \
         done; echo $$j; )`; dpkg-shlibdeps $$k
