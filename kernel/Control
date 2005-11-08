@@ -14,9 +14,11 @@ Provides: =ST-headers, =ST-headers-=CV
 Description: Header files related to Linux kernel, specifically,
  version =V
  .
- This package provides kernel header files for version =V, for sites 
- that want the latest kernel headers. Please read
- /usr/share/doc/=ST-headers-=V/debian.README.gz for details
+ This package provides kernel header files for sites 
+ that want the latest kernel headers for version 
+ =V.
+ Please read /usr/share/doc/=ST-headers-=V/debian.README.gz for
+ details
 
 Package: =ST-source-=V
 Architecture: all
@@ -52,15 +54,12 @@ Pre-Depends: debconf (>= 0.2.17) | debconf-2.0
 Depends: =I coreutils | fileutils (>= 4.0)
 Suggests: =L fdutils, =ST-doc-=V=SA | =ST-source-=V 
 Description: Linux kernel binary image for version =V=SA
- This package contains the Linux kernel image for version =V=SA,
- the corresponding System.map file, and the modules built by the
- packager.  It also contains scripts that try to ensure that the
- system is not left in a unbootable state after an update.
+ This package contains the Linux kernel image for version 
+ =V=SA.
  .
- If you wish to update a bootdisk, or to use a bootloader to make
- installing and using the image easier, we suggest you install the latest
- fdutils (for formatting a floppy to be used as boot disk), and LILO, for a
- powerful bootloader. Of course, both these are optional. 
+ It also contains the corresponding System.map file, and the modules
+ built by the packager.  It also contains scripts that try to ensure
+ that the system is not left in a unbootable state after an update.
  .
  Kernel image packages are generally produced using kernel-package,
  and it is suggested that you install that package if you wish to
@@ -75,14 +74,15 @@ Section: doc
 Priority: optional
 Provides: =ST-doc-=CV
 Suggests: =ST-image-=V=SA
-Description: Linux kernel specific documentation for version =V.
- This package provides various Readme's in the =V kernel
- Documentation/ subdirectory: these typically contain kernel-specific
- installation notes for some drivers. for example. Please see
- /usr/share/doc/=ST-doc-X.X.XX/Documentation/00-INDEX for a list of
- contents.  Please also read the Changes file, as it contains
- information about the problems which may result by upgrading your
- kernel.
+Description: Linux kernel specific documentation for version =V
+ This package provides various Readme's in the =V
+ kernel Documentation/ subdirectory: these typically contain
+ kernel-specific installation notes for some drivers. for
+ example. Please see
+ /usr/share/doc/=ST-doc-X.X.XX/Documentation/00-INDEX
+ for a list of contents.  Please also read the Changes file, as it
+ contains information about the problems which may result by upgrading
+ your kernel.
 
 Package: =ST-manual-=V
 Architecture: all

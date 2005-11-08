@@ -155,13 +155,13 @@ ifneq ($(strip $(kelfimagesrc)),)
 	chmod 644 $(kelfimagedest)
 endif
 endif
-	if test -d $(SRCTOP)/debian/image.d ; then                             \
-             TMPTOP=$(TMPTOP) version=$(version)                          \
-                   run-parts --verbose $(SRCTOP)/debian/image.d ;               \
+	if test -d $(SRCTOP)/debian/image.d ; then                        \
+             TMPTOP=$(TMPTOP) version=$(version) IMAGE_TOP=$(TMPTOP)      \
+                   run-parts --verbose $(SRCTOP)/debian/image.d ;         \
          fi
-	if [ -x debian/post-install ]; then                                    \
-		TMPTOP=$(TMPTOP) STEM=$(INT_STEM) version=$(version)    \
-			debian/post-install;                                  \
+	if [ -x debian/post-install ]; then                               \
+		TMPTOP=$(TMPTOP) STEM=$(INT_STEM) version=$(version)      \
+		IMAGE_TOP=$(TMPTOP) debian/post-install;                  \
 	fi
 ifeq ($(strip $(NEED_IMAGE_POST_PROCESSING)),YES)
 	if grep $(IMAGE_POST_PROCESS_TARGET) $(IMAGE_POST_PROCESS_DIR)/Makefile 2>&1 >/dev/null; then \

@@ -19,6 +19,7 @@
 # 
 #use strict; #for debugging
 use Cwd 'abs_path';
+use Debconf::Client::ConfModule qw(:all);
 
 $|=1;
 # Predefined values:
@@ -292,8 +293,11 @@ if ($ARGV[0] !~ /upgrade/) {
   image_magic("initrd.img.old", $image_dest) if $initrd;
 }
 
-# Ignore all invocations uxcept when called on to purge.
+# Ignore all invocations except when called on to purge.
 exit 0 unless $ARGV[0] =~ /purge/;
+
+my $ret = purge();
+
 my @files_to_remove = qw{
                          modules.dep modules.isapnpmap modules.pcimap
                          modules.usbmap modules.parportmap
