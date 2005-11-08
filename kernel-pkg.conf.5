@@ -86,7 +86,9 @@ Defaults to
 (Optional)
 .TP
 .B debian         
-The Debian revision of the kernel packages. Can be overridden
+The version of the kernel packages, includes both the upstream
+Set to YES, this causes a make clean to be run in theversion 
+and the Debian revision. Can be overridden
 by the environment variable 
 .B DEBIAN_REVISION, 
 and is overridden (again) by the 
@@ -94,7 +96,7 @@ and is overridden (again) by the
 option of
 .B make\-kpkg.
 Defaults to 
-.I 10.0.0.Custom
+.I <VERSION>-10.0.0.Custom
 (Optional)
 .TP
 .B debian_revision_mandatory

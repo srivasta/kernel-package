@@ -1,5 +1,97 @@
 =ST-source-=V (=D) unstable; urgency=low
 
+  * Aaargh, typo in the kernel header rules.
+
+ -- Manoj Srivastava <srivasta@debian.org>  Mon,  7 Nov 2005 14:18:39 -0600
+
+kernel-package (10.006) experimental; urgency=low
+
+  * Hmm. We need to take special care of the case in which the
+    kernel-headers are installed after the kernel-image has been; and the
+    build symlink is not setr. In this case, the header postinst now
+    correctly installs the build symlink.
+
+ -- Manoj Srivastava <srivasta@debian.org>  Mon,  7 Nov 2005 12:44:21 -0600
+
+kernel-package (10.005) experimental; urgency=low
+
+  * Bug fix: "kernel/image.postinst should mention GRUB", thanks to
+    Martin Michlmayr. Well, I don't see why we should mention _any_ boot
+    loader at all, so we are no longer biased against grub. (Closes: #336927)
+  * Bug fix: "kernel-package: Using dpkg --remove followed by dpkg
+    --install does not restore the kernel package", thanks to Daniel
+    Jacobowitz. Also: "kernel-package tells me we're being reinstalled AND
+    updated". Actually, the installed/updated is just sematics; when you
+    reinstall a kernel image you are updating it, and vice versa. The
+    actual problem was that while the symbolic links were removed when the
+    package was removed, dpkg passed the last-version-configured to the
+    postinst, and we took that as evidence that the package had been
+    installed before -- which, while true, did not take into account that
+    the package was currently uninstalled. The fix is to always see if a
+    missing symlink needs to be installed, and not touch existing
+    symlinks.                                       (Closes: #336733,  #336517).
+  * Added kernel/pkg/headers/create_link as an example. The user can install
+    it in the postinst.d directory to set up the /lib/modules/foo/build
+    symlink to point to the kernel-headers. This is not needed, since the
+    kernel-image postinst already checks in the /usr/src/ directory for an
+    installed kernel headers package.
+  * Convert the image prerm scripts to debconf as well, the questions are
+    asked if we try to remove the running kernel image, or if we are
+    removing a kernel version mentioned in boot loader configuration.
+  * Have the minimal.mk not overwrite the control or the changelog file. 
+  * Added a whole slew of config files, and updated older ones, to bring
+    the configurations offered up by default to be more in line with
+    official kernels.
+  * Fixed substitutions in the kernel image package, there was a duplicate
+    =B substitution. 
+  * Ran lintian on all the generated packages. Fixed FSF address in all
+    the copyright notices, and fixed case in the templates file as
+    well. This shall be the last experimental release, barring major
+    problems. 
+
+ -- Manoj Srivastava <srivasta@debian.org>  Mon,  7 Nov 2005 10:44:39 -0600
+
+kernel-package (10.004) experimental; urgency=low
+
+  * Bug fix: "using debconf", thanks to Robert Millan      (Closes: #115884)
+  * Bug fix: "does not install non-interactively", thanks to Matt Kraai
+                                                           (Closes: #247782)
+  * This fine tunes the dependencies between targets. All of the package
+    building targets are ones that insert themselves into the normal flow
+    of policy specified targets, so they must hook themselves into the
+    stream. That means, in essence, that they must depend on the configure
+    and  corresponding build targets (with stamps) and ensure that the
+    prep work is all done before they are invoked. The advantage is that
+    nothing is going to be remade more often than it needs to. It also
+    means we do not need to produce as many stamp files. So, the only
+    dependencies on any of the intermediate targets are targets that have
+    not been registered into the ladder created in rulesets/common/targets.mk
+  * The kernel image maintainer scripts have been greatly
+    changed. Firstly, they now use  debconf; and a number of questions
+    have been moved to the config file (create-kimage-link-$version,
+    old-initrd-link, old-dir-initrd-link, old-system-map-link) while
+    others are asked conditionally in the postinst (depmod-error,
+    depmod-error-initrd, bootloader-test-error, bootloader-error). The
+    postinst has also become far less verbose; the users are far better
+    educated a decade after this was written, and there are other sources
+    of information about booting than the postinst of a kernel image.
+  * The preinst also uses debconf. All the questions asked are still here
+    -- we just use debconf to ask the user. Also, the priority, and need
+    to break non-interactive installs was re-evaluated, and the preinst
+    breaks in far fewer cases than it did before. 
+  * Second, the postinst gets rid of the code that generated boot floppies
+    and created lilo.conf (that latter was probably illegal under current
+    policy anyway). The do_boot_enable and do_boot_floppy configuration
+    variables in /etc/kernel-img.conf are now invalid.
+  * Also, the source tree is not automatically cleaned; the do_clean
+    configuration variable, and the environment variable CLEAN_SOURCE are
+    now control if the source tree is optionally cleaned after the kernel
+    image package is built.
+
+ -- Manoj Srivastava <srivasta@debian.org>  Thu,  3 Nov 2005 23:26:29 -0600
+
+kernel-package (10.003) experimental; urgency=low
+
   * Bug fix: "can not clean up the kernel source tree", thanks to           
     Chun-Chung Chen.                                        
   * Bug fix: "kernel-package creates packages depending on

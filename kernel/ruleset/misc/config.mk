@@ -115,7 +115,6 @@ endif
 
 
 
-# The Debian revision
 ifneq ($(strip $(DEBIAN_REVISION)),)
   HAS_CHANGELOG := $(shell \
     if test -f debian/changelog && ( test -f stamp-debian || test -f debian/official );\
@@ -124,31 +123,6 @@ ifneq ($(strip $(DEBIAN_REVISION)),)
 else
   HAS_CHANGELOG := $(shell if test -f debian/changelog; then echo YES;\
                           else echo NO; fi; )
-endif
-# If there is a changelog file, it overrides. The only exception is
-# when there is no stamp-config, and there is no debian/official,
-# *AND* there is a DEBIAN_REVISION, in which case the DEBIAN_REVISION
-# over rides (since we are going to replace the changelog file soon
-# anyway.  Else, use the commandline or env var setting. Or else
-# default to 10.00.Custom, unless the human has requested that the
-# revision is mandatory, in which case we raise an error
-
-ifeq ($(strip $(HAS_CHANGELOG)),YES)
-  debian := $(shell if test -f debian/changelog; then \
-                     perl -nle 'print /\((\S+)\)/; exit 0' debian/changelog;\
-                  fi; )
-else
-  ifneq ($(strip $(DEBIAN_REVISION)),)
-    debian := $(DEBIAN_REVISION)
-  else
-    ifeq ($(strip $(debian)),)
-      ifneq ($(strip $(debian_revision_mandatory)),)
-        $(error A Debian revision is mandatory, but none was provided)
-      else
-        debian := 10.00.Custom
-      endif
-    endif
-  endif
 endif
 
 # Hmm. The version that we have computed *MUST* match the one that is in the
