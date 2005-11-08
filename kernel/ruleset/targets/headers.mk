@@ -148,17 +148,20 @@ ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 		$(DEBDIR)/pkg/headers/postinst >        $(TMPTOP)/DEBIAN/postinst
 	chmod 755                                       $(TMPTOP)/DEBIAN/postinst
 #	echo "/etc/kernel/postinst.d/create_link-$(version)" > $(TMPTOP)/DEBIAN/conffiles
+	cp -pf debian/control debian/control.dist
 	k=`find $(TMPTOP) -type f | ( while read i; do                    \
           if file -b $$i | egrep -q "^ELF.*executable.*dynamically linked" ; then \
             j="$$j $$i";                                                  \
            fi;                                                            \
-        done; echo $$j; )`; dpkg-shlibdeps $$k
+        done; echo $$j; )`; test -z "$$k" || dpkg-shlibdeps $$k;          \
+        test -n "$$k" || perl -pli~ -e 's/\$$\{shlibs:Depends\}\,?//g' debian/control
+	test ! -e debian/control~ || rm -f debian/control~
 	dpkg-gencontrol -isp -DArchitecture=$(DEB_HOST_ARCH) -p$(package) \
                                           -P$(TMPTOP)/
 	chown -R root:root                  $(TMPTOP)
 	chmod -R og=rX                      $(TMPTOP)
 	dpkg --build                        $(TMPTOP) $(DEB_DEST)
-	rm -rf                              $(TMPTOP)
+	cp -pf debian/control.dist          debian/control
 endif
 
 binary/$(h_package): 

@@ -17,8 +17,9 @@ Description: Header files related to Linux kernel, specifically,
  This package provides kernel header files for sites 
  that want the latest kernel headers for version 
  =V.
- Please read /usr/share/doc/=ST-headers-=V/debian.README.gz for
- details
+ Please read 
+ /usr/share/doc/=ST-headers-=V/debian.README.gz
+ for details
 
 Package: =ST-source-=V
 Architecture: all

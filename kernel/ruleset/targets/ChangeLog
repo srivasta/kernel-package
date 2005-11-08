@@ -1,5 +1,14 @@
 2005-11-08  Manoj Srivastava  <srivasta@debian.org>
 
+	* headers.mk (debian/$(h_package)):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-55
+		  Well, it turns out that only on some architectures do we
+		  havea binary using a dynamically loaded shared library,
+		  so the call to dpkg-shlibs was failing on the
+		  others. Now, go throug a complex dance in which we
+		  either call dpkg-shlibs, or edit the control file using
+		  Perl, so that both cases can be catered to. 
+
 	* image.mk:
 		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-67
 		  Export the variable IMAGE_TOP before calling scripts in
