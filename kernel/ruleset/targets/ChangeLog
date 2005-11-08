@@ -7,6 +7,9 @@
 		  script.  
 		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-55
 		  typo fix. 
+		  aparently, there was an elf binary in the package; and
+		  we were missing a share lib dependency. Added a
+		  call to dpkg-shlibdeps 
 
 2005-11-06  Manoj Srivastava  <srivasta@debian.org>
 

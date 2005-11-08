@@ -135,6 +135,11 @@ ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 		$(DEBDIR)/pkg/headers/postinst >        $(TMPTOP)/DEBIAN/postinst
 	chmod 755                                       $(TMPTOP)/DEBIAN/postinst
 #	echo "/etc/kernel/postinst.d/create_link-$(version)" > $(TMPTOP)/DEBIAN/conffiles
+	k=`find $(TMPTOP) -type f | ( while read i; do                    \
+          if file -b $$i | egrep -q "^ELF.*executable.*dynamically linked" ; then 
+            j="$$j $$i";                                                  \
+           fi;                                                            \
+        done; echo $$j; )`; dpkg-shlibdeps $$k
 	dpkg-gencontrol -isp -DArchitecture=$(DEB_HOST_ARCH) -p$(package) \
                                           -P$(TMPTOP)/
 	chown -R root:root                  $(TMPTOP)

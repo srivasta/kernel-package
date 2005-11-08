@@ -178,7 +178,7 @@ Description: Create a symbolic link to the current kernel image?
  useful if you use a boot loader like lilo.
 
 Template: =ST-image-=V/postinst/kimage-is-a-directory
-Type: Note
+Type: note
 Description: Image symbolic link destination is a directory, aborting
  ${kimage} is a directory, which I did not expect.  I am trying to create a
  symbolic link with that name linked to ${image_dest}. Since a directory

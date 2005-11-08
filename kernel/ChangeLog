@@ -1,9 +1,27 @@
 2005-11-07  Manoj Srivastava  <srivasta@debian.org>
 
+	* Control (Recommends):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-53
+		  Should not depend on a virtual package alone. added
+		  libc6-dev as an real alternate. 
+	  (Description):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-53
+		  Fixed to shut up lintian. 
+	  (Depends):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-53
+		  Added a dependency for ${shlibs:Depends} 
+		  (Description):
+			  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-53
+			  Break up a line since it likely causes the
+			  exceeds width  warning.  
+
 	* templates.in (Type):
 		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-56
 		  Types should be all lower case, as should boolean
 		  default values. 
+		  (Type):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-56
+			  Missed one. 
 
 2005-11-05  Manoj Srivastava  <srivasta@debian.org>
 
