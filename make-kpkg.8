@@ -178,24 +178,6 @@ file from before, you can set the environment variable
 .B VERSION_H_OK
 which shall shut off the warning.
 .TP
-.BR \-\-flavour\ foo
-This option is now deprecated in favor of 
-.BR \-\-append_to_version.
-Sets the kernel flavour to the argument \fBfoo\fR. The flavour is
-also appended to the package name. You need a patched Makefile to make
-this work properly (see /usr/share/doc/kernel\-package/\s-1Flavours\s0.gz).
-It may contain only 
-.B lowercase
-alphanumerics and the characters \- + . (full stop, hyphen, and
-plus). Uppercase letter are not permitted under the Policy for a new
-package. \fB\s-1NOTE\s0\fR: Hyphens are discouraged.  (Look at
-Chapters 4 of the Policy manual for details). Please note that you
-shall need to
-.B make\-kpkg 
-.I clean
-.B FIRST
-if you wish to recompile the kernel\-image using a flavour.
-.TP
 .BR \-\-added\-modules\ foo
 .TP
 .BR \-\-added_modules\ foo

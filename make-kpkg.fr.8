@@ -179,24 +179,6 @@ alors qu'il y a déjà un fichier créé précédemment
 .B VERSION_H_OK
 ce qui fera cesser cet avertissement.
 .TP
-.BR \-\-flavour\ toto
-Cette option est maintenant déconseillée, au profit de
-.BR \-\-append_to_version.
-pour définir à \fBtoto\fR la «\ variante\ » (flavour) du noyau. La 
-«\ variante\ » est ajoutée aussi au nom du paquet. Vous aurez besoin d'un
-Makefile modifié afin que cela fonctionne convenablement (consultez
-/usr/share/doc/kernel\-package/\s-1Flavours\s0.gz).
-Il ne peut être constitué que de caractères alphanumériques 
-.B minuscules
-et des caractères \- + . (trait d'union, plus et point). Les majuscules ne sont
-pas autorisées pour les nouveaux paquets par la Charte. \fB\s-1NOTA\s0\fR: Les
-traits d'union sont déconseillés (Voir le Chapitre 4 de la Charte pour plus
-de détails).  Notez bien que vous devrez certainement utiliser
-.B make\-kpkg 
-.I clean
-.B EN PREMIER LIEU
-si vous voulez recompiler le kernel\-image en utilisant une «\ variante\ ».
-.TP
 .BR \-\-added\-modules\ toto
 .TP
 .BR \-\-added_modules\ toto

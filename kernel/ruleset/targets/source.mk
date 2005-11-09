@@ -44,7 +44,6 @@ ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 	$(install_file) $(DEBDIR)/docs/README.grub     $(DOCDIR)/
 	$(install_file) $(DEBDIR)/docs/README.tecra    $(DOCDIR)/
 	$(install_file) $(DEBDIR)/docs/README.modules  $(DOCDIR)/
-	$(install_file) $(DEBDIR)/docs/Flavours        $(DOCDIR)/
 	$(install_file) $(DEBDIR)/docs/Rationale       $(DOCDIR)/
 	$(install_file) $(DEBDIR)/examples/sample.module.control               \
                                                        $(DOCDIR)/
@@ -63,7 +62,7 @@ ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
   endif
 	$(install_file) debian/changelog      $(SRCDIR)/Debian.src.changelog
 	(cd $(SRCDIR);                                                          \
-            $(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) ARCH=$(KERNEL_ARCH) distclean)
+            $(MAKE) $(EXTRAV_ARG) $(CROSS_ARG) ARCH=$(KERNEL_ARCH) distclean)
 	(cd $(SRCDIR);         rm -f stamp-building $(STAMPS_TO_CLEAN))
 	(cd $(SRCDIR);                                                          \
          [ ! -d scripts/cramfs ]   || make -C scripts/cramfs distclean ; )

@@ -39,7 +39,6 @@ my $arch_in_name=0;
 my $bzimage;
 my $config_target='oldconfig';
 my $cross_compile='';
-my $flavour='';
 my $key_id='';
 my $help_opt=0;
 my $noexec;
@@ -61,7 +60,6 @@ my %option_ctl =
    "noexec"              => \$noexec,
    "initrd"              => \$initrd,
    "revision=s"          => \$revision,
-   "flavour=s"           => \$flavour,
    "added_modules=s"     => \$added_modules,
    "added-modules=s"     => \$added_modules,
    "added-patches=s"     => \$added_patches,
@@ -153,22 +151,6 @@ are not permitted under the Policy for a new package.
 Please note that you must run a B<make-kpkg clean> after configuring
 the kernel using make (x|menu)?config, since that creates
 include/linux/version.h without the appended version I<foo>.
-
-=back
-
-=item B<--flavour> foo
-
-=over 2
-
-This option is now deprecaetd in favour of B<--append_to_version>.
-Sets the kernel flavour to the argument B<foo>. The flavour is also
-appended to the package name. You need a patched Makefile to make this
-work properly (see /usr/share/doc/kernel-package/Flavours.gz).  It may
-contain only B<lowercase> alphanumerics and the characters - + . (full
-stop, hyphen, and plus). Uppercase letters are not permitted under the
-Policy for a new package. B<NOTE>: Hyphens are discouraged.  (Look at
-Chapters 4 of the Policy manual for details).
-
 
 =back
 
@@ -393,8 +375,6 @@ usage: $main::MYNAME [options] target [target ...]
  --help                This message.
  --revision number     The debian revision number. ([a-zA-Z.+0-9]) (Must
                          have digit)
- --flavour  foo        an additional kernel sub-version. ([-a-z.+0-9])
-                       OBSOLETE
  --append-to-version foo
  --append_to_version foo an additional kernel sub-version. ([-a-z.+0-9])
                          Does not require editing the kernel Makefile
@@ -893,34 +873,6 @@ EOMSG
   }
 
   if ($Targets !~ m/^\s*clean\s*$/) {
-    if ($flavour){
-      my $makefile_flavour = `grep FLAVOUR Makefile`;
-      if (! $makefile_flavour) {
-        print STDERR " Error: The top level makefile has not been edited\n";
-        print STDERR " to define FLAVOUR. Please read FLAVOURS.gz\n";
-        exit 1;
-      }
-      if ($flavour !~ m/^[a-z\d\.\-\+]+$/o) {
-        print STDERR " Error: The flavour variable may only contain\n";
-        print STDERR " lowercase alphanumerics and  the  characters  - +  .\n";
-        print STDERR " The current value is: $flavour\n";
-        print STDERR " Aborting.\n";
-        exit 1;
-      }
-      if ($flavour =~ m/[A-Z]+/o){
-        print STDERR "Error: Uppercase letters are not allowed in\n";
-        print STDERR "the flavour variable, since the flavour becomes\n";
-        print STDERR "part of the kernel-image name; and package names\n";
-        print STDERR "may only cantain lowercase alphanumerics.\n";
-        print STDERR "I have $flavour, which shall be dissallowed by the\n";
-        print STDERR "packaging tools. Aborting.\n";
-        exit 1;
-      }
-      $command .= " FLAVOUR=$flavour ";
-      $alt_cmd .= " FLAVOUR=$flavour "
-        unless -f "debian/ruleset/kernel_version.mk";
-    }
-
     if ($append_to_version) {
       if ($append_to_version !~ m/^[a-z\d\.\-\+]+$/o) {
         print STDERR " Error: The extended version may only contain\n";
@@ -979,9 +931,6 @@ EOMSG
 
         my $composite_version = "$kernel_version.$patch_level.$sublevel" .
           $extra_version  . $append_to_version;
-        if ($flavour) {
-          $composite_version  .= "+" . $flavour;
-        }
         if ($uts_release_version ne $composite_version) {
           print STDERR "Warning: The file include/linux/version.h exists\n";
           print STDERR "The contained UTS_VERSION string:\n";

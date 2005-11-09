@@ -13,8 +13,7 @@
 ##                    extracts the components of the version string. It
 ##                    uses the kernel Makefile itself, so it takes into
 ##                    account everything the kernel Makefile itrself pays
-##                    attention to. This file also calculated the obsolete
-##                    Debian specific Flavour variable.
+##                    attention to. 
 ## 
 ## arch-tag: 024a242d-938b-4391-a812-e5ab9099a8a6
 ## 
@@ -87,34 +86,6 @@ HAS_ILLEGAL_EXTRA_VERSION =$(shell                                              
   endif
 endif
 
-# NOTE: FLAVOUR is now obsolete
-# If you want to have more than one kernel configuration per kernel
-# version, set FLAVOUR in the top level kernel Makefile *before*
-# invoking make-kpkg -- it will be appended to UTS_RELEASE in
-# version.h (separated by a hyphen). This affects everything -- the
-# names and versions of the image, source, headers, and doc packages,
-# and where the modules are searched for in /lib/modules.
-
-ifdef FLAVOUR
-# uhm - should check if we really have a Makefile capable of Flavours?
-endif
-
-FLAVOUR:=$(shell grep ^FLAVOUR Makefile 2>/dev/null | \
-                  perl -ple 's/FLAVOUR[\s:=]+//g')
-
-ifeq ($(strip $(FLAVOUR_SEP)),)
-FLAVOUR_SEP:= +
-endif
-
-ifneq ($(strip $(FLAVOUR)),)
-INT_FLAV := $(FLAVOUR_SEP)$(FLAVOUR)
-FLAV_ARG := FLAVOUR=$(FLAVOUR)
-else
-INT_FLAV :=
-FLAV_ARG :=
-endif
-
-## This is the replacement for FLAVOUR
 EXTRAVERSION =$(strip $(EXTRA_VERSION))
 ifneq ($(strip $(APPEND_TO_VERSION)),)
 iatv := $(strip $(APPEND_TO_VERSION))
@@ -130,7 +101,7 @@ UTS_RELEASE_VERSION=$(shell if [ -f include/linux/version.h ]; then             
                  else echo "" ;                                                         \
                  fi)
 
-version = $(VERSION).$(PATCHLEVEL).$(SUBLEVEL)$(EXTRAVERSION)$(iatv)$(INT_FLAV)$(LOCALVERSION)
+version = $(VERSION).$(PATCHLEVEL).$(SUBLEVEL)$(EXTRAVERSION)$(iatv)$(LOCALVERSION)
 
 # Bug out if the version number id not all lowercase
 lc_version = $(shell echo $(version) | tr A-Z a-z)

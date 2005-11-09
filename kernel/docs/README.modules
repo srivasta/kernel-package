@@ -206,32 +206,28 @@ MODULE Packaging hints
    h) APPEND_TO_VERSION This contains a string to be appended to the 
                         EXTRAVERSION variable. This is already factored 
                         into the KVERS variable above.
-   i) FLAVOUR Contains the flavour, if any, of the current
-              kernel. This is already factored into the KVERS variable
-	      above.  Please note that FLAVOURS are now deprecated in
-              preference to  APPEND_TO_VERSION
-   j) INT_SUBARCH Contains the SUB arch if any if and only if the 
+   i) INT_SUBARCH Contains the SUB arch if any if and only if the 
                   ARCH_IN_NAME variable has been set. I suspect that the
                   user wants the .deb names to be modified (but not the
                   kernel version or the location of the dir in which to
                   find modules if this is set. This is *NOT* factored
                   into KVERS above, and is there to be used at your
                   discretion. 
-   k) UNSIGN_CHANGELOG  A boolean
-   l) UNSIGN_SOURCE     A boolean
-   m) ROOT_CMD          a program, like sudo or fakeroot
-   n) root_cmd This is a misnomer. That variable actually holds arguments
+   j) UNSIGN_CHANGELOG  A boolean
+   k) UNSIGN_SOURCE     A boolean
+   l) ROOT_CMD          a program, like sudo or fakeroot
+   m) root_cmd This is a misnomer. That variable actually holds arguments
                for dpkg, specifically, -uc -us -r<blah>, or any
                combination thereof, asd requested by the user. This
                may be set in the config file, so if this variable
                exists, it incorporates and over rides the env vars
                UNSIGN_CHANGELOG, UNSIGN_SOURCE, and ROOT_CMD
-   o) CONCURRENCY_LEVEL The setting from the user passed in to pass to
+   n) CONCURRENCY_LEVEL The setting from the user passed in to pass to
       make -j. kernel-package itself does not call the modules target
       with -j since it does not know if that is safe; it is up to
       module maintainers to see if this parallel compilation setting
       may be used.
-   p) KPKG_EXTRAV_ARG A string. It is either empty, or contains a
+   o) KPKG_EXTRAV_ARG A string. It is either empty, or contains a
       directive to set the EXTRAVERSION variable.
 
 	Have fun,

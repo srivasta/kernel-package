@@ -19,7 +19,7 @@ _make_kpkg()
              --append_to_version --append-to-version --arch --arch_in_name \
              --arch-in-name binary build buildpackage --bzimage clean \
              --config configure --cross_compile --cross-compile debian \
-             --flavour --help --initrd kernel_doc kernel_headers kernel_image \
+             --help --initrd kernel_doc kernel_headers kernel_image \
              kernel_source libc-kheaders modules modules_clean modules_config \
              modules_image --noexec --pgpsign --stem --revision --rootcmd --subarch \
              --targets --uc --us --zimage'

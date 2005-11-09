@@ -1,3 +1,7 @@
+2005-11-08  Manoj Srivastava  <srivasta@debian.org>
+
+	* README: No longer mention FLAVOURS, since that is now gone.
+
 2005-11-07  Manoj Srivastava  <srivasta@debian.org>
 
 	* config.mk:

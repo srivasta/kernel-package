@@ -19,7 +19,7 @@ CONFLOC    := /etc/kernel-pkg.conf
 LIBLOC     := /usr/share/kernel-package
 MODULE_LOC := /usr/src/modules
 
-DOCFILES = README.modules README.tecra README.grub Flavours HOWTO-Linux-2.6-Woody Rationale
+DOCFILES = README.modules README.tecra README.grub HOWTO-Linux-2.6-Woody Rationale
 EXAMPLES = sample.kernel-img.conf kernel_grub_conf.sh sample.posthook.sh
 
 # where kernel-package files go to
@@ -82,7 +82,6 @@ install:
 	$(make_directory)  $(prefix)/usr/share/$(package)/docs
 	$(install_file)    debian/changelog                  $(DOCDIR)/changelog
 	$(install_file)    README                            $(DOCDIR)/README
-	$(install_file)    kernel/docs/Flavours              $(DOCDIR)/Flavours
 	$(install_file)    kernel/docs/HOWTO-Linux-2.6-Woody $(DOCDIR)/
 	$(install_file)    Problems                          $(DOCDIR)/Problems
 	$(install_file)    Multi-Arch                        $(DOCDIR)/Multi-Arch

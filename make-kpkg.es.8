@@ -174,23 +174,6 @@ anterior, puede establecer la variable de entorno
 .B VERSION_H_OK
 que debería parar estos avisos.
 .TP
-.BR \-\-flavour\ tal
-Esta opción está deprecada en favor de
-.BR \-\-append_to_version.
-Establece el sabor del núcleo según el argumento \fBtal\fR. El sabor también es
-añadido al nombre del paquete. Necesita un Makefile parcheado para que esto
-funcione apropiadamente (lea /usr/share/doc/kernel\-package/\s\-1Flavours\s0.gz).
-Sólo debe de contener caracteres alfanuméricos en
-.B minúsculas
-y los caracteres \- + . (guión, signo más y punto). Las letras en mayúsculas no
-están permitidas. \fB\s\-1NOTA\s0\fR: se desaconsejan los guiones. (Lea el
-capítulo 4 de las Normas de Debian para más detalles). Dese cuenta de que
-necesita ejecutar
-.B make\-kpkg 
-.I clean
-.B PRIMERO
-si desea recompilar una imagen del núcleo usando sabores.
-.TP
 .BR \-\-added\-modules\ tal
 .TP
 .BR \-\-added_modules\ tal

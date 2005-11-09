@@ -312,11 +312,6 @@ not require one to edit that makefile manually.  This can also be done
 by setting the environment variable APPEND_TO_VERSION. The command
 line invocation overrides the env variable. 
 
-The method described in the /usr/share/doc/kernel-package/Flavours.gz
-file is obsolete (Note: This involves modifying the kernel sources top
-level Makefile). Also, if recompiling and using a different flavour,
-one needs to do a make-kpkg clean in between compiles.
-
 You may also place long term directives (like your name and email
 address) in the file /etc/kernel-pkg.conf (or ~/.kernel-pkg.conf).
 Putting your name and address in that file is a good idea, to remind
@@ -668,7 +663,7 @@ image = /vmlinuz.old lines in your lilo.conf (or whatever config files
 your boot loader uses -- please read documentation on your boot loader
 for details). Oh, and if your kernel image package uses initrd (as do
 the newer official kernel image packages), please do not forget to add
-a line (initrd=/boot/initrd-2.4.X-flavour) in your lilo.conf file
+a line (initrd=/boot/initrd-2.4.X-foo) in your lilo.conf file
 pointing out this fact to your boot loader.
 
 Conversely, people who wish to tightly control the versions in
@@ -788,9 +783,9 @@ files and the /lib/modules/X.X.XX directory that the previous kernel
 image contained.
 
 If you try to install the recompiled kernel image over the previous
-kernel image (same version and flavour), then the install scripts
-detect that, and ask you to move at least the /lib/modules/X.X.XX dir
-away. If you continue anyway, the files in /boot shall be overwritten. 
+kernel image (same version), then the install scripts detect that, and
+ask you to move at least the /lib/modules/X.X.XX dir away. If you
+continue anyway, the files in /boot shall be overwritten.
 
 Also, if you try to recompile with a changed --revison option or a
 different debian revision, you shall have to make-kpkg clean, and then

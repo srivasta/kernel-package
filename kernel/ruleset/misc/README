@@ -34,5 +34,4 @@ version_vars.mk: This file looks at the top level kernel Makefile, and
                  extracts the components of the version string. It
                  uses the kernel Makefile itself, so it takes into
                  account everything the kernel Makefile itrself pays
-                 attention to. This file also calculated the obsolete
-                 Debian specific Flavour variable.
+                 attention to.
