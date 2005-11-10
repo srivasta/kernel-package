@@ -38,6 +38,7 @@ loader=NoLoader
 ifneq (,$(findstring $(KPKG_SUBARCH), powerpc powerpc64))
   ifneq (,$(findstring $(KPKG_SUBARCH), powerpc64))
     KERNEL_ARCH:=ppc64
+    target := vmlinux
   endif
   ifneq (,$(findstring $(KPKG_SUBARCH), powerpc))
     KERNEL_ARCH:=ppc
@@ -45,9 +46,9 @@ ifneq (,$(findstring $(KPKG_SUBARCH), powerpc powerpc64))
     IMAGE_POST_PROCESS_TARGET := mkvmlinuz_support_install
     IMAGE_POST_PROCESS_DIR    := arch/ppc/boot
     INSTALL_MKVMLINUZ_PATH = $(SRCTOP)/$(IMAGE_TOP)/usr/lib/kernel-image-${version}
+    target := zImage
+    loaderdep=mkvmlinuz
   endif
-  target := zImage
-  loaderdep=mkvmlinuz
 else
   KERNEL_ARCH=ppc64
   target = $(kimage)

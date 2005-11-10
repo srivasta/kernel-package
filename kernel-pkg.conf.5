@@ -362,6 +362,22 @@ for examples). This is useful for people who need to compile for
 several architectures. Defaults to 
 .I /usr/share/kernel\-package/Config
 .TP
+.B INITRD_CMD
+Set this variable to a space separated list of executables that create
+an initial RAM disk. This only has any effect if installing a
+kernel-image that uses an initial RAM disk. The commands so pointed
+must be drop-in compatible with
+.I mkinitrd.
+This sets the built in default used by the postinst script at
+installation time, it can be overridden by the administrator at any
+target machine in
+.B /etc/kernel-img.conf.
+If not set, it Defaults to a subset of
+.I "mkinitrd mkinitrd.yaird mkinitramfs",
+the subset being decided based on the version of the kernel being
+built, so one should refrain from setting this manually -- unless one
+knows what one is doing.
+.TP
 .B IMAGEDIR
 If you want the image to be stored elsewhere than
 .I /boot
@@ -382,22 +398,6 @@ Set this variable, either in the environment or in the config file, to
 point to the location where the kernel config files are
 located. Defaults to 
 .I /usr/share/kernel\-package/Config
-.TP
-.B INITRD_CMD
-Set this variable to a space separated list of executables that create
-an initial RAM disk. This only has any effect if installing a
-kernel-image that uses an initial RAM disk. The commands so pointed
-must be drop-in compatible with
-.I mkinitrd.
-This sets the built in default used by the postinst script at
-installation time, it can be overridden by the administrator at any
-target machine in
-.B /etc/kernel-img.conf.
-If not set, it Defaults to a subset of
-.I "mkinitrd mkinitrd.yaird mkinitramfs",
-the subset being decided based on the version of the kernel being
-built, so one should refrain from setting this manually -- unless one
-knows what one is doing.
 .TP
 .B PATCH_DIR 
 Set this variable, either in the environment or in the config file, to
