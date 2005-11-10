@@ -40,7 +40,14 @@ packages. This utility needs to be run from a top level
 Linux
 kernel source directory,
 which has been previously configured (unless you are using the
-configure target). Typically, you run this command as root, or under
+configure target). Normally, if kernel-package does not find a 
+.I .config
+file in the current directory, it tries very hard to get an
+appropriate one (usually a config file already tailored for debian
+kernels for that architecture), and then calls
+.B make oldconfig
+to let the user answer any new questions. Typically, you run this
+command as root, or under
 .B fakeroot,
 or tell 
 .B make\-kpkg

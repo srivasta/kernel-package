@@ -1,3 +1,11 @@
+2005-11-09  Manoj Srivastava  <srivasta@debian.org>
+
+	* headers.mk:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-55
+		  Restrict the search for ELF filesfor stripping to the
+		  dir in which they are found; which may or may notbe
+		  present. This vastly speeds up the generation.
+
 2005-11-08  Manoj Srivastava  <srivasta@debian.org>
 
 	* source.mk (install/$(s_package)):

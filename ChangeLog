@@ -1,3 +1,10 @@
+2005-11-09  Manoj Srivastava  <srivasta@debian.org>
+
+	* make-kpkg.8:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-55
+		  expand on the fact that is there is no .config,
+		  make-kpkg creates one for you, and runs make oldconfig. 
+
 2005-11-08  Manoj Srivastava  <srivasta@debian.org>
 
 	* _make-kpkg:

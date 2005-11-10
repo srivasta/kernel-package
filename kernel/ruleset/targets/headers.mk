@@ -115,12 +115,12 @@ ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 #         $(DEBDIR)/pkg/headers/create_link  >                        \
 #                $(TMPTOP)/etc/kernel/postinst.d/create_link-$(version)
   ifeq (,$(findstring nostrip,$(DEB_BUILD_OPTIONS)))
-	find $(TMPTOP) -type f | while read i; do                                         \
+	test ! -d $(SRCDIR)/scripts || find $(SRCDIR)/scripts -type f | while read i; do  \
            if file -b $$i | egrep -q "^ELF.*executable"; then                             \
              strip --strip-all --remove-section=.comment --remove-section=.note $$i;      \
            fi;                                                                            \
          done
-	find $(TMPTOP) -type f | while read i; do                                         \
+	test ! -d $(SRCDIR)/scripts || find $(SRCDIR)/scripts -type f | while read i; do  \
            if file -b $$i | egrep -q "^ELF.*shared object"; then                          \
              strip --strip-unneeded --remove-section=.comment --remove-section=.note $$i; \
            fi;                                                                            \
