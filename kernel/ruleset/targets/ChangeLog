@@ -1,3 +1,30 @@
+2005-11-30  Manoj Srivastava  <srivasta@debian.org>
+
+	* image.mk (install/$(i_package)):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-72
+		  Move the clean hook out of here.
+	  (debian/$(i_package)):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-72
+		  And into here. 
+
+	* headers.mk (install/$(h_package)):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-72
+		  It was reported that the hooks called while various
+		  kernel packages were being built were now called
+		  _before_ the maintainer scripts were put into place,
+		  preventing any modifications of these scripts. In some
+		  cases, like the image and headers packages, it was
+		  possible to move the hooks to a point just before the
+		  package creation. In other cases, like for the source
+		  package, this was not possible, since the source is
+		  tarred up prior to packaging, and the hooks needs to be
+		  run before the tarring is done. In the case of the manual
+		  package, there was no hook invoked. Move the hook
+		  invocation away from the install target. 
+	  (debian/$(h_package)):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-72
+		  And invoke it here instead. 
+
 2005-11-09  Manoj Srivastava  <srivasta@debian.org>
 
 	* headers.mk:

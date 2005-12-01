@@ -169,10 +169,6 @@ ifeq ($(strip $(NEED_IMAGE_POST_PROCESSING)),YES)
 	    ARCH=$(KERNEL_ARCH) -C $(IMAGE_POST_PROCESS_DIR) $(IMAGE_POST_PROCESS_TARGET);  \
 	fi
 endif
-ifneq ($(strip $(image_clean_hook)),)
-	(cd $(TMPTOP);              \
-               test -x $(image_clean_hook) && $(image_clean_hook))
-endif
 	test ! -s applied_patches || cp applied_patches                        \
                         $(TMPTOP)/$(IMAGEDIR)/patches-$(version)
 	test ! -s applied_patches || chmod 644                                 \
@@ -307,6 +303,9 @@ else
             -e 's/=S/$(no_symlink)/g' -e 's@=B@$(KERNEL_ARCH)@g'     \
           $(DEBDIR)/pkg/virtual/um/prerm > $(TMPTOP)/DEBIAN/prerm
 	chmod 755 $(TMPTOP)/DEBIAN/prerm
+endif
+ifneq ($(strip $(image_clean_hook)),)
+	(cd $(TMPTOP); test -x $(image_clean_hook) && $(image_clean_hook))
 endif
 	dpkg-gencontrol -DArchitecture=$(DEB_HOST_ARCH) -isp         \
                         -p$(package) -P$(TMPTOP)/

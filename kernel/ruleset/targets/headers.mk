@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 16:23:51 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Mon Oct 31 16:23:51 2005
+## Last Modified On : Wed Nov 30 18:33:08 2005
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 0
+## Update Count     : 1
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : This file is responsible for creating the kernel-headers packages 
@@ -126,10 +126,6 @@ ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
            fi;                                                                            \
          done
   endif
-
-  ifneq ($(strip $(header_clean_hook)),)
-	(cd $(SRCDIR); test -x $(header_clean_hook) && $(header_clean_hook))
-  endif
 endif
 
 debian/$(h_package): testroot
@@ -156,6 +152,9 @@ ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
         done; echo $$j; )`; test -z "$$k" || dpkg-shlibdeps $$k;          \
         test -n "$$k" || perl -pli~ -e 's/\$$\{shlibs:Depends\}\,?//g' debian/control
 	test ! -e debian/control~ || rm -f debian/control~
+  ifneq ($(strip $(header_clean_hook)),)
+	(cd $(SRCDIR); test -x $(header_clean_hook) && $(header_clean_hook))
+  endif
 	dpkg-gencontrol -isp -DArchitecture=$(DEB_HOST_ARCH) -p$(package) \
                                           -P$(TMPTOP)/
 	chown -R root:root                  $(TMPTOP)
