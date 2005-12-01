@@ -623,7 +623,7 @@ With a custom .config file in place (created as above) run again:
 | trick:                                                                |
 |  % make config                                                        |
 |  % make-kpkg build                                                    |
-|  % $Get_Root make -f debian/rules kernel-image-deb                    |
+|  % $Get_Root make -f debian/rules stamp-kernel-image                  |
 | shall generate a kernel image with the username of the user embedded  |
 | in it.                                                                |
 |                                                                       |

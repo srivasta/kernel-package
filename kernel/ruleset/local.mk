@@ -4,9 +4,9 @@
 ## Created On       : Fri Oct 28 00:37:46 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Sat Oct 29 00:09:40 2005
+## Last Modified On : Thu Dec  1 15:14:01 2005
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 4
+## Update Count     : 5
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : 
@@ -158,7 +158,7 @@ STAMPS_TO_CLEAN += stamp-kernel-headers
 
 kernel-image   kernel_image:   stamp-configure stamp-build-arch stamp-kernel-image
 	$(REASON)
-stamp-kernel-image: install/$(i_package) binary/$(i_package) 
+kernel-image-deb stamp-kernel-image: install/$(i_package) binary/$(i_package) 
 	$(REASON)
 	echo done > $@
 STAMPS_TO_CLEAN += stamp-kernel-image

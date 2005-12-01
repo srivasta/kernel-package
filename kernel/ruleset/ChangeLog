@@ -1,3 +1,9 @@
+2005-12-01  Manoj Srivastava  <srivasta@debian.org>
+
+	* local.mk (kernel-image-deb stamp-kernel-image):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-73
+		  Add kernel-image-deb as a alias for stamp-kernel-image 
+
 2005-11-06  Manoj Srivastava  <srivasta@debian.org>
 
 	* minimal.mk (minimal_debian):
