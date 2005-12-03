@@ -1,3 +1,24 @@
+2005-12-03  Manoj Srivastava  <srivasta@debian.org>
+
+	* modules.mk (modules-image modules_image):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-74
+		  older kernel-package versions appear to want to run
+		  oldconfig in the headers package tree, which failed,
+		  since there was inadequate support for running
+		  oldconfig. This has also been fixed, since all we really
+		  need to depend on is a .config file. Change the
+		  dependency from configure to .config (so as not to tun
+		  oldconfig) 
+	  (modules):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-74
+		  Ditto
+	  (modules-config modules_config):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-74
+		  Ditto 
+	  (modules-clean modules_clean):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-74
+		  Ditto 
+
 2005-12-01  Manoj Srivastava  <srivasta@debian.org>
 
 	* local.mk (kernel-image-deb stamp-kernel-image):

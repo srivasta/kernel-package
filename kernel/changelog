@@ -1,6 +1,83 @@
 =ST-source-=V (=D) unstable; urgency=low
 
+  * It was pointed out to me that the ability to build third party modules
+    using make-kpkg and linux kernel headers packages had broken with
+    recent kernel packages, since the check for whether we were in a top
+    level kernel source directory failed to take into account if we were
+    in a header package directory, which is sufficient.
+  * Additionally, older kernel-package versions appear to want to run
+    oldconfig in the headers package tree, which failed, since there was
+    inadequate support for running oldconfig. This has also been fixed,
+    since all we really need to depend on is a .config file.
+  * Finally, make-kpkg insists on there being a ./debian directory, and it
+    makes sense to ship the directory in the source and header packages,
+    since shipping it means that we also remove the need for
+    kernel-package to be installed on the target system
+
+ -- Manoj Srivastava <srivasta@debian.org>  Sat,  3 Dec 2005 02:55:33 -0600
+
+kernel-package (10.011) unstable; urgency=low
+
+  * Bug fix: "DEBIAN/ directory doesn't appear to exist at
+    image_clean_hook time", thanks to Don Armstrong. Moved the hooks for
+    image and headers later in the process.              (Closes: #339659).
+  * Bug fix: "kernel-package: kernel-image-deb mentioned in README.gz but
+    removed in 10.x", thanks to Marc Haber. Well. The new name is
+    stamp-kernel-image. Changed docs, and added kernel-image-deb
+    temporarily as an alias.                             (Closes: #340978).
+
+ -- Manoj Srivastava <srivasta@debian.org>  Thu,  1 Dec 2005 15:30:27 -0600
+
+kernel-package (10.010) experimental; urgency=low
+
+  * Bug fix: "kernel-package: Fails to build ppc64 2.6.14 kernel", thanks
+    to Juergen Kreileder. Sven Luther provided the patch (Closes: #338449).
+
+ -- Manoj Srivastava <srivasta@debian.org>  Thu, 10 Nov 2005 21:47:09 -0600
+
+kernel-package (10.009) experimental; urgency=low
+
+  * The long obsolete --flavour option is now gone, and --apend-to-version
+    should be used. Also, --append-to-version may soon be superceded with
+    --abi, stay tuned.
+  * Speed up the stripping code in kernel header packages, by only looking
+    at the scripts directory (which was the only place with the elf
+    binaries). 
+
+ -- Manoj Srivastava <srivasta@debian.org>  Wed,  9 Nov 2005 22:55:55 -0600
+
+kernel-package (10.008) experimental; urgency=low
+
+  * Well, it turns out that only on some architectures do we havea binary
+    using a dynamically loaded shared library, so the call to dpkg-shlibs
+    was failing on the others. Now, go throug a complex dance in which we 
+    either call dpkg-shlibs, or edit the control file using Perl, so that
+    both cases can be catered to.
+
+ -- Manoj Srivastava <srivasta@debian.org>  Tue,  8 Nov 2005 08:51:08 -0600
+
+kernel-package (10.007) experimental; urgency=low
+
   * Aaargh, typo in the kernel header rules.
+  * The generated packages should not have native version numbers by
+    default, since they are not really debain native packages. The problem
+    was that the default version generated did not have a -, so chnaged
+    that value. The files affected are kernel-pkg.conf, README, 
+    kernel/ruleset/misc/version_vars.mk , kernel-pkg.conf.5,
+    kernel/docs/README,  kernel/ruleset/misc/config.mk. 
+  * While looking at Lintian errors, I noticed that apparently
+    kernel-headers package carries with it an elf binary, and thus should
+    depend on the shared libraries -- but did not. Fixed now by a search
+    and a call to dpkg-shlibs. Various minor nitpicks in the default
+    Control file also fixed.
+  * We also added a make snippet to find and strip the binaries we need to
+    run  dpkg-shlibs upon, since that is the policy.
+  * kernel/ruleset/targets/image.mk: Export the variable IMAGE_TOP before
+    calling scripts in $(SRCTOP)/debian/image.d and debian/post-install,
+    since that is what they expected. Bad idea changing an exposed
+    interface. 
+  * kernel/pkg/image/postrm:  Call purge to remove the questions from
+    debconf database when the package is purged. 
 
  -- Manoj Srivastava <srivasta@debian.org>  Mon,  7 Nov 2005 14:18:39 -0600
 

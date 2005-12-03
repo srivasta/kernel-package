@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 16:23:51 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Wed Nov 30 18:33:08 2005
+## Last Modified On : Sat Dec  3 01:08:54 2005
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 1
+## Update Count     : 3
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : This file is responsible for creating the kernel-headers packages 
@@ -112,6 +112,14 @@ ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
             -e 's@=M@$(MKIMAGE)@g'    -e 's/=OF/$(AM_OFFICIAL)/g'    \
             -e 's/=S/$(no_symlink)/g'  -e 's@=B@$(KERNEL_ARCH)@g'    \
             $(DEBDIR)/pkg/headers/create_link  > $(DOCDIR)/examples/create_link
+	test -d $(SRCDIR)/debian || mkdir $(SRCDIR)/debian
+	for file in $(DEBIAN_FILES) control changelog; do                    \
+            cp -f  $(DEBDIR)/$$file $(SRCDIR)/debian/;                       \
+        done
+	for dir  in $(DEBIAN_DIRS);  do                                      \
+          cp -af $(DEBDIR)/$$dir  $(SRCDIR)/debian/;                         \
+        done
+	(cd $(SRCDIR); find . -type d -name .arch-ids --exec rm -rf {} \; )
 #         $(DEBDIR)/pkg/headers/create_link  >                        \
 #                $(TMPTOP)/etc/kernel/postinst.d/create_link-$(version)
   ifeq (,$(findstring nostrip,$(DEB_BUILD_OPTIONS)))

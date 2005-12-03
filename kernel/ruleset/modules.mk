@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 10:37:44 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Mon Oct 31 10:37:44 2005
+## Last Modified On : Fri Dec  2 23:43:15 2005
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 0
+## Update Count     : 1
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : This file contains the targets responsible for third party
@@ -73,7 +73,7 @@ endef
 
 
 # only generate module image packages
-modules-image modules_image: configure
+modules-image modules_image: .config
 ifeq ($(strip $(shell grep -E ^[^\#]*CONFIG_MODULES $(CONFIG_FILE))),)
 	@echo Modules not configured, so not making $@
 else
@@ -111,7 +111,7 @@ endif
 endif
 
 # generate the modules packages and sign them
-modules: configure
+modules: .config
 ifeq ($(strip $(shell grep -E ^[^\#]*CONFIG_MODULES $(CONFIG_FILE))),)
 	@echo Modules not configured, so not making $@
 else
@@ -149,7 +149,7 @@ endif
 endif
 
 # configure the modules packages
-modules-config modules_config: configure
+modules-config modules_config: .config
 ifeq ($(strip $(shell grep -E ^[^\#]*CONFIG_MODULES $(CONFIG_FILE))),)
 	@echo Modules not configured, so not making $@
 else

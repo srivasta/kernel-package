@@ -4,9 +4,9 @@
 ## Created On	    : Mon Oct 31 18:07:07 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Mon Oct 31 18:07:07 2005
+## Last Modified On : Fri Dec  2 23:41:20 2005
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count	    : 0
+## Update Count	    : 3
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    : 
 ## Description	    : Various checks that would let the build process detect and
@@ -67,9 +67,18 @@ ifeq ($(strip $(int_am_root)),)
 endif
 
 define checkdir
-	@test -f Documentation/Changes -a -f kernel/wait.c || \
-	  (echo Not in correct source directory; exit 1)
+	@echo ""
 endef
+
+$(eval $(check_kernel_dir))
+$(eval $(check_kernel_headers))
+ifeq ($(strip $(IN_KERNEL_DIR)),)
+  ifeq ($(strip $(IN_KERNEL_HEADERS)),)
+    define checkdir
+	@(echo Not in correct source directory; exit 1)
+    endef
+  endif
+endif
 
 #Local variables:
 #mode: makefile

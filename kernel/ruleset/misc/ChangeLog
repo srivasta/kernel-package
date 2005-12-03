@@ -1,3 +1,14 @@
+2005-12-03  Manoj Srivastava  <srivasta@debian.org>
+
+	* checks.mk:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-74
+		  It was pointed out to me that the ability to build third
+		  party modules using make-kpkg and linux kernel headers
+		  packages had broken with recent kernel packages, since
+		  the check for whether we were in a top level kernel
+		  source directory failed to take into account if we were
+		  in a header package directory, which is sufficient.
+
 2005-11-08  Manoj Srivastava  <srivasta@debian.org>
 
 	* README: No longer mention FLAVOURS, since that is now gone.

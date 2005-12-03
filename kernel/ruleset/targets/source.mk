@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 13:55:32 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Mon Oct 31 13:55:32 2005
+## Last Modified On : Sat Dec  3 01:06:33 2005
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 0
+## Update Count     : 2
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : This file is responsible forcreating the kernel-source packages 
@@ -79,6 +79,14 @@ ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
            $(install_file) README.Debian        $(DOCDIR)/README.Debian.1st;    \
 	   gzip -9qf                            $(DOCDIR)/README.Debian.1st;    \
 	fi
+	test -d $(SRCDIR)/debian || mkdir $(SRCDIR)/debian
+	for file in $(DEBIAN_FILES) control changelog; do                    \
+            cp -f  $(DEBDIR)/$$file $(SRCDIR)/debian/;                       \
+        done
+	for dir  in $(DEBIAN_DIRS);  do                                      \
+          cp -af $(DEBDIR)/$$dir  $(SRCDIR)/debian/;                         \
+        done
+	(cd $(SRCDIR); find . -type d -name .arch-ids --exec rm -rf {} \; )
   ifneq ($(strip $(source_clean_hook)),)
 	(cd $(SRCDIR); test -x $(source_clean_hook) && $(source_clean_hook))
   endif
