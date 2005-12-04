@@ -64,7 +64,8 @@ minimal_clean:
 	$(REASON)
 ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
 	test ! -f .config || cp -pf .config config.precious
-	-test -f Makefile && \
+	test ! -e stamp-building || rm -f stamp-building
+	test ! -f Makefile || \
             $(MAKE) $(FLAV_ARG) $(EXTRAV_ARG) $(CROSS_ARG) ARCH=$(KERNEL_ARCH) distclean
 	test ! -f config.precious || mv -f config.precious .config
 else
@@ -82,6 +83,7 @@ debian: minimal_debian
 minimal_debian:
 	$(REASON)
 	test -d debian || mkdir debian
+	test ! -e stamp-building || rm -f stamp-building
 	test -f debian/control || sed         -e 's/=V/$(version)/g'        \
                 -e 's/=D/$(debian)/g'         -e 's/=A/$(DEB_HOST_ARCH)/g'  \
 	        -e 's/=SA/$(INT_SUBARCH)/g'   -e 's/=L/$(int_loaderdep) /g' \

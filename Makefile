@@ -46,7 +46,14 @@ install_file   = install -p    -o root -g root -m 644
 install_program= install -p    -o root -g root -m 755
 make_directory = install -p -d -o root -g root -m 755
 
-all build: check
+all: check
+
+build: check
+
+genpo4a:  po4a.conf
+	if [ -e /usr/bin/po4a ] ; then \
+	  po4a po4a.conf; \
+	fi
 
 check:
 	perl  -wc make-kpkg

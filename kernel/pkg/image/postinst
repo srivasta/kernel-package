@@ -905,6 +905,7 @@ sub image_magic {
 
 # We may not have any modules installed
 if ( -d "$modules_base/$version" ) {
+  print STDERR "Running depmod.\n";
   my $ret = system("depmod -a -F $realimageloc/System.map-$version $version");
   my $exit_value  = $? >> 8;
   my $signal_num  = $? & 127;
@@ -966,6 +967,7 @@ if ( -d "$modules_base/$version" ) {
 sub find_inird_tool {
   my $hostversion = shift;
   my $version = shift;
+  print STDERR "Finding valid ramdisk creators.\n";
   my @ramdisks =
     grep {
       my $args = 
@@ -1100,17 +1102,19 @@ if (-e "/System.map" || -e "/System.old") {
   if ($answer =~ /^(y|t)/i) {
     unlink '/System.map' if -e '/System.map';
     unlink '/System.old' if -e '/System.old';
-    print STFERR "Obsolete links removed.\n";
+    print STDERR "Obsolete links removed.\n";
   }
 }
 
 ## Run user hook script here, if any
 if (-x "$postinst_hook") {
+  print STDERR "Running postinst hook.\n";
   system ("$postinst_hook", $version, $realimageloc . "$kimage-$version") &&
     warn "User hook script $postinst_hook failed";
 }
 
 if (-d "/etc/kernel/postinst.d") {
+  print STDERR "Examining /etc/kernel/postinst.d.\n";
   system ("run-parts", "--verbose", "--exit-on-error", "--arg=$version",
           "--arg=$realimageloc" . "$kimage-$version",
           "/etc/kernel/postinst.d") &&
@@ -1118,6 +1122,7 @@ if (-d "/etc/kernel/postinst.d") {
 }
 
 if (-d "/etc/kernel/postinst.d/$version") {
+  print STDERR "Examining /etc/kernel/postinst.d/$version.\n";
   system ("run-parts", "--verbose", "--exit-on-error", "--arg=$version",
           "--arg=$realimageloc" . "$kimage-$version",
           "/etc/kernel/postinst.d/$version") &&

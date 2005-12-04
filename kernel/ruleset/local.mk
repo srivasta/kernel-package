@@ -83,7 +83,7 @@ CLEAN/$(i_package)::
 	-rm -rf $(TMPTOP)
 ifneq ($(strip $(KERNEL_ARCH)),um)
   ifneq ($(strip $(KERNEL_ARCH)),xen)
-	-test -d ./debian &&                                         \
+	test ! -d ./debian || test ! -e stamp-building ||            \
 	sed -e 's/=V/$(version)/g'    -e 's/=B/$(link_in_boot)/g'    \
             -e 's/=ST/$(INT_STEM)/g'  -e 's/=R/$(reverse_symlink)/g' \
             -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \
@@ -93,7 +93,7 @@ ifneq ($(strip $(KERNEL_ARCH)),um)
             -e 's@=M@$(MKIMAGE)@g'    -e 's/=OF/$(AM_OFFICIAL)/g'    \
             -e 's/=S/$(no_symlink)/g' -e 's@=B@$(KERNEL_ARCH)@g'     \
           $(DEBDIR)/templates.in   > ./debian/templates.master
-	-test -d ./debian &&          $(INSTALL_TEMPLATE)
+	test ! -d ./debian || test ! -e stamp-building || $(INSTALL_TEMPLATE)
   endif
 endif
 
@@ -104,7 +104,7 @@ CLEAN/$(m_package)::
 CLEAN/$(h_package)::
 	-rm -rf $(TMPTOP)
 
-buildpackage: clean CONFIG-common stamp-buildpackage
+buildpackage: CONFIG-common stamp-buildpackage
 stamp-buildpackage: 
 	$(REASON)
 ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)

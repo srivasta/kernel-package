@@ -138,6 +138,7 @@ endif
 	@test -f $(LIBLOC)/rules || \
             echo Error: Could not find $(LIBLOC)/rules
 	test -d debian || mkdir ./debian
+	test ! -e stamp-building || rm -f stamp-building
 	test ! -f ./debian || test -f stamp-debian || test -f debian/official || \
                (rm -rf ./debian && mkdir ./debian)
 ifeq ($(strip $(patch_the_kernel)),YES)
@@ -211,8 +212,8 @@ real_stamp_clean:
 	$(REASON)
 	@echo running clean
 ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
-	test ! -f .config || cp -pf .config config.precious
-	-test -f Makefile && \
+	test ! -f .config  || cp -pf .config config.precious
+	test ! -f Makefile || \
             $(MAKE) $(FLAV_ARG) $(EXTRAV_ARG) $(CROSS_ARG) ARCH=$(KERNEL_ARCH) distclean
 	test ! -f config.precious || mv -f config.precious .config
 else
@@ -231,7 +232,7 @@ endif
 ifeq ($(strip $(NO_UNPATCH_BY_DEFAULT)),)
 	test ! -f stamp-patch || $(run_command) unpatch_now
 endif
-	-test -f stamp-building || test -f debian/official || rm -rf debian
+	test ! -f stamp-building && test ! -f debian/official && rm -rf debian
 	# work around idiocy in recent kernel versions
 	test ! -e scripts/package/builddeb.dist || \
             mv -f scripts/package/builddeb.dist scripts/package/builddeb
