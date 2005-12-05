@@ -1218,6 +1218,7 @@ sub run_lilo (){
     print "boot sector... \n";
   }
 
+  print "Running $loaderloc  ... \n";
   if ($loader =~ /^elilo/io) {
     $ret = system("$loaderloc 2>&1 | tee $temp_file_name");
   } else {
