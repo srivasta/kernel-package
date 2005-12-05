@@ -86,7 +86,7 @@ ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 	for dir  in $(DEBIAN_DIRS);  do                                      \
           cp -af $(DEBDIR)/$$dir  $(SRCDIR)/debian/;                         \
         done
-	(cd $(SRCDIR); find . -type d -name .arch-ids -exec rm -rf {} \; )
+	(cd $(SRCDIR); find . -type d -name .arch-ids -print0 | xargs -0r rm -rf {} \; )
   ifneq ($(strip $(source_clean_hook)),)
 	(cd $(SRCDIR); test -x $(source_clean_hook) && $(source_clean_hook))
   endif
