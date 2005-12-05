@@ -1,3 +1,13 @@
+2005-12-04  Manoj Srivastava  <srivasta@debian.org>
+
+	* headers.mk (echo "This was produced by kernel-package version):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-76
+		  s/--exec/-exec/ for find. 
+
+	* source.mk (install/$(s_package)):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-76
+		  s/--exec/-exec/ for find.
+
 2005-12-03  Manoj Srivastava  <srivasta@debian.org>
 
 	* headers.mk (install/$(h_package)):

@@ -119,7 +119,7 @@ ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 	for dir  in $(DEBIAN_DIRS);  do                                      \
           cp -af $(DEBDIR)/$$dir  $(SRCDIR)/debian/;                         \
         done
-	(cd $(SRCDIR); find . -type d -name .arch-ids --exec rm -rf {} \; )
+	(cd $(SRCDIR); find . -type d -name .arch-ids -exec rm -rf {} \; )
 #         $(DEBDIR)/pkg/headers/create_link  >                        \
 #                $(TMPTOP)/etc/kernel/postinst.d/create_link-$(version)
   ifeq (,$(findstring nostrip,$(DEB_BUILD_OPTIONS)))
