@@ -232,7 +232,7 @@ endif
 ifeq ($(strip $(NO_UNPATCH_BY_DEFAULT)),)
 	test ! -f stamp-patch || $(run_command) unpatch_now
 endif
-	test ! -f stamp-building && test ! -f debian/official && rm -rf debian
+	test -f stamp-building || test -f debian/official || rm -rf debian
 	# work around idiocy in recent kernel versions
 	test ! -e scripts/package/builddeb.dist || \
             mv -f scripts/package/builddeb.dist scripts/package/builddeb
