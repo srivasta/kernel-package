@@ -201,7 +201,7 @@ if ($running eq $version) {
     exit 1; #Operation not permitted
   }
   else {
-     print STFERR "Ok, proceeding with removing running kernel image.\n";
+     print STDERR "Ok, proceeding with removing running kernel image.\n";
   }
 }
 
