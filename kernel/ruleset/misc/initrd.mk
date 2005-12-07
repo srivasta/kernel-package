@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 18:09:11 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Mon Oct 31 18:09:11 2005
+## Last Modified On : Wed Dec  7 09:53:43 2005
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 0
+## Update Count     : 4
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : This snippet uses hard coded version based heuristics to
@@ -44,22 +44,19 @@ ifneq ($(strip $(INITRD)),)
   ifneq ($(strip $(INITRD_CMD)),)
     initrdcmd := $(strip $(INITRD_CMD))
   else
-    ifneq ($(shell if [ $(VERSION)  -eq  2 ] && [ $(PATCHLEVEL) -eq 6 ] &&    \
-                      [ $(SUBLEVEL) -lt  8 ]; then                            \
-                        echo old;                                             \
-                 elif [ $(VERSION)  -eq  2 ] && [ $(PATCHLEVEL) -lt 6 ]; then \
-                        echo old;                                             \
-                 elif [ $(VERSION)  -lt  2 ]; then                            \
-                        echo old;                                             \
+    ifneq ($(shell if [ $(VERSION)  -lt  2 ]; then                               \
+                        echo old;                                                \
+                 elif [ $(VERSION)  -eq  2 ] && [ $(PATCHLEVEL) -lt 6 ]; then    \
+                        echo old;                                                \
+                 elif [ $(VERSION)  -eq  2 ] && [ $(PATCHLEVEL) -eq 6 ] &&       \
+                      [ $(SUBLEVEL) -lt  8 ]; then                               \
+                        echo old;                                                \
                  fi),)
       initrdcmd := mkinitrd
     else
-      ifneq ($(shell if [ $(VERSION)  -eq  2 ] && [ $(PATCHLEVEL) -eq 6 ] &&  \
-                        [ $(SUBLEVEL) -ge  8 ]; then                          \
-                          echo old;                                           \
-                   elif [ $(VERSION)  -eq  2 ] && [ $(PATCHLEVEL) -eq 6 ] &&  \
-                        [ $(SUBLEVEL) -le 12 ]; then                          \
-                          echo old;                                           \
+      ifneq ($(shell if [ $(VERSION)  -eq  2 ] && [ $(PATCHLEVEL) -eq 6  ] &&    \
+                        [ $(SUBLEVEL) -ge  8 ] && [ $(SUBLEVEL)   -le 12 ]; then \
+                          echo old;                                              \
                    fi),)
         initrdcmd := mkinitrd mkinitrd.yaird
       else
