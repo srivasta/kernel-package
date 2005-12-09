@@ -1,3 +1,8 @@
+2005-12-09  Manoj Srivastava  <srivasta@debian.org>
+
+	* arm.mk: Added missing arm.mk. Somehow, this file had gone
+		  missing. 
+
 2005-11-02  Manoj Srivastava  <srivasta@debian.org>
 
 	* xen.mk:
