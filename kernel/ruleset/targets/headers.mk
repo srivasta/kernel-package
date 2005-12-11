@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 16:23:51 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Sat Dec  3 01:08:54 2005
+## Last Modified On : Sun Dec 11 09:50:17 2005
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 3
+## Update Count     : 4
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : This file is responsible for creating the kernel-headers packages 
@@ -69,8 +69,11 @@ ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 	$(install_file) $(DEBDIR)/pkg/headers/copyright    $(DOCDIR)/copyright
 	$(install_file) Makefile                           $(SRCDIR)
 	test ! -e Rules.make || $(install_file) Rules.make $(SRCDIR)
-	test ! -e arch/$(KERNEL_ARCH)/Makefile ||                              \
-                                $(install_file) arch/$(KERNEL_ARCH)/Makefile   \
+	test ! -e arch/$(KERNEL_ARCH)/Makefile     ||                             \
+                                $(install_file) arch/$(KERNEL_ARCH)/Makefile      \
+                                                     $(SRCDIR)/arch/$(KERNEL_ARCH)
+	test ! -e arch/$(KERNEL_ARCH)/Makefile.cpu ||                             \
+                                $(install_file) arch/$(KERNEL_ARCH)/Makefile.cpu  \
                                                      $(SRCDIR)/arch/$(KERNEL_ARCH)
 	test ! -e Rules.make     || $(install_file) Rules.make     $(SRCDIR)
 	test ! -e Module.symvers || $(install_file) Module.symvers $(SRCDIR)

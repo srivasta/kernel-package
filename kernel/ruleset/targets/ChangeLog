@@ -1,3 +1,11 @@
+2005-12-11  Manoj Srivastava  <srivasta@debian.org>
+
+	* headers.mk (install/$(h_package)):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-85
+		  Also install arch/$(KERNEL_ARCH)/Makefile.cpu, since it
+		  is needed by newer kernels. Thanks to   Stefan
+		  Lippers-Hollmann 
+
 2005-12-04  Manoj Srivastava  <srivasta@debian.org>
 
 	* headers.mk (echo "This was produced by kernel-package version):
