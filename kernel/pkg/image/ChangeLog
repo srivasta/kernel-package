@@ -1,3 +1,27 @@
+2005-12-11  Manoj Srivastava  <srivasta@debian.org>
+
+	* prerm:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-86
+			  When done with debconf, call stop: this shall
+			  help prevent errors if the hook scripts write to
+			  stdout. Also, when calling the hook scripts,
+			  redirect stdout to stderr, just in case -- and
+			  to ensure that the messages do not silently
+			  disappear.  
+
+	* postinst:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-86
+		  Ditto 
+
+	* postrm:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-86
+		  Ditto. 
+
+	* preinst:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-86
+		  Ditto 
+
+
 2005-11-08  Manoj Srivastava  <srivasta@debian.org>
 
 	* postrm:

@@ -5,9 +5,9 @@
 # Created On       : Fri May 17 03:28:59 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Mon Oct 24 18:21:54 2005
+# Last Modified On : Sun Dec 11 22:39:43 2005
 # Last Machine Used: glaurung.internal.golden-gryphon.com
-# Update Count     : 73
+# Update Count     : 82
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
@@ -207,25 +207,7 @@ if ($running eq $version) {
 
 #Now, they have an alternate kernel which they are currently running
 
-## Run user hook script here, if any
-if (-x "$prerm_hook") {
-  system ("$prerm_hook", $version, $realimageloc . "$kimage-$version") &&
-	    warn "User hook script $prerm_hook failed";
-}
-if (-d "/etc/kernel/prerm.d") {
-  system ("run-parts", "--verbose", "--exit-on-error", "--arg=$version",
-          "--arg=$realimageloc" . "$kimage-$version",
-          "/etc/kernel/prerm.d") &&
-            die "Failed to process /etc/kernel/prerm.d";
-}
-if (-d "/etc/kernel/prerm.d/$version") {
-  system ("run-parts", "--verbose", "--exit-on-error", "--arg=$version",
-          "--arg=$realimageloc" . "$kimage-$version",
-          "/etc/kernel/prerm.d/$version") &&
-            die "Failed to process /etc/kernel/prerm.d/$version";
-}
-
-# The rest is just us being nice to lilo users.
+# This is just us being nice to lilo users.
 
 chdir("/") or die "could not chdir to /:$!\n";
 
@@ -288,11 +270,36 @@ if (-f "/etc/$loader.conf") { #I know, could be a link, but ..
   }
 }
 
+# Done with Debconf
+$ret = stop();
+if ($ret && $ret != 30 ) {
+  warn "Error stopping debconf, exit code: $ret";
+}
+
+## Run user hook script here, if any
+if (-x "$prerm_hook") {
+  system ("$prerm_hook $version ${realimageloc}${kimage}-${version} 1>&2") &&
+	    warn "User hook script $prerm_hook failed";
+}
+if (-d "/etc/kernel/prerm.d") {
+  system ("run-parts --verbose --exit-on-error --arg=$version " . 
+          "--arg=$realimageloc$kimage-$version /etc/kernel/prerm.d 1>&2") &&
+            die "Failed to process /etc/kernel/prerm.d";
+}
+if (-d "/etc/kernel/prerm.d/$version") {
+  system ("run-parts --verbose --exit-on-error --arg=$version" .
+          " --arg=$realimageloc$kimage-$version " .
+          "/etc/kernel/prerm.d/$version 1>&2") &&
+            die "Failed to process /etc/kernel/prerm.d/$version";
+}
+
 sub success () {
     -f "/lib/modules/$version/modules.dep"  && 
       unlink "/lib/modules/$version/modules.dep";
     exit 0;
 }
+
+
 
 &success();
 exit 0;
