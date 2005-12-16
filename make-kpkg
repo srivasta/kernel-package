@@ -5,9 +5,9 @@
 # Created On       : Mon Jun 17 01:10:11 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Sat Dec  3 00:20:58 2005
+# Last Modified On : Thu Dec 15 23:03:29 2005
 # Last Machine Used: glaurung.internal.golden-gryphon.com
-# Update Count     : 227
+# Update Count     : 230
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
@@ -783,6 +783,12 @@ EOERR3
     }
   }
 
+  if ($Targets =~ m/^\s*modules_/o && ! -d "./debian") {
+    die "The modules_* targets should be called from a fully configured " .
+      "source tree,\n and one where at least make-kpkg debian has been run\n";
+  }
+
+
   # Fine. Just do it!
   my $alt_cmd = "make -f $alt_rules_file " 
     unless -f "debian/ruleset/kernel_version.mk";
@@ -796,6 +802,7 @@ EOERR3
   else {
     $alt_cmd  .= "debian" unless -f "debian/ruleset/kernel_version.mk";
   }
+
   if ($revision) {
     if ($Targets !~ m/^\s*clean\s*$/) { # No need to do all this for just clean
       if (-e "debian/changelog") {

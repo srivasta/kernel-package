@@ -1,3 +1,21 @@
+2005-12-15  Manoj Srivastava  <srivasta@debian.org>
+
+	* make-kpkg.8:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-87
+		  Document the fact that modules_blah targets are not to
+		  be called when there is no ./debian directory 
+
+	* make-kpkg (main):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-87
+		  Die if there is no ./debian, and the first command is a
+		  module_blah target. 
+
+	* Makefile (check):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-87
+		  Ignore failures in all image related postinsts -- since
+		  check is run as non root, we cant load the debconf
+		  modules anyway. 
+
 2005-12-01  Manoj Srivastava  <srivasta@debian.org>
 
 	* README:

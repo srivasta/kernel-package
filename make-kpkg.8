@@ -633,6 +633,7 @@ which defaults to
 .B /usr/src/modules.
 This is useful if you need to manually modify some aspects of the
 configuration, or if you want to manually compile the add on modules. 
+This should not be called unless you already have a ./debian directory.
 .TP
 .B modules_image
 This target allows you to build all packages under
@@ -648,6 +649,7 @@ with
 especially if also using the option
 .B append_to_version
 (prevents spurious warnings).
+This should not be called unless you already have a ./debian directory.
 .TP
 .B modules_clean
 This target allows you to clean all packages under
@@ -656,6 +658,7 @@ which defaults to
 .B /usr/src/modules,
 and this should be all that is needed to undo the effect of any of the
 other modules_ targets.
+This should not be called unless you already have a ./debian directory.
 .TP
 .B configure
 This target runs configure (actually,

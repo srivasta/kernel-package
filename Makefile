@@ -59,8 +59,8 @@ check:
 	perl  -wc make-kpkg
 	-perl -wc kernel/pkg/image/preinst
 	-perl -wc kernel/pkg/image/postinst
-	perl  -wc kernel/pkg/image/postrm
-	perl  -wc kernel/pkg/image/prerm
+	-perl  -wc kernel/pkg/image/postrm
+	-perl  -wc kernel/pkg/image/prerm
 	perl  -wc kernel/pkg/image/config
 	perl  -wc kernel/pkg/headers/postinst
 	bash  -n  kernel/pkg/headers/create_link
