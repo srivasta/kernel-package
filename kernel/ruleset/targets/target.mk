@@ -253,10 +253,10 @@ ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
 	exit 1
 endif
 ifneq ($(strip $(UTS_RELEASE_VERSION)), $(strip $(version)))
-	if [ -f include/linux/version.h ]; then                                          \
-             uts_ver=$$(grep 'define UTS_RELEASE' include/linux/version.h |                \
+	if [ -f include/linux/version.h ]; then                                           \
+             uts_ver=$$(grep 'define UTS_RELEASE' include/linux/version.h |               \
                 perl -nle  'm/^\s*\#define\s+UTS_RELEASE\s+("?)(\S+)\1/g && print $$2;'); \
-	    if [ "X$$uts_ver" != "X$(strip $(UTS_RELEASE_VERSION))" ]; then              \
+	    if [ "X$$uts_ver" != "X$(strip $(UTS_RELEASE_VERSION))" ]; then               \
                 echo "The UTS Release version in include/linux/version.h";                \
 	        echo "     \"$$uts_ver\" ";                                               \
                 echo "does not match current version " ;                                  \
@@ -287,7 +287,7 @@ endif
            sed -e 's/.*LINUX_COMPILER "//' -e 's/"$$//' >> debian/buildinfo
 ifneq ($(strip $(shell test -f version.Debian && cat version.Debian)),)
 	echo kernel source package used: >> debian/buildinfo
-	COLUMNS=150 dpkg -l kernel-source-$(shell test -f version.Debian &&               \
+	COLUMNS=150 dpkg -l $(INT_STEM)-source-$(shell test -f version.Debian &&               \
                                               cat version.Debian | sed -e 's/-.*$$//') |  \
 	 awk '$$1 ~ /[hi]i/ { printf("%s-%s\n", $$2, $$3) }' >> debian/buildinfo
 endif

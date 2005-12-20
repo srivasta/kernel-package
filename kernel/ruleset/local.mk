@@ -36,9 +36,9 @@ $(eval $(which_debdir))
 include $(DEBDIR)/ruleset/targets/target.mk
 
 
-CONFIG-common:: debian/stamp-conf
+CONFIG-common:: debian/stamp-conf 
 	$(REASON)
-CONFIG-arch:: .config 
+CONFIG-arch:: .config conf.vars 
 	$(REASON)
 CONFIG-indep:: conf.vars debian/stamp-kernel-conf
 	$(REASON)

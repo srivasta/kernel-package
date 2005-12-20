@@ -35,8 +35,9 @@ install/$(h_package):
 ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
   ifneq ($(strip $(UTS_RELEASE_VERSION)),$(strip $(version)))
 	@echo "The UTS Release version in include/linux/version.h"
-	@echo "  $(UTS_RELEASE_VERSION)"
-	@echo "does not match current version $(version)."
+	@echo "     \"$(strip $(UTS_RELEASE_VERSION))\" "
+	@echo "does not match current version:"
+	@echo "     \"$(strip $(version))\" "
 	@echo "Reconfiguring."
 	touch Makefile
   endif

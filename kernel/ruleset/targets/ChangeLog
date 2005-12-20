@@ -1,3 +1,18 @@
+2005-12-19  Manoj Srivastava  <srivasta@debian.org>
+
+	* image.mk (install/$(i_package)):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-89
+		  Enable better printing of the version mismatch message.  
+
+	* headers.mk (install/$(h_package)):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-89
+		  Enable better printing of the version mismatch message. 
+
+	* target.mk:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-89
+		  in conf.vars, look for $(INT_STEM)-source-foo, not
+		  kernel-source-foo. 
+
 2005-12-11  Manoj Srivastava  <srivasta@debian.org>
 
 	* headers.mk (install/$(h_package)):
