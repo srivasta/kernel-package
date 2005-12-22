@@ -1,3 +1,9 @@
+2005-12-21  Manoj Srivastava  <srivasta@debian.org>
+
+	* postrm:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-90
+			  Added modules.ofmap to @files_to_remove
+
 2005-12-11  Manoj Srivastava  <srivasta@debian.org>
 
 	* prerm:
