@@ -272,19 +272,19 @@ if ($ret && $ret != 30 ) {
 
 ## Run user hook script here, if any
 if (-x "$postrm_hook") {
-  system ("$postrm_hook $version $realimageloc$kimage-$version 1>&2") &&
+  system ("$postrm_hook $version $realimageloc$kimage-$version") &&
 	    warn "User hook script $postrm_hook failed";
 }
 if (-d "/etc/kernel/postrm.d") {
   system ("run-parts --verbose --exit-on-error --arg=$version " .
           "--arg=$realimageloc$kimage-$version " .
-          "/etc/kernel/postrm.d 1>&2") &&
+          "/etc/kernel/postrm.d") &&
             die "Failed to process /etc/kernel/postrm.d";
 }
 if (-d "/etc/kernel/postrm.d/$version") {
   system ("run-parts --verbose --exit-on-error --arg=$version " .
           "--arg=$realimageloc$kimage-$version " .
-          "/etc/kernel/postrm.d/$version 1>&2") &&
+          "/etc/kernel/postrm.d/$version") &&
             die "Failed to process /etc/kernel/postrm.d/$version";
 }
 

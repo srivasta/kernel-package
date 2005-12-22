@@ -1,3 +1,15 @@
+2005-12-22  Manoj Srivastava  <srivasta@debian.org>
+
+	* kernel-img.conf.5:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-93
+		  Document the fact that hook scripts should not write to
+		  stdout 
+
+	* make-kpkg.8:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-93
+		  Document the fact that hook scripts should not write to
+		  stdout 
+
 2005-12-15  Manoj Srivastava  <srivasta@debian.org>
 
 	* make-kpkg.8:

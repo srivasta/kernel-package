@@ -1168,7 +1168,7 @@ if ($ret && $ret != 30 ) {
 ## Run user hook script here, if any
 if (-x "$postinst_hook") {
   print STDERR "Running postinst hook.\n";
-  system ("$postinst_hook $version $realimageloc$kimage-$version 1>&2") &&
+  system ("$postinst_hook $version $realimageloc$kimage-$version") &&
     warn "User hook script $postinst_hook failed";
 }
 
@@ -1176,7 +1176,7 @@ if (-d "/etc/kernel/postinst.d") {
   print STDERR "Examining /etc/kernel/postinst.d.\n";
   system ("run-parts --verbose --exit-on-error --arg=$version " .
           "--arg=$realimageloc$kimage-$version " .
-          "/etc/kernel/postinst.d 1>&2") &&
+          "/etc/kernel/postinst.d") &&
             die "Failed to process /etc/kernel/postinst.d";
 }
 
@@ -1184,7 +1184,7 @@ if (-d "/etc/kernel/postinst.d/$version") {
   print STDERR "Examining /etc/kernel/postinst.d/$version.\n";
   system ("run-parts --verbose --exit-on-error --arg=$version " .
           "--arg=$realimageloc$kimage-$version " .
-          "/etc/kernel/postinst.d/$version 1>&2") &&
+          "/etc/kernel/postinst.d/$version") &&
             die "Failed to process /etc/kernel/postinst.d/$version";
 }
 

@@ -1,3 +1,25 @@
+2005-12-22  Manoj Srivastava  <srivasta@debian.org>
+
+	* prerm:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-93
+			  do not redirect stdout for scripts that have to
+			  be called in the hooks.  
+
+	* preinst (check):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-93
+		  do not redirect stdout for scripts that have to be
+		  called in the hooks. 
+
+	* postrm (image_magic):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-90
+		  do not redirect stdout for scripts that have to be
+		  called in the hooks. 
+
+	* postinst (find_inird_tool):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-93
+		  do not redirect stdout for  scripts that have to be
+		  called in the hooks. 
+
 2005-12-21  Manoj Srivastava  <srivasta@debian.org>
 
 	* postrm:

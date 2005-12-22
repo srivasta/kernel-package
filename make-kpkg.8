@@ -556,7 +556,7 @@ further modifies this behaviour). No action is taken on upgrades.
 .IP
 Please see the documentation about hooks in
 .B kernel\-img.conf(5).
-These hooks are variables that can be pointed by hte local sysadmin to
+These hooks are variables that can be pointed by the local sysadmin to
 scripts that add or remove a line from the grub menu list at kernel
 image install and remove times. A sample script to add lines to a grub
 menu file is included in the directory
@@ -578,7 +578,16 @@ If they exists, the kernel-image package shall run a
 .B run-parts
 program over the directory (including the versioned one), giving the
 version being installed or removed as an argument, in the
-corresponding phase of installation or removal.
+corresponding phase of installation or removal. These scripts shall be
+called with two arguments, the first being the
+.I version
+of the kernel image, and the second argument being the
+.I location
+of the kernel image itself. Since debconf is in
+use before the script is called, this script should issue no
+diagnostic messgaes to stdout --  while the postinst does call
+.B db_stop
+, debconf does not restore stdout, so messages to stdout disappear. 
 .IP
 On installation, it also offers to run the Linux loader,
 .I LILO

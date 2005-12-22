@@ -278,18 +278,18 @@ if ($ret && $ret != 30 ) {
 
 ## Run user hook script here, if any
 if (-x "$prerm_hook") {
-  system ("$prerm_hook $version ${realimageloc}${kimage}-${version} 1>&2") &&
+  system ("$prerm_hook $version ${realimageloc}${kimage}-${version}") &&
 	    warn "User hook script $prerm_hook failed";
 }
 if (-d "/etc/kernel/prerm.d") {
   system ("run-parts --verbose --exit-on-error --arg=$version " . 
-          "--arg=$realimageloc$kimage-$version /etc/kernel/prerm.d 1>&2") &&
+          "--arg=$realimageloc$kimage-$version /etc/kernel/prerm.d") &&
             die "Failed to process /etc/kernel/prerm.d";
 }
 if (-d "/etc/kernel/prerm.d/$version") {
   system ("run-parts --verbose --exit-on-error --arg=$version" .
           " --arg=$realimageloc$kimage-$version " .
-          "/etc/kernel/prerm.d/$version 1>&2") &&
+          "/etc/kernel/prerm.d/$version") &&
             die "Failed to process /etc/kernel/prerm.d/$version";
 }
 

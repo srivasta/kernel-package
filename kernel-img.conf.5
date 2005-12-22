@@ -168,8 +168,13 @@ shall be called with two arguments, the first being the
 of the kernel image, and the second argument being the
 .I location
 of the kernel image itself. Errors in the script shall produce a
-warning message, but shall be otherwise ignored. An example script for
-grub users is present in /usr/share/doc/kernel\-package/ directory.
+warning message, but shall be otherwise ignored. Since debconf is in
+use before the script is called, this script should issue no
+diagnostic messgaes to stdout --  while the postinst does call
+.B db_stop
+, debconf does not restore stdout, so messages to stdout disappear.
+An example script for grub users is present in
+/usr/share/doc/kernel\-package/ directory.
 .TP
 .B postrm_hook 
 Set this variable to a script to be executed in the postrm (that is,
@@ -180,7 +185,11 @@ the first being the
 of the kernel image, and the second argument being the
 .I location
 of the kernel image itself. Errors in the script shall produce a
-warning message, but shall be otherwise ignored.
+warning message, but shall be otherwise ignored. Since debconf is in
+use before the script is called, this script should issue no
+diagnostic messgaes to stdout --  while the postinst does call
+.B db_stop
+, debconf does not restore stdout, so messages to stdout disappear.  
 .TP
 .B preinst_hook 
 Set this variable to a script to be executed before the package is
@@ -199,7 +208,11 @@ called with two arguments, the first being the
 of the kernel image, and the second argument being the
 .I location
 of the kernel image itself. Errors in the script shall produce a
-warning message, but shall be otherwise ignored.
+warning message, but shall be otherwise ignored. Since debconf is in
+use before the script is called, this script should issue no
+diagnostic messgaes to stdout --  while the postinst does call
+.B db_stop
+, debconf does not restore stdout, so messages to stdout disappear.  
 .TP
 .B ramdisk
 Set this variable to a space separated list of executables that create
