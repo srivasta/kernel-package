@@ -53,21 +53,25 @@ ifneq ($(strip $(INITRD)),)
                         echo old;                                                \
                  fi),)
       initrdcmd := mkinitrd
+      # since it sis not easy to distinguish between mkinitrd and mkinitrd.yaird,
+      # we shall do the dependency here
+      initrddep := initrd-tools (>= 0.1.84)
     else
       ifneq ($(shell if [ $(VERSION)  -eq  2 ] && [ $(PATCHLEVEL) -eq 6  ] &&    \
                         [ $(SUBLEVEL) -ge  8 ] && [ $(SUBLEVEL)   -le 12 ]; then \
                           echo old;                                              \
                    fi),)
         initrdcmd := mkinitrd mkinitrd.yaird
+        # since it sis not easy to distinguish between mkinitrd and
+        # mkinitrd.yaird, we shall do the dependency here
+        initrddep := initrd-tools (>= 0.1.84)
       else
         initrdcmd := mkinitrd.yaird mkinitramfs
       endif
     endif
   endif
-  ifneq (,$(findstring initrd-tools, $(initrdcmd)))
-    initrddep := initrd-tools (>= 0.1.84)
-  endif
-  #setup initrd dependencies
+  # setup initrd dependencies (apart from initrd-tools, which should already have
+  # been taken care of
   ifneq (,$(findstring yaird,$(initrdcmd)))
     ifneq (,$(strip $(initrddep)))
       initrddep := $(initrddep) | yaird (>= 0.1.11)
