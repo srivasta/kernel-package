@@ -80,7 +80,7 @@ include $(DEBDIR)/ruleset/arches/sparc.mk
 endif
 
 ##### amd64
-ifeq ($(strip $(architecture)),amd64)
+ifeq ($(strip $(architecture)),x86_64)
 include $(DEBDIR)/ruleset/arches/amd64.mk
 endif
 

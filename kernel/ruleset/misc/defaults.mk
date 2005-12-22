@@ -90,7 +90,11 @@ CROSS_ARG:=
 #                          sed 's/^Version: *//')
 #
 
-
+# architecture is used mostly to select which arch specific snippet
+# shall be loaded from the rulesets/arches/ directory, and for nothing
+# else. The real variable that we use for calling make on the top level
+# Makefile, for instance, really depends on KERNEL_ARCH, usually set by
+# arch specific makefile snippets.
 ifdef KPKG_ARCH
   architecture:=$(KPKG_ARCH)
 else
@@ -101,8 +105,10 @@ else
   else
     architecture:=$(DEB_HOST_ARCH_CPU)
   endif
-  ifeq ($(architecture), x86_64)
-    architecture:=amd64
+  # Apparently, DEB_HOST_ARCH_CPU does not match what the kernel calls this. 
+  # However, DEB_HOST_GNU_CPU does
+  ifeq ($(architecture), amd64)
+    architecture:=x86_64
   endif
 endif
 
@@ -128,6 +134,7 @@ ifneq ($(strip $(KERNEL_CROSS)),)
   CROSS_ARG:=CROSS_COMPILE=$(KERNEL_CROSS)
 endif
 
+# Set the default. The arch specific snippets can override this
 KERNEL_ARCH:=$(architecture)
 DEBCONFIG = $(CONFDIR)/config
 IMAGEDIR=/boot
