@@ -5,9 +5,9 @@
 # Created On       : Sat May 15 11:05:13 1999
 # Created On Node  : glaurung.green-gryphon.com
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Sun Dec 11 21:19:43 2005
+# Last Modified On : Fri Dec 23 17:58:28 2005
 # Last Machine Used: glaurung.internal.golden-gryphon.com
-# Update Count     : 49
+# Update Count     : 50
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
@@ -20,6 +20,8 @@
 #use strict; #for debugging
 use Cwd 'abs_path';
 use Debconf::Client::ConfModule qw(:all);
+version('2.0');
+my $capb=capb("backup");
 
 $|=1;
 # Predefined values:
