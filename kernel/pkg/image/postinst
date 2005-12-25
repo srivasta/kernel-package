@@ -5,9 +5,9 @@
 # Created On       : Sat Apr 27 05:55:26 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Sun Dec 11 22:36:54 2005
+# Last Modified On : Sun Dec 25 09:39:06 2005
 # Last Machine Used: glaurung.internal.golden-gryphon.com
-# Update Count     : 331
+# Update Count     : 332
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
@@ -1159,12 +1159,6 @@ LOADER: {
   }
 }
 
-# Done with Debconf
-$ret = stop();
-if ($ret && $ret != 30 ) {
-  warn "Error stopping debconf, exit code: $ret";
-}
-
 ## Run user hook script here, if any
 if (-x "$postinst_hook") {
   print STDERR "Running postinst hook.\n";
@@ -1189,6 +1183,12 @@ if (-d "/etc/kernel/postinst.d/$version") {
 }
 
 
+
+# Done with Debconf
+$ret = stop();
+if ($ret && $ret != 30 ) {
+  warn "Error stopping debconf, exit code: $ret";
+}
 
 sub run_lilo (){
   my $ret;

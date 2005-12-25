@@ -5,9 +5,9 @@
 # Created On       : Fri May 17 03:28:59 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Sun Dec 11 22:39:43 2005
+# Last Modified On : Sun Dec 25 09:47:14 2005
 # Last Machine Used: glaurung.internal.golden-gryphon.com
-# Update Count     : 82
+# Update Count     : 83
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
@@ -270,12 +270,6 @@ if (-f "/etc/$loader.conf") { #I know, could be a link, but ..
   }
 }
 
-# Done with Debconf
-$ret = stop();
-if ($ret && $ret != 30 ) {
-  warn "Error stopping debconf, exit code: $ret";
-}
-
 ## Run user hook script here, if any
 if (-x "$prerm_hook") {
   system ("$prerm_hook $version ${realimageloc}${kimage}-${version}") &&
@@ -292,6 +286,14 @@ if (-d "/etc/kernel/prerm.d/$version") {
           "/etc/kernel/prerm.d/$version") &&
             die "Failed to process /etc/kernel/prerm.d/$version";
 }
+
+
+# Done with Debconf
+$ret = stop();
+if ($ret && $ret != 30 ) {
+  warn "Error stopping debconf, exit code: $ret";
+}
+
 
 sub success () {
     -f "/lib/modules/$version/modules.dep"  && 

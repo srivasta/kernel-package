@@ -1,3 +1,51 @@
+2005-12-25  Manoj Srivastava  <srivasta@debian.org>
+
+	* prerm:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-93
+			  In the recent 10.X series, kernel package has
+			  started producing image packages whose
+			  maintainer scripts use debconf for user
+			  interaction. Unfortunately, this meant that any
+			  hook scripts called in the maintainer scripts
+			  for the image package (update-grub comes to
+			  mind), if they wrote anything at all to the
+			  STDout, would cause debconf to throw hissy fits,
+			  since it was expecting commands on STDOUT, not
+			  random chatter from the hook scripts.  
+
+			  One solution was to call db_stop before calling
+			  the hook scripts, and redirecting stdout
+			  to stderr in hte invocation of the
+			  scripts. Unfortunately, this made any
+			  scripts that used debconf impossible. 
+
+			So, either we ban scripts that are interactive, or
+			scripts that scribble on stdout.  Since
+			the former makes some functionality
+			impossible (some scripts can delicer added
+			functionality and flexibility of they can
+			interact with users), and the latter just
+			needs a code change, I would prefer to ask
+			packages that provide scripts to be used
+			in kernel image postinst/postrm to use
+			debconf for user interaction, and to send
+			diagnostics to STDERR. 
+
+	* preinst:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-93
+		  Do not call db_stop before calling hook scripts,
+		  allowing them to use debconf. 
+
+	* postrm:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-95
+		  Do not call db_stop before calling hook scripts,
+		  allowing them to use debconf. 
+
+	* postinst:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-93
+		  Do not call db_stop before calling hook scripts,
+		  allowing them to use debconf. 
+
 2005-12-23  Manoj Srivastava  <srivasta@debian.org>
 
 	* postrm:

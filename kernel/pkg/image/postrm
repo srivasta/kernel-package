@@ -5,9 +5,9 @@
 # Created On       : Sat May 15 11:05:13 1999
 # Created On Node  : glaurung.green-gryphon.com
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Fri Dec 23 17:58:28 2005
+# Last Modified On : Sun Dec 25 09:40:12 2005
 # Last Machine Used: glaurung.internal.golden-gryphon.com
-# Update Count     : 50
+# Update Count     : 51
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
@@ -266,12 +266,6 @@ sub image_magic {
   }
 }
 
-# Done with Debconf
-$ret = stop();
-if ($ret && $ret != 30 ) {
-  warn "Error stopping debconf, exit code: $ret";
-}
-
 ## Run user hook script here, if any
 if (-x "$postrm_hook") {
   system ("$postrm_hook $version $realimageloc$kimage-$version") &&
@@ -300,6 +294,14 @@ if ($ARGV[0] !~ /upgrade/) {
   image_magic("initrd.img",     $image_dest) if $initrd;
   image_magic("initrd.img.old", $image_dest) if $initrd;
 }
+
+
+# Done with Debconf
+$ret = stop();
+if ($ret && $ret != 30 ) {
+  warn "Error stopping debconf, exit code: $ret";
+}
+
 
 # Ignore all invocations except when called on to purge.
 exit 0 unless $ARGV[0] =~ /purge/;
