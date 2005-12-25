@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 17:43:59 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Mon Oct 31 17:43:59 2005
+## Last Modified On : Sun Dec 25 09:01:44 2005
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 0
+## Update Count     : 3
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : sets default values for variables _before_ the
@@ -105,11 +105,6 @@ else
   else
     architecture:=$(DEB_HOST_ARCH_CPU)
   endif
-  # Apparently, DEB_HOST_ARCH_CPU does not match what the kernel calls this. 
-  # However, DEB_HOST_GNU_CPU does
-  ifeq ($(architecture), amd64)
-    architecture:=x86_64
-  endif
 endif
 
 ifndef CROSS_COMPILE
@@ -135,7 +130,14 @@ ifneq ($(strip $(KERNEL_CROSS)),)
 endif
 
 # Set the default. The arch specific snippets can override this
-KERNEL_ARCH:=$(architecture)
+# Apparently, DEB_HOST_ARCH_CPU does not match what the kernel calls this. 
+# However, DEB_HOST_GNU_CPU does. Anyway, we have to hack around it
+ifeq ($(architecture), amd64)
+  KERNEL_ARCH:=x86_64
+else
+  KERNEL_ARCH:=$(architecture)
+endif
+
 DEBCONFIG = $(CONFDIR)/config
 IMAGEDIR=/boot
 

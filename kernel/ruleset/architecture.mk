@@ -4,9 +4,9 @@
 ## Created On       : Fri Oct 28 00:28:13 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Fri Oct 28 00:28:40 2005
+## Last Modified On : Sun Dec 25 08:59:04 2005
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 1
+## Update Count     : 2
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : 
@@ -81,6 +81,10 @@ endif
 
 ##### amd64
 ifeq ($(strip $(architecture)),x86_64)
+include $(DEBDIR)/ruleset/arches/amd64.mk
+endif
+# This is the alternate
+ifeq ($(strip $(architecture)),amd64)
 include $(DEBDIR)/ruleset/arches/amd64.mk
 endif
 
