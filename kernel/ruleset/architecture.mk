@@ -57,16 +57,30 @@ ifeq ($(strip $(architecture)),arm)
 include $(DEBDIR)/ruleset/arches/arm.mk
 endif
 
-##### PowerPC64
-ifneq ($(strip $(filter ppc64 powerpc64,$(architecture))),)
-include $(DEBDIR)/ruleset/arches/ppc64.mk
-endif
+##### PowerPC and PowerPC architecture 
+ifneq ($(strip $(filter ppc powerpc ppc64 powerpc64,$(architecture))),)
+  ifeq ($(shell if [ $(VERSION) -lt 2 ]; then				\
+  			echo old;					\
+	elif [ $(VERSION) -eq 2 ] && [ $(PATCHLEVEL) -lt 6 ]; then	\
+			echo old;					\
+	elif [ $(VERSION) -eq 2 ] && [ $(PATCHLEVEL) -eq 6 ] &&		\
+		[ $(SUBLEVEL) -lt  15 ]; then				\
+			echo old;					\
+	fi),)
+    ##### PowerPC64 and PowerPC
+    include $(DEBDIR)/ruleset/arches/powerpc.mk
+  else
+    ##### PowerPC64
+    ifneq ($(strip $(filter ppc64 powerpc64,$(architecture))),)
+    include $(DEBDIR)/ruleset/arches/ppc64.mk
+    endif
 
-### PowerPC
-ifneq ($(strip $(filter ppc powerpc,$(architecture))),)
-include $(DEBDIR)/ruleset/arches/ppc.mk
+    ##### PowerPC
+    ifneq ($(strip $(filter ppc powerpc,$(architecture))),)
+    include $(DEBDIR)/ruleset/arches/ppc.mk
+    endif
+  endif
 endif
-
 
 ##### Alpha
 ifeq ($(strip $(architecture)),alpha)

@@ -4,6 +4,9 @@
 		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-91
 		  Accept either x86_64 or amd64 as the architecture, just
 		  in case. 
+		  New logic for determining which make snippet to use for
+		  powerpc related arches, and is now kernel-version
+		  aware.
 
 2005-12-19  Manoj Srivastava  <srivasta@debian.org>
 

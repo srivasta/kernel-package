@@ -1,3 +1,9 @@
+2005-12-25  Manoj Srivastava  <srivasta@debian.org>
+
+	* powerpc.mk:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-99
+		  New file, for >2.6.15 kernels. 
+
 2005-12-09  Manoj Srivastava  <srivasta@debian.org>
 
 	* arm.mk: Added missing arm.mk. Somehow, this file had gone
