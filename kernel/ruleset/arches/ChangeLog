@@ -1,3 +1,10 @@
+2005-12-26  Manoj Srivastava  <srivasta@debian.org>
+
+	* powerpc.mk (KERNEL_ARCH):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-99
+		  if the subarch is powerpc or powerpc32, the kernel arch
+		  is really ppc. 
+
 2005-12-25  Manoj Srivastava  <srivasta@debian.org>
 
 	* powerpc.mk:

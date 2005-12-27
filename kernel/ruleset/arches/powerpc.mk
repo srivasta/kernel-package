@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 18:31:06 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Sun Dec 25 12:14:39 2005
+## Last Modified On : Mon Dec 26 22:24:07 2005
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 1
+## Update Count     : 2
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : handle the architecture specific variables.
@@ -78,6 +78,7 @@ ifneq (,$(findstring $(KPKG_SUBARCH), powerpc powerpc32 powerpc64))
     target := zImage
     loaderdep=mkvmlinuz
     target := vmlinux
+    KERNEL_ARCH:=ppc
   endif
   kimagesrc = vmlinux
   kimage := vmlinux
