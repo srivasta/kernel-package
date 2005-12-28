@@ -5,9 +5,9 @@
 # Created On       : Mon Jun 17 01:10:11 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Thu Dec 15 23:03:29 2005
+# Last Modified On : Tue Dec 27 23:34:31 2005
 # Last Machine Used: glaurung.internal.golden-gryphon.com
-# Update Count     : 230
+# Update Count     : 231
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
@@ -358,7 +358,7 @@ target.
 
 =back
 
-The options maybe shortened to the smallest unique string, and may be
+The options may be shortened to the smallest unique string, and may be
 entered with either a - or a -- prefix, and you may use a space or an
 = symbol between an option string and a value.  Please refer to man
 Getopt::Long for details on how the options may be entered.
