@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 17:43:59 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Sun Dec 25 09:01:44 2005
+## Last Modified On : Mon Dec 26 22:55:02 2005
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 3
+## Update Count     : 4
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : sets default values for variables _before_ the
@@ -108,14 +108,12 @@ else
 endif
 
 ifndef CROSS_COMPILE
-  ifneq ($(strip $(KPKG_ARCH)),powerpc64)
-    ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
-      ifneq ($(strip $(architecture)),$(strip $(DEB_BUILD_ARCH)))
-        #KERNEL_CROSS:=$(architecture)-$(strip $(DEB_HOST_ARCH_OS))-
-        KERNEL_CROSS:=$(DEB_HOST_GNU_TYPE)-
-        ifeq ($(architecture), amd64)
-          KERNEL_CROSS:=$(architecture)-$(strip $(DEB_HOST_ARCH_OS))-
-        endif
+  ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
+    ifneq ($(strip $(architecture)),$(strip $(DEB_BUILD_ARCH)))
+      #KERNEL_CROSS:=$(architecture)-$(strip $(DEB_HOST_ARCH_OS))-
+      KERNEL_CROSS:=$(DEB_HOST_GNU_TYPE)-
+      ifeq ($(architecture), amd64)
+        KERNEL_CROSS:=$(architecture)-$(strip $(DEB_HOST_ARCH_OS))-
       endif
     endif
   endif

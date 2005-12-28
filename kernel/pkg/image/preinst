@@ -5,9 +5,9 @@
 # Created On       : Sun Jun 14 03:38:02 1998
 # Created On Node  : tiamat.datasync.com
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Sun Dec 25 09:46:00 2005
+# Last Modified On : Tue Dec 27 15:36:03 2005
 # Last Machine Used: glaurung.internal.golden-gryphon.com
-# Update Count     : 87
+# Update Count     : 89
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
@@ -484,28 +484,25 @@ if ( -f "$modules_base/$version/modules.dep" ) {
 
 ## Run user hook script here, if any
 if (-x "$preinst_hook") {
+  print STDERR "Running preinst hook $preinst_hook.\n";
     system ("$preinst_hook $version  ${realimageloc}${kimage}-${version}") &&
 	die "User hook script $preinst_hook failed";
 }
 if (-d "/etc/kernel/preinst.d") {
+  print STDERR "Examining /etc/kernel/preinst.d/\n";
   system ("run-parts --verbose --exit-on-error --arg=$version" .
           " --arg=$realimageloc$kimage-$version" .
           " /etc/kernel/preinst.d") &&
             die "Failed to process /etc/kernel/preinst.d";
 }
 if (-d "/etc/kernel/preinst.d/$version") {
+  print STDERR "Examining /etc/kernel/preinst.d/$version.\n";
   system ("run-parts --verbose --exit-on-error --arg=$version" .
           " --arg=$realimageloc$kimage-$version" .
           " /etc/kernel/preinst.d/$version") &&
             die "Failed to process /etc/kernel/preinst.d/$version";
 }
-
-# Done with Debconf
-$ret = stop();
-if ($ret && $ret != 30 ) {
-  warn "Error stopping debconf, exit code: $ret";
-}
-
+print STDERR "Done.\n";
 
 exit 0;
 

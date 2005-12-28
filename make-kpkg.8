@@ -273,7 +273,12 @@ This is useful for setting the architecture when you are cross
 compiling. If you are not cross compiling, the architecture is
 determined automatically. The same effect can be achieved by setting
 the environment variable
-.B KPKG_ARCH
+.B KPKG_ARCH.
+The value should be whatever
+.B DEB_HOST_ARCH_CPU
+contains when
+.I dpkg-architecture
+is run on the target machine.
 .TP
 .BR \-\-cross\-compile\ foo
 .TP

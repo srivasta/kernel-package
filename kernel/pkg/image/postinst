@@ -5,9 +5,9 @@
 # Created On       : Sat Apr 27 05:55:26 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Sun Dec 25 09:39:06 2005
+# Last Modified On : Tue Dec 27 15:33:38 2005
 # Last Machine Used: glaurung.internal.golden-gryphon.com
-# Update Count     : 332
+# Update Count     : 333
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
@@ -1161,7 +1161,7 @@ LOADER: {
 
 ## Run user hook script here, if any
 if (-x "$postinst_hook") {
-  print STDERR "Running postinst hook.\n";
+  print STDERR "Running postinst hook $postinst_hook.\n";
   system ("$postinst_hook $version $realimageloc$kimage-$version") &&
     warn "User hook script $postinst_hook failed";
 }
@@ -1182,13 +1182,6 @@ if (-d "/etc/kernel/postinst.d/$version") {
             die "Failed to process /etc/kernel/postinst.d/$version";
 }
 
-
-
-# Done with Debconf
-$ret = stop();
-if ($ret && $ret != 30 ) {
-  warn "Error stopping debconf, exit code: $ret";
-}
 
 sub run_lilo (){
   my $ret;

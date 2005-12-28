@@ -1,3 +1,10 @@
+2005-12-27  Manoj Srivastava  <srivasta@debian.org>
+
+	* defaults.mk:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-91
+		  removed special casing of powerpc64 when determining
+		  whether or not we are cross compiling. 
+
 2005-12-25  Manoj Srivastava  <srivasta@debian.org>
 
 	* defaults.mk:

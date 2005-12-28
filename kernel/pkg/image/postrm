@@ -5,9 +5,9 @@
 # Created On       : Sat May 15 11:05:13 1999
 # Created On Node  : glaurung.green-gryphon.com
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Sun Dec 25 09:40:12 2005
+# Last Modified On : Tue Dec 27 15:34:19 2005
 # Last Machine Used: glaurung.internal.golden-gryphon.com
-# Update Count     : 51
+# Update Count     : 54
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
@@ -268,16 +268,19 @@ sub image_magic {
 
 ## Run user hook script here, if any
 if (-x "$postrm_hook") {
+  warn "Running postrm hook $postrm_hook .\n";
   system ("$postrm_hook $version $realimageloc$kimage-$version") &&
 	    warn "User hook script $postrm_hook failed";
 }
 if (-d "/etc/kernel/postrm.d") {
+  warn "Examining /etc/kernel/postrm.d .\n";
   system ("run-parts --verbose --exit-on-error --arg=$version " .
           "--arg=$realimageloc$kimage-$version " .
           "/etc/kernel/postrm.d") &&
             die "Failed to process /etc/kernel/postrm.d";
 }
 if (-d "/etc/kernel/postrm.d/$version") {
+  warn "Examining /etc/kernel/postrm.d/$version .\n";
   system ("run-parts --verbose --exit-on-error --arg=$version " .
           "--arg=$realimageloc$kimage-$version " .
           "/etc/kernel/postrm.d/$version") &&
@@ -293,13 +296,6 @@ if ($ARGV[0] !~ /upgrade/) {
   image_magic($kimage . ".old", $image_dest);
   image_magic("initrd.img",     $image_dest) if $initrd;
   image_magic("initrd.img.old", $image_dest) if $initrd;
-}
-
-
-# Done with Debconf
-$ret = stop();
-if ($ret && $ret != 30 ) {
-  warn "Error stopping debconf, exit code: $ret";
 }
 
 
