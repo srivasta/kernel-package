@@ -1,3 +1,11 @@
+2005-12-28  Manoj Srivastava  <srivasta@debian.org>
+
+	* powerpc.mk:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-103
+		  New, consolidated snippet for powerpc, which sets kernel
+		  arch based on kernel versions. Removed ppc.mk and
+		  powerpc.mk
+
 2005-12-26  Manoj Srivastava  <srivasta@debian.org>
 
 	* powerpc.mk (KERNEL_ARCH):

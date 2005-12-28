@@ -4,9 +4,9 @@
 ## Created On       : Fri Oct 28 00:28:13 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Sun Dec 25 08:59:04 2005
+## Last Modified On : Wed Dec 28 13:23:38 2005
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 2
+## Update Count     : 3
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : 
@@ -59,27 +59,7 @@ endif
 
 ##### PowerPC and PowerPC architecture 
 ifneq ($(strip $(filter ppc powerpc ppc64 powerpc64,$(architecture))),)
-  ifeq ($(shell if [ $(VERSION) -lt 2 ]; then				\
-  			echo old;					\
-	elif [ $(VERSION) -eq 2 ] && [ $(PATCHLEVEL) -lt 6 ]; then	\
-			echo old;					\
-	elif [ $(VERSION) -eq 2 ] && [ $(PATCHLEVEL) -eq 6 ] &&		\
-		[ $(SUBLEVEL) -lt  15 ]; then				\
-			echo old;					\
-	fi),)
-    ##### PowerPC64 and PowerPC
     include $(DEBDIR)/ruleset/arches/powerpc.mk
-  else
-    ##### PowerPC64
-    ifneq ($(strip $(filter ppc64 powerpc64,$(architecture))),)
-    include $(DEBDIR)/ruleset/arches/ppc64.mk
-    endif
-
-    ##### PowerPC
-    ifneq ($(strip $(filter ppc powerpc,$(architecture))),)
-    include $(DEBDIR)/ruleset/arches/ppc.mk
-    endif
-  endif
 endif
 
 ##### Alpha
