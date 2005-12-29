@@ -30,8 +30,24 @@
 ##
 ###############################################################################
 
+# We need to set the KERNEL_ARCH depending on the actual version, so
+# let's distinguish between pre-2.6.15, 2.6.15 and 2.6.14.
+KERNEL_ARCH_VERSION = $(shell if [ $(VERSION) -lt 2 ]; then             \
+                        echo pre-2.6.15;                                \
+        elif [ $(VERSION) -eq 2 ] && [ $(PATCHLEVEL) -lt 6 ]; then      \
+                        echo pre-2.6.15;                                \
+        elif [ $(VERSION) -eq 2 ] && [ $(PATCHLEVEL) -eq 6 ] &&         \
+                [ $(SUBLEVEL) -lt 15 ]; then                            \
+                        echo pre-2.6.15;                                \
+        elif [ $(VERSION) -eq 2 ] && [ $(PATCHLEVEL) -eq 6 ] &&         \
+                [ $(SUBLEVEL) -lt 16 ]; then                            \
+                        echo 2.6.15;                                    \
+        else                                                            \
+                        echo post-2.6.15;                               \
+        fi)
+
 # prpmc and mbx are not guessed automatically yet.
-ifeq ($(DEB_BUILD_ARCH),powerpc)
+ifneq ($(strip $(filter ppc powerpc ppc64 powerpc64,$(DEB_BUILD_ARCH))),)
 # This is only meaningful when building on a PowerPC
   ifeq ($(GUESS_SUBARCH),)
     GUESS_MACHINE:=$(shell awk '/machine/ { print $$3}' /proc/cpuinfo)
@@ -53,10 +69,18 @@ ifeq ($(DEB_BUILD_ARCH),powerpc)
       endif
     endif
     ifeq ($(GUESS_SUBARCH),)
-      GUESS_SUBARCH:=powerpc
+      ifeq ($(KERNEL_ARCH_VERSION),post-2.6.15)
+        GUESS_SUBARCH:=powerpc
+      else
+        GUESS_SUBARCH:=ppc
+      endif
     endif
   else
-    GUESS_SUBARCH:=powerpc
+    ifeq ($(KERNEL_ARCH_VERSION),post-2.6.15)
+      GUESS_SUBARCH:=powerpc
+    else
+      GUESS_SUBARCH:=ppc
+    endif
   endif
 endif
 
@@ -64,21 +88,6 @@ ifeq (,$(findstring $(KPKG_SUBARCH), apus Amiga APUs nubus ppc ppc32 ppc64 power
   KPKG_SUBARCH:=$(GUESS_SUBARCH)
 endif
 
-# We need to set the KERNEL_ARCH depending on the actual version, so
-# let's distinguish between pre-2.6.15, 2.6.15 and 2.6.14.
-KERNEL_ARCH_VERSION = $(shell if [ $(VERSION) -lt 2 ]; then             \
-                        echo pre-2.6.15;                                \
-        elif [ $(VERSION) -eq 2 ] && [ $(PATCHLEVEL) -lt 6 ]; then      \
-                        echo pre-2.6.15;                                \
-        elif [ $(VERSION) -eq 2 ] && [ $(PATCHLEVEL) -eq 6 ] &&         \
-                [ $(SUBLEVEL) -lt 15 ]; then                            \
-                        echo pre-2.6.15;                                \
-        elif [ $(VERSION) -eq 2 ] && [ $(PATCHLEVEL) -eq 6 ] &&         \
-                [ $(SUBLEVEL) -lt 16 ]; then                            \
-                        echo 2.6.15;                                    \
-        else                                                            \
-                        echo post-2.6.15;                               \
-        fi)
 
 # pre-2.6.15 uses ppc for 32bit and ppc64 for 64bit.
 ifeq ($(KERNEL_ARCH_VERSION), pre-2.6.15)
