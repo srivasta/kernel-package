@@ -1,3 +1,10 @@
+2005-12-31  Manoj Srivastava  <srivasta@debian.org>
+
+	* powerpc.mk (INSTALL_MKVMLINUZ_PATH):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-105
+		  Set it to a value relative to the top of the image
+		  package, instead of an absolute path, and use the stem
+
 2005-12-28  Manoj Srivastava  <srivasta@debian.org>
 
 	* powerpc.mk:

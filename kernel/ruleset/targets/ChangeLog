@@ -1,3 +1,10 @@
+2005-12-31  Manoj Srivastava  <srivasta@debian.org>
+
+	* image.mk (TMPTOP):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-105
+		  adjust the call to install mkvmlinuz stuff, since the
+		  path is now relative
+
 2005-12-19  Manoj Srivastava  <srivasta@debian.org>
 
 	* image.mk (install/$(i_package)):
