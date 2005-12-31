@@ -1159,6 +1159,9 @@ LOADER: {
   }
 }
 
+# set the env var stem
+$ENV{'STEM'} = "=ST";
+
 ## Run user hook script here, if any
 if (-x "$postinst_hook") {
   print STDERR "Running postinst hook $postinst_hook.\n";

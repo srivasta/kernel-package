@@ -583,7 +583,12 @@ If they exists, the kernel-image package shall run a
 .B run-parts
 program over the directory (including the versioned one), giving the
 version being installed or removed as an argument, in the
-corresponding phase of installation or removal. These scripts shall be
+corresponding phase of installation or removal. Before calling these
+scripts, the env variable
+.B STEM
+shall be set to the value of the 
+.I \-\-stem
+argument (or the default value, linux). These scripts shall be
 called with two arguments, the first being the
 .I version
 of the kernel image, and the second argument being the

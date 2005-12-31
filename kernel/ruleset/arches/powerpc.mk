@@ -132,8 +132,8 @@ ifneq (,$(findstring $(KPKG_SUBARCH), powerpc powerpc32 ppc ppc32))
   NEED_IMAGE_POST_PROCESSING = YES
   IMAGE_POST_PROCESS_TARGET := mkvmlinuz_support_install
   IMAGE_POST_PROCESS_DIR    := arch/$(KERNEL_ARCH)/boot
-  # INSTALL_MKVMLINUZ_PATH = /usr/lib/$(INT_STEM)-image-${version}
-  INSTALL_MKVMLINUZ_PATH = /usr/lib/kernel-image-${version}
+  # INSTALL_MKVMLINUZ_PATH = /usr/lib/kernel-image-${version}
+  INSTALL_MKVMLINUZ_PATH = /usr/lib/$(INT_STEM)-image-${version}
   target := zImage
   loaderdep=mkvmlinuz
 endif

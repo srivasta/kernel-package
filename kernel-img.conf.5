@@ -162,7 +162,12 @@ overrides)
 .B postinst_hook 
 Set this variable to a script to be executed during installation after
 all the symbolic 
-links are created, but before running the bootloader. This script
+links are created, but before running the bootloader. Before calling this
+script, the env variable
+.B STEM
+shall be set to the value of the 
+.I \-\-stem
+argument (or the default value, linux). This script
 shall be called with two arguments, the first being the
 .I version
 of the kernel image, and the second argument being the

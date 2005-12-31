@@ -1,3 +1,15 @@
+2005-12-31  Manoj Srivastava  <srivasta@debian.org>
+
+	* kernel-img.conf.5:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-106
+		  Document that STEM is set before postinst scripts are
+		  called 
+
+	* make-kpkg.8:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-106
+		  Document that STEM is set before postinst scripts are
+		  called 
+
 2005-12-27  Manoj Srivastava  <srivasta@debian.org>
 
 	* make-kpkg.8:

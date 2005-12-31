@@ -266,6 +266,9 @@ sub image_magic {
   }
 }
 
+# set the env var stem
+$ENV{'STEM'} = "=ST";
+
 ## Run user hook script here, if any
 if (-x "$postrm_hook") {
   warn "Running postrm hook $postrm_hook .\n";

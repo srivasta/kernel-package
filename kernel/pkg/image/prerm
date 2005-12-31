@@ -270,6 +270,11 @@ if (-f "/etc/$loader.conf") { #I know, could be a link, but ..
   }
 }
 
+
+# set the env var stem
+$ENV{'STEM'} = "=ST";
+
+
 ## Run user hook script here, if any
 if (-x "$prerm_hook") {
   print STDERR "Running prerm hook $prerm_hook.\n";

@@ -1,3 +1,21 @@
+2005-12-31  Manoj Srivastava  <srivasta@debian.org>
+
+	* prerm:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-106
+			  set the env var stem before calling hooks  
+
+	* preinst (check):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-106
+		  set the env var stem before calling hooks 
+
+	* postrm (image_magic):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-106
+		  set the env var stem before calling hooks 
+
+	* postinst (find_inird_tool):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-106
+		  set the env var stem before calling hooks
+
 2005-12-27  Manoj Srivastava  <srivasta@debian.org>
 
 	* postinst (find_inird_tool):
