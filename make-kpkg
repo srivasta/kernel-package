@@ -5,9 +5,9 @@
 # Created On       : Mon Jun 17 01:10:11 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Tue Dec 27 23:34:31 2005
+# Last Modified On : Tue Jan  3 19:56:11 2006
 # Last Machine Used: glaurung.internal.golden-gryphon.com
-# Update Count     : 231
+# Update Count     : 232
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
@@ -827,6 +827,7 @@ EOMSG
       }
       
       $command .= " DEBIAN_REVISION=$revision ";
+      $alt_cmd .= " DEBIAN_REVISION=$revision ";
       if ($revision !~ m/^(\d+:)?[a-zA-Z\d\.\+\-]+$/o) {
 	print STDERR " Error: The revision string may only contain\n";
 	print STDERR " alphanumerics and  the  characters  +  .\n";
