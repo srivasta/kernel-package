@@ -5,9 +5,9 @@
 # Created On       : Sat Apr 27 05:55:26 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Tue Dec 27 15:33:38 2005
+# Last Modified On : Tue Jan  3 18:19:35 2006
 # Last Machine Used: glaurung.internal.golden-gryphon.com
-# Update Count     : 333
+# Update Count     : 335
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
@@ -990,18 +990,26 @@ if ($initrd) {
   die "Failed to find suitable ramdisk generation tool for kernel version \n" .
     "$version on running kernel $hostversion in $ramdisk\n"
       if $#ramdisklist < 0;
-  my $ramdisk_cmd = shift @ramdisklist;
-  print STDERR "Using $ramdisk_cmd to build the ramdisk.\n";
-  print STDERR "Other valid candidates: @ramdisklist\n" if $#ramdisklist > 0;
+  my $success = 0;
+  for $ramdisk_cmd (@ramdisklist) {
+    print STDERR "Using $ramdisk_cmd to build the ramdisk.\n";
+    print STDERR "Other valid candidates: @ramdisklist\n" if $#ramdisklist > 0;
 
-  my $initrd_path = $realimageloc . "initrd.img-$version";
-  my $ret = system("$ramdisk_cmd " .
-                   ($mkimage ? "-m '$mkimage' " : "") .
-                   "-o $initrd_path.new $modules_base/$version");
-  die("Failed to create initrd image.\n") if $ret;
-  rename("$initrd_path.new", "$initrd_path")
-    or die("Failed to rename initrd ($initrd_path)\n");
-
+    my $initrd_path = $realimageloc . "initrd.img-$version";
+    my $ret = system("$ramdisk_cmd " .
+                     ($mkimage ? "-m '$mkimage' " : "") .
+                     "-o $initrd_path.new $modules_base/$version");
+    if ($ret) {
+      warn "$ramdisk_cmd failed to create initrd image.\n";
+    }
+    else {
+      rename("$initrd_path.new", "$initrd_path")
+        or die("Failed to rename initrd ($initrd_path)\n");
+      $success = 1;
+      last;
+    }
+  }
+  die "Failed to create initrd image.\n" unless $success;
   if (! defined $ARGV[1] || ! $ARGV[1] || $ARGV[1] =~ m/<unknown>/og) {
     image_magic("initrd.img", $image_dest);
   }

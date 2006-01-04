@@ -1,3 +1,11 @@
+2006-01-03  Manoj Srivastava  <srivasta@debian.org>
+
+	* postinst:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-107
+		  Now, we try all viable initramfs generators, one after
+		  the other, until we find one that works, and only die if
+		  all  the available initramfs tools have failed. 
+
 2005-12-31  Manoj Srivastava  <srivasta@debian.org>
 
 	* prerm:
