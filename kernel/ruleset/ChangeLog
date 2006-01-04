@@ -1,3 +1,12 @@
+2006-01-04  Manoj Srivastava  <srivasta@debian.org>
+
+	* local.mk (kernel-headers kernel_headers):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-111
+		  Make kernel-headers depend on debian/stamp-prepare,
+		  instead of  stamp-build-arch, since this means for 2.6.X
+		  kernels the full build may not be needed, with the
+		  advent of the prepare target. 
+
 2005-12-28  Manoj Srivastava  <srivasta@debian.org>
 
 	* architecture.mk:

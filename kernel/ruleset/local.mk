@@ -4,9 +4,9 @@
 ## Created On       : Fri Oct 28 00:37:46 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Thu Dec  1 15:14:01 2005
+## Last Modified On : Wed Jan  4 09:39:37 2006
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 5
+## Update Count     : 6
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : 
@@ -149,7 +149,7 @@ stamp-kernel-doc: install/$(d_package) binary/$(d_package)
 	echo done > $@
 STAMPS_TO_CLEAN += stamp-kernel-doc
 
-kernel-headers kernel_headers: stamp-configure stamp-build-arch stamp-kernel-headers
+kernel-headers kernel_headers: stamp-configure debian/stamp-prepare stamp-kernel-headers
 	$(REASON)
 stamp-kernel-headers: install/$(h_package) binary/$(h_package) 
 	$(REASON)

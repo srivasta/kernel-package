@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 10:41:41 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Mon Oct 31 10:41:41 2005
+## Last Modified On : Wed Jan  4 09:38:39 2006
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 0
+## Update Count     : 4
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : This file provides the commands commaon to a number of
@@ -99,6 +99,8 @@ endif
 
 debian/stamp-kernel-conf: .config Makefile
 	$(REASON)
+	$(eval $(which_debdir))
+	$(eval $(deb_rule))
 ifeq ($(DEB_HOST_GNU_SYSTEM), kfreebsd-gnu)
 	mkdir -p bin
 	ln -sf `which gcc-3.4` bin/cc
@@ -107,9 +109,12 @@ endif
 ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
 	$(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) ARCH=$(KERNEL_ARCH) \
                 $(config_target)
-  ifeq ($(shell if [ $(VERSION) -ge 2 ] && [ $(PATCHLEVEL) -ge 5 ]; then \
-                  echo new;fi),)
-	+$(MAKE) -f ./debian/rules debian/dummy_do_dep
+  ifeq ($(shell if   [ $(VERSION) -gt 2 ]; then                            \
+                   echo new;                                               \
+                elif [ $(VERSION) -ge 2 ] && [ $(PATCHLEVEL) -ge 5 ]; then \
+                  echo new;                                                \
+                fi),)
+	+$(run_command)  debian/dummy_do_dep
 	$(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) \
                                  ARCH=$(KERNEL_ARCH) clean
   else
@@ -121,6 +126,23 @@ ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
 endif
 	echo done > $@
 STAMPS_TO_CLEAN += debian/stamp-kernel-conf
+
+debian/stamp-prepare: .config Makefile
+	$(REASON)
+	$(eval $(which_debdir))
+	$(eval $(deb_rule))
+ifeq ($(shell if   [ $(VERSION) -gt 2 ]; then                            \
+                 echo new;                                               \
+              elif [ $(VERSION) -ge 2 ] && [ $(PATCHLEVEL) -ge 5 ]; then \
+                echo new;                                                \
+              fi),)
+	$(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) \
+                                 ARCH=$(KERNEL_ARCH) prepare
+else
+	$(run_command) stamp-build-arch
+endif
+	echo done > $@
+STAMPS_TO_CLEAN += debian/stamp-prepare
 
 debian/stamp-conf:
 	$(REASON)
@@ -240,6 +262,7 @@ endif
             mv -f scripts/package/Makefile.dist scripts/package/Makefile
 	rm -f $(FILES_TO_CLEAN) $(STAMPS_TO_CLEAN)
 	rm -rf $(DIRS_TO_CLEAN)
+
 
 
 debian/stamp-build-kernel: sanity_check debian/stamp-kernel-conf
