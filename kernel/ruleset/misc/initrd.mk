@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 18:09:11 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Wed Dec  7 09:53:43 2005
+## Last Modified On : Tue Jan  3 19:04:29 2006
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 4
+## Update Count     : 5
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : This snippet uses hard coded version based heuristics to
@@ -66,7 +66,7 @@ ifneq ($(strip $(INITRD)),)
         # mkinitrd.yaird, we shall do the dependency here
         initrddep := initrd-tools (>= 0.1.84)
       else
-        initrdcmd := mkinitrd.yaird mkinitramfs
+        initrdcmd := mkinitramfs mkinitrd.yaird
       endif
     endif
   endif
