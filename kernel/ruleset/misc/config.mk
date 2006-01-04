@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 17:30:53 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Mon Oct 31 17:30:53 2005
+## Last Modified On : Tue Jan  3 19:37:01 2006
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 0
+## Update Count     : 1
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : Various internal variable set based on defaults and the
@@ -30,6 +30,35 @@
 ## Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 ##
 ###############################################################################
+
+
+# The Debian revision
+# If there is a changelog file, it overrides. The only exception is
+# when there is no stamp-config, and there is no debian/official,
+# *AND* there is a DEBIAN_REVISION, in which case the DEBIAN_REVISION
+# over rides (since we are going to replace the changelog file soon
+# anyway.  Else, use the commandline or env var setting. Or else
+# default to 10.00.Custom, unless the human has requested that the
+# revision is mandatory, in which case we raise an error
+
+ifeq ($(strip $(HAS_CHANGELOG)),YES)
+  debian := $(shell if test -f debian/changelog; then \
+                     perl -nle 'print /\((\S+)\)/; exit 0' debian/changelog;\
+                  fi; )
+else
+  ifneq ($(strip $(DEBIAN_REVISION)),)
+    debian := $(DEBIAN_REVISION)
+  else
+    ifeq ($(strip $(debian)),)
+      ifneq ($(strip $(debian_revision_mandatory)),)
+        $(error A Debian revision is mandatory, but none was provided)
+      else
+        debian = $(version)-10.00.Custom
+      endif
+    endif
+  endif
+endif
+
 
 
 # See if the version numbers are valid

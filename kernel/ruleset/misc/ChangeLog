@@ -1,3 +1,17 @@
+2006-01-03  Manoj Srivastava  <srivasta@debian.org>
+
+	* config.mk:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-109
+		  Added the calculation of $(debian) here, since it is
+		  included _after_ the config file is. 
+
+	* version_vars.mk:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-107
+		  Removed the calculation of $(debian) from this file,
+		  since this is included before the config file is
+		  included, so the latter always over rides the setting of
+		  the debian revision on the command line. 
+
 2005-12-27  Manoj Srivastava  <srivasta@debian.org>
 
 	* defaults.mk:
