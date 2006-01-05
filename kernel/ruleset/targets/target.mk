@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 10:41:41 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Wed Jan  4 09:38:39 2006
+## Last Modified On : Wed Jan  4 18:24:23 2006
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 4
+## Update Count     : 11
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : This file provides the commands commaon to a number of
@@ -33,8 +33,9 @@
 ###############################################################################
 
 
-.config: testdir 
+.config: Makefile
 	$(REASON)
+	$(checkdir)
 ifneq ($(strip $(use_saved_config)),NO)
 	test -f .config || test ! -f .config.save || \
 		            cp -pf .config.save .config
@@ -51,8 +52,9 @@ endif
 # file at this point
 
 
-conf.vars: testdir Makefile .config
+conf.vars: Makefile .config
 	$(REASON)
+	$(checkdir)
 	@rm -f .mak
 	@touch .mak
 	@echo "VERSION          = $(VERSION)"       >> .mak
@@ -119,12 +121,12 @@ ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
                                  ARCH=$(KERNEL_ARCH) clean
   else
     ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
-	$(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) \
-                                ARCH=$(KERNEL_ARCH) prepare
+	$(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) ARCH=$(KERNEL_ARCH) prepare
     endif
   endif
 endif
 	echo done > $@
+
 STAMPS_TO_CLEAN += debian/stamp-kernel-conf
 
 debian/stamp-prepare: .config Makefile

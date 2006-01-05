@@ -1,3 +1,19 @@
+2006-01-05  Manoj Srivastava  <srivasta@debian.org>
+
+	* minimal.mk (STAMPS_TO_CLEAN):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-109
+		  remove stamp-kernel-configure, nothing uses it
+	  (minimal_debian):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-109
+		  create ./debian/stamps , for future use 
+
+	* local.mk (BUILD-arch):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-111
+		  removed debian/stamp-build-kernel from this target,
+		  since only the kernel images really need it, now that we
+		  have the prepare target (does not really help anything,
+		  but  expresses dependencies better). 
+
 2006-01-04  Manoj Srivastava  <srivasta@debian.org>
 
 	* local.mk (kernel-headers kernel_headers):

@@ -1,3 +1,19 @@
+2006-01-05  Manoj Srivastava  <srivasta@debian.org>
+
+	* target.mk:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-111
+		  use $(checkdir) instead of depending  on the testdir
+		  target, just so we are not remade  all the time.  
+
+	* source.mk (binary/$(s_package)):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-112
+		  use $(checkdir) instead of depending on the testdir
+		  target, just so we are not remade all the time. 
+
+	* manual.mk (binary/$(m_package)):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-112
+		  Ditto
+
 2005-12-31  Manoj Srivastava  <srivasta@debian.org>
 
 	* image.mk (TMPTOP):

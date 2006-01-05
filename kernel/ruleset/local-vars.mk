@@ -4,9 +4,9 @@
 ## Created On       : Fri Oct 28 00:37:02 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Fri Oct 28 16:15:54 2005
+## Last Modified On : Wed Jan  4 18:03:17 2006
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 5
+## Update Count     : 6
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : 
@@ -36,7 +36,7 @@ FILES_TO_CLEAN  = modules/modversions.h modules/ksyms.ver debian/files \
                   applied_patches debian/buildinfo
 STAMPS_TO_CLEAN = stamp-build stamp-configure stamp-image stamp-headers   \
                   stamp-src stamp-diff stamp-doc stamp-manual stamp-patch \
-                  stamp-buildpackage stamp-debian stamp-kernel-configure
+                  stamp-buildpackage stamp-debian
 DIRS_TO_CLEAN   = 
 
 

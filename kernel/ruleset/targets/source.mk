@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 13:55:32 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Sat Dec  3 01:06:33 2005
+## Last Modified On : Wed Jan  4 18:26:00 2006
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 2
+## Update Count     : 3
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : This file is responsible forcreating the kernel-source packages 
@@ -111,8 +111,9 @@ ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 	dpkg --build                                 $(TMPTOP) $(DEB_DEST)
 endif
 
-binary/$(s_package): testdir
+binary/$(s_package):
 	$(REASON)
+	$(checkdir)
 ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 	$(require_root)
 	$(eval $(deb_rule))

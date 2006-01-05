@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 15:52:16 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Mon Oct 31 15:52:16 2005
+## Last Modified On : Wed Jan  4 18:26:29 2006
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 0
+## Update Count     : 1
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : This file is responsible for creating the kernel-manual packages 
@@ -58,8 +58,9 @@ ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 	dpkg --build                              $(TMPTOP) $(DEB_DEST)
 endif
 
-binary/$(m_package): testdir
+binary/$(m_package):
 	$(REASON)
+	$(checkdir)
 ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 	$(require_root)
 	$(eval $(deb_rule))

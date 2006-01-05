@@ -4,9 +4,9 @@
 ## Created On       : Sat Nov 15 01:10:05 2003
 ## Created On Node  : glaurung.green-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Mon Apr 11 13:11:54 2005
+## Last Modified On : Wed Jan  4 18:42:03 2006
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 46
+## Update Count     : 49
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : The top level targets mandated by policy, as well as
@@ -64,14 +64,17 @@ prebuild:
 #######################################################################
 
 # Work here
-CONFIG-common:: testdir 
+CONFIG-common:: testdir
 	$(REASON)
+	$(checkdir)
 
-stamp-arch-conf:  testdir CONFIG-common
+stamp-arch-conf:  CONFIG-common
 	$(REASON)
+	$(checkdir)
 	@echo done > $@
-stamp-indep-conf: testdir CONFIG-common
+stamp-indep-conf: CONFIG-common
 	$(REASON)
+	$(checkdir)
 	@echo done > $@
 
 # Work here
@@ -82,10 +85,12 @@ CONFIG-indep:: stamp-indep-conf
 
 STAMPS_TO_CLEAN += stamp-arch-conf stamp-indep-conf
 # Work here
-$(patsubst %,CONFIG/%,$(DEB_ARCH_PACKAGES))  :: CONFIG/% : testdir CONFIG-arch  
+$(patsubst %,CONFIG/%,$(DEB_ARCH_PACKAGES))  :: CONFIG/% : CONFIG-arch  
 	$(REASON)
-$(patsubst %,CONFIG/%,$(DEB_INDEP_PACKAGES)) :: CONFIG/% : testdir CONFIG-indep 
+	$(checkdir)
+$(patsubst %,CONFIG/%,$(DEB_INDEP_PACKAGES)) :: CONFIG/% : CONFIG-indep 
 	$(REASON)
+	$(checkdir)
 
 stamp-configure-arch:  $(patsubst %,CONFIG/%,$(DEB_ARCH_PACKAGES))
 	$(REASON)
@@ -116,27 +121,34 @@ STAMPS_TO_CLEAN += stamp-configure-arch stamp-configure-indep stamp-configure
 # Work here
 BUILD-common:: testdir
 	$(REASON)
+	$(checkdir)
 
-stamp-arch-build:  testdir BUILD-common $(patsubst %,CONFIG/%,$(DEB_ARCH_PACKAGES))  
+stamp-arch-build:  BUILD-common $(patsubst %,CONFIG/%,$(DEB_ARCH_PACKAGES))  
 	$(REASON)
+	$(checkdir)
 	@echo done > $@
-stamp-indep-build: testdir BUILD-common $(patsubst %,CONFIG/%,$(DEB_INDEP_PACKAGES)) 
+stamp-indep-build: BUILD-common $(patsubst %,CONFIG/%,$(DEB_INDEP_PACKAGES)) 
 	$(REASON)
+	$(checkdir)
 	@echo done > $@
 
 STAMPS_TO_CLEAN += stamp-arch-build stamp-indep-build
 # sync. Work here
-BUILD-arch::  testdir stamp-arch-build
+BUILD-arch::  stamp-arch-build
+	$(checkdir)
 	$(REASON)
 
-BUILD-indep:: testdir stamp-indep-build
+BUILD-indep:: stamp-indep-build
+	$(checkdir)
 	$(REASON)
 
 # Work here
-$(patsubst %,BUILD/%,$(DEB_ARCH_PACKAGES))  :: BUILD/% : testdir BUILD-arch  
+$(patsubst %,BUILD/%,$(DEB_ARCH_PACKAGES))  :: BUILD/% : BUILD-arch  
 	$(REASON)
-$(patsubst %,BUILD/%,$(DEB_INDEP_PACKAGES)) :: BUILD/% : testdir BUILD-indep 
+	$(checkdir)
+$(patsubst %,BUILD/%,$(DEB_INDEP_PACKAGES)) :: BUILD/% : BUILD-indep 
 	$(REASON)
+	$(checkdir)
 
 stamp-build-arch:  $(patsubst %,BUILD/%,$(DEB_ARCH_PACKAGES)) 
 	$(REASON)
@@ -169,28 +181,35 @@ STAMPS_TO_CLEAN += stamp-build-arch stamp-build-indep stamp-build
 #######################################################################
 # Work here
 INST-common:: testdir 
+	$(checkdir)
 	$(REASON)
 
-stamp-arch-inst:  testdir POST-BUILD-arch-stamp  INST-common $(patsubst %,BUILD/%,$(DEB_ARCH_PACKAGES))    
+stamp-arch-inst:  POST-BUILD-arch-stamp  INST-common $(patsubst %,BUILD/%,$(DEB_ARCH_PACKAGES))    
 	$(REASON)
+	$(checkdir)
 	@echo done > $@
-stamp-indep-inst: testdir POST-BUILD-indep-stamp INST-common $(patsubst %,BUILD/%,$(DEB_INDEP_PACKAGES)) 
+stamp-indep-inst: POST-BUILD-indep-stamp INST-common $(patsubst %,BUILD/%,$(DEB_INDEP_PACKAGES)) 
 	$(REASON)
+	$(checkdir)
 	@echo done > $@
 
 STAMPS_TO_CLEAN += stamp-arch-inst stamp-indep-inst
 
 # sync. Work here
-INST-arch::  testdir stamp-arch-inst
+INST-arch::  stamp-arch-inst
 	$(REASON)
-INST-indep:: testdir stamp-indep-inst
+	$(checkdir)
+INST-indep:: stamp-indep-inst
 	$(REASON)
+	$(checkdir)
 
 # Work here
-$(patsubst %,INST/%,$(DEB_ARCH_PACKAGES))  :: INST/% : testdir INST-arch  
+$(patsubst %,INST/%,$(DEB_ARCH_PACKAGES))  :: INST/% : INST-arch  
 	$(REASON)
-$(patsubst %,INST/%,$(DEB_INDEP_PACKAGES)) :: INST/% : testdir INST-indep 
+	$(checkdir)
+$(patsubst %,INST/%,$(DEB_INDEP_PACKAGES)) :: INST/% : INST-indep 
 	$(REASON)
+	$(checkdir)
 
 stamp-install-arch:  $(patsubst %,INST/%,$(DEB_ARCH_PACKAGES))
 	$(REASON)
@@ -219,27 +238,34 @@ STAMPS_TO_CLEAN += stamp-install stamp-install-arch stamp-install-indep
 #######################################################################
 # Work here
 BIN-common:: testdir 
+	$(checkdir)
 	$(REASON)
 
-stamp-arch-bin:  testdir BIN-common  $(patsubst %,INST/%,$(DEB_ARCH_PACKAGES))
+stamp-arch-bin:  BIN-common  $(patsubst %,INST/%,$(DEB_ARCH_PACKAGES))
 	$(REASON)
+	$(checkdir)
 	@echo done > $@
-stamp-indep-bin: testdir BIN-common  $(patsubst %,INST/%,$(DEB_INDEP_PACKAGES))
+stamp-indep-bin: BIN-common  $(patsubst %,INST/%,$(DEB_INDEP_PACKAGES))
 	$(REASON)
+	$(checkdir)
 	@echo done > $@
 
 STAMPS_TO_CLEAN += stamp-arch-bin stamp-indep-bin
 # sync Work here
-BIN-arch::  testdir stamp-arch-bin
+BIN-arch::  stamp-arch-bin
 	$(REASON)
-BIN-indep:: testdir stamp-indep-bin
+	$(checkdir)
+BIN-indep:: stamp-indep-bin
 	$(REASON)
+	$(checkdir)
 
 # Work here
-$(patsubst %,BIN/%,$(DEB_ARCH_PACKAGES))  :: BIN/% : testdir BIN-arch  
+$(patsubst %,BIN/%,$(DEB_ARCH_PACKAGES))  :: BIN/% : BIN-arch  
 	$(REASON)
-$(patsubst %,BIN/%,$(DEB_INDEP_PACKAGES)) :: BIN/% : testdir BIN-indep 
+	$(checkdir)
+$(patsubst %,BIN/%,$(DEB_INDEP_PACKAGES)) :: BIN/% : BIN-indep 
 	$(REASON)
+	$(checkdir)
 
 
 stamp-binary-arch:  $(patsubst %,BIN/%,$(DEB_ARCH_PACKAGES))
@@ -273,18 +299,23 @@ STAMPS_TO_CLEAN += stamp-binary stamp-binary-arch stamp-binary-indep
 # Work here
 CLN-common:: testdir 
 	$(REASON)
+	$(checkdir)
 # sync Work here
-CLN-arch::  testdir CLN-common
+CLN-arch::  CLN-common
 	$(REASON)
+	$(checkdir)
 
-CLN-indep:: testdir CLN-common
+CLN-indep:: CLN-common
 	$(REASON)
+	$(checkdir)
 
 # Work here
-$(patsubst %,CLEAN/%,$(DEB_ARCH_PACKAGES))  :: CLEAN/% : testdir CLN-arch
+$(patsubst %,CLEAN/%,$(DEB_ARCH_PACKAGES))  :: CLEAN/% : CLN-arch
 	$(REASON)
-$(patsubst %,CLEAN/%,$(DEB_INDEP_PACKAGES)) :: CLEAN/% : testdir CLN-indep
+	$(checkdir)
+$(patsubst %,CLEAN/%,$(DEB_INDEP_PACKAGES)) :: CLEAN/% : CLN-indep
 	$(REASON)
+	$(checkdir)
 
 clean-arch:  $(patsubst %,CLEAN/%,$(DEB_ARCH_PACKAGES))
 	$(REASON)
@@ -292,8 +323,8 @@ clean-indep: $(patsubst %,CLEAN/%,$(DEB_INDEP_PACKAGES))
 	$(REASON)
 
 stamp-clean: clean-indep clean-arch 
-	$(checkdir)
 	$(REASON)
+	$(checkdir)
 	-rm -f core `find . \( -name '*.orig' -o -name '*.rej' -o -name '*~'     \
 	         -o -name '*.bak' -o -name '#*#' -o -name '.*.orig'              \
 		 -o -name '.*.rej' -o -name '.SUMS' -o -size 0 \) -print` TAGS

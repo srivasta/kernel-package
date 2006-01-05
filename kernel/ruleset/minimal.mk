@@ -4,9 +4,9 @@
 ## Created On       : Tue Nov  1 03:31:22 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Sat Dec  3 00:20:00 2005
+## Last Modified On : Thu Jan  5 14:19:07 2006
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 1
+## Update Count     : 4
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : 
@@ -52,7 +52,7 @@ FILES_TO_CLEAN  = modules/modversions.h modules/ksyms.ver conf.vars \
                   scripts/cramfs/cramfsck scripts/cramfs/mkcramfs applied_patches 
 STAMPS_TO_CLEAN = stamp-build stamp-configure stamp-image stamp-headers   \
                   stamp-src stamp-diff stamp-doc stamp-manual stamp-patch \
-                  stamp-buildpackage stamp-debian stamp-kernel-configure
+                  stamp-buildpackage stamp-debian
 DIRS_TO_CLEAN   = 
 
 
@@ -104,7 +104,7 @@ minimal_debian:
 	for dir  in $(DEBIAN_DIRS);  do                                      \
           cp -af $(LIBLOC)/$$dir  ./debian/;                                 \
         done
-
+	test -d ./debian/stamps || mkdir debian/stamps 
 
 #Local variables:
 #mode: makefile

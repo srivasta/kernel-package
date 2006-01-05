@@ -4,9 +4,9 @@
 ## Created On       : Fri Oct 28 00:37:46 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Wed Jan  4 09:39:37 2006
+## Last Modified On : Wed Jan  4 16:20:42 2006
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 6
+## Update Count     : 9
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : 
@@ -46,7 +46,10 @@ CONFIG-indep:: conf.vars debian/stamp-kernel-conf
 
 BUILD-common:: sanity_check 
 	$(REASON)
-BUILD-arch:: debian/stamp-build-kernel
+BUILD-arch:: 
+	$(REASON)
+
+BUILD/$(i_package):: debian/stamp-build-kernel
 	$(REASON)
 
 BIN/$(s_package):: binary/$(s_package)
@@ -156,8 +159,9 @@ stamp-kernel-headers: install/$(h_package) binary/$(h_package)
 	echo done > $@
 STAMPS_TO_CLEAN += stamp-kernel-headers
 
-kernel-image   kernel_image:   stamp-configure stamp-build-arch stamp-kernel-image
+kernel-image   kernel_image:   stamp-configure stamp-kernel-image
 	$(REASON)
+
 kernel-image-deb stamp-kernel-image: install/$(i_package) binary/$(i_package) 
 	$(REASON)
 	echo done > $@
