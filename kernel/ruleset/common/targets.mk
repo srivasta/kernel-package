@@ -4,9 +4,9 @@
 ## Created On       : Sat Nov 15 01:10:05 2003
 ## Created On Node  : glaurung.green-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Wed Jan  4 18:42:03 2006
+## Last Modified On : Thu Jan  5 14:50:37 2006
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 49
+## Update Count     : 50
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : The top level targets mandated by policy, as well as
@@ -171,7 +171,9 @@ build: stamp-build
 
 # Work here
 POST-BUILD-arch-stamp::
+	$(REASON)
 POST-BUILD-indep-stamp::
+	$(REASON)
 
 STAMPS_TO_CLEAN += stamp-build-arch stamp-build-indep stamp-build
 #######################################################################
@@ -237,9 +239,9 @@ STAMPS_TO_CLEAN += stamp-install stamp-install-arch stamp-install-indep
 #######################################################################
 #######################################################################
 # Work here
-BIN-common:: testdir 
-	$(checkdir)
+BIN-common:: testdir
 	$(REASON)
+	$(checkdir)
 
 stamp-arch-bin:  BIN-common  $(patsubst %,INST/%,$(DEB_ARCH_PACKAGES))
 	$(REASON)
@@ -287,8 +289,8 @@ stamp-binary: binary-indep binary-arch
 # required
 binary: stamp-binary
 	$(REASON)
-	@echo $(DEB_ARCH_PACKAGES)
-	@echo $(DEB_INDEP_PACKAGES)
+	@echo arch package   = $(DEB_ARCH_PACKAGES)
+	@echo indep packages = $(DEB_INDEP_PACKAGES)
 
 STAMPS_TO_CLEAN += stamp-binary stamp-binary-arch stamp-binary-indep
 #######################################################################
