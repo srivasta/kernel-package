@@ -1,3 +1,10 @@
+2006-01-11  Manoj Srivastava  <srivasta@debian.org>
+
+	* local.mk (kernel-image   kernel_image):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-114
+		  Add debian/stamp-build-kernel as a pre-req, we need it
+		  to have buildinfo  available.  
+
 2006-01-05  Manoj Srivastava  <srivasta@debian.org>
 
 	* minimal.mk (STAMPS_TO_CLEAN):

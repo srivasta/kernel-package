@@ -159,7 +159,7 @@ stamp-kernel-headers: install/$(h_package) binary/$(h_package)
 	echo done > $@
 STAMPS_TO_CLEAN += stamp-kernel-headers
 
-kernel-image   kernel_image:   stamp-configure stamp-kernel-image
+kernel-image   kernel_image:   stamp-configure debian/stamp-build-kernel stamp-kernel-image
 	$(REASON)
 
 kernel-image-deb stamp-kernel-image: install/$(i_package) binary/$(i_package) 
