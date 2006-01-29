@@ -1,3 +1,9 @@
+2006-01-28  Manoj Srivastava  <srivasta@debian.org>
+
+	* architecture.mk:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-115
+		  Added support for armeb 
+
 2006-01-11  Manoj Srivastava  <srivasta@debian.org>
 
 	* local.mk (kernel-image   kernel_image):

@@ -1,3 +1,7 @@
+2006-01-28  Manoj Srivastava  <srivasta@debian.org>
+
+	* armeb.mk (target): Added support for armeb
+
 2005-12-31  Manoj Srivastava  <srivasta@debian.org>
 
 	* powerpc.mk (INSTALL_MKVMLINUZ_PATH):
