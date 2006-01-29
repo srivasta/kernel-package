@@ -1,3 +1,9 @@
+2006-01-28  Manoj Srivastava  <srivasta@debian.org>
+
+	* make-kpkg.es.8:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-116
+		  Typo fix.
+
 2006-01-03  Manoj Srivastava  <srivasta@debian.org>
 
 	* make-kpkg (main):
