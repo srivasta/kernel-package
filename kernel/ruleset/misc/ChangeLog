@@ -1,3 +1,11 @@
+2006-01-28  Manoj Srivastava  <srivasta@debian.org>
+
+	* defaults.mk (KERNEL_ARCH):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-115
+		  Apparently, what DEB_HOST_ARCH_CPU calls mipsel is still
+		  mips according to the  kernel. Added code to set the
+		  KERNEL_ARCH -- this is mostly for clean, anyway.  
+
 2006-01-03  Manoj Srivastava  <srivasta@debian.org>
 
 	* config.mk:

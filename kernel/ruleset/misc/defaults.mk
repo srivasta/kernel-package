@@ -130,10 +130,19 @@ endif
 # Set the default. The arch specific snippets can override this
 # Apparently, DEB_HOST_ARCH_CPU does not match what the kernel calls this. 
 # However, DEB_HOST_GNU_CPU does. Anyway, we have to hack around it
+KERNEL_ARCH:=$(architecture)
 ifeq ($(architecture), amd64)
   KERNEL_ARCH:=x86_64
-else
-  KERNEL_ARCH:=$(architecture)
+endif
+ifeq ($(architecture), mipsel)
+  KERNEL_ARCH:=mips
+endif
+
+ifneq (,$(filter mips64%,$(KPKG_SUBARCH)))
+  KERNEL_ARCH = mips64
+endif
+ifneq (,$(filter %-64,$(KPKG_SUBARCH)))
+  KERNEL_ARCH = mips64
 endif
 
 DEBCONFIG = $(CONFDIR)/config
