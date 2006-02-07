@@ -72,7 +72,12 @@ can do this simply by
 .PP
   % MAKEFLAGS="CC=gcc\-2.95" make\-kpkg ...
 .PP
-(please see the top level kernel Makefile for variables that can be set).
+(please see the top level kernel Makefile for variables that can be
+set).
+.PP
+.B WARNING: 
+Do NOT set the -j option in MAKEFLAGS directly, this shall call the
+build to fail. Use CONCURRENCY_LEVEL as specified below.
 .SH OPTIONS
 .B \-\-help
 Print out a usage message.
@@ -432,6 +437,9 @@ target of
 Should be a (small) integer, if used. You can get the current number
 of CPUs using the command:
  "grep -c '^processor' /proc/cpuinfo"
+.B WARNING: 
+Do NOT set the -j option in MAKEFLAGS directly, this shall call the
+build to fail. 
 .SH TARGETS
 .TP
 .B clean
