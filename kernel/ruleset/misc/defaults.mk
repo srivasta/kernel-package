@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 17:43:59 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Mon Dec 26 22:55:02 2005
+## Last Modified On : Tue Feb  7 09:24:07 2006
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 4
+## Update Count     : 8
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : sets default values for variables _before_ the
@@ -127,24 +127,6 @@ ifneq ($(strip $(KERNEL_CROSS)),)
   CROSS_ARG:=CROSS_COMPILE=$(KERNEL_CROSS)
 endif
 
-# Set the default. The arch specific snippets can override this
-# Apparently, DEB_HOST_ARCH_CPU does not match what the kernel calls this. 
-# However, DEB_HOST_GNU_CPU does. Anyway, we have to hack around it
-KERNEL_ARCH:=$(architecture)
-ifeq ($(architecture), amd64)
-  KERNEL_ARCH:=x86_64
-endif
-ifeq ($(architecture), mipsel)
-  KERNEL_ARCH:=mips
-endif
-
-ifneq (,$(filter mips64%,$(KPKG_SUBARCH)))
-  KERNEL_ARCH = mips64
-endif
-ifneq (,$(filter %-64,$(KPKG_SUBARCH)))
-  KERNEL_ARCH = mips64
-endif
-
 DEBCONFIG = $(CONFDIR)/config
 IMAGEDIR=/boot
 
@@ -152,6 +134,7 @@ comma:= ,
 empty:=
 space:= $(empty) $(empty)
 
+include $(DEBDIR)/ruleset/misc/kernel_arch.mk
 
 ifeq ($(DEB_HOST_GNU_SYSTEM), kfreebsd-gnu)
   PMAKE = PATH=/usr/lib/freebsd/:$(CURDIR)/bin:$(PATH) WERROR= MAKEFLAGS= freebsd-make

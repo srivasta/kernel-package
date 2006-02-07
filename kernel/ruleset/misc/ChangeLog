@@ -1,3 +1,17 @@
+2006-02-07  Manoj Srivastava  <srivasta@debian.org>
+
+	* kernel_arch.mk: This file is here to localize the various over
+		  rides of architecture required to match the arch name
+		  dpkg-architecture determines and what the kernel folks
+		  call that platform. 
+
+	* defaults.mk:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-118
+		  Move the over the over rides of kernel arch to a separate
+		  file. This is needed when we need to match
+		  what DEB_HOST_ARCH_CPU says this platform is and what the
+		  kernel folks call that platform.  
+
 2006-01-28  Manoj Srivastava  <srivasta@debian.org>
 
 	* defaults.mk (KERNEL_ARCH):
