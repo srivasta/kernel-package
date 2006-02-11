@@ -1,3 +1,15 @@
+2006-02-11  Manoj Srivastava  <srivasta@debian.org>
+
+	* local.mk (stamp-kernel-manual):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-120
+		  Well, kernel-manual is not supposed to be an independent
+		  target, it is supposed to depend on and simultaneously
+		  build the kernel-doc package as well. Indeed, if the
+		  kernel-doc package is not also built, we will have a
+		  broken manual package. So, change the prereqs. (I had
+		  only tested make-kpkg buildpackage, so the doc package
+		  was always available). 
+
 2006-01-28  Manoj Srivastava  <srivasta@debian.org>
 
 	* architecture.mk:

@@ -138,9 +138,9 @@ stamp-kernel-source: install/$(s_package) binary/$(s_package)
 	echo done > $@
 STAMPS_TO_CLEAN += stamp-kernel-source
 
-kernel-manual  kernel_manual:  stamp-configure stamp-build-indep stamp-kernel-manual
+kernel-manual  kernel_manual:  stamp-configure stamp-build-indep stamp-kernel-doc stamp-kernel-manual
 	$(REASON)
-stamp-kernel-manual: install/$(m_package) binary/$(m_package) 
+stamp-kernel-manual: install/$(d_package) install/$(m_package) binary/$(d_package) binary/$(m_package) 
 	$(REASON)
 	echo done > $@
 STAMPS_TO_CLEAN += stamp-kernel-manual
