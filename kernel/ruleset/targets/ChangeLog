@@ -1,3 +1,10 @@
+2006-02-12  Manoj Srivastava  <srivasta@debian.org>
+
+	* target.mk (debian/stamp-prepare):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-121
+		  Reversed the  order of the version test. The old way was
+		  buggy. 
+
 2006-01-05  Manoj Srivastava  <srivasta@debian.org>
 
 	* target.mk:

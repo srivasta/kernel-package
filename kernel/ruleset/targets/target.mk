@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 10:41:41 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Wed Jan  4 18:24:23 2006
+## Last Modified On : Sun Feb 12 13:40:48 2006
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 11
+## Update Count     : 12
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : This file provides the commands commaon to a number of
@@ -138,10 +138,9 @@ ifeq ($(shell if   [ $(VERSION) -gt 2 ]; then                            \
               elif [ $(VERSION) -ge 2 ] && [ $(PATCHLEVEL) -ge 5 ]; then \
                 echo new;                                                \
               fi),)
-	$(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) \
-                                 ARCH=$(KERNEL_ARCH) prepare
-else
 	$(run_command) stamp-build-arch
+else
+	$(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) ARCH=$(KERNEL_ARCH) prepare
 endif
 	echo done > $@
 STAMPS_TO_CLEAN += debian/stamp-prepare
