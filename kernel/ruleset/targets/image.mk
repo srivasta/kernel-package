@@ -66,7 +66,11 @@ endif
 	echo "This was produced by kernel-package version $(kpkg_version)." > \
 	           $(DOCDIR)/Buildinfo
 	chmod 0644 $(DOCDIR)/Buildinfo
+ifeq ($(strip $(KERNEL_ARCH)),um)
+	$(install_file) $(config)        $(DOCDIR)/config-$(version)
+else
 	$(install_file) $(config)        $(TMPTOP)/$(IMAGEDIR)/config-$(version)
+endif
 	$(install_file) conf.vars        $(DOCDIR)/conf.vars
 	gzip -9qf                        $(DOCDIR)/conf.vars
 	$(install_file) debian/buildinfo $(DOCDIR)/buildinfo

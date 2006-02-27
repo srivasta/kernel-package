@@ -85,8 +85,8 @@ endif
 	@echo "     \"$(strip $(UTS_RELEASE_VERSION))\" "
 	@echo "does not match current version:"
 	@echo "     \"$(strip $(version))\" "
-	@echo "Reconfiguring."
-	touch Makefile
+	@echo "Please correct this."
+	exit 2
   endif
 	-for module in $(valid_modules) ; do                       \
           if test -d  $$module; then                                \
@@ -131,8 +131,8 @@ endif
 	@echo "     \"$(strip $(UTS_RELEASE_VERSION))\" "
 	@echo "does not match current version:"
 	@echo "     \"$(strip $(version))\" "
-	@echo "Reconfiguring."
-	touch Makefile
+	@echo "Please correct this."
+	exit 2
   endif
 	-for module in $(valid_modules) ; do                       \
           if test -d  $$module; then                                \
@@ -177,8 +177,8 @@ endif
 	@echo "     \"$(strip $(UTS_RELEASE_VERSION))\" "
 	@echo "does not match current version:"
 	@echo "     \"$(strip $(version))\" "
-	@echo "Reconfiguring."
-	touch Makefile
+	@echo "Please correct this."
+	exit 2
   endif
 	-for module in $(valid_modules) ; do                       \
           if test -d  $$module; then                                \
@@ -213,8 +213,8 @@ else
 	@echo "     \"$(strip $(UTS_RELEASE_VERSION))\" "
 	@echo "does not match current version:"
 	@echo "     \"$(strip $(version))\" "
-	@echo "Reconfiguring."
-	touch Makefile
+	@echo "Please correct this."
+	exit 2
   endif
 	-for module in $(valid_modules); do                        \
           if test -d  $$module; then                                \
