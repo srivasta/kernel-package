@@ -36,7 +36,9 @@
 
 
 ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
-  # localversion_files := $(wildcard localversion*)
+  localversion_files := $(wildcard localversion*)
+
+
   # VERSION =$(shell grep -E '^VERSION +=' Makefile 2>/dev/null | \
   #  sed -e 's/[^0-9]*\([0-9]*\)/\1/')
   # PATCHLEVEL =$(shell grep -E '^PATCHLEVEL +=' Makefile 2>/dev/null | \

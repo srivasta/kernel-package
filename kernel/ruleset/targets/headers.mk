@@ -105,6 +105,9 @@ ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 	test ! -e arch/$(KERNEL_ARCH)/kernel/asm-offsets.s ||                     \
            $(install_file)               arch/$(KERNEL_ARCH)/kernel/asm-offsets.s \
                            $(SRCDIR)/arch/$(KERNEL_ARCH)/kernel/asm-offsets.s
+	for file in $(localversion_files) dummy; do                               \
+          test ! -e $$file || $(install_file) $$file $(SRCDIR);                   \
+        fi
 	$(install_file) .config  	        $(SRCDIR)/.config
 	echo $(debian)                    > $(SRCDIR)/$(INT_STEM)-headers.revision
 	sed -e 's/=V/$(version)/g'    -e 's/=IB/$(link_in_boot)/g'   \
