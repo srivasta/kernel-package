@@ -1,3 +1,10 @@
+2006-02-27  Manoj Srivastava  <srivasta@debian.org>
+
+	* modules.mk (@echo "does not match current version):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-123
+		  Check the version information we shall be feeding the
+		  modules versus the stuff in $UTS_RELEASE_VERSION 
+
 2006-02-11  Manoj Srivastava  <srivasta@debian.org>
 
 	* local.mk (stamp-kernel-manual):
