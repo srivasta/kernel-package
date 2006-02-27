@@ -66,7 +66,7 @@ ifneq ($(strip $(INITRD)),)
         # mkinitrd.yaird, we shall do the dependency here
         initrddep := initrd-tools (>= 0.1.84)
       else
-        initrdcmd := mkinitramfs mkinitrd.yaird
+        initrdcmd := mkinitramfs-kpkg mkinitrd.yaird
       endif
     endif
   endif
@@ -79,18 +79,18 @@ ifneq ($(strip $(INITRD)),)
       initrddep := yaird (>= 0.0.11-8)
     endif
   endif
-  ifneq (,$(findstring mkinitramfs,$(initrdcmd)))
+  ifneq (,$(findstring mkinitramfs-kpkg,$(initrdcmd)))
     ifneq (,$(strip $(initrddep)))
-      initrddep := $(initrddep) | initramfs-tools (>= 0.35)
+      initrddep := $(initrddep) | initramfs-tools (>= 0.53)
     else
-      initrddep := initramfs-tools (>= 0.35)
+      initrddep := initramfs-tools (>= 0.53)
     endif
   endif
   # By this time initrddep is not empty, so we can dispense with the emptiness test
   ifneq (,$(findstring yaird,$(initrdcmd)))
     initrddep := $(initrddep) | linux-initramfs-tool
   else
-    ifneq (,$(findstring mkinitramfs,$(initrdcmd)))
+    ifneq (,$(findstring mkinitramfs-kpkg,$(initrdcmd)))
       initrddep := $(initrddep) | linux-initramfs-tool
     endif
   endif
