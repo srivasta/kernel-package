@@ -90,7 +90,7 @@ DIRS_TO_CLEAN += $(TMP_MAN)
 # (suggested by Rob Browning <osiris@cs.utexas.edu>)
 DEB_DEST := ..
 INSTALL_MOD_PATH=$(TMPTOP)
-KPKG_DEST_DIR ?= $(SRCTOP)/..
+KPKG_DEST_DIR ?= $(SRCTOP)/$(DEB_DEST)
 
 #Local variables:
 #mode: makefile
