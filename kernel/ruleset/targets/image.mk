@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 16:47:18 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Mon Oct 31 16:47:18 2005
+## Last Modified On : Tue Mar 21 17:13:09 2006
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 0
+## Update Count     : 1
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : This file is responsible for creating the kernel-image packages 
@@ -32,14 +32,13 @@
 
 install/$(i_package): 
 	$(REASON)
-ifneq ($(strip $(UTS_RELEASE_VERSION)),$(strip $(version)))
-	@echo "The UTS Release version in include/linux/version.h"
-	@echo "     \"$(strip $(UTS_RELEASE_VERSION))\" "
-	@echo "does not match current version:"
-	@echo "     \"$(strip $(version))\" "
-	@echo "Reconfiguring."
-	touch Makefile
-endif
+	$(if $(subst $(strip $(UTS_RELEASE_VERSION)),,$(strip $(version))), \
+		@echo "The UTS Release version in include/linux/version.h"; \
+		@echo "     \"$(strip $(UTS_RELEASE_VERSION))\" "; \
+		@echo "does not match current version:"; \
+		@echo "     \"$(strip $(version))\" "; \
+		@echo "Please correct this."; \
+		exit 2,)
 	rm -f -r ./$(TMPTOP) ./$(TMPTOP).deb
 	$(eval $(which_debdir))
 	$(make_directory) $(TMPTOP)/$(IMAGEDIR)

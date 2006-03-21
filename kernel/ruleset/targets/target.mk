@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 10:41:41 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Sun Feb 12 13:40:48 2006
+## Last Modified On : Tue Mar 21 17:20:20 2006
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 12
+## Update Count     : 14
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : This file provides the commands commaon to a number of
@@ -276,8 +276,8 @@ ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
 	@echo "However, I thought the version is $(version)"
 	exit 1
 endif
-ifneq ($(strip $(UTS_RELEASE_VERSION)), $(strip $(version)))
-	if [ -f include/linux/version.h ]; then                                           \
+	$(if $(subst $(strip $(UTS_RELEASE_VERSION)),,$(strip $(version))),               \
+	  if [ -f include/linux/version.h ]; then                                         \
              uts_ver=$$(grep 'define UTS_RELEASE' include/linux/version.h |               \
                 perl -nle  'm/^\s*\#define\s+UTS_RELEASE\s+("?)(\S+)\1/g && print $$2;'); \
 	    if [ "X$$uts_ver" != "X$(strip $(UTS_RELEASE_VERSION))" ]; then               \
@@ -288,7 +288,7 @@ ifneq ($(strip $(UTS_RELEASE_VERSION)), $(strip $(version)))
                 echo "Reconfiguring." ;                                                   \
                 touch Makefile;                                                           \
              fi;                                                                          \
-	fi
+	  fi)
 endif
 ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
 	$(MAKE) $(do_parallel) $(EXTRAV_ARG) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) \
