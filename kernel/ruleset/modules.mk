@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 10:37:44 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Tue Mar 21 17:12:22 2006
+## Last Modified On : Wed Mar 22 12:02:28 2006
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 2
+## Update Count     : 6
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : This file contains the targets responsible for third party
@@ -81,11 +81,11 @@ ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
 	@(echo "The changelog says we are creating $(saved_version), but I thought the version is $(version)"; exit 1)
 endif
 	$(if $(subst $(strip $(UTS_RELEASE_VERSION)),,$(strip $(version))), \
-		@echo "The UTS Release version in include/linux/version.h"; \
-		@echo "     \"$(strip $(UTS_RELEASE_VERSION))\" "; \
-		@echo "does not match current version:"; \
-		@echo "     \"$(strip $(version))\" "; \
-		@echo "Please correct this."; \
+		echo "The UTS Release version in include/linux/version.h"; \
+		echo "     \"$(strip $(UTS_RELEASE_VERSION))\" "; \
+		echo "does not match current version:"; \
+		echo "     \"$(strip $(version))\" "; \
+		echo "Please correct this."; \
 		exit 2,)
 	-for module in $(valid_modules) ; do                       \
           if test -d  $$module; then                                \
@@ -126,11 +126,11 @@ ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
 	@(echo "The changelog says we are creating $(saved_version), but I thought the version is $(version)"; exit 1)
 endif
 	$(if $(subst $(strip $(UTS_RELEASE_VERSION)),,$(strip $(version))), \
-		@echo "The UTS Release version in include/linux/version.h"; \
-		@echo "     \"$(strip $(UTS_RELEASE_VERSION))\" "; \
-		@echo "does not match current version:"; \
-		@echo "     \"$(strip $(version))\" "; \
-		@echo "Please correct this."; \
+		echo "The UTS Release version in include/linux/version.h"; \
+		echo "     \"$(strip $(UTS_RELEASE_VERSION))\" "; \
+		echo "does not match current version:"; \
+		echo "     \"$(strip $(version))\" "; \
+		echo "Please correct this."; \
 		exit 2,)
 	-for module in $(valid_modules) ; do                       \
           if test -d  $$module; then                                \
@@ -171,11 +171,11 @@ ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
 	@(echo "The changelog says we are creating $(saved_version), but I thought the version is $(version)"; exit 1)
 endif
 	$(if $(subst $(strip $(UTS_RELEASE_VERSION)),,$(strip $(version))), \
-		@echo "The UTS Release version in include/linux/version.h"; \
-		@echo "     \"$(strip $(UTS_RELEASE_VERSION))\" "; \
-		@echo "does not match current version:"; \
-		@echo "     \"$(strip $(version))\" "; \
-		@echo "Please correct this."; \
+		echo "The UTS Release version in include/linux/version.h"; \
+		echo "     \"$(strip $(UTS_RELEASE_VERSION))\" "; \
+		echo "does not match current version:"; \
+		echo "     \"$(strip $(version))\" "; \
+		echo "Please correct this."; \
 		exit 2,)
 	-for module in $(valid_modules) ; do                       \
           if test -d  $$module; then                                \
@@ -206,11 +206,11 @@ ifeq ($(strip $(shell grep -E ^[^\#]*CONFIG_MODULES $(CONFIG_FILE))),)
 	@echo Modules not configured, so not making $@
 else
 	$(if $(subst $(strip $(UTS_RELEASE_VERSION)),,$(strip $(version))), \
-		@echo "The UTS Release version in include/linux/version.h"; \
-		@echo "     \"$(strip $(UTS_RELEASE_VERSION))\" "; \
-		@echo "does not match current version:"; \
-		@echo "     \"$(strip $(version))\" "; \
-		@echo "Please correct this."; \
+		echo "The UTS Release version in include/linux/version.h"; \
+		echo "     \"$(strip $(UTS_RELEASE_VERSION))\" "; \
+		echo "does not match current version:"; \
+		echo "     \"$(strip $(version))\" "; \
+		echo "Please correct this."; \
 		exit 2,)
 	-for module in $(valid_modules); do                        \
           if test -d  $$module; then                                \

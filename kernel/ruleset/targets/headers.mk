@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 16:23:51 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Tue Mar 21 17:22:05 2006
+## Last Modified On : Wed Mar 22 12:00:43 2006
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 5
+## Update Count     : 6
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : This file is responsible for creating the kernel-headers packages 
@@ -34,11 +34,11 @@ install/$(h_package):
 	$(REASON)
 ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 	$(if $(subst $(strip $(UTS_RELEASE_VERSION)),,$(strip $(version))), \
-		@echo "The UTS Release version in include/linux/version.h"; \
-		@echo "     \"$(strip $(UTS_RELEASE_VERSION))\" "; \
-		@echo "does not match current version:"; \
-		@echo "     \"$(strip $(version))\" "; \
-		@echo "Please correct this."; \
+		echo "The UTS Release version in include/linux/version.h"; \
+		echo "     \"$(strip $(UTS_RELEASE_VERSION))\" "; \
+		echo "does not match current version:"; \
+		echo "     \"$(strip $(version))\" "; \
+		echo "Please correct this."; \
 		exit 2,)
 	rm -rf $(TMPTOP)
 	$(make_directory) $(SRCDIR)

@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 10:41:41 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Tue Mar 21 17:20:20 2006
+## Last Modified On : Wed Mar 22 11:20:43 2006
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 14
+## Update Count     : 15
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : This file provides the commands commaon to a number of
@@ -289,7 +289,6 @@ endif
                 touch Makefile;                                                           \
              fi;                                                                          \
 	  fi)
-endif
 ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
 	$(MAKE) $(do_parallel) $(EXTRAV_ARG) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) \
 	                    $(CROSS_ARG) $(target)

@@ -101,7 +101,7 @@ Template: =ST-image-=V/preinst/failed-to-move-modules-=V
 Type: note
 _Description: Failed to move modules out of the way, aborting
  You are attempting to install a kernel image (version =V)
- However, the directory ${modules_base}/=V still exists.
+ However, the directory ${modules_base}/=V/kernel still exists.
  .
  As you have instructed, an attempt was made to move the directory out
  of the way. Unfortunately, There was a problem moving
@@ -117,33 +117,28 @@ Type: boolean
 Default: true
 _Description: Stop install since the kernel-image is already installed?
  You are attempting to install a kernel image (version =V)
- However, the directory ${modules_base}/=V still exists.  If this
+ However, the directory ${modules_base}/=V/kernel still exists.  If this
  directory belongs to a previous ${package} package, and if
  you have deselected some modules, or installed standalone modules
- packages, this could be bad. However, if this directory exists because
- you are also installing some stand alone modules right now, and they
- got unpacked before I did, then this is pretty benign.  Unfortunately,
- I can not tell the difference.
+ packages, this could be bad. 
  .
- If ${modules_base}/=V belongs to a old install of
+ If ${modules_base}/=V/kernel belongs to a old install of
  ${package}, then this is your last chance to abort the
  installation of this kernel image (nothing has been changed yet).
  .
- If this directory is because of stand alone modules being installed
- right now, or if it does belong to an older ${package}
- package but you know what you are doing, and if you feel that this
+ If you know what you are doing, and if you feel that this
  image should be installed despite this anomaly, Please answer n to the
  question.
  .
- Otherwise, I suggest you move ${modules_base}/=V out of the way,
- perhaps to ${modules_base}/=V.old or something, and then try
+ Otherwise, I suggest you move ${modules_base}/=V/kernel out of the way,
+ perhaps to ${modules_base}/=V/kernel.old or something, and then try
  re-installing this image.
 
 Template: =ST-image-=V/preinst/abort-overwrite-=V
 Type: note
 _Description: Aborting install since modules exist
  You are attempting to install an initrd kernel image (version
- =V). However, the corresponding modules directory exists, 
+ =V). However, the corresponding kernel modules directory exists, 
  and there was no permission given to silently delete the modules 
  directory.  Unfortunately, since this Question
  pertaining to this was not shown, and the default action is to abort

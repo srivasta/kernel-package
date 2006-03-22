@@ -5,9 +5,9 @@
 # Created On       : Sun Jun 14 03:38:02 1998
 # Created On Node  : tiamat.datasync.com
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Tue Dec 27 15:36:03 2005
+# Last Modified On : Wed Mar 22 14:07:17 2006
 # Last Machine Used: glaurung.internal.golden-gryphon.com
-# Update Count     : 89
+# Update Count     : 97
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
@@ -325,33 +325,54 @@ if ($initrd && !$do_initrd) {
 sub check {
   my $version = shift;
   my $lib_modules="$modules_base/$version";
+  my $message = '';
 
   if (-d "$lib_modules") {
     opendir(DIR, $lib_modules) || die "can’t opendir $lib_modules: $!";
     my @children = readdir(DIR);
-    if ($#children == 1)          { return 1; } # empty dir
-    if ($#children  > 2)          { return 0; } # ., .., build are OK
+    if ($#children > 1) {
+      my @dirs  = grep { -d "$lib_modules/$_" } @children;
+      if ($#dirs > 1) { # we have subdirs
+        my $dir_message='';
+        for my $dir (@dirs) {
+          if ($dir =~/kernel$/) {
+            $dir_message="An older install was detected.\n";
+          }
+          else {
+            $dir_message="Module sub-directories were detected.\n"
+              unless $dir_message;
+          }
+        }
+        $message += $dir_message if $dir_message;
+      }
 
-    my @dirs  = grep { -d "$lib_modules/$_" } @children;
-    if ($#dirs > 1)               { return 0; } # we have subdirs
-
-    my @links = grep { -l "$lib_modules/$_" } @children;
-    if ($#links == 0) {
-      if ($links[0] =~ /^build$/) { return 1; } # has build symlink, is all.
-      else                        { return 0; } # Bad name
+      my @links = grep { -l "$lib_modules/$_" } @children;
+      if ($#links > -1) {
+        my $links_message = '';
+        for my $link (@links) {
+          next if ($link =~ /^build$/);
+          next if ($link =~ /^source$/);
+          $links_message = "Symbolic links were detected in $modules_base/$version.\n";
+        }
+        $message += $links_message if $links_message;
+      }
+      my @files = grep { -f "$lib_modules/$_" } @children;
+      $message += "Additional files also exist in $modules_base/$version.\n"
+        if ($#files > -1);
     }
-    elsif ($#links > -1)          { return 0; } # spurious symlinks
-
-    my @files = grep { -f "$lib_modules/$_" } @children;
-    if ($#files > -1)             { return 0; } # Should only have a symlink
   }
-  else                            { return 1; } # No such dir
-  return 0;                                     # Should not get here
+  else { $message .= "$lib_modules does not exist. ";}
+  return $message;
+}
+
+if (-d "$modules_base/$version") {
+  my $errors=check($version);
+  warn "Info:\n$errors\n" if $errors;
 }
 
 # If this is an official image, and only a build symlink exists, allow
 # it to be clobbered.
-if ($official_image =~ /^\s*YES\s*$/o && check($version)) { 
+if ($official_image =~ /^\s*YES\s*$/o ) {
   $silent_modules = 'YES';
   if (-d "$modules_base/$version" && -l "$modules_base/$version/build" ) {
     rename("$modules_base/$version/build", "$modules_base/$version/build.save") ||
@@ -359,9 +380,10 @@ if ($official_image =~ /^\s*YES\s*$/o && check($version)) {
   }
 }
 
-if (-d "$modules_base/$version") {
+if (-d "$modules_base/$version/kernel") {
   if ($clobber_modules) {
-    my $ret = system("mv $modules_base/$version $modules_base/${version}_$$");
+    my $ret = 
+      system("mv $modules_base/$version/kernel $modules_base/${version}/kernel_$$");
     my $seen;
     if ($ret) {
       my $note = "${package_name}/preinst/failed-to-move-modules-$version";
@@ -375,7 +397,7 @@ if (-d "$modules_base/$version") {
       $ret = subst("$note", 'modules_base', "$modules_base");
       die "Error setting debconf substitutions in $note: $seen" if $ret;
 
-      $ret = subst("$note", 'dest', "${version}_$$");
+      $ret = subst("$note", 'dest', "${version}/kernel_$$");
       die "Error setting debconf substitutions in $note: $seen" if $ret;
 
       ($ret,$seen) = input('critical', "$note");
