@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 16:47:18 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Tue Mar 21 23:29:29 2006
+## Last Modified On : Wed Mar 22 09:59:20 2006
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 2
+## Update Count     : 5
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : This file is responsible for creating the kernel-image packages 
@@ -42,7 +42,7 @@ install/$(i_package):
 	rm -f -r ./$(TMPTOP) ./$(TMPTOP).deb
 	$(eval $(which_debdir))
 	$(make_directory) $(TMPTOP)/$(IMAGEDIR)
-	$(make_directory) $(DOCDIR)
+	$(make_directory) $(DOCDIR)/examples
 ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
 	$(install_file) Documentation/Changes $(DOCDIR)/
 	gzip -9qf $(DOCDIR)/Changes
@@ -59,6 +59,8 @@ ifeq ($(strip $(KERNEL_ARCH)),um)
 	$(install_file) $(DEBDIR)/docs/linux.1 $(MAN1DIR)/linux-$(version).1
 	gzip -9fq                              $(MAN1DIR)/linux-$(version).1
 endif
+	$(install_script) $(DEBDIR)/examples/sample.force-build-link.sh      \
+                                                      $(DOCDIR)/examples/
 	$(install_file) $(DEBDIR)/pkg/image/README    $(DOCDIR)/debian.README
 	gzip -9qf                                     $(DOCDIR)/debian.README
 	$(install_file) $(DEBDIR)/pkg/image/copyright $(DOCDIR)/copyright

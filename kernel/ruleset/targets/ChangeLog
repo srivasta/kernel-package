@@ -1,3 +1,9 @@
+2006-03-22  Manoj Srivastava  <srivasta@debian.org>
+
+	* image.mk (install/$(i_package)):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-129
+		  Install the sample script 
+
 2006-03-21  Manoj Srivastava  <srivasta@debian.org>
 
 	* target.mk:
