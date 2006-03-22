@@ -4,9 +4,9 @@
 ## Created On       : Fri Oct 28 00:19:59 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Fri Oct 28 00:22:13 2005
+## Last Modified On : Tue Mar 21 23:16:53 2006
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 4
+## Update Count     : 6
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : calls dpkg-architecture and sets up various arch
@@ -37,9 +37,6 @@ DPKG_ARCH := dpkg-architecture
 ifeq ($(strip $(KPKG_ARCH)),um)
   MAKING_VIRTUAL_IMAGE:=YES
 endif
-ifeq ($(strip $(KPKG_ARCH)),xen)
-  MAKING_VIRTUAL_IMAGE:=YES
-endif
 
 ifdef KPKG_ARCH
   ifneq ($(strip $(KPKG_ARCH)),powerpc64)
@@ -47,6 +44,11 @@ ifdef KPKG_ARCH
       ha:=-a$(KPKG_ARCH)
     endif
   endif
+endif
+
+-include .config
+ifneq ($(strip $(CONFIG_XEN)),)
+  MAKING_VIRTUAL_IMAGE:=YES
 endif
 
 # set the dpkg-architecture vars

@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 16:47:18 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Tue Mar 21 17:13:09 2006
+## Last Modified On : Tue Mar 21 23:29:29 2006
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 1
+## Update Count     : 2
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : This file is responsible for creating the kernel-image packages 
@@ -202,7 +202,7 @@ debian/$(i_package): testroot
 	$(REASON)
 	$(make_directory) $(TMPTOP)/DEBIAN
 ifneq ($(strip $(KERNEL_ARCH)),um)
-  ifneq ($(strip $(KERNEL_ARCH)),xen)
+  ifeq ($(strip $(CONFIG_XEN)),)
 	sed -e 's/=V/$(version)/g'    -e 's/=IB/$(link_in_boot)/g'   \
             -e 's/=ST/$(INT_STEM)/g'  -e 's/=R/$(reverse_symlink)/g' \
             -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \

@@ -4,9 +4,9 @@
 ## Created On       : Fri Oct 28 00:37:46 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Wed Jan  4 16:20:42 2006
+## Last Modified On : Tue Mar 21 23:31:13 2006
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 9
+## Update Count     : 10
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : 
@@ -85,7 +85,7 @@ CLEAN/$(s_package)::
 CLEAN/$(i_package)::
 	-rm -rf $(TMPTOP)
 ifneq ($(strip $(KERNEL_ARCH)),um)
-  ifneq ($(strip $(KERNEL_ARCH)),xen)
+  ifeq  ($(strip $(CONFIG_XEN)),)
 	test ! -d ./debian || test ! -e stamp-building ||            \
 	sed -e 's/=V/$(version)/g'    -e 's/=B/$(link_in_boot)/g'    \
             -e 's/=ST/$(INT_STEM)/g'  -e 's/=R/$(reverse_symlink)/g' \
