@@ -180,3 +180,16 @@ VFS: Cannot open root device "308" or 03:08
 	which was causing install to give away permissions on a directory
 	(lesson: fakeroot and xfs w/o restrict_chown=1 don't play together
 	nicely).
+       q) The most recent versions of sudo (versions after 1.6.8p12-1)
+          now create a default sudoers file with the env_reset option
+          set.  This causes make-kpkg to fail with the rather
+          unexpected error message "make: Nothing to be done for
+          `$(i_package)'." since the i_package variable is constructed
+          without the APPEND_TO_VERSION string in the sub-make
+          invocation with sudo because env_reset causes sudo to clean
+          it out of the environment.  Clearly there are other possible
+          failure conditions/messages depending on which variables the
+          root sub-make is expecting to find.
+
+          So, using sudo with env_reset will cause errors, possibly
+          with the above error message.

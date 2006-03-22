@@ -1,3 +1,9 @@
+2006-03-21  Manoj Srivastava  <srivasta@debian.org>
+
+	* Problems (VFS):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-130
+		  Documented problems with using sudo with env_reset 
+
 2006-01-28  Manoj Srivastava  <srivasta@debian.org>
 
 	* make-kpkg.es.8:
