@@ -5,9 +5,9 @@
 # Created On       : Sat Apr 27 05:55:26 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Tue Jan  3 18:19:35 2006
+# Last Modified On : Tue Mar 21 20:47:31 2006
 # Last Machine Used: glaurung.internal.golden-gryphon.com
-# Update Count     : 335
+# Update Count     : 336
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
@@ -1207,7 +1207,7 @@ sub run_lilo (){
       ($ret,$seen) = fset ("$note", 'seen', 'false');
       die "Error setting debconf flags in $note: $seen" if $ret;
 
-      $ret = subst("$note", 'locader', "$loader");
+      $ret = subst("$note", 'loader', "$loader");
       die "Error setting debconf substitutions in $note: $seen" if $ret;
 
       $ret = subst("$note", 'temp_file_name', "$temp_file_name");

@@ -1,3 +1,10 @@
+2006-03-21  Manoj Srivastava  <srivasta@debian.org>
+
+	* postinst (run_lilo):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-131
+		  Typo in debconf substitution. The variable is loader,
+		  not locader 
+
 2006-01-03  Manoj Srivastava  <srivasta@debian.org>
 
 	* postinst:
