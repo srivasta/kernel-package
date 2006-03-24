@@ -1,6 +1,6 @@
 Template: =ST-image-=V/preinst/initrd-=V
 Type: text
-_Description: You are installing a kernel with an initrd image
+Description:  You are installing a kernel with an initrd image
  You are attempting to install an initrd kernel image (version
  =V) on a machine currently running kernel version
  ${hostversion}.
@@ -14,7 +14,7 @@ _Description: You are installing a kernel with an initrd image
 Template: =ST-image-=V/preinst/bootloader-initrd-=V
 Type: boolean
 Default: true
-_Description: Do you want to abort now?
+Description:  Do you want to abort now?
  You are attempting to install an initrd kernel image (version =V)
  This will not work unless you have configured your boot loader to use
  initrd. (An initrd image is a kernel image that expects to use an INITial
@@ -34,7 +34,7 @@ _Description: Do you want to abort now?
 Template: =ST-image-=V/preinst/lilo-initrd-=V
 Type: boolean
 Default: true
-_Description: Do you want to abort now?
+Description:  Do you want to abort now?
  You are attempting to install an initrd kernel image (version =V)
  This will not work unless you have configured your boot loader to use
  initrd. (An initrd image is a kernel image that expects to use an INITial
@@ -57,7 +57,7 @@ _Description: Do you want to abort now?
 Template: =ST-image-=V/preinst/elilo-initrd-=V
 Type: boolean
 Default: true
-_Description: Do you want to abort now?
+Description:  Do you want to abort now?
  You are attempting to install an initrd kernel image (version =V)
  This will not work unless you have configured your boot loader to use
  initrd. (An initrd image is a kernel image that expects to use an INITial
@@ -79,7 +79,7 @@ _Description: Do you want to abort now?
 
 Template: =ST-image-=V/preinst/lilo-has-ramdisk
 Type: text
-_Description: Lilo has a ramdisk line, which should be commented or removed
+Description:  Lilo has a ramdisk line, which should be commented or removed
  I have found a line
  ${LINE}
  in /etc/lilo.conf that should be removed or commented out, since you are using 
@@ -87,7 +87,7 @@ _Description: Lilo has a ramdisk line, which should be commented or removed
 
 Template: =ST-image-=V/preinst/abort-install-=V
 Type: note
-_Description: Aborting install since loading an initrd kernel image
+Description:  Aborting install since loading an initrd kernel image
  You are attempting to install an initrd kernel image (version
  =V) This will not work unless you have configured your boot
  loader to use initrd. (An initrd image is a kernel image that expects
@@ -99,7 +99,7 @@ _Description: Aborting install since loading an initrd kernel image
 
 Template: =ST-image-=V/preinst/failed-to-move-modules-=V
 Type: note
-_Description: Failed to move modules out of the way, aborting
+Description:  Failed to move modules out of the way, aborting
  You are attempting to install a kernel image (version =V)
  However, the directory ${modules_base}/=V/kernel still exists.
  .
@@ -115,7 +115,7 @@ _Description: Failed to move modules out of the way, aborting
 Template: =ST-image-=V/preinst/overwriting-modules-=V
 Type: boolean
 Default: true
-_Description: Stop install since the kernel-image is already installed?
+Description:  Stop install since the kernel-image is already installed?
  You are attempting to install a kernel image (version =V)
  However, the directory ${modules_base}/=V/kernel still exists.  If this
  directory belongs to a previous ${package} package, and if
@@ -136,7 +136,7 @@ _Description: Stop install since the kernel-image is already installed?
 
 Template: =ST-image-=V/preinst/abort-overwrite-=V
 Type: note
-_Description: Aborting install since modules exist
+Description:  Aborting install since modules exist
  You are attempting to install an initrd kernel image (version
  =V). However, the corresponding kernel modules directory exists, 
  and there was no permission given to silently delete the modules 
@@ -147,7 +147,7 @@ _Description: Aborting install since modules exist
 
 Template: =ST-image-=V/preinst/already-running-this-=V
 Type: note
-_Description: The kernel version running is the same as the one being installed
+Description:  The kernel version running is the same as the one being installed
  You are attempting to install a kernel version that is the same as
  the version you are currently running (version ${running}). The modules
  list is quite likely to have been changed, and the modules dependency
@@ -167,14 +167,14 @@ _Description: The kernel version running is the same as the one being installed
 Template: =ST-image-=V/postinst/create-kimage-link-=V
 Type: boolean
 Default: true
-_Description: Create a symbolic link to the current kernel image?
+Description:  Create a symbolic link to the current kernel image?
  I notice that you do not have ${kimage} symbolic link. I can create one 
  for you, and it shall be updated by newer kernel image packages. This is
  useful if you use a boot loader like lilo.
 
 Template: =ST-image-=V/postinst/kimage-is-a-directory
 Type: note
-_Description: Image symbolic link destination is a directory, aborting
+Description:  Image symbolic link destination is a directory, aborting
  ${kimage} is a directory, which I did not expect.  I am trying to create a
  symbolic link with that name linked to ${image_dest}. Since a directory
  exists here, my assumptions are way off, and I am aborting.
@@ -182,7 +182,7 @@ _Description: Image symbolic link destination is a directory, aborting
 Template: =ST-image-=V/postinst/depmod-error-=V
 Type: boolean
 Default: false
-_Description: Do you want to abort now?
+Description:  Do you want to abort now?
  This may be benign, (You may have versioned symbol names, for instance).
  Or this could be an error. depmod exited with return value ${exit_value}
  ${SIGNAL}${CORE}. 
@@ -192,7 +192,7 @@ _Description: Do you want to abort now?
 Template: =ST-image-=V/postinst/depmod-error-initrd-=V
 Type: boolean
 Default: false
-_Description: Do you want to abort now?
+Description:  Do you want to abort now?
  This may be benign, (You may have versioned symbol names, for instance).
  Or this could be an error. depmod exited with return value ${exit_value}
  . ${SIGNAL} ${CORE}
@@ -206,7 +206,7 @@ _Description: Do you want to abort now?
 Template: =ST-image-=V/postinst/old-initrd-link-=V
 Type: boolean
 Default: true
-_Description: Should the old initrd link be deleted now?
+Description:  Should the old initrd link be deleted now?
  I note that you have an old initrd symbolic link in place. The name of
  the symbolic link is being changed to initrd.img. If the old link is
  deleted, you may have to update the boot loader. If the link is left in
@@ -215,7 +215,7 @@ _Description: Should the old initrd link be deleted now?
 Template: =ST-image-=V/postinst/old-dir-initrd-link-=V
 Type: boolean
 Default: true
-_Description: Should the old initrd link be deleted now?
+Description:  Should the old initrd link be deleted now?
  I note that you have an old ${image_dir}/initrd symbolic link in
  place.  The location of the symbolic link is now the same location as
  the kernel image symbolic links, namely, in ${image_dest}.  If the old
@@ -225,7 +225,7 @@ _Description: Should the old initrd link be deleted now?
 Template: =ST-image-=V/postinst/old-system-map-link-=V
 Type: boolean
 Default: true
-_Description: Should the old /System.map link be deleted now?
+Description:  Should the old /System.map link be deleted now?
  You have /System.map symbolic link. These were installed by ancient 
  kernel image packages. However, all the programs that look at the 
  information in the map files (including top, ps, and klogd) 
@@ -239,14 +239,14 @@ _Description: Should the old /System.map link be deleted now?
 
 Template: =ST-image-=V/postinst/bootloader-test-error-=V
 Type: note
-_Description: Error running the boot loader in test mode.
+Description:  Error running the boot loader in test mode.
  An error occurred while running the boot loader ${loader} in test mode.
  A log is available in ${temp_file_name}. Please edit /etc/${loader}.conf
  manually and re-run ${loader}, or make other arrangements to boot your machine.
 
 Template: =ST-image-=V/postinst/bootloader-error-=V
 Type: note
-_Description: Error running the boot loader in test mode.
+Description:  Error running the boot loader in test mode.
  An error occurred while running the boot loader ${loader}.
  A log is available in ${temp_file_name}. Please edit /etc/${loader}.conf
  manually and re-run ${loader}, or make other arrangements to boot your machine.
@@ -254,7 +254,7 @@ _Description: Error running the boot loader in test mode.
 Template: =ST-image-=V/prerm/removing-running-kernel-=V
 Type: boolean
 Default: true
-_Description: Do you want to abort removal now?
+Description:  Do you want to abort removal now?
  You are running a kernel (version ${running}) and attempting to remove
  the same version. This is a potentially disastrous action. Not only
  will /boot/vmlinuz-${running} be removed, making it impossible to boot
@@ -270,7 +270,7 @@ _Description: Do you want to abort removal now?
 Template: =ST-image-=V/prerm/would-invalidate-boot-loader-=V
 Type: boolean
 Default: true
-_Description: Do you want to abort removal now?
+Description:  Do you want to abort removal now?
  You have a valid /etc/${loader}.conf file that mentions
  ${kimage}-=V.  Removing =ST-image-=V would invalidate
  that file. (you will have to edit /etc/${loader}.conf or re-target
