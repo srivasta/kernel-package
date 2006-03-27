@@ -1,3 +1,10 @@
+2006-03-27  Manoj Srivastava  <srivasta@debian.org>
+
+	* make-kpkg.8:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-138
+		  Added some documentation for allowing cross-compilation
+		  for other architectures in a multi-arch set. 
+
 2006-03-21  Manoj Srivastava  <srivasta@debian.org>
 
 	* Problems (VFS):

@@ -283,13 +283,16 @@ The value should be whatever
 .B DEB_HOST_ARCH_CPU
 contains when
 .I dpkg-architecture
-is run on the target machine.
+is run on the target machine, or it can be an other architecture in a
+multi-arch set (like i386/amd64).
 .TP
 .BR \-\-cross\-compile\ foo
 .TP
 .BR \-\-cross_compile\ foo
 This is useful for setting the target string when you are cross
-compiling. The same effect can be achieved by setting the environment variable
+compiling. Use the dummy target "\-" if you are building for other
+arches of a multiarch set, like i386/amd64.  The same effect can be
+achieved by setting the environment variable
 .B CROSS_COMPILE
 .TP
 .BR \-\-subarch\ foo

@@ -41,7 +41,9 @@ endif
 ifdef KPKG_ARCH
   ifneq ($(strip $(KPKG_ARCH)),powerpc64)
     ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
-      ha:=-a$(KPKG_ARCH)
+      ifneq ($(CROSS_COMPILE),-)
+        ha:=-a$(KPKG_ARCH)
+      endif
     endif
   endif
 endif

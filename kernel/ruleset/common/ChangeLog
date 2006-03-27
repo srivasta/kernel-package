@@ -1,3 +1,12 @@
+2006-03-27  Manoj Srivastava  <srivasta@debian.org>
+
+	* archvars.mk:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-138
+		  Do not set -a for dpkg-architecture if compiling for
+		  another arch in a multiarch set. Additionally, this
+		  prevents us from confusing dpkg-architecture by asking
+		  it to tell us  about vars for the arch "-". 
+
 2006-03-21  Manoj Srivastava  <srivasta@debian.org>
 
 	* archvars.mk:

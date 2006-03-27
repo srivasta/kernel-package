@@ -124,7 +124,11 @@ endif
 KERNEL_CROSS:=$(shell echo $(KERNEL_CROSS) | sed -e 's,--$$,-,')
 
 ifneq ($(strip $(KERNEL_CROSS)),)
-  CROSS_ARG:=CROSS_COMPILE=$(KERNEL_CROSS)
+  ifeq ($(KERNEL_CROSS),-)
+    CROSS_ARG:=CROSS_COMPILE=''
+  else
+    CROSS_ARG:=CROSS_COMPILE=$(KERNEL_CROSS)
+  endif
 endif
 
 DEBCONFIG = $(CONFDIR)/config
