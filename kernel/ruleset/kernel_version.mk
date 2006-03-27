@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 18:12:22 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Mon Oct 31 18:12:22 2005
+## Last Modified On : Sun Mar 26 19:53:50 2006
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 0
+## Update Count     : 1
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : 
@@ -46,6 +46,9 @@ dot-config := 0
 .PHONY: debian_EXTRAVERSION debian_LOCALVERSION debian_TOPDIR
 
 
+debian_KERNELRELEASE:
+	@echo "$(strip $(KERNELRELEASE))"
+
 debian_VERSION:
 	@echo "$(strip $(VERSION))"
 
@@ -59,7 +62,11 @@ debian_EXTRAVERSION:
 	@echo "$(strip $(EXTRAVERSION))"
 
 debian_LOCALVERSION:
+ifneq ($strip($(localver-full)),)
+	@echo "$(strip $(localver-full))"
+else
 	@echo "$(strip $(LOCALVERSION))"
+endif
 
 debian_TOPDIR:
 # 2.6 kernels declared TOPDIR obsolete, so use srctree if it exists

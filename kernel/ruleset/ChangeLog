@@ -1,3 +1,10 @@
+2006-03-27  Manoj Srivastava  <srivasta@debian.org>
+
+	* kernel_version.mk (debian_LOCALVERSION):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-137
+		  Look at $(localver-full) if it is not empty, or else
+		  fall back to $(LOCALVERSION).  This changed in 2.6.16. 
+
 2006-03-21  Manoj Srivastava  <srivasta@debian.org>
 
 	* modules.mk (modules-image modules_image):
