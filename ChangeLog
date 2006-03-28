@@ -1,5 +1,10 @@
 2006-03-27  Manoj Srivastava  <srivasta@debian.org>
 
+	* make-kpkg (main):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-139
+		  Since the advent of localversion, we no longer try for
+		  an exact match, just a substring one. 
+
 	* make-kpkg.8:
 		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-138
 		  Added some documentation for allowing cross-compilation
