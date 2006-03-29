@@ -69,6 +69,7 @@ ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 	$(install_file) $(DEBDIR)/pkg/headers/copyright    $(DOCDIR)/copyright
 	$(install_file) Makefile                           $(SRCDIR)
 	test ! -e Rules.make || $(install_file) Rules.make $(SRCDIR)
+	test ! -e .kernelrelease || $(install_file) .kernelrelease $(SRCDIR)
 	test ! -e arch/$(KERNEL_ARCH)/Makefile     ||                             \
                                 $(install_file) arch/$(KERNEL_ARCH)/Makefile      \
                                                      $(SRCDIR)/arch/$(KERNEL_ARCH)
