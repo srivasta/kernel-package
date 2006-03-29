@@ -32,6 +32,7 @@
 
 install/$(i_package): 
 	$(REASON)
+	@echo "This is kernel package version $(kpkg_version)."
 	$(if $(subst $(strip $(UTS_RELEASE_VERSION)),,$(strip $(version))), \
 		echo "The UTS Release version in include/linux/version.h"; \
 		echo "     \"$(strip $(UTS_RELEASE_VERSION))\" "; \
@@ -202,6 +203,7 @@ endif
 
 debian/$(i_package): testroot
 	$(REASON)
+	@echo "This is kernel package version $(kpkg_version)."
 	$(make_directory) $(TMPTOP)/DEBIAN
 ifneq ($(strip $(KERNEL_ARCH)),um)
   ifeq ($(strip $(CONFIG_XEN)),)
@@ -325,6 +327,7 @@ endif
 
 binary/$(i_package):
 	$(REASON)
+	@echo "This is kernel package version $(kpkg_version)."
 	$(require_root)
 	$(eval $(deb_rule))
 	$(root_run_command) debian/$(package)

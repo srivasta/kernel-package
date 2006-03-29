@@ -33,6 +33,7 @@
 
 install/$(s_package): 
 	$(REASON)
+	@echo "This is kernel package version $(kpkg_version)."
 ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 	rm -rf $(TMPTOP)
 	$(make_directory) $(SRCDIR)
@@ -97,6 +98,7 @@ endif
 
 debian/$(s_package): testroot
 	$(REASON)
+	@echo "This is kernel package version $(kpkg_version)."
 ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 	$(eval $(which_debdir))
 	$(make_directory) $(TMPTOP)/DEBIAN
@@ -113,6 +115,7 @@ endif
 
 binary/$(s_package):
 	$(REASON)
+	@echo "This is kernel package version $(kpkg_version)."
 	$(checkdir)
 ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 	$(require_root)

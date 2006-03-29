@@ -1,9 +1,27 @@
 2006-03-29  Manoj Srivastava  <srivasta@debian.org>
 
+	* source.mk:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-141
+		  Addeddiagnostic messages reporting theversion of
+		  kernel-package being run. 
+
+	* manual.mk:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-141
+		  Ditto. 
+
+	* target.mk:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-141
+		  Ditto. 
+
+	* doc.mk: srivasta@debian.org--etch/kernel-package--devel--9.0--patch-141
+		  Ditto.  
+
 	* headers.mk (install/$(h_package)):
 		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-140
 		  Install .kernelrelease into the header package as
 		  well.
+		  Added a diagnostic messages reporting the version of
+		  kernel-package being run. 
 
 2006-03-22  Manoj Srivastava  <srivasta@debian.org>
 

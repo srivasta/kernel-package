@@ -32,6 +32,7 @@
 
 install/$(h_package):
 	$(REASON)
+	@echo "This is kernel package version $(kpkg_version)."
 ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 	$(if $(subst $(strip $(UTS_RELEASE_VERSION)),,$(strip $(version))), \
 		echo "The UTS Release version in include/linux/version.h"; \
@@ -145,6 +146,7 @@ endif
 
 debian/$(h_package): testroot
 	$(REASON)
+	@echo "This is kernel package version $(kpkg_version)."
 ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 	$(make_directory) $(TMPTOP)/DEBIAN
 	$(eval $(deb_rule))
@@ -180,6 +182,7 @@ endif
 
 binary/$(h_package): 
 	$(REASON)
+	@echo "This is kernel package version $(kpkg_version)."
 ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 	$(require_root)
 	$(eval $(deb_rule))

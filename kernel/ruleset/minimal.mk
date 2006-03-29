@@ -62,6 +62,7 @@ DIRS_TO_CLEAN   =
 clean: minimal_clean
 minimal_clean:
 	$(REASON)
+	@echo "This is kernel package version $(kpkg_version)."
 ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
 	test ! -f .config || cp -pf .config config.precious
 	test ! -e stamp-building || rm -f stamp-building
@@ -82,6 +83,7 @@ endif
 debian: minimal_debian
 minimal_debian:
 	$(REASON)
+	@echo "This is kernel package version $(kpkg_version)."
 	test -d debian || mkdir debian
 	test ! -e stamp-building || rm -f stamp-building
 	test -f debian/control || sed         -e 's/=V/$(version)/g'        \

@@ -35,6 +35,7 @@
 # created in rulesets/common/targets.mk
 install/$(m_package): install/$(d_package) 
 	$(REASON)
+	@echo "This is kernel package version $(kpkg_version)."
 ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 	rm -rf            $(TMPTOP)
 	$(make_directory) $(DOCDIR)
@@ -50,6 +51,7 @@ endif
 
 debian/$(m_package): testroot
 	$(REASON)
+	@echo "This is kernel package version $(kpkg_version)."
 ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 	$(make_directory) $(TMPTOP)/DEBIAN
 	dpkg-gencontrol -isp -p$(package)       -P$(TMPTOP)/
@@ -60,6 +62,7 @@ endif
 
 binary/$(m_package):
 	$(REASON)
+	@echo "This is kernel package version $(kpkg_version)."
 	$(checkdir)
 ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 	$(require_root)

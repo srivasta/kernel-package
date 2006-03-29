@@ -38,9 +38,9 @@ MAKEFLAGS:=$(filter-out -w,$(MAKEFLAGS))
 MFLAGS:=$(filter-out -w,$(FLAGS))
 
 # Include the kernel makefile
-override dot-config := 0
+override dot-config := 1
 include Makefile
-dot-config := 0
+dot-config := 1
 
 .PHONY: debian_VERSION debian_PATCHLEVEL debian_SUBLEVEL
 .PHONY: debian_EXTRAVERSION debian_LOCALVERSION debian_TOPDIR

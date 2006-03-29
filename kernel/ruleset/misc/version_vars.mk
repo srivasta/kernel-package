@@ -77,6 +77,12 @@ else
   endif
 endif
 
+KERNELRELEASE = $(shell if [ -f .kernelrelease ]; then          \
+                           cat .kernelrelease 2> /dev/null ;    \
+                        else                                    \
+                          echo "";                              \
+                       fi;)  
+
 HAVE_NEW_MODLIB =$(shell grep -E '\(INSTALL_MOD_PATH\)' Makefile 2>/dev/null )
 
 ifneq ($(strip $(EXTRA_VERSION)),)

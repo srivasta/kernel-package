@@ -38,41 +38,57 @@ include $(DEBDIR)/ruleset/targets/target.mk
 
 CONFIG-common:: debian/stamp-conf 
 	$(REASON)
+	@echo "This is kernel package version $(kpkg_version)."
 CONFIG-arch:: .config conf.vars 
 	$(REASON)
+	@echo "This is kernel package version $(kpkg_version)."
 CONFIG-indep:: conf.vars debian/stamp-kernel-conf
 	$(REASON)
+	@echo "This is kernel package version $(kpkg_version)."
 
 
 BUILD-common:: sanity_check 
 	$(REASON)
+	@echo "This is kernel package version $(kpkg_version)."
 BUILD-arch:: 
 	$(REASON)
+	@echo "This is kernel package version $(kpkg_version)."
 
 BUILD/$(i_package):: debian/stamp-build-kernel
 	$(REASON)
+	@echo "This is kernel package version $(kpkg_version)."
 
 BIN/$(s_package):: binary/$(s_package)
 	$(REASON)
+	@echo "This is kernel package version $(kpkg_version)."
 BIN/$(i_package):: binary/$(i_package)
 	$(REASON)
+	@echo "This is kernel package version $(kpkg_version)."
 BIN/$(d_package):: binary/$(d_package)
 	$(REASON)
+	@echo "This is kernel package version $(kpkg_version)."
 BIN/$(m_package):: binary/$(m_package)
 	$(REASON)
+	@echo "This is kernel package version $(kpkg_version)."
 BIN/$(h_package):: binary/$(h_package)
 	$(REASON)
+	@echo "This is kernel package version $(kpkg_version)."
 
 INST/$(s_package):: install/$(s_package)
 	$(REASON)
+	@echo "This is kernel package version $(kpkg_version)."
 INST/$(i_package):: install/$(i_package)
 	$(REASON)
+	@echo "This is kernel package version $(kpkg_version)."
 INST/$(d_package):: install/$(d_package)
 	$(REASON)
+	@echo "This is kernel package version $(kpkg_version)."
 INST/$(m_package):: install/$(m_package)
 	$(REASON)
+	@echo "This is kernel package version $(kpkg_version)."
 INST/$(h_package):: install/$(h_package)
 	$(REASON)
+	@echo "This is kernel package version $(kpkg_version)."
 
 CLN-common::
 	$(REASON)
@@ -110,6 +126,7 @@ CLEAN/$(h_package)::
 buildpackage: CONFIG-common stamp-buildpackage
 stamp-buildpackage: 
 	$(REASON)
+	@echo "This is kernel package version $(kpkg_version)."
 ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
 	@echo "The changelog says we are creating $(saved_version)"
 	@echo "However, I thought the version is $(version)"
@@ -127,48 +144,60 @@ STAMPS_TO_CLEAN += stamp-buildpackage
 # stream.            
 debian:  stamp-indep-conf
 	$(REASON)
+	@echo "This is kernel package version $(kpkg_version)."
 
 # For the following, that means that we must make sure that the configure and 
 # corresponding build targets are all done before the packages are built.
 kernel-source  kernel_source:  stamp-configure stamp-build-indep stamp-kernel-source
 	$(REASON)
+	@echo "This is kernel package version $(kpkg_version)."
 
 stamp-kernel-source: install/$(s_package) binary/$(s_package) 
 	$(REASON)
+	@echo "This is kernel package version $(kpkg_version)."
 	echo done > $@
 STAMPS_TO_CLEAN += stamp-kernel-source
 
 kernel-manual  kernel_manual:  stamp-configure stamp-build-indep stamp-kernel-doc stamp-kernel-manual
 	$(REASON)
+	@echo "This is kernel package version $(kpkg_version)."
 stamp-kernel-manual: install/$(d_package) install/$(m_package) binary/$(d_package) binary/$(m_package) 
 	$(REASON)
+	@echo "This is kernel package version $(kpkg_version)."
 	echo done > $@
 STAMPS_TO_CLEAN += stamp-kernel-manual
 
 kernel-doc     kernel_doc:     stamp-configure stamp-build-indep stamp-kernel-doc
 	$(REASON)
+	@echo "This is kernel package version $(kpkg_version)."
 stamp-kernel-doc: install/$(d_package) binary/$(d_package) 
 	$(REASON)
+	@echo "This is kernel package version $(kpkg_version)."
 	echo done > $@
 STAMPS_TO_CLEAN += stamp-kernel-doc
 
 kernel-headers kernel_headers: stamp-configure debian/stamp-prepare stamp-kernel-headers
 	$(REASON)
+	@echo "This is kernel package version $(kpkg_version)."
 stamp-kernel-headers: install/$(h_package) binary/$(h_package) 
 	$(REASON)
+	@echo "This is kernel package version $(kpkg_version)."
 	echo done > $@
 STAMPS_TO_CLEAN += stamp-kernel-headers
 
 kernel-image   kernel_image:   stamp-configure debian/stamp-build-kernel stamp-kernel-image
 	$(REASON)
+	@echo "This is kernel package version $(kpkg_version)."
 
 kernel-image-deb stamp-kernel-image: install/$(i_package) binary/$(i_package) 
 	$(REASON)
+	@echo "This is kernel package version $(kpkg_version)."
 	echo done > $@
 STAMPS_TO_CLEAN += stamp-kernel-image
 
 libc-kheaders libc_kheaders: 
 	$(REASON)
+	@echo "This is kernel package version $(kpkg_version)."
 	@echo This target is now obsolete.
 
 

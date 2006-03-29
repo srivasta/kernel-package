@@ -57,6 +57,7 @@ conf.vars: Makefile .config
 	$(checkdir)
 	@rm -f .mak
 	@touch .mak
+	@echo "This is kernel package version $(kpkg_version)." >> .mak
 	@echo "VERSION          = $(VERSION)"       >> .mak
 	@echo "PATCHLEVEL       = $(PATCHLEVEL)"    >> .mak
 	@echo "SUBLEVEL 	= $(SUBLEVEL)"      >> .mak
@@ -268,6 +269,7 @@ endif
 
 debian/stamp-build-kernel: sanity_check debian/stamp-kernel-conf
 	$(REASON)
+	@echo "This is kernel package version $(kpkg_version)."
 # Builds the binary package.
 # debian.config contains the current idea of what the image should
 # have.
