@@ -4,9 +4,9 @@
 ## Created On       : Fri Oct 28 00:19:59 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Tue Mar 21 23:16:53 2006
+## Last Modified On : Wed Apr 12 10:06:50 2006
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 6
+## Update Count     : 14
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : calls dpkg-architecture and sets up various arch
@@ -37,6 +37,29 @@ DPKG_ARCH := dpkg-architecture
 ifeq ($(strip $(KPKG_ARCH)),um)
   MAKING_VIRTUAL_IMAGE:=YES
 endif
+ifeq ($(strip $(KPKG_ARCH)),xen)
+  MAKING_VIRTUAL_IMAGE:=YES
+endif
+
+-include .config
+ifneq ($(strip $(CONFIG_UM)),)
+  MAKING_VIRTUAL_IMAGE:=YES
+  KPKG_ARCH=um
+endif
+
+ifneq ($(strip $(CONFIG_XEN)),)
+  MAKING_VIRTUAL_IMAGE:=YES
+  ifneq ($(strip $(CONFIG_X86_XEN)),)
+    KPKG_SUBARCH=xen
+  else
+    KPKG_ARCH=xen
+    ifeq ($(strip $(CONFIG_XEN_PRIVILEGED_GUEST)),)
+      KPKG_SUBARCH=xenu
+    else
+      KPKG_SUBARCH=xen0
+    endif
+  endif
+endif
 
 ifdef KPKG_ARCH
   ifneq ($(strip $(KPKG_ARCH)),powerpc64)
@@ -48,10 +71,6 @@ ifdef KPKG_ARCH
   endif
 endif
 
--include .config
-ifneq ($(strip $(CONFIG_XEN)),)
-  MAKING_VIRTUAL_IMAGE:=YES
-endif
 
 # set the dpkg-architecture vars
 export DEB_BUILD_ARCH      := $(shell $(DPKG_ARCH)       -qDEB_BUILD_ARCH)

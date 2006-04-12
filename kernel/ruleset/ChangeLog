@@ -1,3 +1,15 @@
+2006-04-12  Manoj Srivastava  <srivasta@debian.org>
+
+	* kernel_version.mk (debian_LOCALVERSION):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-142
+		  Late evaluation to allow all components to settle. 
+
+	* architecture.mk:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-142
+		  No longer assume that the presence of  CONFIG_XEN
+		  implies the ARCH is also xen; since now the ARCH is
+		  i386, but the subarch is xen. 
+
 2006-03-29  Manoj Srivastava  <srivasta@debian.org>
 
 	* minimal.mk:

@@ -1,3 +1,10 @@
+2006-04-12  Manoj Srivastava  <srivasta@debian.org>
+
+	* postinst (fix_source_link):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-142
+		  Clarify that it is the link target that we cannot see
+		  the contents of. 
+
 2006-03-22  Manoj Srivastava  <srivasta@debian.org>
 
 	* preinst (check):

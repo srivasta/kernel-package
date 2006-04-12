@@ -62,11 +62,7 @@ debian_EXTRAVERSION:
 	@echo "$(strip $(EXTRAVERSION))"
 
 debian_LOCALVERSION:
-ifneq ($strip($(localver-full)),)
-	@echo "$(strip $(localver-full))"
-else
-	@echo "$(strip $(LOCALVERSION))"
-endif
+	@echo $(if $(strip $(localver-full)),"$(strip $(localver-full))", "$(strip $(LOCALVERSION))")
 
 debian_TOPDIR:
 # 2.6 kernels declared TOPDIR obsolete, so use srctree if it exists

@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 17:45:52 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Tue Mar 21 23:30:01 2006
+## Last Modified On : Wed Apr 12 01:59:20 2006
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 1
+## Update Count     : 2
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : sets up package names for the packages we can
@@ -56,7 +56,11 @@ ifeq ($(strip $(KERNEL_ARCH)),um)
 	i_package := $(INT_STEM)-uml-$(version)$(INT_SUBARCH)
 else
   ifneq ($(strip $(CONFIG_XEN)),)
-	i_package := $(INT_STEM)-$(KPKG_SUBARCH)-$(version)
+	ifeq ($(strip $(CONFIG_XEN_PRIVILEGED_GUEST)),)
+	  i_package := $(INT_STEM)-xenu-$(version)
+        else
+          i_package := $(INT_STEM)-xen0-$(version)
+        endif
   else
 	i_package := $(INT_STEM)-image-$(version)$(INT_SUBARCH)
   endif

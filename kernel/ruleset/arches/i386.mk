@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 18:31:10 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Mon Oct 31 18:31:10 2005
+## Last Modified On : Wed Apr 12 13:38:47 2006
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 0
+## Update Count     : 13
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : handle the architecture specific variables.
@@ -36,20 +36,35 @@ GUESS_SUBARCH:=$(shell if test -f .config; then \
                      else \
                        uname -m;\
                      fi)
-ifeq (,$(findstring $(KPKG_SUBARCH),i386 i486 i586 i686))
+
+ifeq (,$(findstring $(KPKG_SUBARCH), xen i386 i486 i586 i686))
   KPKG_SUBARCH:=$(GUESS_SUBARCH)
 endif
 DEBCONFIG= $(CONFDIR)/config.$(KPKG_SUBARCH)
 ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
-  kimage := bzImage
-  loaderdep=lilo (>= 19.1) | grub
-  loader=lilo
-  loaderdoc=LiloDefault
-  target = $(kimage)
-  kimagesrc = $(strip arch/$(KERNEL_ARCH)/boot/$(kimage))
-  kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
-  kelfimagesrc = vmlinux
-  kelfimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
+  ifeq ($(strip $(CONFIG_X86_XEN)),)
+    kimagesrc = $(strip arch/$(KERNEL_ARCH)/boot/$(kimage))
+    kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
+    kelfimagesrc = vmlinux
+    kelfimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
+    loaderdep=lilo (>= 19.1) | grub
+    loader=lilo
+    loaderdoc=LiloDefault
+    kimage := bzImage
+    target = $(kimage)
+  else
+    kimagesrc = vmlinux
+    ifeq ($(strip $(CONFIG_XEN_PRIVILEGED_GUEST)),)
+      kimagedest = $(INT_IMAGE_DESTDIR)/xenu-inux-$(version)
+    else
+      kimagedest = $(INT_IMAGE_DESTDIR)/xen0-linux-$(version)
+    endif
+    loaderdep=grub,xen-vm
+    loader=grub
+    loaderdoc=
+    kimage := vmlinux
+    target = $(kimage)
+  endif
 else
   loaderdep=grub | grub2
   loader=grub

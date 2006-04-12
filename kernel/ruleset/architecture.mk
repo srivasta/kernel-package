@@ -4,9 +4,9 @@
 ## Created On       : Fri Oct 28 00:28:13 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Tue Mar 21 23:21:38 2006
+## Last Modified On : Tue Apr 11 17:26:55 2006
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 4
+## Update Count     : 5
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : 
@@ -127,9 +127,6 @@ endif
 
 # xen-linux
 ifeq ($(strip $(architecture)),xen)
-include $(DEBDIR)/ruleset/arches/xen.mk
-endif
-ifneq ($(strip $(CONFIG_XEN)),)
 include $(DEBDIR)/ruleset/arches/xen.mk
 endif
 

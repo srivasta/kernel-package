@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 16:47:18 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Wed Mar 22 12:00:57 2006
+## Last Modified On : Wed Apr 12 02:22:37 2006
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 6
+## Update Count     : 9
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : This file is responsible for creating the kernel-image packages 
@@ -71,7 +71,15 @@ endif
 ifeq ($(strip $(KERNEL_ARCH)),um)
 	$(install_file) $(config)        $(DOCDIR)/config-$(version)
 else
+  ifneq ($(strip $(CONFIG_XEN)),)
+     ifeq ($(strip $(CONFIG_XEN_PRIVILEGED_GUEST)),)
+	$(install_file) $(config)        $(TMPTOP)/$(IMAGEDIR)/config-xenu-$(version)
+     else
+	$(install_file) $(config)        $(TMPTOP)/$(IMAGEDIR)/config-xen0-$(version)
+     endif
+  else
 	$(install_file) $(config)        $(TMPTOP)/$(IMAGEDIR)/config-$(version)
+  endif
 endif
 	$(install_file) conf.vars        $(DOCDIR)/conf.vars
 	gzip -9qf                        $(DOCDIR)/conf.vars
@@ -181,10 +189,24 @@ endif
 	test ! -s applied_patches || chmod 644                                 \
                         $(TMPTOP)/$(IMAGEDIR)/patches-$(version)
 ifneq ($(strip $(KERNEL_ARCH)),um)
+  ifneq ($(strip $(CONFIG_XEN)),)
+     ifeq ($(strip $(CONFIG_XEN_PRIVILEGED_GUEST)),)
+	test ! -f System.map ||  cp System.map                         \
+                        $(TMPTOP)/$(IMAGEDIR)/System.map-xenu-$(version);
+	test ! -f System.map ||  chmod 644                             \
+                        $(TMPTOP)/$(IMAGEDIR)/System.map-xenu-$(version);
+     else
+	test ! -f System.map ||  cp System.map                         \
+                        $(TMPTOP)/$(IMAGEDIR)/System.map-xen0-$(version);
+	test ! -f System.map ||  chmod 644                             \
+                        $(TMPTOP)/$(IMAGEDIR)/System.map-xen0-$(version);
+     endif
+  else
 	test ! -f System.map ||  cp System.map                         \
                         $(TMPTOP)/$(IMAGEDIR)/System.map-$(version);
 	test ! -f System.map ||  chmod 644                             \
                         $(TMPTOP)/$(IMAGEDIR)/System.map-$(version);
+  endif
 else
 	if [ -d $(INSTALL_MOD_PATH)/lib/modules ] ; then               \
           find $(INSTALL_MOD_PATH)/lib/modules/ -type f -print0 |      \
