@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 18:31:10 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Wed Apr 12 13:38:47 2006
+## Last Modified On : Wed Apr 12 15:17:16 2006
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 13
+## Update Count     : 14
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : handle the architecture specific variables.
@@ -55,7 +55,7 @@ ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
   else
     kimagesrc = vmlinux
     ifeq ($(strip $(CONFIG_XEN_PRIVILEGED_GUEST)),)
-      kimagedest = $(INT_IMAGE_DESTDIR)/xenu-inux-$(version)
+      kimagedest = $(INT_IMAGE_DESTDIR)/xenu-linux-$(version)
     else
       kimagedest = $(INT_IMAGE_DESTDIR)/xen0-linux-$(version)
     endif
