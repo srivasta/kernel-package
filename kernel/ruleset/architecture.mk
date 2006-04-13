@@ -4,9 +4,9 @@
 ## Created On       : Fri Oct 28 00:28:13 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Tue Apr 11 17:26:55 2006
+## Last Modified On : Thu Apr 13 09:48:40 2006
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 5
+## Update Count     : 6
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : 
@@ -45,6 +45,9 @@
 # (h) The name of the arch specific configuration file
 # Some architectures has sub architectures
 INT_IMAGE_DESTDIR=$(TMPTOP)/$(IMAGEDIR)
+define DO_IMAGE_POST_PROCESSING
+	@echo ""
+endef
 
 $(eval $(which_debdir))
 ### m68k

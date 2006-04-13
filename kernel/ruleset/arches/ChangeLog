@@ -1,3 +1,11 @@
+2006-04-13  Manoj Srivastava  <srivasta@debian.org>
+
+	* powerpc.mk (INSTALL_MKVMLINUZ_PATH):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-144
+		  Specify the post-processing to be done at the point we
+		  indicate something is needed.  Also, change processing
+		  for new kernels.
+
 2006-04-12  Manoj Srivastava  <srivasta@debian.org>
 
 	* i386.mk:

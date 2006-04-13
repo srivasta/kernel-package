@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 16:47:18 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Wed Apr 12 02:22:37 2006
+## Last Modified On : Thu Apr 13 09:50:43 2006
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 9
+## Update Count     : 10
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : This file is responsible for creating the kernel-image packages 
@@ -179,10 +179,7 @@ endif
 		IMAGE_TOP=$(TMPTOP) debian/post-install;                  \
 	fi
 ifeq ($(strip $(NEED_IMAGE_POST_PROCESSING)),YES)
-	if grep $(IMAGE_POST_PROCESS_TARGET) $(IMAGE_POST_PROCESS_DIR)/Makefile 2>&1 >/dev/null; then \
-	    $(MAKE) INSTALL_MKVMLINUZ=$(TMPTOP)$(INSTALL_MKVMLINUZ_PATH) 	            \
-	    ARCH=$(KERNEL_ARCH) -C $(IMAGE_POST_PROCESS_DIR) $(IMAGE_POST_PROCESS_TARGET);  \
-	fi
+	$(DO_IMAGE_POST_PROCESSING)
 endif
 	test ! -s applied_patches || cp applied_patches                        \
                         $(TMPTOP)/$(IMAGEDIR)/patches-$(version)

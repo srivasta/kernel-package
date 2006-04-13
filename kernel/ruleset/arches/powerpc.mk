@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 18:31:06 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Wed Dec 28 13:26:08 2005
+## Last Modified On : Thu Apr 13 09:58:30 2006
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 4
+## Update Count     : 8
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : handle the architecture specific variables.
@@ -127,13 +127,26 @@ target := $(kimage)
 DEBCONFIG= $(CONFDIR)/config.$(KPKG_SUBARCH)
 
 # 32bit generic powerpc subarches.
-ifneq (,$(findstring $(KPKG_SUBARCH), powerpc powerpc32 ppc ppc32))
+ifneq (,$(findstring $(KPKG_SUBARCH), powerpc powerpc32 ppc ppc32 ppc64 powerpc64))
   KPKG_SUBARCH:=powerpc
   NEED_IMAGE_POST_PROCESSING = YES
   IMAGE_POST_PROCESS_TARGET := mkvmlinuz_support_install
   IMAGE_POST_PROCESS_DIR    := arch/$(KERNEL_ARCH)/boot
   # INSTALL_MKVMLINUZ_PATH = /usr/lib/kernel-image-${version}
   INSTALL_MKVMLINUZ_PATH = /usr/lib/$(INT_STEM)-image-${version}
+  define DO_IMAGE_POST_PROCESSING
+	if grep $(IMAGE_POST_PROCESS_TARGET) $(IMAGE_POST_PROCESS_DIR)/Makefile 2>&1 \
+                >/dev/null; then                                                     \
+          if [ "$(KERNEL_ARCH_VERSION" = "post-2.6.15" ]; then                       \
+            $(MAKE) INSTALL_MKVMLINUZ=$(TMPTOP)$(INSTALL_MKVMLINUZ_PATH)             \
+               ARCH=$(KERNEL_ARCH) $(IMAGE_POST_PROCESS_TARGET);                     \
+          else                                                                       \
+            $(MAKE) INSTALL_MKVMLINUZ=$(TMPTOP)$(INSTALL_MKVMLINUZ_PATH)             \
+              ARCH=$(KERNEL_ARCH) -C $(IMAGE_POST_PROCESS_DIR)                       \
+                $(IMAGE_POST_PROCESS_TARGET);                                        \
+          fi;                                                                        \
+        fi
+  endef
   target := zImage
   loaderdep=mkvmlinuz
 endif
