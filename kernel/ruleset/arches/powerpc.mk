@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 18:31:06 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Thu Apr 13 09:58:30 2006
+## Last Modified On : Fri Apr 14 10:21:36 2006
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 8
+## Update Count     : 9
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : handle the architecture specific variables.
@@ -137,7 +137,7 @@ ifneq (,$(findstring $(KPKG_SUBARCH), powerpc powerpc32 ppc ppc32 ppc64 powerpc6
   define DO_IMAGE_POST_PROCESSING
 	if grep $(IMAGE_POST_PROCESS_TARGET) $(IMAGE_POST_PROCESS_DIR)/Makefile 2>&1 \
                 >/dev/null; then                                                     \
-          if [ "$(KERNEL_ARCH_VERSION" = "post-2.6.15" ]; then                       \
+          if [ "$(KERNEL_ARCH_VERSION)" = "post-2.6.15" ]; then                      \
             $(MAKE) INSTALL_MKVMLINUZ=$(TMPTOP)$(INSTALL_MKVMLINUZ_PATH)             \
                ARCH=$(KERNEL_ARCH) $(IMAGE_POST_PROCESS_TARGET);                     \
           else                                                                       \
