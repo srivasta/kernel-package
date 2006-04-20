@@ -40,7 +40,7 @@ packages. This utility needs to be run from a top level
 Linux
 kernel source directory,
 which has been previously configured (unless you are using the
-configure target). Normally, if kernel-package does not find a 
+configure target). Normally, if kernel\-package does not find a 
 .I .config
 file in the current directory, it tries very hard to get an
 appropriate one (usually a config file already tailored for debian
@@ -76,7 +76,7 @@ can do this simply by
 set).
 .PP
 .B WARNING: 
-Do NOT set the -j option in MAKEFLAGS directly, this shall call the
+Do NOT set the \-j option in MAKEFLAGS directly, this shall call the
 build to fail. Use CONCURRENCY_LEVEL as specified below.
 .SH OPTIONS
 .B \-\-help
@@ -85,7 +85,7 @@ Print out a usage message.
 .BR \-\-revision " number"
 Changes the Debian revision number for the packages produced to the argument
 .BR number.
-This has certain constraints: the --revision option only has an effect
+This has certain constraints: the \-\-revision option only has an effect
 during the configure phase (in other words, if a file called
 .I stamp\-configure
 exists, this option has no effect \-\- run 
@@ -143,11 +143,11 @@ version, it is also added to the Debian package name, and, as such
 must obey the policy governing the package name. That means it may
 contain only 
 .B  lowercase
-alphanumerics and the characters - + . (full stop, hyphen, and
+alphanumerics and the characters \- + . (full stop, hyphen, and
 plus). Uppercase letters are not permitted under the Policy for a new
 package.  If the environment variable
 .B IGNORE_UPPERCASE_VERSION
-is set, make-kpkg shall lower case version numbers set in the Makefile
+is set, make\-kpkg shall lower case version numbers set in the Makefile
 or in the 
 .I localversion
 file. 
@@ -180,7 +180,7 @@ the same option in any later invocation of make\-kpkg (say, for
 building stand alone modules, or something).  
 .B make\-kpkg
 does not remember the argument foo in between invocations (this is
-different from the behavior of --revision, which we do remember in
+different from the behavior of \-\-revision, which we do remember in
 between invocations). If you are annoyed by make\-kpkg whining about
 using 
 .BR \-\-append_to_version 
@@ -270,7 +270,7 @@ the image, for example.
 Some of the patch packages also pay attention to other environment
 variables, and these are documented in the appropriate doc directory
 (for example, you should look at
-.I /usr/share/doc/kernel-patch-foo/README-kernelpatch.Debian
+.I /usr/share/doc/kernel\-patch\-foo/README\-kernelpatch.Debian
 for patch foo for additional information).
 .TP
 .BR \-\-arch\ foo
@@ -282,9 +282,9 @@ the environment variable
 The value should be whatever
 .B DEB_HOST_ARCH_CPU
 contains when
-.I dpkg-architecture
+.I dpkg\-architecture
 is run on the target machine, or it can be an other architecture in a
-multi-arch set (like i386/amd64).
+multi\-arch set (like i386/amd64).
 .TP
 .BR \-\-cross\-compile\ foo
 .TP
@@ -397,13 +397,13 @@ directory. It is passed to the
 program's 
 .I \-m
 option. For example, it can be
-  "genromfs -d %s -f %s"
+  "genromfs \-d %s \-f %s"
 or
   "mkcramfs %s %s"
 .TP
 .B \-\-rootcmd foo
 The command that provides a means of gaining super user access (for
-example, `sudo' or `fakeroot') as needed by dpkg\-buildpackage's -r
+example, `sudo' or `fakeroot') as needed by dpkg\-buildpackage's \-r
 option. 
 .TP
 .B \-\-stem foo
@@ -432,16 +432,16 @@ supported, please read man Getopt::Long (3perl).
 .B CONCURRENCY_LEVEL
 If defined, this environment variable sets the concurrency level of
 make used to compile the kernel and the modules set using
-.I -j
+.I \-j
 flags to the sub make in the 
 .B build
 target of 
 .B make\-kpkg.
 Should be a (small) integer, if used. You can get the current number
 of CPUs using the command:
- "grep -c '^processor' /proc/cpuinfo"
+ "grep \-c '^processor' /proc/cpuinfo"
 .B WARNING: 
-Do NOT set the -j option in MAKEFLAGS directly, this shall call the
+Do NOT set the \-j option in MAKEFLAGS directly, this shall call the
 build to fail. 
 .SH TARGETS
 .TP
@@ -473,11 +473,11 @@ and produces the complete package using
 .B binary
 This target produces all four Debian kernel packages by running the
 targets
-.B binary-indep 
+.B binary\-indep 
 and
-.B binary-arch.
+.B binary\-arch.
 .TP
-.B binary-indep
+.B binary\-indep
 This target produces the arch independent packages by running the
 targets
 .B kernel_source,
@@ -485,7 +485,7 @@ targets
 and
 .B kernel_doc.
 .TP
-.B binary-arch
+.B binary\-arch
 This target produces the arch dependent packages by running the
 targets
 .B kernel_headers
@@ -524,7 +524,7 @@ This target produces a Debian package containing the section 9
 manual pages included in the Linux kernel. Please note that this is not
 really an independent target; calling this shall also invoke the 
 .I kernel_doc
-target, and creates a kernel-doc package at the same time.
+target, and creates a kernel\-doc package at the same time.
 .TP
 .B kernel_doc
 This target produces a Debian package containing the documentation
@@ -590,8 +590,8 @@ and
 .I /etc/kernel/postinst.d/<VERSION>/,
 .I /etc/kernel/prerm.d/<VERSION>/,
 .I /etc/kernel/postrm.d/<VERSION>/.
-If they exists, the kernel-image package shall run a 
-.B run-parts
+If they exists, the kernel\-image package shall run a 
+.B run\-parts
 program over the directory (including the versioned one), giving the
 version being installed or removed as an argument, in the
 corresponding phase of installation or removal. Before calling these
@@ -694,7 +694,7 @@ This should not be called unless you already have a ./debian directory.
 This target runs configure (actually,
 .B config_target,
 set by 
-.B --config 
+.B \-\-config 
 which defaults to 
 .I oldconfig
 ) early, so you may edit files generated by
