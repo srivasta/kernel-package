@@ -31,16 +31,32 @@
 ###############################################################################
 
 KERNEL_ARCH=x86_64
-kimage := bzImage
-loaderdep=lilo (>= 19.1) | grub
-loader=lilo
-loaderdoc=LiloDefault
-target = $(kimage)
-kimagesrc = $(strip arch/$(KERNEL_ARCH)/boot/$(kimage))
-kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
-DEBCONFIG= $(CONFDIR)/config.$(KPKG_SUBARCH)
-kelfimagesrc = vmlinux
-kelfimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
+ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
+  ifeq ($(strip $(CONFIG_X86_XEN)),)
+    kimage := bzImage
+    loaderdep=lilo (>= 19.1) | grub
+    loader=lilo
+    loaderdoc=LiloDefault
+    target = $(kimage)
+    kimagesrc = $(strip arch/$(KERNEL_ARCH)/boot/$(kimage))
+    kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
+    DEBCONFIG= $(CONFDIR)/config.$(KPKG_SUBARCH)
+    kelfimagesrc = vmlinux
+    kelfimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
+  else
+    kimagesrc = vmlinux
+    ifeq ($(strip $(CONFIG_XEN_PRIVILEGED_GUEST)),)
+      kimagedest = $(INT_IMAGE_DESTDIR)/xenu-linux-$(version)
+    else
+      kimagedest = $(INT_IMAGE_DESTDIR)/xen0-linux-$(version)
+    endif
+    loaderdep=grub,xen-vm
+    loader=grub
+    loaderdoc=
+    kimage := vmlinux
+    target = $(kimage)
+  endif
+endif
 
 #Local variables:
 #mode: makefile
