@@ -19,9 +19,19 @@
 # 
 #use strict; #for debugging
 use Cwd 'abs_path';
-use Debconf::Client::ConfModule qw(:all);
-version('2.0');
-my $capb=capb("backup");
+
+# Debconf may not be around here.
+my $have_debconf = 0;
+my $capb;
+
+eval {require Debconf::Client::ConfModule;};
+if ( ! $@ )
+{
+  $have_debconf++;
+  import Debconf::Client::ConfModule ':all';
+  version('2.0');
+  $capb=capb("backup");
+}
 
 $|=1;
 # Predefined values:
