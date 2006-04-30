@@ -32,7 +32,7 @@
 
 KERNEL_ARCH=x86_64
 ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
-  ifeq ($(strip $(CONFIG_X86_XEN)),)
+  ifeq ($(strip $(CONFIG_X86_64_XEN)),)
     kimage := bzImage
     loaderdep=lilo (>= 19.1) | grub
     loader=lilo

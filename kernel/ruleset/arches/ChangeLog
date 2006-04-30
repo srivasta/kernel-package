@@ -1,3 +1,10 @@
+2006-04-30  Manoj Srivastava  <srivasta@debian.org>
+
+	* amd64.mk (KERNEL_ARCH):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-151
+		  The correct kernel  configuration var to check for is
+		  CONFIG_X86_64_XEN, not CONFIG_X86_XEN.  
+
 2006-04-20  Manoj Srivastava  <srivasta@debian.org>
 
 	* amd64.mk (target):
