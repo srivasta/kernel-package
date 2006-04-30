@@ -139,7 +139,8 @@ ifneq (,$(findstring $(KPKG_SUBARCH), powerpc powerpc32 ppc ppc32 ppc64 powerpc6
                 >/dev/null; then                                                     \
           if [ "$(KERNEL_ARCH_VERSION)" = "post-2.6.15" ]; then                      \
             $(MAKE) INSTALL_MKVMLINUZ=$(TMPTOP)$(INSTALL_MKVMLINUZ_PATH)             \
-               ARCH=$(KERNEL_ARCH) $(IMAGE_POST_PROCESS_TARGET);                     \
+               ARCH=$(KERNEL_ARCH) $(EXTRAV_ARG) $(CROSS_ARG)                        \
+	       $(IMAGE_POST_PROCESS_TARGET);                                         \
           else                                                                       \
             $(MAKE) INSTALL_MKVMLINUZ=$(TMPTOP)$(INSTALL_MKVMLINUZ_PATH)             \
               ARCH=$(KERNEL_ARCH) -C $(IMAGE_POST_PROCESS_DIR)                       \

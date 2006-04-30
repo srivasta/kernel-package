@@ -1,5 +1,10 @@
 2006-04-30  Manoj Srivastava  <srivasta@debian.org>
 
+	* powerpc.mk (ARCH):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-152
+		  Provide $(EXTRAV_ARG) and  $(CROSS_ARG)  to the inage
+		  post processing script
+
 	* amd64.mk (KERNEL_ARCH):
 		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-151
 		  The correct kernel  configuration var to check for is
