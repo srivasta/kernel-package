@@ -1,3 +1,9 @@
+2006-05-02  Manoj Srivastava  <srivasta@debian.org>
+
+	* sparc.mk:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-153
+		  Do not set ARCH_IN_NAME if append to version is nul 
+
 2006-04-30  Manoj Srivastava  <srivasta@debian.org>
 
 	* powerpc.mk (ARCH):

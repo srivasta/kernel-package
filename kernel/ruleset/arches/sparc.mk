@@ -37,9 +37,6 @@ loaderdoc=SiloDefault
 NEED_DIRECT_GZIP_IMAGE = YES
 kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
 DEBCONFIG = $(CONFDIR)/config.sparc
-ifeq (,$(APPEND_TO_VERSION))
-  ARCH_IN_NAME = YES
-endif
 
 ifeq (,$(KPKG_SUBARCH))
   ifeq (sparc64,$(strip $(shell uname -m)))
