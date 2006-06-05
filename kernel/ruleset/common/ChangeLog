@@ -1,3 +1,11 @@
+2006-06-05  Manoj Srivastava  <srivasta@debian.org>
+
+	* archvars.mk (MAKING_VIRTUAL_IMAGE):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-155
+		  also consider CONFIG_X86_64_XEN (any more architectures
+		  that Xen would support, this method is gonna get
+		  untenable). This'll fix Xen building on AMD64 
+
 2006-03-27  Manoj Srivastava  <srivasta@debian.org>
 
 	* archvars.mk:

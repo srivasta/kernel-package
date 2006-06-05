@@ -49,7 +49,7 @@ endif
 
 ifneq ($(strip $(CONFIG_XEN)),)
   MAKING_VIRTUAL_IMAGE:=YES
-  ifneq ($(strip $(CONFIG_X86_XEN)),)
+  ifneq ($(strip $(CONFIG_X86_XEN)$(CONFIG_X86_64_XEN)),)
     KPKG_SUBARCH=xen
   else
     KPKG_ARCH=xen
