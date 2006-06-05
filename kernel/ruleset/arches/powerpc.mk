@@ -64,6 +64,10 @@ ifneq ($(strip $(filter ppc powerpc ppc64 powerpc64,$(DEB_BUILD_ARCH))),)
         else
           ifneq (,$(findstring Amiga,$(GUESS_MACHINE)))
             GUESS_SUBARCH:=apus
+          else
+            ifneq (,$(findstring Amiga,$(GUESS_MACHINE)))
+              GUESS_SUBARCH:=prep
+            endif
           endif
         endif
       endif
@@ -115,7 +119,7 @@ ifeq ($(KERNEL_ARCH_VERSION),post-2.6.15)
   ifneq (,$(findstring $(KPKG_SUBARCH), ppc ppc32 ppc64 powerpc64 powerpc powerpc32))
     KERNEL_ARCH:=powerpc
   endif
-  ifneq (,$(findstring $(KPKG_SUBARCH), apus Amiga APUs nubus prpmc mbx MBX))
+  ifneq (,$(findstring $(KPKG_SUBARCH), prep apus Amiga APUs nubus prpmc mbx MBX))
     KERNEL_ARCH:=ppc
   endif
 endif
@@ -127,7 +131,7 @@ target := $(kimage)
 DEBCONFIG= $(CONFDIR)/config.$(KPKG_SUBARCH)
 
 # 32bit generic powerpc subarches.
-ifneq (,$(findstring $(KPKG_SUBARCH), powerpc powerpc32 ppc ppc32 ppc64 powerpc64))
+ifneq (,$(findstring $(KPKG_SUBARCH), prep powerpc powerpc32 ppc ppc32 ppc64 powerpc64))
   KPKG_SUBARCH:=powerpc
   NEED_IMAGE_POST_PROCESSING = YES
   IMAGE_POST_PROCESS_TARGET := mkvmlinuz_support_install
@@ -137,7 +141,8 @@ ifneq (,$(findstring $(KPKG_SUBARCH), powerpc powerpc32 ppc ppc32 ppc64 powerpc6
   define DO_IMAGE_POST_PROCESSING
 	if grep $(IMAGE_POST_PROCESS_TARGET) $(IMAGE_POST_PROCESS_DIR)/Makefile 2>&1 \
                 >/dev/null; then                                                     \
-          if [ "$(KERNEL_ARCH_VERSION)" = "post-2.6.15" ]; then                      \
+          if [ "$(KERNEL_ARCH_VERSION)" = "post-2.6.15" ] &&			     \
+	     [ "$(KPKG_SUBARCH)" != "prep" ] ; then                                  \
             $(MAKE) INSTALL_MKVMLINUZ=$(TMPTOP)$(INSTALL_MKVMLINUZ_PATH)             \
                ARCH=$(KERNEL_ARCH) $(EXTRAV_ARG) $(CROSS_ARG)                        \
 	       $(IMAGE_POST_PROCESS_TARGET);                                         \
