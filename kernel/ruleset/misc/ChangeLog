@@ -1,3 +1,11 @@
+2006-06-05  Manoj Srivastava  <srivasta@debian.org>
+
+	* pkg_names.mk (UML_DIR):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-154
+		  The new rootstrap can automatically install UML modules
+		  at build time, as long as the installation directory is
+		  compatible. This makes it so. 
+
 2006-04-12  Manoj Srivastava  <srivasta@debian.org>
 
 	* pkg_names.mk (i_package):

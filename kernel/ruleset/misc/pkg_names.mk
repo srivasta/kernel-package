@@ -85,7 +85,7 @@ MAN1DIR = $(MANDIR)/man1
 MAN9DIR = $(MANDIR)/man9
 INFODIR = $(TMPTOP)/usr/share/info
 
-UML_DIR        = $(TMPTOP)/usr/lib/uml/modules-$(version)
+UML_DIR        = $(TMPTOP)/usr/lib/uml/modules/$(version)
 
 TMP_MAN        = $(SRCTOP)/debian/tmp_man
 DIRS_TO_CLEAN += $(TMP_MAN)

@@ -205,9 +205,9 @@ ifneq ($(strip $(KERNEL_ARCH)),um)
                         $(TMPTOP)/$(IMAGEDIR)/System.map-$(version);
   endif
 else
-	if [ -d $(INSTALL_MOD_PATH)/lib/modules ] ; then               \
-          find $(INSTALL_MOD_PATH)/lib/modules/ -type f -print0 |      \
-	   xargs -0ri mv {} $(UML_DIR)/ ;                               \
+	if [ -d $(INSTALL_MOD_PATH)/lib/modules/$(version) ] ; then    \
+          (cd $(INSTALL_MOD_PATH)/lib/modules/$(version);              \
+           tar cf - . | (cd $(UML_DIR)/; umask 000; tar xsf -));       \
         fi
 	rm -rf $(INSTALL_MOD_PATH)/lib
 endif
