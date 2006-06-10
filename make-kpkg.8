@@ -214,7 +214,16 @@ patches to the kernel sources. This automatically sets the
 configuration option to YES. 
 .IP
 Unlike the treatment of the modules, you may only give the patch file
-basename (not the full path name of the patch file).  For each file
+basename (not the full path name of the patch file). Additionally, any
+patch that tries to change the version number, either by editing the 
+.B Makefile,
+or by adding a 
+.B .localversion
+file, is not supported, and will break the compilation, since the
+version number has already been fixed in 
+.I debian/changelog.
+.IP
+For each file
 <patch_name> in the list, the following process is followed: If
 the file can be found in the directories
 .B ALL_PATCH_DIR/{apply,unpatch}/,
