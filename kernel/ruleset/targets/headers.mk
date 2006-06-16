@@ -87,6 +87,8 @@ ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
                -path './debian/*'    -prune -o -type f                              \
                \( -name Makefile -o  -name 'Kconfig*' \) -print  |                  \
                   cpio -pdL --preserve-modification-time $(SRCDIR);
+	test ! -d arch/$(KERNEL_ARCH)/include || find arch/$(KERNEL_ARCH)/include   \
+               -print | cpio -pdL --preserve-modification-time $(SRCDIR);
   else
 	-tar cf - include |        (cd $(SRCDIR); umask 000; tar xsf -)
 	-tar cf - scripts |        (cd $(SRCDIR); umask 000; tar xsf -)
@@ -102,6 +104,8 @@ ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
                -path './debian/*'  -prune -o -type f                              \
                \( -name Makefile -o -name 'Kconfig*' \) -print |                  \
                   cpio -pd --preserve-modification-time $(SRCDIR);
+	test ! -d arch/$(KERNEL_ARCH)/include || find arch/$(KERNEL_ARCH)/include \
+               -print | cpio -pd --preserve-modification-time $(SRCDIR);
   endif
 	test ! -e arch/$(KERNEL_ARCH)/kernel/asm-offsets.s ||                     \
            $(install_file)               arch/$(KERNEL_ARCH)/kernel/asm-offsets.s \

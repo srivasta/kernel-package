@@ -1,3 +1,9 @@
+2006-06-16  Manoj Srivastava  <srivasta@debian.org>
+
+	* headers.mk:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-160
+		  Also copy (if it does exists) arch/$(KERNEL_ARCH)/include 
+
 2006-06-05  Manoj Srivastava  <srivasta@debian.org>
 
 	* image.mk (TMPTOP):
