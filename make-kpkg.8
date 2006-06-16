@@ -300,8 +300,12 @@ multi\-arch set (like i386/amd64).
 .BR \-\-cross_compile\ foo
 This is useful for setting the target string when you are cross
 compiling. Use the dummy target "\-" if you are building for other
-arches of a multiarch set, like i386/amd64.  The same effect can be
-achieved by setting the environment variable
+arches of a multiarch set, like i386/amd64. The same effect can be
+achieved by setting the environment variablePlease note that this does
+not in any way set the compiler the kernel build process shall use; if
+the default compiler that the build process comes up with is not the
+one desired, please explicitly specify the compiler that should be
+used. 
 .B CROSS_COMPILE
 .TP
 .BR \-\-subarch\ foo

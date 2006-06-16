@@ -1,3 +1,10 @@
+2006-06-16  Manoj Srivastava  <srivasta@debian.org>
+
+	* make-kpkg.8:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-161
+		  Note that just calling cross-compile does not change the
+		  compiler used. 
+
 2006-06-09  Manoj Srivastava  <srivasta@debian.org>
 
 	* make-kpkg.8:
