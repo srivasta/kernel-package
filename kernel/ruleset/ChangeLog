@@ -1,3 +1,10 @@
+2006-06-16  Manoj Srivastava  <srivasta@debian.org>
+
+	* minimal.mk:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-158
+		  Look up the kernel arch name for powerpc's from the file
+		  kernel/ruleset/arches/what_is_ppc_called_today.mk 
+
 2006-04-13  Manoj Srivastava  <srivasta@debian.org>
 
 	* architecture.mk (DO_IMAGE_POST_PROCESSIN):

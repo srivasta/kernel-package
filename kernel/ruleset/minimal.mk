@@ -4,9 +4,9 @@
 ## Created On       : Tue Nov  1 03:31:22 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Thu Jan  5 14:19:07 2006
+## Last Modified On : Wed Jun 14 10:09:09 2006
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 4
+## Update Count     : 5
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : 
@@ -47,6 +47,10 @@ include $(DEBDIR)/ruleset/misc/version_vars.mk
 include $(DEBDIR)/ruleset/misc/defaults.mk
 -include $(CONFLOC)
 include $(DEBDIR)/ruleset/misc/config.mk
+
+ifneq ($(strip $(filter ppc powerpc ppc64 powerpc64,$(architecture))),)
+  include $(DEBDIR)/ruleset/arches/what_is_ppc_called_today.mk
+endif
 
 FILES_TO_CLEAN  = modules/modversions.h modules/ksyms.ver conf.vars \
                   scripts/cramfs/cramfsck scripts/cramfs/mkcramfs applied_patches 

@@ -1014,7 +1014,7 @@ if ($initrd) {
     image_magic("initrd.img", $image_dest);
   }
   else {
-    if (! -e "$kimage") {
+    if (! -e "initrd.img") {
       handle_missing_link("initrd.img", $image_dest, "initrd.img-$version",
                           $realimageloc);
     }

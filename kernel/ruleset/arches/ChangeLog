@@ -1,3 +1,14 @@
+2006-06-16  Manoj Srivastava  <srivasta@debian.org>
+
+	* what_is_ppc_called_today.mk:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-158
+		  New file with the powerpc kernel arch determination code
+
+	* powerpc.mk:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-158
+		  Moved out the bit of code that determines what the
+		  kernel arch is, based on version and subarch.  
+
 2006-05-02  Manoj Srivastava  <srivasta@debian.org>
 
 	* sparc.mk:
