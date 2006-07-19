@@ -1,5 +1,9 @@
 2006-07-19  Manoj Srivastava  <srivasta@debian.org>
 
+	* README:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-166
+			  Update Linus' email address  
+
 	* postrm (remove_sym_link):
 		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-165
 		  Do not assume that the boot loader is defined. 
