@@ -206,7 +206,8 @@ sub remove_sym_link {
     {
       warn "Unless you used the optional flag in lilo, \n";
     }
-  warn " you may need to re-run $loader\n";
+  warn " you may need to re-run your boot loader" . ($loader ? "[$loader]":"")
+    . "\n";
   # Remove the dangling link
   unlink "$bad_image";
 }
