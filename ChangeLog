@@ -1,5 +1,10 @@
 2006-07-19  Manoj Srivastava  <srivasta@debian.org>
 
+	* _make-kpkg:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-167
+		  fix bash completion. compgen apparently doesn't like
+		  newlines in its input. 
+
 	* make-kpkg.8:
 		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-164
 		  This change clones the target to support the newer linux

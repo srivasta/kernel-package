@@ -15,14 +15,15 @@ _make_kpkg()
     COMPREPLY=()
     cur=${COMP_WORDS[COMP_CWORD]}
     prev=${COMP_WORDS[COMP_CWORD-1]}
-    options='--added_modules --added-modules --added_patches --added-patches \
+    options="--added_modules --added-modules --added_patches --added-patches \
              --append_to_version --append-to-version --arch --arch_in_name \
              --arch-in-name binary build buildpackage --bzimage clean \
              --config configure --cross_compile --cross-compile debian \
              --help --initrd kernel_doc kernel_headers kernel_image \
-             kernel_source libc-kheaders modules modules_clean modules_config \
+             kernel_source linux_doc linux_headers linux_image \
+             linux_source libc-kheaders modules modules_clean modules_config \
              modules_image --noexec --pgpsign --stem --revision --rootcmd --subarch \
-             --targets --uc --us --zimage'
+             --targets --uc --us --zimage"
 
     paroptions="$options"
 
