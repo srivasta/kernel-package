@@ -1,3 +1,10 @@
+2006-07-19  Manoj Srivastava  <srivasta@debian.org>
+
+	* local.mk:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-164
+		  This change clones the target to support the newer linux
+		  prefix. 
+
 2006-06-16  Manoj Srivastava  <srivasta@debian.org>
 
 	* minimal.mk:

@@ -148,7 +148,7 @@ debian:  stamp-indep-conf
 
 # For the following, that means that we must make sure that the configure and 
 # corresponding build targets are all done before the packages are built.
-kernel-source  kernel_source:  stamp-configure stamp-build-indep stamp-kernel-source
+linux-source  linux_source  kernel-source  kernel_source:  stamp-configure stamp-build-indep stamp-kernel-source
 	$(REASON)
 	@echo "This is kernel package version $(kpkg_version)."
 
@@ -167,7 +167,7 @@ stamp-kernel-manual: install/$(d_package) install/$(m_package) binary/$(d_packag
 	echo done > $@
 STAMPS_TO_CLEAN += stamp-kernel-manual
 
-kernel-doc     kernel_doc:     stamp-configure stamp-build-indep stamp-kernel-doc
+linux-doc   linux_doc   kernel-doc     kernel_doc:     stamp-configure stamp-build-indep stamp-kernel-doc
 	$(REASON)
 	@echo "This is kernel package version $(kpkg_version)."
 stamp-kernel-doc: install/$(d_package) binary/$(d_package) 
@@ -176,7 +176,7 @@ stamp-kernel-doc: install/$(d_package) binary/$(d_package)
 	echo done > $@
 STAMPS_TO_CLEAN += stamp-kernel-doc
 
-kernel-headers kernel_headers: stamp-configure debian/stamp-prepare stamp-kernel-headers
+linux-headers linux_headers kernel-headers kernel_headers: stamp-configure debian/stamp-prepare stamp-kernel-headers
 	$(REASON)
 	@echo "This is kernel package version $(kpkg_version)."
 stamp-kernel-headers: install/$(h_package) binary/$(h_package) 
@@ -185,7 +185,7 @@ stamp-kernel-headers: install/$(h_package) binary/$(h_package)
 	echo done > $@
 STAMPS_TO_CLEAN += stamp-kernel-headers
 
-kernel-image   kernel_image:   stamp-configure debian/stamp-build-kernel stamp-kernel-image
+linux-image   linux_image   kernel-image   kernel_image:   stamp-configure debian/stamp-build-kernel stamp-kernel-image
 	$(REASON)
 	@echo "This is kernel package version $(kpkg_version)."
 

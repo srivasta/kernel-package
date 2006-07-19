@@ -1,5 +1,11 @@
 2006-07-19  Manoj Srivastava  <srivasta@debian.org>
 
+	* make-kpkg.8:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-164
+		  This change clones the target to support the newer linux
+		  prefix.  Also change some strings in make-kpkg with
+		  kernel-image too. 
+
 	* make-kpkg (main):
 		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-163
 		  Quote the $composite_version string so that the match

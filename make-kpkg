@@ -286,7 +286,7 @@ useful for debugging.
 
 =over 2
 
-If make-kpkg is generating a kernel-image package, perform any actions
+If make-kpkg is generating a linux-image package, perform any actions
 necessary for a kernel loaded using initrd. B<NOTE:> in older kernels,
 this required a non-standard cramfs initrd patch to the kernel, unless
 the mkinitrd configuration was modified not to use cramfs. The patch
@@ -294,7 +294,7 @@ usually shipped with B<Debian>.  Some architectures still need patches
 to fix cramfs problems.
 
 This may include extra dependencies, and modifications to maintainer
-scripts.  It has no effect when make-kpkg is not making a kernel-image
+scripts.  It has no effect when make-kpkg is not making a linux-image
 package.(The INITRD_OK variable is now obsolete).
 
 =back
@@ -606,16 +606,24 @@ my %Known_targets=
    "debian"         => 1,
    "kernel_source"  => 3,
    "kernel-source"  => 3,
+   "linux_source"   => 3,
+   "linux-source"   => 3,
    "kernel_headers" => 3,
    "kernel-headers" => 3,
+   "linux_headers"  => 3,
+   "linux-headers"  => 3,
    "kernel-manual" => 3,
    "kernel_manual" => 3,
    "libc-kheaders"  => 3,
    "kernel_doc"     => 3,
    "kernel-doc"     => 3,
+   "linux_doc"      => 3,
+   "linux-doc"      => 3,
    "binary-arch"    => 2,
    "kernel_image"   => 3,
    "kernel-image"   => 3,
+   "linux_image"    => 3,
+   "linux-image"    => 3,
    "build"          => 4,
    "modules"        => 1,
    "modules_image"  => 1,
