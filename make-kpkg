@@ -939,7 +939,7 @@ EOMSG
 
         my $composite_version = "$kernel_version.$patch_level.$sublevel" .
           $extra_version  . $append_to_version;
-        if ($uts_release_version !~ /$composite_version/) {
+        if ($uts_release_version !~ /\Q$composite_version\E/) {
           print STDERR "Warning: The file include/linux/version.h exists\n";
           print STDERR "The contained UTS_VERSION string:\n";
           print STDERR "\t\t\t\"$uts_release_version\"\n";

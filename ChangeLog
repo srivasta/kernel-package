@@ -1,5 +1,11 @@
 2006-07-19  Manoj Srivastava  <srivasta@debian.org>
 
+	* make-kpkg (main):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-163
+		  Quote the $composite_version string so that the match
+		  does not get confused by regexp meta characters in the
+		  version. 
+
 	* Problems (VFS):
 		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-162
 		  When run in a git sourced tree, scripts/setlocalversion
