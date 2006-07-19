@@ -1,3 +1,12 @@
+2006-07-19  Manoj Srivastava  <srivasta@debian.org>
+
+	* target.mk (real_stamp_clean):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-162
+		  Revert the changes done during config while cleaning.
+	  (debian/stamp-conf):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-162
+		  Move the files we change in ./scripts to unique names 
+
 2006-06-16  Manoj Srivastava  <srivasta@debian.org>
 
 	* headers.mk:

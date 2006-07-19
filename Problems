@@ -193,3 +193,27 @@ VFS: Cannot open root device "308" or 03:08
 
           So, using sudo with env_reset will cause errors, possibly
           with the above error message.
+
+        r) When run in a git sourced tree, scripts/setlocalversion
+           checks to see if the tree is the trunk, if not, it adds
+           version information to the kernel version. It also checks
+           to see if there are uncommited changes, if so, it adds the
+           string "-dirty" to the version. Since we change a couple of
+           files in ./scripts/, this falls afoul of the make-kpkg
+           checks, since the version number is now different from what
+           make-kpkg knows it to be. The workaround is to modify the
+           setlocalversion script, like so:
+
+diff --git a/scripts/setlocalversion b/scripts/setlocalversion
+index 82e4993..65dcb40 100644
+--- a/scripts/setlocalversion
++++ b/scripts/setlocalversion
+@@ -16,7 +16,7 @@ if head=`git rev-parse --verify HEAD 2>/
+ 	fi
+ 
+ 	# Are there uncommitted changes?
+-	if git diff-index HEAD | read dummy; then
++	if git diff-index HEAD | grep -v -e "scripts/package/Makefile$" -e "scripts/package/builddeb$" -e "scripts/setlocalversion$" | read dummy; then
+ 		printf '%s' -dirty
+ 	fi
+ fi

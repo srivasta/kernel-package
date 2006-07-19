@@ -155,9 +155,9 @@ ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
 endif
 	# work around idiocy in recent kernel versions
 	test ! -e scripts/package/builddeb || \
-            mv -f scripts/package/builddeb scripts/package/builddeb.dist
+            mv -f scripts/package/builddeb scripts/package/builddeb.kpkg-dist
 	test ! -e scripts/package/Makefile || \
-            (mv -f scripts/package/Makefile scripts/package/Makefile.dist && \
+            (mv -f scripts/package/Makefile scripts/package/Makefile.kpkg-dist && \
                (echo "# Dummy file "; echo "help:") >  scripts/package/Makefile)
 	@test -f $(LIBLOC)/rules || \
             echo Error: Could not find $(LIBLOC)/rules
@@ -235,6 +235,10 @@ endif
 real_stamp_clean:
 	$(REASON)
 	@echo running clean
+	test ! -f scripts/package/builddeb.kpkg-dist ||                     \
+          mv -f scripts/package/builddeb.kpkg-dist scripts/package/builddeb
+	test ! -f scripts/package/builddeb.kpkg-dist ||                     \
+          mv -f scripts/package/Makefile.kpkg-dist scripts/package/Makefile
 ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
 	test ! -f .config  || cp -pf .config config.precious
 	test ! -f Makefile || \

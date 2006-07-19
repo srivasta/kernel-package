@@ -1,3 +1,17 @@
+2006-07-19  Manoj Srivastava  <srivasta@debian.org>
+
+	* Problems (VFS):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-162
+		  When run in a git sourced tree, scripts/setlocalversion
+		  checks to see if the tree is the trunk, if not, it adds
+		  version information to the kernel version. It also
+		  checks to see if there are  uncommited changes, if so,
+		  it adds the string "-dirty" to the version. Since we
+		  change a couple of files in ./scripts/, this falls afoul
+		  of the make-kpkg checks, since the version number is now
+		  different from what make-kpkg knows it to be. The
+		  workaround is to modify the setlocalversion script. 
+
 2006-06-16  Manoj Srivastava  <srivasta@debian.org>
 
 	* make-kpkg.8:
