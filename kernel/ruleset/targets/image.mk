@@ -34,7 +34,7 @@ install/$(i_package):
 	$(REASON)
 	@echo "This is kernel package version $(kpkg_version)."
 	$(if $(subst $(strip $(UTS_RELEASE_VERSION)),,$(strip $(version))), \
-		echo "The UTS Release version in include/linux/version.h"; \
+		echo "The UTS Release version in $(UTS_RELEASE_HEADER)"; \
 		echo "     \"$(strip $(UTS_RELEASE_VERSION))\" "; \
 		echo "does not match current version:"; \
 		echo "     \"$(strip $(version))\" "; \
@@ -136,7 +136,7 @@ ifneq ($(filter kfreebsd-gnu, $(DEB_HOST_GNU_SYSTEM)):$(strip $(shell grep -E ^[
 	   mv $(TMPTOP)/lib/modules/$(version)/build ./debian/build-link
   ifeq ($(strip $(KERNEL_ARCH)),um)
 	-depmod -q -FSystem.map -b $(TMPTOP) \
-           $(version)-$$(sed q include/linux/version.h | sed s/\"//g | awk -F\- '{print $$2}')
+           $(version)-$$(sed q $(UTS_RELEASE_HEADER) | sed s/\"//g | awk -F\- '{print $$2}')
   else
     ifeq ($(DEB_BUILD_GNU_TYPE),$(DEB_HOST_GNU_TYPE))
 	-depmod -q -FSystem.map -b $(TMPTOP) $(version);

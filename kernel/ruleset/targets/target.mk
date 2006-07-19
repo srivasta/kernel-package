@@ -283,11 +283,11 @@ ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
 	exit 1
 endif
 	$(if $(subst $(strip $(UTS_RELEASE_VERSION)),,$(strip $(version))),               \
-	  if [ -f include/linux/version.h ]; then                                         \
-             uts_ver=$$(grep 'define UTS_RELEASE' include/linux/version.h |               \
+	  if [ -f $(UTS_RELEASE_HEADER) ]; then                                           \
+             uts_ver=$$(grep 'define UTS_RELEASE' $(UTS_RELEASE_HEADER) |                 \
                 perl -nle  'm/^\s*\#define\s+UTS_RELEASE\s+("?)(\S+)\1/g && print $$2;'); \
 	    if [ "X$$uts_ver" != "X$(strip $(UTS_RELEASE_VERSION))" ]; then               \
-                echo "The UTS Release version in include/linux/version.h";                \
+                echo "The UTS Release version in $(UTS_RELEASE_HEADER)";                  \
 	        echo "     \"$$uts_ver\" ";                                               \
                 echo "does not match current version " ;                                  \
                 echo "     \"$(strip $(version))\" " ;                                    \

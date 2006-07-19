@@ -35,7 +35,7 @@ install/$(h_package):
 	@echo "This is kernel package version $(kpkg_version)."
 ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 	$(if $(subst $(strip $(UTS_RELEASE_VERSION)),,$(strip $(version))), \
-		echo "The UTS Release version in include/linux/version.h"; \
+		echo "The UTS Release version in $(UTS_RELEASE_HEADER)"; \
 		echo "     \"$(strip $(UTS_RELEASE_VERSION))\" "; \
 		echo "does not match current version:"; \
 		echo "     \"$(strip $(version))\" "; \

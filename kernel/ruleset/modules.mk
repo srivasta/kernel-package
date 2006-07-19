@@ -81,7 +81,7 @@ ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
 	@(echo "The changelog says we are creating $(saved_version), but I thought the version is $(version)"; exit 1)
 endif
 	$(if $(subst $(strip $(UTS_RELEASE_VERSION)),,$(strip $(version))), \
-		echo "The UTS Release version in include/linux/version.h"; \
+		echo "The UTS Release version in $(UTS_RELEASE_HEADER)"; \
 		echo "     \"$(strip $(UTS_RELEASE_VERSION))\" "; \
 		echo "does not match current version:"; \
 		echo "     \"$(strip $(version))\" "; \
@@ -126,7 +126,7 @@ ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
 	@(echo "The changelog says we are creating $(saved_version), but I thought the version is $(version)"; exit 1)
 endif
 	$(if $(subst $(strip $(UTS_RELEASE_VERSION)),,$(strip $(version))), \
-		echo "The UTS Release version in include/linux/version.h"; \
+		echo "The UTS Release version in $(UTS_RELEASE_HEADER)"; \
 		echo "     \"$(strip $(UTS_RELEASE_VERSION))\" "; \
 		echo "does not match current version:"; \
 		echo "     \"$(strip $(version))\" "; \
@@ -171,7 +171,7 @@ ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
 	@(echo "The changelog says we are creating $(saved_version), but I thought the version is $(version)"; exit 1)
 endif
 	$(if $(subst $(strip $(UTS_RELEASE_VERSION)),,$(strip $(version))), \
-		echo "The UTS Release version in include/linux/version.h"; \
+		echo "The UTS Release version in $(UTS_RELEASE_HEADER)"; \
 		echo "     \"$(strip $(UTS_RELEASE_VERSION))\" "; \
 		echo "does not match current version:"; \
 		echo "     \"$(strip $(version))\" "; \
@@ -206,7 +206,7 @@ ifeq ($(strip $(shell grep -E ^[^\#]*CONFIG_MODULES $(CONFIG_FILE))),)
 	@echo Modules not configured, so not making $@
 else
 	$(if $(subst $(strip $(UTS_RELEASE_VERSION)),,$(strip $(version))), \
-		echo "The UTS Release version in include/linux/version.h"; \
+		echo "The UTS Release version in $(UTS_RELEASE_HEADER)"; \
 		echo "     \"$(strip $(UTS_RELEASE_VERSION))\" "; \
 		echo "does not match current version:"; \
 		echo "     \"$(strip $(version))\" "; \

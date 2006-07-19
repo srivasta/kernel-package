@@ -103,10 +103,15 @@ iatv :=
 EXTRAV_ARG :=
 endif
 
-UTS_RELEASE_VERSION=$(shell if [ -f include/linux/version.h ]; then                     \
-                 grep 'define UTS_RELEASE' include/linux/version.h |                    \
+UTS_RELEASE_HEADER=$(shell if [ -f include/linux/utsrelease.h ]; then \
+	                       echo include/linux/utsrelease.h;       \
+	                   else                                       \
+                               echo include/linux/version.h ; \
+	                   fi)
+UTS_RELEASE_VERSION=$(shell if [ -f $(UTS_RELEASE_HEADER) ]; then                        \
+                 grep 'define UTS_RELEASE' $(UTS_RELEASE_HEADER) |                       \
                  perl -nle  'm/^\s*\#define\s+UTS_RELEASE\s+("?)(\S+)\1/g && print $$2;';\
-                 else echo "" ;                                                         \
+                 else echo "" ;                                                          \
                  fi)
 
 version = $(VERSION).$(PATCHLEVEL).$(SUBLEVEL)$(EXTRAVERSION)$(iatv)$(LOCALVERSION)
