@@ -131,7 +131,7 @@ Description:  Stop install since the kernel-image is already installed?
  question.
  .
  Otherwise, I suggest you move ${modules_base}/=V/kernel out of the way,
- perhaps to ${modules_base}/=V/kernel.old or something, and then try
+ perhaps to ${modules_base}/=V.kernel.old or something, and then try
  re-installing this image.
 
 Template: =ST-image-=V/preinst/abort-overwrite-=V
