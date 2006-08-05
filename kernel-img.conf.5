@@ -161,8 +161,10 @@ overrides)
 .TP
 .B postinst_hook 
 Set this variable to a script to be executed during installation after
-all the symbolic 
-links are created, but before running the bootloader. Before calling this
+all the symbolic links are created, but before running the
+bootloader. The path can be a relative path if the script lives in a
+safe path -- that is, if it lives in /bin, /sbin, /usr/bin, or
+/usr/sbin, or must be an absolute path instead. Before calling this
 script, the env variable
 .B STEM
 shall be set to the value of the 
@@ -172,10 +174,10 @@ shall be called with two arguments, the first being the
 .I version
 of the kernel image, and the second argument being the
 .I location
-of the kernel image itself. Errors in the script shall produce a
-warning message, but shall be otherwise ignored. Since debconf is in
-use before the script is called, this script should issue no
-diagnostic messgaes to stdout --  while the postinst does call
+of the kernel image itself. Errors in the script shall cause the
+postinst to fail. Since debconf is in use before the script is called,
+this script should issue no diagnostic messgaes to stdout -- while the
+postinst does call
 .B db_stop
 , debconf does not restore stdout, so messages to stdout disappear.
 An example script for grub users is present in
@@ -184,8 +186,10 @@ An example script for grub users is present in
 .B postrm_hook 
 Set this variable to a script to be executed in the postrm (that is,
 after the image has been removed) after all the remove actions have
-been performed. This script shall be called with two arguments,
-the first being the
+been performed. The path can be a relative path if the script lives in
+a safe path -- that is, if it lives in /bin, /sbin, /usr/bin, or
+/usr/sbin, or must be an absolute path instead. This script shall be
+called with two arguments, the first being the
 .I version
 of the kernel image, and the second argument being the
 .I location
@@ -198,8 +202,11 @@ diagnostic messgaes to stdout --  while the postinst does call
 .TP
 .B preinst_hook 
 Set this variable to a script to be executed before the package is
-unpacked, and can be used to put in additional checks. This script
-shall be called with two arguments, the first being the
+unpacked, and can be used to put in additional checks. The path can be
+a relative path if the script lives in a safe path -- that is, if it
+lives in /bin, /sbin, /usr/bin, or /usr/sbin, or must be an absolute
+path instead. This script shall be called with two arguments, the
+first being the
 .I version
 of the kernel image, and the second argument being the
 .I location
@@ -207,15 +214,18 @@ of the kernel image itself.
 .TP
 .B prerm_hook 
 Set this variable to a script to be executed before the package files
-are removed (so any added files may be removed) . This script shall be
-called with two arguments, the first being the
+are removed (so any added files may be removed) . The path can be a
+relative path if the script lives in a safe path -- that is, if it
+lives in /bin, /sbin, /usr/bin, or /usr/sbin, or must be an absolute
+path instead. This script shall be called with two arguments, the
+first being the
 .I version
 of the kernel image, and the second argument being the
 .I location
-of the kernel image itself. Errors in the script shall produce a
-warning message, but shall be otherwise ignored. Since debconf is in
-use before the script is called, this script should issue no
-diagnostic messgaes to stdout --  while the postinst does call
+of the kernel image itself. Errors in the script shall cause the prerm
+to fail. Since debconf is in use before the script is called, this
+script should issue no diagnostic messgaes to stdout -- while the
+postinst does call
 .B db_stop
 , debconf does not restore stdout, so messages to stdout disappear.  
 .TP
@@ -242,23 +252,29 @@ Unlike the other hook variables, this is meant for a script run during
 the post inst of a docs, headers or a source package. Using this hook
 for the headers package is now being deprecated, at some point the
 headers post install script shall only run the header_postinst_hook.
-This script shall be called with two arguments, the first being the
+The path can be a relative path if the script lives in a safe path --
+that is, if it lives in /bin, /sbin, /usr/bin, or /usr/sbin, or must
+be an absolute path instead. This script shall be called with two
+arguments, the first being the
 .I name
 of the package being installed (could be kernel\-source\-X.X.XX or
 kernel\-headers\-X.X.XX), and the second argument being the
 .I version
-of the package being installed. Errors in the script shall produce a
-warning message, but shall be otherwise ignored. 
+of the package being installed. Errors in the script shall cause the
+postinst to fail. 
 .TP
 .B headers_postinst_hook 
 Unlike the other hook variables, this is meant for a script run during
-the post inst of a headers package only. This script
-shall be called with two arguments, the first being the
+the post inst of a headers package only. The path can be a relative
+path if the script lives in a safe path -- that is, if it lives in
+/bin, /sbin, /usr/bin, or /usr/sbin, or must be an absolute path
+instead.This script shall be called with two arguments, the first
+being the
 .I name
 of the package being installed (kernel\-headers\-X.X.XX), and the second argument being the
 .I version
-of the package being installed. Errors in the script shall produce a
-warning message, but shall be otherwise ignored. 
+of the package being installed. Errors in the script shall cause the
+postinst to fail. 
 .TP
 .B move_image 
 Instead of creating symbolic links to (or, if 

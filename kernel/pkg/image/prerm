@@ -5,9 +5,9 @@
 # Created On       : Fri May 17 03:28:59 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Tue Dec 27 15:37:00 2005
+# Last Modified On : Sat Aug  5 13:14:17 2006
 # Last Machine Used: glaurung.internal.golden-gryphon.com
-# Update Count     : 84
+# Update Count     : 85
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
@@ -274,12 +274,56 @@ if (-f "/etc/$loader.conf") { #I know, could be a link, but ..
 # set the env var stem
 $ENV{'STEM'} = "=ST";
 
+sub exec_script {
+  my $type   = shift;
+  my $script = shift;
+  print STDERR "Running $type hook script $script.\n";
+  system ("$script $version $realimageloc$kimage-$version") &&
+    print STDERR "User $type hook script [$script] ";
+  if ($?) {
+    if ($? == -1) {
+      print STDERR "failed to execute: $!\n";
+    }
+    elsif ($? & 127) {
+      printf STDERR "died with signal %d, %s coredump\n",
+        ($? & 127),  ($? & 128) ? 'with' : 'without';
+    }
+    else {
+      printf STDERR "exited with value %d\n", $? >> 8;
+    }
+    exit $? >> 8;
+  }
+}
+sub run_hook {
+  my $type   = shift;
+  my $script = shift;
+  if ($script =~ m,^/,) {
+    # Full path provided for the hook script
+    if (-x "$script") {
+      &exec_script($type,$script);
+    }
+    else {
+      die "The provided $type hook script [$script] could not be run.\n";
+    }
+  }
+  else {
+    # Look for it in a safe path
+    for my $path ('/bin', '/sbin', '/usr/bin', '/usr/sbin') {
+      if (-x "$path/$script") {
+        &exec_script($type, "$path/$script");
+        return 0;
+      }
+    }
+    # No luck
+    print STDERR "Could not find $type hook script [$script].\n";
+    die "Looked in: '/bin', '/sbin', '/usr/bin', '/usr/sbin'\n";
+  }
+}
+
 
 ## Run user hook script here, if any
 if (-x "$prerm_hook") {
-  print STDERR "Running prerm hook $prerm_hook.\n";
-  system ("$prerm_hook $version ${realimageloc}${kimage}-${version}") &&
-	    warn "User hook script $prerm_hook failed";
+  &run_hook("prerm", $prerm_hook);
 }
 if (-d "/etc/kernel/prerm.d") {
   print STDERR "Examining /etc/kernel/prerm.d.\n";

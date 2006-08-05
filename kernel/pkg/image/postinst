@@ -5,9 +5,9 @@
 # Created On       : Sat Apr 27 05:55:26 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Tue Mar 21 20:47:31 2006
+# Last Modified On : Sat Aug  5 12:52:20 2006
 # Last Machine Used: glaurung.internal.golden-gryphon.com
-# Update Count     : 336
+# Update Count     : 340
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
@@ -1169,12 +1169,55 @@ LOADER: {
 
 # set the env var stem
 $ENV{'STEM'} = "=ST";
+sub exec_script {
+  my $type   = shift;
+  my $script = shift;
+  print STDERR "Running $type hook script $script.\n";
+  system ("$script $version $realimageloc$kimage-$version") &&
+    print STDERR "User $type hook script [$script] ";
+  if ($?) {
+    if ($? == -1) {
+      print STDERR "failed to execute: $!\n";
+    }
+    elsif ($? & 127) {
+      printf STDERR "died with signal %d, %s coredump\n",
+        ($? & 127),  ($? & 128) ? 'with' : 'without';
+    }
+    else {
+      printf STDERR "exited with value %d\n", $? >> 8;
+    }
+    exit $? >> 8;
+  }
+}
+sub run_hook {
+  my $type   = shift;
+  my $script = shift;
+  if ($script =~ m,^/,) {
+    # Full path provided for the hook script
+    if (-x "$script") {
+      &exec_script($type,$script);
+    }
+    else {
+      die "The provided $type hook script [$script] could not be run.\n";
+    }
+  }
+  else {
+    # Look for it in a safe path
+    for my $path ('/bin', '/sbin', '/usr/bin', '/usr/sbin') {
+      if (-x "$path/$script") {
+        &exec_script($type, "$path/$script");
+        return 0;
+      }
+    }
+    # No luck
+    print STDERR "Could not find $type hook script [$script].\n";
+    die "Looked in: '/bin', '/sbin', '/usr/bin', '/usr/sbin'\n";
+  }
+}
 
 ## Run user hook script here, if any
-if (-x "$postinst_hook") {
-  print STDERR "Running postinst hook $postinst_hook.\n";
-  system ("$postinst_hook $version $realimageloc$kimage-$version") &&
-    warn "User hook script $postinst_hook failed";
+if ($postinst_hook) {
+  &run_hook("postinst", $postinst_hook);
 }
 
 if (-d "/etc/kernel/postinst.d") {
