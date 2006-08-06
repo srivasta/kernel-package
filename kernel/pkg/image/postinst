@@ -5,9 +5,9 @@
 # Created On       : Sat Apr 27 05:55:26 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Sat Aug  5 12:52:20 2006
+# Last Modified On : Sat Aug  5 19:41:58 2006
 # Last Machine Used: glaurung.internal.golden-gryphon.com
-# Update Count     : 340
+# Update Count     : 344
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
@@ -58,7 +58,8 @@ my $arch              = "=A"; #  should be same as dpkg --print-installation-arc
 my $kernel_arch       = "=B";
 my $ramdisk           = "=MK";  # List of tools to create initial ram fs.
 my $initrddep         = "=MD";  # List of dependencies for such tools
-my $package_name    = "=ST-image-$version";
+my $package_name      = "=ST-image-$version";
+my $explicit_do_loader = '';
 
 my $Loader          = "NoLOADER"; #
 $Loader             = "LILO"     if $loader =~ /^lilo/io;
@@ -141,6 +142,7 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
       $do_boot_enable  = "Yes" if /do_boot_enable\s*=\s*(yes|true|1)\s*$/ig;
       $do_bootfloppy   = "Yes" if /do_bootfloppy\s*=\s*(yes|true|1)\s*$/ig;
       $do_bootloader   = "Yes" if /do_bootloader\s*=\s*(yes|true|1)\s*$/ig;
+      $explicit_do_loader = "YES" if /do_bootloader\s*=\s*(yes|true|1)\s*$/ig;
       $relative_links  = "Yes" if /relative_links\s*=\s*(yes|true|1)\s*$/ig;
       $do_initrd       = "Yes" if /do_initrd\s*=\s*(yes|true|1)\s*$/ig;
       $warn_initrd     = "Yes" if /warn_initrd\s*=\s*(yes|true|1)\s*$/ig;
@@ -1239,6 +1241,51 @@ if (-d "/etc/kernel/postinst.d/$version") {
 
 sub run_lilo (){
   my $ret;
+  # Try and figure out if the user really wants lilo to be run --
+  # since the default is to run the boot laoder, which is ! grub -- but
+  # the user may be using grub now, and not changed the default.
+
+  # So, if the user has explicitly asked for the loader to be run, or
+  # if there is no postinst hook, or if there is no grub installed --
+  # we are OK. Or else, we ask.
+  if ($explicit_do_loader || (! ($postinst_hook && -x '/sbin/grub'))  {
+    print STDERR "Running boot loader as requested\n";
+  }
+  else {
+    # Ask the user
+    my $seen;
+    my $question = "${package_name}/postinst/really-run-bootloader-$version";
+
+    print STDERR "Do we really want to run bootloader $loader?\n";
+
+    ($ret,$seen) = fset ("$question", 'seen', 'false');
+    die "Error setting debconf flags in $question: $seen" if $ret;
+
+    $ret = subst("$question", 'loader', "$loader");
+    die "Error setting debconf substitutions in $question: $seen" if $ret;
+
+    ($ret,$seen) = input('critical', "$question");
+    if ($ret && $ret != 30 ) {
+      die "Error setting debconf question $question: $seen";
+    }
+
+    ($ret,$seen) = go ();
+    if ($ret && $ret != 30 ) {
+      die "Error asking debconf question $question: $seen";
+    }
+
+    ($ret,$answer) = get("$question");
+    die "Error retreiving answer for $question: $answer" if $ret;
+
+    if ($answer =~ /^(y|t)/i) {
+      print STDERR "Ok, not running $loader\n";
+      return 0;
+    }
+    else {
+      print STDERR "Ok, continuing as directed.\n";
+    }
+
+  }
   if ($loader =~ /^lilo/io or $loader =~ /vmelilo/io) {
     print STDERR "Testing $loader.conf ... \n";
     unlink $temp_file_name;     # security
@@ -1246,6 +1293,8 @@ sub run_lilo (){
     if ($ret) {
       my $seen;
       my $note = "${package_name}/postinst/bootloader-test-error-$version";
+
+      print STDERR "Failed test for bootloader $loader\n";
 
       ($ret,$seen) = fset ("$note", 'seen', 'false');
       die "Error setting debconf flags in $note: $seen" if $ret;
@@ -1263,7 +1312,7 @@ sub run_lilo (){
 
       ($ret,$seen) = go ();
       if ($ret && $ret != 30 ) {
-        die "Error asking debconf question $note: $seen";
+        die "Error showing debconf note $note: $seen";
       }
       return $ret;
     }

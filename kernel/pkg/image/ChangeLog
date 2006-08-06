@@ -19,6 +19,19 @@
 	* postinst (run_hook):
 		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-170
 		  Ditto. 
+	  (run_lilo):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-170
+		  The default behaviour of the  postinst script has been
+		  to run the built in default bootloader  (typically lilo)
+		  -- set at compile time, based on the arch. The
+		  installed default for Debian, however, has since moved
+		  on to be  configuration variable in /etc/kernel-img.conf
+		  --and may still have  lilo installed. The trick is to
+		  figure out whether they really want to  ruyn lilo. So,
+		  if there is no /etc/lilo.conf, we run nothing. If the
+		  user has explicitly asked to run lilo, we rin lilo. Or
+		  if there is no grub, or if there is no postinst hook
+		  script, we run lilo. Or else, we  ask the user. 
 
 2006-07-19  Manoj Srivastava  <srivasta@debian.org>
 

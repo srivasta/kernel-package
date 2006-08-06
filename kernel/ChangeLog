@@ -1,3 +1,11 @@
+2006-08-05  Manoj Srivastava  <srivasta@debian.org>
+
+	* templates.in (really-run-bootloader):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-171
+		  Ask whether to run the  default bootloader (typically
+		  lilo), or let the postinst hook script update grub
+		  later. 
+
 2006-07-23  Manoj Srivastava  <srivasta@debian.org>
 
 	* templates.in (Description):
