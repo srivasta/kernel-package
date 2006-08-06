@@ -1,3 +1,10 @@
+2006-08-05  Manoj Srivastava  <srivasta@debian.org>
+
+	* Makefile (install):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-172
+		  Remove the {arch} dir for the new common sub project
+		  from the /usr/share/kernel-package subdir 
+
 2006-07-19  Manoj Srivastava  <srivasta@debian.org>
 
 	* _make-kpkg:

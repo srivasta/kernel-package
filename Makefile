@@ -4,9 +4,9 @@
 ## Created On       : Tue Nov 18 15:53:52 2003
 ## Created On Node  : glaurung.green-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Fri Oct 28 15:48:40 2005
+## Last Modified On : Sat Aug  5 20:48:51 2006
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 26
+## Update Count     : 27
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : 
@@ -123,6 +123,8 @@ install:
 	(cd kernel;        tar cf - * |                                         \
            (cd             $(prefix)/usr/share/$(package); umask 000;           \
                            tar xpf -))
+	test ! -d          $(prefix)/usr/share/$(package)/\{arch\} ||           \
+               rm -rf      $(prefix)/usr/share/$(package)/\{arch\}
 	(cd $(DOCDIR);     for file in $(EXAMPLES); do                          \
                             mv ../../$(package)/examples/$$file examples/;      \
                            done)
