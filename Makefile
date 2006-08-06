@@ -4,9 +4,9 @@
 ## Created On       : Tue Nov 18 15:53:52 2003
 ## Created On Node  : glaurung.green-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Sat Aug  5 20:48:51 2006
+## Last Modified On : Sat Aug  5 21:03:26 2006
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 27
+## Update Count     : 28
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : 
@@ -123,8 +123,8 @@ install:
 	(cd kernel;        tar cf - * |                                         \
            (cd             $(prefix)/usr/share/$(package); umask 000;           \
                            tar xpf -))
-	test ! -d          $(prefix)/usr/share/$(package)/\{arch\} ||           \
-               rm -rf      $(prefix)/usr/share/$(package)/\{arch\}
+	test ! -d          $(prefix)/usr/share/$(package)/ruleset/common/\{arch\} || \
+               rm -rf      $(prefix)/usr/share/$(package)/ruleset/common/\{arch\}
 	(cd $(DOCDIR);     for file in $(EXAMPLES); do                          \
                             mv ../../$(package)/examples/$$file examples/;      \
                            done)
