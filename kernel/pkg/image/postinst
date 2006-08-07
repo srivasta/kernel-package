@@ -5,9 +5,9 @@
 # Created On       : Sat Apr 27 05:55:26 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Sat Aug  5 19:41:58 2006
+# Last Modified On : Mon Aug  7 09:07:48 2006
 # Last Machine Used: glaurung.internal.golden-gryphon.com
-# Update Count     : 344
+# Update Count     : 345
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
@@ -1248,7 +1248,7 @@ sub run_lilo (){
   # So, if the user has explicitly asked for the loader to be run, or
   # if there is no postinst hook, or if there is no grub installed --
   # we are OK. Or else, we ask.
-  if ($explicit_do_loader || (! ($postinst_hook && -x '/sbin/grub'))  {
+  if ($explicit_do_loader || (! ($postinst_hook && -x '/sbin/grub')))  {
     print STDERR "Running boot loader as requested\n";
   }
   else {
