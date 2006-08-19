@@ -373,7 +373,7 @@ This program should be run in a linux kernel source top level directory.
 usage: $main::MYNAME [options] target [target ...]
   where options are:
  --help                This message.
- --revision number     The debian revision number. ([a-zA-Z.+0-9]) (Must
+ --revision number     The debian revision number. ([a-zA-Z.~+0-9]) (Must
                          have digit)
  --append-to-version foo
  --append_to_version foo an additional kernel sub-version. ([-a-z.+0-9])
@@ -836,9 +836,9 @@ EOMSG
       
       $command .= " DEBIAN_REVISION=$revision ";
       $alt_cmd .= " DEBIAN_REVISION=$revision ";
-      if ($revision !~ m/^(\d+:)?[a-zA-Z\d\.\+\-]+$/o) {
+      if ($revision !~ m/^(\d+:)?[a-zA-Z\d\~\.\+\-]+$/o) {
 	print STDERR " Error: The revision string may only contain\n";
-	print STDERR " alphanumerics and  the  characters  +  .\n";
+	print STDERR " alphanumerics and  the  characters ~ +  .\n";
 	print STDERR " If epochs are used, the colon : is also allowed\n";
 	print STDERR " The current value is: $revision\n";
 	print STDERR " Aborting.\n";
@@ -850,7 +850,7 @@ EOMSG
 	print STDERR " Please ensure that the upstream and debian revision\n";
 	print STDERR " numbers are policy compliant enough that dpkg and\n";
 	print STDERR " shall not choke on them at the end of the compile\n";
-	if ($revision !~ m/^(\d+:)?[a-zA-Z\d\.\+\-]+-\d+[^-]*$/o) {
+	if ($revision !~ m/^(\d+:)?[a-zA-Z\d\~\.\+\-]+-\d+[^-]*$/o) {
 	  die " The revision $revision fails policy compliance, aborting\n";
 	}
 	else {

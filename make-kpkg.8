@@ -116,7 +116,7 @@ So, if you want to re\-run
 .B make\-kpkg 
 with a different revision number, you have to make sure you start with
 a clean slate.  Secondly, the version may contain only 
-alphanumerics and the characters + . (full stop and plus)
+alphanumerics and the characters ~ + . (tilde, full stop and plus)
 and must contain a digit. (Look at the Policy manual for
 details). 
 .I Actually, that is a lie: official kernel and modules maintainers
@@ -143,7 +143,7 @@ version, it is also added to the Debian package name, and, as such
 must obey the policy governing the package name. That means it may
 contain only 
 .B  lowercase
-alphanumerics and the characters \- + . (full stop, hyphen, and
+alphanumerics and the characters ~ \- + . (tilde, full stop, hyphen, and
 plus). Uppercase letters are not permitted under the Policy for a new
 package.  If the environment variable
 .B IGNORE_UPPERCASE_VERSION

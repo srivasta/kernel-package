@@ -96,8 +96,7 @@ exit 0 if $ARGV[0] =~ /abort-upgrade/;
 exit 1 unless $ARGV[0] =~ /(install|upgrade)/;
 
 # Official images may silently upgrade
-if ($official_image =~ /^\s*YES\s*$/o
-    && ($ARGV[0] =~ /upgrade/ || $arch =~ m/powerpc/)) {
+if ($official_image =~ /^\s*YES\s*$/o && ($ARGV[0] =~ /upgrade/)) {
     $silent_modules = 'Yes';
   }
 
@@ -373,7 +372,6 @@ if (-d "$modules_base/$version") {
 # If this is an official image, and only a build symlink exists, allow
 # it to be clobbered.
 if ($official_image =~ /^\s*YES\s*$/o ) {
-  $silent_modules = 'YES';
   if (-d "$modules_base/$version" && -l "$modules_base/$version/build" ) {
     rename("$modules_base/$version/build", "$modules_base/$version/build.save") ||
       die "failed to move $modules_base/$version/build:$!";

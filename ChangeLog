@@ -1,3 +1,13 @@
+2006-08-19  Manoj Srivastava  <srivasta@debian.org>
+
+	* make-kpkg (main):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-175
+		  Allow ~ in version numbers 
+
+	* make-kpkg.8:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-175
+		  Allow ~ in version numbers 
+
 2006-08-05  Manoj Srivastava  <srivasta@debian.org>
 
 	* Makefile (install):
