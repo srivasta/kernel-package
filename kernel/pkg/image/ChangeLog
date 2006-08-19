@@ -1,3 +1,11 @@
+2006-08-19  Manoj Srivastava  <srivasta@debian.org>
+
+	* postinst (run_lilo):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-176
+		  Change the name of the bootloader selection question,
+		  since now it is a shared question, though we do try to
+		  ensure it is asked every time. 
+
 2006-08-05  Manoj Srivastava  <srivasta@debian.org>
 
 	* postrm (run_hook):

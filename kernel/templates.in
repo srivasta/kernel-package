@@ -237,7 +237,7 @@ Description:  Should the old /System.map link be deleted now?
  applies to one such kernel, for all other choices the symbols loaded
  will be wrong. Not having /System.map at all prevents this.
 
-Template: =ST-image-=V/postinst/really-run-bootloader-=V
+Template: shared/kernel-image/really-run-bootloader
 Type: boolean
 Default: true
 Description: Run the default bootloader?

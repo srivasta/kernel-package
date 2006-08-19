@@ -1254,7 +1254,7 @@ sub run_lilo (){
   else {
     # Ask the user
     my $seen;
-    my $question = "${package_name}/postinst/really-run-bootloader-$version";
+    my $question = "shared/kernel-image/really-run-bootloader";
 
     print STDERR "Do we really want to run bootloader $loader?\n";
 
