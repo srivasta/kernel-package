@@ -692,13 +692,17 @@ sub main (){
     exit 1;
   }
 
-  if ($config_target !~ /^(?:|old|menu|x|g|rand|def|all(mod|yes|no))(config)?$/) {
-    print "Config type must be one of {config,oldconfig,menuconfig,xconfig,gconfig\n";
-    print " randconfig,defconfig,allmodconfigallyesconfig,allnoconfig}.\n";
-    print "use --help to display command line syntax help.\n";
-    exit 1;
+  # Official image maintainers ask to be allowed to create modified
+  # configure targets.
+  if (! -f 'debian/official') {
+    if ($config_target !~ /^(?:|old|menu|x|g|rand|def|all(mod|yes|no))(config)?$/) {
+      print "Config type must be one of {config,oldconfig,menuconfig,xconfig,gconfig\n";
+      print " randconfig,defconfig,allmodconfigallyesconfig,allnoconfig}.\n";
+      print "use --help to display command line syntax help.\n";
+      exit 1;
+    }
+    $config_target = 'config' unless $2;
   }
-  $config_target = 'config' unless $2;
 
   if ($ENV{'MAKEFLAGS'} && 
       ($ENV{'MAKEFLAGS'} =~ /-j/ || $ENV{'MAKEFLAGS'} =~ /--jobs/ )) {

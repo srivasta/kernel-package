@@ -1,3 +1,10 @@
+2006-08-20  Manoj Srivastava  <srivasta@debian.org>
+
+	* make-kpkg (main):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-175
+		  Disable configuration target sanity checks for official
+		  sources, on request. 
+
 2006-08-19  Manoj Srivastava  <srivasta@debian.org>
 
 	* make-kpkg (main):
