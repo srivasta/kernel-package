@@ -5,9 +5,9 @@
 # Created On       : Fri Nov  7 13:14:25 1997
 # Created On Node  : tiamat.datasync.com
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Sun Jan  6 01:49:31 2002
-# Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 21
+# Last Modified On : Sun Aug 20 20:27:50 2006
+# Last Machine Used: glaurung.internal.golden-gryphon.com
+# Update Count     : 24
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
@@ -109,12 +109,12 @@ characters + and . (plus and full stop).
   # Test and remove the debian revision
   if ($version =~ m/\-/o) {
     $have_debrev = 1;
-    if ($version =~ m/(.*)-[A-Za-z0-9\+\.]+$/o) {
+    if ($version =~ m/(.*)-[A-Za-z0-9\~\+\.]+$/o) {
       $version = $1;		# remove the debian version
     }
     else {
       #This is an error.
-      print "The Debian revision fails to match (.*)-[A-Za-z0-9\\+\\.]+\$ in $version.\n";
+      print "The Debian revision fails to match (.*)-[A-Za-z0-9\\~\\+\\.]+\$ in $version.\n";
       exit 1;
     }
   }
@@ -136,18 +136,18 @@ there is no epoch then colons are not allowed.
   #Check out the main version
   if ($have_epochs) {
     if ($have_debrev) {
-      $upstream_pat = '^[A-Za-z0-9\.\+\:\-]+$'; # Note the : and the -
+      $upstream_pat = '^[A-Za-z0-9\~\.\+\:\-]+$'; # Note the : and the -
     }
     else {
-      $upstream_pat = '^[A-Za-z0-9\.\+\:]+$'; # Note the : 
+      $upstream_pat = '^[A-Za-z0-9\~\.\+\:]+$'; # Note the : 
     }
   }
   else {
     if ($have_debrev) {
-      $upstream_pat = '^[A-Za-z0-9\.\+\-]+$'; # Note the -
+      $upstream_pat = '^[A-Za-z0-9\~\.\+\-]+$'; # Note the -
     }
     else {
-      $upstream_pat = '^[A-Za-z0-9\.\+\-]+$';
+      $upstream_pat = '^[A-Za-z0-9\~\.\+\-]+$';
     }
   }
 
