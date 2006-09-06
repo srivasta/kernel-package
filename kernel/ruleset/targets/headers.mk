@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 16:23:51 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Wed Mar 22 12:00:43 2006
+## Last Modified On : Wed Sep  6 11:39:14 2006
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 6
+## Update Count     : 7
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : This file is responsible for creating the kernel-headers packages 
@@ -178,6 +178,7 @@ ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
   endif
 	dpkg-gencontrol -isp -DArchitecture=$(DEB_HOST_ARCH) -p$(package) \
                                           -P$(TMPTOP)/
+	$(create_md5sums)                   $(TMPTOP)
 	chown -R root:root                  $(TMPTOP)
 	chmod -R og=rX                      $(TMPTOP)
 	dpkg --build                        $(TMPTOP) $(DEB_DEST)

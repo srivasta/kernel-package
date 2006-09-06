@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 13:55:32 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Wed Jan  4 18:26:00 2006
+## Last Modified On : Wed Sep  6 11:49:38 2006
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 3
+## Update Count     : 4
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : This file is responsible forcreating the kernel-source packages 
@@ -108,6 +108,7 @@ ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 	chmod -R og=rX                               $(TMPTOP)
 	chown -R root:root                           $(TMPTOP)
 	dpkg-gencontrol -isp -p$(package)          -P$(TMPTOP)/
+	$(create_md5sums)                            $(TMPTOP)
 	chmod -R og=rX                               $(TMPTOP)
 	chown -R root:root                           $(TMPTOP)
 	dpkg --build                                 $(TMPTOP) $(DEB_DEST)

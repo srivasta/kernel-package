@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 16:38:08 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Mon Oct 31 16:38:08 2005
+## Last Modified On : Wed Sep  6 11:36:49 2006
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 0
+## Update Count     : 1
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : This file is responsible for creating the kernel-doc packages
@@ -98,6 +98,7 @@ ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 		$(DEBDIR)/pkg/doc/postinst >        $(TMPTOP)/DEBIAN/postinst
 	chmod 755                                   $(TMPTOP)/DEBIAN/postinst
 	dpkg-gencontrol -isp -p$(package)         -P$(TMPTOP)/
+	$(create_md5sums)                           $(TMPTOP)
 	chmod -R og=rX                              $(TMPTOP)
 	chown -R root:root                          $(TMPTOP)
 	dpkg --build                                $(TMPTOP) $(DEB_DEST)

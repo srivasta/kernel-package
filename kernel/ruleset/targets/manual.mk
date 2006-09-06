@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 15:52:16 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Wed Jan  4 18:26:29 2006
+## Last Modified On : Wed Sep  6 11:40:58 2006
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 1
+## Update Count     : 2
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : This file is responsible for creating the kernel-manual packages 
@@ -55,6 +55,7 @@ debian/$(m_package): testroot
 ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 	$(make_directory) $(TMPTOP)/DEBIAN
 	dpkg-gencontrol -isp -p$(package)       -P$(TMPTOP)/
+	$(create_md5sums)                         $(TMPTOP)
 	chmod -R og=rX                            $(TMPTOP)
 	chown -R root:root                        $(TMPTOP)
 	dpkg --build                              $(TMPTOP) $(DEB_DEST)
