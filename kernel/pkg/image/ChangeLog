@@ -1,3 +1,22 @@
+2006-09-06  Manoj Srivastava  <srivasta@debian.org>
+
+	* postinst:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-183
+		  Add a new variable, warn_reboot, which controls if a
+		  warning to reboot is issued.
+
+	* preinst:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-183
+		  Ditto. 
+
+	* postrm:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-183
+			  Ditto.  
+
+	* prerm:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-183
+			  Ditto.  
+
 2006-08-19  Manoj Srivastava  <srivasta@debian.org>
 
 	* postinst (run_lilo):

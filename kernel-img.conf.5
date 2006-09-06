@@ -300,6 +300,16 @@ out of the way if it is the same version as the image being
 installed. Use at your own risk.
 This variable is unset by default.
 .TP
+.B warn_reboot
+This variable can be used to turn off the warning given when
+installing a kernel image which is the same version as the currently
+running version. If the modules list is changed, the modules
+dependencies may have been changed, and the modules for the new kernel
+may not run correctly on the running kernel if the kernel ABI has
+changed in the meanwhile. It is a good idea to reboot, and this is a
+note to remind you. If you know what you are doing, you can set this
+variable to no. This variable is set by default.
+.TP
 .B do_bootloader
 If set to NO, this prevents the postinst from running the boot
 loader.  Defaults to Yes.

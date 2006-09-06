@@ -1,3 +1,10 @@
+2006-09-06  Manoj Srivastava  <srivasta@debian.org>
+
+	* kernel-img.conf.5:
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-183
+		  Document the new warn_boot variable, which reminds
+		  people to reboot. 
+
 2006-08-20  Manoj Srivastava  <srivasta@debian.org>
 
 	* make-kpkg (main):
