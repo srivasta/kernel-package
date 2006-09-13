@@ -1,3 +1,10 @@
+2006-09-13  Manoj Srivastava  <srivasta@debian.org>
+
+	* postrm (run_hook):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-185
+		  Don't look to see if the postrm hook script is
+		  executable, search path first
+
 2006-09-06  Manoj Srivastava  <srivasta@debian.org>
 
 	* postinst:

@@ -5,9 +5,9 @@
 # Created On       : Sat May 15 11:05:13 1999
 # Created On Node  : glaurung.green-gryphon.com
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Sat Aug  5 13:16:15 2006
+# Last Modified On : Wed Sep 13 11:26:19 2006
 # Last Machine Used: glaurung.internal.golden-gryphon.com
-# Update Count     : 56
+# Update Count     : 57
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
@@ -329,7 +329,7 @@ sub run_hook {
 }
 
 ## Run user hook script here, if any
-if (-x "$postrm_hook") {
+if ($postrm_hook) {
   &run_hook("postrm", $postrm_hook);
 }
 if (-d "/etc/kernel/postrm.d") {
