@@ -42,6 +42,7 @@ my $cross_compile='';
 my $key_id='';
 my $help_opt=0;
 my $noexec;
+my $verbose;
 my $initrd=0;
 my $revision=0;
 my $root_cmd;
@@ -58,6 +59,7 @@ my %option_ctl =
   (
    "help"                => \$help_opt,
    "noexec"              => \$noexec,
+   "verbose"             => \$verbose,
    "initrd"              => \$initrd,
    "revision=s"          => \$revision,
    "added_modules=s"     => \$added_modules,
@@ -282,6 +284,15 @@ useful for debugging.
 
 =back
 
+=item B<--verbose>
+
+=over 2
+
+Pass  a  B<V=1> option to the I<make> so that commands are verbosely
+printed  to  the  screen  while executed.  This is very useful for debugging.
+
+=back
+
 =item B<--initrd>
 
 =over 2
@@ -401,6 +412,7 @@ usage: $main::MYNAME [options] target [target ...]
                        oldconfig.
  --targets             Lists the known targets.
  --noexec              Pass a -n option to the make process
+ --verbose             Pass a V=1 option to the make process
  --zimage              Create a kernel using zImage rather than bzImage
  --bzimage             Create a kernel using bzImage (in case the site
                        wide default is zimage, as set in
@@ -1009,6 +1021,11 @@ EOMSG
   if ($noexec){
     $command .= " -n ";
     $alt_cmd .= " -n "
+      unless -f "debian/ruleset/kernel_version.mk";
+  }
+  if ($verbose){
+    $command .= " V=1 ";
+    $alt_cmd .= " V=1 "
       unless -f "debian/ruleset/kernel_version.mk";
   }
   if ($initrd) {
