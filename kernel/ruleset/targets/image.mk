@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 16:47:18 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Wed Sep  6 11:40:04 2006
+## Last Modified On : Sun Sep 24 14:12:22 2006
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 11
+## Update Count     : 12
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : This file is responsible for creating the kernel-image packages 
@@ -135,11 +135,11 @@ ifneq ($(filter kfreebsd-gnu, $(DEB_HOST_GNU_SYSTEM)):$(strip $(shell grep -E ^[
 	test ! -e $(TMPTOP)/lib/modules/$(version)/build ||                         \
 	   mv $(TMPTOP)/lib/modules/$(version)/build ./debian/build-link
   ifeq ($(strip $(KERNEL_ARCH)),um)
-	-depmod -q -FSystem.map -b $(TMPTOP) \
+	-/sbin/depmod -q -FSystem.map -b $(TMPTOP) \
            $(version)-$$(sed q $(UTS_RELEASE_HEADER) | sed s/\"//g | awk -F\- '{print $$2}')
   else
     ifeq ($(DEB_BUILD_GNU_TYPE),$(DEB_HOST_GNU_TYPE))
-	-depmod -q -FSystem.map -b $(TMPTOP) $(version);
+	-/sbin/depmod -q -FSystem.map -b $(TMPTOP) $(version);
     endif
   endif
 	test ! -e ./debian/source-link ||                                              \
