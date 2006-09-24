@@ -5,9 +5,9 @@
 # Created On       : Sun Jun 14 03:38:02 1998
 # Created On Node  : tiamat.datasync.com
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Sat Aug  5 13:12:24 2006
+# Last Modified On : Sun Sep 24 14:04:42 2006
 # Last Machine Used: glaurung.internal.golden-gryphon.com
-# Update Count     : 98
+# Update Count     : 99
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
@@ -476,7 +476,7 @@ EOF
   }
 }
 
-if ( -f "$modules_base/$version/modules.dep" && ! $warn_reboot) {
+if ( -f "$modules_base/$version/modules.dep" && $warn_reboot) {
   my $running = '';
   chop($running=`uname -r`);
   if ($running eq $version) {
