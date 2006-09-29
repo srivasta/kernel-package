@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 18:07:50 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Fri Sep 29 10:33:36 2006
+## Last Modified On : Fri Sep 29 12:20:50 2006
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 11
+## Update Count     : 12
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : This file looks at the top level kernel Makefile, and
@@ -55,17 +55,23 @@ ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
   $(eval $(which_debdir))
   # Call this twice; if there are problems in the .config, kbuild rewrites 
   # .config, and the informational message messes up the variable.
-  TEST         :=$(shell $(MAKE) $(CROSS_ARG) --no-print-directory -sf            \
+  TEST         :=$(shell $(MAKE) $(CROSS_ARG) ARCH=$(KERNEL_ARCH)                \
+                         --no-print-directory -sf                                \
                          $(DEBDIR)/ruleset/kernel_version.mk debian_VERSION)
-  VERSION      :=$(shell $(MAKE) $(CROSS_ARG) --no-print-directory -sf            \
+  VERSION      :=$(shell $(MAKE) $(CROSS_ARG) ARCH=$(KERNEL_ARCH)                \
+                         --no-print-directory -sf                                \
                          $(DEBDIR)/ruleset/kernel_version.mk debian_VERSION)
-  PATCHLEVEL   :=$(shell $(MAKE) $(CROSS_ARG) --no-print-directory -sf            \
+  PATCHLEVEL   :=$(shell $(MAKE) $(CROSS_ARG) ARCH=$(KERNEL_ARCH)                \
+                         --no-print-directory -sf                                \
                          $(DEBDIR)/ruleset/kernel_version.mk debian_PATCHLEVEL)
-  SUBLEVEL     :=$(shell $(MAKE) $(CROSS_ARG) --no-print-directory -sf            \
+  SUBLEVEL     :=$(shell $(MAKE) $(CROSS_ARG) ARCH=$(KERNEL_ARCH)                \
+                         --no-print-directory -sf                                \
                          $(DEBDIR)/ruleset/kernel_version.mk debian_SUBLEVEL)
-  EXTRA_VERSION:=$(shell $(MAKE) $(CROSS_ARG) --no-print-directory -sf            \
+  EXTRA_VERSION:=$(shell $(MAKE) $(CROSS_ARG) ARCH=$(KERNEL_ARCH)                \
+                         --no-print-directory -sf                                \
                          $(DEBDIR)/ruleset/kernel_version.mk debian_EXTRAVERSION)
-  LOCALVERSION :=$(shell $(MAKE) $(CROSS_ARG) --no-print-directory -sf            \
+  LOCALVERSION :=$(shell $(MAKE) $(CROSS_ARG) ARCH=$(KERNEL_ARCH)                \
+                         --no-print-directory -sf                                \
                          $(DEBDIR)/ruleset/kernel_version.mk debian_LOCALVERSION)
   # If the variable TEST did get a mesage about .config beng written, pass it on.
   ifneq ($(strip $(TEST)),$(strip $(VERSION)))
