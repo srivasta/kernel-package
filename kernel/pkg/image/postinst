@@ -5,9 +5,9 @@
 # Created On       : Sat Apr 27 05:55:26 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Mon Aug  7 09:07:48 2006
+# Last Modified On : Fri Sep 29 10:08:18 2006
 # Last Machine Used: glaurung.internal.golden-gryphon.com
-# Update Count     : 345
+# Update Count     : 357
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
@@ -182,11 +182,12 @@ my $pattern = "=" . "I";
 $initrd=~ s/^$pattern$//;
 
 if ($link_in_boot) {
-  $image_dest = "/$image_dir/";
-  $image_dest =~ s|^/*|/|o;
+  $image_dest = "/$image_dir/"; # same as realimageloc
 }
 
+# Tack on at least one trainling /
 $image_dest = "$image_dest/";
+$image_dest =~ s|^/*|/|o;
 $image_dest =~ s|/+$|/|o;
 
 if (! -d "$image_dest") {
@@ -362,14 +363,17 @@ sub CanonicalizePath {
   while (@work) {
     my $seg = shift @work;
     if ($seg eq "." || $seg eq "") {
-    } elsif ($seg eq "..") {
+    } 
+    elsif ($seg eq "..") {
       if (@out && $out[-1] ne "..") {
         pop @out;
-      } else {
+      } 
+      else {
         # Leading "..", or "../..", etc.
         push @out, $seg;
       }
-    } else {
+    } 
+    else {
       push @out, $seg;
     }
   }
@@ -401,7 +405,7 @@ sub spath {
     unshift @outdir, ".." if $out;
   }
   if ($#newdir > $#olddir) {
-    for ($i=$#olddir; $i < $#newdir; $i++) {
+    for ($i=0; $i < $#newdir; $i++) {
       unshift @outdir, "..";
     }
   }
@@ -464,9 +468,14 @@ sub really_reverse_link {
   if (test_relative ('Old Dir' => $Old, 'New Dir' => $src_dir,
                      'Test File' => "$link_name")) {
     $Old   =~ s|^/*||o;
+
   } elsif ($relative_links) {
     $Old = spath('Old' => "$Old", 'New' => "$src_dir" );
   }
+  # Special case is they are in the same dir
+  my $rel_path = spath('Old' => "$Old", 'New' => "$src_dir" );
+  $Old ="" if $rel_path =~ m/^\s*$/o;
+
   if ($use_hard_links =~ m/YES/i) {
     link($Old . "$link_name", $src_dir . "$link_name") ||
       die("Failed to symbolic-link " . $dest_dir . "$link_name to " . $src_dir
@@ -609,6 +618,10 @@ sub really_move_link {
   elsif ($relative_links) {
     $Old = spath('Old' => "$Old", 'New' => $cwd);
   }
+  # Special case is they are in the same dir
+  my $rel_path = spath('Old' => "$Old", 'New' => "$cwd" );
+  $Old ="" if $rel_path =~ m/^\s*$/o;
+
   if ($use_hard_links =~ m/YES/i) {
     warn "ln " . $Old . "$image_name " . "$kimage" if $DEBUG;
     if (! link($Old . "$image_name", "$kimage")) {
@@ -710,6 +723,10 @@ sub handle_missing_link {
       } elsif ($relative_links) {
         $Old = spath('Old' => "$Old", 'New' => $realimageloc);
       }
+      # Special case is they are in the same dir
+      my $rel_path = spath('Old' => "$Old", 'New' => "$realimageloc" );
+      $Old ="" if $rel_path =~ m/^\s*$/o;
+
       symlink($Old . "$kimage", $realimageloc . "$image_name")
         || die("Failed to symbolic-link " . $realimageloc
                . "$image_name to " . $image_dest . "$kimage .\n");
@@ -724,6 +741,10 @@ sub handle_missing_link {
       } elsif ($relative_links) {
         $Old = spath('Old' => "$Old", 'New' => $image_dest);
       }
+      # Special case is they are in the same dir
+      my $rel_path = spath('Old' => "$Old", 'New' => "$image_dest" );
+      $Old ="" if $rel_path =~ m/^\s*$/o;
+
       symlink($Old . "$image_name", "$kimage") ||
         die("Failed to symbolic-link " . $realimageloc
             . "$image_name to "  . $image_dest . "$kimage .\n");
@@ -786,6 +807,10 @@ sub handle_non_symlinks {
     } elsif ($relative_links) {
       $Old = spath('Old' => "$Old", 'New' => $realimageloc);
     }
+    # Special case is they are in the same dir
+    my $rel_path = spath('Old' => "$Old", 'New' => "$realimageloc" );
+    $Old ="" if $rel_path =~ m/^\s*$/o;
+
     if ($use_hard_links =~ m/YES/i) {
       warn "ln " . $Old . "$kimage " . $realimageloc . "$image_name" if $DEBUG;
       if (! link($Old . "$kimage", $realimageloc . "$image_name")) {
@@ -816,6 +841,10 @@ sub handle_non_symlinks {
     } elsif ($relative_links) {
       $Old = spath('Old' => "$Old", 'New' => $cwd);
     }
+    # Special case is they are in the same dir
+    my $rel_path = spath('Old' => "$Old", 'New' => "$cwd" );
+    $Old ="" if $rel_path =~ m/^\s*$/o;
+
     warn "ln " . $Old . "$image_name " . "$kimage" if $DEBUG;
     if (! link($Old . "$image_name", "$kimage")) {
       warn "mv $kimage.$$ $kimage" if $DEBUG;

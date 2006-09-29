@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 18:07:50 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Tue Jan  3 19:36:27 2006
+## Last Modified On : Fri Sep 29 10:33:36 2006
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 1
+## Update Count     : 11
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : This file looks at the top level kernel Makefile, and
@@ -53,6 +53,10 @@ ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
   # Could have used :=, but some patches do seem to patch the
   # Makefile. perhaps deferring the rule makes that better
   $(eval $(which_debdir))
+  # Call this twice; if there are problems in the .config, kbuild rewrites 
+  # .config, and the informational message messes up the variable.
+  TEST         :=$(shell $(MAKE) $(CROSS_ARG) --no-print-directory -sf            \
+                         $(DEBDIR)/ruleset/kernel_version.mk debian_VERSION)
   VERSION      :=$(shell $(MAKE) $(CROSS_ARG) --no-print-directory -sf            \
                          $(DEBDIR)/ruleset/kernel_version.mk debian_VERSION)
   PATCHLEVEL   :=$(shell $(MAKE) $(CROSS_ARG) --no-print-directory -sf            \
@@ -63,6 +67,10 @@ ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
                          $(DEBDIR)/ruleset/kernel_version.mk debian_EXTRAVERSION)
   LOCALVERSION :=$(shell $(MAKE) $(CROSS_ARG) --no-print-directory -sf            \
                          $(DEBDIR)/ruleset/kernel_version.mk debian_LOCALVERSION)
+  # If the variable TEST did get a mesage about .config beng written, pass it on.
+  ifneq ($(strip $(TEST)),$(strip $(VERSION)))
+    $(warn configuration written to .config)
+  endif
 else
   ifeq ($(DEB_HOST_GNU_SYSTEM), kfreebsd-gnu)
     VERSION        =$(shell grep '^REVISION=' conf/newvers.sh |                   \
@@ -120,10 +128,17 @@ version = $(VERSION).$(PATCHLEVEL).$(SUBLEVEL)$(EXTRAVERSION)$(iatv)$(LOCALVERSI
 lc_version = $(shell echo $(version) | tr A-Z a-z)
 ifneq ($(strip $(version)),$(strip $(lc_version)))
   ifeq ($(strip $(IGNORE_UPPERCASE_VERSION)),)
-    $(error Error. The version number $(strip $(version)) is not all \
- lowercase. Since the version ends up in the package name of the \
- kernel image package, this is a Debian policy violation, and \
- the packaging system shall refuse to package the image. )
+    $(error Error. The version number \
+       $(strip $(version))            \
+ VERSION=[$(VERSION)], PATCHLEVEL=[$(PATCHLEVEL)], \
+ SUBLEVEL=[$(SUBLEVEL)], EXTRAVERSION=[$(EXTRAVERSION)], \
+ iatv=[$(iatv)], LOCALVERSION=[$(LOCALVERSION)],   \
+ UTS_RELEASE_VERSION=[$(UTS_RELEASE_VERSION)],      \
+ KERNELRELEASE=[$(KERNELRELEASE)].                 \
+ is not all lowercase. Since the version ends up in the package\
+ name of the kernel image package, this is a Debian policy \
+ violation, and the packaging system shall refuse to package \
+ the image. )
   else
     $(warn Error. The version number $(strip $(version)) is not all \
  lowercase. Since the version ends up in the package name of the \

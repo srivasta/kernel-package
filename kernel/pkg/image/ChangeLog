@@ -1,3 +1,14 @@
+2006-09-29  Manoj Srivastava  <srivasta@debian.org>
+
+	* postinst (handle_non_symlinks):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-189
+		  Fix a typo in determining the relative path for
+		  images. Also, in several places, handle a special case
+		  when the source and destination directories are
+		  identical, and use a relative link there.  This might
+		  help the folks using a separate /boot and link_in_boot
+		  options.
+
 2006-09-24  Manoj Srivastava  <srivasta@debian.org>
 
 	* preinst (check):

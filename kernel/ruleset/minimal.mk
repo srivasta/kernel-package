@@ -4,9 +4,9 @@
 ## Created On       : Tue Nov  1 03:31:22 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Wed Jun 14 10:09:09 2006
+## Last Modified On : Fri Sep 29 08:38:36 2006
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 5
+## Update Count     : 7
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : 
@@ -75,7 +75,7 @@ DIRS_TO_CLEAN   =
 clean: minimal_clean
 minimal_clean:
 	$(REASON)
-	@echo "This is kernel package version $(kpkg_version)."
+	@echo $(if $(strip $(kpkg_version)),"This is kernel package version $(kpkg_version).","Cleaning.")
 ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
 	test ! -f .config || cp -pf .config config.precious
 	test ! -e stamp-building || rm -f stamp-building

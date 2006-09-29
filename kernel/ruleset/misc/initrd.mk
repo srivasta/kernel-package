@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 18:09:11 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Tue Jan  3 19:04:29 2006
+## Last Modified On : Fri Sep 29 09:11:46 2006
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 5
+## Update Count     : 6
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : This snippet uses hard coded version based heuristics to
@@ -81,7 +81,7 @@ ifneq ($(strip $(INITRD)),)
   endif
   ifneq (,$(findstring yaird,$(initrdcmd)))
     ifneq (,$(strip $(initrddep)))
-      initrddep := $(initrddep) | yaird (>= 0.1.11)
+      initrddep := $(initrddep) | yaird (>= 0.0.11)
     else
       initrddep := yaird (>= 0.0.11-8)
     endif

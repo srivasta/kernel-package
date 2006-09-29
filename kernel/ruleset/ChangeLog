@@ -1,3 +1,10 @@
+2006-09-29  Manoj Srivastava  <srivasta@debian.org>
+
+	* minimal.mk (minimal_clean):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-189
+		  Check to see if $(kpkg_version) is present before using
+		  it in an informational message. 
+
 2006-07-19  Manoj Srivastava  <srivasta@debian.org>
 
 	* modules.mk (modules-image modules_image):

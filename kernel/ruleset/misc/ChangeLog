@@ -1,3 +1,18 @@
+2006-09-29  Manoj Srivastava  <srivasta@debian.org>
+
+	* initrd.mk (initrddep):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-189
+		  Fix typo in yaird version number.  We want >= 0.0.11,
+		  not 0.1.11.
+
+	* version_vars.mk (TEST):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-189
+		  Add an dummy call to make, if there are problems in the
+		  .config, kbuild rewrites  .config, and the informational
+		  message messes up the VERSION variable. If the variable
+		  TEST did get a mesage about .config being written, pass
+		  it on. 
+
 2006-08-19  Manoj Srivastava  <srivasta@debian.org>
 
 	* initrd.mk (initrddep):
