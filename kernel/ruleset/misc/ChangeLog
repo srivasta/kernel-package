@@ -1,3 +1,9 @@
+2006-09-30  Manoj Srivastava  <srivasta@debian.org>
+
+	* version_vars.mk (TEST):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-189
+		  Only pass ARCH if KERNEL_ARCH is not empty. 
+
 2006-09-29  Manoj Srivastava  <srivasta@debian.org>
 
 	* initrd.mk (initrddep):
