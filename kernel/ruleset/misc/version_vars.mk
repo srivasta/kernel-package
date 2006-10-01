@@ -39,15 +39,15 @@ ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
   localversion_files := $(wildcard localversion*)
 
 
-  # VERSION =$(shell grep -E '^VERSION +=' Makefile 2>/dev/null | \
+  # VERSION =$(call doit,grep -E '^VERSION +=' Makefile 2>/dev/null | \
   #  sed -e 's/[^0-9]*\([0-9]*\)/\1/')
-  # PATCHLEVEL =$(shell grep -E '^PATCHLEVEL +=' Makefile 2>/dev/null | \
+  # PATCHLEVEL =$(call doit,grep -E '^PATCHLEVEL +=' Makefile 2>/dev/null | \
   #  sed -e 's/[^0-9]*\([0-9]*\)/\1/')
-  # SUBLEVEL =$(shell grep -E '^SUBLEVEL +=' Makefile 2>/dev/null | \
+  # SUBLEVEL =$(call doit,grep -E '^SUBLEVEL +=' Makefile 2>/dev/null | \
   #  sed -e 's/[^0-9]*\([0-9]*\)/\1/')
-  # EXTRA_VERSION =$(shell grep -E '^EXTRAVERSION +=' Makefile 2>/dev/null | \
+  # EXTRA_VERSION =$(call doit,grep -E '^EXTRAVERSION +=' Makefile 2>/dev/null | \
   #  sed -e 's/EXTRAVERSION *= *\([^ \t]*\)/\1/')
-  # LOCALVERSION = $(subst $(space),, $(shell cat /dev/null $(localversion_files)) \
+  # LOCALVERSION = $(subst $(space),, $(call doit,cat /dev/null $(localversion_files)) \
   #                  $(CONFIG_LOCALVERSION))
 
   # Could have used :=, but some patches do seem to patch the
@@ -58,17 +58,17 @@ ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
   endif
   # Call this twice; if there are problems in the .config, kbuild rewrites 
   # .config, and the informational message messes up the variable.
-  TEST         :=$(shell $(MAKE) $(CROSS_ARG) $(K_ARG) --no-print-directory \
+  TEST         :=$(call doit,$(MAKE) $(CROSS_ARG) $(K_ARG) --no-print-directory \
                    -sf $(DEBDIR)/ruleset/kernel_version.mk debian_VERSION)
-  VERSION      :=$(shell $(MAKE) $(CROSS_ARG) $(K_ARG) --no-print-directory \
+  VERSION      :=$(call doit,$(MAKE) $(CROSS_ARG) $(K_ARG) --no-print-directory \
                    -sf $(DEBDIR)/ruleset/kernel_version.mk debian_VERSION)
-  PATCHLEVEL   :=$(shell $(MAKE) $(CROSS_ARG) $(K_ARG) --no-print-directory \
+  PATCHLEVEL   :=$(call doit,$(MAKE) $(CROSS_ARG) $(K_ARG) --no-print-directory \
                    -sf $(DEBDIR)/ruleset/kernel_version.mk debian_PATCHLEVEL)
-  SUBLEVEL     :=$(shell $(MAKE) $(CROSS_ARG) $(K_ARG) --no-print-directory \
+  SUBLEVEL     :=$(call doit,$(MAKE) $(CROSS_ARG) $(K_ARG) --no-print-directory \
                    -sf $(DEBDIR)/ruleset/kernel_version.mk debian_SUBLEVEL)
-  EXTRA_VERSION:=$(shell $(MAKE) $(CROSS_ARG) $(K_ARG) --no-print-directory \
+  EXTRA_VERSION:=$(call doit,$(MAKE) $(CROSS_ARG) $(K_ARG) --no-print-directory \
                    -sf $(DEBDIR)/ruleset/kernel_version.mk debian_EXTRAVERSION)
-  LOCALVERSION :=$(shell $(MAKE) $(CROSS_ARG) $(K_ARG) --no-print-directory \
+  LOCALVERSION :=$(call doit,$(MAKE) $(CROSS_ARG) $(K_ARG) --no-print-directory \
                    -sf $(DEBDIR)/ruleset/kernel_version.mk debian_LOCALVERSION)
   # If the variable TEST did get a mesage about .config beng written, pass it on.
   ifneq ($(strip $(TEST)),$(strip $(VERSION)))
@@ -76,28 +76,28 @@ ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
   endif
 else
   ifeq ($(DEB_HOST_GNU_SYSTEM), kfreebsd-gnu)
-    VERSION        =$(shell grep '^REVISION=' conf/newvers.sh |                   \
+    VERSION        =$(call doit,grep '^REVISION=' conf/newvers.sh |                   \
       sed -e 's/[^0-9]*\([0-9]\)\..*/\1/')
-    PATCHLEVEL =$(shell grep '^REVISION=' conf/newvers.sh |                       \
+    PATCHLEVEL =$(call doit,grep '^REVISION=' conf/newvers.sh |                       \
      sed -e 's/[^0-9]*[0-9]*\.\([0-9]*\)[^0-9]*/\1/')
     SUBLEVEL =0
-    EXTRA_VERSION =$(shell grep '^RELEASE=' conf/newvers.sh |                     \
+    EXTRA_VERSION =$(call doit,grep '^RELEASE=' conf/newvers.sh |                     \
      sed -e 's/[^0-9]*\([0-9]*\)[^0-9]*/\1/')
     LOCALVERSION = $(subst $(space),,                                             \
-       $(shell cat /dev/null $(localversion_files)) $(CONFIG_LOCALVERSION))
+       $(call doit,cat /dev/null $(localversion_files)) $(CONFIG_LOCALVERSION))
   endif
 endif
 
-KERNELRELEASE = $(shell if [ -f .kernelrelease ]; then          \
+KERNELRELEASE = $(call doit,if [ -f .kernelrelease ]; then          \
                            cat .kernelrelease 2> /dev/null ;    \
                         else                                    \
                           echo "";                              \
                        fi;)  
 
-HAVE_NEW_MODLIB =$(shell grep -E '\(INSTALL_MOD_PATH\)' Makefile 2>/dev/null )
+HAVE_NEW_MODLIB =$(call doit,grep -E '\(INSTALL_MOD_PATH\)' Makefile 2>/dev/null )
 
 ifneq ($(strip $(EXTRA_VERSION)),)
-HAS_ILLEGAL_EXTRA_VERSION =$(shell                                                  \
+HAS_ILLEGAL_EXTRA_VERSION =$(call doit,                                                 \
     perl -e '$$i="$(EXTRA_VERSION)"; $$i !~ m/^[a-z\.\-\+][a-z\d\.\-\+]*$$/o && print YES;')
   ifneq ($(strip $(HAS_ILLEGAL_EXTRA_VERSION)),)
     $(error Error: The EXTRAVERSION may only contain lowercase alphanumerics        \
@@ -114,12 +114,12 @@ iatv :=
 EXTRAV_ARG :=
 endif
 
-UTS_RELEASE_HEADER=$(shell if [ -f include/linux/utsrelease.h ]; then \
+UTS_RELEASE_HEADER=$(call doit,if [ -f include/linux/utsrelease.h ]; then \
 	                       echo include/linux/utsrelease.h;       \
 	                   else                                       \
                                echo include/linux/version.h ; \
 	                   fi)
-UTS_RELEASE_VERSION=$(shell if [ -f $(UTS_RELEASE_HEADER) ]; then                        \
+UTS_RELEASE_VERSION=$(call doit,if [ -f $(UTS_RELEASE_HEADER) ]; then                        \
                  grep 'define UTS_RELEASE' $(UTS_RELEASE_HEADER) |                       \
                  perl -nle  'm/^\s*\#define\s+UTS_RELEASE\s+("?)(\S+)\1/g && print $$2;';\
                  else echo "" ;                                                          \
@@ -128,7 +128,7 @@ UTS_RELEASE_VERSION=$(shell if [ -f $(UTS_RELEASE_HEADER) ]; then               
 version = $(VERSION).$(PATCHLEVEL).$(SUBLEVEL)$(EXTRAVERSION)$(iatv)$(LOCALVERSION)
 
 # Bug out if the version number id not all lowercase
-lc_version = $(shell echo $(version) | tr A-Z a-z)
+lc_version = $(call doit,echo $(version) | tr A-Z a-z)
 ifneq ($(strip $(version)),$(strip $(lc_version)))
   ifeq ($(strip $(IGNORE_UPPERCASE_VERSION)),)
     $(error Error. The version number \
@@ -153,12 +153,12 @@ ifneq ($(strip $(version)),$(strip $(lc_version)))
 endif
 
 
-AM_OFFICIAL := $(shell if [ -f debian/official ]; then echo YES; fi )
+AM_OFFICIAL := $(call doit,if [ -f debian/official ]; then echo YES; fi )
 
 # See if we are being run in the kernel directory
 ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
   define check_kernel_dir
-  IN_KERNEL_DIR := $(shell if test -d drivers && test -d kernel && test -d fs && test \
+  IN_KERNEL_DIR := $(call doit,if test -d drivers && test -d kernel && test -d fs && test \
                                    -d include/linux ; then                            \
                                       echo YES;                                       \
                            fi )
@@ -166,14 +166,14 @@ ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
 else
   ifeq ($(DEB_HOST_GNU_SYSTEM), kfreebsd-gnu)
     define check_kernel_dir
-    IN_KERNEL_DIR := $(shell if test -d dev && test -d kern && test -d fs &&          \
+    IN_KERNEL_DIR := $(call doit,if test -d dev && test -d kern && test -d fs &&          \
                              test -d i386/include ; then echo YES; fi)
     endef
   endif
 endif
 
 define check_kernel_headers
-IN_KERNEL_HEADERS=$(shell if [ -f $(INT_STEM)-headers.revision ]; then                \
+IN_KERNEL_HEADERS=$(call doit,if [ -f $(INT_STEM)-headers.revision ]; then                \
                                cat $(INT_STEM)-headers.revision;                      \
                             else echo "" ;                                            \
                             fi)
