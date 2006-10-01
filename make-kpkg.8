@@ -742,7 +742,12 @@ for details.  Creating and installing a self created libc\-kheaders
 package may break your system unless you know what you are doing. You
 have been warned.
 .SH "ENVIRONMENT VARIABLES"
-The following variables (documented above) affect 
+.I KPKG_DEBUG, 
+if set, causes make-kpkg to spit out debugging messages about some
+shell functions executed internally. This is probably of not interest
+to anyone not debugging 
+.B make\-kpkg.
+The following variables (documented above) also affect 
 .B make\-kpkg:
 .I DEBIAN_REVISION_MANDATORY
 .I APPEND_TO_VERSION
