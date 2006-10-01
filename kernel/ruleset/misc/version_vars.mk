@@ -53,32 +53,23 @@ ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
   # Could have used :=, but some patches do seem to patch the
   # Makefile. perhaps deferring the rule makes that better
   $(eval $(which_debdir))
+  ifneq ($(strip $(KERNEL_ARCH)),)
+    K_ARG="ARCH=$(KERNEL_ARCH)"
+  endif
   # Call this twice; if there are problems in the .config, kbuild rewrites 
   # .config, and the informational message messes up the variable.
-  TEST         :=$(shell $(MAKE) $(CROSS_ARG)                                    \
-                         $(if $(strip $(KERNEL_ARCH)),ARCH=$(KERNEL_ARCH),) -sf  \
-                         --no-print-directory                                    \
-                         $(DEBDIR)/ruleset/kernel_version.mk debian_VERSION)
-  VERSION      :=$(shell $(MAKE) $(CROSS_ARG)                                    \
-                         $(if $(strip $(KERNEL_ARCH)),ARCH=$(KERNEL_ARCH),) -sf  \
-                         --no-print-directory                                    \
-                         $(DEBDIR)/ruleset/kernel_version.mk debian_VERSION)
-  PATCHLEVEL   :=$(shell $(MAKE) $(CROSS_ARG)                                    \
-                         $(if $(strip $(KERNEL_ARCH)),ARCH=$(KERNEL_ARCH),) -sf  \
-                         --no-print-directory                                    \
-                         $(DEBDIR)/ruleset/kernel_version.mk debian_PATCHLEVEL)
-  SUBLEVEL     :=$(shell $(MAKE) $(CROSS_ARG)                                    \
-                         $(if $(strip $(KERNEL_ARCH)),ARCH=$(KERNEL_ARCH),) -sf  \
-                         --no-print-directory                                    \
-                         $(DEBDIR)/ruleset/kernel_version.mk debian_SUBLEVEL)
-  EXTRA_VERSION:=$(shell $(MAKE) $(CROSS_ARG)                                    \
-                         $(if $(strip $(KERNEL_ARCH)),ARCH=$(KERNEL_ARCH),) -sf  \
-                         --no-print-directory                                    \
-                         $(DEBDIR)/ruleset/kernel_version.mk debian_EXTRAVERSION)
-  LOCALVERSION :=$(shell $(MAKE) $(CROSS_ARG)                                    \
-                         $(if $(strip $(KERNEL_ARCH)),ARCH=$(KERNEL_ARCH),) -sf  \
-                         --no-print-directory                                    \
-                         $(DEBDIR)/ruleset/kernel_version.mk debian_LOCALVERSION)
+  TEST         :=$(shell $(MAKE) $(CROSS_ARG) $(K_ARG) --no-print-directory \
+                   -sf $(DEBDIR)/ruleset/kernel_version.mk debian_VERSION)
+  VERSION      :=$(shell $(MAKE) $(CROSS_ARG) $(K_ARG) --no-print-directory \
+                   -sf $(DEBDIR)/ruleset/kernel_version.mk debian_VERSION)
+  PATCHLEVEL   :=$(shell $(MAKE) $(CROSS_ARG) $(K_ARG) --no-print-directory \
+                   -sf $(DEBDIR)/ruleset/kernel_version.mk debian_PATCHLEVEL)
+  SUBLEVEL     :=$(shell $(MAKE) $(CROSS_ARG) $(K_ARG) --no-print-directory \
+                   -sf $(DEBDIR)/ruleset/kernel_version.mk debian_SUBLEVEL)
+  EXTRA_VERSION:=$(shell $(MAKE) $(CROSS_ARG) $(K_ARG) --no-print-directory \
+                   -sf $(DEBDIR)/ruleset/kernel_version.mk debian_EXTRAVERSION)
+  LOCALVERSION :=$(shell $(MAKE) $(CROSS_ARG) $(K_ARG) --no-print-directory \
+                   -sf $(DEBDIR)/ruleset/kernel_version.mk debian_LOCALVERSION)
   # If the variable TEST did get a mesage about .config beng written, pass it on.
   ifneq ($(strip $(TEST)),$(strip $(VERSION)))
     $(warn configuration written to .config)
