@@ -350,37 +350,37 @@ sub test_relative {
 ############
 ######################################################################
 ######################################################################
-sub CanonicalizePath {
-  my $path = join '/', @_;
-  my @work = split '/', $path;
-  my @out;
-  my $is_absolute;
+# sub CanonicalizePath {
+#   my $path = join '/', @_;
+#   my @work = split '/', $path;
+#   my @out;
+#   my $is_absolute;
 
-  if (@work && $work[0] eq "") {
-    $is_absolute = 1; shift @work;
-  }
+#   if (@work && $work[0] eq "") {
+#     $is_absolute = 1; shift @work;
+#   }
 
-  while (@work) {
-    my $seg = shift @work;
-    if ($seg eq "." || $seg eq "") {
-    } 
-    elsif ($seg eq "..") {
-      if (@out && $out[-1] ne "..") {
-        pop @out;
-      } 
-      else {
-        # Leading "..", or "../..", etc.
-        push @out, $seg;
-      }
-    } 
-    else {
-      push @out, $seg;
-    }
-  }
+#   while (@work) {
+#     my $seg = shift @work;
+#     if ($seg eq "." || $seg eq "") {
+#     } 
+#     elsif ($seg eq "..") {
+#       if (@out && $out[-1] ne "..") {
+#         pop @out;
+#       } 
+#       else {
+#         # Leading "..", or "../..", etc.
+#         push @out, $seg;
+#       }
+#     } 
+#     else {
+#       push @out, $seg;
+#     }
+#   }
 
-  unshift @out, "" if $is_absolute;
-  return join('/', @out);
-}
+#   unshift @out, "" if $is_absolute;
+#   return join('/', @out);
+# }
 ######################################################################
 ######################################################################
 ############
@@ -393,8 +393,8 @@ sub spath {
   die "Missing Required paramater 'Old'" unless $params{'Old'};
   die "Missing Required paramater 'New'" unless  $params{'New'};
 
-  my @olddir  = split '/', CanonicalizePath $params{'Old'};
-  my @newdir  = split '/', CanonicalizePath $params{'New'};
+  my @olddir  = split '/', `readlink -q -m $params{'Old'}`;
+  my @newdir  = split '/', `readlink -q -m $params{'New'}`;
   my @outdir  = @olddir;
 
   my $out = '';
@@ -468,9 +468,6 @@ sub really_reverse_link {
   if (test_relative ('Old Dir' => $Old, 'New Dir' => $src_dir,
                      'Test File' => "$link_name")) {
     $Old   =~ s|^/*||o;
-
-  } elsif ($relative_links) {
-    $Old = spath('Old' => "$Old", 'New' => "$src_dir" );
   }
   # Special case is they are in the same dir
   my $rel_path = spath('Old' => "$Old", 'New' => "$src_dir" );
@@ -518,7 +515,7 @@ sub move_p {
     if $DEBUG;
   my $vmlinuz_target = readlink "$kimage";
   my $real_target = '';
-  my $target = CanonicalizePath("$realimageloc" . "$kimage-$version");
+  my $target = `readlink -q -m "${realimageloc}${kimage-$version}"`;
   $real_target = abs_path($vmlinuz_target) if defined($vmlinuz_target);
 
   if (!defined($vmlinuz_target) || ! -f "$real_target") {
@@ -538,7 +535,7 @@ sub move_p {
     $vmlinuz_target = $cwd . "/" . $vmlinuz_target;
     $vmlinuz_target =~ s|/+|/|o;
   }
-  $vmlinuz_target = CanonicalizePath($vmlinuz_target);
+  $vmlinuz_target = `readlink -q -m $vmlinuz_target`;
 
   if ("$vmlinuz_target" ne "$target") {
     warn "DEBUG: We need to handle this.\n" if $DEBUG;
@@ -555,7 +552,7 @@ sub move_p {
             $old_target = $cwd . "/" . $old_target;
             $old_target =~ s|/+|/|o;
           }
-          $old_target = CanonicalizePath($old_target);
+          $old_target = `readlink -q -m $old_target`;
           if ("$old_target"  ne "$target") {
             $force_move = 1;
             warn "DEBUG: Old link ($old_target) does not point to us ($target)\n"
@@ -615,27 +612,24 @@ sub really_move_link {
                      'Test File' => "$image_name")) {
     $Old   =~ s|^/*||o;
   }
-  elsif ($relative_links) {
-    $Old = spath('Old' => "$Old", 'New' => $cwd);
-  }
   # Special case is they are in the same dir
   my $rel_path = spath('Old' => "$Old", 'New' => "$cwd" );
   $Old ="" if $rel_path =~ m/^\s*$/o;
 
   if ($use_hard_links =~ m/YES/i) {
-    warn "ln " . $Old . "$image_name " . "$kimage" if $DEBUG;
-    if (! link($Old . "$image_name", "$kimage")) {
+    warn "ln ${Old}${image_name} $kimage" if $DEBUG;
+    if (! link("${Old}${image_name}", "$kimage")) {
       rename("$kimage.$$", "$kimage");
-      die("Failed to link " . $realimageloc .
-          "$image_name to "  . $image_dest . "$kimage .\n");
+      die("Failed to link ${Old}${image_name} to " .
+          "${image_dest}${kimage}.\n");
     }
   } 
   else {
-    warn "ln -s " . $Old . "$image_name " . "$kimage" if $DEBUG;
-    if (! symlink($Old . "$image_name", "$kimage")) {
+    warn "ln -s ${Old}${image_name} $kimage" if $DEBUG;
+    if (! symlink("${Old}${image_name}", "$kimage")) {
       rename("$kimage.$$", "$kimage");
-      die("Failed to symbolic-link " . $realimageloc .
-          "$image_name to " . $image_dest . "$kimage .\n");
+      die("Failed to symbolic-link ${Old}${image_name} to " .
+          "${image_dest}${kimage}.\n");
     }
   }
 
@@ -714,42 +708,30 @@ sub handle_missing_link {
   }
 
   if (! $no_symlink && $do_symlink =~ /Yes/i) {
+    my $Old = $realimageloc;
+    my $New = $image_dest;
+    my $Name = "$image_name";
+    my $Link_Dest = "$kimage";
+
     if ($reverse_symlink) {
-      my $Old = $image_dest;
-      if (test_relative ('Old Dir' => $Old,
-                         'New Dir' => $realimageloc,
-                         'Test File' => "$kimage")) {
-        $Old   =~ s|^/*||o;
-      } elsif ($relative_links) {
-        $Old = spath('Old' => "$Old", 'New' => $realimageloc);
-      }
-      # Special case is they are in the same dir
-      my $rel_path = spath('Old' => "$Old", 'New' => "$realimageloc" );
-      $Old ="" if $rel_path =~ m/^\s*$/o;
-
-      symlink($Old . "$kimage", $realimageloc . "$image_name")
-        || die("Failed to symbolic-link " . $realimageloc
-               . "$image_name to " . $image_dest . "$kimage .\n");
-      warn "ln -s " . $Old . "$kimage " . $realimageloc . "$image_name" if $DEBUG;
+      $Old = $image_dest;
+      $New = $realimageloc;
+      $Name = "$kimage";
+      $Link_Dest = $realimageloc . "$image_name";
     }
-    else {
-      my $Old = $realimageloc;
-      if (test_relative ('Old Dir' => $Old,
-                         'New Dir' => $image_dest,
-                         'Test File' => "$image_name")) {
-        $Old   =~ s|^/*||o;
-      } elsif ($relative_links) {
-        $Old = spath('Old' => "$Old", 'New' => $image_dest);
-      }
-      # Special case is they are in the same dir
-      my $rel_path = spath('Old' => "$Old", 'New' => "$image_dest" );
-      $Old ="" if $rel_path =~ m/^\s*$/o;
-
-      symlink($Old . "$image_name", "$kimage") ||
-        die("Failed to symbolic-link " . $realimageloc
-            . "$image_name to "  . $image_dest . "$kimage .\n");
-      warn "ln -s " . $Old . "$image_name " . "$kimage" if $DEBUG;
+    if (test_relative ('Old Dir' => $Old,
+                       'New Dir' => $New,
+                       'Test File' => $Name)) {
+      $Old   =~ s|^/*||o;
     }
+    # Special case is they are in the same dir
+    my $rel_path = spath('Old' => "$Old", 'New' => "$New" );
+    $Old ="" if $rel_path =~ m/^\s*$/o;
+
+    symlink($Old . "$Name", "$Link_Dest") ||
+      die("Failed to symbolic-link ${Old}$Name to $Link_Dest.\n");
+    warn "ln -s ${Old}$Name $Link_Dest" if $DEBUG;
+
   }
 }
 
@@ -804,8 +786,6 @@ sub handle_non_symlinks {
     if (test_relative ('Old Dir' => $Old, 'New Dir' => $realimageloc,
                        'Test File' => "$kimage")) {
       $Old   =~ s|^/*||o;
-    } elsif ($relative_links) {
-      $Old = spath('Old' => "$Old", 'New' => $realimageloc);
     }
     # Special case is they are in the same dir
     my $rel_path = spath('Old' => "$Old", 'New' => "$realimageloc" );
@@ -838,8 +818,6 @@ sub handle_non_symlinks {
     if (test_relative ('Old Dir' => $Old, 'New Dir' => $cwd,
                        'Test File' => "$image_name")) {
       $Old   =~ s|^/*||o;
-    } elsif ($relative_links) {
-      $Old = spath('Old' => "$Old", 'New' => $cwd);
     }
     # Special case is they are in the same dir
     my $rel_path = spath('Old' => "$Old", 'New' => "$cwd" );

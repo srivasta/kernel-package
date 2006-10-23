@@ -217,3 +217,28 @@ index 82e4993..65dcb40 100644
  		printf '%s' -dirty
  	fi
  fi
+
+      s)
+         There is a problem when GREP_OPTIONS are exported, since it
+         may impact the results comoing out of grep in scripts that
+         are tun in shubshells -- and, of course, make-kpkg is one of
+         them.
+
+           $ echo $GREP_OPTIONS --colour=always
+
+         So the Perl regex does not match in:
+         UTS_RELEASE_VERSION=$(call doit,if [ -f $(UTS_RELEASE_HEADER) ]; then                        \
+                          grep 'define UTS_RELEASE' $(UTS_RELEASE_HEADER) |                       \
+                          perl -nle  'm/^\s*\#define\s+UTS_RELEASE\s+("?)(\S+)\1/g && print $$2;';\
+                          else echo "" ;                                                          \
+                          fi)
+
+         This shows up as an error message like:
+,----
+| The UTS Release version in include/linux/utsrelease.h
+|      ""
+| does not match current version:
+|      "2.6.18"
+| Please correct this.
+| make: *** [install/linux-image-2.6.18] Erreur 2
+`----
