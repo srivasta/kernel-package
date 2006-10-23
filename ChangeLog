@@ -1,3 +1,11 @@
+2006-10-23  Manoj Srivastava  <srivasta@debian.org>
+
+	* make-kpkg (main):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-197
+		  Also set the env var DEBIAN_REVISION even if the target
+		  is clean, since otherwise it has a problem with
+		  debian_revision_mandatory. 
+
 2006-10-01  Manoj Srivastava  <srivasta@debian.org>
 
 	* make-kpkg.8:

@@ -882,6 +882,11 @@ EOMSG
 	exit 1;
       }
     }
+    else {
+      # No checking, since this is the clean target
+      $command .= " DEBIAN_REVISION=$revision ";
+      $alt_cmd .= " DEBIAN_REVISION=$revision ";
+    }
   }
   else {
     if ($Targets !~ m/^\s*clean\s*$/) {
