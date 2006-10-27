@@ -85,7 +85,7 @@ ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
                                  fi)
  ifneq (,$(strip $(HAVE_BAD_VERSION)))
   $(error Error: "$(VERSION)")
- endef
+ endif
 else
   ifeq ($(DEB_HOST_GNU_SYSTEM), kfreebsd-gnu)
     VERSION        =$(call doit,grep '^REVISION=' conf/newvers.sh |                   \
