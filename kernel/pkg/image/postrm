@@ -352,6 +352,9 @@ if ($ARGV[0] !~ /upgrade/) {
   if (-f $realimageloc . "initrd.img-$version") {
     unlink $realimageloc . "initrd.img-$version";
   }
+  if (-f $realimageloc . "initrd.img-$version.bak") {
+    unlink $realimageloc . "initrd.img-$version.bak";
+  }
   image_magic($kimage,          $image_dest);
   image_magic($kimage . ".old", $image_dest);
   image_magic("initrd.img",     $image_dest) if $initrd;

@@ -1,3 +1,10 @@
+2006-10-27  Manoj Srivastava  <srivasta@debian.org>
+
+	* postrm (run_hook):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-199
+		  Cleanup after update-initramfs by also removing  initrd
+		  backup files for now, even though we did not create them.
+
 2006-10-23  Manoj Srivastava  <srivasta@debian.org>
 
 	* postinst (run_hook):
