@@ -59,21 +59,33 @@ ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
   # Call this twice; if there are problems in the .config, kbuild rewrites 
   # .config, and the informational message messes up the variable.
   TEST         :=$(call doit,$(MAKE) $(CROSS_ARG) $(K_ARG) --no-print-directory \
-                   -sf $(DEBDIR)/ruleset/kernel_version.mk debian_VERSION)
+                   -sf $(DEBDIR)/ruleset/kernel_version.mk debian_VERSION       \
+                    2>/dev/null )
   VERSION      :=$(call doit,$(MAKE) $(CROSS_ARG) $(K_ARG) --no-print-directory \
-                   -sf $(DEBDIR)/ruleset/kernel_version.mk debian_VERSION)
+                   -sf $(DEBDIR)/ruleset/kernel_version.mk debian_VERSION       \
+                    2>/dev/null | tail -n 1)
   PATCHLEVEL   :=$(call doit,$(MAKE) $(CROSS_ARG) $(K_ARG) --no-print-directory \
-                   -sf $(DEBDIR)/ruleset/kernel_version.mk debian_PATCHLEVEL)
+                   -sf $(DEBDIR)/ruleset/kernel_version.mk debian_PATCHLEVEL    \
+                    2>/dev/null | tail -n 1)
   SUBLEVEL     :=$(call doit,$(MAKE) $(CROSS_ARG) $(K_ARG) --no-print-directory \
-                   -sf $(DEBDIR)/ruleset/kernel_version.mk debian_SUBLEVEL)
+                   -sf $(DEBDIR)/ruleset/kernel_version.mk debian_SUBLEVEL      \
+                    2>/dev/null | tail -n 1)
   EXTRA_VERSION:=$(call doit,$(MAKE) $(CROSS_ARG) $(K_ARG) --no-print-directory \
-                   -sf $(DEBDIR)/ruleset/kernel_version.mk debian_EXTRAVERSION)
+                   -sf $(DEBDIR)/ruleset/kernel_version.mk debian_EXTRAVERSION  \
+                    2>/dev/null | tail -n 1)
   LOCALVERSION :=$(call doit,$(MAKE) $(CROSS_ARG) $(K_ARG) --no-print-directory \
-                   -sf $(DEBDIR)/ruleset/kernel_version.mk debian_LOCALVERSION)
+                   -sf $(DEBDIR)/ruleset/kernel_version.mk debian_LOCALVERSION  \
+                    2>/dev/null | tail -n 1)
   # If the variable TEST did get a mesage about .config beng written, pass it on.
   ifneq ($(strip $(TEST)),$(strip $(VERSION)))
-    $(warn configuration written to .config)
+    $(warn $(TEST))
   endif
+ HAVE_BAD_VERSION:=$(call doit, if [ $$(echo $(VERSION) | wc -l) -gt 1 ]; then \
+                                    echo YES;                                  \
+                                 fi)
+ ifneq (,$(strip $(HAVE_BAD_VERSION)))
+  $(error Error: "$(VERSION)")
+ endef
 else
   ifeq ($(DEB_HOST_GNU_SYSTEM), kfreebsd-gnu)
     VERSION        =$(call doit,grep '^REVISION=' conf/newvers.sh |                   \
@@ -114,12 +126,12 @@ iatv :=
 EXTRAV_ARG :=
 endif
 
-UTS_RELEASE_HEADER=$(call doit,if [ -f include/linux/utsrelease.h ]; then \
-	                       echo include/linux/utsrelease.h;       \
-	                   else                                       \
-                               echo include/linux/version.h ; \
+UTS_RELEASE_HEADER=$(call doit,if [ -f include/linux/utsrelease.h ]; then  \
+	                       echo include/linux/utsrelease.h;            \
+	                   else                                            \
+                               echo include/linux/version.h ;              \
 	                   fi)
-UTS_RELEASE_VERSION=$(call doit,if [ -f $(UTS_RELEASE_HEADER) ]; then                        \
+UTS_RELEASE_VERSION=$(call doit,if [ -f $(UTS_RELEASE_HEADER) ]; then                    \
                  grep 'define UTS_RELEASE' $(UTS_RELEASE_HEADER) |                       \
                  perl -nle  'm/^\s*\#define\s+UTS_RELEASE\s+("?)(\S+)\1/g && print $$2;';\
                  else echo "" ;                                                          \
