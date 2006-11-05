@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 10:41:41 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Wed Sep  6 11:54:15 2006
+## Last Modified On : Sat Nov  4 22:26:02 2006
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 16
+## Update Count     : 17
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : This file provides the commands commaon to a number of
@@ -85,7 +85,8 @@ endif
 # Use the kernel's Makefile to calculate the TOPDIR.
 # TOPDIR is obsolete in 2.6 kernels, so the kernel_version.mk
 # will get us the right answer
-	@sed -e 's%$(shell $(MAKE) --no-print-directory -sf $(DEBDIR)/ruleset/kernel_version.mk debian_TOPDIR)%$$(TOPDIR)%g' .mak     > conf.vars
+	@echo $(shell $(MAKE) --no-print-directory -sf $(DEBDIR)/ruleset/kernel_version.mk debian_TOPDIR 2>/dev/null | tail -n 1) >/dev/null
+	@sed -e 's%$(shell $(MAKE) --no-print-directory -sf $(DEBDIR)/ruleset/kernel_version.mk debian_TOPDIR 2>/dev/null | tail -n 1)%$$(TOPDIR)%g' .mak     > conf.vars
 	@rm -f .mak
 
 debian/dummy_do_dep:
