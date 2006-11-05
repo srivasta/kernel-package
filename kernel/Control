@@ -52,7 +52,7 @@ Section: base
 Priority: optional
 Provides: =ST-image,  =ST-image-=CV
 Pre-Depends: debconf (>= 0.2.17) | debconf-2.0
-Depends: =I coreutils | fileutils (>= 4.0)
+Depends: =I coreutils (>= 5.2.1)
 Suggests: =L fdutils, =ST-doc-=V=SA | =ST-source-=V 
 Description: Linux kernel binary image for version =V=SA
  This package contains the Linux kernel image for version 

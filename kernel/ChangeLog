@@ -1,3 +1,10 @@
+2006-11-04  Manoj Srivastava  <srivasta@debian.org>
+
+	* Control (Depends):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-202
+		  Since the postinst now uses readlink -m, we  need to
+		  depend on coreutils newer than 5.2.1
+
 2006-08-05  Manoj Srivastava  <srivasta@debian.org>
 
 	* templates.in (really-run-bootloader):
