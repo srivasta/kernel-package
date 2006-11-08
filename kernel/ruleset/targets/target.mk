@@ -238,7 +238,7 @@ real_stamp_clean:
 	@echo running clean
 	test ! -f scripts/package/builddeb.kpkg-dist ||                     \
           mv -f scripts/package/builddeb.kpkg-dist scripts/package/builddeb
-	test ! -f scripts/package/builddeb.kpkg-dist ||                     \
+	test ! -f scripts/package/Makefile.kpkg-dist ||                     \
           mv -f scripts/package/Makefile.kpkg-dist scripts/package/Makefile
 ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
 	test ! -f .config  || cp -pf .config config.precious

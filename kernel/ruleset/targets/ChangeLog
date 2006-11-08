@@ -1,3 +1,9 @@
+2006-11-08  Manoj Srivastava  <srivasta@debian.org>
+
+	* target.mk (real_stamp_clean):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-203
+		  Check for the actual file we are trying to clean up
+
 2006-11-04  Manoj Srivastava  <srivasta@debian.org>
 
 	* target.mk:
