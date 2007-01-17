@@ -34,7 +34,6 @@
 install/$(s_package): 
 	$(REASON)
 	@echo "This is kernel package version $(kpkg_version)."
-ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 	rm -rf $(TMPTOP)
 	$(make_directory) $(SRCDIR)
 	$(make_directory) $(DOCDIR)
@@ -52,15 +51,15 @@ ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 	$(install_file) $(DEBDIR)/pkg/source/copyright $(DOCDIR)/copyright
 	echo "This was produced by kernel-package version $(kpkg_version)." >  \
 	                                               $(DOCDIR)/Buildinfo
-  ifneq ($(strip $(int_follow_symlinks_in_src)),)
+ifneq ($(strip $(int_follow_symlinks_in_src)),)
 	-tar cfh - $$(echo * | sed -e 's/ debian//g' -e 's/\.deb//g' ) |       \
 	(cd $(SRCDIR); umask 000; tar xpsf -)
 	(cd $(SRCDIR)/include; rm -rf asm ; )
-  else
+else
 	-tar cf - $$(echo * | sed -e 's/ debian//g' -e 's/\.deb//g' ) |         \
 	(cd $(SRCDIR); umask 000; tar xspf -)
 	(cd $(SRCDIR)/include; rm -f asm ; )
-  endif
+endif
 	$(install_file) debian/changelog      $(SRCDIR)/Debian.src.changelog
 	(cd $(SRCDIR);                                                          \
             $(MAKE) $(EXTRAV_ARG) $(CROSS_ARG) ARCH=$(KERNEL_ARCH) distclean)
@@ -88,18 +87,16 @@ ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
           cp -af $(DEBDIR)/$$dir  $(SRCDIR)/debian/;                         \
         done
 	(cd $(SRCDIR); find . -type d -name .arch-ids -print0 | xargs -0r rm -rf {} \; )
-  ifneq ($(strip $(source_clean_hook)),)
+ifneq ($(strip $(source_clean_hook)),)
 	(cd $(SRCDIR); test -x $(source_clean_hook) && $(source_clean_hook))
-  endif
+endif
 	(cd $(SRCDIR) && cd .. &&                                            \
            tar $(TAR_COMPRESSION) -cf $(package).tar.$(TAR_SUFFIX) $(package) && \
              rm -rf $(package);)
-endif
 
 debian/$(s_package): testroot
 	$(REASON)
 	@echo "This is kernel package version $(kpkg_version)."
-ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 	$(eval $(which_debdir))
 	$(make_directory) $(TMPTOP)/DEBIAN
 	sed -e 's/=P/$(package)/g' -e 's/=V/$(version)/g'                       \
@@ -112,17 +109,14 @@ ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 	chmod -R og=rX                               $(TMPTOP)
 	chown -R root:root                           $(TMPTOP)
 	dpkg --build                                 $(TMPTOP) $(DEB_DEST)
-endif
 
 binary/$(s_package):
 	$(REASON)
 	@echo "This is kernel package version $(kpkg_version)."
 	$(checkdir)
-ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 	$(require_root)
 	$(eval $(deb_rule))
 	$(root_run_command) debian/$(package)
-endif
 
 
 #Local variables:

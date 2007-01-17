@@ -1,3 +1,45 @@
+2007-01-17  Manoj Srivastava  <srivasta@debian.org>
+
+	* source.mk (install/$(s_package)):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-204
+		  Make source packages even for Xen and UML.
+	  (debian/$(s_package)):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-204
+		  Ditto.
+	  (binary/$(s_package)):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-204
+		  Ditto.
+
+	* manual.mk (install/$(m_package)):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-204
+		  Make manual packages even for Xen and UML 
+		  (debian/$(m_package)):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-204
+		  Ditto.
+	  (binary/$(m_package)):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-204
+		  Ditto.
+
+	* headers.mk (install/$(h_package)):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-204
+		  Make header  packages even for Xen and UML
+		  (debian/$(h_package)):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-204
+		  Ditto.
+		  (binary/$(h_package)):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-204
+		  Ditto.
+
+	* doc.mk (install/$(d_package)):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-204
+		  Make all packages even for Xen and UML variants 
+	  (debian/$(d_package)):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-204
+		  Ditto.
+	  (binary/$(d_package)):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-204
+		  Ditto.
+
 2006-11-08  Manoj Srivastava  <srivasta@debian.org>
 
 	* target.mk (real_stamp_clean):

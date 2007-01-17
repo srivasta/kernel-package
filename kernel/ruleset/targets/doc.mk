@@ -33,7 +33,6 @@
 install/$(d_package): 
 	$(REASON)
 	@echo "This is kernel package version $(kpkg_version)."
-ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 	$(eval $(which_debdir))
 	rm -rf            $(TMPTOP)
 	$(make_directory) $(DOCDIR)
@@ -50,9 +49,9 @@ ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 	if test -f README.Debian ; then \
            $(install_file) README.Debian $(DOCDIR)/README.Debian.1st;\
 	fi
-  ifneq ($(strip $(shell if [ -x /usr/bin/db2html ]; then echo YSE; fi)),)
+ifneq ($(strip $(shell if [ -x /usr/bin/db2html ]; then echo YSE; fi)),)
 	$(MAKE)  mandocs htmldocs
-  endif
+endif
 	-tar cf - Documentation | (cd $(DOCDIR); umask 000; tar xsf -)
 	test ! -d $(DOCDIR)/Documentation/DocBook ||                            \
 	   rm -f   $(DOCDIR)/Documentation/DocBook/Makefile                     \
@@ -67,7 +66,7 @@ ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 	   rm -rf $(DOCDIR)/Documentation/DocBook/man
 	test ! -d $(DOCDIR)/Documentation/DocBook ||                           \
 	   mv $(DOCDIR)/Documentation/DocBook $(DOCDIR)/html
-  ifneq ($(shell if [ $(VERSION) -ge 2 ] && [ $(PATCHLEVEL) -ge 5 ]; then \
+ifneq ($(shell if [ $(VERSION) -ge 2 ] && [ $(PATCHLEVEL) -ge 5 ]; then \
 	                  echo new;fi),)
 		find -name Kconfig -print0 | xargs -0r cat | \
 		     (umask 000 ; cat > $(DOCDIR)/Kconfig.collected)
@@ -75,23 +74,21 @@ ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 	if ! test -s $(DOCDIR)/Kconfig.collected ; then \
 	    rm -f $(DOCDIR)/Kconfig.collected ;          \
          fi
-  endif
-  ifneq ($(strip $(doc_clean_hook)),)
+endif
+ifneq ($(strip $(doc_clean_hook)),)
 	(cd $(DOCDIR);              \
                test -x $(doc_clean_hook) && $(doc_clean_hook))
-  endif
+endif
 	-gzip -9qfr $(DOCDIR)
 	-find $(DOCDIR)      -type f -name \*.gz -perm +111 -exec gunzip {} \;
 	-find $(DOCDIR)/html -type f -name \*.gz            -exec gunzip {} \;
 	$(install_file) $(DEBDIR)/pkg/doc/copyright $(DOCDIR)/copyright
 	-rmdir   $(MAN9DIR)
 	-rmdir   $(MANDIR)
-endif
 
 debian/$(d_package): testroot
 	$(REASON)
 	@echo "This is kernel package version $(kpkg_version)."
-ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 	$(make_directory) $(TMPTOP)/DEBIAN
 	$(eval $(deb_rule))
 	sed -e 's/=P/$(package)/g' -e 's/=V/$(version)/g' \
@@ -102,16 +99,13 @@ ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 	chmod -R og=rX                              $(TMPTOP)
 	chown -R root:root                          $(TMPTOP)
 	dpkg --build                                $(TMPTOP) $(DEB_DEST)
-endif
 
 binary/$(d_package): 
 	$(REASON)
 	@echo "This is kernel package version $(kpkg_version)."
-ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 	$(require_root)
 	$(eval $(deb_rule))
 	$(root_run_command) debian/$(package)
-endif
 
 #Local variables:
 #mode: makefile

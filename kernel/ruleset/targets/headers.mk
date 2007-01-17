@@ -33,7 +33,6 @@
 install/$(h_package):
 	$(REASON)
 	@echo "This is kernel package version $(kpkg_version)."
-ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 	$(if $(subst $(strip $(UTS_RELEASE_VERSION)),,$(strip $(version))), \
 		echo "The UTS Release version in $(UTS_RELEASE_HEADER)"; \
 		echo "     \"$(strip $(UTS_RELEASE_VERSION))\" "; \
@@ -79,7 +78,7 @@ ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
                                                      $(SRCDIR)/arch/$(KERNEL_ARCH)
 	test ! -e Rules.make     || $(install_file) Rules.make     $(SRCDIR)
 	test ! -e Module.symvers || $(install_file) Module.symvers $(SRCDIR)
-  ifneq ($(strip $(int_follow_symlinks_in_src)),)
+ifneq ($(strip $(int_follow_symlinks_in_src)),)
 	-tar cfh - include       |   (cd $(SRCDIR); umask 000; tar xsf -)
 	-tar cfh - scripts       |   (cd $(SRCDIR); umask 000; tar xsf -)
 	(cd $(SRCDIR)/include;   rm -rf asm; ln -s asm-$(KERNEL_ARCH) asm)
@@ -89,7 +88,7 @@ ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
                   cpio -pdL --preserve-modification-time $(SRCDIR);
 	test ! -d arch/$(KERNEL_ARCH)/include || find arch/$(KERNEL_ARCH)/include   \
                -print | cpio -pdL --preserve-modification-time $(SRCDIR);
-  else
+else
 	-tar cf - include |        (cd $(SRCDIR); umask 000; tar xsf -)
 	-tar cf - scripts |        (cd $(SRCDIR); umask 000; tar xsf -)
 	# Undo the move away of the scripts dir Makefile
@@ -106,7 +105,7 @@ ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
                   cpio -pd --preserve-modification-time $(SRCDIR);
 	test ! -d arch/$(KERNEL_ARCH)/include || find arch/$(KERNEL_ARCH)/include \
                -print | cpio -pd --preserve-modification-time $(SRCDIR);
-  endif
+endif
 	test ! -e arch/$(KERNEL_ARCH)/kernel/asm-offsets.s ||                     \
            $(install_file)               arch/$(KERNEL_ARCH)/kernel/asm-offsets.s \
                            $(SRCDIR)/arch/$(KERNEL_ARCH)/kernel/asm-offsets.s
@@ -134,7 +133,7 @@ ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 	(cd $(SRCDIR); find . -type d -name .arch-ids -print0 | xargs -0r rm -rf  )
 #         $(DEBDIR)/pkg/headers/create_link  >                        \
 #                $(TMPTOP)/etc/kernel/postinst.d/create_link-$(version)
-  ifeq (,$(findstring nostrip,$(DEB_BUILD_OPTIONS)))
+ifeq (,$(findstring nostrip,$(DEB_BUILD_OPTIONS)))
 	test ! -d $(SRCDIR)/scripts || find $(SRCDIR)/scripts -type f | while read i; do  \
            if file -b $$i | egrep -q "^ELF.*executable"; then                             \
              strip --strip-all --remove-section=.comment --remove-section=.note $$i;      \
@@ -145,13 +144,11 @@ ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
              strip --strip-unneeded --remove-section=.comment --remove-section=.note $$i; \
            fi;                                                                            \
          done
-  endif
 endif
 
 debian/$(h_package): testroot
 	$(REASON)
 	@echo "This is kernel package version $(kpkg_version)."
-ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 	$(make_directory) $(TMPTOP)/DEBIAN
 	$(eval $(deb_rule))
 	sed -e 's/=V/$(version)/g'    -e 's/=IB/$(link_in_boot)/g'   \
@@ -173,9 +170,9 @@ ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
         done; echo $$j; )`; test -z "$$k" || dpkg-shlibdeps $$k;          \
         test -n "$$k" || perl -pli~ -e 's/\$$\{shlibs:Depends\}\,?//g' debian/control
 	test ! -e debian/control~ || rm -f debian/control~
-  ifneq ($(strip $(header_clean_hook)),)
+ifneq ($(strip $(header_clean_hook)),)
 	(cd $(SRCDIR); test -x $(header_clean_hook) && $(header_clean_hook))
-  endif
+endif
 	dpkg-gencontrol -isp -DArchitecture=$(DEB_HOST_ARCH) -p$(package) \
                                           -P$(TMPTOP)/
 	$(create_md5sums)                   $(TMPTOP)
@@ -183,16 +180,13 @@ ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 	chmod -R og=rX                      $(TMPTOP)
 	dpkg --build                        $(TMPTOP) $(DEB_DEST)
 	cp -pf debian/control.dist          debian/control
-endif
 
 binary/$(h_package): 
 	$(REASON)
 	@echo "This is kernel package version $(kpkg_version)."
-ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 	$(require_root)
 	$(eval $(deb_rule))
 	$(root_run_command) debian/$(package)
-endif
 
 #Local variables:
 #mode: makefile

@@ -36,7 +36,6 @@
 install/$(m_package): install/$(d_package) 
 	$(REASON)
 	@echo "This is kernel package version $(kpkg_version)."
-ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 	rm -rf            $(TMPTOP)
 	$(make_directory) $(DOCDIR)
 	$(make_directory) $(MANDIR)/man9
@@ -47,29 +46,24 @@ ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 	-gzip -9qfr $(MANDIR)
 	-gzip -9qfr $(DOCDIR)
 	$(install_file) $(DEBDIR)/pkg/doc/copyright $(DOCDIR)/copyright
-endif
 
 debian/$(m_package): testroot
 	$(REASON)
 	@echo "This is kernel package version $(kpkg_version)."
-ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 	$(make_directory) $(TMPTOP)/DEBIAN
 	dpkg-gencontrol -isp -p$(package)       -P$(TMPTOP)/
 	$(create_md5sums)                         $(TMPTOP)
 	chmod -R og=rX                            $(TMPTOP)
 	chown -R root:root                        $(TMPTOP)
 	dpkg --build                              $(TMPTOP) $(DEB_DEST)
-endif
 
 binary/$(m_package):
 	$(REASON)
 	@echo "This is kernel package version $(kpkg_version)."
 	$(checkdir)
-ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 	$(require_root)
 	$(eval $(deb_rule))
 	$(root_run_command) debian/$(package)
-endif
 
 #Local variables:
 #mode: makefile
