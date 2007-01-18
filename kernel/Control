@@ -52,7 +52,7 @@ Section: base
 Priority: optional
 Provides: =ST-image,  =ST-image-=CV
 Pre-Depends: debconf (>= 0.2.17) | debconf-2.0
-Depends: =I coreutils (>= 5.2.1)
+Depends: =I coreutils (>= 5.96)
 Suggests: =L fdutils, =ST-doc-=V=SA | =ST-source-=V 
 Description: Linux kernel binary image for version =V=SA
  This package contains the Linux kernel image for version 
@@ -100,7 +100,7 @@ Architecture: =A
 Section: base
 Priority: optional
 Provides: =ST-uml,  =ST-uml-=CV, user-mode-linux
-Depends: =I coreutils | fileutils (>= 4.0)
+Depends: =I coreutils (>= 5.96) | fileutils (>= 4.0)
 Suggests: =L fdutils, kernel-doc-=V=SA | kernel-source-=V, uml-utilities
 Conflicts: user-mode-linux (<= 2.6)
 Replaces: user-mode-linux (<= 2.6)
@@ -113,7 +113,7 @@ Architecture: =A
 Section: base 
 Priority: optional 
 Provides: =ST-xen0,  =ST-xen0-=CV 
-Depends: =I coreutils | fileutils (>= 4.0) 
+Depends: =I coreutils (>= 5.96) | fileutils (>= 4.0) 
 Suggests: =L fdutils, =ST-doc-=V=SA | =ST-source-=V 
 Description: Linux xen kernel binary image for version =V=SA 
  This package contains the Linux xen kernel image for version =V=SA 
@@ -124,7 +124,7 @@ Architecture: =A
 Section: base 
 Priority: optional 
 Provides: =ST-xenu,  =ST-xenu-=CV 
-Depends: =I coreutils | fileutils (>= 4.0) 
+Depends: =I coreutils (>= 5.96) | fileutils (>= 4.0) 
 Suggests: =L fdutils, =ST-doc-=V=SA | =ST-source-=V 
 Description: Linux xen kernel binary image for version =V=SA 
  This package contains the Linux xen kernel image for version =V=SA 

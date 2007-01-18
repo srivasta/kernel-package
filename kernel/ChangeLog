@@ -1,3 +1,15 @@
+2007-01-17  Manoj Srivastava  <srivasta@debian.org>
+
+	* Control (Depends):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--versionfix-4
+		  In release version 10.063, I cleaned up the  postinst as
+		  while I was at it, going with readlink -q -m instead of
+		  the built in version. Since -m was a flag not present in
+		  Sarge's coreutils, this means the generated image files
+		  should have a versioned dependency on coreutils. The
+		  previous versioned dependency was not strict enough,
+		  updated to a version that works. 
+
 2006-11-04  Manoj Srivastava  <srivasta@debian.org>
 
 	* Control (Depends):
