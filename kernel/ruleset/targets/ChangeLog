@@ -29,6 +29,12 @@
 		  (binary/$(h_package)):
 		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-204
 		  Ditto.
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--versionfix-3
+			  When trying to compile external modules on on
+			  IA64/McKinley ItaniumII, the Makefile in
+			  arch/ia64/ needs some scripts from
+			  arch/ia64/scripts/ directory. These scripts were
+			  not so far being shipped.
 
 	* doc.mk (install/$(d_package)):
 		  srivasta@debian.org--etch/kernel-package--devel--9.0--patch-204

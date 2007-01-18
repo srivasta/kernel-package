@@ -88,6 +88,8 @@ ifneq ($(strip $(int_follow_symlinks_in_src)),)
                   cpio -pdL --preserve-modification-time $(SRCDIR);
 	test ! -d arch/$(KERNEL_ARCH)/include || find arch/$(KERNEL_ARCH)/include   \
                -print | cpio -pdL --preserve-modification-time $(SRCDIR);
+	test ! -d arch/$(KERNEL_ARCH)/scripts || find arch/$(KERNEL_ARCH)/scripts   \
+               -print | cpio -pdL --preserve-modification-time $(SRCDIR);
 else
 	-tar cf - include |        (cd $(SRCDIR); umask 000; tar xsf -)
 	-tar cf - scripts |        (cd $(SRCDIR); umask 000; tar xsf -)
@@ -104,6 +106,8 @@ else
                \( -name Makefile -o -name 'Kconfig*' \) -print |                  \
                   cpio -pd --preserve-modification-time $(SRCDIR);
 	test ! -d arch/$(KERNEL_ARCH)/include || find arch/$(KERNEL_ARCH)/include \
+               -print | cpio -pd --preserve-modification-time $(SRCDIR);
+	test ! -d arch/$(KERNEL_ARCH)/scripts || find arch/$(KERNEL_ARCH)/scripts \
                -print | cpio -pd --preserve-modification-time $(SRCDIR);
 endif
 	test ! -e arch/$(KERNEL_ARCH)/kernel/asm-offsets.s ||                     \
