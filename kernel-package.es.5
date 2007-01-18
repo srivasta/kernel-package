@@ -31,7 +31,7 @@
 .\" /cvs/debian-doc/manpages/english/kernel-package/kernel-package.5
 .\" Revisada por Rudy Godoy <rudy@kernel-panik.org>
 
-.TH KERNEL\-PACKAGE 5 "25 de mayo de 1999" "Debian" "manual Debian GNU/Linux" 
+.TH KERNEL\-PACKAGE 5 "25 de mayo de 1999" "Debian" "manual de Debian GNU/Linux" 
 .\" NAME should be all caps, SECTION should be 1-8, maybe w/ subsection
 .\" other parms are allowed: see man(7), man(1)
 .SH NOMBRE
@@ -61,8 +61,8 @@ núcleos es instantánea.
 .B ii) Soporte para múltiples imágenes
 Permite mantener varias versiones de imágenes del núcleo sin ninguna dificultad.
 .TP
-.B iii) Múltiples sabores de la misma versión del núcleo
-Permite mantener varios sabores de la misma versión del núcleo (puede tener una
+.B iii) Múltiples variantes de la misma versión del núcleo
+Permite mantener varias variantes de la misma versión del núcleo (puede tener una
 versión 2.0.36 estable y una 2.0.36 parcheada con los últimos controladores sin
 necesidad de preocuparse de contaminar los módulos en
 .I /lib/modules).
@@ -85,7 +85,7 @@ Permite usar el sistema de gestión de paquetes para instalar los núcleos.
 make\-kpkg crea un fichero .deb que posteriormente dpkg puede instalar por usted.
 Esto facilita la instalación de otros paquetes que dependen del núcleo.
 .TP
-.B vii) Seguir la configuración del núcleo
+.B vii) Seguimiento de la configuración del núcleo
 Guarda la configuración de cada imagen del núcleo en
 .I /boot,
 ésta es parte del paquete que contiene la imagen, debido a esto la imagen del

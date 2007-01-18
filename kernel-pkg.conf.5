@@ -43,7 +43,7 @@ snippet included during the kernel packages build process, and hence
 you may put any legal Makefile directive in that file (just make very
 sure you know what you are doing).  If the per user configuration file
 .I ~/.kernel\-pkg.conf
-exists, it is loaded in favour of the system wide configuration file
+exists, it is loaded in favor of the system wide configuration file
 .I /etc/kernel\-pkg.conf.
 .PP
 All the variables have reasonable default values, and maybe
@@ -87,7 +87,7 @@ Defaults to
 .TP
 .B debian         
 The version of the kernel packages, includes both the upstream
-Set to YES, this causes a make clean to be run in theversion 
+Set to YES, this causes a make clean to be run in the version 
 and the Debian revision. Can be overridden
 by the environment variable 
 .B DEBIAN_REVISION, 
@@ -157,7 +157,7 @@ without the version number, and the numbered version is the link) to the
 .I image
 file. Can be overridden by the environment variable
 .B REVERSE_SYMLINK
-Mutualy exclusive to 
+Mutually exclusive to 
 .I no_symlinks.
 Can be used with
 .I link_in_boot.
@@ -306,7 +306,7 @@ overrides this, and would most likely be how extra documentation is
 specified. 
 .TP
 .B kpkg_follow_symlinks_in_src
-This option is especially useful for people who use symlinc farms to
+This option is especially useful for people who use symlink farms to
 compile kernels. With this option, kernel\-source and kernel\-header
 packages shall not be just full of dangling symlinks, instead, the
 symbolic links shall be followed. Please note that any symbolic links

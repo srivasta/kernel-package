@@ -176,7 +176,7 @@ of the kernel image, and the second argument being the
 .I location
 of the kernel image itself. Errors in the script shall cause the
 postinst to fail. Since debconf is in use before the script is called,
-this script should issue no diagnostic messgaes to stdout -- while the
+this script should issue no diagnostic messages to stdout -- while the
 postinst does call
 .B db_stop
 , debconf does not restore stdout, so messages to stdout disappear.
@@ -196,7 +196,7 @@ of the kernel image, and the second argument being the
 of the kernel image itself. Errors in the script shall produce a
 warning message, but shall be otherwise ignored. Since debconf is in
 use before the script is called, this script should issue no
-diagnostic messgaes to stdout --  while the postinst does call
+diagnostic messages to stdout --  while the postinst does call
 .B db_stop
 , debconf does not restore stdout, so messages to stdout disappear.  
 .TP
@@ -224,7 +224,7 @@ of the kernel image, and the second argument being the
 .I location
 of the kernel image itself. Errors in the script shall cause the prerm
 to fail. Since debconf is in use before the script is called, this
-script should issue no diagnostic messgaes to stdout -- while the
+script should issue no diagnostic messages to stdout -- while the
 postinst does call
 .B db_stop
 , debconf does not restore stdout, so messages to stdout disappear.  
@@ -268,7 +268,7 @@ Unlike the other hook variables, this is meant for a script run during
 the post inst of a headers package only. The path can be a relative
 path if the script lives in a safe path -- that is, if it lives in
 /bin, /sbin, /usr/bin, or /usr/sbin, or must be an absolute path
-instead.This script shall be called with two arguments, the first
+instead. This script shall be called with two arguments, the first
 being the
 .I name
 of the package being installed (kernel\-headers\-X.X.XX), and the second argument being the
@@ -326,7 +326,7 @@ Set to YES to prevent the
 post installation script from issuing a warning when installing an
 initrd kernel. This assumes you have correctly set up your boot loader
 to be able to boot the initrd image. Default: no. This is deprecated
-in favour of the more descriptive
+in favor of the more descriptive
 .B warn_initrd
 option (please note that the sense of the option is inverted).
 .TP

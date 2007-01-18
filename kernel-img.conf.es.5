@@ -31,7 +31,7 @@
 .\" /cvs/debian-doc/manpages/english/kernel-package/kernel-img.conf.5 
 .\" Revisada por Rudy Godoy <rudy@kernel-panik.org>
 
-.TH KERNEL\-IMG.CONF 5 "21 de marzo de 2000" "Debian" "manual Debian GNU/Linux" 
+.TH KERNEL\-IMG.CONF 5 "21 de marzo de 2000" "Debian" "manual de Debian GNU/Linux" 
 .\" NAME should be all caps, SECTION should be 1-8, maybe w/ subsection
 .\" other parms are allowed: see man(7), man(1)
 .SH NOMBRE
@@ -63,7 +63,7 @@ la respuesta en
 En este momento, las variables modificables por el usuario son:
 .TP
 .B link_in_boot 
-Si es Yes en enlace simbólico con la imagen llamado
+Si es «Yes» el enlace simbólico con la imagen llamado
 .I vmlinuz 
 se creará en 
 .I /boot 
@@ -71,7 +71,7 @@ en vez de en
 .I /.  
 El nombre antiguo y confuso image_in_boot es desaconsejado, ya que lo que
 se reubica normalmente es el enlace simbólico.
-Por omisión es No.
+Por omisión es «No».
 .TP
 .B do_symlinks
 Por omisión, el script de post\-instalación de la imagen del núcleo crea o
@@ -86,16 +86,16 @@ Si no existe, el script de configuración pregunta al usuario si desea crear el
 enlace simbólico, y guarda la respuesta en el fichero
 .I /etc/kernel\-img.conf
 recién creado.
-Si el fichero de configuración ya existe, y esta opción está puesta a NO, nunca
-se crea ningún enlace. Esto es para aquellos que no quieran tener enlaces
+Si el fichero de configuración ya existe, y esta opción está definida a No, en ningún
+caso se crea el enlace. Esto es para aquellos que no quieran tener enlaces
 simbólicos molestando en su directorio / . Por omisión es Yes.
 .TP
 .B minimal_swap
 Por omisión, si el enlace simbólico /vmlinuz no apunta a una imagen que es la
-misma que la imagen instalada, el postinst mueve /vmlinuz a /vmlinuz.old, y crea
+misma que la imagen instalada, el programa postinst mueve /vmlinuz a /vmlinuz.old, y crea
 un enlace simbólico a la imagen del núcleo en /vmlinuz (la excepción es para
 prevenir que /vmlinuz y /vmlinuz.old apunten a la misma imagen del núcleo --
-potencialmente desastroso si la imagen actual es defectuosa o le falta
+que podría ser potencialmente desastroso si la imagen actual es defectuosa o le falta
 algo). Sin embargo, si la opción está habilitada, no se realiza ninguna acción si
 /vmlinuz.old apunta a la imagen actualmente instalada (por omisión los enlaces
 simbólicos son intercambiados). Por omisión tiene el valor de No.
@@ -107,7 +107,7 @@ Mutuamente excluyente con
 .I reverse_symlinks. 
 Puede usarse con
 .I link_in_boot (image_in_boot).
-Si es Yes, la imagen real es colocada en vmlinuz (en vez de en
+Si es Yes, la imagen real se coloca en vmlinuz (en vez de en
 /boot/vmlinuz\-X.X.XX). Si usa link_in_boot junto con esto, se mueve
 /boot/vmlinuz\-X.X.XX a /boot/vmlinuz. El vmlinuz previo se mueve
 incondicionalmente a vmlinuz.old. (Normalmente, esto sólo se hace si la versión
@@ -125,8 +125,6 @@ Determina si se usan enlaces simbólico invertidos (esto es, el fichero real es
 el que no tiene número de versión, la versión numerada es el enlace) al fichero
 con la 
 .I imagen.
-Puede ser modificado mediante la variable de entorno
-.B REVERSE_SYMLINK
 Mutuamente excluyente con
 .I no_symlinks.
 Se puede usar junto con
@@ -146,7 +144,7 @@ Si quiere que el enlace simbólico (o imagen, si
 .B move_image 
 está establecida) se guarde en algún sitio distinto de
 .I /
-establezca esta variable al directorio donde quiera poner el enlace. Dese cuenta
+establezca esta variable al directorio donde quiera poner el enlace. Tenga en cuenta
 que no es una variable booleana. Puede ser de ayuda para usuarios de
 .B loadlin
 , que pueden establecer ésta y
@@ -155,39 +153,61 @@ Por omisión es
 .I /.
 Se puede usar con todas la opciones anteriores excepto con
 .B link_in_boot (image_in_boot),
-porque no tendría sentido. (Si ambas
+porque no tendría sentido. (Si se establece ambas
 .B image_dest 
 y 
 .B link_in_boot (image_in_boot)
-están establecidas, predomina
+, predomina
 .B link_in_boot (image_in_boot)).
 .TP
 .B postinst_hook 
 Establezca esta variable apuntando a un script que debe ser ejecutado durante la
 instalación después de que se hayan creado todos los enlaces simbólicos, pero
-antes de invocar el gestor de arranque u ofrecer crear un disquete de
-arranque. Este script debe invocarse con dos argumentos, el primero es la
+antes de invocar el gestor de arranque. La ruta puede ser relativa si el
+programa se encuentra en una ruta segura (es decir, si se localiza en /bin, /sbin,
+/usr/bin, o /usr/sbin), o en caso contrario debe ser una ruta absoluta. Antes
+de invocar a este programa, debe definir la variable
+.B STEM
+con el valor del argumento
+.I \-\-stem
+(o el valor predeterminado, linux). 
+Este script debe invocarse con dos argumentos, el primero es la
 .I versión
 de la imagen del núcleo, el segundo es la
 .I localización
-de la imagen del núcleo. Los errores en el script sólo producirán un mensaje de
-aviso. Un script de ejemplo para usuarios de grub se puede encontrar
-en /usr/share/doc/kernel\-package/.
+de la imagen del núcleo. Los errores en el script causarán el fallo de
+postinst. Debido a que se está usando debconf antes de que se invoque
+al script, éste no debe mostrar mensajes de diagnóstico a stdout 
+(mientras postinst invoca
+.B db_stop
+, debconf no restaura stdout, por lo tanto los mensajes a stdout desaparecerán).
+Puede encontrar un script de ejemplo para usuarios de grub en el directorio
+/usr/share/doc/kernel\-package/.
 .TP
 .B postrm_hook 
-Establezca esta variable apuntando a un script que debe ser ejecutado después de
-que se haya eliminado la imagen y después de que se hayan realizado todas las
-acciones. Este script debe invocarse con dos argumentos, el primero es la
+Establezca esta variable apuntando a un script que debe ser ejecutado en el postrm 
+(es decir, después de que se haya eliminado la imagen) después de que se hayan realizado 
+todas las acciones. La ruta puede ser relativa si el programa se encuentra en 
+una ruta segura (es decir, si se localiza en /bin, /sbin,
+/usr/bin, o /usr/sbin), o en caso contrario debe ser una ruta absoluta. 
+Este script debe invocarse con dos argumentos, el primero es la
 .I versión
 de la imagen del núcleo, el segundo es la
 .I localización
 de la imagen del núcleo. Los errores en el script sólo producirán un mensaje de
-aviso.
+aviso, pero deben ser ignorados. Debido a que debconf está en uso antes de
+que se invoque el script, éste no debe mostrar mensajes de diagnóstico a
+stdout (mientras postinst invoca
+.B db_stop
+, debconf no restaura stdout, por lo tanto los mensajes a stdout desaparecerán).
 .TP
 .B preinst_hook 
 Establezca esta variable apuntando a un script que debe ser ejecutado después de
-desempaquetar el paquete, puede usarse para comprobaciones adicionales. Este
-script debe invocarse con dos argumentos, el primero es la
+desempaquetar el paquete, puede usarse para comprobaciones adicionales. 
+ La ruta puede ser relativa si el programa se encuentra en
+una ruta segura (es decir, si se localiza en /bin, /sbin,
+/usr/bin, o /usr/sbin), o en caso contrario debe ser una ruta absoluta.
+Este script debe invocarse con dos argumentos, el primero es la
 .I versión
 de la imagen del núcleo, el segundo es la
 .I localización
@@ -196,31 +216,60 @@ de la imagen del núcleo.
 .B prerm_hook 
 Establezca esta variable apuntando a un script que debe de ser ejecutado después
 que los ficheros del paquete hayan sido eliminados (de este modo se
-puede eliminar cualquier fichero añadido). Este script debe invocarse con dos
-argumentos, el primero es la
+puede eliminar cualquier fichero añadido). La ruta puede ser relativa si el 
+programa se encuentra en una ruta segura (es decir, si se localiza en /bin, /sbin,
+/usr/bin, o /usr/sbin), o en caso contrario debe ser una ruta absoluta.
+Este script debe invocarse con dos argumentos, el primero es la
 .I versión
-de la imagen del núcleo, el segundo es la
+de la imagen del núcleo, y el segundo es la
 .I localización
-de la imagen del núcleo. Los errores en el script sólo producirán un mensaje de
-aviso.
+de la imagen del núcleo. Los errores en el script causarán el fallo de prerm.
+Debido a que debconf está en uso antes de que se invoque al script, éste
+no deberá mostrar mensajes a stdout (mientras postinst invoca
+.B db_stop
+, debconf no restaura stdout, por lo tanto los mensajes a stdout desaparecerán).
+.TP
+.B ramdisk
+Establezca esta variable a una lista de ejecutables separada por espacios que
+crean un disco RAM de inicio. Esto tiene efecto únicamente si se instala un
+kernel-image (imágen de núcleo) que usa un disco RAM de inicio. Las órdenes
+definidas deben ser compatibles con
+.I mkinitrd.
+Al usar las opciones de línea de órdenes
+.I --supported-host-version
+y
+.I --supported-target-version,
+estos ejecutables se consultan al momento de instalación para comprobar
+si la combinación del actual núcleo en ejecución como núcleo anfitrión,
+y la versión del núcleo a instalarse como al núcleo destino, y elminados
+de la lista si no. La primera herramienta viable se usa para crear el
+disco RAM de inicio. La instalación fallará si no se encuentra una
+herramienta utilizable.
+Por omisión es definido al conjunto de
+.I "mkinitrd mkinitrd.yaird mkinitramfs"
 .TP
 .B src_postinst_hook
 A diferencia de las otras variables hook, éste es para un script que se ejecuta
 durante el postinst de un paquete de documentación, de cabeceras, o fuente. El
 uso de esta variable en paquetes con cabeceras ahora está desaconsejado, en algún
 momento el script de postinst del paquete con las cabeceras sólo deberá ejecutar
-header_postinst_hook.
+header_postinst_hook. La ruta puede ser relativa si el
+programa se encuentra en una ruta segura (es decir, si se localiza en /bin, /sbin,
+/usr/bin, o /usr/sbin), o en caso contrario debe ser una ruta absoluta.
 Este script necesita dos argumentos, el primero es el
 .I nombre
 del paquete que se esta instalando (kernel\-headers\-X.X.XX), y el segundo
 argumento es la
 .I versión
-del paquete que esta siendo instalado. Los errores en el script sólo producirán
-un mensaje de aviso.
+del paquete que esta siendo instalado. Los errores en el script causarán
+el fallo de postinst.
 .TP
 .B headers_postinst_hook
 A diferencia de las otras variables hook, ésta es sólo para un script que se
-ejecuta durante el postinst de un paquete de cabeceras. Este script necesita dos
+ejecuta durante el postinst de un paquete de cabeceras. La ruta puede ser 
+relativa si el programa se encuentra en una ruta segura (es decir, si se 
+localiza en /bin, /sbin, /usr/bin, o /usr/sbin), o en caso contrario debe 
+ser una ruta absoluta. Este script necesita dos
 argumentos, el primero es el
 .I nombre
 del paquete que se esta instalando (podría ser kernel\-source\-X.X.XX o
@@ -252,29 +301,18 @@ Si está establecida, el preinst tratará de eliminar /lib/modules/version sin
 comunicarlo si es la misma versión que la de la imagen siendo instalada. Uselo
 bajo su responsabilidad. Por omisión esta variable está sin establecer.
 .TP
-.B do_boot_enable
-Si es NO, deshabilita cualquier intento de crear disquetes de arranque, ejecutar
-lilo, etc. Tiene el efecto adicional de que el postinst sea silencioso.
-Estableciendo  
-.B do_bootfloppy
-y 
-.B do_bootloader
-a NO implica establecer
-.B do_boot_enable 
-a NO. Por omisión es Yes.
+.B warn_reboot
+Esta variable se puede utilizar para deshabilitar el aviso cuando se instala
+un núcleo de la misma versión que el que está en ejecución actualmente. Si
+se cambia la lista de módulos, las dependencias de módulos habrán cambiado,
+y los módulos del nuevo núcleo podrían no ejecutarse correctamente en el núcleo
+actual si el ABI del núcleo ha cambiado en el intermedio. Es una buena idea
+reiniciar, y esto es una nota para recordarle. Si sabe lo que hace puede 
+definir esta variable a No. Esta variable está definida por omisión.
 .TP
-.B do_bootfloppy
-Si es NO, hace que el postinst no cree un disquete de arranque y tampoco
-pregunte acerca de ello. El gestor de arranque todavía será ejecutado. Esto
-reducirá la interacción de postinst. (Todavía pregunta antes de dar formato a
-.I /dev/fd0) 
+.B do_bootloader
+Si es NO, hace que el postinst no ejecute el gestor de arranque.
 Por omisión es Yes.
-.TP
-.B do_bootloader
-Si es NO, hace que el postinst no ejecute el gestor de arranque. Todavía se
-preguntará al usuario si desea crear un disquete de arranque a menos que
-.B do_bootfloppy
-también esté a NO. Por omisión es Yes.
 .TP
 .B relative_links
 Si es Yes, el script de postinst de la imagen del núcleo tomará medidas
@@ -300,8 +338,8 @@ configurado correctamente su gestor de arranque para que arranque la imagen
 initrd. Esta opción se prefiere respecto a
 .B do_initrd,
 ya que lo que se previene son los
-.I avisos.
-Por omisión es Yes.
+.I avisos
+ . Por omisión es Yes.
 .TP
 .B use_hard_links
 Esta opción es para aquellos que no puedan usar enlaces simbólicos (por ejemplo,
@@ -323,7 +361,7 @@ Esta opción manipula el enlace de construcción creado por los núcleos
 recientes. Si el enlace es un enlace colgante, y si parece que el
 correspondiente kernel\-headers está instalado en el sistema, se creará un nuevo
 enlace apuntándolo. Por omisión se reenlazará el directorio de construcción
-(SI).
+(YES).
 .TP
 .B force_build_link
 Esta opción manipula el enlace de construcción creado por los núcleos
@@ -332,7 +370,7 @@ enlace a /usr/src/kernel\-headers\-X.Y.ZZ, sin importar que estén o no
 instalados. Por omisión está sin establecer, ya que no creamos enlaces colgantes
 de forma predeterminada.
 .TP
-.B relink_source_link
+.B relink_src_link
 Esta opción manipula el enlace al código fuente creado por los últimos núcleos.
 Si el enlace es un enlace colgante se elimina durante la instalación.
 Por omisión re-enlaza (elimina) el enlace «source» («YES»).
@@ -349,7 +387,7 @@ o
  mkimage="mkcramfs %s %s"
 .TP
 .B silent_modules
-Está opción es para aquellos que se sienten molestos cuando se les avisa de
+Está opción es para aquellos a quienes les molesta cuando se les avisa de
 módulos existentes en el directorio
 .I /lib/modules/$version.
 Este directorio probablemente pertenezca a un paquete 
@@ -366,7 +404,7 @@ existente. Por omisión no está establecido.
 .B silent_loader
 Si está establecida, está opción hará que se omita la pregunta realizada antes
 de ejecutar el gestor de arranque durante el proceso de instalación. Esta opción
-no afecta a que el gestor de arranque sea o no ejecutado (lea
+no afecta a que el gestor de arranque sea o no ejecutado (véase 
 .B do_bootloader
 para entender como controlarlo, la ausencia de un fichero de configuración hará
 el proceso de instalación ameno e interactivo).
@@ -391,3 +429,4 @@ Esta página del manual fue escrita por Manoj Srivastava <srivasta@debian.org>,
 para el sistema Debian GNU/Linux.
 .SH TRADUCTOR
 Traducción de Rubén Porras Campo <debian\-l10n\-spanish@lists.debian.org>
+Revisión y actualización de Rudy Godoy <rudy@kernel\-panik.org>
