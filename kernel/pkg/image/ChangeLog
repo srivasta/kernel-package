@@ -1,3 +1,9 @@
+2007-02-24  Manoj Srivastava  <srivasta@debian.org>
+
+	* postrm (run_hook):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--versionfix-6
+		  remove modules.seriomap as well.
+
 2007-01-17  Manoj Srivastava  <srivasta@debian.org>
 
 	* postinst:
