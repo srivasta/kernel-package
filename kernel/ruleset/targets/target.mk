@@ -308,8 +308,8 @@ else
 	$(PMAKE) -C $(architecture)/compile/GENERIC
   endif
 endif
-	COLUMNS=150 dpkg -l 'gcc*' perl dpkg 'libc6*' binutils ldso make dpkg-dev |\
-         awk '$$1 ~ /[hi]i/ { printf("%s-%s\n", $$2, $$3) }'   > debian/buildinfo
+	COLUMNS=150 dpkg -l 'gcc*' perl dpkg 'libc6*' binutils make dpkg-dev |\
+         awk '$$1 ~ /[hi]i/ { printf("%s-%s\n", $$2, $$3) }'> debian/buildinfo
 	@echo this was built on a machine with the kernel: >> debian/buildinfo
 	uname -a >> debian/buildinfo
 	echo using the compiler: >> debian/buildinfo
