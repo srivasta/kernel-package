@@ -62,6 +62,9 @@ endif
 ifeq ($(strip $(architecture)),armeb)
 include $(DEBDIR)/ruleset/arches/armeb.mk
 endif
+ifeq ($(strip $(architecture)),armel)
+include $(DEBDIR)/ruleset/arches/armel.mk
+endif
 
 ##### PowerPC and PowerPC architecture 
 ifneq ($(strip $(filter ppc powerpc ppc64 powerpc64,$(architecture))),)

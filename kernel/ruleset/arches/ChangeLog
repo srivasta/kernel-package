@@ -1,3 +1,7 @@
+2007-02-25  Manoj Srivastava  <srivasta@debian.org>
+
+	* armel.mk (DEBCONFIG): New architecture make snippet for the armel arch
+
 2006-06-16  Manoj Srivastava  <srivasta@debian.org>
 
 	* what_is_ppc_called_today.mk:

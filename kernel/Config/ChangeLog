@@ -1,3 +1,7 @@
+2007-02-25  Manoj Srivastava  <srivasta@debian.org>
+
+	* config.armel (CONFIG_ARM): New kernel config file for the armel arch.
+
 2005-11-07  Manoj Srivastava  <srivasta@debian.org>
 
 	* config.alpha:
