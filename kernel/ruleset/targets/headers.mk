@@ -110,6 +110,15 @@ else
 	test ! -d arch/$(KERNEL_ARCH)/scripts || find arch/$(KERNEL_ARCH)/scripts \
                -print | cpio -pd --preserve-modification-time $(SRCDIR);
 endif
+ifeq ($(strip $(KERNEL_ARCH)),um)
+	test ! -e arch/$(KERNEL_ARCH)/Makefile.cpu ||                              \
+         $(install_file) arch/$(KERNEL_ARCH)/Makefile.cpu                          \
+               $(SRCDIR)/arch/$(KERNEL_ARCH)/
+	test ! -s $(SRCDIR)/arch/um || $(make_directory) $(SRCDIR)/arch/um
+	$(install_file) arch/um/Makefile* $(SRCDIR)/arch/um/
+	test ! -e arch/um/Kconfig.arch ||                                           \
+         $(install_file) arch/um/Kconfig.arch $(SRCDIR)/arch/um/
+endif
 	test ! -e arch/$(KERNEL_ARCH)/kernel/asm-offsets.s ||                     \
            $(install_file)               arch/$(KERNEL_ARCH)/kernel/asm-offsets.s \
                            $(SRCDIR)/arch/$(KERNEL_ARCH)/kernel/asm-offsets.s
