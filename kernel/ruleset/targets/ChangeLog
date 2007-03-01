@@ -7,6 +7,10 @@
 	  (real_stamp_clean):
 		  srivasta@debian.org--etch/kernel-package--devel--9.0--versionfix-11
 		  And restore it during clean
+	  (echo using the compiler):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--versionfix-13
+		  Fix patch names and source version name that is saved in
+		  the buildinfo file.
 
 2007-02-25  Manoj Srivastava  <srivasta@debian.org>
 
