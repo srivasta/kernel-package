@@ -158,8 +158,8 @@ endif
 	test ! -e scripts/package/builddeb || \
             mv -f scripts/package/builddeb scripts/package/builddeb.kpkg-dist
 	test ! -e scripts/setlocalversion || \
-            cp -af scripts/setlocalversion scripts/setlocalversion.kpkg-dist && \
-               (echo "#!/bin/sh"; echo "echo ''") >  scripts/setlocalversion)
+            (cp -af scripts/setlocalversion scripts/setlocalversion.kpkg-dist && \
+               (echo "#!/bin/sh"; echo ": echo ") >  scripts/setlocalversion)
 	test ! -e scripts/package/Makefile || \
             (mv -f scripts/package/Makefile scripts/package/Makefile.kpkg-dist && \
                (echo "# Dummy file "; echo "help:") >  scripts/package/Makefile)
