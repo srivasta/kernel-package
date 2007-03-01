@@ -38,24 +38,33 @@
 ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
   localversion_files := $(wildcard localversion*)
 
-
-  # VERSION =$(call doit,grep -E '^VERSION +=' Makefile 2>/dev/null | \
-  #  sed -e 's/[^0-9]*\([0-9]*\)/\1/')
-  # PATCHLEVEL =$(call doit,grep -E '^PATCHLEVEL +=' Makefile 2>/dev/null | \
-  #  sed -e 's/[^0-9]*\([0-9]*\)/\1/')
-  # SUBLEVEL =$(call doit,grep -E '^SUBLEVEL +=' Makefile 2>/dev/null | \
-  #  sed -e 's/[^0-9]*\([0-9]*\)/\1/')
-  # EXTRA_VERSION =$(call doit,grep -E '^EXTRAVERSION +=' Makefile 2>/dev/null | \
-  #  sed -e 's/EXTRAVERSION *= *\([^ \t]*\)/\1/')
-  # LOCALVERSION = $(subst $(space),, $(call doit,cat /dev/null $(localversion_files)) \
-  #                  $(CONFIG_LOCALVERSION))
-
   # Could have used :=, but some patches do seem to patch the
   # Makefile. perhaps deferring the rule makes that better
+
   $(eval $(which_debdir))
+  # for powerpc, we need to set the (KERNEL_ARCH) based on the version numbers -- 
+  # which we can't get to unless we know the kernel architecture. Yossarian would
+  # have liked this.
+  ifneq ($(strip $(filter ppc powerpc ppc64 powerpc64,$(architecture))),)
+    # Calculate most of the version the old fashioned way
+    VERSION :=$(call doit,grep -E '^VERSION +=' Makefile 2>/dev/null | \
+     sed -e 's/[^0-9]*\([0-9]*\)/\1/')
+    PATCHLEVEL :=$(call doit,grep -E '^PATCHLEVEL +=' Makefile 2>/dev/null | \
+     sed -e 's/[^0-9]*\([0-9]*\)/\1/')
+    SUBLEVEL :=$(call doit,grep -E '^SUBLEVEL +=' Makefile 2>/dev/null | \
+     sed -e 's/[^0-9]*\([0-9]*\)/\1/')
+    # EXTRA_VERSION =$(call doit,grep -E '^EXTRAVERSION +=' Makefile 2>/dev/null | \
+    #  sed -e 's/EXTRAVERSION *= *\([^ \t]*\)/\1/')
+    # LOCALVERSION = $(subst $(space),, $(call doit,cat /dev/null $(localversion_files)) \
+    #                  $(CONFIG_LOCALVERSION))
+
+    # Now use the version number from above to set the KERNEL_ARCH
+    include $(DEBDIR)/ruleset/arches/what_is_ppc_called_today.mk
+  endif
   ifneq ($(strip $(KERNEL_ARCH)),)
     K_ARG="ARCH=$(KERNEL_ARCH)"
   endif
+  # Now to really calculate version numbers
   # Call this twice; if there are problems in the .config, kbuild rewrites 
   # .config, and the informational message messes up the variable.
   TEST         :=$(call doit,$(MAKE) $(CROSS_ARG) $(K_ARG) --no-print-directory \
