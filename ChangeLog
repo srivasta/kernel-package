@@ -1,3 +1,10 @@
+2007-03-01  Manoj Srivastava  <srivasta@debian.org>
+
+	* Problems (VFS):
+		  srivasta@debian.org--etch/kernel-package--devel--9.0--versionfix-11
+		  Document that scripts/setlocalversion creates additional
+		  problems, and remove the ineffectual patch
+
 2006-10-23  Manoj Srivastava  <srivasta@debian.org>
 
 	* make-kpkg (main):

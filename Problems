@@ -201,24 +201,15 @@ VFS: Cannot open root device "308" or 03:08
            string "-dirty" to the version. Since we change a couple of
            files in ./scripts/, this falls afoul of the make-kpkg
            checks, since the version number is now different from what
-           make-kpkg knows it to be. The workaround is to modify the
-           setlocalversion script, like so:
+           make-kpkg knows it to be. 
 
-diff --git a/scripts/setlocalversion b/scripts/setlocalversion
-index 82e4993..65dcb40 100644
---- a/scripts/setlocalversion
-+++ b/scripts/setlocalversion
-@@ -16,7 +16,7 @@ if head=`git rev-parse --verify HEAD 2>/
- 	fi
- 
- 	# Are there uncommitted changes?
--	if git diff-index HEAD | read dummy; then
-+	if git diff-index HEAD | grep -v -e "scripts/package/Makefile$" -e "scripts/package/builddeb$" -e "scripts/setlocalversion$" | read dummy; then
- 		printf '%s' -dirty
- 	fi
- fi
+      s) there is an additional truncated commit ID added by the
+         script scripts/setlocalversion whenever it detects that we
+         are not building from a tagged commit of the official tree,
+         so it might be just simpler to get rid of it altogether,
+         which is what make-kpkg does now.
 
-      s)
+      t)
          There is a problem when GREP_OPTIONS are exported, since it
          may impact the results comoing out of grep in scripts that
          are tun in shubshells -- and, of course, make-kpkg is one of

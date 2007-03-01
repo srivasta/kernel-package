@@ -157,6 +157,9 @@ endif
 	# work around idiocy in recent kernel versions
 	test ! -e scripts/package/builddeb || \
             mv -f scripts/package/builddeb scripts/package/builddeb.kpkg-dist
+	test ! -e scripts/setlocalversion || \
+            cp -af scripts/setlocalversion scripts/setlocalversion.kpkg-dist && \
+               (echo "#!/bin/sh"; echo "echo ''") >  scripts/setlocalversion)
 	test ! -e scripts/package/Makefile || \
             (mv -f scripts/package/Makefile scripts/package/Makefile.kpkg-dist && \
                (echo "# Dummy file "; echo "help:") >  scripts/package/Makefile)
@@ -238,6 +241,8 @@ real_stamp_clean:
 	@echo running clean
 	test ! -f scripts/package/builddeb.kpkg-dist ||                     \
           mv -f scripts/package/builddeb.kpkg-dist scripts/package/builddeb
+	test ! -f scripts/setlocalversion.kpkg-dist ||                     \
+          mv -f scripts/setlocalversion.kpkg-dist scripts/setlocalversion
 	test ! -f scripts/package/Makefile.kpkg-dist ||                     \
           mv -f scripts/package/Makefile.kpkg-dist scripts/package/Makefile
 ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
