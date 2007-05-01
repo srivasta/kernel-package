@@ -1,3 +1,10 @@
+2007-05-01  Manoj Srivastava  <srivasta@debian.org>
+
+	* make-kpkg.8:
+		  srivasta@debian.org--lenny/kernel-package--devel--11.0--base-0
+		  Small typographical fix.  this shall call the build to
+		  fail -> this shall >>cause<< the build to fail. 
+
 2007-03-01  Manoj Srivastava  <srivasta@debian.org>
 
 	* Problems (VFS):
