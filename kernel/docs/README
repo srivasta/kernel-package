@@ -89,6 +89,7 @@ Phase TWO: Create a portable kernel image .deb file
       Personally, I prefer non initrd images for my personal machines,
       since then adding third party modules to the machine has fewer
       gotchas
+
 Phase THREE: Install the kernel image on one or more machines
  5# dpkg -i ../kernel-image-X.XXX_1.0_<arch>.deb
  6# shutdown -r now # If and only if LILO/SILO/QUIK/PALO/VMELILO/ZIPL/yaboot/..
@@ -111,12 +112,12 @@ Phase THREE: Install the kernel image on one or more machines
 Getting the kernel source
 ------- --- ------ ------
 
- You can get kerel sources in several different ways: by installing a
+ You can get kernel sources in several different ways: by installing a
  prepackaged Debian kernel source package (at the time of writing, it
  is kernel-source-2.4.20_2.4.20-6_all.deb). This shall create a file
  /usr/src/kernel-source-2.4.20.tar.bz2, which can be unpacked wherever
  you wish. Alternately, you can get linux-2.4.20.tar.bz2 from you
- favourite ftp.kernel.org mirror, (/pub/linux/kernel/v2.4/ in the ftp
+ favorite ftp.kernel.org mirror, (/pub/linux/kernel/v2.4/ in the FTP
  site). 
 
 Unpacking kernel sources:
@@ -151,7 +152,7 @@ build kernels.
 % tar jvvfx /usr/src/kernel-source-2.4.20.tar.bz2
   (or, tar jvvfx /path/to/download/linux-2.4.20.tar.bz2)
 
-	The next two steps are optionsl, you only need them if you are
+	The next two steps are optional, you only need them if you are
  going to create third party modules (stuff in
  /usr/src/module-name.tar.gz)
 
@@ -167,6 +168,12 @@ building.
 Configuration File
 ------------- ----
 
+The kernel now needs to be configured, that is you have to set the
+kernel options and select the drivers which are going to be included,
+either as built-in, or as external modules. These setting are saved in
+a file ./config.  The kernel build infrastructure offers a number of
+targets, which invoke different configuration front-ends. 
+
 Kernel package by itself does not create any configuration file
 (.config); it uses whatever you have. You can use the previous version
 made for you machine by copying it over from /boot/config-Y.Y.YY, like
@@ -176,8 +183,16 @@ where Y.Y.YY stands for the old version of the kernel that you had
 hand tuned.
 
 If you do not wish to copy the old copy over, you can create a new one
-from scratch using make menuconfig (please look at the kenrel
-documentaion for help on configuring your kernel).
+from scratch using console-based menu configuration command "make
+menuconfig" (please look at the kernel documentation for help on
+configuring your kernel). Instead of menuconfig one can use config
+(text-based line-by-line configuration front-end) or xconfig (graphical
+configuration front-end).
+
+After the configuration process is finished, the new or updated kernel
+configuration will be stored in .config file in the top-level
+directory.
+
 
 Versions and revisions
 ----------------------
@@ -289,10 +304,10 @@ effect)
 
  NOTE about using initial ram disk images (initrd).  Recent official
  kitchen sink kernel image packages tend to use this, in order to
- accomodate as wide a vareity of root file system types as humanly
+ accommodate as wide a variety of root file system types as humanly
  possible without building them all into the kernel. In order to use
  these images, you need to instruct you boot loader that this is a
- kernel image using intrd, and tell the boot loader where to find the
+ kernel image using initrd, and tell the boot loader where to find the
  initrd image.  Unfortunately, you can't just substitute a non initrd
  image afterwards without changing the boot loader instructions.  So,
  if your boot loader configuration expects to see an initrd image, add
@@ -325,7 +340,7 @@ old modules directory before installation, like so (need to be root):
         # dpkg -i kernel-image-2.0.29_custom.1.0_i386.deb
 and later get rid of the .save directory.
 
-People who want to have multiple flavours of the same kernel version
+People who want to have multiple flavors of the same kernel version
 around should look at the append_to_version flag of make-kpkg. This
 appends to the EXTRAVERSION variable of the kernel Makefile, and does
 not require one to edit that makefile manually.  This can also be done
@@ -439,11 +454,11 @@ install_vmlinux  Set to YES to install the uncompressed kernel
 
 kpkg_follow_symlinks_in_src
               This option is especially useful for people who use
-              symlinc farms to compile kernels. With this option,
+              symbolic link farms to compile kernels. With this option,
               kernel-source and kernel-header packages shall not be
               just full of dangling symlinks, instead, the symbolic
               links shall be followed. Please note that any symbolic
-              links in the kernel sources woudl be flattened as well.
+              links in the kernel sources would be flattened as well.
               The environment variable KPKG_FOLLOW_SYMLINKS_IN_SRC
               overrides this. Symlink farming is described below.
 
@@ -548,7 +563,7 @@ clobber_modules
               your own risk.  This variable is unset by  default.
 
 do_boot_enable
-              If set to NO, this shortcircuits all attempts to create
+              If set to NO, this short-circuits all attempts to create
               boot floppies, run lilo, etc. This has the additional
               side effect that the postinst is silent. Setting both
               do_bootfloppy and do_bootloader to NO implies setting
@@ -807,7 +822,7 @@ kernel image (same version), then the install scripts
 detect that, and ask you to move at least the /lib/modules/X.X.XX dir
 away. If you continue anyway, the files in /boot shall be overwritten. 
 
-Also, if you try to recompile with a changed --revison option or a
+Also, if you try to recompile with a changed --revision option or a
 different debian revision, you shall have to make-kpkg clean, and then
 recompile. 
 
@@ -1018,13 +1033,13 @@ next kernel compilation, but you have not yet compiled it.
    one level up, in "/usr/local/src".
 
    You can try reading the documentation in the "kernel-package"
-   package.  A more complicated comman line to build your kernel
-   image, with all kinds of bells and whistels, is:
+   package.  A more complicated command line to build your kernel
+   image, with all kinds of bells and whistles, is:
 
    make-kpkg clean   
    make-kpkg -rootcmd fakeroot --append-to-version -custom.${VER} \
         --revision custom.${VER} kernel_image modules-image
-   This one also builds any standalone modules packages you may have
+   This one also builds any stand-alone modules packages you may have
    installed on your machine.
 
 
