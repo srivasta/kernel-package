@@ -71,6 +71,13 @@ define mod_inst_cmds
         )
 endef
 
+# Pass on cross arg, if not empty
+ifneq ($(strip $(CROSS_ARG)),)
+  int_ca := "CROSS_ARCG=$(CROSS_ARG)"
+else
+  int_ca :=
+endif
+
 
 # only generate module image packages
 modules-image modules_image: .config
@@ -95,7 +102,7 @@ endif
                              KPKG_DEST_DIR="$(KPKG_DEST_DIR)"       \
                              KPKG_MAINTAINER="$(maintainer)"        \
                              KPKG_EXTRAV_ARG="$(EXTRAV_ARG)"        \
-                             ARCH="$(KERNEL_ARCH)"                  \
+                             ARCH="$(KERNEL_ARCH)" $(int_ca)        \
                              KDREV="$(debian)" kdist_image; then    \
                   echo "Module $$module processed fine";            \
               else                                                  \
@@ -139,7 +146,7 @@ endif
                              KMAINT="$(pgp)" KEMAIL="$(email)"      \
                              KPKG_DEST_DIR="$(KPKG_DEST_DIR)"       \
                              KPKG_MAINTAINER="$(maintainer)"        \
-                             ARCH=$(KERNEL_ARCH)                    \
+                             ARCH=$(KERNEL_ARCH) $(int_ca)          \
                              KPKG_EXTRAV_ARG="$(EXTRAV_ARG)"        \
                              KDREV="$(debian)" kdist; then          \
                   echo "Module $$module processed fine";            \
@@ -184,7 +191,7 @@ endif
                              KMAINT="$(pgp)" KEMAIL="$(email)"      \
                              KPKG_DEST_DIR="$(KPKG_DEST_DIR)"       \
                              KPKG_MAINTAINER="$(maintainer)"        \
-                             ARCH=$(KERNEL_ARCH)                    \
+                             ARCH=$(KERNEL_ARCH) $(int_ca)          \
                              KPKG_EXTRAV_ARG="$(EXTRAV_ARG)"        \
                              KDREV="$(debian)" kdist_configure; then\
                   echo "Module $$module configured fine";           \
@@ -219,7 +226,7 @@ else
                              KMAINT="$(pgp)" KEMAIL="$(email)"      \
                              KPKG_DEST_DIR="$(KPKG_DEST_DIR)"       \
                              KPKG_MAINTAINER="$(maintainer)"        \
-                             ARCH=$(KERNEL_ARCH)                    \
+                             ARCH=$(KERNEL_ARCH) $(int_ca)          \
                              KPKG_EXTRAV_ARG="$(EXTRAV_ARG)"        \
                              KDREV="$(debian)" kdist_clean; then    \
                   echo "Module $$module cleaned";                   \
