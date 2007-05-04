@@ -300,7 +300,8 @@ if ($initrd && !$do_initrd) {
   }
   $answer =~ s/^\s+//;
   $answer =~ s/\s+$//;
-  print STDERR "Ok, Aborting\n" unless $answer =~ /^(f|n)/i;
+  print STDERR "Ok, Aborting, since the bootloader might not handle " .
+    "an initrd/initramfs image.\n" unless $answer =~ /^(f|n)/i;
   if ($answer !~ /^(f|n)/i && $invisible) {
     my $note = "${package_name}/preinst/abort-install-$version";
 
@@ -444,7 +445,8 @@ if (-d "$modules_base/$version/kernel") {
 
     $answer =~ s/^\s+//;
     $answer =~ s/\s+$//;
-    print STDERR "Ok, Aborting\n" unless $answer =~ /^(f|n)/i;
+    print STDERR "Ok, aborting, since modules for this image already exist.\n"
+      unless $answer =~ /^(f|n)/i;
     if ($answer !~ /^(f|n)/i && $invisible) {
       my $note = "${package_name}/preinst/abort-overwrite-$version";
 
