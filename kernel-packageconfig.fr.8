@@ -1,5 +1,3 @@
-.\" This file was generated with po4a. Translate the source file.
-.\" 
 .\" Hey, Emacs! This is an -*- nroff -*- source file.
 .\" Copyright (c) 1997 Manoj Srivastava <srivasta@debian.org>
 .\"
@@ -26,26 +24,33 @@
 .\"
 .\"    $Id: kernel-packageconfig.8,v 1.2 1997/06/03 00:24:04 srivasta Exp $
 .\"
-.TH KERNEL\-PACKAGECONFIG 8 "7 Janvier 1997" Debian "manuel Debian GNU/Linux"
+.\"*******************************************************************
+.\"
+.\" This file was generated with po4a. Translate the source file.
+.\"
+.\"*******************************************************************
+.TH KERNEL\-PACKAGECONFIG 8 "7 janvier 1997" Debian "Manuel Debian GNU/Linux"
 .SH NOM
-kernel\-packageconfig \- Programme de gestion du fichier 
-/etc/kernel\-pkg.conf.
+kernel\-packageconfig \- gestionnaire interne de /etc/kernel\-pkg.conf.
 .SH SYNOPSIS
-.B kernel\-packageconfig
+\fBkernel\-packageconfig\fP
 .SH DESCRIPTION
-L'utilitaire \fBkernel\-packageconfig\fR est appelé à l'intérieur du script 
-\fBpostinst du paquet kernel\-package\fR afin de fabriquer le fichier de 
-configuration /etc/kernel\-pkg.conf. Ce programme est idempotent et il ne 
-modifie le fichier que s'il contient les valeurs par défaut d'origine. 
-Il n'a pas été conçu pour un usage direct.
+L'utilitaire \fBkernel\-packageconfig\fP est appelé en interne par le script de
+post\-installation de \fBkernel\-package\fP afin de construire le fichier de
+configuration /etc/kernel\-pkg.conf. Il est idempotent, et ne modifie le
+fichier que s'il contient les valeurs par défaut d'origine. Il n'est \fBpas\fP
+destiné à être utilisé directement.
 .SH OPTIONS
 Cet utilitaire n'a aucune option.
 .SH FICHIERS
-Le fichier modifié par ce programme est \fI/etc/kernel\-pkg.conf.\fR
+Le fichier modifié par ce programme est \fI/etc/kernel\-pkg.conf\fP.
 .SH "VOIR AUSSI"
-.B kernel\-pkg.conf (5)
+\fBkernel\-pkg.conf(5)\fP
 .SH AUTEUR
-Cette page a été écrite par Manoj Srivastava <srivasta@debian.org>, 
+Cette page a été écrite par Manoj Srivastava, <srivasta@debian.org>,
 pour le système Debian GNU/Linux.
+
 .SH TRADUCTION
-Sylvain Cherrier <sylvain.cherrier@free.fr> Juillet 2004.
+Cette page de manuel a été traduite et est maintenue par Sylvain Cherrier
+<sylvain.cherrier@free.fr> et les membres de la liste
+<debian\-l10n\-french@lists.debian.org> entre 2004 et 2007.

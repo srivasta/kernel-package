@@ -1,5 +1,21 @@
 2007-05-04  Manoj Srivastava  <srivasta@debian.org>
 
+	* kernel-pkg.conf.fr.5:
+		  srivasta@debian.org--lenny/kernel-package--devel--11.0--patch-4
+		  New translation.
+
+	* kernel-packageconfig.fr.8:
+		  srivasta@debian.org--lenny/kernel-package--devel--11.0--patch-4
+		  New translation.
+
+	* kernel-package.fr.5:
+		  srivasta@debian.org--lenny/kernel-package--devel--11.0--patch-4
+		  New translation.
+
+	* kernel-img.conf.fr.5:
+		  srivasta@debian.org--lenny/kernel-package--devel--11.0--patch-4
+		  New translation.
+
 	* make-kpkg (main):
 		  srivasta@debian.org--lenny/kernel-package--devel--11.0--patch-3
 		  Allow silentoldconfig as a possible config target.

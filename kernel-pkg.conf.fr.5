@@ -23,399 +23,322 @@
 .\"
 .\" $Id: kernel-pkg.conf.5,v 1.37 2003/09/01 17:09:15 srivasta Exp $
 .\"
-.TH KERNEL\-PKG.CONF 5 "7 Jan 1997" "Debian" "Manuel Debian GNU/Linux" 
+.\"*******************************************************************
+.\"
+.\" This file was generated with po4a. Translate the source file.
+.\"
+.\"*******************************************************************
+.TH KERNEL\-PKG.CONF 5 "7 janvier 1997" Debian "Manuel Debian GNU/Linux"
 .\" NAME should be all caps, SECTION should be 1-8, maybe w/ subsection
 .\" other parms are allowed: see man(7), man(1)
 .SH NOM
-kernel\-pkg.conf \- fichier de configuration générale pour make\-kpkg
+kernel\-pkg.conf \- fichier de configuration général pour make\-kpkg
 .SH SYNOPSIS
-.I /etc/kernel\-pkg.conf
-ou
-.I ~/.kernel\-pkg.conf
-.SH "DESCRIPTION"
-Le fichier
-.I /etc/kernel\-pkg.conf
-ou
-.I ~/.kernel\-pkg.conf
-est en fait un bout de
-.BR Makefile
-inséré pendant le processus de construction des paquets concernant le noyau
-\ ;\ de ce fait, vous pouvez mettre toute directive acceptée par Make dans
-ce fichier (soyez simplement très vigilant à ce que vous faites). Si le fichier
-de configuration personnel
-.I ~/.kernel\-pkg.conf
-existe, il est chargé en priorité par rapport à celui générique du système 
-.I /etc/kernel\-pkg.conf.
+\fI/etc/kernel\-pkg.conf\fP ou \fI~/.kernel\-pkg.conf\fP
+.SH DESCRIPTION
+Les fichiers \fI/etc/kernel\-pkg.conf\fP ou \fI~/.kernel\-pkg.conf\fP sont en fait
+des morceaux de code de type \fBMakefile\fP inclus dans le processus de
+construction du paquet du noyau. Vous pourrez inclure de la sorte n'importe
+quelle directive de Makefile dans ce fichier (vérifiez simplement que vous
+savez vraiment ce que vous faites). S'il existe un fichier de configuration
+\fI~/.kernel\-pkg.conf\fP, il sera prioritaire sur le fichier de configuration
+du système \fI/etc/kernel\-pkg.conf\fP.
 .PP
-Toutes les variables ont des valeurs acceptables par défaut, et peuvent être
-modifiées ponctuellement ou pour un utilisateur grâce aux 
-variables d'environnement. Certaines de ces variables peuvent de nouveau être 
-modifiées par les options de
-.B make\-kpkg.
+Toutes les variables ont des valeurs raisonnables par défaut, et peuvent
+être outrepassées ponctuellement ou sur la base de choix de l'utilisateur
+grâce aux variables d'environnement. Certaines de ces variables peuvent de
+plus être modifiées grâce à des options de \fBmake\-kpkg\fP.
 .PP
-Actuellement, les variables modifiables par l'utilisateur sont\ :
-.TP
-.B maintainer
-Le responsable local des paquets kernel-*. Définie lors de l'installation du 
-paquet par le script 
-.IR postinst.
-Modifiable grâce à la variable d'environnement
-.B KPKG_MAINTAINER.
-Notez bien que toute apostrophe ' doit être protégée, comme dans\ :\ 
-maintainer\ =\ John O'\\''Brien. Oui, c'est très laid, mais ça marche.
-.TP
-.B email      
-L'adresse de ce responsable. Définie lors de l'installation du paquet par 
-.IR postinst.
-Modifiable grâce à la variable d'environnement
-.B KPKG_EMAIL.
-.TP
-.B pgp           
-Nom à rechercher dans la base de données pgp
-.BI si
-des modules distincts (tels que pcmcia, etc.) sont construits dans 
-.IR /usr/src/modules/.
-Modifiable par la variable d'environnement
-.B PGP_SIGNATURE, 
-puis (encore) modifiable par l'option
-.IR \-\-pgpsign
-de
-.B make\-kpkg.
-Réglée par défaut à 
-.I maintainer.
-(Optionnelle)
-.TP
-.B debian         
-Le numéro de révision Debian des paquets du noyau. Modifiable par la variable
-d'environnement
-.B DEBIAN_REVISION, 
-puis (encore) modifiable par l'option
-.IR \-\-revision
-de
-.B make\-kpkg.
-Réglée par défaut à
-.I 10.0.0.Custom
-(Facultative)
-.TP
-.B debian_revision_mandatory
-Normalement pas définie. Si cette variable, ou la variable d'environnement
-.B DEBIAN_REVISION_MANDATORY
-sont définies, l'omission d'un numéro de révision Debian provoquera une
-erreur (et
-.B make\-kpkg
-ne fournira pas la valeur 10.0.0.Custom par défaut)
-.TP
-.B link_in_boot
-À mettre à «\ True\ » si vous voulez que le lien symbolique
-.I vmlinuz 
-vers l'image du noyau soit dans 
-.I /boot 
-plutôt que dans
-.I /  
-par défaut. Modifiable par la variable d'environnement
-.B LINK_IN_BOOT 
-qui n'est pas définie par défaut.
-(Optionnelle)
-.TP
-.B kimage         
-Le type de l'image du noyau (zImage, ou bzImage, par exemple). Modifiable par
-la variable d'environnement
-.B IMAGE_TYPE,  
-puis (encore) modifiable par les options
-.IR \-\-zimage
-ou
-.IR \-\-bzimage
-de
-.B make\-kpkg.
-Valeur par défaut : 
-.I bzImage.
-(Optionnelle)
-.TP
-.B no_symlinks
-Pour créer un lien symbolique vers le fichier
-.I image
-du noyau. Modifiable par la variable d'environnement
-.B NO_SYMLINK
-Exacte opposée de
-.I reverse_symlinks. 
-Peut être utilisé en conjonction avec
-.I link_in_boot. 
-L'image sera rangée dans vmlinuz (au lieu de /boot/vmlinuz\-X.X.XX). L'ancien
-vmlinuz sera, dans tous les cas, déplacé vers vmlinuz.old (Normalement, ce 
-déplacement n'a lieu que si la nouvelle image diffère de l'ancienne). Vous
-êtes limité à deux images, à moins de lancer d'autres commandes pour 
-sauvegarder les images plus anciennes. Cette option concerne les gens qui 
-ont un répertoire
-.I /boot
-dans leur système et qui n'utilisent pas de liens symboliques (et qui, de ce fait,
-utilisent loadlin pour démarrer leur système). Cette option est un Bidouillage.
-Valeur non définie par défaut (optionnelle).
-.TP
-.B reverse_symlinks
-Pour utiliser les liens symboliques vers le fichier
-.I image
-dans le sens inverse (dans ce cas, c'est le vrai fichier qui n'a pas le numéro
-de version, et c'est le lien qui porte le numéro). Modifiable par la variable
-d'environnement
-.B REVERSE_SYMLINK
-Exacte opposée de
-.I no_symlinks.
-Peut être utilisé avec
-.I link_in_boot
-de la même façon que
-.I no_symlinks,
-sauf que c'est /boot/vmlinuz\-X.XX qui est le lien symbolique vers la véritable
-nouvelle image, vmlinuz. Là encore, vous êtes limité à deux images en tout,
-sauf si vous lancez d'autres commandes. Les anciens liens symboliques restent,
-pointant dans le vide. Cette option sert à ceux qui ont un
-.I /boot
-sous umsdos, qui ne voit pas le lien en DOS, mais veulent connaître la version
-de l'image quand ils sont sous Linux. Cette option est un Bidouillage. Valeur
-non définie par défaut (optionnel).
-.TP
-.B patch_the_kernel
-Variable réservée aux experts. Si elle est réglée à «\ YES\ » (la variable
-d'environnement
-.B PATCH_THE_KERNEL 
-a priorité sur celle-ci), le processus de création du paquet lance run\-parts
-sur
-.I /usr/src/kernel\-patches/$(architecture)/apply 
-et inverse son effet (du moins l'espère-t-on) pendant le «\ clean\ » en lançant
+Les variables actuellement modifiables par l'utilisateur sont les suivantes\ :
+.TP 
+\fBmaintainer\fP
+Mainteneur local des paquets kernel\-*. Défini lors de l'installation du
+paquet par le script de \fIpost\-installation\fP. Il est possible de
+l'outrepasser grâce à la variable d'environnement
+\fBKPKG_MAINTAINER\fP. Veuillez noter que tout signe de type «\ '\ » doit être
+protégé, comme dans maintainer = John O'\e\*(rqBrien. Oui, ce n'est pas
+terrible, mais ça marche.
+.TP 
+\fBemail\fP
+L'adresse de courriel de cette personne. Définie lors de l'installation du
+paquet par le script de \fIpost\-installation\fP. Il est possible de
+l'outrepasser grâce à la variable d'environnement \fBKPKG_EMAIL\fP.
+.TP 
+\fBpgp\fP
+Nom à rechercher dans la base de données pgp \fBsi\fP des modules séparés (tels
+que pcmcia, etc.) ont été compilés dans \fI/usr/src/modules/\fP. Il est
+possible de l'outrepasser grâce à la variable d'environnement
+\fBPGP_SIGNATURE\fP, et il peut être (à nouveau) outrepassé par l'option
+\fI\-\-pgpsign\fP de \fBmake\-kpkg\fP. Valeur par défaut\ :
+\fImaintainer\fP. (Optionnel)
+.TP 
+\fBdebian\fP
+Version des paquets du noyau, incluant aussi les versions officielles
+(upstream). Réglée à «\ YES\ », elle entraîne l'exécution d'un clean pour la
+version et la révision Debian. Modifiable par la variable d?environnement
+\fBDEBIAN_REVISION\fP, puis (encore) modifiable par l?option \fI\-\-revision\fP de
+\fBmake\-kpkg\fP. Réglée par défaut à
+\fI<VERSION>\-10.0.0.Custom\fP. (Optionnel)
+.TP 
+\fBdebian_revision_mandatory\fP
+Habituellement non définie. Si elle, ou la variable d'environnement
+\fBDEBIAN_REVISION_MANDATORY\fP, sont définies, alors l'absence de numéro de
+révision Debian entraînera une erreur (et \fBmake\-kpkg\fP ne fournira pas la
+valeur par défaut «\ 10.0.0.Custom\ »).
+.TP 
+\fBlink_in_boot\fP
+Mettre à «\ True\ » si vous voulez que le lien symbolique pointant vers
+l'image du noyau, à savoir \fIvmlinuz\fP, soit dans \fI/boot\fP plutôt que dans
+\fI/\fP. Il est possible de l'outrepasser avec la variable d'environnement
+\fBLINK_IN_BOOT\fP. Non renseigné par défaut. (Optionnel)
+.TP 
+\fBkimage\fP
+Type d'image du noyau (zImage ou bzImage par exemple). Il est possible de
+l'outrepasser grâce à la variable d'environnement \fBIMAGE_TYPE\fP, et il est
+possible de l'outrepasser (de nouveau) grâce aux options \fI\-\-zimage\fP ou
+\fI\-\-bzimage\fP de \fBmake\-kpkg\fP. Valeur par défaut\ : \fIbzImage\fP. (Optionnel)
+.TP 
+\fBno_symlinks\fP
+Définit s'il faut utiliser des liens symboliques avec le fichier
+\fIimage\fP. Il est possible de l'outrepasser grâce à la variable
+d'environnement \fBNO_SYMLINK\fP et est l'opposée de \fIreverse_symlinks\fP. Elle
+peut être utilisée avec \fIlink_in_boot\fP.L'image réelle est mise dans
+vmlinuz, au lieu de /boot/vmlinuz\-X.X.XX. L'ancien vmlinuz est renommé
+d'office en vmlinuz.old. (Normalement, cela n'est fait que si la version de
+la nouvelle image est différente de l'ancienne). Vous ne pouvez avoir que
+deux images, à moins de prendre des mesures pour conserver des copies des
+anciennes images. Cela peut servir à ceux qui ont \fI/boot\fP sur un système
+qui n'utilise pas les liens symboliques\ ; ils utilisent aussi loadlin comme
+programme de démarrage. C'est un bidouillage. La valeur par défaut est «\ No\ ».
+.TP 
+\fBreverse_symlinks\fP
+Définit s'il faut utiliser des liens symboliques inversés avec le fichier
+\fIimage\fP (c'est\-à\-dire que le fichier réel est celui qui n'a pas de numéro
+de version et c'est le lien qui possède le numéro de version). Il est
+possible de l'outrepasser grâce à la variable d'environnement
+\fBREVERSE_SYMLINK\fP et est l'opposée de \fIno_symlinks\fP. Elle peut être
+utilisée avec \fIlink_in_boot\fP. Tout se passe comme avec \fIno_symlinks\fP, sauf
+que /boot/vmlinuz\-X.X.XX est un lien symbolique vers la nouvelle image
+réelle, vmlinuz. Là aussi, vous ne pouvez avoir que deux images, à moins de
+prendre d'autres mesures. Les liens symboliques plus anciens sont laissés
+ballants. Cela peut servir aux gens qui ont \fI/boot\fP sur umsdos et qui ne
+peuvent voir les liens symboliques dans dos mais veulent connaître la
+version de l'image quand ils sont dans Linux. C'est un bidouillage. La
+valeur par défaut est «\ No\ ».
+.TP 
+\fBpatch_the_kernel\fP
+Variable réservée seulement aux experts. Si elle est réglée à «\ YES\ » (la
+variable d'environnement \fBPATCH_THE_KERNEL\fP l'outrepasse), le processus de
+construction déclenche l'exécution de run\-parts sur
+\fI/usr/src/kernel\-patches/$(architecture)/apply\fP et (si tout se passe bien)
+lance l'opération inverse lors du nettoyage (NdT\ : clean) en exécutant
 run\-parts sur
-.I /usr/src/kernel\-patches/$(architecture)/unpatch. 
-L'architecture spéciale «\ all\ » est utilisée pour les patches indépendants
-de l'architecture.
-.TP
-.B config_target
-Définit la phase de configuration à exécuter. La cible par défaut est oldconfig,
-ce qui correspond bien à des exécutions non (ou très peu) interactives. Si vous
-mettez patch_the_kernel à «\ YES\ » et que certains patches modifient la liste
-des réglages de configuration offerts, vous voudrez probablement choisir une
-autre cible (menuconfig ou xconfig, par exemple).
-(La variable d'environnement
-.B CONFIG_TARGET
-a priorité sur cette option.)
-Si la valeur de config_target est différente de config, oldconfig, menuconfig
-ou xconfig, l'option se réinitialisera à oldconfig.
-.TP
-.B use_saved_config
-Variable réservée aux experts. Si elle est réglée à «\ NO\ » (la variable
-d'environnement
-.B USE_SAVED_CONFIG
-a priorité sur celle-ci), le fichier .config.save situé dans le répertoire le
-plus haut est ignoré.
-.TP
-.B root_cmd 
-Est une variable dont le but est d'être transmise à
-.B dpkg\-buildpackage
-dans la cible
-.I buildpackage.
-Elle doit fournir un moyen d'obtenir les droit d'accès du super-utilisateur
-(
-.I `sudo'
-ou 
-.I `fakeroot'
-par exemple), un peu à la façon de l'option -r de 
-.B dpkg\-buildpackages.
-La variable d'environnement
-.B ROOT_CMD
-a priorité sur celle-ci. La variable d'environnement
-.B UNSIGN_SOURCE
-fournit à cette commande l'option qui force  dpkg\-buildpackage à ne pas signer
-la source, et de la même façon, la variable d'environnement
-.B UNSIGN_CHANGELOG 
-fournit à cette commande l'option qui force  dpkg\-buildpackage à ne pas signer
-le changelog. Là encore, cette variable n'est utile que pour la cible
-.I buildpackage.
-Réglez la variable d'environnement
-.B ROOT_CMD
-si vous voulez juste construire l'image du noyau, par exemple. 
-.TP
-.B delete_build_link
-Lorsque réglée à YES, supprime le lien symbolique
-.I /lib/modules/$VERSION/build
-pointant sur le paquet .deb. La variable d'environnement
-.B DELETE_BUILD_LINK
-a priorité sur cette option.
-.TP
-.B do_clean	
-Réglée à tout sauf YES, renoncera à lancer le make clean sur l'arborescence
-des sources du noyau après la construction du paquet de l'image du noyau. La 
-variable d'environnement 
-.B CLEAN_SOURCE
-a priorité sur cette option.
-.TP
-.B install_vmlinux
-Réglée à YES, installe aussi l'image non compressée du noyau au format ELF en
-plus de l'image compressé (vmlinuz). Cette image est indispensable à oprofile 
-(oprofile.sourceforge.net, pour i386 uniquement) pour l'optimisation du noyau
-et de l'espace utilisateur.
+\fI/usr/src/kernel\-patches/$(architecture)/unpatch\fP. L'architecture spéciale
+«\ all\ » sert aux patches indépendants de toute architecture.
 .TP 
-.B source_clean_hook
-Lorsqu'il pointe sur un programme, celui-ci est alors exécuté sur la racine
-(temporaire) de l'arborescence du noyau avant l'empaquetage des sources,
-.I ./debian/tmp\-source/usr/src/kernel\-source\-X.X.XX.
-Aucun effet sur quoi que ce soit d'autre que les sources en cours
-d'empaquetage. Ce script agit sur le répertoire courant et ses fils, et 
+\fBconfig_target\fP
+Choix du type de configuration à exécuter. Par défaut, c'est «\ oldconfig\ », ce qui est pratique pour les lancements non interactifs (ou aux
+interactions réduites au minimum). Si vous avez défini patch_the_kernel à «\ YES\ » et que certains patches modifient les choix de configuration
+disponibles, vous voudrez probablement un autre type (telle que menuconfig
+ou xconfig). (La variable d'environnement \fBCONFIG_TARGET\fP outrepasse ce
+choix). Si la valeur de config_target n'est ni config, oldconfig, menuconfig
+ou xconfig, elle est alors réinitialisée à oldconfig.
+.TP 
+\fBuse_saved_config\fP
+Variable réservée seulement aux experts. Si elle est réglée à «\ NO\ » (la
+variable d'environnement \fBUSE_SAVED_CONFIG\fP outrepasse cela), le fichier
+\&.config.save du répertoire au sommet de l'arborescence est ignoré.
+.TP 
+\fBroot_cmd\fP
+C'est une variable dont le but est d'être transmise à \fBdpkg\-buildpackage\fP
+dans la cible \fIbuildpackage\fP. Elle doit fournir un moyen d'obtenir les
+droits d'accès du superutilisateur ( \fI«\ sudo\ »\fP ou \fI«\ fakeroot\ »\fP par
+exemple), un peu à la façon de l'option \-r de \fBdpkg\-buildpackage\fP. La
+variable d'environnement \fBROOT_CMD\fP a priorité sur celle\-ci. La variable
+d'environnement \fBUNSIGN_SOURCE\fP fournit à cette commande l'option qui force
+dpkg\-buildpackage à ne pas signer la source, et de la même façon, la
+variable d'environnement \fBUNSIGN_CHANGELOG\fP fournit à cette commande
+l'option qui force dpkg\-buildpackage à ne pas signer le changelog. Là
+encore, cette variable n'est utile que pour la cible \fIbuildpackage\fP. Réglez
+la variable d'environnement ROOT_CMD si vous voulez juste construire l'image
+du noyau, par exemple.
+.TP 
+\fBdelete_build_link\fP
+Lorsque réglée à «\ YES\ », supprime le lien symbolique
+\fI/lib/modules/$VERSION/build\fP pointant sur le paquet .deb. La variable
+d'environnement \fBDELETE_BUILD_LINK\fP a priorité sur cette option.
+.TP 
+\fBdo_clean	\fP
+Si elle est définie à «\ YES\ », un make clean sera lancé sur l'arborescence
+des sources du noyau après la construction du paquet de l'image du noyau. La
+variable d'environnement \fBCLEAN_SOURCE\fP a priorité sur cette option.
+.TP 
+\fBinstall_vmlinux\fP
+Si elle est réglée à «\ YES\ », l'image non compressée du noyau au format
+ELF sera installée en plus de l'image compressé (vmlinuz). Cette image est
+indispensable à oprofile (oprofile.sourceforge.net, pour i386 uniquement)
+pour l'optimisation du noyau et de l'espace utilisateur.
+.TP  
+\fBimage_clean_hook\fP
+Lorsqu'elle correspond à un programme, celui\-ci est alors exécuté sur la
+racine (temporaire) de l'arborescence du noyau avant l'empaquetage des
+sources. Cela n'a aucun effet sur quoi que ce soit d'autre que les sources
+en cours d'empaquetage. Si le script agit sur le répertoire courant et ses
+fils, l'arborescence originale des sources demeure inchangée. Utile pour
+faciliter le modelage des sources du noyau en cours d'empaquetage.
+.TP  
+\fBsource_clean_hook\fP
+Lorsqu'il correspond à un programme, celui\-ci est alors lancé sur la racine
+des répertoires des en\-têtes du noyau avant leur empaquetage,
+\&\fI./debian/tmp\-source/usr/src/kernel\-source\-X.X.XX\fP. Cela n'a aucun effet
+sur quoi que ce soit d'autre que les sources en cours d'empaquetage. Si le
+script agit sur le répertoire courant et ses fils, l'arborescence originale
+des sources demeure inchangée. Utile pour faciliter le modelage des en\-têtes
+du noyau en cours d'empaquetage (en supprimant par exemple les répertoires
+de contrôle de version, ou en se débarrassant des architectures non
+désirées).
+.TP  
+\fBheader_clean_hook\fP
+Lorsqu'il correspond à un programme, celui\-ci est alors lancé sur la racine
+des répertoires des en\-têtes du noyau avant leur empaquetage. Cela n'a aucun
+effet sur quoi que ce soit d'autre que les sources en cours
+d'empaquetage. Si le script agit sur le répertoire courant et ses fils,
 l'arborescence originale des sources demeure inchangée. Utile pour faciliter
-la cure d'amaigrissement des sources du noyau en cours d'empaquetage (en
-supprimant par exemple les répertoires de contrôle de version, ou en
-supprimant les architectures non voulues).
+la cure d'amaigrissement des en\-têtes du noyau en cours d'empaquetage (en
+supprimant par exemple les répertoires de contrôle de version, ou en se
+débarrassant des architectures non désirées).
+.TP  
+\fBdoc_clean_hook\fP
+Lorsqu'il correspond à un programme, celui\-ci est alors exécuté sur la
+racine de l'arborescence de la documentation avant son empaquetage. Cela n'a
+aucun effet sur quoi que soit d'autre que la documentation en cours
+d'empaquetage. Si le script agit sur le répertoire courant et ses fils,
+l'arborescence originale demeure inchangée. Utile pour faciliter le modelage
+de la documentation du noyau en cours d'empaquetage (en supprimant par
+exemple les répertoires de contrôle de version, ou en se débarrassant des
+architectures non désirées).
 .TP 
-.B header_clean_hook
-Lorsqu'il pointe sur un programme, celui-ci est alors lancé sur la racine des
-répertoires des en-têtes du noyau avant leur empaquetage. Aucun effet sur quoi
-que ce soit d'autre que les sources en cours d'empaquetage. Ce script agit sur
-le répertoire courant et ses fils, et l'arborescence originale des sources 
-demeure inchangée. Utile pour faciliter la cure d'amaigrissement des en-têtes
-du noyau en cours d'empaquetage (en supprimant par exemple les répertoires de 
-contrôle de version, ou en se débarrassant des architectures non désirées).
-.TP 
-.B doc_clean_hook
-Lorsqu'il pointe sur un programme, celui-ci est alors exécuté sur la racine
-de l'arborescence de la documentation avant son empaquetage. Aucun effet sur
-quoi que soit d'autre que la documentation en cours d'empaquetage. Ce script
-agit sur le répertoire courant et ses fils, et l'arborescence originale demeure
-inchangée. Utile pour faciliter la cure d'amaigrissement de la documentation
-du noyau en cours d'empaquetage (en supprimant par exemple les répertoires de
-contrôle de version, ou en se débarrassant des architectures non désirées).
-.TP
-.B extra_docs
+\fBextra_docs\fP
 Cette variable pourra contenir le chemin vers toute documentation
-supplémentaire qui sera alors installée dans le répertoire 
-.I /usr/share/doc/kernel\-image\-X.X.XX/.
-Il n'y a pas de détection de conflit de noms, et les fichiers ne sont pas
-compressés. De ce fait, si vous voulez que ces fichiers soient compressés, 
-compressez-les et indiquez alors le chemin vers le fichier compressé. La 
-variable d'environnement
-.B EXTRA_DOCS
+supplémentaire qui sera alors installée dans le répertoire
+\fI/usr/share/doc/kernel\-image\-X.X.XX/\fP. Il n'y a pas de détection de conflit
+de noms, et les fichiers ne sont pas compressés. De ce fait, si vous voulez
+que ces fichiers soient compressés, compressez\-les et indiquez alors le
+chemin vers le fichier compressé. La variable d'environnement \fBEXTRA_DOCS\fP
 a priorité sur cette option, et indiquera certainement la manière de
 spécifier la documentation supplémentaire.
-.TP
-.B kpkg_follow_symlinks_in_src
+.TP 
+\fBkpkg_follow_symlinks_in_src\fP
 Cette option est particulièrement utile à ceux qui se servent d'un ensemble
-de liens symboliques pour compiler leurs noyaux. Avec cette option, les paquets
-kernel\-source et kernel\-header ne seront pas une simple collection de liens
-morts, car les liens symboliques auront été suivis. Notez bien que tout lien
-symbolique présent dans les sources du noyau sera résolu. La variable 
-d'environnement 
-.B KPKG_FOLLOW_SYMLINKS_IN_SRC
-a priorité sur cette option.
-.TP
-.B make_libc_headers
-Variable pour le responsable de la
-.I libc6 
-lorsqu'il compile la
-.I libc6, 
-afin d'empaqueter aussi les en-têtes correspondants.
-.B N'Y TOUCHEZ PAS
-à moins de savoir ce que vous faites, car une différence entre les en-têtes que
-vous empaquetez et la
-.I libc6 
-peut tout à fait amener de subtiles instabilités dans tous les codes compilés
-sur votre machine. Vous êtes prévenu. La variable d'environnement
-.B MAKE_LIBC_HEADERS
-a priorité sur cette option.
-.TP
-.B CONCURRENCY_LEVEL
+de liens symboliques pour compiler leurs noyaux. Avec cette option, les
+paquets kernel\-source et kernel\-header ne seront pas une simple collection
+de liens morts, car les liens symboliques auront été suivis. Notez bien que
+tout lien symbolique présent dans les sources du noyau sera résolu. La
+variable d'environnement \fBKPKG_FOLLOW_SYMLINKS_IN_SRC\fP a priorité sur cette
+option.
+.TP 
+\fBmake_libc_headers\fP
+Variable pour le responsable de la \fIlibc6\fP qui, lorsqu'il compile la
+\fIlibc6\fP, empaquette aussi les en\-têtes correspondants. \fBN'Y TOUCHEZ PAS\fP à
+moins de savoir ce que vous faites, car une différence entre les en\-têtes
+que vous empaquetez et la \fIlibc6\fP peut vraiment déclencher de subtiles
+instabilités dans tous les codes compilés sur votre machine. Vous êtes
+prévenu. La variable d'environnement \fBMAKE_LIBC_HEADERS\fP a priorité sur
+cette option.
+.TP 
+\fBCONCURRENCY_LEVEL\fP
 Si elle est définie, cette variable règle le nombre de processus concurrents
 qu'utilisera make pour compiler le noyau et les modules, grâce à l'option
-.I -j
-de la commande make lancée par la cible
-.B build
-de
-.B make\-kpkg.
-Doit être, si elle est définie, un (petit) entier.
-.TP
-.B ARCH_IN_NAME
-Si elle est définie, cette variable force
-.B make\-kpkg
-à utiliser un nom rallongé pour le paquet de l'image du noyau, en intégrant la
-sous\-architecture dans le nom de l'image\ ;\ ainsi, on peut écrire des scripts
-pour créer de multiples sous\-architectures, l'une après l'autre.
-.B Notez bien
-que seul le
-.I nom
-du paquet est changé, pas l'emplacement des modules, etc.
-.TP
-.B CONFDIR
+\fI\-j\fP de la commande make lancée par la cible \fBbuild\fP de \fBmake\-kpkg\fP. Doit
+être, si elle est définie, un (petit) entier.
+.TP 
+\fBARCH_IN_NAME\fP
+Si elle est définie, cette variable force \fBmake\-kpkg\fP à utiliser un nom
+rallongé pour le paquet de l'image du noyau, en intégrant la
+sous\-architecture dans le nom de l'image\ ; ainsi, on peut écrire des
+scripts pour créer de multiples sous\-architectures, l'une après
+l'autre. \fBNotez bien\fP que seul le \fInom\fP du paquet est changé, pas
+l'emplacement des modules, etc.
+.TP 
+\fBCONFDIR\fP
 Cette variable pourra pointer sur un répertoire contenant les fichiers
-.I .config
-spécifiques aux différentes architectures (consultez
-.I /usr/share/kernel\-package/Config
-pour voir des exemples). Pratique pour compiler pour plusieurs architectures.
-Pointe par défaut sur 
-.I /usr/share/kernel\-package/Config
-.TP
-.B IMAGEDIR
-Si vous voulez que l'image soit stockée ailleurs que dans
-.I /boot
-, définissez le répertoire de destination dans cette variable. Cela
-pourra être utile aux utilisateurs de
-.B loadlin.
-Pointe par défaut sur  
-.I /boot.
-.TP
-.B MODULE_LOC
+\&\fI.config\fP spécifiques aux différentes architectures (consultez
+\fI/usr/share/kernel\-package/Config\fP pour voir des exemples). Pratique pour
+compiler pour plusieurs architectures. Pointe par défaut sur
+\fI/usr/share/kernel\-package/Config\fP.
+.TP 
+\fBINITRD_CMD\fP
+Réglez cette variable en lui donnant une liste d'exécutables (séparé par des
+espaces) permettant la création du disque virtuel (RAM Disk) initial. Elle
+n'a d'effet que si vous installez une image du noyau qui utilise un disque
+virtuel au démarrage. Les commandes indiquées doivent être directement
+compatibles avec \fImkinitrd\fP. Cette variable définit le mode de construction
+par défaut du script post\-installation lors de l'installation, qui peut être
+outrepassée par l'administrateur pour chacune des cibles grâce à
+\fB/etc/kernel\-img.conf\fP. Si cette liste n'est pas définie, elle pointe par
+défaut sur un sous\-ensemble de \fImkinitrd mkinitrd.yaird mkinitramfs\fP, ce
+sous\-ensemble étant choisi selon la version du noyau en cours de
+construction, afin que chacun puisse faire ses réglages manuellement (s'il
+sait ce qu'il fait).
+.TP 
+\fBIMAGEDIR\fP
+Si vous voulez que l'image soit stockée ailleurs que dans \fI/boot\fP,
+définissez le répertoire de destination dans cette variable. Cela pourra
+être utile aux utilisateurs de \fBloadlin\fP. Pointe par défaut sur \fI/boot\fP.
+.TP 
+\fBMODULE_LOC\fP
 Réglez cette variable, soit dans votre environnement, soit dans le fichier
-de configuration, afin qu'elle pointe sur l'endroit où sont situés les modules
-additionnels. Pointe par défaut sur 
-.I /usr/src/modules
-.TP
-.B CONFDIR
+de configuration, afin qu'elle pointe sur l'endroit où sont situés les
+modules additionnels. Pointe par défaut sur \fI/usr/src/modules\fP.
+.TP 
+\fBCONFDIR\fP
 Réglez cette variable, soit dans votre environnement, soit dans le fichier
-de configuration, afin qu'elle pointe sur l'endroit où sont situés les fichiers
-de configuration du noyau. Pointe par défaut sur
-.I /usr/share/kernel\-package/Config
-.TP
-.B PATCH_DIR 
+de configuration, afin qu'elle pointe sur l'endroit où sont situés les
+fichiers de configuration du noyau. Pointe par défaut sur
+\fI/usr/share/kernel\-package/Config\fP.
+.TP 
+\fBPATCH_DIR\fP
 Réglez cette variable, soit dans votre environnement, soit dans le fichier
-de configuration, afin qu'elle pointe sur l'endroit où sont situés les patches
-additionnels du noyau. Pointe par défaut sur
-.I /usr/src/kernel\-patches/ARCHITECTURE
-.TP
-.B ALL_PATCH_DIR 
+de configuration, afin qu'elle pointe sur l'endroit où sont situés les
+patches additionnels du noyau. Pointe par défaut sur
+\fI/usr/src/kernel\-patches/ARCHITECTURE\fP.
+.TP 
+\fBALL_PATCH_DIR\fP
 Réglez cette variable, soit dans votre environnement, soit dans le fichier
-de configuration, afin qu'elle pointe sur l'endroit où sont situés les patches
-additionnels du noyau non liés à des architectures. Pointe par défaut sur
-.I /usr/src/kernel\-patches/all
+de configuration, afin qu'elle pointe sur l'endroit où sont situés les
+patches additionnels du noyau non liés à des architectures. Pointe par
+défaut sur \fI/usr/src/kernel\-patches/all\fP.
 .PP
-Le contenu d'une variable est définie de la façon suivante\ :\ 
+Le contenu d'une variable est définie de la façon suivante\ :
 .IP a)
-Les valeurs par défaut sont présentes dans le fichier «\ rules\ ». Ces valeurs
-sont utilisées si aucun réglage n'est fait.
+Les valeurs par défaut sont présentes dans le fichier «\ rules\ ». Ces
+valeurs sont utilisées si aucun réglage n'est fait.
 .IP b)
 Les variables peuvent être réglées dans le fichier de configuration
-.I /etc/kernel\-pkg.conf. 
-Ces valeurs ont priorité sur les valeurs par défaut.
+\fI/etc/kernel\-pkg.conf\fP. Ces valeurs ont priorité sur les valeurs par
+défaut.
 .IP c)
-Les variables peuvent aussi être réglées en donnant une valeur à la variable
-d'environnement correspondante. Ces valeurs ont priorité sur le fichier de
-configuration et sur les valeurs par défaut.
+Les variables peuvent aussi être définies en donnant une valeur à la
+variable d'environnement correspondante. Ces valeurs ont priorité sur le
+fichier de configuration et sur les valeurs par défaut.
 .IP d)
-Par l'utilisation des options de
-.B make\-kpkg 
-, ou, lorsqu'on utilise directement les fichiers «\ rules\ », sur la ligne
-de commande.
+Par l'utilisation des options de \fBmake\-kpkg\fP, ou, lorsqu'on utilise
+directement les fichiers «\ rules\ », sur la ligne de commande.
 .br
-.BI "# xxx/rules DEBIAN_REVISION=2.0a kernel_image"
+\fB# xxx/rules DEBIAN_REVISION=2.0a kernel_image\fP
 .br
-Cette commande a priorité sur toutes les méthodes décrites ci-dessus.
+Cette commande a priorité sur toutes les méthodes décrites ci\-dessus.
 .SH FICHIERS
-Le fichier décrit ici est
-.I /etc/kernel\-pkg.conf.
-ou
-.I ~/.kernel\-pkg.conf.
+Le fichier ici décrit est \fI/etc/kernel\-pkg.conf\fP ou \fI~/.kernel\-pkg.conf\fP.
 .SH "VOIR AUSSI"
-.BR make\-kpkg (1),
-.BR kernel\-img.conf (5),
-.BR make (1),
-.B le manuel GNU Make.
+\fBmake\-kpkg\fP(1), \fBkernel\-img.conf\fP(5), \fBmake\fP(1), \fBle manuel GNU Make\fP
 .SH BOGUES
-Il n'y a aucun bogue. Toute ressemblance avec un bogue serait du délire. 
-Vraiment.
+Il n'y a pas d'erreur. Toute ressemblance avec un bogue est du
+délire. Vraiment.
 .SH AUTEUR
-Cette page a été écrite par Manoj Srivastava <srivasta@debian.org>, pour le
-système Debian GNU/Linux.
+Cette page a été écrite par Manoj Srivastava, <srivasta@debian.org>,
+pour le système Debian GNU/Linux.
 .SH TRADUCTION
-Sylvain Cherrier <sylvain.cherrier@free.fr> Juillet 2004.
+Cette page de manuel a été traduite et est maintenue par Sylvain Cherrier
+<sylvain.cherrier@free.fr> et les membres de la liste
+<debian\-l10n\-french@lists.debian.org> entre 2004 et 2007.
