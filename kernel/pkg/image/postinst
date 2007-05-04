@@ -473,13 +473,13 @@ sub really_reverse_link {
 
   if ($use_hard_links =~ m/YES/i) {
     link($Old . "$link_name", $src_dir . "$link_name") ||
-      die("Failed to symbolic-link " . $dest_dir . "$link_name to " . $src_dir
+      die("Failed to hard-link " . $dest_dir . "$link_name to " . $src_dir
           . "$link_name .\n");
     warn "ln " . $Old . "$link_name " . $src_dir . "$link_name"  if $DEBUG;
   }
   else {
     symlink($Old . "$link_name", $src_dir . "$link_name") ||
-      die("Failed to link " . $dest_dir . "$link_name to " . $src_dir . 
+      die("Failed to symbolically link " . $dest_dir . "$link_name to " . $src_dir . 
           "$link_name .\n");
     warn "ln -s " . $Old . "$link_name " . $src_dir . "$link_name" if $DEBUG;
   }
@@ -792,7 +792,7 @@ sub handle_non_symlinks {
     if ($use_hard_links =~ m/YES/i) {
       warn "ln " . $Old . "$kimage " . $realimageloc . "$image_name" if $DEBUG;
       if (! link($Old . "$kimage", $realimageloc . "$image_name")) {
-        warn "Could not link " . $image_dest .
+        warn "Could not hard link " . $image_dest .
           "$kimage to $image_name :$!";
       }
     }
@@ -825,7 +825,7 @@ sub handle_non_symlinks {
     if (! link($Old . "$image_name", "$kimage")) {
       warn "mv $kimage.$$ $kimage" if $DEBUG;
       rename("$kimage.$$", "$kimage");
-      die("Failed to link " . $realimageloc . "$image_name to "
+      die("Failed to hard link " . $realimageloc . "$image_name to "
           . $image_dest . "$kimage .\n");
     }
   }

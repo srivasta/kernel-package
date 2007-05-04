@@ -1,5 +1,10 @@
 2007-05-04  Manoj Srivastava  <srivasta@debian.org>
 
+	* postinst (really_reverse_link):
+		  srivasta@debian.org--lenny/kernel-package--devel--11.0--patch-6
+		  Fix Typographical errors in diagnostics where symlink
+		  and hardlink were swapped. 
+
 	* preinst (check):
 		  srivasta@debian.org--lenny/kernel-package--devel--11.0--patch-2
 		  Add more verbose explanations when aborting.
