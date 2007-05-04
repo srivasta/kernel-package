@@ -1,3 +1,9 @@
+2007-05-04  Manoj Srivastava  <srivasta@debian.org>
+
+	* make-kpkg (main):
+		  srivasta@debian.org--lenny/kernel-package--devel--11.0--patch-3
+		  Allow silentoldconfig as a possible config target.
+
 2007-05-01  Manoj Srivastava  <srivasta@debian.org>
 
 	* make-kpkg.8:
