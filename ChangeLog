@@ -1,5 +1,10 @@
 2007-05-04  Manoj Srivastava  <srivasta@debian.org>
 
+	* make-kpkg.8:
+		  srivasta@debian.org--lenny/kernel-package--devel--11.0--patch-5
+		  Document the fact that we require a .config file even
+		  when running the debian target.
+
 	* kernel-pkg.conf.fr.5:
 		  srivasta@debian.org--lenny/kernel-package--devel--11.0--patch-4
 		  New translation.

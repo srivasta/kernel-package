@@ -724,10 +724,14 @@ later.
 .B debian
 This target creates the 
 .I ./debian
-directory, and optionally patches the source. This is called by the 
+directory, and optionally patches the source. It requires a
+pre-existing 
+.I .config
+configuration file.  This target is called by the 
 .B configure 
 target. You may use this target to have the sources patched, and then
-manually run the configuration step.
+manually run the configuration step to update the configuration file,
+with any new configuration options the patches may have introduced.
 .TP
 .B libc\-kheaders
 This is a special target for the libc\-dev maintainer, who can use it
