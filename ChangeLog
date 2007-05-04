@@ -1,5 +1,10 @@
 2007-05-04  Manoj Srivastava  <srivasta@debian.org>
 
+	* Problems (VFS):
+		  srivasta@debian.org--lenny/kernel-package--devel--11.0--patch-8
+		  Document that kernel-package does not work wih older
+		  make versions.
+
 	* make-kpkg.8:
 		  srivasta@debian.org--lenny/kernel-package--devel--11.0--patch-5
 		  Document the fact that we require a .config file even

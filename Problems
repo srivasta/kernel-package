@@ -233,3 +233,13 @@ VFS: Cannot open root device "308" or 03:08
 | Please correct this.
 | make: *** [install/linux-image-2.6.18] Erreur 2
 `----
+
+          u) The current version of make-kpkg is incompatible with
+             older versions of make. Specifically, the problem shows
+             up as:
+,----
+| $ fakeroot make-kpkg --initrd                  
+| exec make -f /usr/share/kernel-package/ruleset/minimal.mk debian INITRD=YES 
+| /usr/share/kernel-package/ruleset/misc/version_vars.mk:55: *** missing `endif'.  Stop.
+| Failed to create a ./debian directory: No such file or directory at /usr/bin/make-kpkg line 1096.
+`----
