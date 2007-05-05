@@ -7,6 +7,14 @@
 	  (.config):
 		  srivasta@debian.org--lenny/kernel-package--devel--11.0--patch-10
 		  If it does, then use make defconfig to generate one.
+	  (debian/stamp-conf):
+		  srivasta@debian.org--lenny/kernel-package--devel--11.0--patch-11
+		  Do not move setlocalversion out of the way, now that we
+		  can handle the -dirty string.
+	  (real_stamp_clean):
+		  srivasta@debian.org--lenny/kernel-package--devel--11.0--patch-11
+		  Since we do not move setlocalversion out of the way,
+		  there is no need to revert that on clean.
 
 2007-03-01  Manoj Srivastava  <srivasta@debian.org>
 

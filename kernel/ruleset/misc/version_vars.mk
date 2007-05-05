@@ -89,12 +89,18 @@ ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
   ifneq ($(strip $(TEST)),$(strip $(VERSION)))
     $(warn $(TEST))
   endif
- HAVE_BAD_VERSION:=$(call doit, if [ $$(echo $(VERSION) | wc -l) -gt 1 ]; then \
+  HAVE_BAD_VERSION:=$(call doit, if [ $$(echo $(VERSION) | wc -l) -gt 1 ]; then \
                                     echo YES;                                  \
                                  fi)
- ifneq (,$(strip $(HAVE_BAD_VERSION)))
-  $(error Error: "$(VERSION)")
- endif
+  ifneq (,$(strip $(HAVE_BAD_VERSION)))
+    $(error Error: "$(VERSION)")
+  endif
+  ifneq ($(strip $(CONFIG_LOCALVERSION_AUTO)),)
+    GIT_VERSION=$(shell /bin/sh scripts/setlocalversion)
+    ifneq ($(strip $(GIT_VERSION)),)
+      GIT_VERSION:=$(GIT_VERSION)-dirty
+    endif
+  endif
 else
   ifeq ($(DEB_HOST_GNU_SYSTEM), kfreebsd-gnu)
     VERSION        =$(call doit,grep '^REVISION=' conf/newvers.sh |                   \
@@ -146,27 +152,28 @@ UTS_RELEASE_VERSION=$(call doit,if [ -f $(UTS_RELEASE_HEADER) ]; then           
                  else echo "" ;                                                          \
                  fi)
 
-version = $(VERSION).$(PATCHLEVEL).$(SUBLEVEL)$(EXTRAVERSION)$(iatv)$(LOCALVERSION)
+version = $(VERSION).$(PATCHLEVEL).$(SUBLEVEL)$(EXTRAVERSION)$(iatv)$(LOCALVERSION)$(GIT_VERSION)
 
 # Bug out if the version number id not all lowercase
 lc_version = $(call doit,echo $(version) | tr A-Z a-z)
 ifneq ($(strip $(version)),$(strip $(lc_version)))
   ifeq ($(strip $(IGNORE_UPPERCASE_VERSION)),)
-    $(error Error. The version number \
-       $(strip $(version))            \
- VERSION=[$(VERSION)], PATCHLEVEL=[$(PATCHLEVEL)], \
- SUBLEVEL=[$(SUBLEVEL)], EXTRAVERSION=[$(EXTRAVERSION)], \
- iatv=[$(iatv)], LOCALVERSION=[$(LOCALVERSION)],   \
- UTS_RELEASE_VERSION=[$(UTS_RELEASE_VERSION)],      \
- KERNELRELEASE=[$(KERNELRELEASE)].                 \
- is not all lowercase. Since the version ends up in the package\
- name of the kernel image package, this is a Debian policy \
- violation, and the packaging system shall refuse to package \
+    $(error Error. The version number                               \
+       $(strip $(version))                                          \
+ VERSION=[$(VERSION)], PATCHLEVEL=[$(PATCHLEVEL)],                  \
+ SUBLEVEL=[$(SUBLEVEL)], EXTRAVERSION=[$(EXTRAVERSION)],            \
+ iatv=[$(iatv)], LOCALVERSION=[$(LOCALVERSION)],                    \
+ GIT_VERSION=[$(GIT_VERSION)]                                       \
+ UTS_RELEASE_VERSION=[$(UTS_RELEASE_VERSION)],                      \
+ KERNELRELEASE=[$(KERNELRELEASE)].                                  \
+ is not all lowercase. Since the version ends up in the package     \
+ name of the kernel image package, this is a Debian policy          \
+ violation, and the packaging system shall refuse to package        \
  the image. )
   else
     $(warn Error. The version number $(strip $(version)) is not all \
- lowercase. Since the version ends up in the package name of the \
- kernel image package, this is a Debian policy violation, and \
+ lowercase. Since the version ends up in the package name of the    \
+ kernel image package, this is a Debian policy violation, and       \
  the packaging system shall refuse to package the image. Lower -casing version.)
 
     version := $(strip $(lc_version))

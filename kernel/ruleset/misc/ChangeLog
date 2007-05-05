@@ -1,3 +1,14 @@
+2007-05-05  Manoj Srivastava  <srivasta@debian.org>
+
+	* version_vars.mk (GIT_VERSION):
+		  srivasta@debian.org--lenny/kernel-package--devel--11.0--patch-11
+		  If CONFIG_LOCALVERSION_AUTO is set, see if we are
+		  running in a git tree. If so, append -dirty to the git
+		  version string.
+	  (version):
+		  srivasta@debian.org--lenny/kernel-package--devel--11.0--patch-11
+		  Append git version string
+
 2007-03-01  Manoj Srivastava  <srivasta@debian.org>
 
 	* version_vars.mk:
