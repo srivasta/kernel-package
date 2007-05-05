@@ -1,3 +1,11 @@
+2007-05-05  Manoj Srivastava  <srivasta@debian.org>
+
+	* minimal.mk:
+		  srivasta@debian.org--lenny/kernel-package--devel--11.0--patch-10
+		  Now that kernel-package seems to handle kernels well
+		  without a .config again, remove the tests for a
+		  preexisting .config.
+
 2007-05-04  Manoj Srivastava  <srivasta@debian.org>
 
 	* modules.mk (int_ca):

@@ -43,16 +43,8 @@ DEBDIR=$(shell if test -f ./debian/ruleset/kernel_version.mk; then echo ./debian
 endef
 $(eval $(which_debdir))
 
-HAVE_CONFIG=$(shell if test -f .config; then echo YES; fi)
-
 include $(DEBDIR)/ruleset/common/archvars.mk
-
-ifneq ($(strip $(HAVE_CONFIG)),)
-  include $(DEBDIR)/ruleset/misc/version_vars.mk
-else
-  $(warning No .config file found)
-endif
-
+include $(DEBDIR)/ruleset/misc/version_vars.mk
 include $(DEBDIR)/ruleset/misc/defaults.mk
 -include $(CONFLOC)
 include $(DEBDIR)/ruleset/misc/config.mk
@@ -96,9 +88,6 @@ endif
 debian: minimal_debian
 minimal_debian:
 	$(REASON)
-ifeq ($(strip $(HAVE_CONFIG)),)
-	$(error Please create a .config file)
-endif
 	@echo "This is kernel package version $(kpkg_version)."
 	test -d debian || mkdir debian
 	test ! -e stamp-building || rm -f stamp-building

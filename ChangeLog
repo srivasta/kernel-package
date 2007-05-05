@@ -1,3 +1,10 @@
+2007-05-05  Manoj Srivastava  <srivasta@debian.org>
+
+	* make-kpkg.8:
+		  srivasta@debian.org--lenny/kernel-package--devel--11.0--patch-9
+		  Revert changes made about needing .config files, since
+		  the behaviour has now been changed back.
+
 2007-05-04  Manoj Srivastava  <srivasta@debian.org>
 
 	* Problems (VFS):

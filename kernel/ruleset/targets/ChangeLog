@@ -1,3 +1,13 @@
+2007-05-05  Manoj Srivastava  <srivasta@debian.org>
+
+	* target.mk (NEED_CONFIG):
+		  srivasta@debian.org--lenny/kernel-package--devel--11.0--patch-10
+		  Determine if this kernel needs a pre-defined .config or
+		  not.
+	  (.config):
+		  srivasta@debian.org--lenny/kernel-package--devel--11.0--patch-10
+		  If it does, then use make defconfig to generate one.
+
 2007-03-01  Manoj Srivastava  <srivasta@debian.org>
 
 	* target.mk (debian/stamp-conf):

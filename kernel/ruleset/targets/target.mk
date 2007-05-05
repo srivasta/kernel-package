@@ -32,8 +32,19 @@
 ##
 ###############################################################################
 
+# Find out whether we need to have a pre-defined .config
+NEED_CONFIG = $(shell if [ $(VERSION) -lt 2 ]; then                        \
+                           echo "";                                        \
+           elif [ $(VERSION) -eq 2 ] && [ $(PATCHLEVEL) -lt 6 ]; then      \
+                           echo "";                                        \
+           elif [ $(VERSION) -eq 2 ] && [ $(PATCHLEVEL) -eq 6 ] &&         \
+                   [ $(SUBLEVEL) -lt 18 ]; then                            \
+                           echo "";                                        \
+           else                                                            \
+                           echo "YES";                                     \
+           fi)
 
-.config: Makefile
+.config:
 	$(REASON)
 	$(checkdir)
 ifneq ($(strip $(use_saved_config)),NO)
@@ -46,6 +57,9 @@ endif
 	test -f .config || test ! -f $(DEBDIR)/config || \
 		            cp -pf $(DEBDIR)/config  .config
 ifeq ($(strip $(have_new_config_target)),)
+  ifneq ($(strip $(NEED_CONFIG)),)
+	test -f .config || $(MAKE) defconfig
+  endif
 	test -f .config || (echo "*** Need a config file .config" && false)
 endif
 # if $(have_new_config_target) is set, then we need not have a .config
