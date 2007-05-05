@@ -34,19 +34,20 @@ make\-kpkg \- build Debian kernel packages from Linux kernel sources
 .SH DESCRIPTION
 This manual page explains the Debian
 .B "make\-kpkg"
-utility, which is used to create the kernel related 
-Debian 
-packages. This utility needs to be run from a top level 
-Linux
-kernel source directory,
-which has been previously configured (unless you are using the
-configure target). Normally, if kernel\-package does not find a 
+utility, which is used to create the kernel related Debian
+packages. This utility needs to be run from a top level Linux kernel
+source directory, which has been previously configured. Starting with
+kernel version
+.B 2.6.18, 
+you can't run make at the top level like we do to determine the
+version number without having a .config file. Unfortunately, with the
+various local version addenda, the only way to get a reliable version
+is to ask the kbuild system by running make -- so a 
 .I .config
-file in the current directory, it tries very hard to get an
-appropriate one (usually a config file already tailored for debian
-kernels for that architecture), and then calls
-.B make oldconfig
-to let the user answer any new questions. Typically, you run this
+file is now required. Earlier, if kernel\-package did not find a
+.I .config
+file in the current directory, it tried very hard to get an
+appropriate one, but that is no longer feasible. Typically, you run this
 command as root, or under
 .B fakeroot,
 or tell 

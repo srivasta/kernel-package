@@ -9,6 +9,7 @@
 		  srivasta@debian.org--lenny/kernel-package--devel--11.0--patch-5
 		  Document the fact that we require a .config file even
 		  when running the debian target.
+		  Explain why a .config is now required.
 
 	* kernel-pkg.conf.fr.5:
 		  srivasta@debian.org--lenny/kernel-package--devel--11.0--patch-4
