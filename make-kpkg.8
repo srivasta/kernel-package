@@ -427,7 +427,11 @@ option.
 Call the packages foo\-* instead of kernel\-*. This is useful in
 helping transition from calling the packages kernel\-* to linux\-*
 packages, in preparation for non\-linux kernels in the
-distribution. The default is linux. 
+distribution. The default is linux. The stem, since it is the initial
+part of a package name must consist only of lower case letters
+(`a-z'), digits (`0-9'), plus (`+') and minus (`-') signs, and periods
+(`.').  It must be at least two characters long and must start with an
+alphanumeric character. 
 .TP
 .B \-\-us
 This option is passed to dpkg\-buildpackage, and directs that package

@@ -5,9 +5,9 @@
 # Created On       : Mon Jun 17 01:10:11 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Tue Jan  3 19:56:11 2006
+# Last Modified On : Wed May  9 23:45:27 2007
 # Last Machine Used: glaurung.internal.golden-gryphon.com
-# Update Count     : 232
+# Update Count     : 233
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
@@ -1019,6 +1019,15 @@ EOMSG
       unless -f "debian/ruleset/kernel_version.mk";
   }
   if ($stem) {
+    if (! $stem =~ m/[a-z0-9][a-z0-9\.\+\-]+/) {
+      print STDERR "The stem, since it is the initial part of a package name\n";
+      print STDERR "must consist only of lower case letters (`a-z'), digits\n";
+      print STDERR "(`0-9'), plus (`+') and minus (`-') signs, and periods \n";
+      print STDERR "(`.').  It must be at least two characters long and must\n";
+      print STDERR "start with an alphanumeric character\n";
+      print STDERR "$stem does not match the criteria.\n";
+      die "Illegal stem option.\n";
+    }
     $command .= " KPKG_STEM=$stem ";
     $alt_cmd .= " KPKG_STEM=$stem "
       unless -f "debian/ruleset/kernel_version.mk";
