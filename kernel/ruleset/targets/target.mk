@@ -89,7 +89,7 @@ endif
 	@echo "KPKG_ARCH        = $(KPKG_ARCH)"        >> .mak
 # Fetch the rest of the information from the kernel's Makefile
 	$(eval $(which_debdir))
-ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
+ifeq ($(DEB_HOST_ARCH_OS), linux)
 	@$(MAKE) --no-print-directory -sf $(DEBDIR)/ruleset/kernel_version.mk  \
           ARCH=$(KERNEL_ARCH) $(CROSS_ARG) debian_conf_var              >> .mak
 endif
@@ -105,11 +105,11 @@ endif
 
 debian/dummy_do_dep:
 	$(REASON)
-ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
+ifeq ($(DEB_HOST_ARCH_OS), linux)
 	+$(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) \
                                  ARCH=$(KERNEL_ARCH) $(fast_dep) dep
 else
-  ifeq ($(DEB_HOST_GNU_SYSTEM), kfreebsd-gnu)
+  ifeq ($(DEB_HOST_ARCH_OS), kfreebsd)
 	$(PMAKE) -C $(architecture)/compile/GENERIC depend
   endif
 endif
@@ -119,12 +119,12 @@ debian/stamp-kernel-conf: .config Makefile
 	$(REASON)
 	$(eval $(which_debdir))
 	$(eval $(deb_rule))
-ifeq ($(DEB_HOST_GNU_SYSTEM), kfreebsd-gnu)
+ifeq ($(DEB_HOST_ARCH_OS), kfreebsd)
 	mkdir -p bin
 	ln -sf `which gcc-3.4` bin/cc
 	cd $(architecture)/conf && freebsd-config GENERIC
 endif
-ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
+ifeq ($(DEB_HOST_ARCH_OS), linux)
 	$(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) ARCH=$(KERNEL_ARCH) \
                 $(config_target)
   ifeq ($(shell if   [ $(VERSION) -gt 2 ]; then                            \
@@ -254,14 +254,14 @@ real_stamp_clean:
           mv -f scripts/package/builddeb.kpkg-dist scripts/package/builddeb
 	test ! -f scripts/package/Makefile.kpkg-dist ||                     \
           mv -f scripts/package/Makefile.kpkg-dist scripts/package/Makefile
-ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
+ifeq ($(DEB_HOST_ARCH_OS), linux)
 	test ! -f .config  || cp -pf .config config.precious
 	test ! -f Makefile || \
             $(MAKE) $(FLAV_ARG) $(EXTRAV_ARG) $(CROSS_ARG) ARCH=$(KERNEL_ARCH) distclean
 	test ! -f config.precious || mv -f config.precious .config
 else
 	rm -f .config
-  ifeq ($(DEB_HOST_GNU_SYSTEM), kfreebsd-gnu)
+  ifeq ($(DEB_HOST_ARCH_OS), kfreebsd)
 	rm -rf bin
 	if test -e $(architecture)/compile/GENERIC ; then     \
 	  $(PMAKE) -C $(architecture)/compile/GENERIC clean ; \
@@ -310,7 +310,7 @@ endif
                 touch Makefile;                                                           \
              fi;                                                                          \
 	  fi)
-ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
+ifeq ($(DEB_HOST_ARCH_OS), linux)
 	$(MAKE) $(do_parallel) $(EXTRAV_ARG) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) \
 	                    $(CROSS_ARG) $(target)
   ifneq ($(strip $(shell grep -E ^[^\#]*CONFIG_MODULES $(CONFIG_FILE))),)
@@ -318,7 +318,7 @@ ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
 	                    $(CROSS_ARG) modules
   endif
 else
-  ifeq ($(DEB_HOST_GNU_SYSTEM), kfreebsd-gnu)
+  ifeq ($(DEB_HOST_ARCH_OS), kfreebsd)
 	$(PMAKE) -C $(architecture)/compile/GENERIC
   endif
 endif

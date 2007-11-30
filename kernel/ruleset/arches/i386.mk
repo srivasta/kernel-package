@@ -41,7 +41,7 @@ ifeq (,$(findstring $(KPKG_SUBARCH), xen i386 i486 i586 i686))
   KPKG_SUBARCH:=$(GUESS_SUBARCH)
 endif
 DEBCONFIG= $(CONFDIR)/config.$(KPKG_SUBARCH)
-ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
+ifeq ($(DEB_HOST_ARCH_OS), linux)
   ifeq ($(strip $(CONFIG_X86_XEN)),)
     kimagesrc = $(strip arch/$(KERNEL_ARCH)/boot/$(kimage))
     kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
@@ -68,7 +68,7 @@ ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
 else
   loaderdep=grub | grub2
   loader=grub
-  ifeq ($(DEB_HOST_GNU_SYSTEM), kfreebsd-gnu)
+  ifeq ($(DEB_HOST_ARCH_OS), kfreebsd)
     kimagesrc = $(strip $(KERNEL_ARCH)/compile/GENERIC/kernel)
     kimagedest = $(INT_IMAGE_DESTDIR)/kfreebsd-$(version)
   endif

@@ -35,7 +35,7 @@
 ###############################################################################
 
 
-ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
+ifeq ($(DEB_HOST_ARCH_OS), linux)
   localversion_files := $(wildcard localversion*)
 
   # Could have used :=, but some patches do seem to patch the
@@ -102,7 +102,7 @@ ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
     endif
   endif
 else
-  ifeq ($(DEB_HOST_GNU_SYSTEM), kfreebsd-gnu)
+  ifeq ($(DEB_HOST_ARCH_OS), kfreebsd)
     VERSION        =$(call doit,grep '^REVISION=' conf/newvers.sh |                   \
       sed -e 's/[^0-9]*\([0-9]\)\..*/\1/')
     PATCHLEVEL =$(call doit,grep '^REVISION=' conf/newvers.sh |                       \
@@ -184,7 +184,7 @@ endif
 AM_OFFICIAL := $(call doit,if [ -f debian/official ]; then echo YES; fi )
 
 # See if we are being run in the kernel directory
-ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
+ifeq ($(DEB_HOST_ARCH_OS), linux)
   define check_kernel_dir
   IN_KERNEL_DIR := $(call doit,if test -d drivers && test -d kernel && test -d fs && test \
                                    -d include/linux ; then                            \
@@ -192,7 +192,7 @@ ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
                            fi )
   endef
 else
-  ifeq ($(DEB_HOST_GNU_SYSTEM), kfreebsd-gnu)
+  ifeq ($(DEB_HOST_ARCH_OS), kfreebsd)
     define check_kernel_dir
     IN_KERNEL_DIR := $(call doit,if test -d dev && test -d kern && test -d fs &&          \
                              test -d i386/include ; then echo YES; fi)

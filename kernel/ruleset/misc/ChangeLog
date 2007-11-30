@@ -1,3 +1,17 @@
+2007-11-30  Manoj Srivastava  <srivasta@debian.org>
+
+	* version_vars.mk:
+		  srivasta@debian.org--lenny/kernel-package--devel--11.0--patch-13
+		  use DEB_HOST_ARCH_OS, not DEB_HOST_GNU_SYSTEM
+
+	* modules.mk:
+		  srivasta@debian.org--lenny/kernel-package--devel--11.0--patch-13
+		  use DEB_HOST_ARCH_OS, not DEB_HOST_GNU_SYSTEM
+
+	* defaults.mk:
+		  srivasta@debian.org--lenny/kernel-package--devel--11.0--patch-13
+		  use DEB_HOST_ARCH_OS, not DEB_HOST_GNU_SYSTEM
+
 2007-05-05  Manoj Srivastava  <srivasta@debian.org>
 
 	* version_vars.mk (GIT_VERSION):

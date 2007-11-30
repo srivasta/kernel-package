@@ -140,7 +140,7 @@ space:= $(empty) $(empty)
 
 include $(DEBDIR)/ruleset/misc/kernel_arch.mk
 
-ifeq ($(DEB_HOST_GNU_SYSTEM), kfreebsd-gnu)
+ifeq ($(DEB_HOST_ARCH_OS), kfreebsd)
   PMAKE = PATH=/usr/lib/freebsd/:$(CURDIR)/bin:$(PATH) WERROR= MAKEFLAGS= freebsd-make
 endif
 

@@ -44,7 +44,7 @@ install/$(i_package):
 	$(eval $(which_debdir))
 	$(make_directory) $(TMPTOP)/$(IMAGEDIR)
 	$(make_directory) $(DOCDIR)/examples
-ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
+ifeq ($(DEB_HOST_ARCH_OS), linux)
 	$(install_file) Documentation/Changes $(DOCDIR)/
 	gzip -9qf $(DOCDIR)/Changes
 endif
@@ -100,12 +100,12 @@ endif
 ifeq ($(strip $(HAVE_EXTRA_DOCS)),YES)
 	$(install_file) $(extra_docs) 	         $(DOCDIR)/
 endif
-ifneq ($(filter kfreebsd-gnu, $(DEB_HOST_GNU_SYSTEM)):$(strip $(shell grep -E ^[^\#]*CONFIG_MODULES $(CONFIG_FILE))),:)
-  ifeq  ($(DEB_HOST_GNU_SYSTEM):$(strip $(HAVE_NEW_MODLIB)),linux:)
+ifneq ($(filter kfreebsd, $(DEB_HOST_ARCH_OS)):$(strip $(shell grep -E ^[^\#]*CONFIG_MODULES $(CONFIG_FILE))),:)
+  ifeq  ($(DEB_HOST_ARCH_OS):$(strip $(HAVE_NEW_MODLIB)),linux:)
 	$(mod_inst_cmds)
   else
 # could have also said DEPMOD=/bin/true instead of moving files
-    ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
+    ifeq ($(DEB_HOST_ARCH_OS), linux)
       ifneq ($(strip $(KERNEL_CROSS)),)
 	mv System.map System.precious
       endif
@@ -115,7 +115,7 @@ ifneq ($(filter kfreebsd-gnu, $(DEB_HOST_GNU_SYSTEM)):$(strip $(shell grep -E ^[
 	mv System.precious System.map
       endif
     else
-      ifeq ($(DEB_HOST_GNU_SYSTEM), kfreebsd-gnu)
+      ifeq ($(DEB_HOST_ARCH_OS), kfreebsd)
 	mkdir -p $(INSTALL_MOD_PATH)/boot/defaults
 	install -o root -g root -m 644                        \
                 $(architecture)/conf/GENERIC.hints            \

@@ -68,7 +68,7 @@ clean: minimal_clean
 minimal_clean:
 	$(REASON)
 	@echo $(if $(strip $(kpkg_version)),"This is kernel package version $(kpkg_version).","Cleaning.")
-ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
+ifeq ($(DEB_HOST_ARCH_OS), linux)
 	test ! -f .config || cp -pf .config config.precious
 	test ! -e stamp-building || rm -f stamp-building
 	test ! -f Makefile || \
@@ -76,7 +76,7 @@ ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
 	test ! -f config.precious || mv -f config.precious .config
 else
 	rm -f .config
-  ifeq ($(DEB_HOST_GNU_SYSTEM), kfreebsd-gnu)
+  ifeq ($(DEB_HOST_ARCH_OS), kfreebsd)
 	rm -rf bin
 	if test -e $(architecture)/compile/GENERIC ; then     \
 	  $(PMAKE) -C $(architecture)/compile/GENERIC clean ; \

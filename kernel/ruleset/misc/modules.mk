@@ -65,17 +65,17 @@ CONFIG_FILE := $(shell if test -e .config ; then \
                        fi)
 
 
-ifeq ($(DEB_HOST_GNU_SYSTEM), linux-gnu)
+ifeq ($(DEB_HOST_ARCH_OS), linux)
   config = .config
 else
-  ifeq ($(DEB_HOST_GNU_SYSTEM), kfreebsd-gnu)
+  ifeq ($(DEB_HOST_ARCH_OS), kfreebsd)
     config = $(architecture)/conf/GENERIC
   endif
 endif
 
 
 # define MODULES_ENABLED if appropriate
-ifneq ($(filter kfreebsd-gnu, $(DEB_HOST_GNU_SYSTEM)):$(strip $(shell grep -E ^[^\#]*CONFIG_MODULES $(CONFIG_FILE))),:)
+ifneq ($(filter kfreebsd, $(DEB_HOST_ARCH_OS)):$(strip $(shell grep -E ^[^\#]*CONFIG_MODULES $(CONFIG_FILE))),:)
   MODULES_ENABLED := YES
 endif
 

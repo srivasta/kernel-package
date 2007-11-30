@@ -1,3 +1,13 @@
+2007-11-30  Manoj Srivastava  <srivasta@debian.org>
+
+	* target.mk (conf.vars):
+		  srivasta@debian.org--lenny/kernel-package--devel--11.0--patch-13
+		  use DEB_HOST_ARCH_OS, not DEB_HOST_GNU_SYSTEM
+
+	* image.mk (install/$(i_package)):
+		  srivasta@debian.org--lenny/kernel-package--devel--11.0--patch-13
+		  use DEB_HOST_ARCH_OS, not DEB_HOST_GNU_SYSTEM
+
 2007-05-05  Manoj Srivastava  <srivasta@debian.org>
 
 	* target.mk (NEED_CONFIG):
