@@ -1,3 +1,22 @@
+2007-11-30  Manoj Srivastava  <srivasta@debian.org>
+
+	* kernel-img.conf.fr.5:
+		  srivasta@debian.org--lenny/kernel-package--devel--11.0--patch-14
+		  If /etc/kernel-img.conf contains a mkimage line with
+		  quotation marks, then kernel reconfiguring fails. This
+		  happens because MKIMAGE variable in mkinitrd will have
+		  outer quotes and last eval operator try to execute
+		  "\"genromfs tra-la-la\"" command (instead of "genromfs
+		  tra-la-la") and fails. Remove quotes from the example.
+
+	* kernel-img.conf.es.5 (Precaución):
+		  srivasta@debian.org--lenny/kernel-package--devel--11.0--patch-14
+		  Ditto.
+
+	* kernel-img.conf.5 (Caveat):
+		  srivasta@debian.org--lenny/kernel-package--devel--11.0--patch-14
+		  Ditto.
+
 2007-05-09  Manoj Srivastava  <srivasta@debian.org>
 
 	* make-kpkg (main):
