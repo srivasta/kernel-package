@@ -114,6 +114,10 @@ ifneq ($(filter kfreebsd, $(DEB_HOST_ARCH_OS)):$(strip $(shell grep -E ^[^\#]*CO
       ifneq ($(strip $(KERNEL_CROSS)),)
 	mv System.precious System.map
       endif
+      ifneq ($(strip ($CONFIG_LGUEST)),)
+	$(install_file) Documentation/lguest/lguest $(TMPTOP)/lib/modules/$(version)/lguest
+	chmod 755 $(TMPTOP)/lib/modules/$(version)/lguest
+      endif
     else
       ifeq ($(DEB_HOST_ARCH_OS), kfreebsd)
 	mkdir -p $(INSTALL_MOD_PATH)/boot/defaults
@@ -342,6 +346,7 @@ endif
 	dpkg --build                   $(TMPTOP) $(DEB_DEST)
 ifeq ($(strip $(do_clean)),YES)
 	$(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) ARCH=$(KERNEL_ARCH) clean
+	$(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) ARCH=$(KERNEL_ARCH) -C Documentation/lguest clean
 	rm -f stamp-$(package)
 endif
 

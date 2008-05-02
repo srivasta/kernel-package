@@ -53,6 +53,7 @@ ifneq ($(strip $(shell if [ -x /usr/bin/db2html ]; then echo YSE; fi)),)
 	$(MAKE)  mandocs htmldocs
 endif
 	-tar cf - Documentation | (cd $(DOCDIR); umask 000; tar xsf -)
+	rm -f $(DOCDIR)/Documentation/lguest/lguest $(DOCDIR)/Documentation/lguest/lguest.lds
 	test ! -d $(DOCDIR)/Documentation/DocBook ||                            \
 	   rm -f   $(DOCDIR)/Documentation/DocBook/Makefile                     \
 	           $(DOCDIR)/Documentation/DocBook/*.sgml                       \

@@ -135,6 +135,8 @@ ifeq ($(DEB_HOST_ARCH_OS), linux)
 	+$(run_command)  debian/dummy_do_dep
 	$(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) \
                                  ARCH=$(KERNEL_ARCH) clean
+	$(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) \
+                                 ARCH=$(KERNEL_ARCH) -C Documentation/lguest clean
   else
     ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
 	$(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) ARCH=$(KERNEL_ARCH) prepare
@@ -256,6 +258,7 @@ real_stamp_clean:
           mv -f scripts/package/Makefile.kpkg-dist scripts/package/Makefile
 ifeq ($(DEB_HOST_ARCH_OS), linux)
 	test ! -f .config  || cp -pf .config config.precious
+	$(MAKE) $(FLAV_ARG) $(EXTRAV_ARG) $(CROSS_ARG) ARCH=$(KERNEL_ARCH) -C Documentation/lguest clean
 	test ! -f Makefile || \
             $(MAKE) $(FLAV_ARG) $(EXTRAV_ARG) $(CROSS_ARG) ARCH=$(KERNEL_ARCH) distclean
 	test ! -f config.precious || mv -f config.precious .config
@@ -316,6 +319,10 @@ ifeq ($(DEB_HOST_ARCH_OS), linux)
   ifneq ($(strip $(shell grep -E ^[^\#]*CONFIG_MODULES $(CONFIG_FILE))),)
 	$(MAKE) $(do_parallel) $(EXTRAV_ARG) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) \
 	                    $(CROSS_ARG) modules
+  endif
+  ifneq ($(strip $(shell grep -E ^[^\#]*CONFIG_LGUEST $(CONFIG_FILE))),)
+	$(MAKE) $(do_parallel) $(EXTRAV_ARG) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) \
+	                    $(CROSS_ARG) -C Documentation/lguest
   endif
 else
   ifeq ($(DEB_HOST_ARCH_OS), kfreebsd)
