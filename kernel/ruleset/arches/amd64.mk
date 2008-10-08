@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 18:31:11 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Mon Oct 31 18:31:11 2005
-## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 0
+## Last Modified On : Tue Oct  7 23:07:13 2008
+## Last Machine Used: anzu.internal.golden-gryphon.com
+## Update Count     : 1
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : handle the architecture specific variables.
@@ -30,6 +30,17 @@
 ##
 ###############################################################################
 
+IMAGE_SRC_DIR=$(shell if [ $(VERSION) -lt 2 ]; then                     \
+                        echo $(KERNEL_ARCH);                            \
+        elif [ $(VERSION) -eq 2 ] && [ $(PATCHLEVEL) -lt 6 ]; then      \
+                        echo $(KERNEL_ARCH);                            \
+        elif [ $(VERSION) -eq 2 ] && [ $(PATCHLEVEL) -eq 6 ] &&         \
+                [ $(SUBLEVEL) -lt 26 ]; then                            \
+                        echo $(KERNEL_ARCH);                            \
+        else                                                            \
+                        echo x86;                                       \
+        fi)
+
 KERNEL_ARCH=x86_64
 ifeq ($(DEB_HOST_ARCH_OS), linux)
   ifeq ($(strip $(CONFIG_X86_64_XEN)),)
@@ -38,7 +49,7 @@ ifeq ($(DEB_HOST_ARCH_OS), linux)
     loader=lilo
     loaderdoc=LiloDefault
     target = $(kimage)
-    kimagesrc = $(strip arch/$(KERNEL_ARCH)/boot/$(kimage))
+    kimagesrc = $(strip arch/$(IMAGE_SRC_DIR)/boot/$(kimage))
     kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
     DEBCONFIG= $(CONFDIR)/config.$(KPKG_SUBARCH)
     kelfimagesrc = vmlinux

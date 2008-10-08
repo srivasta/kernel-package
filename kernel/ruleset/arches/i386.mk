@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 18:31:10 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Wed Apr 12 15:17:16 2006
-## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 14
+## Last Modified On : Tue Oct  7 23:10:23 2008
+## Last Machine Used: anzu.internal.golden-gryphon.com
+## Update Count     : 17
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : handle the architecture specific variables.
@@ -37,21 +37,32 @@ GUESS_SUBARCH:=$(shell if test -f .config; then \
                        uname -m;\
                      fi)
 
+IMAGE_SRC_DIR=$(shell if [ $(VERSION) -lt 2 ]; then                     \
+                        echo $(KERNEL_ARCH);                            \
+        elif [ $(VERSION) -eq 2 ] && [ $(PATCHLEVEL) -lt 6 ]; then      \
+                        echo $(KERNEL_ARCH);                            \
+        elif [ $(VERSION) -eq 2 ] && [ $(PATCHLEVEL) -eq 6 ] &&         \
+                [ $(SUBLEVEL) -lt 26 ]; then                            \
+                        echo $(KERNEL_ARCH);                            \
+        else                                                            \
+                        echo x86;                                       \
+        fi)
+
 ifeq (,$(findstring $(KPKG_SUBARCH), xen i386 i486 i586 i686))
   KPKG_SUBARCH:=$(GUESS_SUBARCH)
 endif
 DEBCONFIG= $(CONFDIR)/config.$(KPKG_SUBARCH)
 ifeq ($(DEB_HOST_ARCH_OS), linux)
   ifeq ($(strip $(CONFIG_X86_XEN)),)
-    kimagesrc = $(strip arch/$(KERNEL_ARCH)/boot/$(kimage))
+    kimage := bzImage
+    target = $(kimage)
+    kimagesrc = $(strip arch/$(IMAGE_SRC_DIR)/boot/$(kimage))
     kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
     kelfimagesrc = vmlinux
     kelfimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
     loaderdep=lilo (>= 19.1) | grub
     loader=lilo
     loaderdoc=LiloDefault
-    kimage := bzImage
-    target = $(kimage)
   else
     kimagesrc = vmlinux
     ifeq ($(strip $(CONFIG_XEN_PRIVILEGED_GUEST)),)
