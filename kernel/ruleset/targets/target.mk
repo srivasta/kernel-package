@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 10:41:41 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Sat Nov  4 22:26:02 2006
-## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 17
+## Last Modified On : Tue Oct  7 23:51:12 2008
+## Last Machine Used: anzu.internal.golden-gryphon.com
+## Update Count     : 19
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : This file provides the commands commaon to a number of
@@ -300,7 +300,10 @@ ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
 	@echo "However, I thought the version is $(version)"
 	exit 1
 endif
-	$(if $(subst $(strip $(UTS_RELEASE_VERSION)),,$(strip $(version))),               \
+# Here, we check to see if what we think is the UTS_RELEASE_VERSION matches the version
+# If not, we re-extract the uts release version from the header, to see if our understanding
+# of UTS_RELEASE_VERSION is correct. This probably does not work right.
+	$(if $(strip $(subst $(strip $(UTS_RELEASE_VERSION)),,$(strip $(version)))),      \
 	  if [ -f $(UTS_RELEASE_HEADER) ]; then                                           \
              uts_ver=$$(grep 'define UTS_RELEASE' $(UTS_RELEASE_HEADER) |                 \
                 perl -nle  'm/^\s*\#define\s+UTS_RELEASE\s+("?)(\S+)\1/g && print $$2;'); \
