@@ -1,0 +1,6 @@
+[submodule "debian"]
+	path = debian
+	url = git://git.debian.org/~srivasta/debian/debian-dir.git
+[submodule "kernel/ruleset/common"]
+	path = kernel/ruleset/common
+	url = git://git.debian.org/~srivasta/debian/debian-common.git
