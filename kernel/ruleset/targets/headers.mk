@@ -30,6 +30,13 @@
 ##
 ###############################################################################
 
+LINK_ARCH=$(KERNEL_ARCH)
+ifeq ($(shell if [ $(PATCHLEVEL) -eq 6 ] && [ $(SUBLEVEL) -gt 23 ] ; then \
+	    if [ $(KERNEL_ARCH)=="i386" ] || [ $(KERNEL_ARCH)=="x86_64" ] ; then \
+	         echo "yes" ; fi ; fi ),yes)
+	LINK_ARCH=x86
+endif
+
 install/$(h_package):
 	$(REASON)
 	@echo "This is kernel package version $(kpkg_version)."
@@ -44,8 +51,8 @@ install/$(h_package):
 	$(make_directory) $(SRCDIR)
 	$(make_directory) $(DOCDIR)/examples
 #	$(make_directory) $(TMPTOP)/etc/kernel/postinst.d
-	$(make_directory) $(SRCDIR)/arch/$(KERNEL_ARCH)
-	$(make_directory) $(SRCDIR)/arch/$(KERNEL_ARCH)/kernel/
+	$(make_directory) $(SRCDIR)/arch/$(LINK_ARCH)
+	$(make_directory) $(SRCDIR)/arch/$(LINK_ARCH)/kernel/
 	$(eval $(which_debdir))
 	$(install_file) debian/changelog                $(DOCDIR)/changelog.Debian
 	$(install_file) $(DEBDIR)/pkg/headers/README    $(DOCDIR)/debian.README
@@ -70,18 +77,21 @@ install/$(h_package):
 	$(install_file) Makefile                           $(SRCDIR)
 	test ! -e Rules.make || $(install_file) Rules.make $(SRCDIR)
 	test ! -e .kernelrelease || $(install_file) .kernelrelease $(SRCDIR)
-	test ! -e arch/$(KERNEL_ARCH)/Makefile     ||                             \
-                                $(install_file) arch/$(KERNEL_ARCH)/Makefile      \
-                                                     $(SRCDIR)/arch/$(KERNEL_ARCH)
-	test ! -e arch/$(KERNEL_ARCH)/Makefile.cpu ||                             \
-                                $(install_file) arch/$(KERNEL_ARCH)/Makefile.cpu  \
-                                                     $(SRCDIR)/arch/$(KERNEL_ARCH)
+	test ! -e arch/$(LINK_ARCH)/Makefile     ||                             \
+                                $(install_file) arch/$(LINK_ARCH)/Makefile      \
+                                                     $(SRCDIR)/arch/$(LINK_ARCH)
+	test ! -e arch/$(LINK_ARCH)/Makefile.cpu ||                             \
+                                $(install_file) arch/$(LINK_ARCH)/Makefile.cpu  \
+                                                     $(SRCDIR)/arch/$(LINK_ARCH)
+	test ! -e arch/$(LINK_ARCH)/Makefile_32.cpu ||                             \
+                                $(install_file) arch/$(LINK_ARCH)/Makefile_32.cpu  \
+                                                     $(SRCDIR)/arch/$(LINK_ARCH)
 	test ! -e Rules.make     || $(install_file) Rules.make     $(SRCDIR)
 	test ! -e Module.symvers || $(install_file) Module.symvers $(SRCDIR)
 ifneq ($(strip $(int_follow_symlinks_in_src)),)
 	-tar cfh - include       |   (cd $(SRCDIR); umask 000; tar xsf -)
 	-tar cfh - scripts       |   (cd $(SRCDIR); umask 000; tar xsf -)
-	(cd $(SRCDIR)/include;   rm -rf asm; ln -s asm-$(KERNEL_ARCH) asm)
+	(cd $(SRCDIR)/include;   rm -rf asm; ln -s asm-$(LINK_ARCH) asm)
 	find . -path './scripts/*'   -prune -o -path './Documentation/*' -prune -o  \
                -path './debian/*'    -prune -o -type f                              \
                \( -name Makefile -o  -name 'Kconfig*' \) -print  |                  \
@@ -100,7 +110,7 @@ else
 	test ! -f $(SRCDIR)/scripts/package/builddeb.dist ||                  \
            mv  -f $(SRCDIR)/scripts/package/builddeb.dist                     \
                   $(SRCDIR)/scripts/package/builddeb
-	(cd       $(SRCDIR)/include; rm -f asm; ln -s asm-$(KERNEL_ARCH) asm)
+	(cd       $(SRCDIR)/include; rm -f asm; ln -s asm-$(LINK_ARCH) asm)
 	find . -path './scripts/*' -prune -o -path './Documentation/*' -prune -o  \
                -path './debian/*'  -prune -o -type f                              \
                \( -name Makefile -o -name 'Kconfig*' \) -print |                  \
@@ -111,17 +121,20 @@ else
                -print | cpio -pd --preserve-modification-time $(SRCDIR);
 endif
 ifeq ($(strip $(KERNEL_ARCH)),um)
-	test ! -e arch/$(KERNEL_ARCH)/Makefile.cpu ||                              \
-         $(install_file) arch/$(KERNEL_ARCH)/Makefile.cpu                          \
-               $(SRCDIR)/arch/$(KERNEL_ARCH)/
+	test ! -e arch/$(LINK_ARCH)/Makefile.cpu ||                              \
+         $(install_file) arch/$(LINK_ARCH)/Makefile.cpu                          \
+               $(SRCDIR)/arch/$(LINK_ARCH)/
+	test ! -e arch/$(LINK_ARCH)/Makefile_32.cpu ||                              \
+         $(install_file) arch/$(LINK_ARCH)/Makefile_32.cpu                          \
+               $(SRCDIR)/arch/$(LINK_ARCH)/
 	test ! -s $(SRCDIR)/arch/um || $(make_directory) $(SRCDIR)/arch/um
 	$(install_file) arch/um/Makefile* $(SRCDIR)/arch/um/
 	test ! -e arch/um/Kconfig.arch ||                                           \
          $(install_file) arch/um/Kconfig.arch $(SRCDIR)/arch/um/
 endif
-	test ! -e arch/$(KERNEL_ARCH)/kernel/asm-offsets.s ||                     \
-           $(install_file)               arch/$(KERNEL_ARCH)/kernel/asm-offsets.s \
-                           $(SRCDIR)/arch/$(KERNEL_ARCH)/kernel/asm-offsets.s
+	test ! -e arch/$(LINK_ARCH)/kernel/asm-offsets.s ||                     \
+           $(install_file)               arch/$(LINK_ARCH)/kernel/asm-offsets.s \
+                           $(SRCDIR)/arch/$(LINK_ARCH)/kernel/asm-offsets.s
 	for file in $(localversion_files) dummy; do                               \
           test ! -e $$file || $(install_file) $$file $(SRCDIR);                   \
         done
