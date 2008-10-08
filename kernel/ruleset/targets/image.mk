@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 16:47:18 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Wed Oct  8 00:28:29 2008
+## Last Modified On : Wed Oct  8 00:33:58 2008
 ## Last Machine Used: anzu.internal.golden-gryphon.com
-## Update Count     : 13
+## Update Count     : 14
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : This file is responsible for creating the kernel-image packages 
@@ -102,6 +102,7 @@ ifneq ($(filter kfreebsd, $(DEB_HOST_ARCH_OS)):$(strip $(shell grep -E ^[^\#]*CO
 	mv System.map System.precious
       endif
 	$(MAKE) $(EXTRAV_ARG) INSTALL_MOD_PATH=$(INSTALL_MOD_PATH)           \
+                INSTALL_FW_PATH=$(INSTALL_MOD_PATH)/lib/firmware/$(version)  \
                 $(CROSS_ARG) ARCH=$(KERNEL_ARCH) modules_install
       ifneq ($(strip $(KERNEL_CROSS)),)
 	mv System.precious System.map
