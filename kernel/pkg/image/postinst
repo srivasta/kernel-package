@@ -5,9 +5,9 @@
 # Created On       : Sat Apr 27 05:55:26 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Tue Oct  7 23:33:06 2008
+# Last Modified On : Wed Oct  8 00:03:41 2008
 # Last Machine Used: anzu.internal.golden-gryphon.com
-# Update Count     : 358
+# Update Count     : 360
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
@@ -113,10 +113,14 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
       s/\#.*$//g;
       next if /^\s*$/;
 
+      warn "Option image_in_boot is deprecated, and will go away. Use link_in_boot instead.\n"
+        if m/image_in_boot\s*=\s*/;
+
       $do_symlink      = "" if /do_symlinks\s*=\s*(no|false|0)\s*$/ig;
       $no_symlink      = "" if /no_symlinks\s*=\s*(no|false|0)\s*$/ig;
       $reverse_symlink = "" if /reverse_symlink\s*=\s*(no|false|0)\s*$/ig;
       $link_in_boot    = "" if /link_in_boot\s*=\s*(no|false|0)\s*$/ig;
+      $link_in_boot    = "" if /image_in_boot\s*=\s*(no|false|0)\s*$/ig;
       $move_image      = "" if /move_image\s*=\s*(no|false|0)\s*$/ig;
       $clobber_modules = '' if /clobber_modules\s*=\s*(no|false|0)\s*$/ig;
       $do_boot_enable  = '' if /do_boot_enable\s*=\s*(no|false|0)\s*$/ig;
@@ -139,6 +143,7 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
       $no_symlink      = "Yes" if /no_symlinks\s*=\s*(yes|true|1)\s*$/ig;
       $reverse_symlink = "Yes" if /reverse_symlinks\s*=\s*(yes|true|1)\s*$/ig;
       $link_in_boot    = "Yes" if /link_in_boot\s*=\s*(yes|true|1)\s*$/ig;
+      $link_in_boot    = "Yes" if /image_in_boot\s*=\s*(yes|true|1)\s*$/ig;
       $move_image      = "Yes" if /move_image\s*=\s*(yes|true|1)\s*$/ig;
       $clobber_modules = "Yes" if /clobber_modules\s*=\s*(yes|true|1)\s*$/ig;
       $do_boot_enable  = "Yes" if /do_boot_enable\s*=\s*(yes|true|1)\s*$/ig;

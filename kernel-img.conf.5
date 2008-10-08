@@ -60,8 +60,6 @@ in
 .I /boot 
 rather than the default 
 .I /.  
-The old, and very confusing, name image_in_boot is deprecated, since
-it is the symbolic link that is usually being relocated. 
 Defaults to No.
 .TP
 .B do_symlinks
@@ -101,7 +99,7 @@ file.
 Mutually exclusive to 
 .I reverse_symlinks. 
 Can be used with
-.I link_in_boot (image_in_boot).
+.I link_in_boot.
 If set to Yes, the real image is placed in vmlinuz (instead of
 /boot/vmlinuz\-X.X.XX). If you use link_in_boot in conjunction with
 this, /boot/vmlinuz\-X.X.XX is moved to /boot/vmlinuz.  The old vmlinuz
@@ -122,7 +120,7 @@ file.
 Mutually exclusive to 
 .I no_symlinks.
 Can be used with
-.I link_in_boot (image_in_boot).
+.I link_in_boot.
 Just like 
 .I no_symlinks, 
 except that the
@@ -150,13 +148,13 @@ users, who may set both this and
 Defaults to 
 .I /.
 This can be used in conjunction with all above options except
-.B link_in_boot (image_in_boot),
+.B link_in_boot,
 which would not make sense. (If both 
 .B image_dest 
 and 
-.B link_in_boot (image_in_boot)
+.B link_in_boot
 are set, 
-.B link_in_boot (image_in_boot)
+.B link_in_boot
 overrides)
 .TP
 .B postinst_hook 
