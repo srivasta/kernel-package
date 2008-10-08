@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 16:23:51 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Wed Sep  6 11:39:14 2006
-## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 7
+## Last Modified On : Wed Oct  8 00:17:59 2008
+## Last Machine Used: anzu.internal.golden-gryphon.com
+## Update Count     : 10
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : This file is responsible for creating the kernel-headers packages 
@@ -189,16 +189,17 @@ debian/$(h_package): testroot
 	chmod 755                                       $(TMPTOP)/DEBIAN/postinst
 #	echo "/etc/kernel/postinst.d/create_link-$(version)" > $(TMPTOP)/DEBIAN/conffiles
 	cp -pf debian/control debian/control.dist
+ifneq ($(strip $(header_clean_hook)),)
+	(cd $(SRCDIR); test -x $(header_clean_hook) && $(header_clean_hook))
+endif
 	k=`find $(TMPTOP) -type f | ( while read i; do                    \
           if file -b $$i | egrep -q "^ELF.*executable.*dynamically linked" ; then \
             j="$$j $$i";                                                  \
            fi;                                                            \
         done; echo $$j; )`; test -z "$$k" || dpkg-shlibdeps $$k;          \
+        echo "Elf Files: $$K" >              $(DOCDIR)/elffiles;          \
         test -n "$$k" || perl -pli~ -e 's/\$$\{shlibs:Depends\}\,?//g' debian/control
 	test ! -e debian/control~ || rm -f debian/control~
-ifneq ($(strip $(header_clean_hook)),)
-	(cd $(SRCDIR); test -x $(header_clean_hook) && $(header_clean_hook))
-endif
 	dpkg-gencontrol -isp -DArchitecture=$(DEB_HOST_ARCH) -p$(package) \
                                           -P$(TMPTOP)/
 	$(create_md5sums)                   $(TMPTOP)
