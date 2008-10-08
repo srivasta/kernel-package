@@ -18,7 +18,7 @@
 		    Need for kernel include files
                     ==== === ====== ======= =====
    
-	Even though GNU libc 2.0 (a.k.a. libc6) provides an uniform
+	Even though GNU libc 2.0 (a.k.a. libc6) provides a uniform
  interface to C programmers, one should realize that it needs
  different underpinnings on different architectures and operating
  systems (remember, glibc2 is multi-OS).

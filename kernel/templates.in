@@ -122,7 +122,7 @@ Description:  Stop install since the kernel-image is already installed?
  you have deselected some modules, or installed standalone modules
  packages, this could be bad. 
  .
- If ${modules_base}/=V/kernel belongs to a old install of
+ If ${modules_base}/=V/kernel belongs to an old install of
  ${package}, then this is your last chance to abort the
  installation of this kernel image (nothing has been changed yet).
  .
