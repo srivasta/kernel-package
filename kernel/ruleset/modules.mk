@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 10:37:44 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Mon Mar 27 10:57:27 2006
-## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 7
+## Last Modified On : Tue Oct  7 22:31:46 2008
+## Last Machine Used: anzu.internal.golden-gryphon.com
+## Update Count     : 8
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : This file contains the targets responsible for third party
@@ -73,7 +73,7 @@ endef
 
 # Pass on cross arg, if not empty
 ifneq ($(strip $(CROSS_ARG)),)
-  int_ca := "CROSS_ARCG=$(CROSS_ARG)"
+  int_ca := "CROSS_ARG=$(CROSS_ARG)"
 else
   int_ca :=
 endif
