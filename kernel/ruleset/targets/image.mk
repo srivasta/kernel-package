@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 16:47:18 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Sun Sep 24 14:12:22 2006
-## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 12
+## Last Modified On : Wed Oct  8 00:28:29 2008
+## Last Machine Used: anzu.internal.golden-gryphon.com
+## Update Count     : 13
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : This file is responsible for creating the kernel-image packages 
@@ -44,15 +44,12 @@ install/$(i_package):
 	$(eval $(which_debdir))
 	$(make_directory) $(TMPTOP)/$(IMAGEDIR)
 	$(make_directory) $(DOCDIR)/examples
+	$(install_file) debian/changelog        $(DOCDIR)/changelog.Debian
 ifeq ($(DEB_HOST_ARCH_OS), linux)
 	$(install_file) Documentation/Changes $(DOCDIR)/
-	gzip -9qf $(DOCDIR)/Changes
 endif
-	$(install_file) debian/changelog        $(DOCDIR)/changelog.Debian
-	gzip -9qf                               $(DOCDIR)/changelog.Debian
 ifdef loaderdoc
 	$(install_file) $(DEBDIR)/docs/ImageLoaders/$(loaderdoc) $(DOCDIR)/$(loaderdoc)
-	gzip -9qf                                                $(DOCDIR)/$(loaderdoc)
 endif
 ifeq ($(strip $(KERNEL_ARCH)),um)
 	$(make_directory) $(UML_DIR)
@@ -63,11 +60,6 @@ endif
 	$(install_script) $(DEBDIR)/examples/sample.force-build-link.sh      \
                                                       $(DOCDIR)/examples/
 	$(install_file) $(DEBDIR)/pkg/image/README    $(DOCDIR)/debian.README
-	gzip -9qf                                     $(DOCDIR)/debian.README
-	$(install_file) $(DEBDIR)/pkg/image/copyright $(DOCDIR)/copyright
-	echo "This was produced by kernel-package version $(kpkg_version)." > \
-	           $(DOCDIR)/Buildinfo
-	chmod 0644 $(DOCDIR)/Buildinfo
 ifeq ($(strip $(KERNEL_ARCH)),um)
 	$(install_file) $(config)        $(DOCDIR)/config-$(version)
 else
@@ -82,24 +74,24 @@ else
   endif
 endif
 	$(install_file) conf.vars        $(DOCDIR)/conf.vars
-	gzip -9qf                        $(DOCDIR)/conf.vars
+	echo "This was produced by kernel-package version $(kpkg_version)." > \
+	           $(DOCDIR)/Buildinfo
+	chmod 0644 $(DOCDIR)/Buildinfo
 	$(install_file) debian/buildinfo $(DOCDIR)/buildinfo
-	gzip -9qf                        $(DOCDIR)/buildinfo
 	if test -f debian/official && test -f debian/README.Debian ; then \
            $(install_file) debian/README.Debian  $(DOCDIR)/README.Debian ; \
-         gzip -9qf                               $(DOCDIR)/README.Debian;\
 	fi
 	if test -f README.Debian ; then \
            $(install_file) README.Debian $(DOCDIR)/README.Debian.1st;\
-           gzip -9qf                     $(DOCDIR)/README.Debian.1st;\
 	fi
-	if test -f Debian.src.changelog; then \
+	if test -f Debian.src.changelog; then               \
 	  $(install_file) Debian.src.changelog  $(DOCDIR)/; \
-           gzip -9qf                             $(DOCDIR)/Debian.src.changelog;\
 	fi
 ifeq ($(strip $(HAVE_EXTRA_DOCS)),YES)
 	$(install_file) $(extra_docs) 	         $(DOCDIR)/
 endif
+	gzip -9qfr                        $(DOCDIR)
+	$(install_file) $(DEBDIR)/pkg/image/copyright $(DOCDIR)/copyright
 ifneq ($(filter kfreebsd, $(DEB_HOST_ARCH_OS)):$(strip $(shell grep -E ^[^\#]*CONFIG_MODULES $(CONFIG_FILE))),:)
   ifeq  ($(DEB_HOST_ARCH_OS):$(strip $(HAVE_NEW_MODLIB)),linux:)
 	$(mod_inst_cmds)
