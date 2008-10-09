@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 16:38:08 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Wed Sep  6 11:36:49 2006
-## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 1
+## Last Modified On : Wed Oct  8 15:35:22 2008
+## Last Machine Used: anzu.internal.golden-gryphon.com
+## Update Count     : 8
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : This file is responsible for creating the kernel-doc packages
@@ -30,9 +30,10 @@
 ##
 ###############################################################################
 
-install/$(d_package): 
+debian/stamp/install/$(d_package): 
 	$(REASON)
 	@echo "This is kernel package version $(kpkg_version)."
+	@test -d debian/stamp/install || mkdir debian/stamp/install
 	$(eval $(which_debdir))
 	rm -rf            $(TMPTOP)
 	$(make_directory) $(DOCDIR)
@@ -83,13 +84,18 @@ endif
 	-gzip -9qfr $(DOCDIR)
 	-find $(DOCDIR)      -type f -name \*.gz -perm +111 -exec gunzip {} \;
 	-find $(DOCDIR)/html -type f -name \*.gz            -exec gunzip {} \;
+	find   $(DOCDIR)/              -type d -exec chmod 0755 {} \;
 	$(install_file) $(DEBDIR)/pkg/doc/copyright $(DOCDIR)/copyright
 	-rmdir   $(MAN9DIR)
 	-rmdir   $(MANDIR)
+	@echo done > $@
 
-debian/$(d_package): testroot
+debian/stamp/binary/$(d_package): 
 	$(REASON)
+	$(checkdir)
+	$(TESTROOT)
 	@echo "This is kernel package version $(kpkg_version)."
+	@test -d debian/stamp/binary || mkdir debian/stamp/binary
 	$(make_directory) $(TMPTOP)/DEBIAN
 	$(eval $(deb_rule))
 	sed -e 's/=P/$(package)/g' -e 's/=V/$(version)/g' \
@@ -100,13 +106,19 @@ debian/$(d_package): testroot
 	chmod -R og=rX                              $(TMPTOP)
 	chown -R root:root                          $(TMPTOP)
 	dpkg --build                                $(TMPTOP) $(DEB_DEST)
+	@echo done > $@
 
-binary/$(d_package): 
+debian/stamp/binary/pre-$(d_package): debian/stamp/install/$(d_package)
 	$(REASON)
+	$(checkdir)
 	@echo "This is kernel package version $(kpkg_version)."
+	@test -d debian/stamp/binary || mkdir debian/stamp/binary
 	$(require_root)
 	$(eval $(deb_rule))
-	$(root_run_command) debian/$(package)
+	$(root_run_command) debian/stamp/binary/$(d_package)
+	@echo done > $@
+
+
 
 #Local variables:
 #mode: makefile

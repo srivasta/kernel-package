@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 15:52:16 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Wed Sep  6 11:40:58 2006
-## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 2
+## Last Modified On : Wed Oct  8 15:52:04 2008
+## Last Machine Used: anzu.internal.golden-gryphon.com
+## Update Count     : 10
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : This file is responsible for creating the kernel-manual packages 
@@ -33,9 +33,10 @@
 
 # Only dependencies that have not been registered into the ladder
 # created in rulesets/common/targets.mk
-install/$(m_package): install/$(d_package) 
+debian/stamp/install/$(m_package): debian/stamp/install/$(d_package) 
 	$(REASON)
 	@echo "This is kernel package version $(kpkg_version)."
+	@test -d debian/stamp/install || mkdir debian/stamp/install
 	rm -rf            $(TMPTOP)
 	$(make_directory) $(DOCDIR)
 	$(make_directory) $(MANDIR)/man9
@@ -46,24 +47,32 @@ install/$(m_package): install/$(d_package)
 	-gzip -9qfr $(MANDIR)
 	-gzip -9qfr $(DOCDIR)
 	$(install_file) $(DEBDIR)/pkg/doc/copyright $(DOCDIR)/copyright
+	@echo done > $@
 
-debian/$(m_package): testroot
+debian/stamp/binary/$(m_package):
 	$(REASON)
+	$(checkdir)
+	$(TESTROOT)
 	@echo "This is kernel package version $(kpkg_version)."
+	@test -d debian/stamp/binary || mkdir debian/stamp/binary
 	$(make_directory) $(TMPTOP)/DEBIAN
 	dpkg-gencontrol -isp -p$(package)       -P$(TMPTOP)/
 	$(create_md5sums)                         $(TMPTOP)
 	chmod -R og=rX                            $(TMPTOP)
 	chown -R root:root                        $(TMPTOP)
 	dpkg --build                              $(TMPTOP) $(DEB_DEST)
+	@echo done > $@
 
-binary/$(m_package):
+debian/stamp/binary/pre-$(m_package): debian/stamp/install/$(m_package)
 	$(REASON)
-	@echo "This is kernel package version $(kpkg_version)."
 	$(checkdir)
+	@echo "This is kernel package version $(kpkg_version)."
+	@test -d debian/stamp/binary || mkdir debian/stamp/binary
 	$(require_root)
 	$(eval $(deb_rule))
-	$(root_run_command) debian/$(package)
+	$(root_run_command) debian/stamp/binary/$(m_package)
+	@echo done > $@
+
 
 #Local variables:
 #mode: makefile

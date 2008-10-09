@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 16:47:18 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Wed Oct  8 00:33:58 2008
+## Last Modified On : Wed Oct  8 12:13:06 2008
 ## Last Machine Used: anzu.internal.golden-gryphon.com
-## Update Count     : 14
+## Update Count     : 24
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : This file is responsible for creating the kernel-image packages 
@@ -30,7 +30,7 @@
 ##
 ###############################################################################
 
-install/$(i_package): 
+debian/stamp/install/$(i_package): 
 	$(REASON)
 	@echo "This is kernel package version $(kpkg_version)."
 	$(if $(subst $(strip $(UTS_RELEASE_VERSION)),,$(strip $(version))), \
@@ -41,6 +41,7 @@ install/$(i_package):
 		echo "Please correct this."; \
 		exit 2,)
 	rm -f -r ./$(TMPTOP) ./$(TMPTOP).deb
+	@test -d debian/stamp/install || mkdir debian/stamp/install
 	$(eval $(which_debdir))
 	$(make_directory) $(TMPTOP)/$(IMAGEDIR)
 	$(make_directory) $(DOCDIR)/examples
@@ -108,8 +109,10 @@ ifneq ($(filter kfreebsd, $(DEB_HOST_ARCH_OS)):$(strip $(shell grep -E ^[^\#]*CO
 	mv System.precious System.map
       endif
       ifneq ($(strip ($CONFIG_LGUEST)),)
-	$(install_file) Documentation/lguest/lguest $(TMPTOP)/lib/modules/$(version)/lguest
-	chmod 755 $(TMPTOP)/lib/modules/$(version)/lguest
+	test ! -f Documentation/lguest/lguest ||                             \
+            $(install_file) Documentation/lguest/lguest $(TMPTOP)/lib/modules/$(version)/lguest
+	test ! -f $(TMPTOP)/lib/modules/$(version)/lguest ||                 \
+            chmod 755 $(TMPTOP)/lib/modules/$(version)/lguest
       endif
     else
       ifeq ($(DEB_HOST_ARCH_OS), kfreebsd)
@@ -216,9 +219,12 @@ endif
 ifeq ($(strip $(delete_build_link)),YES)
 	rm -f $(TMPTOP)/lib/modules/$(version)/build
 endif
+	@echo done > $@
 
-debian/$(i_package): testroot
+debian/stamp/binary/$(i_package):
 	$(REASON)
+	$(checkdir)
+	$(TESTROOT)
 	@echo "This is kernel package version $(kpkg_version)."
 	$(make_directory) $(TMPTOP)/DEBIAN
 ifneq ($(strip $(KERNEL_ARCH)),um)
@@ -339,16 +345,23 @@ endif
 	dpkg --build                   $(TMPTOP) $(DEB_DEST)
 ifeq ($(strip $(do_clean)),YES)
 	$(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) ARCH=$(KERNEL_ARCH) clean
-	$(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) ARCH=$(KERNEL_ARCH) -C Documentation/lguest clean
+	test ! -d Documentation/lguest  ||                           \
+           $(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) ARCH=$(KERNEL_ARCH) -C Documentation/lguest clean
 	rm -f stamp-$(package)
 endif
+	@echo done > $@
 
-binary/$(i_package):
+debian/stamp/binary/pre-$(i_package): debian/stamp/install/$(i_package)
 	$(REASON)
+	$(checkdir)
 	@echo "This is kernel package version $(kpkg_version)."
+	@test -d debian/stamp/binary || mkdir debian/stamp/binary
 	$(require_root)
 	$(eval $(deb_rule))
-	$(root_run_command) debian/$(package)
+	$(root_run_command) debian/stamp/binary/$(i_package)
+	@echo done > $@
+
+
 
 #Local variables:
 #mode: makefile

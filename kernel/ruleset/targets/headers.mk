@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 16:23:51 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Wed Oct  8 00:17:59 2008
+## Last Modified On : Wed Oct  8 12:04:03 2008
 ## Last Machine Used: anzu.internal.golden-gryphon.com
-## Update Count     : 10
+## Update Count     : 19
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : This file is responsible for creating the kernel-headers packages 
@@ -37,7 +37,7 @@ ifeq ($(shell if [ $(PATCHLEVEL) -eq 6 ] && [ $(SUBLEVEL) -gt 23 ] ; then \
 	LINK_ARCH=x86
 endif
 
-install/$(h_package):
+debian/stamp/install/$(h_package):
 	$(REASON)
 	@echo "This is kernel package version $(kpkg_version)."
 	$(if $(subst $(strip $(UTS_RELEASE_VERSION)),,$(strip $(version))), \
@@ -48,6 +48,7 @@ install/$(h_package):
 		echo "Please correct this."; \
 		exit 2,)
 	rm -rf $(TMPTOP)
+	@test -d debian/stamp/install || mkdir debian/stamp/install
 	$(make_directory) $(SRCDIR)
 	$(make_directory) $(DOCDIR)/examples
 #	$(make_directory) $(TMPTOP)/etc/kernel/postinst.d
@@ -171,10 +172,14 @@ ifeq (,$(findstring nostrip,$(DEB_BUILD_OPTIONS)))
            fi;                                                                            \
          done
 endif
+	@echo done > $@
 
-debian/$(h_package): testroot
+debian/stamp/binary/$(h_package): 
 	$(REASON)
 	@echo "This is kernel package version $(kpkg_version)."
+	$(checkdir)
+	$(TESTROOT)
+	@test -d debian/stamp/binary || mkdir debian/stamp/binary
 	$(make_directory) $(TMPTOP)/DEBIAN
 	$(eval $(deb_rule))
 	sed -e 's/=V/$(version)/g'    -e 's/=IB/$(link_in_boot)/g'   \
@@ -207,13 +212,18 @@ endif
 	chmod -R og=rX                      $(TMPTOP)
 	dpkg --build                        $(TMPTOP) $(DEB_DEST)
 	cp -pf debian/control.dist          debian/control
+	@echo done > $@
 
-binary/$(h_package): 
+debian/stamp/binary/pre-$(h_package): debian/stamp/install/$(h_package)
 	$(REASON)
+	$(checkdir)
 	@echo "This is kernel package version $(kpkg_version)."
+	@test -d debian/stamp/binary || mkdir debian/stamp/binary
 	$(require_root)
 	$(eval $(deb_rule))
-	$(root_run_command) debian/$(package)
+	$(root_run_command) debian/stamp/binary/$(h_package)
+	@echo done > $@
+
 
 #Local variables:
 #mode: makefile

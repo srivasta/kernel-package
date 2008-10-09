@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 13:55:32 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Wed Sep  6 11:49:38 2006
-## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 4
+## Last Modified On : Wed Oct  8 12:42:30 2008
+## Last Machine Used: anzu.internal.golden-gryphon.com
+## Update Count     : 12
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : This file is responsible forcreating the kernel-source packages 
@@ -31,10 +31,11 @@
 ###############################################################################
 
 
-install/$(s_package): 
+debian/stamp/install/$(s_package): 
 	$(REASON)
 	@echo "This is kernel package version $(kpkg_version)."
 	rm -rf $(TMPTOP)
+	@test -d debian/stamp/install || mkdir debian/stamp/install
 	$(make_directory) $(SRCDIR)
 	$(make_directory) $(DOCDIR)
 	$(eval $(which_debdir))
@@ -93,9 +94,13 @@ endif
 	(cd $(SRCDIR) && cd .. &&                                            \
            tar $(TAR_COMPRESSION) -cf $(package).tar.$(TAR_SUFFIX) $(package) && \
              rm -rf $(package);)
+	@echo done > $@
 
-debian/$(s_package): testroot
+debian/stamp/binary/$(s_package):
 	$(REASON)
+	$(checkdir)
+	$(TESTROOT)
+	@test -d debian/stamp/binary || mkdir debian/stamp/binary
 	@echo "This is kernel package version $(kpkg_version)."
 	$(eval $(which_debdir))
 	$(make_directory) $(TMPTOP)/DEBIAN
@@ -109,14 +114,19 @@ debian/$(s_package): testroot
 	chmod -R og=rX                               $(TMPTOP)
 	chown -R root:root                           $(TMPTOP)
 	dpkg --build                                 $(TMPTOP) $(DEB_DEST)
+	@echo done > $@
 
-binary/$(s_package):
+
+debian/stamp/binary/pre-$(s_package): debian/stamp/install/$(s_package)
 	$(REASON)
-	@echo "This is kernel package version $(kpkg_version)."
 	$(checkdir)
+	@echo "This is kernel package version $(kpkg_version)."
+	@test -d debian/stamp/binary || mkdir debian/stamp/binary
 	$(require_root)
 	$(eval $(deb_rule))
-	$(root_run_command) debian/$(package)
+	$(root_run_command) debian/stamp/binary/$(s_package)
+	@echo done > $@
+
 
 
 #Local variables:

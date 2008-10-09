@@ -2,13 +2,10 @@ This directory contains the commands reuired for building the packages
 created by us.
 
 
- target.mk:
+ common.mk:
          This file provides the commands commaon to a number of
          packages built, and also includes the files providing
          commands to build each of the packages we create. 
-
- sanity_check.mk: This contains a sanity check that must be
-         passed before creating a kernel package
 
  source.mk:
          This file is responsible forcreating the kernel-source

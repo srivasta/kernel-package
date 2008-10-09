@@ -4,9 +4,9 @@
 ## Created On       : Fri Oct 28 00:37:46 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Tue Sep  5 22:28:47 2006
-## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 11
+## Last Modified On : Wed Oct  8 15:37:21 2008
+## Last Machine Used: anzu.internal.golden-gryphon.com
+## Update Count     : 31
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : 
@@ -33,73 +33,33 @@ testdir:
 	$(checkdir)
 
 $(eval $(which_debdir))
-include $(DEBDIR)/ruleset/targets/target.mk
+include $(DEBDIR)/ruleset/targets/common.mk
+
+debian/stamp/pre-config-common: debian/stamp/conf/common
+debian/stamp/pre-config-indep:  debian/stamp/conf/kernel-conf
+
+debian/stamp/pre-build-common:  sanity_check 
+debian/stamp/BUILD/$(i_package): debian/stamp/build/kernel
+
+debian/stamp/INST/$(s_package): debian/stamp/install/$(s_package)
+debian/stamp/INST/$(i_package): debian/stamp/install/$(i_package)
+debian/stamp/INST/$(d_package): debian/stamp/install/$(d_package)
+debian/stamp/INST/$(m_package): debian/stamp/install/$(m_package)
+debian/stamp/INST/$(h_package): debian/stamp/install/$(h_package)
+
+debian/stamp/BIN/$(s_package): debian/stamp/binary/pre-$(s_package)
+debian/stamp/BIN/$(i_package): debian/stamp/binary/pre-$(i_package)
+debian/stamp/BIN/$(d_package): debian/stamp/binary/pre-$(d_package)
+debian/stamp/BIN/$(m_package): debian/stamp/binary/pre-$(m_package)
+debian/stamp/BIN/$(h_package): debian/stamp/binary/pre-$(h_package)
 
 
-CONFIG-common:: debian/stamp-conf 
-	$(REASON)
-	@echo "This is kernel package version $(kpkg_version)."
-CONFIG-arch:: .config conf.vars 
-	$(REASON)
-	@echo "This is kernel package version $(kpkg_version)."
-CONFIG-indep:: conf.vars debian/stamp-kernel-conf
-	$(REASON)
-	@echo "This is kernel package version $(kpkg_version)."
-
-
-BUILD-common:: sanity_check 
-	$(REASON)
-	@echo "This is kernel package version $(kpkg_version)."
-BUILD-arch:: 
-	$(REASON)
-	@echo "This is kernel package version $(kpkg_version)."
-
-BUILD/$(i_package):: debian/stamp-build-kernel
-	$(REASON)
-	@echo "This is kernel package version $(kpkg_version)."
-
-BIN/$(s_package):: binary/$(s_package)
-	$(REASON)
-	@echo "This is kernel package version $(kpkg_version)."
-BIN/$(i_package):: binary/$(i_package)
-	$(REASON)
-	@echo "This is kernel package version $(kpkg_version)."
-BIN/$(d_package):: binary/$(d_package)
-	$(REASON)
-	@echo "This is kernel package version $(kpkg_version)."
-BIN/$(m_package):: binary/$(m_package)
-	$(REASON)
-	@echo "This is kernel package version $(kpkg_version)."
-BIN/$(h_package):: binary/$(h_package)
-	$(REASON)
-	@echo "This is kernel package version $(kpkg_version)."
-
-INST/$(s_package):: install/$(s_package)
-	$(REASON)
-	@echo "This is kernel package version $(kpkg_version)."
-INST/$(i_package):: install/$(i_package)
-	$(REASON)
-	@echo "This is kernel package version $(kpkg_version)."
-INST/$(d_package):: install/$(d_package)
-	$(REASON)
-	@echo "This is kernel package version $(kpkg_version)."
-INST/$(m_package):: install/$(m_package)
-	$(REASON)
-	@echo "This is kernel package version $(kpkg_version)."
-INST/$(h_package):: install/$(h_package)
-	$(REASON)
-	@echo "This is kernel package version $(kpkg_version)."
-
-CLN-common::
-	$(REASON)
-	$(warn_root)
-	$(eval $(deb_rule))
-	$(root_run_command) real_stamp_clean
+CLN-common:: real_stamp_clean
 
 CLEAN/$(s_package)::
-	-rm -rf $(TMPTOP)
+	test ! -d $(TMPTOP) || rm -rf $(TMPTOP)
 CLEAN/$(i_package)::
-	-rm -rf $(TMPTOP)
+	test ! -d $(TMPTOP) || rm -rf $(TMPTOP)
 ifneq ($(strip $(KERNEL_ARCH)),um)
   ifeq  ($(strip $(CONFIG_XEN)),)
 	test ! -d ./debian || test ! -e stamp-building ||            \
@@ -117,83 +77,39 @@ ifneq ($(strip $(KERNEL_ARCH)),um)
 endif
 
 CLEAN/$(d_package)::
-	-rm -rf $(TMPTOP)
+	test ! -d $(TMPTOP) || rm -rf $(TMPTOP)
 CLEAN/$(m_package)::
-	-rm -rf $(TMPTOP)
+	test ! -d $(TMPTOP) || rm -rf $(TMPTOP)
 CLEAN/$(h_package)::
-	-rm -rf $(TMPTOP)
+	test ! -d $(TMPTOP) || rm -rf $(TMPTOP)
 
-buildpackage: CONFIG-common stamp-buildpackage
-stamp-buildpackage: 
-	$(REASON)
-	@echo "This is kernel package version $(kpkg_version)."
-ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
-	@echo "The changelog says we are creating $(saved_version)"
-	@echo "However, I thought the version is $(version)"
-	exit 1
-endif
-	echo 'Building Package' > stamp-building
-	dpkg-buildpackage -nc $(strip $(int_root_cmd)) $(strip $(int_us))  \
-               $(strip $(int_uc)) -m"$(maintainer) <$(email)>" -k"$(pgp)"
-	rm -f stamp-building
-	echo done >  $@
-STAMPS_TO_CLEAN += stamp-buildpackage
+buildpackage: debian/stamp/build/buildpackage
 
 # All of these are targets that insert themselves into the normal flow
 # of policy specified targets, so they must hook themselves into the
 # stream.            
-debian:  stamp-indep-conf
-	$(REASON)
-	@echo "This is kernel package version $(kpkg_version)."
+debian:  debian/stamp/pre-config-common
 
 # For the following, that means that we must make sure that the configure and 
 # corresponding build targets are all done before the packages are built.
-linux-source  linux_source  kernel-source  kernel_source:  stamp-configure stamp-build-indep stamp-kernel-source
-	$(REASON)
-	@echo "This is kernel package version $(kpkg_version)."
-
-stamp-kernel-source: install/$(s_package) binary/$(s_package) 
-	$(REASON)
-	@echo "This is kernel package version $(kpkg_version)."
-	echo done > $@
-STAMPS_TO_CLEAN += stamp-kernel-source
-
-kernel-manual  kernel_manual:  stamp-configure stamp-build-indep stamp-kernel-doc stamp-kernel-manual
-	$(REASON)
-	@echo "This is kernel package version $(kpkg_version)."
-stamp-kernel-manual: install/$(d_package) install/$(m_package) binary/$(d_package) binary/$(m_package) 
-	$(REASON)
-	@echo "This is kernel package version $(kpkg_version)."
-	echo done > $@
-STAMPS_TO_CLEAN += stamp-kernel-manual
-
-linux-doc   linux_doc   kernel-doc     kernel_doc:     stamp-configure stamp-build-indep stamp-kernel-doc
-	$(REASON)
-	@echo "This is kernel package version $(kpkg_version)."
-stamp-kernel-doc: install/$(d_package) binary/$(d_package) 
-	$(REASON)
-	@echo "This is kernel package version $(kpkg_version)."
-	echo done > $@
-STAMPS_TO_CLEAN += stamp-kernel-doc
-
-linux-headers linux_headers kernel-headers kernel_headers: stamp-configure debian/stamp-prepare stamp-kernel-headers
-	$(REASON)
-	@echo "This is kernel package version $(kpkg_version)."
-stamp-kernel-headers: install/$(h_package) binary/$(h_package) 
-	$(REASON)
-	@echo "This is kernel package version $(kpkg_version)."
-	echo done > $@
-STAMPS_TO_CLEAN += stamp-kernel-headers
-
-linux-image   linux_image   kernel-image   kernel_image:   stamp-configure debian/stamp-build-kernel stamp-kernel-image
-	$(REASON)
-	@echo "This is kernel package version $(kpkg_version)."
-
-kernel-image-deb stamp-kernel-image: install/$(i_package) binary/$(i_package) 
-	$(REASON)
-	@echo "This is kernel package version $(kpkg_version)."
-	echo done > $@
-STAMPS_TO_CLEAN += stamp-kernel-image
+linux-source  linux_source  kernel-source  kernel_source:
+	$(eval $(deb_rule))
+	$(root_run_command) 	 debian/stamp/binary/pre-$(s_package)
+linux-doc     linux_doc     kernel-doc     kernel_doc:
+	$(eval $(deb_rule))
+	$(root_run_command) 	 debian/stamp/binary/pre-$(d_package)
+linux-headers linux_headers kernel-headers kernel_headers: debian/stamp/build/kernel
+	$(eval $(deb_rule))
+	$(root_run_command) 	 debian/stamp/binary/pre-$(h_package)
+linux-image   linux_image   kernel-image   kernel_image:   debian/stamp/build/kernel 
+	$(eval $(deb_rule))
+	$(root_run_command) 	debian/stamp/binary/pre-$(i_package)
+kernel-manual kernel_manual:  debian/stamp/build/kernel 
+	$(eval $(deb_rule))
+	$(root_run_command) 	 debian/stamp/binary/pre-$(m_package)
+kernel-image-deb :  debian/stamp/build/kernel 
+	$(eval $(deb_rule))
+	$(root_run_command) 	debian/stamp/binary/pre-$(i_package)
 
 libc-kheaders libc_kheaders: 
 	$(REASON)
