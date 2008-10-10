@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 18:31:07 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Mon Oct 31 18:31:07 2005
-## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 0
+## Last Modified On : Thu Oct  9 14:19:06 2008
+## Last Machine Used: anzu.internal.golden-gryphon.com
+## Update Count     : 1
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : handle the architecture specific variables.
@@ -78,7 +78,7 @@ ifeq (,$(kimagesrc))
 endif
 
 NEED_DIRECT_GZIP_IMAGE = NO
-kimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
+kimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(KERNELRELEASE)
 
 ifneq ($(shell if [ $(VERSION)  -ge  2 ]  && [ $(PATCHLEVEL) -ge 5 ] &&    \
                   [ $(SUBLEVEL) -ge 41 ]; then echo new;                   \

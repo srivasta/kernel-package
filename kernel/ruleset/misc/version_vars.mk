@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 18:07:50 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Sat Sep 30 09:34:00 2006
-## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 13
+## Last Modified On : Thu Oct  9 17:21:02 2008
+## Last Machine Used: anzu.internal.golden-gryphon.com
+## Update Count     : 28
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : This file looks at the top level kernel Makefile, and
@@ -115,13 +115,15 @@ else
   endif
 endif
 
-KERNELRELEASE = $(call doit,if [ -f .kernelrelease ]; then          \
-                           cat .kernelrelease 2> /dev/null ;    \
-                        else                                    \
-                          echo "";                              \
-                       fi;)  
-
 HAVE_NEW_MODLIB =$(call doit,grep -E '\(INSTALL_MOD_PATH\)' Makefile 2>/dev/null )
+HAVE_INST_PATH  =$(call doit,grep -E '\(INSTALL_PATH\)' Makefile 2>/dev/null )
+HAVE_INST_HEADER=$(call doit,grep -E '\(INSTALL_HDR_PATH\)' Makefile 2>/dev/null )
+HAVE_SILENT_CONFIG=$(call doit,test -f scripts/kconfig/Makefile && grep -E 'silentoldconfig' scripts/kconfig/Makefile 2>/dev/null )
+
+silentconfig=
+ifneq ($(strip $(HAVE_SILENT_CONFIG)),)
+  silentconfig=silentoldconfig
+endif
 
 ifneq ($(strip $(EXTRA_VERSION)),)
 HAS_ILLEGAL_EXTRA_VERSION =$(call doit,                                                 \
@@ -152,13 +154,14 @@ UTS_RELEASE_VERSION=$(call doit,if [ -f $(UTS_RELEASE_HEADER) ]; then           
                  else echo "" ;                                                          \
                  fi)
 
+
 version = $(VERSION).$(PATCHLEVEL).$(SUBLEVEL)$(EXTRAVERSION)$(iatv)$(LOCALVERSION)$(GIT_VERSION)
 
 # Bug out if the version number id not all lowercase
 lc_version = $(call doit,echo $(version) | tr A-Z a-z)
 ifneq ($(strip $(version)),$(strip $(lc_version)))
   ifeq ($(strip $(IGNORE_UPPERCASE_VERSION)),)
-    $(error Error. The version number                               \
+    $(error Error. The Kernel Release version                       \
        $(strip $(version))                                          \
  VERSION=[$(VERSION)], PATCHLEVEL=[$(PATCHLEVEL)],                  \
  SUBLEVEL=[$(SUBLEVEL)], EXTRAVERSION=[$(EXTRAVERSION)],            \
@@ -179,6 +182,13 @@ ifneq ($(strip $(version)),$(strip $(lc_version)))
     version := $(strip $(lc_version))
   endif
 endif
+KERNELRELEASE = $(strip $(call doit,if [ -f include/config/kernel.release ]; then \
+                           cat include/config/kernel.release 2> /dev/null;\
+                        elif [ -f .kernelrelease ]; then                  \
+                           cat .kernelrelease 2> /dev/null ;              \
+                        else                                              \
+                          echo "$(version)";                              \
+                       fi;))
 
 
 AM_OFFICIAL := $(call doit,if [ -f debian/official ]; then echo YES; fi )
@@ -211,10 +221,10 @@ endef
 $(eval $(check_kernel_dir))
 $(eval $(check_kernel_headers))
 ifeq ($(strip $(IN_KERNEL_DIR)),)
-ifneq ($(strip $(IN_KERNEL_HEADERS)),)
-version=$(UTS_RELEASE_VERSION)
-debian =$(IN_KERNEL_HEADERS)
-endif
+  ifneq ($(strip $(IN_KERNEL_HEADERS)),)
+    version=$(UTS_RELEASE_VERSION)
+    debian =$(IN_KERNEL_HEADERS)
+  endif
 endif
 
 #Local variables:

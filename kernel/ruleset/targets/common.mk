@@ -4,9 +4,9 @@
 ## Created On	    : Mon Oct 31 10:41:41 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Wed Oct  8 17:23:07 2008
+## Last Modified On : Thu Oct  9 20:37:38 2008
 ## Last Machine Used: anzu.internal.golden-gryphon.com
-## Update Count	    : 47
+## Update Count	    : 85
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    : This file provides the commands commaon to a number of
@@ -44,6 +44,32 @@ NEED_CONFIG = $(shell if [ $(VERSION) -lt 2 ]; then			   \
 			   echo "YES";					   \
 	   fi)
 
+USE_KBUILD=$(shell if [ $(VERSION) -lt 2 ]; then			   \
+			   echo "";					   \
+	   elif [ $(VERSION) -eq 2 ] && [ $(PATCHLEVEL) -lt 6 ]; then	   \
+			   echo "";					   \
+	   elif [ $(VERSION) -eq 2 ] && [ $(PATCHLEVEL) -eq 6 ] &&	   \
+		   [ $(SUBLEVEL) -lt 22 ]; then				   \
+			   echo "";					   \
+	   else								   \
+			   echo "YES";					   \
+	   fi)
+
+define save_upstream_debianization
+	test ! -e scripts/package/builddeb ||					  \
+	    mv -f scripts/package/builddeb scripts/package/builddeb.kpkg-dist
+	test ! -e scripts/package/Makefile ||					  \
+	    test -f scripts/package/Makefile.kpkg-dist ||			  \
+	    (mv -f scripts/package/Makefile scripts/package/Makefile.kpkg-dist && \
+	       (echo "# Dummy file "; echo "help:") >  scripts/package/Makefile)
+endef
+define restore_upstream_debianization
+	test ! -f scripts/package/builddeb.kpkg-dist ||			    \
+	  mv -f scripts/package/builddeb.kpkg-dist scripts/package/builddeb
+	test ! -f scripts/package/Makefile.kpkg-dist ||			    \
+	  mv -f scripts/package/Makefile.kpkg-dist scripts/package/Makefile
+endef
+
 sanity_check:
 ifeq ($(strip $(IN_KERNEL_DIR)),)
 	@echo "Not in correct source directory"
@@ -77,7 +103,7 @@ ifeq ($(strip $(STOP_FOR__BIN86)),YES)
 endif
 ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
 	@echo "The changelog says we are creating $(saved_version)"
-	@echo "However, I thought the version is $(version)"
+	@echo "However, I thought the version is $(KERNELRELEASE)"
 	exit 4
 endif
 
@@ -107,7 +133,7 @@ endif
 # file at this point
 
 
-conf.vars: Makefile .config
+conf.vars:
 	$(REASON)
 	$(checkdir)
 	@test -d ./debian || mkdir debian
@@ -146,25 +172,20 @@ endif
 	@rm -f .mak
 	@touch conf.vars
 
-
-debian/stamp/conf/prep: conf.vars
+debian/stamp/conf/kernel-conf:
 	$(REASON)
 	@test -d debian/stamp	   || mkdir debian/stamp
 	@test -d debian/stamp/conf || mkdir debian/stamp/conf
-# work around idiocy in recent kernel versions
-# However, this makes it harder to use git versions of the kernel
-	test ! -e scripts/package/builddeb || \
-	    mv -f scripts/package/builddeb scripts/package/builddeb.kpkg-dist
-	test ! -e scripts/package/Makefile || \
-	    (mv -f scripts/package/Makefile scripts/package/Makefile.kpkg-dist && \
-	       (echo "# Dummy file "; echo "help:") >  scripts/package/Makefile)
-	test ! -e stamp-building || rm -f stamp-building
-	@echo done > $@
-
-debian/stamp/conf/patch: debian/stamp/conf/prep
-	$(REASON)
-	@test -d debian/stamp	   || mkdir debian/stamp
-	@test -d debian/stamp/conf || mkdir debian/stamp/conf
+	$(eval $(which_debdir))
+	$(eval $(deb_rule))
+ifeq ($(DEB_HOST_ARCH_OS), kfreebsd)
+	mkdir -p bin
+	ln -sf `which gcc-3.4` bin/cc
+	cd $(architecture)/conf && freebsd-config GENERIC
+endif
+######################################################################
+### Patch the kernel sources
+######################################################################
 ifeq ($(strip $(patch_the_kernel)),YES)
 	test ! -f applied_patches || rm -f applied_patches
   ifneq ($(strip $(valid_patches)),)
@@ -182,62 +203,23 @@ ifeq ($(strip $(patch_the_kernel)),YES)
 	done
   endif
 endif
-	@echo done > $@
-
-debian/rules: debian/stamp/conf/patch
-	$(REASON)
-	@test -f $(LIBLOC)/rules || echo Error: Could not find $(LIBLOC)/rules
-	@test -f $(LIBLOC)/rules || exit 4
-	( test -f debian/official && test -f debian/control) ||		   \
-	   sed -e 's/=V/$(version)/g'	      -e 's/=D/$(debian)/g'	   \
-	       -e 's/=A/$(DEB_HOST_ARCH)/g'   -e 's/=SA/$(INT_SUBARCH)/g'  \
-		-e 's/=L/$(int_loaderdep) /g' -e 's/=I/$(initrddep)/g'	   \
-		-e 's/=CV/$(VERSION).$(PATCHLEVEL)/g'			   \
-		-e 's/=M/$(maintainer) <$(email)>/g'			   \
-		-e 's/=ST/$(INT_STEM)/g'      -e 's/=B/$(KERNEL_ARCH)/g'   \
-			 $(CONTROL)> debian/control
-	test -f debian/official ||					      \
-	   sed -e 's/=V/$(version)/g' -e 's/=D/$(debian)/g'		      \
-	    -e 's/=A/$(DEB_HOST_ARCH)/g' -e 's/=M/$(maintainer) <$(email)>/g' \
-	    -e 's/=ST/$(INT_STEM)/g'	 -e 's/=B/$(KERNEL_ARCH)/g'	      \
-		$(LIBLOC)/changelog > debian/changelog
-	test -f debian/official ||						\
-	   for file in $(DEBIAN_FILES); do					\
-	       cp -f  $(LIBLOC)/$$file ./debian/;				\
-	   done
-	test -f debian/official ||						\
-	   for dir  in $(DEBIAN_DIRS);	do					\
-	     cp -af $(LIBLOC)/$$dir  ./debian/;					\
-	   done
-	install -p -m 755 $(LIBLOC)/rules debian/rules
-
-debian/stamp/conf/common: debian/rules
-	$(REASON)
-	@test -d debian/stamp	   || mkdir debian/stamp
-	@test -d debian/stamp/conf || mkdir debian/stamp/conf
-ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
-	@echo "The changelog says we are creating $(saved_version)."
-	@echo "However, I thought the version is $(version)"
-	exit 3
-endif
-	echo done >  $@
-
-
-
-debian/stamp/conf/kernel-conf: .config Makefile
-	$(REASON)
-	@test -d debian/stamp	   || mkdir debian/stamp
-	@test -d debian/stamp/conf || mkdir debian/stamp/conf
-	$(eval $(which_debdir))
-	$(eval $(deb_rule))
-ifeq ($(DEB_HOST_ARCH_OS), kfreebsd)
-	mkdir -p bin
-	ln -sf `which gcc-3.4` bin/cc
-	cd $(architecture)/conf && freebsd-config GENERIC
-endif
+######################################################################
+### Prepare the version number
+######################################################################
 ifeq ($(DEB_HOST_ARCH_OS), linux)
+	$(restore_upstream_debianization)
+  ifneq ($(strip $(HAVE_SILENT_CONFIG)),)
+	if [ -e .config ]; then                                              \
+          $(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) ARCH=$(KERNEL_ARCH) \
+		$(silentconfig);                                             \
+        else                                                                 \
+	  $(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) ARCH=$(KERNEL_ARCH) \
+	 	   $(config_target);                                         \
+        fi
+  else
 	$(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) ARCH=$(KERNEL_ARCH) \
-		$(config_target)
+                    $(config_target);                                      
+  endif
   ifeq ($(shell if   [ $(VERSION) -gt 2 ]; then				   \
 		   echo new;						   \
 		elif [ $(VERSION) -ge 2 ] && [ $(PATCHLEVEL) -ge 5 ]; then \
@@ -251,19 +233,58 @@ ifeq ($(DEB_HOST_ARCH_OS), linux)
 	$(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) ARCH=$(KERNEL_ARCH) prepare
     endif
   endif
+	$(save_upstream_debianization)
 else
   ifeq ($(DEB_HOST_ARCH_OS), kfreebsd)
 	+$(PMAKE) -C $(architecture)/compile/GENERIC depend
   endif
 endif
-	test ! -d Documentation/lguest ||				   \
-	    $(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG)		   \
-			   ARCH=$(KERNEL_ARCH) -C Documentation/lguest clean
 	echo done > $@
 
 
+debian/rules:
+	$(REASON)
+	@test -f $(LIBLOC)/rules || echo Error: Could not find $(LIBLOC)/rules
+	@test -f $(LIBLOC)/rules || exit 4
+	( test -f debian/official && test -f debian/control) ||		   \
+	   sed -e 's/=V/$(KERNELRELEASE)/g'	      -e 's/=D/$(debian)/g'	   \
+	       -e 's/=A/$(DEB_HOST_ARCH)/g'   -e 's/=SA/$(INT_SUBARCH)/g'  \
+		-e 's/=L/$(int_loaderdep) /g' -e 's/=I/$(initrddep)/g'	   \
+		-e 's/=CV/$(VERSION).$(PATCHLEVEL)/g'			   \
+		-e 's/=M/$(maintainer) <$(email)>/g'			   \
+		-e 's/=ST/$(INT_STEM)/g'      -e 's/=B/$(KERNEL_ARCH)/g'   \
+			 $(CONTROL)> debian/control
+	test -f debian/official ||					      \
+	   sed -e 's/=V/$(KERNELRELEASE)/g' -e 's/=D/$(debian)/g'		      \
+	    -e 's/=A/$(DEB_HOST_ARCH)/g' -e 's/=M/$(maintainer) <$(email)>/g' \
+	    -e 's/=ST/$(INT_STEM)/g'	 -e 's/=B/$(KERNEL_ARCH)/g'	      \
+		$(LIBLOC)/changelog > debian/changelog
+	test -f debian/official ||					\
+	   for file in $(DEBIAN_FILES); do				\
+	       cp -f  $(LIBLOC)/$$file ./debian/;			\
+	   done
+	test -f debian/official ||					\
+	   for dir  in $(DEBIAN_DIRS);	do				\
+	     cp -af $(LIBLOC)/$$dir  ./debian/;				\
+	   done
+	install -p -m 755 $(LIBLOC)/rules debian/rules
 
-debian/stamp/build/kernel:
+debian/stamp/conf/common: debian/rules
+	$(REASON)
+	@test -d debian/stamp	   || mkdir debian/stamp
+	@test -d debian/stamp/conf || mkdir debian/stamp/conf
+ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
+	@echo "The changelog says we are creating $(saved_version)."
+	@echo "However, I thought the version is $(KERNELRELEASE)"
+	exit 3
+endif
+	echo done >  $@
+
+
+
+
+
+debian/stamp/build/kernel: conf.vars
 	$(REASON)
 	@test -d debian/stamp	   || mkdir debian/stamp
 	@test -d debian/stamp/build || mkdir debian/stamp/build
@@ -273,13 +294,13 @@ debian/stamp/build/kernel:
 # have.
 ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
 	@echo "The changelog says we are creating $(saved_version)"
-	@echo "However, I thought the version is $(version)"
+	@echo "However, I thought the version is $(KERNELRELEASE)"
 	exit 1
 endif
 # Here, we check to see if what we think is the UTS_RELEASE_VERSION matches the version
 # If not, we re-extract the uts release version from the header, to see if our understanding
 # of UTS_RELEASE_VERSION is correct. This probably does not work right.
-	$(if $(strip $(subst $(strip $(UTS_RELEASE_VERSION)),,$(strip $(version)))),	  \
+	$(if $(strip $(subst $(strip $(UTS_RELEASE_VERSION)),,$(strip $(KERNELRELEASE)))),	  \
 	  if [ -f $(UTS_RELEASE_HEADER) ]; then						  \
 	     uts_ver=$$(grep 'define UTS_RELEASE' $(UTS_RELEASE_HEADER) |		  \
 		perl -nle  'm/^\s*\#define\s+UTS_RELEASE\s+("?)(\S+)\1/g && print $$2;'); \
@@ -287,22 +308,29 @@ endif
 		echo "The UTS Release version in $(UTS_RELEASE_HEADER)";		  \
 		echo "	   \"$$uts_ver\" ";						  \
 		echo "does not match current version " ;				  \
-		echo "	   \"$(strip $(version))\" " ;					  \
+		echo "	   \"$(strip $(KERNELRELEASE))\" " ;					  \
 		echo "Reconfiguring." ;							  \
 		touch Makefile;								  \
 	     fi;									  \
 	  fi)
 ifeq ($(DEB_HOST_ARCH_OS), linux)
+	$(restore_upstream_debianization)
+  ifeq ($(strip $(USE_KBUILD)),yes)
+	$(MAKE) $(do_parallel) $(EXTRAV_ARG) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) \
+			    $(CROSS_ARG) all
+  else
 	$(MAKE) $(do_parallel) $(EXTRAV_ARG) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) \
 			    $(CROSS_ARG) $(target)
-  ifneq ($(strip $(shell grep -E ^[^\#]*CONFIG_MODULES $(CONFIG_FILE))),)
+    ifneq ($(strip $(shell grep -E ^[^\#]*CONFIG_MODULES $(CONFIG_FILE))),)
 	$(MAKE) $(do_parallel) $(EXTRAV_ARG) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) \
 			    $(CROSS_ARG) modules
+    endif
   endif
   ifneq ($(strip $(shell grep -E ^[^\#]*CONFIG_LGUEST $(CONFIG_FILE))),)
 	$(MAKE) $(do_parallel) $(EXTRAV_ARG) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) \
 			    $(CROSS_ARG) -C Documentation/lguest
   endif
+	$(save_upstream_debianization)
 else
   ifeq ($(DEB_HOST_ARCH_OS), kfreebsd)
 	$(PMAKE) -C $(architecture)/compile/GENERIC
@@ -353,16 +381,13 @@ endif
 real_stamp_clean: unpatch_now
 	$(REASON)
 	@echo running clean
-	test ! -f scripts/package/builddeb.kpkg-dist ||			    \
-	  mv -f scripts/package/builddeb.kpkg-dist scripts/package/builddeb
-	test ! -f scripts/package/Makefile.kpkg-dist ||			    \
-	  mv -f scripts/package/Makefile.kpkg-dist scripts/package/Makefile
 ifeq ($(DEB_HOST_ARCH_OS), linux)
-	test ! -f .config  || cp -pf .config config.precious
+	$(save_upstream_debianization)
+	test ! -f .config  || cp -pf .config ,,precious
 	$(MAKE) $(FLAV_ARG) $(EXTRAV_ARG) $(CROSS_ARG) ARCH=$(KERNEL_ARCH) -C Documentation/lguest clean
 	test ! -f Makefile || \
 	    $(MAKE) $(FLAV_ARG) $(EXTRAV_ARG) $(CROSS_ARG) ARCH=$(KERNEL_ARCH) distclean
-	test ! -f config.precious || mv -f config.precious .config
+	$(restore_upstream_debianization)
 else
 	rm -f .config
   ifeq ($(DEB_HOST_ARCH_OS), kfreebsd)
@@ -376,6 +401,8 @@ endif
 	test -f stamp-building || test -f debian/official || rm -rf debian
 	rm -f $(FILES_TO_CLEAN) $(STAMPS_TO_CLEAN)
 	rm -rf $(DIRS_TO_CLEAN)
+	test ! -f ,,precious || mv -f ,,precious .config
+
 
 
 
@@ -386,10 +413,13 @@ debian/stamp/build/buildpackage: debian/stamp/pre-config-common
 	@echo "This is kernel package version $(kpkg_version)."
 ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
 	@echo "The changelog says we are creating $(saved_version)"
-	@echo "However, I thought the version is $(version)"
+	@echo "However, I thought the version is $(KERNELRELEASE)"
 	exit 1
 endif
 	echo 'Building Package' > stamp-building
+# work around idiocy in recent kernel versions
+# However, this makes it harder to use git versions of the kernel
+	$(save_upstream_debianization)
 	dpkg-buildpackage -nc $(strip $(int_root_cmd)) $(strip $(int_us))  \
 	       $(strip $(int_uc)) -m"$(maintainer) <$(email)>" -k"$(pgp)"
 	rm -f stamp-building

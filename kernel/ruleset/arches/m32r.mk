@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 18:31:09 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Mon Oct 31 18:31:09 2005
-## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 0
+## Last Modified On : Thu Oct  9 14:18:07 2008
+## Last Machine Used: anzu.internal.golden-gryphon.com
+## Update Count     : 1
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : handle the architecture specific variables.
@@ -37,7 +37,7 @@ loader=
 loaderdoc=
 target = $(kimage)
 kimagesrc = $(strip arch/$(KERNEL_ARCH)/boot/$(kimage))
-kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
+kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(KERNELRELEASE)
 DEBCONFIG= $(CONFDIR)/config.$(KPKG_SUBARCH)
 
 #Local variables:

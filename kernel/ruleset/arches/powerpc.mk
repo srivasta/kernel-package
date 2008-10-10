@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 18:31:06 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Wed Jun 14 10:04:59 2006
-## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 10
+## Last Modified On : Thu Oct  9 14:18:18 2008
+## Last Machine Used: anzu.internal.golden-gryphon.com
+## Update Count     : 11
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : handle the architecture specific variables.
@@ -35,7 +35,7 @@ include $(DEBDIR)/ruleset/arches/what_is_ppc_called_today.mk
 
 kimagesrc = vmlinux
 kimage := vmlinux
-kimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
+kimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(KERNELRELEASE)
 target := $(kimage)
 DEBCONFIG= $(CONFDIR)/config.$(KPKG_SUBARCH)
 
@@ -81,14 +81,14 @@ ifneq (,$(findstring $(KPKG_SUBARCH), NuBuS nubus))
   target := zImage
   kimagesrc = arch/$(KERNEL_ARCH)/appleboot/Mach\ Kernel
   kimage := vmlinux
-  kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
+  kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(KERNELRELEASE)
 endif
 # prpmc subarch
 ifneq (,$(findstring $(KPKG_SUBARCH),PRPMC prpmc))
   KPKG_SUBARCH:=prpmc
   target = zImage
   kelfimagesrc = arch/$(KERNEL_ARCH)/boot/images/zImage.pplus
-  kelfimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
+  kelfimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(KERNELRELEASE)
 endif
 # mbx subarch
 ifneq (,$(findstring $(KPKG_SUBARCH),MBX mbx))
@@ -97,7 +97,7 @@ ifneq (,$(findstring $(KPKG_SUBARCH),MBX mbx))
   kelfimagesrc = $(shell if [ -d arch/$(KERNEL_ARCH)/mbxboot ]; then \
         echo arch/$(KERNEL_ARCH)/mbxboot/$(kimage) ; else            \
         echo arch/$(KERNEL_ARCH)/boot/images/zvmlinux.embedded; fi)
-  kelfimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
+  kelfimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(KERNELRELEASE)
 endif
 
 #Local variables:

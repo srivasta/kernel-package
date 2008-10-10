@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 18:31:09 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Mon Oct 31 18:31:09 2005
-## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 0
+## Last Modified On : Thu Oct  9 14:19:17 2008
+## Last Machine Used: anzu.internal.golden-gryphon.com
+## Update Count     : 1
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : handle the architecture specific variables.
@@ -37,9 +37,9 @@ loaderdoc=
 target=compressed
 NEED_DIRECT_GZIP_IMAGE=NO
 kimagesrc=vmlinux.gz
-kimagedest=$(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
+kimagedest=$(INT_IMAGE_DESTDIR)/vmlinuz-$(KERNELRELEASE)
 kelfimagesrc = vmlinux
-kelfimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
+kelfimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(KERNELRELEASE)
 DEBCONFIG=$(CONFDIR)/config.$(KPKG_SUBARCH)
 
 #Local variables:

@@ -1,19 +1,19 @@
 ######################### -*- Mode: Makefile-Gmake -*- ########################
-## amd64.mk --- 
-## Author           : Manoj Srivastava ( srivasta@glaurung.internal.golden-gryphon.com ) 
+## amd64.mk ---
+## Author           : Manoj Srivastava ( srivasta@glaurung.internal.golden-gryphon.com )
 ## Created On       : Mon Oct 31 18:31:11 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Tue Oct  7 23:07:13 2008
+## Last Modified On : Thu Oct  9 14:18:47 2008
 ## Last Machine Used: anzu.internal.golden-gryphon.com
-## Update Count     : 1
+## Update Count     : 6
 ## Status           : Unknown, Use with caution!
-## HISTORY          : 
+## HISTORY          :
 ## Description      : handle the architecture specific variables.
-## 
+##
 ## arch-tag: 0429f056-d3a2-43d3-a02b-78bf0f655633
-## 
-## 
+##
+##
 ## This program is free software; you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
 ## the Free Software Foundation; either version 2 of the License, or
@@ -43,29 +43,25 @@ IMAGE_SRC_DIR=$(shell if [ $(VERSION) -lt 2 ]; then                     \
 
 KERNEL_ARCH=x86_64
 ifeq ($(DEB_HOST_ARCH_OS), linux)
+  kimage := bzImage
+  loaderdep=lilo (>= 19.1) | grub
+  loader=lilo
+  loaderdoc=LiloDefault
+  target = $(kimage)
+  kimagesrc = $(strip arch/$(IMAGE_SRC_DIR)/boot/$(kimage))
+  kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(KERNELRELEASE)
+  DEBCONFIG= $(CONFDIR)/config.$(KPKG_SUBARCH)
   ifeq ($(strip $(CONFIG_X86_64_XEN)),)
-    kimage := bzImage
-    loaderdep=lilo (>= 19.1) | grub
-    loader=lilo
-    loaderdoc=LiloDefault
-    target = $(kimage)
-    kimagesrc = $(strip arch/$(IMAGE_SRC_DIR)/boot/$(kimage))
-    kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
-    DEBCONFIG= $(CONFDIR)/config.$(KPKG_SUBARCH)
     kelfimagesrc = vmlinux
-    kelfimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
+    kelfimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(KERNELRELEASE)
   else
-    kimagesrc = vmlinux
+    kelfimagesrc = vmlinux
     ifeq ($(strip $(CONFIG_XEN_PRIVILEGED_GUEST)),)
-      kimagedest = $(INT_IMAGE_DESTDIR)/xenu-linux-$(version)
+      kelfimagedest = $(INT_IMAGE_DESTDIR)/xenu-linux-$(KERNELRELEASE)
     else
-      kimagedest = $(INT_IMAGE_DESTDIR)/xen0-linux-$(version)
+      kelfimagesrc = $(INT_IMAGE_DESTDIR)/xen0-linux-$(KERNELRELEASE)
     endif
-    loaderdep=grub,xen-vm
-    loader=grub
-    loaderdoc=
-    kimage := vmlinux
-    target = $(kimage)
+    int_install_vmlinux:=YES
   endif
 endif
 

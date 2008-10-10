@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 18:31:10 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Tue Oct  7 23:10:23 2008
+## Last Modified On : Thu Oct  9 14:20:00 2008
 ## Last Machine Used: anzu.internal.golden-gryphon.com
-## Update Count     : 17
+## Update Count     : 21
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : handle the architecture specific variables.
@@ -53,35 +53,31 @@ ifeq (,$(findstring $(KPKG_SUBARCH), xen i386 i486 i586 i686))
 endif
 DEBCONFIG= $(CONFDIR)/config.$(KPKG_SUBARCH)
 ifeq ($(DEB_HOST_ARCH_OS), linux)
+  kimage := bzImage
+  target = $(kimage)
+  kimagesrc = $(strip arch/$(IMAGE_SRC_DIR)/boot/$(kimage))
+  kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(KERNELRELEASE)
+  loaderdep=lilo (>= 19.1) | grub
+  loader=lilo
+  loaderdoc=LiloDefault
   ifeq ($(strip $(CONFIG_X86_XEN)),)
-    kimage := bzImage
-    target = $(kimage)
-    kimagesrc = $(strip arch/$(IMAGE_SRC_DIR)/boot/$(kimage))
-    kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
     kelfimagesrc = vmlinux
-    kelfimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
-    loaderdep=lilo (>= 19.1) | grub
-    loader=lilo
-    loaderdoc=LiloDefault
+    kelfimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(KERNELRELEASE)
   else
-    kimagesrc = vmlinux
+    kelfimagesrc = vmlinux
     ifeq ($(strip $(CONFIG_XEN_PRIVILEGED_GUEST)),)
-      kimagedest = $(INT_IMAGE_DESTDIR)/xenu-linux-$(version)
+      kelfimagedest = $(INT_IMAGE_DESTDIR)/xenu-linux-$(KERNELRELEASE)
     else
-      kimagedest = $(INT_IMAGE_DESTDIR)/xen0-linux-$(version)
+      kelfimagedest = $(INT_IMAGE_DESTDIR)/xen0-linux-$(KERNELRELEASE)
     endif
-    loaderdep=grub,xen-vm
-    loader=grub
-    loaderdoc=
-    kimage := vmlinux
-    target = $(kimage)
+    int_install_vmlinux:=YES
   endif
 else
   loaderdep=grub | grub2
   loader=grub
   ifeq ($(DEB_HOST_ARCH_OS), kfreebsd)
     kimagesrc = $(strip $(KERNEL_ARCH)/compile/GENERIC/kernel)
-    kimagedest = $(INT_IMAGE_DESTDIR)/kfreebsd-$(version)
+    kimagedest = $(INT_IMAGE_DESTDIR)/kfreebsd-$(KERNELRELEASE)
   endif
 endif
 

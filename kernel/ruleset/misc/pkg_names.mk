@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 17:45:52 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Wed Apr 12 01:59:20 2006
-## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 2
+## Last Modified On : Thu Oct  9 14:33:01 2008
+## Last Machine Used: anzu.internal.golden-gryphon.com
+## Update Count     : 5
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : sets up package names for the packages we can
@@ -50,25 +50,25 @@ endif
 endif
 
 # The name of the package (for example, 'emacs').
-s_package   := $(INT_STEM)-source-$(version)
-h_package := $(INT_STEM)-headers-$(version)
+s_package  = $(INT_STEM)-source-$(KERNELRELEASE)
+h_package  = $(INT_STEM)-headers-$(KERNELRELEASE)
 ifeq ($(strip $(KERNEL_ARCH)),um)
-	i_package := $(INT_STEM)-uml-$(version)$(INT_SUBARCH)
+	i_package  = $(INT_STEM)-uml-$(KERNELRELEASE)$(INT_SUBARCH)
 else
   ifneq ($(strip $(CONFIG_XEN)),)
 	ifeq ($(strip $(CONFIG_XEN_PRIVILEGED_GUEST)),)
-	  i_package := $(INT_STEM)-xenu-$(version)
+	  x_package  = $(INT_STEM)-xenu-$(KERNELRELEASE)
         else
-          i_package := $(INT_STEM)-xen0-$(version)
+          x_package  = $(INT_STEM)-xen0-$(KERNELRELEASE)
         endif
   else
-	i_package := $(INT_STEM)-image-$(version)$(INT_SUBARCH)
+	i_package  = $(INT_STEM)-image-$(KERNELRELEASE)$(INT_SUBARCH)
   endif
 endif
-d_package := $(INT_STEM)-doc-$(version)
-m_package := $(INT_STEM)-manual-$(version)
+d_package  = $(INT_STEM)-doc-$(KERNELRELEASE)
+m_package  = $(INT_STEM)-manual-$(KERNELRELEASE)
 
-SRCTOP    := $(shell if [ "$$PWD" != "" ]; then echo $$PWD; else pwd; fi)
+SRCTOP     = $(shell if [ "$$PWD" != "" ]; then echo $$PWD; else pwd; fi)
 
 TMPTOP     = $(SRCTOP)/debian/$(package)
 LINTIANDIR = $(TMPTOP)/usr/share/lintian/overrides
@@ -85,7 +85,7 @@ MAN1DIR = $(MANDIR)/man1
 MAN9DIR = $(MANDIR)/man9
 INFODIR = $(TMPTOP)/usr/share/info
 
-UML_DIR        = $(TMPTOP)/usr/lib/uml/modules/$(version)
+UML_DIR        = $(TMPTOP)/usr/lib/uml/modules/$(KERNELRELEASE)
 
 TMP_MAN        = $(SRCTOP)/debian/tmp_man
 DIRS_TO_CLEAN += $(TMP_MAN)

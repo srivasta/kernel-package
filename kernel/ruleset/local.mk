@@ -4,9 +4,9 @@
 ## Created On       : Fri Oct 28 00:37:46 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Wed Oct  8 15:37:21 2008
+## Last Modified On : Thu Oct  9 20:33:37 2008
 ## Last Machine Used: anzu.internal.golden-gryphon.com
-## Update Count     : 31
+## Update Count     : 36
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : 
@@ -35,10 +35,10 @@ testdir:
 $(eval $(which_debdir))
 include $(DEBDIR)/ruleset/targets/common.mk
 
-debian/stamp/pre-config-common: debian/stamp/conf/common
+debian/stamp/pre-config-common: 
 debian/stamp/pre-config-indep:  debian/stamp/conf/kernel-conf
-
-debian/stamp/pre-build-common:  sanity_check 
+configure: debian/stamp/conf/common
+debian/stamp/pre-build-common:  sanity_check conf.vars
 debian/stamp/BUILD/$(i_package): debian/stamp/build/kernel
 
 debian/stamp/INST/$(s_package): debian/stamp/install/$(s_package)
@@ -63,7 +63,7 @@ CLEAN/$(i_package)::
 ifneq ($(strip $(KERNEL_ARCH)),um)
   ifeq  ($(strip $(CONFIG_XEN)),)
 	test ! -d ./debian || test ! -e stamp-building ||            \
-	sed -e 's/=V/$(version)/g'    -e 's/=B/$(link_in_boot)/g'    \
+	sed -e 's/=V/$(KERNELRELEASE)/g'    -e 's/=B/$(link_in_boot)/g'    \
             -e 's/=ST/$(INT_STEM)/g'  -e 's/=R/$(reverse_symlink)/g' \
             -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \
             -e 's@=MK@$(initrdcmd)@g' -e 's@=A@$(DEB_HOST_ARCH)@g'   \

@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 18:31:10 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Mon Oct 31 18:31:10 2005
-## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 0
+## Last Modified On : Thu Oct  9 14:19:56 2008
+## Last Machine Used: anzu.internal.golden-gryphon.com
+## Update Count     : 1
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : handle the architecture specific variables.
@@ -39,7 +39,7 @@ NEED_DIRECT_GZIP_IMAGE=NO
 # Override arch name because hppa uses arch/parisc not arch/hppa
 KERNEL_ARCH := parisc
 kimagesrc=$(kimage)
-kimagedest=$(INT_IMAGE_DESTDIR)/vmlinux-$(version)
+kimagedest=$(INT_IMAGE_DESTDIR)/vmlinux-$(KERNELRELEASE)
 # This doesn't seem to work, but the other archs do it...
 DEBCONFIG=$(CONFDIR)/config.$(KPKG_SUBARCH)
 

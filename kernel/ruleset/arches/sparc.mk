@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 18:31:02 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Mon Oct 31 18:31:02 2005
-## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 0
+## Last Modified On : Thu Oct  9 14:19:11 2008
+## Last Machine Used: anzu.internal.golden-gryphon.com
+## Update Count     : 1
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : handle the architecture specific variables.
@@ -35,7 +35,7 @@ loaderdep = silo
 loader = silo
 loaderdoc=SiloDefault
 NEED_DIRECT_GZIP_IMAGE = YES
-kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
+kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(KERNELRELEASE)
 DEBCONFIG = $(CONFDIR)/config.sparc
 
 ifeq (,$(KPKG_SUBARCH))
@@ -64,7 +64,7 @@ ifneq ($(shell if [ $(VERSION)  -ge  2 ] && [ $(PATCHLEVEL) -ge 5 ] &&  \
   target    = image
   kimagesrc = arch/$(KERNEL_ARCH)/boot/image
   kelfimagesrc = vmlinux
-  kelfimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
+  kelfimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(KERNELRELEASE)
 else
   target    = vmlinux
   kimagesrc = vmlinux

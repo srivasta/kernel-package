@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 16:38:08 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Wed Oct  8 15:35:22 2008
+## Last Modified On : Thu Oct  9 14:21:09 2008
 ## Last Machine Used: anzu.internal.golden-gryphon.com
-## Update Count     : 8
+## Update Count     : 9
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : This file is responsible for creating the kernel-doc packages
@@ -98,7 +98,7 @@ debian/stamp/binary/$(d_package):
 	@test -d debian/stamp/binary || mkdir debian/stamp/binary
 	$(make_directory) $(TMPTOP)/DEBIAN
 	$(eval $(deb_rule))
-	sed -e 's/=P/$(package)/g' -e 's/=V/$(version)/g' \
+	sed -e 's/=P/$(package)/g' -e 's/=V/$(KERNELRELEASE)/g' \
 		$(DEBDIR)/pkg/doc/postinst >        $(TMPTOP)/DEBIAN/postinst
 	chmod 755                                   $(TMPTOP)/DEBIAN/postinst
 	dpkg-gencontrol -isp -p$(package)         -P$(TMPTOP)/

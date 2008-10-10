@@ -4,9 +4,9 @@
 ## Created On       : Fri Dec  9 14:58:51 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Fri Dec  9 15:02:02 2005
-## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 3
+## Last Modified On : Thu Oct  9 14:19:23 2008
+## Last Machine Used: anzu.internal.golden-gryphon.com
+## Update Count     : 4
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : 
@@ -38,7 +38,7 @@ ifeq ($(strip $(architecture)),arm)
     kimage := zImage
     target = Image
     kimagesrc = arch/$(KERNEL_ARCH)/boot/Image
-    kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
+    kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(KERNELRELEASE)
     loaderdep=
     loader=nettrom
     loaderdoc=
@@ -49,11 +49,11 @@ ifeq ($(strip $(architecture)),arm)
     target = zImage
     NEED_DIRECT_GZIP_IMAGE=NO
     kimagesrc = arch/$(KERNEL_ARCH)/boot/zImage
-    kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
+    kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(KERNELRELEASE)
     DEBCONFIG = $(CONFDIR)/config.arm
   endif
   kelfimagesrc = vmlinux
-  kelfimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
+  kelfimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(KERNELRELEASE)
 endif
 
 #Local variables:

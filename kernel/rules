@@ -5,9 +5,9 @@
 ## Created On	    : Sat Apr 27 06:36:31 1996
 ## Created On Node  : melkor.pilgrim.umass.edu
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Fri Oct 28 16:15:55 2005
-## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count	    : 973
+## Last Modified On : Thu Oct  9 14:17:29 2008
+## Last Machine Used: anzu.internal.golden-gryphon.com
+## Update Count	    : 974
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    :
@@ -82,6 +82,7 @@ include $(DEBDIR)/ruleset/local.mk
 test:
 	$(eval $(which_debdir))
 	echo version: $(version)
+	echo KERNELRELEASE: $(KERNELRELEASE)
 	echo KPKG_ARCH: $(KPKG_ARCH)
 	echo $(DEB_BUILD_ARCH)
 	echo $(DEB_BUILD_GNU_CPU)

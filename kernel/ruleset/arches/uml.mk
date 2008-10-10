@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 18:30:26 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Mon Oct 31 18:30:26 2005
-## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 0
+## Last Modified On : Thu Oct  9 14:19:00 2008
+## Last Machine Used: anzu.internal.golden-gryphon.com
+## Update Count     : 1
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : handle the architecture specific variables.
@@ -49,7 +49,7 @@ endif
 kimagesrc  = $(strip $(kimage))
 INT_IMAGE_DESTDIR=$(DOCDIR)
 IMAGEDIR = /usr/bin
-kimagedest = $(TMPTOP)/$(IMAGEDIR)/linux-$(version)
+kimagedest = $(TMPTOP)/$(IMAGEDIR)/linux-$(KERNELRELEASE)
 loaderdep=
 loaderdoc=
 KERNEL_ARCH = um

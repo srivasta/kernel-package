@@ -10,6 +10,8 @@ Architecture: any
 Depends: ${shlibs:Depends}
 Section: devel
 Priority: optional
+Recommends: libc6-dev | libc-dev, gcc | c-compiler, make (>= 3.80-10), binutils (>= 2.12), util-linux (>= 2.10o)
+Suggests: module-init-tools (>= 0.9.10), e2fsprogs (>= 1.29)
 Provides: =ST-headers, =ST-headers-=CV
 Description: Header files related to Linux kernel, specifically,
  version =V
@@ -27,8 +29,8 @@ Section: devel
 Priority: optional
 Provides: =ST-source, =ST-source-=CV
 Depends: binutils, bzip2, file
-Recommends: libc6-dev | libc-dev, gcc, make, po-debconf, gettext
-Suggests: libncurses-dev | ncurses-dev, kernel-package, xmlto
+Recommends: libc6-dev | libc-dev, gcc | c-compiler, make (>= 3.80-10), po-debconf, gettext, binutils (>= 2.12), util-linux (>= 2.10o), module-init-tools (>= 0.9.10), debianutils (>= 2.30)
+Suggests: libncurses-dev | ncurses-dev, kernel-package, xmlto, libdb3-dev, libncurses-dev, docbook-utils, e2fsprogs (>= 1.29), linux-initramfs-tool, ksymoops
 Description: Linux kernel source for version =V
  This package provides the source code for the Linux kernel, specifically,
  version =V.
@@ -53,7 +55,7 @@ Priority: optional
 Provides: =ST-image,  =ST-image-=CV
 Pre-Depends: debconf (>= 0.2.17) | debconf-2.0
 Depends: =I coreutils (>= 5.96)
-Suggests: =L fdutils, =ST-doc-=V=SA | =ST-source-=V 
+Suggests: =L fdutils, =ST-doc-=V=SA | =ST-source-=V, ksymoops
 Description: Linux kernel binary image for version =V=SA
  This package contains the Linux kernel image for version 
  =V=SA.

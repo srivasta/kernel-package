@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 13:55:32 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Wed Oct  8 12:42:30 2008
+## Last Modified On : Thu Oct  9 22:08:58 2008
 ## Last Machine Used: anzu.internal.golden-gryphon.com
-## Update Count     : 12
+## Update Count     : 14
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : This file is responsible forcreating the kernel-source packages 
@@ -72,7 +72,7 @@ endif
            $(install_file) debian/README.Debian $(DOCDIR)/README.Debian ;       \
 	   gzip -9qf $(DOCDIR)/README.Debian;                                   \
 	else                                                                    \
-	    sed -e 's/=V/$(version)/g' -e 's/=A/$(DEB_HOST_ARCH)/g'             \
+	    sed -e 's/=V/$(KERNELRELEASE)/g' -e 's/=A/$(DEB_HOST_ARCH)/g'             \
              -e 's/=ST/$(INT_STEM)/g'  -e 's/=B/$(KERNEL_ARCH)/g'               \
                  $(DEBDIR)/pkg/source/README >  $(SRCDIR)/README.Debian ;       \
 	fi
@@ -87,7 +87,9 @@ endif
 	for dir  in $(DEBIAN_DIRS);  do                                      \
           cp -af $(DEBDIR)/$$dir  $(SRCDIR)/debian/;                         \
         done
-	(cd $(SRCDIR); find . -type d -name .arch-ids -print0 | xargs -0r rm -rf {} \; )
+	(cd $(SRCDIR); find . -type d -name .arch-ids -print0  | xargs -0r rm -rf {} \; )
+	(cd $(SRCDIR); find . -type d -name .git -print0       | xargs -0r rm -rf {} \; )
+	(cd $(SRCDIR); find . -type f -name .gitmodule -print0 | xargs -0r rm -f  {} \; )
 ifneq ($(strip $(source_clean_hook)),)
 	(cd $(SRCDIR); test -x $(source_clean_hook) && $(source_clean_hook))
 endif
@@ -104,7 +106,7 @@ debian/stamp/binary/$(s_package):
 	@echo "This is kernel package version $(kpkg_version)."
 	$(eval $(which_debdir))
 	$(make_directory) $(TMPTOP)/DEBIAN
-	sed -e 's/=P/$(package)/g' -e 's/=V/$(version)/g'                       \
+	sed -e 's/=P/$(package)/g' -e 's/=V/$(KERNELRELEASE)/g'                       \
 	    $(DEBDIR)/pkg/source/postinst >          $(TMPTOP)/DEBIAN/postinst
 	chmod 755                                    $(TMPTOP)/DEBIAN/postinst
 	chmod -R og=rX                               $(TMPTOP)

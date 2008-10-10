@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 16:23:51 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Wed Oct  8 12:04:03 2008
+## Last Modified On : Thu Oct  9 22:09:12 2008
 ## Last Machine Used: anzu.internal.golden-gryphon.com
-## Update Count     : 19
+## Update Count     : 28
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : This file is responsible for creating the kernel-headers packages 
@@ -36,15 +36,16 @@ ifeq ($(shell if [ $(PATCHLEVEL) -eq 6 ] && [ $(SUBLEVEL) -gt 23 ] ; then \
 	         echo "yes" ; fi ; fi ),yes)
 	LINK_ARCH=x86
 endif
+INSTALL_HDR_PATH=$(SRCDIR)
 
 debian/stamp/install/$(h_package):
 	$(REASON)
 	@echo "This is kernel package version $(kpkg_version)."
-	$(if $(subst $(strip $(UTS_RELEASE_VERSION)),,$(strip $(version))), \
+	$(if $(subst $(strip $(UTS_RELEASE_VERSION)),,$(strip $(KERNELRELEASE))), \
 		echo "The UTS Release version in $(UTS_RELEASE_HEADER)"; \
 		echo "     \"$(strip $(UTS_RELEASE_VERSION))\" "; \
 		echo "does not match current version:"; \
-		echo "     \"$(strip $(version))\" "; \
+		echo "     \"$(strip $(KERNELRELEASE))\" "; \
 		echo "Please correct this."; \
 		exit 2,)
 	rm -rf $(TMPTOP)
@@ -55,9 +56,12 @@ debian/stamp/install/$(h_package):
 	$(make_directory) $(SRCDIR)/arch/$(LINK_ARCH)
 	$(make_directory) $(SRCDIR)/arch/$(LINK_ARCH)/kernel/
 	$(eval $(which_debdir))
+######################################################################
+#### Add documentation to /usr/share/doc
+######################################################################
 	$(install_file) debian/changelog                $(DOCDIR)/changelog.Debian
 	$(install_file) $(DEBDIR)/pkg/headers/README    $(DOCDIR)/debian.README
-	$(install_file) $(config)  	                $(DOCDIR)/config-$(version)
+	$(install_file) $(config)  	                $(DOCDIR)/config-$(KERNELRELEASE)
 	$(install_file) conf.vars  	                $(DOCDIR)/conf.vars
 	$(install_file) CREDITS                         $(DOCDIR)/
 	$(install_file) MAINTAINERS                     $(DOCDIR)/
@@ -75,6 +79,9 @@ debian/stamp/install/$(h_package):
 	                                                   $(DOCDIR)/Buildinfo
 	chmod 0644                                         $(DOCDIR)/Buildinfo
 	$(install_file) $(DEBDIR)/pkg/headers/copyright    $(DOCDIR)/copyright
+######################################################################
+#### 
+######################################################################
 	$(install_file) Makefile                           $(SRCDIR)
 	test ! -e Rules.make || $(install_file) Rules.make $(SRCDIR)
 	test ! -e .kernelrelease || $(install_file) .kernelrelease $(SRCDIR)
@@ -89,7 +96,7 @@ debian/stamp/install/$(h_package):
                                                      $(SRCDIR)/arch/$(LINK_ARCH)
 	test ! -e Rules.make     || $(install_file) Rules.make     $(SRCDIR)
 	test ! -e Module.symvers || $(install_file) Module.symvers $(SRCDIR)
-ifneq ($(strip $(int_follow_symlinks_in_src)),)
+  ifneq ($(strip $(int_follow_symlinks_in_src)),)
 	-tar cfh - include       |   (cd $(SRCDIR); umask 000; tar xsf -)
 	-tar cfh - scripts       |   (cd $(SRCDIR); umask 000; tar xsf -)
 	(cd $(SRCDIR)/include;   rm -rf asm; ln -s asm-$(LINK_ARCH) asm)
@@ -101,16 +108,9 @@ ifneq ($(strip $(int_follow_symlinks_in_src)),)
                -print | cpio -pdL --preserve-modification-time $(SRCDIR);
 	test ! -d arch/$(KERNEL_ARCH)/scripts || find arch/$(KERNEL_ARCH)/scripts   \
                -print | cpio -pdL --preserve-modification-time $(SRCDIR);
-else
+  else
 	-tar cf - include |        (cd $(SRCDIR); umask 000; tar xsf -)
 	-tar cf - scripts |        (cd $(SRCDIR); umask 000; tar xsf -)
-	# Undo the move away of the scripts dir Makefile
-	test ! -f $(SRCDIR)/scripts/package/Makefile.dist ||                  \
-           mv  -f $(SRCDIR)/scripts/package/Makefile.dist                     \
-                  $(SRCDIR)/scripts/package/Makefile
-	test ! -f $(SRCDIR)/scripts/package/builddeb.dist ||                  \
-           mv  -f $(SRCDIR)/scripts/package/builddeb.dist                     \
-                  $(SRCDIR)/scripts/package/builddeb
 	(cd       $(SRCDIR)/include; rm -f asm; ln -s asm-$(LINK_ARCH) asm)
 	find . -path './scripts/*' -prune -o -path './Documentation/*' -prune -o  \
                -path './debian/*'  -prune -o -type f                              \
@@ -120,8 +120,8 @@ else
                -print | cpio -pd --preserve-modification-time $(SRCDIR);
 	test ! -d arch/$(KERNEL_ARCH)/scripts || find arch/$(KERNEL_ARCH)/scripts \
                -print | cpio -pd --preserve-modification-time $(SRCDIR);
-endif
-ifeq ($(strip $(KERNEL_ARCH)),um)
+  endif
+  ifeq ($(strip $(KERNEL_ARCH)),um)
 	test ! -e arch/$(LINK_ARCH)/Makefile.cpu ||                              \
          $(install_file) arch/$(LINK_ARCH)/Makefile.cpu                          \
                $(SRCDIR)/arch/$(LINK_ARCH)/
@@ -132,16 +132,21 @@ ifeq ($(strip $(KERNEL_ARCH)),um)
 	$(install_file) arch/um/Makefile* $(SRCDIR)/arch/um/
 	test ! -e arch/um/Kconfig.arch ||                                           \
          $(install_file) arch/um/Kconfig.arch $(SRCDIR)/arch/um/
-endif
+  endif
 	test ! -e arch/$(LINK_ARCH)/kernel/asm-offsets.s ||                     \
            $(install_file)               arch/$(LINK_ARCH)/kernel/asm-offsets.s \
                            $(SRCDIR)/arch/$(LINK_ARCH)/kernel/asm-offsets.s
 	for file in $(localversion_files) dummy; do                               \
           test ! -e $$file || $(install_file) $$file $(SRCDIR);                   \
         done
+	(cd $(SRCDIR); find . -type d -name .git -print0       | xargs -0r rm -rf {} \; )
+	(cd $(SRCDIR); find . -type f -name .gitmodule -print0 | xargs -0r rm -f  {} \; )
+######################################################################
+#### Now add in Debian specific informational stuff
+######################################################################
 	$(install_file) .config  	        $(SRCDIR)/.config
 	echo $(debian)                    > $(SRCDIR)/$(INT_STEM)-headers.revision
-	sed -e 's/=V/$(version)/g'    -e 's/=IB/$(link_in_boot)/g'   \
+	sed -e 's/=V/$(KERNELRELEASE)/g'    -e 's/=IB/$(link_in_boot)/g'   \
             -e 's/=ST/$(INT_STEM)/g'  -e 's/=R/$(reverse_symlink)/g' \
             -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \
             -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'        \
@@ -157,9 +162,11 @@ endif
 	for dir  in $(DEBIAN_DIRS);  do                                      \
           cp -af $(DEBDIR)/$$dir  $(SRCDIR)/debian/;                         \
         done
-	(cd $(SRCDIR); find . -type d -name .arch-ids -print0 | xargs -0r rm -rf  )
+######################################################################
+#### Now strip any elf objects in the header package
+######################################################################
 #         $(DEBDIR)/pkg/headers/create_link  >                        \
-#                $(TMPTOP)/etc/kernel/postinst.d/create_link-$(version)
+#                $(TMPTOP)/etc/kernel/postinst.d/create_link-$(KERNELRELEASE)
 ifeq (,$(findstring nostrip,$(DEB_BUILD_OPTIONS)))
 	test ! -d $(SRCDIR)/scripts || find $(SRCDIR)/scripts -type f | while read i; do  \
            if file -b $$i | egrep -q "^ELF.*executable"; then                             \
@@ -182,7 +189,7 @@ debian/stamp/binary/$(h_package):
 	@test -d debian/stamp/binary || mkdir debian/stamp/binary
 	$(make_directory) $(TMPTOP)/DEBIAN
 	$(eval $(deb_rule))
-	sed -e 's/=V/$(version)/g'    -e 's/=IB/$(link_in_boot)/g'   \
+	sed -e 's/=V/$(KERNELRELEASE)/g'    -e 's/=IB/$(link_in_boot)/g'   \
             -e 's/=ST/$(INT_STEM)/g'  -e 's/=R/$(reverse_symlink)/g' \
             -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \
             -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'        \
@@ -192,7 +199,7 @@ debian/stamp/binary/$(h_package):
             -e 's/=S/$(no_symlink)/g'  -e 's@=B@$(KERNEL_ARCH)@g'    \
 		$(DEBDIR)/pkg/headers/postinst >        $(TMPTOP)/DEBIAN/postinst
 	chmod 755                                       $(TMPTOP)/DEBIAN/postinst
-#	echo "/etc/kernel/postinst.d/create_link-$(version)" > $(TMPTOP)/DEBIAN/conffiles
+#	echo "/etc/kernel/postinst.d/create_link-$(KERNELRELEASE)" > $(TMPTOP)/DEBIAN/conffiles
 	cp -pf debian/control debian/control.dist
 ifneq ($(strip $(header_clean_hook)),)
 	(cd $(SRCDIR); test -x $(header_clean_hook) && $(header_clean_hook))

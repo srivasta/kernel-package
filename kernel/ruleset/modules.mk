@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 10:37:44 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Tue Oct  7 22:31:46 2008
+## Last Modified On : Thu Oct  9 15:11:12 2008
 ## Last Machine Used: anzu.internal.golden-gryphon.com
-## Update Count     : 8
+## Update Count     : 14
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : This file contains the targets responsible for third party
@@ -31,9 +31,9 @@
 ##
 ###############################################################################
 
-define mod_inst_cmds
+define old_mod_inst_cmds
         @(                                                           \
-        MODLIB=$(INSTALL_MOD_PATH)/lib/modules/$(version);           \
+        MODLIB=$(INSTALL_MOD_PATH)/lib/modules/$(KERNELRELEASE);           \
         cd modules;                                                  \
         MODULES="";                                                  \
         inst_mod() { These="$$(cat $$1)"; MODULES="$$MODULES $$These"; \
@@ -71,6 +71,10 @@ define mod_inst_cmds
         )
 endef
 
+ifeq (,$(findstring nostrip,$(DEB_BUILD_OPTIONS)))
+INSTALL_MOD_STRIP:=1
+endif
+
 # Pass on cross arg, if not empty
 ifneq ($(strip $(CROSS_ARG)),)
   int_ca := "CROSS_ARG=$(CROSS_ARG)"
@@ -85,19 +89,19 @@ ifeq ($(strip $(shell grep -E ^[^\#]*CONFIG_MODULES $(CONFIG_FILE))),)
 	@echo Modules not configured, so not making $@
 else
 ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
-	@(echo "The changelog says we are creating $(saved_version), but I thought the version is $(version)"; exit 1)
+	@(echo "The changelog says we are creating $(saved_version), but I thought the version is $(KERNELRELEASE)"; exit 1)
 endif
-	$(if $(subst $(strip $(UTS_RELEASE_VERSION)),,$(strip $(version))), \
+	$(if $(subst $(strip $(UTS_RELEASE_VERSION)),,$(strip $(KERNELRELEASE))), \
 		echo "The UTS Release version in $(UTS_RELEASE_HEADER)"; \
 		echo "     \"$(strip $(UTS_RELEASE_VERSION))\" "; \
 		echo "does not match current version:"; \
-		echo "     \"$(strip $(version))\" "; \
+		echo "     \"$(strip $(KERNELRELEASE))\" "; \
 		echo "Please correct this."; \
 		exit 2,)
 	-for module in $(valid_modules) ; do                       \
           if test -d  $$module; then                                \
 	    (cd $$module;                                          \
-              if ./debian/rules KVERS="$(version)" KSRC="$(SRCTOP)" \
+              if ./debian/rules KVERS="$(KERNELRELEASE)" KSRC="$(SRCTOP)" \
                              KMAINT="$(pgp)" KEMAIL="$(email)"      \
                              KPKG_DEST_DIR="$(KPKG_DEST_DIR)"       \
                              KPKG_MAINTAINER="$(maintainer)"        \
@@ -130,19 +134,19 @@ ifeq ($(strip $(shell grep -E ^[^\#]*CONFIG_MODULES $(CONFIG_FILE))),)
 	@echo Modules not configured, so not making $@
 else
 ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
-	@(echo "The changelog says we are creating $(saved_version), but I thought the version is $(version)"; exit 1)
+	@(echo "The changelog says we are creating $(saved_version), but I thought the version is $(KERNELRELEASE)"; exit 1)
 endif
-	$(if $(subst $(strip $(UTS_RELEASE_VERSION)),,$(strip $(version))), \
+	$(if $(subst $(strip $(UTS_RELEASE_VERSION)),,$(strip $(KERNELRELEASE))), \
 		echo "The UTS Release version in $(UTS_RELEASE_HEADER)"; \
 		echo "     \"$(strip $(UTS_RELEASE_VERSION))\" "; \
 		echo "does not match current version:"; \
-		echo "     \"$(strip $(version))\" "; \
+		echo "     \"$(strip $(KERNELRELEASE))\" "; \
 		echo "Please correct this."; \
 		exit 2,)
 	-for module in $(valid_modules) ; do                       \
           if test -d  $$module; then                                \
 	    (cd $$module;                                          \
-              if ./debian/rules KVERS="$(version)" KSRC="$(SRCTOP)" \
+              if ./debian/rules KVERS="$(KERNELRELEASE)" KSRC="$(SRCTOP)" \
                              KMAINT="$(pgp)" KEMAIL="$(email)"      \
                              KPKG_DEST_DIR="$(KPKG_DEST_DIR)"       \
                              KPKG_MAINTAINER="$(maintainer)"        \
@@ -175,19 +179,19 @@ ifeq ($(strip $(shell grep -E ^[^\#]*CONFIG_MODULES $(CONFIG_FILE))),)
 	@echo Modules not configured, so not making $@
 else
 ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
-	@(echo "The changelog says we are creating $(saved_version), but I thought the version is $(version)"; exit 1)
+	@(echo "The changelog says we are creating $(saved_version), but I thought the version is $(KERNELRELEASE)"; exit 1)
 endif
-	$(if $(subst $(strip $(UTS_RELEASE_VERSION)),,$(strip $(version))), \
+	$(if $(subst $(strip $(UTS_RELEASE_VERSION)),,$(strip $(KERNELRELEASE))), \
 		echo "The UTS Release version in $(UTS_RELEASE_HEADER)"; \
 		echo "     \"$(strip $(UTS_RELEASE_VERSION))\" "; \
 		echo "does not match current version:"; \
-		echo "     \"$(strip $(version))\" "; \
+		echo "     \"$(strip $(KERNELRELEASE))\" "; \
 		echo "Please correct this."; \
 		exit 2,)
 	-for module in $(valid_modules) ; do                       \
           if test -d  $$module; then                                \
 	    (cd $$module;                                          \
-              if ./debian/rules KVERS="$(version)" KSRC="$(SRCTOP)" \
+              if ./debian/rules KVERS="$(KERNELRELEASE)" KSRC="$(SRCTOP)" \
                              KMAINT="$(pgp)" KEMAIL="$(email)"      \
                              KPKG_DEST_DIR="$(KPKG_DEST_DIR)"       \
                              KPKG_MAINTAINER="$(maintainer)"        \
@@ -208,21 +212,21 @@ endif
         done
 endif
 
-modules-clean modules_clean: .config
-ifeq ($(strip $(shell grep -E ^[^\#]*CONFIG_MODULES $(CONFIG_FILE))),)
+modules-clean modules_clean:
+ifeq ($(strip $(shell if [ -e $(CONFIG_FILE) ]; then grep -E ^[^\#]*CONFIG_MODULES $(CONFIG_FILE); fi)),)
 	@echo Modules not configured, so not making $@
 else
-	$(if $(subst $(strip $(UTS_RELEASE_VERSION)),,$(strip $(version))), \
+	$(if $(subst $(strip $(UTS_RELEASE_VERSION)),,$(strip $(KERNELRELEASE))), \
 		echo "The UTS Release version in $(UTS_RELEASE_HEADER)"; \
 		echo "     \"$(strip $(UTS_RELEASE_VERSION))\" "; \
 		echo "does not match current version:"; \
-		echo "     \"$(strip $(version))\" "; \
+		echo "     \"$(strip $(KERNELRELEASE))\" "; \
 		echo "Please correct this."; \
 		exit 2,)
 	-for module in $(valid_modules); do                        \
           if test -d  $$module; then                                \
 	    (cd $$module;                                          \
-              if ./debian/rules KVERS="$(version)" KSRC="$(SRCTOP)" \
+              if ./debian/rules KVERS="$(KERNELRELEASE)" KSRC="$(SRCTOP)" \
                              KMAINT="$(pgp)" KEMAIL="$(email)"      \
                              KPKG_DEST_DIR="$(KPKG_DEST_DIR)"       \
                              KPKG_MAINTAINER="$(maintainer)"        \

@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 17:30:53 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Tue Jan  3 19:37:01 2006
-## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 1
+## Last Modified On : Thu Oct  9 17:00:54 2008
+## Last Machine Used: anzu.internal.golden-gryphon.com
+## Update Count     : 8
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : Various internal variable set based on defaults and the
@@ -53,7 +53,11 @@ else
       ifneq ($(strip $(debian_revision_mandatory)),)
         $(error A Debian revision is mandatory, but none was provided)
       else
-        debian = $(version)-10.00.Custom
+        ifeq ($(strip $(KERNELRELEASE)),)
+          debian = $(strip $(version))-10.00.Custom
+        else
+          debian = $(strip $(KERNELRELEASE))-10.00.Custom
+        endif
       endif
     endif
   endif
@@ -165,7 +169,7 @@ ifeq ($(strip $(HAS_CHANGELOG)),YES)
 # "official" version, in which case they can shoot themselves in the
 # foot if they so desire
   ifneq ($(strip $(saved_version)),)
-    ifneq ($(strip $(saved_version)),$(strip $(version)))
+    ifneq ($(strip $(saved_version)),$(strip $(KERNELRELEASE)))
       HAVE_VERSION_MISMATCH:=$(shell if test ! -f debian/official;then echo YES; fi; )
     endif
   endif
@@ -238,6 +242,8 @@ patch_the_kernel = YES
 endif
 
 
+config_target = oldconfig
+have_new_config_target =
 
 ifneq ($(strip $(CONFIG_TARGET)),)
 config_target := $(CONFIG_TARGET)
@@ -246,8 +252,8 @@ endif
 
 # If config_target doesn't end in 'config' then reset it to 'oldconfig'.
 ifneq ($(patsubst %config,config,$(strip $(config_target))),config)
-config_target := oldconfig
-have_new_config_target :=
+  config_target = oldconfig
+  have_new_config_target =
 endif
 
 ifneq ($(strip $(USE_SAVED_CONFIG)),)

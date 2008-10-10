@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 18:31:05 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Mon Oct 31 18:31:05 2005
-## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 0
+## Last Modified On : Thu Oct  9 14:20:12 2008
+## Last Machine Used: anzu.internal.golden-gryphon.com
+## Update Count     : 1
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : handle the architecture specific variables.
@@ -49,10 +49,10 @@ loaderdoc=
 target = image
 NEED_DIRECT_GZIP_IMAGE=NO
 kimagesrc = $(strip arch/$(KERNEL_ARCH)/boot/$(target))
-kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
+kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(KERNELRELEASE)
 DEBCONFIG= $(CONFDIR)/config.$(KPKG_SUBARCH)
 kelfimagesrc = vmlinux
-kelfimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
+kelfimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(KERNELRELEASE)
 
 #Local variables:
 #mode: makefile

@@ -26,10 +26,10 @@ ifeq ($(strip $(architecture)),armel)
   target = zImage
   NEED_DIRECT_GZIP_IMAGE=NO
   kimagesrc = arch/$(KERNEL_ARCH)/boot/zImage
-  kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(version)
+  kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(KERNELRELEASE)
   DEBCONFIG = $(CONFDIR)/config.armel
   kelfimagesrc = vmlinux
-  kelfimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(version)
+  kelfimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(KERNELRELEASE)
   KERNEL_ARCH = arm
 
 endif
