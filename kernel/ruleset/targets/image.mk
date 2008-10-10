@@ -244,7 +244,7 @@ ifneq ($(strip $(KERNEL_ARCH)),um)
 	    -e 's@=MK@$(initrdcmd)@g' -e 's@=A@$(DEB_HOST_ARCH)@g'   \
 	    -e 's@=M@$(MKIMAGE)@g'    -e 's/=OF/$(AM_OFFICIAL)/g'    \
 	    -e 's/=S/$(no_symlink)/g' -e 's@=B@$(KERNEL_ARCH)@g'     \
-	  $(DEBDIR)/pkg/virtual/xen/postinst > $(TMPTOP)/DEBIAN/postinst
+	  $(DEBDIR)/pkg/pkg/image/postinst > $(TMPTOP)/DEBIAN/postinst
 	chmod 755 $(TMPTOP)/DEBIAN/postinst
 	sed -e 's/=V/$(KERNELRELEASE)/g'	   -e 's/=IB/$(link_in_boot)/g'	   \
 	    -e 's/=ST/$(INT_STEM)/g'  -e 's/=R/$(reverse_symlink)/g' \
@@ -284,7 +284,7 @@ ifneq ($(strip $(KERNEL_ARCH)),um)
 	    -e 's@=MK@$(initrdcmd)@g' -e 's@=A@$(DEB_HOST_ARCH)@g'   \
 	    -e 's@=M@$(MKIMAGE)@g'    -e 's/=OF/$(AM_OFFICIAL)/g'    \
 	    -e 's/=S/$(no_symlink)/g' -e 's@=B@$(KERNEL_ARCH)@g'     \
-	 $(DEBDIR)/pkg/virtual/xen/prerm > $(TMPTOP)/DEBIAN/prerm
+	 $(DEBDIR)/pkg/pkg/image/prerm > $(TMPTOP)/DEBIAN/prerm
 	chmod 755 $(TMPTOP)/DEBIAN/prerm
 	sed -e 's/=V/$(version)/g'    -e 's/=IB/$(link_in_boot)/g'    \
 	    -e 's/=ST/$(INT_STEM)/g'  -e 's/=R/$(reverse_symlink)/g' \
