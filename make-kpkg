@@ -5,9 +5,9 @@
 # Created On       : Mon Jun 17 01:10:11 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Wed May  9 23:45:27 2007
-# Last Machine Used: glaurung.internal.golden-gryphon.com
-# Update Count     : 233
+# Last Modified On : Thu Oct  9 23:43:00 2008
+# Last Machine Used: anzu.internal.golden-gryphon.com
+# Update Count     : 235
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
@@ -652,14 +652,14 @@ my $targets_help =<<EOTRGT;
 ===============================================================================
 |     Targets                      |   Automatically builds                   |
 ===============================================================================
-| clean                            |                                          |
-| buildpackage                     | Builds the whole package                 |
-| binary                           | Builds kernel_{source,headers,image,doc} |
-|       binary-indep               |                                          |
+|  clean                           |                                          |
+|  buildpackage                    | Builds the whole package                 |
+|* binary                          | Builds kernel_{source,headers,image,doc} |
+|*      binary-indep               |                                          |
 |            kernel_source         |                                          |
 |            kernel_doc            |                                          |
 |            kernel_manual         |                                          |
-|       binary-arch                |                                          |
+|*      binary-arch                |                                          |
 |            kernel_headers        |                                          |
 |            kernel_image          | Builds build                             |
 |                           build  |                                          |
@@ -672,6 +672,7 @@ my $targets_help =<<EOTRGT;
 | debian                           | Creates ./debian dir, and                |
 |                                  | optionally patches the source            |
 ===============================================================================
+ *: make-kpkg needs to be run as root (or fakeroot), --rootcmd will not work
 See /usr/share/kernel-package/rules for details.
 EOTRGT
   ;

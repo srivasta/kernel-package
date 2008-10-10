@@ -421,7 +421,13 @@ or
 .B \-\-rootcmd foo
 The command that provides a means of gaining super user access (for
 example, `sudo' or `fakeroot') as needed by dpkg\-buildpackage's \-r
-option. 
+option. This option does not work for three of the targets, namely,
+.I binary, binary\-indep,
+and
+.I binary\-arch.
+For those targets the entire
+.I make\-kpkg
+command must be run as (fake)root.
 .TP
 .B \-\-stem foo
 Call the packages foo\-* instead of kernel\-*. This is useful in
@@ -496,6 +502,11 @@ targets
 .B binary\-indep 
 and
 .B binary\-arch.
+However, this requires
+.I make-kpkg
+to be run as root (or fakeroot), since 
+.I \-\-rootcmd
+will not work.
 .TP
 .B binary\-indep
 This target produces the arch independent packages by running the
@@ -504,12 +515,22 @@ targets
 .B kernel_manual
 and
 .B kernel_doc.
+However, this also requires
+.I make-kpkg
+to be run as root (or fakeroot), since 
+.I \-\-rootcmd
+will not work.
 .TP
 .B binary\-arch
 This target produces the arch dependent packages by running the
 targets
 .B kernel_headers
 and
+However, this also requires
+.I make-kpkg
+to be run as root (or fakeroot), since 
+.I \-\-rootcmd
+will not work.
 .B kernel_image.
 .TP
 .B kernel_source
