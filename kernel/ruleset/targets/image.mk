@@ -236,7 +236,7 @@ debian/stamp/binary/$(i_package):
 	@echo "This is kernel package version $(kpkg_version)."
 	$(make_directory) $(TMPTOP)/DEBIAN
 ifneq ($(strip $(KERNEL_ARCH)),um)
-	sed -e 's/=V/$(KERNELRELEASE)/g'    -e 's/=IB/$(link_in_boot)/g'    \
+	sed -e 's/=V/$(KERNELRELEASE)/g'    -e 's/=IB/$(link_in_boot)/g' \
 	    -e 's/=ST/$(INT_STEM)/g'  -e 's/=R/$(reverse_symlink)/g' \
 	    -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'	     \
 	    -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'	     \
@@ -246,7 +246,7 @@ ifneq ($(strip $(KERNEL_ARCH)),um)
 	    -e 's/=S/$(no_symlink)/g' -e 's@=B@$(KERNEL_ARCH)@g'     \
 	  $(DEBDIR)/pkg/image/postinst > $(TMPTOP)/DEBIAN/postinst
 	chmod 755 $(TMPTOP)/DEBIAN/postinst
-	sed -e 's/=V/$(KERNELRELEASE)/g'	   -e 's/=IB/$(link_in_boot)/g'	   \
+	sed -e 's/=V/$(KERNELRELEASE)/g'	   -e 's/=IB/$(link_in_boot)/g' \
 	    -e 's/=ST/$(INT_STEM)/g'  -e 's/=R/$(reverse_symlink)/g' \
 	    -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'	     \
 	    -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'	     \
@@ -256,7 +256,7 @@ ifneq ($(strip $(KERNEL_ARCH)),um)
 	    -e 's/=S/$(no_symlink)/g'  -e 's@=B@$(KERNEL_ARCH)@g'    \
 	 $(DEBDIR)/pkg/image/config > $(TMPTOP)/DEBIAN/config
 	chmod 755 $(TMPTOP)/DEBIAN/config
-	sed -e 's/=V/$(KERNELRELEASE)/g'	   -e 's/=IB/$(link_in_boot)/g'	   \
+	sed -e 's/=V/$(KERNELRELEASE)/g'	   -e 's/=IB/$(link_in_boot)/g' \
 	    -e 's/=ST/$(INT_STEM)/g'  -e 's/=R/$(reverse_symlink)/g' \
 	    -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'	     \
 	    -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'	     \
@@ -286,6 +286,7 @@ ifneq ($(strip $(KERNEL_ARCH)),um)
 	    -e 's/=S/$(no_symlink)/g' -e 's@=B@$(KERNEL_ARCH)@g'     \
 	 $(DEBDIR)/pkg/image/prerm > $(TMPTOP)/DEBIAN/prerm
 	chmod 755 $(TMPTOP)/DEBIAN/prerm
+	$(INSTALL_TEMPLATE)
 	sed -e 's/=V/$(version)/g'    -e 's/=IB/$(link_in_boot)/g'    \
 	    -e 's/=ST/$(INT_STEM)/g'  -e 's/=R/$(reverse_symlink)/g' \
 	    -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \
@@ -294,8 +295,7 @@ ifneq ($(strip $(KERNEL_ARCH)),um)
 	    -e 's/=MD/$(initrddep)/g'                                \
 	    -e 's@=M@$(MKIMAGE)@g'    -e 's/=OF/$(AM_OFFICIAL)/g'    \
 	    -e 's/=S/$(no_symlink)/g' -e 's@=B@$(KERNEL_ARCH)@g'     \
-	 $(DEBDIR)/templates.in   > ./debian/templates.master
-	$(INSTALL_TEMPLATE)
+	 $(DEBDIR)/templates.l10n   > ./debian/templates.master
 	$(install_file) ./debian/templates.master $(TMPTOP)/DEBIAN/templates
 else
 	sed -e 's/=V/$(KERNELRELEASE)/g'    -e 's/=IB/$(link_in_boot)/g'    \
