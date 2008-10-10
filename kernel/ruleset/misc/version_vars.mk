@@ -4,9 +4,9 @@
 ## Created On       : Mon Oct 31 18:07:50 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Thu Oct  9 17:21:02 2008
+## Last Modified On : Fri Oct 10 02:41:13 2008
 ## Last Machine Used: anzu.internal.golden-gryphon.com
-## Update Count     : 28
+## Update Count     : 29
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : This file looks at the top level kernel Makefile, and
@@ -95,12 +95,6 @@ ifeq ($(DEB_HOST_ARCH_OS), linux)
   ifneq (,$(strip $(HAVE_BAD_VERSION)))
     $(error Error: "$(VERSION)")
   endif
-  ifneq ($(strip $(CONFIG_LOCALVERSION_AUTO)),)
-    GIT_VERSION=$(shell /bin/sh scripts/setlocalversion)
-    ifneq ($(strip $(GIT_VERSION)),)
-      GIT_VERSION:=$(GIT_VERSION)-dirty
-    endif
-  endif
 else
   ifeq ($(DEB_HOST_ARCH_OS), kfreebsd)
     VERSION        =$(call doit,grep '^REVISION=' conf/newvers.sh |                   \
@@ -155,7 +149,7 @@ UTS_RELEASE_VERSION=$(call doit,if [ -f $(UTS_RELEASE_HEADER) ]; then           
                  fi)
 
 
-version = $(VERSION).$(PATCHLEVEL).$(SUBLEVEL)$(EXTRAVERSION)$(iatv)$(LOCALVERSION)$(GIT_VERSION)
+version = $(VERSION).$(PATCHLEVEL).$(SUBLEVEL)$(EXTRAVERSION)$(iatv)$(LOCALVERSION)
 
 # Bug out if the version number id not all lowercase
 lc_version = $(call doit,echo $(version) | tr A-Z a-z)
@@ -166,7 +160,6 @@ ifneq ($(strip $(version)),$(strip $(lc_version)))
  VERSION=[$(VERSION)], PATCHLEVEL=[$(PATCHLEVEL)],                  \
  SUBLEVEL=[$(SUBLEVEL)], EXTRAVERSION=[$(EXTRAVERSION)],            \
  iatv=[$(iatv)], LOCALVERSION=[$(LOCALVERSION)],                    \
- GIT_VERSION=[$(GIT_VERSION)]                                       \
  UTS_RELEASE_VERSION=[$(UTS_RELEASE_VERSION)],                      \
  KERNELRELEASE=[$(KERNELRELEASE)].                                  \
  is not all lowercase. Since the version ends up in the package     \

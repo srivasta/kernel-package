@@ -4,9 +4,9 @@
 ## Created On	    : Mon Oct 31 10:41:41 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Fri Oct 10 00:24:36 2008
+## Last Modified On : Fri Oct 10 02:45:00 2008
 ## Last Machine Used: anzu.internal.golden-gryphon.com
-## Update Count	    : 91
+## Update Count	    : 93
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    : This file provides the commands commaon to a number of
@@ -207,7 +207,7 @@ endif
 ### Prepare the version number
 ######################################################################
 ifeq ($(DEB_HOST_ARCH_OS), linux)
-	$(restore_upstream_debianization)
+	$(save_upstream_debianization)
   ifneq ($(strip $(HAVE_SILENT_CONFIG)),)
 	if [ -e .config ]; then                                              \
           $(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) ARCH=$(KERNEL_ARCH) \
@@ -233,7 +233,6 @@ ifeq ($(DEB_HOST_ARCH_OS), linux)
 	$(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) ARCH=$(KERNEL_ARCH) prepare
     endif
   endif
-	$(save_upstream_debianization)
 else
   ifeq ($(DEB_HOST_ARCH_OS), kfreebsd)
 	+$(PMAKE) -C $(architecture)/compile/GENERIC depend
