@@ -84,45 +84,14 @@ Print out a usage message.
 Changes the Debian revision number for the packages produced to the argument
 .BR number.
 This has certain constraints: the \-\-revision option only has an effect
-during the configure phase (in other words, if a file called
-.I stamp\-configure
-exists, this option has no effect \-\- run 
-.B make\-kpkg clean 
-or manually remove
-.I stamp\-configure 
-and 
-.I stamp\-debian
-for it to have an effect -- I strongly suggest you run
-.B make\-kpkg clean 
-unless you know what you are doing). 
-Additionally, official source package maintainers provide their own
-version numbers and data for the official uploads, and hence a number
-of things, including the
-.B Debian
-revision, is not modified by
-.B make\-kpkg.
-If you happen to have an official source, (that would mean that the
-file 
-.I debian/official
-exists, and is not empty), and want to use your own revision number,
-make sure you remove
-.I debian/official
-before running  
-.B make\-kpkg clean 
-for this option to have an effect.
+during the configure phase.
 So, if you want to re\-run 
 .B make\-kpkg 
 with a different revision number, you have to make sure you start with
 a clean slate.  Secondly, the version may contain only 
 alphanumerics and the characters ~ + . (tilde, full stop and plus)
 and must contain a digit. (Look at the Policy manual for
-details). 
-.I Actually, that is a lie: official kernel and modules maintainers
-have special dispensation to use hyphens, but it is strongly
-deprecated for most people, since no sanitization of the version
-number is done, and dpkg and friends may choke on it at the end of the
-compile unless one knows what one is doing. 
-Optionally, you may prepend the revision with a digit followed by a
+details).  Optionally, you may prepend the revision with a digit followed by a
 colon (:). The default is
 .B 10.00.Custom
 unless the environment variable

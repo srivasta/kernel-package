@@ -83,7 +83,7 @@ Phase TWO: Create a portable kernel image .deb file
       (Get_Root is whatever you need to become root -- fakeroot or
       sudo are examples that come to mind).  NOTE: if you have
       instructed your boot loader to expect initrd kernels (which is
-      the norm for recent official kernel image packages) you need to
+      the norm for recent kernel image packages) you need to
       add --initrd to the line above.
    % $Get_Root make-kpkg --initrd --revision=custom.1.0 kernel_image 
       Personally, I prefer non initrd images for my personal machines,
@@ -113,12 +113,11 @@ Getting the kernel source
 ------- --- ------ ------
 
  You can get kernel sources in several different ways: by installing a
- prepackaged Debian kernel source package (at the time of writing, it
- is kernel-source-2.4.20_2.4.20-6_all.deb). This shall create a file
- /usr/src/kernel-source-2.4.20.tar.bz2, which can be unpacked wherever
- you wish. Alternately, you can get linux-2.4.20.tar.bz2 from you
- favorite ftp.kernel.org mirror, (/pub/linux/kernel/v2.4/ in the FTP
- site). 
+ prepackaged Debian kernel source package created by make-kpkg. This
+ shall create a file /usr/src/kernel-source-2.4.20.tar.bz2, which can
+ be unpacked wherever you wish. Alternately, you can get
+ linux-2.4.20.tar.bz2 from you favorite ftp.kernel.org mirror,
+ (/pub/linux/kernel/v2.4/ in the FTP site).
 
 Unpacking kernel sources:
 -------------------------
@@ -221,18 +220,7 @@ modules used by the default kernel with the same version.
 
 The revision number (the argument supplied after the --revision flag)
 has certain constraints: 
-a) It only has an effect during the configure phase (in other words,
-   if a file called stamp-configure exists, this option has no effect
-   -- run make-kpkg clean or manually remove stamp-configure,
-   stamp-debian, and debian/official for it to have an effect -- I
-   strongly suggest make-kpkg clean unless you know what you are
-   doing).  Additionally, official source package maintainers provide
-   their own version numbers and data for the official uploads, and
-   hence a number of things, including the Debian revision, is not
-   modified by make-kpkg.  If you happen to have an official source,
-   (that would mean that the file debian/official exists), and want to
-   use your own revision number, make sure you remove debian/official
-   before running make-kpkg clean for this option to have an effect.
+a) It only has an effect during the configure phase.
    So, if you want to re-run make-kpkg with a different revision
    number, you have to make sure you start with a clean slate.
 b) It may contain only alphanumerics and the characters + . (full
@@ -302,15 +290,15 @@ kernel enabled, you'll type:
 different revision, or else the revision flag shall not have any
 effect)
 
- NOTE about using initial ram disk images (initrd).  Recent official
- kitchen sink kernel image packages tend to use this, in order to
- accommodate as wide a variety of root file system types as humanly
- possible without building them all into the kernel. In order to use
- these images, you need to instruct you boot loader that this is a
- kernel image using initrd, and tell the boot loader where to find the
- initrd image.  Unfortunately, you can't just substitute a non initrd
- image afterwards without changing the boot loader instructions.  So,
- if your boot loader configuration expects to see an initrd image, add
+ NOTE about using initial ram disk images (initrd).  Recent kitchen
+ sink kernel image packages tend to use this, in order to accommodate
+ as wide a variety of root file system types as humanly possible
+ without building them all into the kernel. In order to use these
+ images, you need to instruct you boot loader that this is a kernel
+ image using initrd, and tell the boot loader where to find the initrd
+ image.  Unfortunately, you can't just substitute a non initrd image
+ afterwards without changing the boot loader instructions.  So, if
+ your boot loader configuration expects to see an initrd image, add
  --initrd to the above invocation, like so:
    make-kpkg clean
    $Get_Root make-kpkg --initrd --revision=3:custom.2.0 kernel_image
@@ -697,7 +685,7 @@ boot loader take advantage of this by putting image = /vmlinuz and
 image = /vmlinuz.old lines in your lilo.conf (or whatever config files
 your boot loader uses -- please read documentation on your boot loader
 for details). Oh, and if your kernel image package uses initrd (as do
-the newer official kernel image packages), please do not forget to add
+the newer  kernel image packages), please do not forget to add
 a line (initrd=/boot/initrd-2.4.X-foo) in your lilo.conf file
 pointing out this fact to your boot loader.
 

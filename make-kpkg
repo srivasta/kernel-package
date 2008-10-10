@@ -5,9 +5,9 @@
 # Created On       : Mon Jun 17 01:10:11 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Thu Oct  9 23:43:00 2008
+# Last Modified On : Fri Oct 10 02:19:17 2008
 # Last Machine Used: anzu.internal.golden-gryphon.com
-# Update Count     : 235
+# Update Count     : 237
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
@@ -114,19 +114,11 @@ kernel source directory.
 
 Sets the Debian revision number for the packages produced to the
 argument B<number>. This has certain constraints: It only has an
-effect during the configure phase (in other words, if a file called
-stamp-configure or both debian/changelog and debian/official exists,
-this option has no effect -- run make-kpkg clean or manually remove
-stamp-configure, and stamp-debian (and debian/official, if that
-exists) for it to have an effect). I suggest you run make-kpkg clean
+effect during the configure phase. I suggest you run make-kpkg clean
 unless you know what you are doing. Secondly, it may contain only
 alphanumerics and the characters + . (full stop, and plus)
 and must contain a digit. B<NOTE>: No hyphens allowed. (Look at the
-Debian policy manual for details). I<Actually, that is a lie: official
-kernel and modules maintainers have special dispensation to use hyphens,
-but it is strongly deprecated for most people, since we do no sanitization
-of the version number, and dpkg and friends may choke on it at the end
-of the compile unless one knows what one is doing.>
+Debian policy manual for details).
 
 Optionally, you may prepend the revision with a digit followed by a colon (:)
 
