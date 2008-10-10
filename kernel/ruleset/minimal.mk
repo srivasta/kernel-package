@@ -4,9 +4,9 @@
 ## Created On       : Tue Nov  1 03:31:22 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Thu Oct  9 17:12:22 2008
+## Last Modified On : Fri Oct 10 00:27:07 2008
 ## Last Machine Used: anzu.internal.golden-gryphon.com
-## Update Count     : 21
+## Update Count     : 31
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : 
@@ -83,49 +83,13 @@ else
 endif
 	rm -f $(FILES_TO_CLEAN) $(STAMPS_TO_CLEAN)
 
-minimal_prep:
+debian/stamp/conf/minimal_debian: 
 	$(REASON)
 	@echo "This is kernel package version $(kpkg_version)."
-ifeq ($(DEB_HOST_ARCH_OS), linux)
-  ifeq ($(shell if   [ $(VERSION) -gt 2 ]; then				   \
-		   echo new;						   \
-		elif [ $(VERSION) -ge 2 ] && [ $(PATCHLEVEL) -ge 5 ]; then \
-		  echo new;						   \
-		fi),)
-	@echo "Preparing the kernel version (old)"
-	$(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) ARCH=$(KERNEL_ARCH) $(config_target)
-	+$(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) \
-				 ARCH=$(KERNEL_ARCH) $(fast_dep) dep
-  else
-    ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
-	@echo "Preparing the kernel version."
-	$(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) ARCH=$(KERNEL_ARCH) prepare
-    endif
-  endif
-else
-  ifeq ($(DEB_HOST_ARCH_OS), kfreebsd)
-	+$(PMAKE) -C $(architecture)/compile/GENERIC depend
-  endif
-endif
-
-debian/stamps/minimal_debian: minimal_prep
-	$(REASON)
-	@echo "This is kernel package version $(kpkg_version)."
-	test -d debian || mkdir debian
+	test -d debian             || mkdir debian
+	@test -d debian/stamp	   || mkdir debian/stamp
+	@test -d debian/stamp/conf || mkdir debian/stamp/conf
 	test ! -e stamp-building || rm -f stamp-building
-	test -f debian/control || sed         -e 's/=V/$(KERNELRELEASE)/g'  \
-                -e 's/=D/$(debian)/g'         -e 's/=A/$(DEB_HOST_ARCH)/g'  \
-	        -e 's/=SA/$(INT_SUBARCH)/g'   -e 's/=L/$(int_loaderdep) /g' \
-                -e 's/=I/$(initrddep)/g'                                    \
-                -e 's/=CV/$(VERSION).$(PATCHLEVEL)/g'                       \
-                -e 's/=M/$(maintainer) <$(email)>/g'                        \
-                -e 's/=ST/$(INT_STEM)/g'      -e 's/=B/$(KERNEL_ARCH)/g'    \
-		         $(CONTROL) > debian/control
-	test -f debian/changelog ||  sed -e 's/=V/$(KERNELRELEASE)/g'       \
-	    -e 's/=D/$(debian)/g'        -e 's/=A/$(DEB_HOST_ARCH)/g'       \
-            -e 's/=ST/$(INT_STEM)/g'     -e 's/=B/$(KERNEL_ARCH)/g'         \
-	    -e 's/=M/$(maintainer) <$(email)>/g' 	                    \
-             $(LIBLOC)/changelog > debian/changelog
 	install -p -m 755 $(LIBLOC)/rules debian/rules
 	for file in $(DEBIAN_FILES); do                                      \
             cp -f  $(LIBLOC)/$$file ./debian/;                               \
@@ -133,10 +97,25 @@ debian/stamps/minimal_debian: minimal_prep
 	for dir  in $(DEBIAN_DIRS);  do                                      \
           cp -af $(LIBLOC)/$$dir  ./debian/;                                 \
         done
-	test -d ./debian/stamps || mkdir debian/stamps 
+	test -f debian/control || sed         -e 's/=V/$(KERNELRELEASE)/g'  \
+                -e 's/=D/$(debian)/g'         -e 's/=A/$(DEB_HOST_ARCH)/g'  \
+		-e 's/=SA/$(INT_SUBARCH)/g'   -e 's/=L/$(int_loaderdep) /g' \
+		-e 's/=I/$(initrddep)/g'				    \
+		-e 's/=CV/$(VERSION).$(PATCHLEVEL)/g'			    \
+		-e 's/=M/$(maintainer) <$(email)>/g'			    \
+		-e 's/=ST/$(INT_STEM)/g'      -e 's/=B/$(KERNEL_ARCH)/g'    \
+                  $(CONTROL) > debian/control
+	test -f debian/changelog ||  sed -e 's/=V/$(KERNELRELEASE)/g'       \
+            -e 's/=D/$(debian)/g'        -e 's/=A/$(DEB_HOST_ARCH)/g'       \
+            -e 's/=ST/$(INT_STEM)/g'     -e 's/=B/$(KERNEL_ARCH)/g'         \
+            -e 's/=M/$(maintainer) <$(email)>/g'                            \
+             $(LIBLOC)/changelog > debian/changelog
+	test -d ./debian/stamp || mkdir debian/stamp 
+	$(MAKE) -f debian/rules debian/stamp/conf/kernel-conf
+	$(MAKE) -f debian/rules debian/stamp/conf/full-changelog
 	echo done > $@
 
-debian: debian/stamps/minimal_debian
+debian: debian/stamp/conf/minimal_debian
 
 #Local variables:
 #mode: makefile

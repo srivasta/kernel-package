@@ -4,9 +4,9 @@
 ## Created On	    : Mon Oct 31 10:41:41 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Thu Oct  9 20:37:38 2008
+## Last Modified On : Fri Oct 10 00:24:36 2008
 ## Last Machine Used: anzu.internal.golden-gryphon.com
-## Update Count	    : 85
+## Update Count	    : 91
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    : This file provides the commands commaon to a number of
@@ -242,12 +242,14 @@ endif
 	echo done > $@
 
 
-debian/rules:
+debian/control debian/changelog debian/rules debian/stamp/conf/full-changelog:
 	$(REASON)
-	@test -f $(LIBLOC)/rules || echo Error: Could not find $(LIBLOC)/rules
-	@test -f $(LIBLOC)/rules || exit 4
+	@test -f $(LIBLOC)/rules   || echo Error: Could not find $(LIBLOC)/rules
+	@test -f $(LIBLOC)/rules   || exit 4
+	@test -d debian/stamp	   || mkdir debian/stamp
+	@test -d debian/stamp/conf || mkdir debian/stamp/conf
 	( test -f debian/official && test -f debian/control) ||		   \
-	   sed -e 's/=V/$(KERNELRELEASE)/g'	      -e 's/=D/$(debian)/g'	   \
+	   sed -e 's/=V/$(KERNELRELEASE)/g'	      -e 's/=D/$(debian)/g' \
 	       -e 's/=A/$(DEB_HOST_ARCH)/g'   -e 's/=SA/$(INT_SUBARCH)/g'  \
 		-e 's/=L/$(int_loaderdep) /g' -e 's/=I/$(initrddep)/g'	   \
 		-e 's/=CV/$(VERSION).$(PATCHLEVEL)/g'			   \
@@ -255,7 +257,7 @@ debian/rules:
 		-e 's/=ST/$(INT_STEM)/g'      -e 's/=B/$(KERNEL_ARCH)/g'   \
 			 $(CONTROL)> debian/control
 	test -f debian/official ||					      \
-	   sed -e 's/=V/$(KERNELRELEASE)/g' -e 's/=D/$(debian)/g'		      \
+	   sed -e 's/=V/$(KERNELRELEASE)/g' -e 's/=D/$(debian)/g'	      \
 	    -e 's/=A/$(DEB_HOST_ARCH)/g' -e 's/=M/$(maintainer) <$(email)>/g' \
 	    -e 's/=ST/$(INT_STEM)/g'	 -e 's/=B/$(KERNEL_ARCH)/g'	      \
 		$(LIBLOC)/changelog > debian/changelog
@@ -268,8 +270,9 @@ debian/rules:
 	     cp -af $(LIBLOC)/$$dir  ./debian/;				\
 	   done
 	install -p -m 755 $(LIBLOC)/rules debian/rules
+	@echo done > debian/stamp/conf/full-changelog
 
-debian/stamp/conf/common: debian/rules
+debian/stamp/conf/common: debian/stamp/conf/full-changelog
 	$(REASON)
 	@test -d debian/stamp	   || mkdir debian/stamp
 	@test -d debian/stamp/conf || mkdir debian/stamp/conf
