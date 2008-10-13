@@ -921,57 +921,6 @@ EOMSG
         exit 1;
       }
 
-      if (-f "include/linux/version.h" && ! -f 'debian/official' &&
-          ! $ENV{"VERSION_H_OK"} && ! ($Targets =~ m/^\s*clean\s*$/ )) {
-        open (VERSION, "include/linux/version.h") or
-          die "Could not read include/linux/version.h:$!";
-
-        my $temp_string         = '';
-        my $kernel_version      = '';
-        my $patch_level         = '';
-        my $sublevel            = '';
-        my $extra_version       = '';
-        my $uts_release_version = '';
-
-        $temp_string = `egrep '^VERSION +=' Makefile 2>/dev/null `;
-        if ($temp_string =~ m/^\D*(\d+)/) {
-          $kernel_version = $1;
-        }
-
-        $temp_string = `egrep '^PATCHLEVEL +=' Makefile 2>/dev/null `;
-        if ($temp_string =~ m/^\D*(\d+)/) {
-          $patch_level = $1;
-        }
-
-        $temp_string = `egrep '^SUBLEVEL +=' Makefile 2>/dev/null `;
-        if ($temp_string =~ m/^\D*(\d+)/) {
-          $sublevel =  $1;
-        }
-
-        $temp_string = `egrep '^EXTRAVERSION +=' Makefile 2>/dev/null `;
-        if ($temp_string =~ m/EXTRAVERSION\s*=\s*(\S+)/) {
-          $extra_version = $1;
-        }
-
-        while (<VERSION>) {
-          chomp;
-          m/^\s*#define\s+UTS_RELEASE\s+("?)(\S+)\1/ || next;
-          $uts_release_version = $2;
-        }
-
-        my $composite_version = "$kernel_version.$patch_level.$sublevel" .
-          $extra_version  . $append_to_version;
-        if ($uts_release_version !~ /\Q$composite_version\E/) {
-          print STDERR "Warning: The file include/linux/version.h exists\n";
-          print STDERR "The contained UTS_VERSION string:\n";
-          print STDERR "\t\t\t\"$uts_release_version\"\n";
-          print STDERR "does not match expectations:\n";
-          print STDERR "\t\t\t\"$composite_version\"\n";
-          print STDERR "I'll try and recover\n";
-          system ("touch", "Makefile") == 0
-            or die "touch Makefile failed:$?";
-        }
-      }
       $command .= " APPEND_TO_VERSION=$append_to_version ";
       $alt_cmd .= " APPEND_TO_VERSION=$append_to_version "
         unless -f "debian/ruleset/kernel_version.mk";
