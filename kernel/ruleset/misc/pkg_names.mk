@@ -55,14 +55,13 @@ h_package  = $(INT_STEM)-headers-$(KERNELRELEASE)
 ifeq ($(strip $(KERNEL_ARCH)),um)
 	i_package  = $(INT_STEM)-uml-$(KERNELRELEASE)$(INT_SUBARCH)
 else
+	i_package  = $(INT_STEM)-image-$(KERNELRELEASE)$(INT_SUBARCH)
   ifneq ($(strip $(CONFIG_XEN)),)
 	ifeq ($(strip $(CONFIG_XEN_PRIVILEGED_GUEST)),)
 	  x_package  = $(INT_STEM)-xenu-$(KERNELRELEASE)
         else
           x_package  = $(INT_STEM)-xen0-$(KERNELRELEASE)
         endif
-  else
-	i_package  = $(INT_STEM)-image-$(KERNELRELEASE)$(INT_SUBARCH)
   endif
 endif
 d_package  = $(INT_STEM)-doc-$(KERNELRELEASE)
