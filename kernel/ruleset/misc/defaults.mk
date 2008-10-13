@@ -32,8 +32,8 @@
 ###############################################################################
 
 # The maintainer information.
-maintainer = Debian Kernel Team
-email= debian-kernel@lists.debian.org
+maintainer = Unknown Kernel Package Maintainer
+email= unknown@unconfigured.in.etc.kernel-pkg.conf
 
 pgp=$(maintainer)
 
@@ -53,6 +53,27 @@ endif
 #
 DEBIAN_FILES = ChangeLog  Control  Control.bin86 config templates.in rules
 DEBIAN_DIRS  = Config docs examples ruleset scripts pkg po
+
+ifneq (,$(findstring Unknown,$(maintainer)))
+  ifneq ($(strip $(DEBFULLNAME)),)
+     maintainer = $(DEBFULLNAME)
+  else
+    ifneq ($(strip $(NAME)),)
+     maintainer = $(NAME)
+    endif
+  endif
+endif
+
+ifneq (,$(findstring unknown,$(email)))
+  ifneq ($(strip $(DEBEMAIL)),)
+      email = $(DEBEMAIL)
+  else
+    ifneq ($(strip $(EMAIL)),) 
+      email = $(EMAIL)
+   endif
+  endif
+endif
+
 
 #  Package specific stuff
 # decide if image is meant to be in /boot rather than /
