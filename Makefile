@@ -107,13 +107,12 @@ install: genpo4a
 	$(install_file)    kernel-package.5  	      $(MAN5DIR)/kernel-package.5
 	$(install_file)    make-kpkg.8       	      $(MAN1DIR)/make-kpkg.1
 	$(install_file)    kernel-packageconfig.8     $(MAN8DIR)/
-	for lang in es fr; do                                                                       \
-         $(install_file)    kernel-pkg.conf.$$lang.5  $(MANTOP)/$$lang/man5/kernel-pkg.conf.5;      \
-	 $(install_file)    kernel-pkg.conf.$$lang.5  $(MANTOP)/$$lang/man5/kernel-pkg.conf.5;      \
-	 $(install_file)    kernel-img.conf.es.5      $(MANTOP)/$$lang/man5/kernel-img.conf.5;      \
-	 $(install_file)    kernel-package.es.5       $(MANTOP)/$$lang/man5/kernel-package.5;       \
-	 $(install_file)    make-kpkg.es.8            $(MANTOP)/$$lang/man1/make-kpkg.1;            \
-	 $(install_file)    kernel-packageconfig.es.8 $(MANTOP)/$$lang/man8/kernel-packageconfig.8; \
+	for lang in es fr; do                                                                           \
+	 $(install_file)    kernel-pkg.conf.$$lang.5      $(MANTOP)/$$lang/man5/kernel-pkg.conf.5;      \
+	 $(install_file)    kernel-img.conf.$$lang.5      $(MANTOP)/$$lang/man5/kernel-img.conf.5;      \
+	 $(install_file)    kernel-package.$$lang.5       $(MANTOP)/$$lang/man5/kernel-package.5;       \
+	 $(install_file)    make-kpkg.$$lang.8            $(MANTOP)/$$lang/man1/make-kpkg.1;            \
+	 $(install_file)    kernel-packageconfig.$$lang.8 $(MANTOP)/$$lang/man8/kernel-packageconfig.8; \
         done
 	gzip -9fqr         $(prefix)/usr/share/man
 	$(install_file)    kernel-pkg.conf            $(prefix)/etc/kernel-pkg.conf
@@ -136,5 +135,15 @@ install: genpo4a
 	chmod  0755          $(prefix)/usr/share/$(package)/rules
 
 clean distclean:
-	@echo nothing to do for clean
-
+	for lang in fr; do                           \
+          test ! -f kernel-pkg.conf.$$lang.5 ||      \
+            rm  kernel-pkg.conf.$$lang.5      ;      \
+	  test ! -f kernel-img.conf.$$lang.5 ||      \
+            rm  kernel-img.conf.$$lang.5      ;      \
+	  test ! -f kernel-package.$$lang.5 ||       \
+            rm  kernel-package.$$lang.5       ;      \
+	  test ! -f make-kpkg.$$lang.5 ||            \
+            rm  make-kpkg.$$lang.8            ;      \
+	  test ! -f kernel-packageconfig.$$lang.5 || \
+            rm  kernel-packageconfig.$$lang.8 ;      \
+        done
