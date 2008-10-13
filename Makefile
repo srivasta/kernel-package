@@ -27,6 +27,8 @@ DEBDIR     = $(LIBLOC)
 DEBDIR_NAME= $(shell basename $(DEBDIR))
 
 DOCDIR     = $(prefix)/usr/share/doc/$(package)
+MANTOP     = $(prefix)/usr/share/man/
+MAN5DIR    = $(prefix)/usr/share/man/man5
 MAN1DIR    = $(prefix)/usr/share/man/man1
 MAN5DIR    = $(prefix)/usr/share/man/man5
 MAN8DIR    = $(prefix)/usr/share/man/man8
@@ -50,9 +52,9 @@ all: check
 
 build: check
 
-genpo4a:  po4a.conf
-	if [ -e /usr/bin/po4a ] ; then \
-	  po4a po4a.conf; \
+genpo4a:  po4a/po4a.conf
+	if [ -e /usr/bin/po4a ] ; then    \
+	  po4a --previous po4a/po4a.conf; \
 	fi
 
 check:
@@ -72,7 +74,7 @@ check:
 	bash  -n  kernel/examples/kernel_grub_rm.sh
 	bash  -n  kernel/examples/sample.posthook.sh
 
-install:
+install: genpo4a
 	$(make_directory)  $(MAN1DIR)
 	$(make_directory)  $(MAN5DIR)
 	$(make_directory)  $(MAN8DIR)
@@ -105,16 +107,14 @@ install:
 	$(install_file)    kernel-package.5  	      $(MAN5DIR)/kernel-package.5
 	$(install_file)    make-kpkg.8       	      $(MAN1DIR)/make-kpkg.1
 	$(install_file)    kernel-packageconfig.8     $(MAN8DIR)/
-	$(install_file)    kernel-pkg.conf.es.5       $(ES_MAN5DIR)/kernel-pkg.conf.5 
-	$(install_file)    kernel-img.conf.es.5       $(ES_MAN5DIR)/kernel-img.conf.5
-	$(install_file)    kernel-package.es.5        $(ES_MAN5DIR)/kernel-package.5  
-	$(install_file)    make-kpkg.es.8             $(ES_MAN1DIR)/make-kpkg.1
-	$(install_file)    kernel-packageconfig.es.8  $(ES_MAN8DIR)/kernel-packageconfig.8 
-	$(install_file)    kernel-pkg.conf.fr.5       $(FR_MAN5DIR)/kernel-pkg.conf.5 
-	$(install_file)    kernel-img.conf.fr.5       $(FR_MAN5DIR)/kernel-img.conf.5
-	$(install_file)    kernel-package.fr.5        $(FR_MAN5DIR)/kernel-package.5  
-	$(install_file)    make-kpkg.fr.8             $(FR_MAN1DIR)/make-kpkg.1
-	$(install_file)    kernel-packageconfig.fr.8  $(FR_MAN8DIR)/kernel-packageconfig.8 
+	for lang in es fr; do                                                                       \
+         $(install_file)    kernel-pkg.conf.$$lang.5  $(MANTOP)/$$lang/man5/kernel-pkg.conf.5;      \
+	 $(install_file)    kernel-pkg.conf.$$lang.5  $(MANTOP)/$$lang/man5/kernel-pkg.conf.5;      \
+	 $(install_file)    kernel-img.conf.es.5      $(MANTOP)/$$lang/man5/kernel-img.conf.5;      \
+	 $(install_file)    kernel-package.es.5       $(MANTOP)/$$lang/man5/kernel-package.5;       \
+	 $(install_file)    make-kpkg.es.8            $(MANTOP)/$$lang/man1/make-kpkg.1;            \
+	 $(install_file)    kernel-packageconfig.es.8 $(MANTOP)/$$lang/man8/kernel-packageconfig.8; \
+        done
 	gzip -9fqr         $(prefix)/usr/share/man
 	$(install_file)    kernel-pkg.conf            $(prefix)/etc/kernel-pkg.conf
 	$(install_program) kernel-packageconfig       $(prefix)/usr/sbin/kernel-packageconfig
