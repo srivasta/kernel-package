@@ -146,8 +146,8 @@ msgstr "指示通りにこのディレクトリを待避しようとしました
 #. Type: note
 #. Description
 #: ../templates:7001
-msgid "I suggest you move $modules_base/$version out of the way manually, and then try re-installing this image."
-msgstr "手動で $modules_base/$version をどこかに待避し、その後このイメージの再インストールをお奨めします。"
+msgid "I suggest you move ${modules_base}/${version} out of the way manually, and then try re-installing this image."
+msgstr "手動で ${modules_base}/${version} をどこかに待避し、その後このイメージの再インストールをお奨めします。"
 
 #. Type: note
 #. Description
@@ -293,8 +293,8 @@ msgstr "デフォルトのブートローダを実行しますか?"
 #. Type: boolean
 #. Description
 #: ../templates:18001
-msgid "The default boot loader for this architecture is $loader, which is present. However, you have not explicitly requested the boot loader $loader should be run in the configuration file /etc/kernel-img.conf, and you seem to have grub installed, and have set a postinst hook (which is used to hook in grub after a kernel image installation). At this point, it is perfectly likely that this system is using grub as a bootloader, and not the builtin default of $loader. If that is the case, running $loader instead of grub might make the machine unbootable. I need to know whether to run the default bootloader $loader, or just let the postinst hook script update grub later. The default is to run $loader."
-msgstr "このアーキテクチャのデフォルトブートローダは $loader で存在しています。しかし、設定ファイル /etc/kernel-img.conf で、ブートローダ $loader を実行するように、明示していません。また、grub をインストールしようとしており、(カーネルイメージインストール後に grub のフックで使用する) postinst フックが設定されています。これにより、このシステムではブートローダに grub を用い、$loader の組み込みのデフォルトを使用しないと、確実に見なせます。この場合、grub の代わりに $loader を実行するとマシンが起動しなくなる可能性があります。ここでは、デフォルトブートローダである $loader を実行するか、grub の更新後に postinst フックスクリプトを後で実行するかを知る必要があります。デフォルトでは $loader を実行します。"
+msgid "The default boot loader for this architecture is ${loader}, which is present. However, you have not explicitly requested the boot loader ${loader} should be run in the configuration file /etc/kernel-img.conf, and you seem to have grub installed, and have set a postinst hook (which is used to hook in grub after a kernel image installation). At this point, it is perfectly likely that this system is using grub as a bootloader, and not the builtin default of ${loader}. If that is the case, running ${loader} instead of grub might make the machine unbootable. I need to know whether to run the default bootloader ${loader}, or just let the postinst hook script update grub later. The default is to run ${loader}."
+msgstr "このアーキテクチャのデフォルトブートローダは ${loader} で存在しています。しかし、設定ファイル /etc/kernel-img.conf で、ブートローダ ${loader} を実行するように、明示していません。また、grub をインストールしようとしており、(カーネルイメージインストール後に grub のフックで使用する) postinst フックが設定されています。これにより、このシステムではブートローダに grub を用い、${loader} の組み込みのデフォルトを使用しないと、確実に見なせます。この場合、grub の代わりに ${loader} を実行するとマシンが起動しなくなる可能性があります。ここでは、デフォルトブートローダである ${loader} を実行するか、grub の更新後に postinst フックスクリプトを後で実行するかを知る必要があります。デフォルトでは ${loader} を実行します。"
 
 #. Type: note
 #. Description

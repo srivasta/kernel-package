@@ -102,7 +102,7 @@ _Description:  Failed to move modules out of the way, aborting
  of the way. Unfortunately, There was a problem moving
  ${modules_base}/=V to ${modules_base}/${dest}.
  .
- I suggest you move $modules_base/$version out of the way manually,
+ I suggest you move ${modules_base}/${version} out of the way manually,
  and then try re-installing this image.
  .
  I am aborting.
@@ -232,16 +232,16 @@ Template: shared/kernel-image/really-run-bootloader
 Type: boolean
 Default: true
 _Description: Run the default bootloader?
- The default boot loader for this architecture is $loader, which is
+ The default boot loader for this architecture is ${loader}, which is
  present. However, you have not explicitly requested the boot loader
- $loader should be run in the configuration file /etc/kernel-img.conf, and
+ ${loader} should be run in the configuration file /etc/kernel-img.conf, and
  you seem to have grub installed, and have set a postinst hook (which is
  used to hook in grub after a kernel image installation). At this point, it
  is perfectly likely that this system is using grub as a bootloader, and
- not the builtin default of $loader. If that is the case, running $loader
+ not the builtin default of ${loader}. If that is the case, running ${loader}
  instead of grub might make the machine unbootable. I need to know whether
- to run the default bootloader $loader, or just let the postinst hook
- script update grub later. The default is to run $loader.
+ to run the default bootloader ${loader}, or just let the postinst hook
+ script update grub later. The default is to run ${loader}.
 
 Template: =ST-image-=V/postinst/bootloader-test-error-=V
 Type: note
