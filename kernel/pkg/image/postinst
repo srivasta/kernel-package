@@ -1261,7 +1261,7 @@ sub run_lilo (){
     ($ret,$answer) = get("$question");
     die "Error retreiving answer for $question: $answer" if $ret;
 
-    if ($answer =~ /^(y|t)/i) {
+    if ($answer !~ /^(y|t)/i) {
       print STDERR "Ok, not running $loader\n";
       return 0;
     }
