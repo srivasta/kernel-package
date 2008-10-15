@@ -58,7 +58,10 @@ Phase ONE: Getting and configuring the kernel
     kernels, make gconfig) and configure
 
 Phase TWO: Create a portable kernel image .deb file
- 3% make-kpkg clean
+ 3% make-kpkg clean 
+    Or just rm -rf ./debian, if you do not want to get rid of the
+    previous state and only rebuild whatever required for any
+    changes. 
  4% $Get_Root make-kpkg --revision=custom.1.0 kernel_image 
       (Get_Root is whatever you need to become root -- fakeroot or
       sudo are examples that come to mind).  NOTE: if you have
@@ -203,6 +206,7 @@ has certain constraints:
 a) It only has an effect during the configure phase. 
    So, if you want to re-run make-kpkg with a different revision
    number, you have to make sure you start with a clean slate.
+   (just rm -rf ./debian should work)
 b) It may contain only alphanumerics and the characters + . (full
    stop, and plus) and should contain a digit.  NOTE: No hyphens
    allowed (Look at the Debian Policy manual for details). Optionally,
@@ -255,6 +259,8 @@ guard against forced upgrades.
 
 So, try using an epoch for your custom packages: 
   make-kpkg clean
+      (or just rm -rf ./debian, if you do not want to rebuild from the
+      beginning)
   $Get_Root make-kpkg --revision=3:custom.1.0 kernel_image
       (Get_Root is whatever you need to become root -- fakeroot or
       sudo are examples that come to mind).
@@ -263,12 +269,13 @@ And the next time when you build a kernel, because you just bought a new
 sound card or you discovered that you suddenly want masquerading in your
 kernel enabled, you'll type: 
   make-kpkg clean
+      (or just rm -rf ./debian)
   $Get_Root make-kpkg --revision=3:custom.2.0 kernel_image
       (Get_Root is whatever you need to become root -- fakeroot or
       sudo are examples that come to mind).
-(remember to do a make-kpkg clean before you compile again with a
-different revision, or else the revision flag shall not have any
-effect)
+(remember to do rm -rf ./debian or a make-kpkg clean before you
+compile again with a different revision, or else the revision flag
+shall not have any effect)
 
  NOTE about using initial ram disk images (initrd).  Recent
  kitchen sink kernel image packages tend to use this, in order to
@@ -281,6 +288,8 @@ effect)
  if your boot loader configuration expects to see an initrd image, add
  --initrd to the above invocation, like so:
    make-kpkg clean
+        (or just rm -rf ./debian, if you do not want to rebuild from the
+         beginning)
    $Get_Root make-kpkg --initrd --revision=3:custom.2.0 kernel_image
 
 When make-kpkg is finished, you'll have 
@@ -293,13 +302,12 @@ administrativia and finally it will ask you if you want to make a
 boot floppy and if you want to run lilo now. 
 
 Now, there is a caveat: If you already have kernel 2.0.29 installed,
-and you have a freshly created custom 2.0.29 kernel [having remembered
-to do a make-kpkg clean in between ;-], just installing the new 2.0.29
-kernel shall install modules (as it should) in /lib/modules/2.0.29,
-which is where the old modules were! If you have added or removed
-modules relative to the old 2.0.29 kernel (very likely if your old
-kernel was the default gigantic generic kernel), then you shall have a
-mish-mash of modules in /lib/modules/2.0.29 ;-(
+and you have a freshly created custom 2.0.29 kernel, just installing
+the new 2.0.29 kernel shall install modules (as it should) in
+/lib/modules/2.0.29, which is where the old modules were! If you have
+added or removed modules relative to the old 2.0.29 kernel (very
+likely if your old kernel was the default gigantic generic kernel),
+then you shall have a mish-mash of modules in /lib/modules/2.0.29 ;-(
 
 Unfortunately, there is no reasonable solution; I suggest moving the
 old modules directory before installation, like so (need to be root):
@@ -579,6 +587,7 @@ Please see kernel-img.conf (5).
 
 To generate a new kernel image, just run
 % make-kpkg clean
+  (or just rm -rf ./debian)
 % $Get_Root make-kpkg --revision=custom.1.0 kernel_image
       (Get_Root is whatever you need to become root -- fakeroot or
       sudo are examples that come to mind) or (if you use initrd)
@@ -605,6 +614,7 @@ have a .config file, just copy it to this directory, and you are go.
 
 With a custom .config file in place (created as above) run again:
 % make-kpkg clean
+     (or just rm -rf ./debian)
 % $Get_Root make-kpkg --revision=custom.1.0 kernel_image
       (Get_Root is whatever you need to become root -- fakeroot or
       sudo are examples that come to mind).
@@ -615,7 +625,7 @@ With a custom .config file in place (created as above) run again:
 | Or, for people who want to minimize time spent in fakeroot (for       |
 | whatever reasons that maybe -- I think that the separate step as      |
 | non-fake-root is not required, but that is a personal opinion)        |
-| % make-kpkg clean                                                     |
+| % test ! -d debian || rm -rf debian                                   |
 | % make-kpkg  --revision=custom.1.0 build                              |
 | % $Get_Root make-kpkg --revision=custom.1.0 kernel_image              |
 |     (Get_Root is whatever you need to become root -- fakeroot or      |
@@ -639,6 +649,7 @@ With a custom .config file in place (created as above) run again:
 
 To create a source or header package, run
 % make-kpkg clean
+  (or rm -rf ./debian)
 % $Get_Root make-kpkg --revision=custom.1.0 kernel_source
 % $Get_Root make-kpkg --revision=custom.1.0 kernel_headers
 Note: You only need one of these.
@@ -766,7 +777,7 @@ packages, and don't want to be root to do so (the following assumes
 #       fakeroot make-kpkg  --append-to-version $machine \              #
 #            $patches $modules modules_image                            #
 #    fi                                                                 #
-#    make-kpkg clean                                                    #
+#    test ! -d debian || rm -rf debian                                  #
 #  done                                                                 #
 #########################################################################
 
@@ -791,7 +802,7 @@ ask you to move at least the /lib/modules/X.X.XX dir away. If you
 continue anyway, the files in /boot shall be overwritten.
 
 Also, if you try to recompile with a changed --revison option or a
-different debian revision, you shall have to make-kpkg clean, and then
+different debian revision, you shall have to remove ./debian, and then
 recompile. 
 
 Tecras and other notebooks 
@@ -864,7 +875,7 @@ for CONFIG in `cd config; ls *.gz; cd ..`; do
 	  MACHINE=$(echo $CONFIG|cut -d _ -f 1);
 	  gzip -dc config/$CONFIG > $KERNEL/.config
 	  cd $KERNEL
-	  $MAKE_KPKG $MAKE_KPKG_OPTIONS --append-to-version $MACHINE clean
+          test ! -d debian || rm -rf debian
 	  $MAKE_KPKG $MAKE_KPKG_OPTIONS --append-to-version $MACHINE kernel_image modules_image
     gzip -c .config > ../config/${MACHINE}_config_${KERNEL}_${DATE}.gz
     cd ..;
@@ -1002,6 +1013,7 @@ next kernel compilation, but you have not yet compiled it.
    image, with all kinds of bells and whistles, is:
 
    make-kpkg clean   
+     (or just rm -rf ./debian)
    make-kpkg -rootcmd fakeroot --append-to-version -custom.${VER} \
         --revision custom.${VER} kernel_image modules-image
    This one also builds any stand-alone modules packages you may have
