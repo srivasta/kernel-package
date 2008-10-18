@@ -208,18 +208,8 @@ endif
 ######################################################################
 ifeq ($(DEB_HOST_ARCH_OS), linux)
 	$(save_upstream_debianization)
-  ifneq ($(strip $(HAVE_SILENT_CONFIG)),)
-	if [ -e .config ]; then                                              \
-          $(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) ARCH=$(KERNEL_ARCH) \
-		$(silentconfig);                                             \
-        else                                                                 \
-	  $(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) ARCH=$(KERNEL_ARCH) \
-	 	   $(config_target);                                         \
-        fi
-  else
 	$(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) ARCH=$(KERNEL_ARCH) \
                     $(config_target);                                      
-  endif
   ifeq ($(shell if   [ $(VERSION) -gt 2 ]; then				   \
 		   echo new;						   \
 		elif [ $(VERSION) -ge 2 ] && [ $(PATCHLEVEL) -ge 5 ]; then \

@@ -241,13 +241,17 @@ ifeq ($(strip $(patch_the_kernel)),yeS)
 patch_the_kernel = YES
 endif
 
-
-config_target = oldconfig
 have_new_config_target =
+config_target = oldconfig
+ifeq ($(strip $(HAVE_CONFIG)),yeS)
+  ifneq ($(strip $(silentconfig)),)
+    config_target = $(silentconfig)
+  endif
+endif
 
 ifneq ($(strip $(CONFIG_TARGET)),)
-config_target := $(CONFIG_TARGET)
-have_new_config_target := YES
+ config_target          := $(CONFIG_TARGET)
+ have_new_config_target := YES
 endif
 
 # If config_target doesn't end in 'config' then reset it to 'oldconfig'.

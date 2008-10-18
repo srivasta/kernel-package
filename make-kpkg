@@ -934,6 +934,7 @@ EOMSG
   }
   if ($config_target ne 'oldconfig') {
     $command .= " CONFIG_TARGET=$config_target ";
+    $alt_cmd .= " CONFIG_TARGET=$config_target ";
   }
   if ($cross_compile){
     $command .= " CROSS_COMPILE=$cross_compile ";

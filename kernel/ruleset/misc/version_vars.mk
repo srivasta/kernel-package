@@ -113,6 +113,7 @@ HAVE_NEW_MODLIB =$(call doit,grep -E '\(INSTALL_MOD_PATH\)' Makefile 2>/dev/null
 HAVE_INST_PATH  =$(call doit,grep -E '\(INSTALL_PATH\)' Makefile 2>/dev/null )
 HAVE_INST_HEADER=$(call doit,grep -E '\(INSTALL_HDR_PATH\)' Makefile 2>/dev/null )
 HAVE_SILENT_CONFIG=$(call doit,test -f scripts/kconfig/Makefile && grep -E 'silentoldconfig' scripts/kconfig/Makefile 2>/dev/null )
+HAVE_CONFIG=$(call doit,if [ -e .config ]; then echo YES; fi )
 
 silentconfig=
 ifneq ($(strip $(HAVE_SILENT_CONFIG)),)
