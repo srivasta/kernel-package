@@ -54,6 +54,9 @@ ifeq ($(DEB_HOST_ARCH_OS), linux)
   ifeq ($(strip $(CONFIG_X86_64_XEN)),)
     kelfimagesrc = vmlinux
     kelfimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(KERNELRELEASE)
+  else ifeq ($(strip $(CONFIG_XEN)),)
+    kelfimagesrc = vmlinux
+    kelfimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(KERNELRELEASE)
   else
     kelfimagesrc = vmlinux
     ifeq ($(strip $(CONFIG_XEN_PRIVILEGED_GUEST)),)
