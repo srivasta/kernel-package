@@ -104,9 +104,9 @@ debian/stamp/install/$(h_package):
                -path './debian/*'    -prune -o -type f                              \
                \( -name Makefile -o  -name 'Kconfig*' \) -print  |                  \
                   cpio -pdL --preserve-modification-time $(SRCDIR);
-	test ! -d arch/$(KERNEL_ARCH)/include || find arch/$(KERNEL_ARCH)/include   \
+	test ! -d arch/$(LINK_ARCH)/include || find arch/$(LINK_ARCH)/include   \
                -print | cpio -pdL --preserve-modification-time $(SRCDIR);
-	test ! -d arch/$(KERNEL_ARCH)/scripts || find arch/$(KERNEL_ARCH)/scripts   \
+	test ! -d arch/$(LINK_ARCH)/scripts || find arch/$(LINK_ARCH)/scripts   \
                -print | cpio -pdL --preserve-modification-time $(SRCDIR);
   else
 	-tar cf - include |        (cd $(SRCDIR); umask 000; tar xsf -)
@@ -116,9 +116,9 @@ debian/stamp/install/$(h_package):
                -path './debian/*'  -prune -o -type f                              \
                \( -name Makefile -o -name 'Kconfig*' \) -print |                  \
                   cpio -pd --preserve-modification-time $(SRCDIR);
-	test ! -d arch/$(KERNEL_ARCH)/include || find arch/$(KERNEL_ARCH)/include \
+	test ! -d arch/$(LINK_ARCH)/include || find arch/$(LINK_ARCH)/include \
                -print | cpio -pd --preserve-modification-time $(SRCDIR);
-	test ! -d arch/$(KERNEL_ARCH)/scripts || find arch/$(KERNEL_ARCH)/scripts \
+	test ! -d arch/$(LINK_ARCH)/scripts || find arch/$(LINK_ARCH)/scripts \
                -print | cpio -pd --preserve-modification-time $(SRCDIR);
   endif
   ifeq ($(strip $(KERNEL_ARCH)),um)
@@ -153,7 +153,7 @@ debian/stamp/install/$(h_package):
             -e 's/=MD/$(initrddep)/g'                                \
             -e 's@=MK@$(initrdcmd)@g' -e 's@=A@$(DEB_HOST_ARCH)@g'   \
             -e 's@=M@$(MKIMAGE)@g'    -e 's/=OF/$(AM_OFFICIAL)/g'    \
-            -e 's/=S/$(no_symlink)/g'  -e 's@=B@$(KERNEL_ARCH)@g'    \
+            -e 's/=S/$(no_symlink)/g'  -e 's@=B@$(LINK_ARCH)@g'    \
             $(DEBDIR)/pkg/headers/create_link  > $(DOCDIR)/examples/create_link
 	test -d $(SRCDIR)/debian || mkdir $(SRCDIR)/debian
 	for file in $(DEBIAN_FILES) control changelog; do                    \
@@ -196,7 +196,7 @@ debian/stamp/binary/$(h_package):
             -e 's/=MD/$(initrddep)/g' -e 's/=P/$(package)/g'         \
             -e 's@=MK@$(initrdcmd)@g' -e 's@=A@$(DEB_HOST_ARCH)@g'   \
             -e 's@=M@$(MKIMAGE)@g'    -e 's/=OF/$(AM_OFFICIAL)/g'    \
-            -e 's/=S/$(no_symlink)/g'  -e 's@=B@$(KERNEL_ARCH)@g'    \
+            -e 's/=S/$(no_symlink)/g'  -e 's@=B@$(LINK_ARCH)@g'    \
 		$(DEBDIR)/pkg/headers/postinst >        $(TMPTOP)/DEBIAN/postinst
 	chmod 755                                       $(TMPTOP)/DEBIAN/postinst
 #	echo "/etc/kernel/postinst.d/create_link-$(KERNELRELEASE)" > $(TMPTOP)/DEBIAN/conffiles

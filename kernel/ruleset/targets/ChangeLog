@@ -1,12 +1,19 @@
+2008-11-15  Manoj Srivastava  <srivasta@debian.org>
+
+	* headers.mk (debian/stamp/binary/$(h_package)): master Use the
+	LINK_ARCH variable instead of KERNEL_ARCGH variables in more
+	places; this ensures that the headers for x86 archies do not go
+	missing. 
+
 2007-11-30  Manoj Srivastava  <srivasta@debian.org>
 
 	* target.mk (conf.vars):
-		  srivasta@debian.org--lenny/kernel-package--devel--11.0--patch-13
-		  use DEB_HOST_ARCH_OS, not DEB_HOST_GNU_SYSTEM
+	srivasta@debian.org--lenny/kernel-package--devel--11.0--patch-13
+	use DEB_HOST_ARCH_OS, not DEB_HOST_GNU_SYSTEM
 
 	* image.mk (install/$(i_package)):
-		  srivasta@debian.org--lenny/kernel-package--devel--11.0--patch-13
-		  use DEB_HOST_ARCH_OS, not DEB_HOST_GNU_SYSTEM
+	srivasta@debian.org--lenny/kernel-package--devel--11.0--patch-13
+	use DEB_HOST_ARCH_OS, not DEB_HOST_GNU_SYSTEM
 
 2007-05-05  Manoj Srivastava  <srivasta@debian.org>
 
