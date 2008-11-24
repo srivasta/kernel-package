@@ -190,7 +190,7 @@ endif
 ###   Post-processing
 ######################################################################
 ifeq ($(strip $(NEED_DIRECT_GZIP_IMAGE)),YES)
-	gzip -9vc $(kimagedest)
+	gzip -9fq $(kimagedest)
 endif
 ifeq ($(strip $(KERNEL_ARCH)),um)
 	chmod 755 $(kimagedest);
