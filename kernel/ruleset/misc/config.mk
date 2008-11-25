@@ -242,13 +242,19 @@ patch_the_kernel = YES
 endif
 
 have_new_config_target =
-config_target = oldconfig
-ifeq ($(strip $(HAVE_CONFIG)),yeS)
-  ifneq ($(strip $(silentconfig)),)
-    config_target = $(silentconfig)
+# what kernel config target to run in our configure target.
+# The default is empty, unless set in kernel-pkg.conf
+ifeq ($(strip $(config_target)),)
+  # Variable not set in config file. 
+  config_target := oldconfig
+  ifeq ($(strip $(HAVE_CONFIG)),yeS)
+    ifneq ($(strip $(silentconfig)),)
+      config_target = $(silentconfig)
+    endif
   endif
 endif
 
+# Allow thte environment variable to override this
 ifneq ($(strip $(CONFIG_TARGET)),)
  config_target          := $(CONFIG_TARGET)
  have_new_config_target := YES

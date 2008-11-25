@@ -98,10 +98,6 @@ do_clean := NO
 # install uncompressed kernel ELF-image (for oprofile)
 int_install_vmlinux := NO
 
-# what kernel config target to run in our configure target.
-config_target := oldconfig
-
-
 # The default architecture (all if architecture independent)
 CROSS_ARG:=
 
