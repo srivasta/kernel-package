@@ -192,13 +192,18 @@ endif
 ifeq ($(strip $(NEED_DIRECT_GZIP_IMAGE)),YES)
 	gzip -9fq $(kimagedest)
 endif
+# Set permissions on the image
 ifeq ($(strip $(KERNEL_ARCH)),um)
 	chmod 755 $(kimagedest);
   ifeq (,$(findstring nostrip,$(DEB_BUILD_OPTIONS)))
 	strip --strip-unneeded --remove-section=.note --remove-section=.comment	 $(kimagedest);
   endif
 else
+  ifeq ($(strip $(NEED_DIRECT_GZIP_IMAGE)),YES)
+	chmod 644 $(kimagedest).gz;
+  else
 	chmod 644 $(kimagedest);
+  endif
 endif
 ######################################################################
 ###   Hooks and information
