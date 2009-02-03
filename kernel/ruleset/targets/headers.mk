@@ -99,6 +99,8 @@ debian/stamp/install/$(h_package):
   ifneq ($(strip $(int_follow_symlinks_in_src)),)
 	-tar cfh - include       |   (cd $(SRCDIR); umask 000; tar xsf -)
 	-tar cfh - scripts       |   (cd $(SRCDIR); umask 000; tar xsf -)
+	test ! -e arch/powerpc/lib/crtsavres.o ||                                  \
+          tar cfh - arch/powerpc/lib/crtsavres.o | (cd $(SRCDIR); umask 000; tar xsf -)
 	(cd $(SRCDIR)/include;   rm -rf asm; ln -s asm-$(LINK_ARCH) asm)
 	find . -path './scripts/*'   -prune -o -path './Documentation/*' -prune -o  \
                -path './debian/*'    -prune -o -type f                              \
@@ -111,6 +113,8 @@ debian/stamp/install/$(h_package):
   else
 	-tar cf - include |        (cd $(SRCDIR); umask 000; tar xsf -)
 	-tar cf - scripts |        (cd $(SRCDIR); umask 000; tar xsf -)
+	test ! -e arch/powerpc/lib/crtsavres.o ||                                  \
+          tar cfh - arch/powerpc/lib/crtsavres.o | (cd $(SRCDIR); umask 000; tar xsf -)
 	(cd       $(SRCDIR)/include; rm -f asm; ln -s asm-$(LINK_ARCH) asm)
 	find . -path './scripts/*' -prune -o -path './Documentation/*' -prune -o  \
                -path './debian/*'  -prune -o -type f                              \
