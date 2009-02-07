@@ -30,6 +30,20 @@
 ##
 ###############################################################################
 
+
+# We need to set the KERNEL_ARCH depending on the actual version, so
+# let's distinguish between pre-2.6.29 and later.
+KERNEL_ARCH_VERSION = $(shell if [ $(VERSION) -lt 2 ]; then             \
+                        echo pre-2.6.29;                                \
+        elif [ $(VERSION) -eq 2 ] && [ $(PATCHLEVEL) -lt 6 ]; then      \
+                        echo pre-2.6.29;                                \
+        elif [ $(VERSION) -eq 2 ] && [ $(PATCHLEVEL) -eq 6 ] &&         \
+                [ $(SUBLEVEL) -lt 29 ]; then                            \
+                        echo pre-2.6.29;                                \
+        else                                                            \
+                        echo post-2.6.29;                               \
+        fi)
+
 kimage := vmlinuz
 loaderdep = silo
 loader = silo
@@ -46,14 +60,18 @@ ifeq (,$(KPKG_SUBARCH))
   endif
 endif
 
-ifneq (,$(filter sparc64%,$(KPKG_SUBARCH)))
-   KERNEL_ARCH = sparc64
+# All sparc variants are now consolidated, post 2.6.29-rc3 or so.
+ifeq ($(KERNEL_ARCH_VERSION),pre-2.6.29)
+  ifneq (,$(filter sparc64%,$(KPKG_SUBARCH)))
+     KERNEL_ARCH = sparc64 
+  else
+     ifneq (,$(filter sparc%,$(KPKG_SUBARCH)))
+        KERNEL_ARCH = sparc
+     else
+        KERNEL_ARCH = $(strip $(shell uname -m))
+     endif
 else
-   ifneq (,$(filter sparc%,$(KPKG_SUBARCH)))
-      KERNEL_ARCH = sparc
-   else
-      KERNEL_ARCH = $(strip $(shell uname -m))
-   endif
+    KERNEL_ARCH = sparc
 endif
 
 ifneq ($(shell if [ $(VERSION)  -ge  2 ] && [ $(PATCHLEVEL) -ge 5 ] &&  \
