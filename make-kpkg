@@ -29,7 +29,7 @@ make-kpkg - build Debian kernel packages from Linux kernel sources.
 ($main::MYNAME     = $main::0) =~ s|.*/||;
 $main::Author      = "Manoj Srivastava";
 $main::AuthorMail  = "srivasta\@debian.org";
-$main::Version     = '$Revision: 1.94 $ ';
+$main::Version     = '=K=V';
 
 my $added_modules='';
 my $added_patches='';
@@ -807,7 +807,7 @@ EOERR3
 
 
   # Fine. Just do it!
-  my $alt_cmd = "make -f $alt_rules_file " 
+  my $alt_cmd = "make kpkg_version=$main::Version -f $alt_rules_file " 
     unless -f "debian/ruleset/kernel_version.mk";
   my $command = "$rules_file ";
   if ($signature){

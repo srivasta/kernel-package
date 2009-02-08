@@ -118,6 +118,7 @@ install: genpo4a
 	$(install_file)    kernel-pkg.conf            $(prefix)/etc/kernel-pkg.conf
 	$(install_program) kernel-packageconfig       $(prefix)/usr/sbin/kernel-packageconfig
 	$(install_program) make-kpkg                  $(prefix)/usr/bin/make-kpkg
+	perl -pli          -e 's/=K=V/$(version)/'    $(prefix)/usr/bin/make-kpkg
 	$(install_file)    Rationale                  $(prefix)/usr/share/$(package)/docs/
 	(cd kernel;        tar cf - * |                                         \
            (cd             $(prefix)/usr/share/$(package); umask 000;           \
