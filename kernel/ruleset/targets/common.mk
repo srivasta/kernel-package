@@ -250,6 +250,7 @@ debian/control debian/changelog debian/rules debian/stamp/conf/full-changelog:
 	    -e 's/=A/$(DEB_HOST_ARCH)/g' -e 's/=M/$(maintainer) <$(email)>/g' \
 	    -e 's/=ST/$(INT_STEM)/g'	 -e 's/=B/$(KERNEL_ARCH)/g'	      \
 		$(LIBLOC)/changelog > debian/changelog
+	chmod 0644 debian/control debian/changelog
 	test -f debian/official ||					\
 	   for file in $(DEBIAN_FILES); do				\
 	       cp -f  $(LIBLOC)/$$file ./debian/;			\

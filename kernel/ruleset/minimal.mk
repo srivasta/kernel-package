@@ -110,6 +110,7 @@ debian/stamp/conf/minimal_debian:
             -e 's/=ST/$(INT_STEM)/g'     -e 's/=B/$(KERNEL_ARCH)/g'         \
             -e 's/=M/$(maintainer) <$(email)>/g'                            \
              $(LIBLOC)/changelog > debian/changelog
+	chmod 0644 debian/control debian/changelog
 	test -d ./debian/stamp || mkdir debian/stamp 
 	$(MAKE) -f debian/rules debian/stamp/conf/kernel-conf
 	$(MAKE) -f debian/rules debian/stamp/conf/full-changelog
