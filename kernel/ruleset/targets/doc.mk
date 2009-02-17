@@ -44,9 +44,6 @@ debian/stamp/install/$(d_package):
 	echo "This was produced by kernel-package version $(kpkg_version)." > \
 	           $(DOCDIR)/Buildinfo
 	chmod 0644 $(DOCDIR)/Buildinfo
-	if test -f debian/official && test -f debian/README.Debian ; then \
-           $(install_file) debian/README.Debian $(DOCDIR)/README.Debian;\
-	fi
 	if test -f README.Debian ; then \
            $(install_file) README.Debian $(DOCDIR)/README.Debian.1st;\
 	fi

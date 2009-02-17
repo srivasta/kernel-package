@@ -67,10 +67,6 @@ debian/stamp/install/$(h_package):
 	$(install_file) MAINTAINERS                     $(DOCDIR)/
 	$(install_file) REPORTING-BUGS                  $(DOCDIR)/
 	$(install_file) README                          $(DOCDIR)/
-	if test -f debian/official && test -f           debian/README.Debian ; then   \
-           $(install_file) debian/README.Debian         $(DOCDIR)/README.Debian;  \
-           $(install_file) README.Debian                $(DOCDIR)/README.Debian;  \
-	fi
 	if test -f README.Debian ; then                                                 \
            $(install_file) README.Debian                $(DOCDIR)/README.Debian.1st;\
 	fi

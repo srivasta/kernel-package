@@ -59,8 +59,7 @@ kernel packages.
 
 This information will be used to sign the new packages produced.  If
 you never intend to sign the kernel images, source, or header packages
-created (You should only need to do so if you upload an official
-package), you may safely leave it blank.  However, we recommend that
+created, you may safely leave it blank.  However, we recommend that
 you do supply a full name if only so that the dpkg -s kernel-*
 information looks prettier <grin>.
 

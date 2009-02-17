@@ -67,15 +67,9 @@ endif
 	(cd $(SRCDIR);         rm -f stamp-building $(STAMPS_TO_CLEAN))
 	(cd $(SRCDIR);                                                          \
          [ ! -d scripts/cramfs ]   || make -C scripts/cramfs distclean ; )
-	if test -f debian/official && test -f debian/README.Debian ; then       \
-           $(install_file) debian/README.Debian $(SRCDIR)/README.Debian ;       \
-           $(install_file) debian/README.Debian $(DOCDIR)/README.Debian ;       \
-	   gzip -9qf $(DOCDIR)/README.Debian;                                   \
-	else                                                                    \
-	    sed -e 's/=V/$(KERNELRELEASE)/g' -e 's/=A/$(DEB_HOST_ARCH)/g'             \
+	sed -e 's/=V/$(KERNELRELEASE)/g' -e 's/=A/$(DEB_HOST_ARCH)/g'           \
              -e 's/=ST/$(INT_STEM)/g'  -e 's/=B/$(KERNEL_ARCH)/g'               \
-                 $(DEBDIR)/pkg/source/README >  $(SRCDIR)/README.Debian ;       \
-	fi
+                 $(DEBDIR)/pkg/source/README >  $(SRCDIR)/README.Debian ;       
 	if test -f README.Debian ; then                                         \
            $(install_file) README.Debian        $(DOCDIR)/README.Debian.1st;    \
 	   gzip -9qf                            $(DOCDIR)/README.Debian.1st;    \

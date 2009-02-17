@@ -32,14 +32,13 @@
 ###############################################################################
 
 
-# The Debian revision
-# If there is a changelog file, it overrides. The only exception is
-# when there is no stamp-config, and there is no debian/official,
-# *AND* there is a DEBIAN_REVISION, in which case the DEBIAN_REVISION
-# over rides (since we are going to replace the changelog file soon
-# anyway.  Else, use the commandline or env var setting. Or else
-# default to 10.00.Custom, unless the human has requested that the
-# revision is mandatory, in which case we raise an error
+# The Debian revision If there is a changelog file, it overrides. The
+# only exception is when there is no stamp-config, *AND* there is a
+# DEBIAN_REVISION, in which case the DEBIAN_REVISION over rides (since
+# we are going to replace the changelog file soon anyway.  Else, use
+# the commandline or env var setting. Or else default to 10.00.Custom,
+# unless the human has requested that the revision is mandatory, in
+# which case we raise an error
 
 ifeq ($(strip $(HAS_CHANGELOG)),YES)
   debian := $(shell if test -f debian/changelog; then \
@@ -150,7 +149,7 @@ endif
 
 ifneq ($(strip $(DEBIAN_REVISION)),)
   HAS_CHANGELOG := $(shell \
-    if test -f debian/changelog && ( test -f stamp-debian || test -f debian/official );\
+    if test -f debian/changelog && ( test -f stamp-debian );\
     then echo YES;\
     else echo NO; fi; )
 else
@@ -165,12 +164,10 @@ ifeq ($(strip $(HAS_CHANGELOG)),YES)
                      perl -nle 'print /^$(INT_STEM)-source-(\S+)/; exit 0' \
                           debian/changelog;\
                   fi; )
-# Warn people about version mismatches, unless they are running an
-# "official" version, in which case they can shoot themselves in the
-# foot if they so desire
+# Warn people about version mismatches
   ifneq ($(strip $(saved_version)),)
     ifneq ($(strip $(saved_version)),$(strip $(KERNELRELEASE)))
-      HAVE_VERSION_MISMATCH:=$(shell if test ! -f debian/official;then echo YES; fi; )
+      HAVE_VERSION_MISMATCH:=YES
     endif
   endif
 endif
@@ -180,8 +177,7 @@ ifneq ($(strip $(DELETE_BUILD_LINK)),)
 delete_build_link := YES
 else
 ifeq ($(strip $(delete_build_link)),)
-delete_build_link := $(shell if test -f debian/official; then echo YES;\
-                          else echo NO; fi; )
+delete_build_link := NO
 endif
 endif
 

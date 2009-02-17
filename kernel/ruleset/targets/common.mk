@@ -214,28 +214,17 @@ debian/control debian/changelog debian/rules debian/stamp/conf/full-changelog:
 	@test -f $(LIBLOC)/rules   || exit 4
 	@test -d debian/stamp	   || mkdir debian/stamp
 	@test -d debian/stamp/conf || mkdir debian/stamp/conf
-	( test -f debian/official && test -f debian/control) ||		   \
-	   sed -e 's/=V/$(KERNELRELEASE)/g'	      -e 's/=D/$(debian)/g' \
-	       -e 's/=A/$(DEB_HOST_ARCH)/g'   -e 's/=SA/$(INT_SUBARCH)/g'  \
-		-e 's/=L/$(int_loaderdep) /g' -e 's/=I/$(initrddep)/g'	   \
-		-e 's/=CV/$(VERSION).$(PATCHLEVEL)/g'			   \
-		-e 's/=M/$(maintainer) <$(email)>/g'			   \
-		-e 's/=ST/$(INT_STEM)/g'      -e 's/=B/$(KERNEL_ARCH)/g'   \
-			 $(CONTROL)> debian/control
-	test -f debian/official ||					      \
-	   sed -e 's/=V/$(KERNELRELEASE)/g' -e 's/=D/$(debian)/g'	      \
+	sed -e 's/=V/$(KERNELRELEASE)/g' -e 's/=D/$(debian)/g'	      \
 	    -e 's/=A/$(DEB_HOST_ARCH)/g' -e 's/=M/$(maintainer) <$(email)>/g' \
 	    -e 's/=ST/$(INT_STEM)/g'	 -e 's/=B/$(KERNEL_ARCH)/g'	      \
 		$(LIBLOC)/changelog > debian/changelog
 	chmod 0644 debian/control debian/changelog
-	test -f debian/official ||					\
-	   for file in $(DEBIAN_FILES); do				\
-	       cp -f  $(LIBLOC)/$$file ./debian/;			\
-	   done
-	test -f debian/official ||					\
-	   for dir  in $(DEBIAN_DIRS);	do				\
-	     cp -af $(LIBLOC)/$$dir  ./debian/;				\
-	   done
+	for file in $(DEBIAN_FILES); do				\
+	     cp -f  $(LIBLOC)/$$file ./debian/;			\
+	done
+	for dir  in $(DEBIAN_DIRS);	do				\
+	   cp -af $(LIBLOC)/$$dir  ./debian/;				\
+	done
 	install -p -m 755 $(LIBLOC)/rules debian/rules
 	@echo done > debian/stamp/conf/full-changelog
 
@@ -368,7 +357,7 @@ else
   endif
 endif
 	$(eval $(deb_rule))
-	test -f stamp-building || test -f debian/official || rm -rf debian
+	test -f stamp-building || rm -rf debian
 	rm -f $(FILES_TO_CLEAN) $(STAMPS_TO_CLEAN)
 	rm -rf $(DIRS_TO_CLEAN)
 	test ! -f ,,precious || mv -f ,,precious .config

@@ -163,11 +163,11 @@ VFS: Cannot open root device "308" or 03:08
 	The cause for this is either you have not compiled the file
 	system type of the root file system into the kernel, or you
 	have instructed your boot loader to expect an initrd kernel
-	(this is required for running a recent official kernel image
-	package from Debian), and have installed a non-initrd garden
-	variety kernel image.  You need to go back and recompile the
-	kernel image, either including the root file system type as a
-	builtin, or adding a --initrd flag to the make-kpkg run.
+	(this is required for running a recent official kernel image,
+	and have installed a non-initrd garden variety kernel image.
+	You need to go back and recompile the kernel image, either
+	including the root file system type as a builtin, or adding a
+	--initrd flag to the make-kpkg run.
       p) Even when the kernel is built with a regular user using fakeroot, 
          it fails with
 > install -p -d -o root -g root -m 755 debian/tmp-image/DEBIAN

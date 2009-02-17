@@ -74,9 +74,6 @@ endif
 		   $(DOCDIR)/Buildinfo
 	chmod 0644 $(DOCDIR)/Buildinfo
 	$(install_file) debian/buildinfo $(DOCDIR)/buildinfo
-	if test -f debian/official && test -f debian/README.Debian ; then \
-	   $(install_file) debian/README.Debian	 $(DOCDIR)/README.Debian ; \
-	fi
 	if test -f README.Debian ; then \
 	   $(install_file) README.Debian $(DOCDIR)/README.Debian.1st;\
 	fi

@@ -185,8 +185,6 @@ KERNELRELEASE = $(strip $(call doit,if [ -f include/config/kernel.release ]; the
                        fi;))
 
 
-AM_OFFICIAL := $(call doit,if [ -f debian/official ]; then echo YES; fi )
-
 # See if we are being run in the kernel directory
 ifeq ($(DEB_HOST_ARCH_OS), linux)
   define check_kernel_dir

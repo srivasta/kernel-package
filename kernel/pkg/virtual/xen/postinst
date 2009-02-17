@@ -43,7 +43,6 @@ loader="=L";   # lilo, silo, quik, palo, vmelilo, nettrom, arcboot or delo
 image_dir="=D";        # where the image is located
 initrd="=I";        # initrd kernel
 mkimage="=M";        # command to generate the initrd image
-official_image="=OF";      # only true for official images
 subarch="=SA";          # should be xen0 or xenu 
 ramdisk='/usr/sbin/mkinitrd'    # Tool to create initial ram fs.
 realimageloc="/$image_dir/";

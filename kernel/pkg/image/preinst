@@ -52,7 +52,6 @@ my $ignore_depmod_err = '';    # normally we do not
 my $relink_src_link   = 'YES';	# There is no harm in checking the link
 my $relink_build_link = 'YES'; # There is no harm in checking the link
 my $force_build_link  = '';	 # There is no harm in checking the link
-my $official_image    = "=OF"; # only true for official images
 my $arch              = "=A";  #  should be same as dpkg --print-installation-architecture
 my $kernel_arch       = "=B";
 my $ramdisk           = "=MK";  # List of tools to create initial ram fs.
@@ -97,11 +96,6 @@ die "Pre inst Internal error. Aborting." unless $version;
 
 exit 0 if $ARGV[0] =~ /abort-upgrade/;
 exit 1 unless $ARGV[0] =~ /(install|upgrade)/;
-
-# Official images may silently upgrade
-if ($official_image =~ /^\s*YES\s*$/o && ($ARGV[0] =~ /upgrade/)) {
-    $silent_modules = 'Yes';
-  }
 
 # remove multiple leading slashes; make sure there is at least one.
 $realimageloc  =~ s|^/*|/|o;
@@ -371,15 +365,6 @@ sub check {
 if (-d "$modules_base/$version") {
   my $errors=check($version);
   warn "Info:\n$errors\n" if $errors;
-}
-
-# If this is an official image, and only a build symlink exists, allow
-# it to be clobbered.
-if ($official_image =~ /^\s*YES\s*$/o ) {
-  if (-d "$modules_base/$version" && -l "$modules_base/$version/build" ) {
-    rename("$modules_base/$version/build", "$modules_base/$version/build.save") ||
-      die "failed to move $modules_base/$version/build:$!";
-  }
 }
 
 if (-d "$modules_base/$version/kernel") {

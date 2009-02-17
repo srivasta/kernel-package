@@ -48,7 +48,6 @@ my $ignore_depmod_err = '';          # normally we do not
 my $relink_src_link   = 'YES'; # There is no harm in checking the link
 my $relink_build_link = 'YES'; # There is no harm in checking the link
 my $force_build_link  = '';    # There is no harm in checking the link
-my $official_image    = "=OF";  # only true for official images
 my $arch              = "=A"; #  should be same as dpkg --print-installation-architecture
 my $kernel_arch       = "=B";
 my $ramdisk           = "=MK";  # List of tools to create initial ram fs.
@@ -163,10 +162,6 @@ if ($link_in_boot) {
 $image_dest = "$image_dest/";
 $image_dest =~ s|/+$|/|o;
 
-# Official powerpc images may silently upgrade
-if ($official_image =~ /^\s*YES\s*$/o && $arch =~ m/powerpc/) {
-  $silent_modules = 'Yes';
-}
 $ENV{KERNEL_ARCH}=$kernel_arch if $kernel_arch;
 
 # Paranoid check to make sure that the correct value is put in there
