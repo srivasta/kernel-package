@@ -20,18 +20,6 @@
  source package (maintained, as now, by the i386 maintainer), and every
  other architecture maintainer just release kernel-patch packages.
 
-	make-kpkg from kernel-package has been modified to be aware of
- these patch packages, and incorporate the patch during a kernel image
- build process. This option is turned off by default, and is only
- invoked when a ENV variable PATCH_THE_KERNEL is defined (config file
- support also present).
-
-	A nice side effect of this proposal is that we can handle
- arbitrary patches as well, which could allow the authors of kernel
- patches to say, for example, I have a nice new driver for device XXX,
- to use in your kernel, get kernel-patch-yyy.deb, and rebuild your
- kernel to use it.
-
 ----------------------------------------------------------------------
 i386 Kernel maintainer:
   kernel-source-<version>_<version>_all.deb  # Common, large source package
@@ -88,13 +76,10 @@ if ! test -d kernel -a -d Documentation ; then
 fi
 
 ARCHITECTURE=`dpkg --print-installation-architecture`
-PATCHNAME=<patch name or number>
 
 if test -f debian/APPLIED_$ARCHITECTURE_$PATCHNAME ; then
    exit 0 
 fi
-
-PATCHDIR=/usr/src/kernel-patches/$ARCHITECTURE
 
 # Example on how to get current kernel version number etc
 VERSION=$(grep ^VERSION Makefile 2>/dev/null | \

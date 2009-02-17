@@ -205,42 +205,6 @@ ifneq ($(strip $(IMAGE_TYPE)),)
 kimage = $(IMAGE_TYPE)
 endif
 
-ifneq ($(strip $(PATCH_THE_KERNEL)),)
-patch_the_kernel = $(PATCH_THE_KERNEL)
-endif
-
-ifneq ($(strip $(KPKG_SELECTED_PATCHES)),)
-ifeq ($(strip $(patch_the_kernel)),NO)
-patch_the_kernel = NO
-else
-ifeq ($(strip $(patch_the_kernel)),no)
-patch_the_kernel = NO
-else
-patch_the_kernel = YES
-endif
-endif
-endif
-
-
-ifeq ($(strip $(patch_the_kernel)),yes)
-patch_the_kernel = YES
-endif
-ifeq ($(strip $(patch_the_kernel)),Yes)
-patch_the_kernel = YES
-endif
-ifeq ($(strip $(patch_the_kernel)),YEs)
-patch_the_kernel = YES
-endif
-ifeq ($(strip $(patch_the_kernel)),yEs)
-patch_the_kernel = YES
-endif
-ifeq ($(strip $(patch_the_kernel)),yES)
-patch_the_kernel = YES
-endif
-ifeq ($(strip $(patch_the_kernel)),yeS)
-patch_the_kernel = YES
-endif
-
 have_new_config_target =
 # what kernel config target to run in our configure target.
 # The default is empty, unless set in kernel-pkg.conf

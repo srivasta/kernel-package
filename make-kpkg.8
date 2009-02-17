@@ -172,83 +172,6 @@ The default is that all modules in
 .B MODULE_LOC,
 are compiled when the modules_blah targets are invoked.
 .TP
-.BR \-\-added\-patches\ foo
-.TP
-.BR \-\-added_patches\ foo
-The argument should be a comma separated list of additional
-patches to the kernel sources. This automatically sets the 
-.I patch_the_kernel
-configuration option to YES. 
-.IP
-Unlike the treatment of the modules, you may only give the patch file
-basename (not the full path name of the patch file). Additionally, any
-patch that tries to change the version number, either by editing the 
-.B Makefile,
-or by adding a 
-.B .localversion
-file, is not supported, and will break the compilation, since the
-version number has already been fixed in 
-.I debian/changelog.
-.IP
-For each file
-<patch_name> in the list, the following process is followed: If
-the file can be found in the directories
-.B ALL_PATCH_DIR/{apply,unpatch}/,
-then the file
-.B ALL_PATCH_DIR/apply/<patch_name>
-shall be executed in turn during the configure phase (and presumably
-this applies the patch). Correspondingly, the file
-.B ALL_PATCH_DIR/unpatch/<patch_name> 
-shall be executed in the clean phase.  
-The default is that all patches are applied by running all the
-executable files in 
-.B ALL_PATCH_DIR/apply/
-if requested (Either by setting the configuration option
-.B patch_the_kernel
-or the environment variable 
-.B PATCH_THE_KERNEL
-to YES).  Please note that the patches are UN\-installed from the source
-when you run the clean target.  This cleanup can be prevented by
-setting the environment variable 
-.B NO_UNPATCH_BY_DEFAULT
-.IP
-In the above, 
-.B ALL_PATCH_DIR
-defaults to a subdirectory of
-.I /usr/src/kernel\-patches/.
-.IP
-Some times it would be convenient to have the patches applied when
-one asks for specific patches using this option, without also having
-to explicitly set the environment variable. Since setting the
-environment variable 
-.B PATCH_THE_KERNEL
-to YES could be dangerous, (for in that case all patches may be
-installed when you want none, and did not specify the added_patches
-option), You may also set the variable PATCH_THE_KERNEL to
-.I AUTO,
-in which case PATCH_THE_KERNEL shall be set to YES for you when you 
-invoke 
-.BR \-\-added\-patches\ foo, 
-but not otherwise.  
-Also, please note that if any patch installs a script in 
-.I ./debian/image.d/
-directory, 
-.B run\-parts 
-shall be called on that directory just before the kernel image package is
-built. The location of the root of the image package being built shall
-be passed in the environment variable 
-.B IMAGE_TOP,
-and the kernel versions is passed in through the environment variable
-.B version.
-This is a way for the patch to insert any additional files into
-the image, for example.
-.IP
-Some of the patch packages also pay attention to other environment
-variables, and these are documented in the appropriate doc directory
-(for example, you should look at
-.I /usr/share/doc/kernel\-patch\-foo/README\-kernelpatch.Debian
-for patch foo for additional information).
-.TP
 .BR \-\-arch\ foo
 This is useful for setting the architecture when you are cross
 compiling. If you are not cross compiling, the architecture is
@@ -315,8 +238,6 @@ Change the type of configure done from the default \f(CWoldconfig\fR.
 \f(CWallnoconfig\fR;  \f(CWold\fR,
 \f(CWmenu\fR, \f(CWg\fR, or \f(CWx\fR.
 .sp
-This option is particularly useful when using \s-1PATCH_THE_KERNEL\s0 if some
-of the patches change what configuration options are available. 
 .B Note
 however that 
 .BR make\-kpkg
@@ -744,8 +665,6 @@ The following variables (documented above) also affect
 .I DEBIAN_REVISION_MANDATORY
 .I APPEND_TO_VERSION
 .I VERSION_H_OK
-.I PATCH_THE_KERNEL
-.I NO_UNPATCH_BY_DEFAULT
 .I KPKG_ARCH
 .I CROSS_COMPILE
 .I KPKG_SUBARCH

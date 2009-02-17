@@ -176,22 +176,9 @@ en umsdos, y no pueden ver el enlace en dos, pero quieren saber el número de la
 versión cuando estén en Linux. Esto es una chapuza.
 Por omisión está sin definir. (opcional)
 .TP
-.B patch_the_kernel
-Esta variable es sólo para expertos. Si es YES (la variable de entorno 
-.B PATCH_THE_KERNEL 
-lo modifica), el proceso de construcción hace que se ejecute sobre
-.I /usr/src/kernel\-patches/$(architecture)/apply 
-y (afortunadamente) deshaga el proceso durante la fase de limpieza ejecutando
-run\-parts sobre 
-.I /usr/src/kernel\-patches/$(architecture)/unpatch. 
-La arquitectura especial all se usa para parches independientes de la arquitectura.
-.TP
 .B config_target
 Define el tipo de configuración a usar. Por omisión es oldconfig, lo que está
-bien para configuraciones no interactivas (o mínimamente interactivas). Si está
-poniendo patch_the_kernel a YES y algunos de los parches cambian la
-configuración disponible, entonces es posible que desee poner esto a otro valor
-(como menuconfig o xconfig).
+bien para configuraciones no interactivas (o mínimamente interactivas). 
 (La variable de entorno
 .B CONFIG_TARGET
 modifica éste valor de configuración).
@@ -369,17 +356,6 @@ Establezca esta variable, bien en el entorno o bien en el fichero de
 configuración al lugar donde se encuentren los ficheros de configuración del
 núcleo. Por omisión
 .I /usr/share/kernel\-package/Config
-.TP
-.B PATCH_DIR 
-Establezca esta variable, bien en el entorno o bien en el fichero de
-configuración al lugar donde se encuentren parches adicionales. Por omisión
-.I /usr/src/kernel\-patches/ARCHITECTURE
-.TP
-.B ALL_PATCH_DIR 
-Establezca esta variable, bien en el entorno o bien en el fichero de
-configuración al lugar donde se encuentren parches independientes de la
-arquitectura adicionales. Por omisión
-.I /usr/src/kernel\-patches/all
 .PP
 El valor una variable puede establecerse de forma que:
 .IP a)

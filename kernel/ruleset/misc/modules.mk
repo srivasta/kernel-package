@@ -35,16 +35,8 @@
 
 # Deal with modules issues
 ifeq ($(strip $(CONFDIR)),)
-  ifeq ($(strip $(patch_the_kernel)),YES)
-    CONFDIR     = $(PATCH_DIR)
-  else
-    ifeq ($(strip $(patch_the_kernel)),yes)
-      CONFDIR     = $(PATCH_DIR)
-    else
       $(eval $(which_debdir))
       CONFDIR     = $(DEBDIR)/Config
-    endif
-  endif
 endif
 
 # The file which has local configuration

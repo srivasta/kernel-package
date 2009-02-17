@@ -21,10 +21,6 @@ modules.mk: This file deals with setting up variables, looking at
             directories, and creating a list of valid third party
             modules available for the kernel being built.
 
-patches.mk: This file deals with setting up variables, looking at
-            directories, and creating a list of valid third party
-            patches available for the kernel being built.
-
 pkg_names.mk: This file sets up package names for the packages we can
               build (based on kernel version), the locations under
               ./debian where these packages shall be built, and the

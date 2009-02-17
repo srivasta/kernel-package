@@ -147,9 +147,6 @@ conf.vars:
 ifneq ($(strip $(iatv)),)
 	@echo "APPEND_TO_VERSION = $(iatv)"	    >> .mak
 endif
-ifeq ($(strip $(patch_the_kernel)),YES)
-	@echo "KPKG_SELECTED_PATCHES = $(KPKG_SELECTED_PATCHES)" >> .mak
-endif
 ifeq ($(strip $(MODULES_ENABLED)),YES)
 	@echo "KPKG_SELECTED_MODULES = $(KPKG_SELECTED_MODULES)" >> .mak
 endif
@@ -182,26 +179,6 @@ ifeq ($(DEB_HOST_ARCH_OS), kfreebsd)
 	mkdir -p bin
 	ln -sf `which gcc-3.4` bin/cc
 	cd $(architecture)/conf && freebsd-config GENERIC
-endif
-######################################################################
-### Patch the kernel sources
-######################################################################
-ifeq ($(strip $(patch_the_kernel)),YES)
-	test ! -f applied_patches || rm -f applied_patches
-  ifneq ($(strip $(valid_patches)),)
-	for patch in $(valid_patches) ; do	      \
-	  if test -x  $$patch; then		       \
-	      if $$patch; then			       \
-		  echo "Patch $$patch processed fine"; \
-		  echo "$(notdir $$patch)" >> applied_patches;	 \
-	      else				       \
-		   echo "Patch $(notdir $$patch)  failed.";	 \
-		   echo "Hit return to Continue";      \
-		   read ans;			       \
-	      fi;				       \
-	  fi;					       \
-	done
-  endif
 endif
 ######################################################################
 ### Prepare the version number

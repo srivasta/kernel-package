@@ -83,15 +83,6 @@ Phase THREE: Install the kernel image on one or more machines
  it). Steps 1 to 4 can be carried out as a non root user. Step 5 does
  require root privileges.
 
- If you're using the patch_the_kernel facility, you may want to remove
- step 2 and instead insert `--config=menuconfig' into the make-kpkg
- command-line of step 4 (or perhaps use `xconfig' or `config' (or, for
- 2.6.X kernels, `gconfig') in place of `menuconfig').  This way,
- patching the kernel happens before menuconfig (or whichever), and
- you'll get better defaults for any questions introduced by the
- patches. (Also look at the --added_patches command line option to
- selectively apply some patches in conjunction with patch_the_kernel)
-
 Getting the kernel source
 ------- --- ------ ------
 
@@ -392,22 +383,6 @@ image_dest    If  you  want  the  symbolic  link  (or  image,  if
               all above options except link_in_boot, which would
               not   make   sense.   (If   both   image_dest   and
               link_in_boot are set, link_in_boot overrides).
-
-patch_the_kernel This is an experts only variable. If set to YES (ENV
-                 variable PATCH_THE_KERNEL overrides this), the build
-                 process causes run-parts to be run over
-                 /usr/src/kernel-patches/$(architecture)/apply and
-                 (hopefully) reverses the process during clean by
-                 running run-parts over
-                 /usr/src/kernel-patches/$(architecture)/unpatch. The
-                 special architecture all is used for arch independent
-                 patches. You may use the --added_patches command line
-                 in conjunction with this variable to selectively
-                 apply only some patches from that directory. The
-                 people who package the pacthes should have arranged
-                 to have the order of application and unapplication be
-                 sane. This variable is automatically set to YES if
-                 you use the option --added-patches.
 
 root_cmd         This should be set to a means of gaining superuser
                  access (for example, `sudo' or `fakeroot') as needed
@@ -768,14 +743,13 @@ packages, and don't want to be root to do so (the following assumes
 #  for machine in kallissin ember smaug scatha glaurung, tiamat ;do     #
 #    if [ -f . configdirs/$machine ]; then                              #
 #      . configdirs/$machine                                            #
-#      # $patches is now either empty, or it has --added-patches=a,b    #
 #    fi                                                                 #
 #    cd $machine                                                        #
 #    make-kpkg --rootcmd fakeroot --append-to-version $machine \        #
-#        $patches $modules kernel_image                                 #
+#        $modules kernel_image                                          #
 #    if [ "X$modules" != "X" ]; then                                    #
 #       fakeroot make-kpkg  --append-to-version $machine \              #
-#            $patches $modules modules_image                            #
+#            $modules modules_image                                     #
 #    fi                                                                 #
 #    test ! -d debian || rm -rf debian                                  #
 #  done                                                                 #

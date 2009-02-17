@@ -88,10 +88,6 @@ reverse_symlink :=
 # kernel-source are deduced from the Makefile (see below,
 # and footnote 1 for details)
 
-# Whether to look for and install kernel patches by default.
-# Be very careful if you do this.
-patch_the_kernel := AUTO
-
 # run make clean after build
 do_clean := NO
 
