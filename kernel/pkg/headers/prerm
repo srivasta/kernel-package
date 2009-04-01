@@ -54,12 +54,24 @@ my $CONF_LOC        = '/etc/kernel-img.conf';
 $realimageloc  =~ s|^/*|/|o;
 $realimageloc  =~ s|/+|/|o;
 
+my $architecture;
+chomp($architecture = `dpkg --print-installation-architecture`);
+$architecture = "ppc" if $architecture eq "powerpc";
+$architecture = "parisc" if $architecture eq "hppa";
+$architecture = "mips" if $architecture eq "mipsel";
+$architecture = "x86_64" if $architecture eq "amd64";
+
+my $stop_and_read     = 0;
 my $header_preinst_hook = '';
 my $header_postinst_hook = '';
 my $header_prerm_hook = '';
 my $header_postrm_hook = '';
 
-chdir '/usr/src' or die "Could not chdir to /usr/src:$!";
+# if ($stop_and_read) {
+#   my $answer;
+#   print STDERR " Please Hit return to continue.";
+#   $answer = <STDIN>;
+# }
 
 if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
   if (open(CONF, "$CONF_LOC")) {
@@ -127,26 +139,26 @@ sub run_hook {
 
 ## Run user hook script here, if any
 
-if (-x "$header_postinst_hook") {
-  system ("$header_postinst_hook", $package, $version) &&
-    warn "User hook script $header_postinst_hook failed";
-  #&run_hook("postinst", $header_postinst_hook);
+if (-x "$header_prerm_hook") {
+  system ("$heade_prerm_hook", $package, $version) &&
+    warn "User hook script $header_prerm_hook failed";
+  #&run_hook("prerm", $header_prerm_hook);
 }
 
-if (-d "/etc/kernel/header_postinst.d") {
-  print STDERR "Examining /etc/kernel/header_postinst.d.\n";
+if (-d "/etc/kernel/header_prerm.d") {
+  print STDERR "Examining /etc/kernel/header_prerm.d.\n";
   system ("run-parts --verbose --exit-on-error --arg=$version " .
           "--arg=$realimageloc$kimage-$version " .
-          "/etc/kernel/header_postinst.d") &&
-            die "Failed to process /etc/kernel/header_postinst.d";
+          "/etc/kernel/header_prerm.d") &&
+            die "Failed to process /etc/kernel/header_prerm.d";
 }
 
-if (-d "/etc/kernel/header_postinst.d/$version") {
-  print STDERR "Examining /etc/kernel/header_postinst.d/$version.\n";
+if (-d "/etc/kernel/header_prerm.d/$version") {
+  print STDERR "Examining /etc/kernel/header_prerm.d/$version.\n";
   system ("run-parts --verbose --exit-on-error --arg=$version " .
           "--arg=$realimageloc$kimage-$version " .
-          "/etc/kernel/header_postinst.d/$version") &&
-            die "Failed to process /etc/kernel/header_postinst.d/$version";
+          "/etc/kernel/header_prerm.d/$version") &&
+            die "Failed to process /etc/kernel/header_prerm.d/$version";
 }
 
 

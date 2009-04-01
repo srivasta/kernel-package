@@ -19,8 +19,10 @@ CONFLOC    := /etc/kernel-pkg.conf
 LIBLOC     := /usr/share/kernel-package
 MODULE_LOC := /usr/src/modules
 
-DOCFILES = README.modules README.tecra README.grub HOWTO-Linux-2.6-Woody Rationale
-EXAMPLES = sample.kernel-img.conf kernel_grub_conf.sh sample.posthook.sh
+DOCFILES = README.modules README.tecra README.grub HOWTO-Linux-2.6-Woody \
+           Rationale
+EXAMPLES = sample.kernel-img.conf kernel_grub_conf.sh sample.posthook.sh \
+           etc.kernel
 
 # where kernel-package files go to
 DEBDIR     = $(LIBLOC)
@@ -65,6 +67,9 @@ check:
 	-perl  -wc kernel/pkg/image/prerm
 	-perl  -wc kernel/pkg/image/config
 	perl  -wc kernel/pkg/headers/postinst
+	perl  -wc kernel/pkg/headers/postrm
+	perl  -wc kernel/pkg/headers/preinst
+	perl  -wc kernel/pkg/headers/prerm
 	bash  -n  kernel/pkg/headers/create_link
 	bash  -n  kernel/pkg/virtual/um/postinst
 	bash  -n  kernel/pkg/virtual/um/prerm
@@ -73,6 +78,7 @@ check:
 	bash  -n  kernel/examples/kernel_grub_conf.sh
 	bash  -n  kernel/examples/kernel_grub_rm.sh
 	bash  -n  kernel/examples/sample.posthook.sh
+	bash -n kernel/examples/etc.kernel/header_postinst.d/link
 
 install: genpo4a
 	$(make_directory)  $(MAN1DIR)

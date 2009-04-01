@@ -1,0 +1,54 @@
+#! /bin/bash
+
+version=$1
+image=$2
+package=$3
+
+architecture=$(dpkg --print-installation-architecture)
+
+case $architecture in
+    powerpc)
+        architecture='ppc'
+        ;;
+    hppa)
+        architecture='parisc'
+        ;;
+    mipsel)
+        architecture='mips'
+        ;;
+    amd64)
+        architecture='x86'
+        ;;
+    *)
+        :
+esac
+
+
+if [ -d "/usr/src/linux-headers-$version" ]; then
+    # See if we have a kernel image of the same version already
+    # installed.
+    if  [ -d "/lib/modiles/$version"  ] &&
+        [ ! -e "/lib/modiles/$version/build" ]; then
+        if ! ln -s "/usr/src/linux-headers-$version"  "/lib/modiles/$version/build" ; then
+            echo >&2 "Could not link /usr/src/linux-headers-$version to /lib/modiles/$version/build";
+        fi
+    fi
+    # Make sure the asm link is sane
+    if [ ! -d "/usr/src/linux-headers-$version/include" ]; then
+        echo >&2 "/usr/src/linux-headers-$version/include does not exist"
+        exit 1
+    fi
+    cd "/usr/src/linux-headers-$version/include"
+    if [ ! -s "asm-$architecture" ]; then
+        echo >&2 "/usr/src/linux-headers-$version/include/asm-$architecture does not exist"
+    elif [ -e 'asm' ]; then
+        if [ ~ -l 'asm' ]; then
+            echo >&2 "/usr/src/linux-headers-$version/include/asm is not a symbolic link"
+        else
+            rm -f asm
+            ln -sf  "asm-$architecture" 'asm'
+        fi
+    fi    
+fi
+
+exit 0
