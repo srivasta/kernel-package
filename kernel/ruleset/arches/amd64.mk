@@ -44,9 +44,6 @@ IMAGE_SRC_DIR=$(shell if [ $(VERSION) -lt 2 ]; then                     \
 KERNEL_ARCH=x86_64
 ifeq ($(DEB_HOST_ARCH_OS), linux)
   kimage := bzImage
-  loaderdep=lilo (>= 19.1) | grub
-  loader=lilo
-  loaderdoc=LiloDefault
   target = $(kimage)
   kimagesrc = $(strip arch/$(IMAGE_SRC_DIR)/boot/$(kimage))
   kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(KERNELRELEASE)

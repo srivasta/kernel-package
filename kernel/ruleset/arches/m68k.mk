@@ -65,15 +65,6 @@ kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(KERNELRELEASE)
 kelfimagesrc = vmlinux
 kelfimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(KERNELRELEASE)
 DEBCONFIG = $(CONFDIR)/config.$(KPKG_SUBARCH)
-ifneq (,$(findstring $(KPKG_SUBARCH),mvme147 mvme16x bvme6000))
-  loaderdep=vmelilo
-  loader=vmelilo
-  loaderdoc=VmeliloDefault
-else
-  loaderdep=
-  loader=lilo
-  loaderdoc=
-endif
 
 #Local variables:
 #mode: makefile

@@ -31,9 +31,6 @@
 ###############################################################################
 
 kimage := vmlinuz
-loaderdep=
-loader=milo
-loaderdoc=
 target = boot
 kimagesrc = arch/$(KERNEL_ARCH)/boot/vmlinux.gz
 kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(KERNELRELEASE)

@@ -39,9 +39,6 @@ ifeq ($(strip $(architecture)),arm)
     target = Image
     kimagesrc = arch/$(KERNEL_ARCH)/boot/Image
     kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(KERNELRELEASE)
-    loaderdep=
-    loader=nettrom
-    loaderdoc=
     NEED_DIRECT_GZIP_IMAGE=NO
     DEBCONFIG= $(CONFDIR)/config.netwinder
   else

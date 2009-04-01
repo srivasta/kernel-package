@@ -42,9 +42,6 @@ ifneq ($(shell if [ $(VERSION)  -ge  2 ]  && [ $(PATCHLEVEL) -ge 6 ] &&    \
 else
   kimage := vmlinux
 endif
-  loaderdep = arcboot
-  loader = arcboot
-  loaderdoc =
 endif
 # SGI ELF64
 ifneq (,$(filter r10k-ip27 r10k-ip28 r10k-ip30,$(strip $(KPKG_SUBARCH))))
@@ -58,15 +55,6 @@ ifneq ($(shell if [ $(VERSION)  -ge  2 ]  && [ $(PATCHLEVEL) -ge 6 ] &&    \
 else
   kimage := vmlinux.64
 endif
-  loaderdep = arcboot
-  loader = arcboot
-  loaderdoc =
-endif
-# Broadcom SWARM
-ifneq (,$(filter sb1-swarm-bn,$(strip $(KPKG_SUBARCH))))
-  loaderdep = sibyl
-  loader = sibyl
-  loaderdoc =
 endif
 
 # Default value

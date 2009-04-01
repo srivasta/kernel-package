@@ -310,10 +310,6 @@ actual si el ABI del núcleo ha cambiado en el intermedio. Es una buena idea
 reiniciar, y esto es una nota para recordarle. Si sabe lo que hace puede 
 definir esta variable a No. Esta variable está definida por omisión.
 .TP
-.B do_bootloader
-Si es NO, hace que el postinst no ejecute el gestor de arranque.
-Por omisión es Yes.
-.TP
 .B relative_links
 Si es Yes, el script de postinst de la imagen del núcleo tomará medidas
 adicionales para que el enlace simbólico sea relativo. Normalmente el enlace es
@@ -400,14 +396,6 @@ directorio es totalmente benigna. Si establece esta variable, nunca más podrá
 cancelar la instalación si se detecta previamente un directorio
 .I /lib/modules/$version
 existente. Por omisión no está establecido.
-.TP
-.B silent_loader
-Si está establecida, está opción hará que se omita la pregunta realizada antes
-de ejecutar el gestor de arranque durante el proceso de instalación. Esta opción
-no afecta a que el gestor de arranque sea o no ejecutado (véase 
-.B do_bootloader
-para entender como controlarlo, la ausencia de un fichero de configuración hará
-el proceso de instalación ameno e interactivo).
 .TP
 .B ignore_depmod_error
 Si está establecida, no pide confirmación para continuar después de un problema

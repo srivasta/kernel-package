@@ -50,8 +50,6 @@ kimagesrc  = $(strip $(kimage))
 INT_IMAGE_DESTDIR=$(DOCDIR)
 IMAGEDIR = /usr/bin
 kimagedest = $(TMPTOP)/$(IMAGEDIR)/linux-$(KERNELRELEASE)
-loaderdep=
-loaderdoc=
 KERNEL_ARCH = um
 architecture = i386
 

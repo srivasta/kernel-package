@@ -30,37 +30,10 @@
 ##
 ###############################################################################
 
-# DECstations
-ifneq (,$(filter r3k-kn02 r4k-kn04,$(strip $(KPKG_SUBARCH))))
-  loaderdep = delo
-  loader = delo
-  loaderdoc =
-endif
-# Cobalt
-ifneq (,$(filter r5k-cobalt,$(strip $(KPKG_SUBARCH))))
-  loaderdep = colo
-  loader = colo
-  loaderdoc =
-endif
-# LASAT
-ifneq (,$(filter r5k-lasat,$(strip $(KPKG_SUBARCH))))
-  loaderdep =
-  loader =
-  loaderdoc =
-endif
-# Broadcom SWARM
-ifneq (,$(filter sb1-swarm-bn,$(strip $(KPKG_SUBARCH))))
-  loaderdep = sibyl
-  loader = sibyl
-  loaderdoc =
-endif
 # xxs1500
 ifneq (,$(filter xxs1500,$(strip $(KPKG_SUBARCH))))
   kimage := vmlinux
   kimagesrc = $(strip arch/$(KERNEL_ARCH)/boot/$(kimage).srec)
-  loaderdep =
-  loader =
-  loaderdoc =
 endif
 
 # Default value

@@ -65,7 +65,7 @@ ifneq ($(strip $(KERNEL_ARCH)),um)
 	test ! -d ./debian || test ! -e stamp-building ||            \
 	sed -e 's/=V/$(KERNELRELEASE)/g'    -e 's/=B/$(link_in_boot)/g'    \
             -e 's/=ST/$(INT_STEM)/g'  -e 's/=R/$(reverse_symlink)/g' \
-            -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \
+            -e 's/=K/$(kimage)/g'            \
             -e 's@=MK@$(initrdcmd)@g' -e 's@=A@$(DEB_HOST_ARCH)@g'   \
             -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'        \
             -e 's/=MD/$(initrddep)/g'                                \

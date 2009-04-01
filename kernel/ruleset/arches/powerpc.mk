@@ -63,7 +63,6 @@ ifneq (,$(findstring $(KPKG_SUBARCH), prep powerpc powerpc32 ppc ppc32 ppc64 pow
         fi
   endef
   target := zImage
-  loaderdep=mkvmlinuz
 endif
 
 # 64bit generic powerpc subarches.

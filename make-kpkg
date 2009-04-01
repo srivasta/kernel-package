@@ -495,13 +495,8 @@ I<.config>.  If there is no I<.config> file in the kernel source
 directory, a default configuration is provided similar to the one used
 to create the B<Debian> boot-floppies.  The package produced updates
 the symbolic links in the root directory to point to the new kernel
-image in I</boot>.  It also offers to run the Linux loader, B<LILO>
-(or alternates like B<loadlin>, B<SILO>, B<QUIK>, B<VMELILO>, B<ZIPL>,
-B<yaboot>, B<PALO> or B<GRUB> ), creating a configuration file for the
-supported boot loaders if needed.  It also offers to put the new
-kernel on a floppy, formatting the floppy if needed.  On deletion, the
-package checks the version of the kernel running, and refuses to
-delete a running kernel.
+image in I</boot>.  On deletion, the package checks the version of the
+kernel running, and refuses to delete a running kernel.
 
 =back
 

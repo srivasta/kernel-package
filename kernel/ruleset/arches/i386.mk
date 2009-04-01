@@ -57,9 +57,6 @@ ifeq ($(DEB_HOST_ARCH_OS), linux)
   target = $(kimage)
   kimagesrc = $(strip arch/$(IMAGE_SRC_DIR)/boot/$(kimage))
   kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(KERNELRELEASE)
-  loaderdep=lilo (>= 19.1) | grub
-  loader=lilo
-  loaderdoc=LiloDefault
   ifeq ($(strip $(CONFIG_X86_XEN)),)
     kelfimagesrc = vmlinux
     kelfimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(KERNELRELEASE)
@@ -73,8 +70,6 @@ ifeq ($(DEB_HOST_ARCH_OS), linux)
     int_install_vmlinux:=YES
   endif
 else
-  loaderdep=grub | grub2
-  loader=grub
   ifeq ($(DEB_HOST_ARCH_OS), kfreebsd)
     kimagesrc = $(strip $(KERNEL_ARCH)/compile/GENERIC/kernel)
     kimagedest = $(INT_IMAGE_DESTDIR)/kfreebsd-$(KERNELRELEASE)

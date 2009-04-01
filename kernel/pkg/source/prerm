@@ -46,7 +46,6 @@ my $image_dest      = "/";
 my $realimageloc    = "/$image_dir/";
 my $have_conffile   = "";
 my $silent_modules  = '';
-my $silent_loader   = '';
 my $modules_base    = '/lib/modules';
 my $CONF_LOC        = '/etc/kernel-img.conf';
 # remove multiple leading slashes; make sure there is at least one.
@@ -61,11 +60,8 @@ $architecture = "mips" if $architecture eq "mipsel";
 $architecture = "x86_64" if $architecture eq "amd64";
 
 my $stop_and_read     = 0;
-my $have_conffile     = "";
 my $src_postinst_hook = '';
-my $CONF_LOC          = '/etc/kernel-img.conf';
 my $src_preinst_hook = '';
-my $src_postinst_hook = '';
 my $src_prerm_hook = '';
 my $src_postrm_hook = '';
 

@@ -45,9 +45,6 @@ KERNEL_ARCH_VERSION = $(shell if [ $(VERSION) -lt 2 ]; then             \
         fi)
 
 kimage := vmlinuz
-loaderdep = silo
-loader = silo
-loaderdoc=SiloDefault
 NEED_DIRECT_GZIP_IMAGE = YES
 kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(KERNELRELEASE)
 DEBCONFIG = $(CONFDIR)/config.sparc

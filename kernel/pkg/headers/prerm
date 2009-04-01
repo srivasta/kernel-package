@@ -47,7 +47,6 @@ my $image_dest      = "/";
 my $realimageloc    = "/$image_dir/";
 my $have_conffile   = "";
 my $silent_modules  = '';
-my $silent_loader   = '';
 my $modules_base    = '/lib/modules';
 my $CONF_LOC        = '/etc/kernel-img.conf';
 # remove multiple leading slashes; make sure there is at least one.
@@ -140,7 +139,7 @@ sub run_hook {
 ## Run user hook script here, if any
 
 if (-x "$header_prerm_hook") {
-  system ("$heade_prerm_hook", $package, $version) &&
+  system ("$header_prerm_hook", $package, $version) &&
     warn "User hook script $header_prerm_hook failed";
   #&run_hook("prerm", $header_prerm_hook);
 }

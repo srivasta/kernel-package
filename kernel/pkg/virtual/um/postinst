@@ -39,7 +39,6 @@ link_in_boot="=IB";   # Should be empty, mostly
 no_symlink="=S";   # Should be empty, mostly
 reverse_symlink="=R";   # Should be empty, mostly
 kimage="=K";   # Should be empty, mostly
-loader="=L";   # lilo, silo, quik, palo, vmelilo, nettrom, arcboot or delo
 image_dir="=D";        # where the image is located
 initrd="=I";        # initrd kernel
 mkimage="=M";        # command to generate the initrd image

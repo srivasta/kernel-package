@@ -31,9 +31,6 @@
 ###############################################################################
 
 kimage := vmlinuz
-loaderdep=elilo
-loader=elilo
-loaderdoc=
 target=compressed
 NEED_DIRECT_GZIP_IMAGE=NO
 kimagesrc=vmlinux.gz

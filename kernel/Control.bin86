@@ -50,11 +50,6 @@ Description: Linux kernel binary image for version =V=SA.
  packager.  It also contains scripts that try to ensure that the
  system is not left in a unbootable state after an update.
  .
- If you wish to update a bootdisk, or to use a bootloader to make
- installing and using the image easier, we suggest you install the latest
- fdutils (for formatting a floppy to be used as boot disk), and LILO, for a
- powerful bootloader. Of course, both these are optional. 
- .
  Kernel image packages are generally produced using kernel-package,
  and it is suggested that you install that package if you wish to
  create a custom kernel from the sources.

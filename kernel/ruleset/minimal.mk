@@ -99,7 +99,7 @@ debian/stamp/conf/minimal_debian:
         done
 	test -f debian/control || sed         -e 's/=V/$(KERNELRELEASE)/g'  \
                 -e 's/=D/$(debian)/g'         -e 's/=A/$(DEB_HOST_ARCH)/g'  \
-		-e 's/=SA/$(INT_SUBARCH)/g'   -e 's/=L/$(int_loaderdep) /g' \
+		-e 's/=SA/$(INT_SUBARCH)/g'  \
 		-e 's/=I/$(initrddep)/g'				    \
 		-e 's/=CV/$(VERSION).$(PATCHLEVEL)/g'			    \
 		-e 's/=M/$(maintainer) <$(email)>/g'			    \

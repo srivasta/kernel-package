@@ -31,9 +31,6 @@
 ###############################################################################
 
 kimage := vmlinux
-loaderdep=palo
-loader=palo
-loaderdoc=
 target=$(kimage)
 NEED_DIRECT_GZIP_IMAGE=NO
 # Override arch name because hppa uses arch/parisc not arch/hppa

@@ -49,17 +49,6 @@ else
 endif
 kimage := $(target)
 
-ifeq (,$(filter xen0,$(KPKG_SUBARCH)))
-   # only domain-0 are bootable via xen so only domain0 subarch needs grub and xen-vm
-   loaderdep=grub,xen-vm
-   loader=grub
-   loaderdoc=
-else
-   loaderdep=
-   loader=
-   loaderdoc=
-endif
-
 kimagesrc = $(kimage)
 kimagedest = $(INT_IMAGE_DESTDIR)/xen-linux-$(KERNELRELEASE)
 

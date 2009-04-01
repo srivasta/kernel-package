@@ -513,39 +513,15 @@ clobber_modules
               same  version  as the image being installed. Use at
               your own risk.  This variable is unset by  default.
 
-do_boot_enable
-              If set to NO, this short-circuits all attempts to create
-              boot floppies, run lilo, etc. This has the additional
-              side effect that the postinst is silent. Setting both
-              do_bootfloppy and do_bootloader to NO implies setting
-              do_boot_enable to NO. Defaults to Yes.
-
-do_bootfloppy
-              If set to NO, this prevents the postinst from asking
-              questions about creating a boot floppy, and no boot
-              floppy is created. The bootloader shall still be run.
-              This may cut down on the interaction the postinst has.
-              (It still prompts before formatting /dev/fd0). Defaults
-              to Yes.
-
-do_bootloader
-              If set to NO, this prevents the postinst from running
-              the bootloader. The user may still be asked to create a
-              floppy, unless do_bootfloppy is also set to NO. Defaults
-              to Yes.
-
 postinst_hook
               Set this variable to a script to be executed during
-              installation after all the symbolic links are  cre-
-              ated,  but before running the bootloader or  offer-
-              ing to create a floppy. This script shall be called
-              with  two arguments, the first being the version of
-              the kernel image, and the second argument being the
-              location  of the kernel image itself. Errors in the
-              script shall produce a warning message,  but  shall
-              be  otherwise  ignored.  An example script for grub
-              users is present in  /usr/share/doc/kernel-package/
-              directory.
+              installation. This script shall be called with two
+              arguments, the first being the version of the kernel
+              image, and the second argument being the location of the
+              kernel image itself. Errors in the script shall produce
+              a warning message, but shall be otherwise ignored.  An
+              example script for grub users is present in
+              /usr/share/doc/kernel-package/ directory.
 postrm_hook
               Set this variable to a script to be executed in the
               postrm (that is, after the image has been  removed)
@@ -644,20 +620,6 @@ Here is a nice, practical example:
 % make-kpkg -rfakeroot --append-to-version $(hostname) \
              --revision $(date +'%Y%m%d')
 
-A note on boot loaders: the kernel-image install-scripts arrange to
-have /vmlinuz and /vmlinuz.old point to the latest kernel image and
-the next most recent one, respectively.  You may choose to have your
-boot loader take advantage of this by putting image = /vmlinuz and
-image = /vmlinuz.old lines in your lilo.conf (or whatever config files
-your boot loader uses -- please read documentation on your boot loader
-for details). Oh, and if your kernel image package uses initrd (as do
-the newer  kernel image packages), please do not forget to add
-a line (initrd=/boot/initrd-2.4.X-foo) in your lilo.conf file
-pointing out this fact to your boot loader.
-
-Conversely, people who wish to tightly control the versions in
-lilo.conf (believe me, people, this gets to be a pain in the neck
-fast) can use image = /boot/vmlinuz-X.X.XX.
 
 For folks using grub, there are now postinst_hook and postrm_hook
 variables that can be pointed to scripts that add or remove  a line

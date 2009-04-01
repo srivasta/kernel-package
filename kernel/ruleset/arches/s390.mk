@@ -43,9 +43,6 @@ ifeq (4,$(PATCHLEVEL))
   endif
 endif
 kimage := zimage
-loaderdep=zipl
-loader=zipl
-loaderdoc=
 target = image
 NEED_DIRECT_GZIP_IMAGE=NO
 kimagesrc = $(strip arch/$(KERNEL_ARCH)/boot/$(target))

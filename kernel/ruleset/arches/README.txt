@@ -5,9 +5,6 @@
 
  Each architecture has the following specified for it
  (a) The kernel image type (i.e. zImage or bzImage)
- (b) The dependency on a loader, if any
- (c) The name of the loader
- (d) The name of the documentation file for the loader
  (e) The build target
  (f) The location of the kernelimage source
  (g) The location of the kernelimage destination

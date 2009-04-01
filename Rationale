@@ -47,12 +47,9 @@
         packages that depend on the package management system being
         aware of these packages).
      x) Since the kernel image package is a full fledged Debian
-        package, it comes with maintainer scripts, which take care of
-        details like offering to make a boot disk, manipulating
-        symbolic links in / so that you can make boot loader scripts
-        static (just refer to the symbolic links, rather than the real
-        image files; the names of the symbolic links do not change,
-        but the kernel image file names change with the version).
+        package, it comes with maintainer scripts, which allow the end
+        user to add in scripts to affect handling of new kernel
+        packages in a most flexible fashion.
     xi) There is support for the multitudinous subarchitectures that
         have blossomed under the umbrella of the m68k and powerpc
         architectures.
@@ -65,17 +62,12 @@
 	installation on a slower machine. This is really nice since
 	the modules are all included in the .deb; and one does not
 	have to deal with modules manually.
-   xiv) The postinst looks at a configuration file on the installation
-        machine (as opposed to the machine that the image was compiled
-        on), and allows the local admin to decide on issues of
-        symbolic links, and whether the boot loader stuff must be
-        run, and whether one wants to create a boot floppy or not. 
-    xv) The postinst and the postrm scripts allow the local admin on
+   xiv) The postinst and the postrm scripts allow the local admin on
         the installation machine to add a script into runtime hooks;
         this can allow, amongst other things, grub users to add and
         remove kernel image stanzas from the grub menu (example
         scripts to do this are in the package).
-   xvi) One can append to the kernel version on the command line, or
+    xv) One can append to the kernel version on the command line, or
         by setting an environment variable. So if your kernel is
         called kernel-image-2.4.1John.Home; it is unlikely to be
         overridden by the official 2.4.1 kernel, since they are not the
