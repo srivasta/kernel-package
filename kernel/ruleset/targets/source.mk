@@ -38,7 +38,14 @@ debian/stamp/install/$(s_package):
 	@test -d debian/stamp/install || mkdir debian/stamp/install
 	$(make_directory) $(SRCDIR)
 	$(make_directory) $(DOCDIR)
+	$(make_directory) $(TMPTOP)/etc/kernel/src_postinst.d
+	$(make_directory) $(TMPTOP)/etc/kernel/src_preinst.d
+	$(make_directory) $(TMPTOP)/etc/kernel/src_postrm.d
+	$(make_directory) $(TMPTOP)/etc/kernel/src_prerm.d
 	$(eval $(which_debdir))
+######################################################################
+#### Add documentation to /usr/share/doc
+######################################################################
 	$(install_file) README                         $(DOCDIR)/README
 	$(install_file) debian/changelog               $(DOCDIR)/changelog.Debian
 	$(install_file) $(DEBDIR)/docs/README          $(DOCDIR)/debian.README
@@ -48,10 +55,16 @@ debian/stamp/install/$(s_package):
 	$(install_file) $(DEBDIR)/docs/Rationale       $(DOCDIR)/
 	$(install_file) $(DEBDIR)/examples/sample.module.control               \
                                                        $(DOCDIR)/
+	if test -f README.Debian ; then                                                 \
+           $(install_file) README.Debian                $(DOCDIR)/README.Debian.1st;\
+	fi
 	gzip -9qfr                                     $(DOCDIR)/
 	$(install_file) $(DEBDIR)/pkg/source/copyright $(DOCDIR)/copyright
 	echo "This was produced by kernel-package version $(kpkg_version)." >  \
 	                                               $(DOCDIR)/Buildinfo
+######################################################################
+#### 
+######################################################################
 ifneq ($(strip $(int_follow_symlinks_in_src)),)
 	-tar cfh - $$(echo * | sed -e 's/ debian//g' -e 's/\.deb//g' ) |       \
 	(cd $(SRCDIR); umask 000; tar xpsf -)
@@ -100,9 +113,46 @@ debian/stamp/binary/$(s_package):
 	@echo "This is kernel package version $(kpkg_version)."
 	$(eval $(which_debdir))
 	$(make_directory) $(TMPTOP)/DEBIAN
-	sed -e 's/=P/$(package)/g' -e 's/=V/$(KERNELRELEASE)/g'                       \
-	    $(DEBDIR)/pkg/source/postinst >          $(TMPTOP)/DEBIAN/postinst
-	chmod 755                                    $(TMPTOP)/DEBIAN/postinst
+	sed -e 's/=V/$(KERNELRELEASE)/g'    -e 's/=IB/$(link_in_boot)/g'   \
+            -e 's/=ST/$(INT_STEM)/g'  -e 's/=R/$(reverse_symlink)/g' \
+            -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \
+            -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'        \
+            -e 's/=MD/$(initrddep)/g' -e 's/=P/$(package)/g'         \
+            -e 's@=MK@$(initrdcmd)@g' -e 's@=A@$(DEB_HOST_ARCH)@g'   \
+            -e 's@=M@$(MKIMAGE)@g'    -e 's/=OF/$(AM_OFFICIAL)/g'    \
+            -e 's/=S/$(no_symlink)/g'  -e 's@=B@$(LINK_ARCH)@g'    \
+		$(DEBDIR)/pkg/source/postinst >        $(TMPTOP)/DEBIAN/preinst
+	chmod 755                                       $(TMPTOP)/DEBIAN/preinst
+	sed -e 's/=V/$(KERNELRELEASE)/g'    -e 's/=IB/$(link_in_boot)/g'   \
+            -e 's/=ST/$(INT_STEM)/g'  -e 's/=R/$(reverse_symlink)/g' \
+            -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \
+            -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'        \
+            -e 's/=MD/$(initrddep)/g' -e 's/=P/$(package)/g'         \
+            -e 's@=MK@$(initrdcmd)@g' -e 's@=A@$(DEB_HOST_ARCH)@g'   \
+            -e 's@=M@$(MKIMAGE)@g'    -e 's/=OF/$(AM_OFFICIAL)/g'    \
+            -e 's/=S/$(no_symlink)/g'  -e 's@=B@$(LINK_ARCH)@g'    \
+		$(DEBDIR)/pkg/source/postinst >        $(TMPTOP)/DEBIAN/postinst
+	chmod 755                                       $(TMPTOP)/DEBIAN/postinst
+	sed -e 's/=V/$(KERNELRELEASE)/g'    -e 's/=IB/$(link_in_boot)/g'   \
+            -e 's/=ST/$(INT_STEM)/g'  -e 's/=R/$(reverse_symlink)/g' \
+            -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \
+            -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'        \
+            -e 's/=MD/$(initrddep)/g' -e 's/=P/$(package)/g'         \
+            -e 's@=MK@$(initrdcmd)@g' -e 's@=A@$(DEB_HOST_ARCH)@g'   \
+            -e 's@=M@$(MKIMAGE)@g'    -e 's/=OF/$(AM_OFFICIAL)/g'    \
+            -e 's/=S/$(no_symlink)/g'  -e 's@=B@$(LINK_ARCH)@g'    \
+		$(DEBDIR)/pkg/source/postinst >        $(TMPTOP)/DEBIAN/prerm
+	chmod 755                                       $(TMPTOP)/DEBIAN/prerm
+	sed -e 's/=V/$(KERNELRELEASE)/g'    -e 's/=IB/$(link_in_boot)/g'   \
+            -e 's/=ST/$(INT_STEM)/g'  -e 's/=R/$(reverse_symlink)/g' \
+            -e 's/=K/$(kimage)/g'     -e 's/=L/$(loader)/g'          \
+            -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'        \
+            -e 's/=MD/$(initrddep)/g' -e 's/=P/$(package)/g'         \
+            -e 's@=MK@$(initrdcmd)@g' -e 's@=A@$(DEB_HOST_ARCH)@g'   \
+            -e 's@=M@$(MKIMAGE)@g'    -e 's/=OF/$(AM_OFFICIAL)/g'    \
+            -e 's/=S/$(no_symlink)/g'  -e 's@=B@$(LINK_ARCH)@g'    \
+		$(DEBDIR)/pkg/source/postinst >        $(TMPTOP)/DEBIAN/postrm
+	chmod 755                                       $(TMPTOP)/DEBIAN/postrm
 	chmod -R og=rX                               $(TMPTOP)
 	chown -R root:root                           $(TMPTOP)
 	dpkg-gencontrol -isp -p$(package)          -P$(TMPTOP)/

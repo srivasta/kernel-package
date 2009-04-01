@@ -42,14 +42,6 @@ my $CONF_LOC          = '/etc/kernel-img.conf';
 # most of our work is done in /usr/src.
 chdir '/usr/src' or die "Could not chdir to /usr/src:$!";
 
-if (-l 'linux') {
-  if (-e "linux-$version" ){
-    if (! unlink "linux-$version") {
-      exit 0;
-    }
-  }
-}
-
 if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
   if (open(CONF, "$CONF_LOC")) {
     while (<CONF>) {
@@ -115,6 +107,21 @@ if (-x "$src_postinst_hook") {
   &run_hook("postinst", $src_postinst_hook);
 }
 
+if (-d "/etc/kernel/src_postinst.d") {
+  print STDERR "Examining /etc/kernel/src_postinst.d.\n";
+  system ("run-parts --verbose --exit-on-error --arg=$version " .
+          "--arg=$realimageloc$kimage-$version " .
+          "/etc/kernel/src_postinst.d") &&
+            die "Failed to process /etc/kernel/src_postinst.d";
+}
+
+if (-d "/etc/kernel/src_postinst.d/$version") {
+  print STDERR "Examining /etc/kernel/src_postinst.d/$version.\n";
+  system ("run-parts --verbose --exit-on-error --arg=$version " .
+          "--arg=$realimageloc$kimage-$version " .
+          "/etc/kernel/src_postinst.d/$version") &&
+            die "Failed to process /etc/kernel/src_postinst.d/$version";
+}
 
 
 exit 0;
