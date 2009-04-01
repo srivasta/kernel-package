@@ -69,8 +69,6 @@ my $doc_postinst_hook = '';
 my $doc_prerm_hook = '';
 my $doc_postrm_hook = '';
 
-# most of our work is done in /usr/src.
-chdir '/usr/src' or die "Could not chdir to /usr/src:$!";
 
 if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
   if (open(CONF, "$CONF_LOC")) {
@@ -79,10 +77,10 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
       s/\#.*$//g;
       next if /^\s*$/;
 
-      $doc_preinst_hook    = "$1"  if /doc_preinst_hook\s*=\s*(\S+)/ig;
-      $doc_postinst_hook   = "$1"  if /doc_postinst_hook\s*=\s*(\S+)/ig;
-      $doc_prerm_hook   = "$1"  if /doc_prerm_hook\s*=\s*(\S+)/ig;
-      $doc_postinst_hook   = "$1"  if /doc_postinst_hook\s*=\s*(\S+)/ig;
+      $doc_preinst_hook  = "$1"  if /doc_preinst_hook\s*=\s*(\S+)/ig;
+      $doc_postinst_hook = "$1"  if /doc_postinst_hook\s*=\s*(\S+)/ig;
+      $doc_prerm_hook    = "$1"  if /doc_prerm_hook\s*=\s*(\S+)/ig;
+      $doc_postinst_hook = "$1"  if /doc_postinst_hook\s*=\s*(\S+)/ig;
     }
     close CONF;
     $have_conffile = "Yes";
@@ -90,35 +88,27 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
 }
 
 ## Run user hook script here, if any
-if (-x "$doc_postinst_hook") {
-    system ("$doc_postinst_hook", $package, $version) &&
-	warn "User hook script $doc_postinst_hook failed";
+if (-x "$doc_postrm_hook") {
+    system ("$doc_postrm_hook", $package, $version) &&
+	warn "User hook script $doc_postrm_hook failed";
 }
 
-if (-d "/etc/kernel/doc_postinst.d") {
-  print STDERR "Examining /etc/kernel/doc_postinst.d.\n";
+if (-d "/etc/kernel/doc_postrm.d") {
+  print STDERR "Examining /etc/kernel/doc_postrm.d.\n";
   system ("run-parts --verbose --exit-on-error --arg=$version " .
           "--arg=$realimageloc$kimage-$version " .
-          "/etc/kernel/doc_postinst.d") &&
-            die "Failed to process /etc/kernel/doc_postinst.d";
+          "/etc/kernel/doc_postrm.d") &&
+            die "Failed to process /etc/kernel/doc_postrm.d";
 }
 
-if (-d "/etc/kernel/doc_postinst.d/$version") {
-  print STDERR "Examining /etc/kernel/doc_postinst.d/$version.\n";
+if (-d "/etc/kernel/doc_postrm.d/$version") {
+  print STDERR "Examining /etc/kernel/doc_postrm.d/$version.\n";
   system ("run-parts --verbose --exit-on-error --arg=$version " .
           "--arg=$realimageloc$kimage-$version " .
-          "/etc/kernel/doc_postinst.d/$version") &&
-            die "Failed to process /etc/kernel/doc_postinst.d/$version";
+          "/etc/kernel/doc_postrm.d/$version") &&
+            die "Failed to process /etc/kernel/doc_postrm.d/$version";
 }
 
-
-if (-l 'linux') {
-  if (-e "linux-$version" ){
-    if (! unlink "linux-$version") {
-      exit 0;
-    }
-  }
-}
 
 exit 0;
 

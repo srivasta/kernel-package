@@ -39,6 +39,13 @@ debian/stamp/install/$(d_package):
 	$(make_directory) $(DOCDIR)
 	$(make_directory) $(MAN9DIR)
 	$(make_directory) $(TMP_MAN)
+	$(make_directory) $(TMPTOP)/etc/kernel/doc_postinst.d
+	$(make_directory) $(TMPTOP)/etc/kernel/doc_preinst.d
+	$(make_directory) $(TMPTOP)/etc/kernel/doc_postrm.d
+	$(make_directory) $(TMPTOP)/etc/kernel/doc_prerm.d
+######################################################################
+#### Add documentation to /usr/share/doc
+######################################################################
 	$(install_file) debian/changelog          $(DOCDIR)/changelog.Debian
 	$(install_file) $(DEBDIR)/pkg/doc/README  $(DOCDIR)/README.Debian
 	echo "This was produced by kernel-package version $(kpkg_version)." > \
@@ -65,6 +72,9 @@ endif
 	   rm -rf $(DOCDIR)/Documentation/DocBook/man
 	test ! -d $(DOCDIR)/Documentation/DocBook ||                           \
 	   mv $(DOCDIR)/Documentation/DocBook $(DOCDIR)/html
+######################################################################
+#### 
+######################################################################
 ifneq ($(shell if [ $(VERSION) -ge 2 ] && [ $(PATCHLEVEL) -ge 5 ]; then \
 	                  echo new;fi),)
 		find -name Kconfig -print0 | xargs -0r cat | \
@@ -96,8 +106,17 @@ debian/stamp/binary/$(d_package):
 	$(make_directory) $(TMPTOP)/DEBIAN
 	$(eval $(deb_rule))
 	sed -e 's/=P/$(package)/g' -e 's/=V/$(KERNELRELEASE)/g' \
+		$(DEBDIR)/pkg/doc/postinst >        $(TMPTOP)/DEBIAN/preinst
+	chmod 755                                   $(TMPTOP)/DEBIAN/preinst
+	sed -e 's/=P/$(package)/g' -e 's/=V/$(KERNELRELEASE)/g' \
 		$(DEBDIR)/pkg/doc/postinst >        $(TMPTOP)/DEBIAN/postinst
 	chmod 755                                   $(TMPTOP)/DEBIAN/postinst
+	sed -e 's/=P/$(package)/g' -e 's/=V/$(KERNELRELEASE)/g' \
+		$(DEBDIR)/pkg/doc/postinst >        $(TMPTOP)/DEBIAN/prerm
+	chmod 755                                   $(TMPTOP)/DEBIAN/prerm
+	sed -e 's/=P/$(package)/g' -e 's/=V/$(KERNELRELEASE)/g' \
+		$(DEBDIR)/pkg/doc/postinst >        $(TMPTOP)/DEBIAN/postrm
+	chmod 755                                   $(TMPTOP)/DEBIAN/postrm
 	dpkg-gencontrol -isp -p$(package)         -P$(TMPTOP)/
 	$(create_md5sums)                           $(TMPTOP)
 	chmod -R og=rX                              $(TMPTOP)

@@ -70,6 +70,10 @@ check:
 	perl  -wc kernel/pkg/headers/postrm
 	perl  -wc kernel/pkg/headers/preinst
 	perl  -wc kernel/pkg/headers/prerm
+	perl  -wc kernel/pkg/doc/postinst
+	perl  -wc kernel/pkg/doc/postrm
+	perl  -wc kernel/pkg/doc/preinst
+	perl  -wc kernel/pkg/doc/prerm
 	bash  -n  kernel/pkg/headers/create_link
 	bash  -n  kernel/pkg/virtual/um/postinst
 	bash  -n  kernel/pkg/virtual/um/prerm

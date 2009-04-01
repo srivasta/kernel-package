@@ -38,8 +38,10 @@ my $arch              = "=A"; #  should be same as dpkg --print-installation-arc
 my $kernel_arch       = "=B";
 my $package_name    = "=ST-doc-$version";
 
-# Ignore all invocations uxcept when called on to configure.
-exit 0 unless ($ARGV[0] && $ARGV[0] =~ /configure/);
+die "Pre inst Internal error. Aborting." unless $version;
+
+exit 0 if $ARGV[0] =~ /abort-upgrade/;
+exit 1 unless $ARGV[0] =~ /(install|upgrade)/;
 
 #known variables
 my $image_dest      = "/";
@@ -69,8 +71,6 @@ my $doc_postinst_hook = '';
 my $doc_prerm_hook = '';
 my $doc_postrm_hook = '';
 
-# most of our work is done in /usr/src.
-chdir '/usr/src' or die "Could not chdir to /usr/src:$!";
 
 if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
   if (open(CONF, "$CONF_LOC")) {
@@ -79,10 +79,10 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
       s/\#.*$//g;
       next if /^\s*$/;
 
-      $doc_preinst_hook    = "$1"  if /doc_preinst_hook\s*=\s*(\S+)/ig;
-      $doc_postinst_hook   = "$1"  if /doc_postinst_hook\s*=\s*(\S+)/ig;
-      $doc_prerm_hook   = "$1"  if /doc_prerm_hook\s*=\s*(\S+)/ig;
-      $doc_postinst_hook   = "$1"  if /doc_postinst_hook\s*=\s*(\S+)/ig;
+      $doc_preinst_hook  = "$1"  if /doc_preinst_hook\s*=\s*(\S+)/ig;
+      $doc_postinst_hook = "$1"  if /doc_postinst_hook\s*=\s*(\S+)/ig;
+      $doc_prerm_hook    = "$1"  if /doc_prerm_hook\s*=\s*(\S+)/ig;
+      $doc_postinst_hook = "$1"  if /doc_postinst_hook\s*=\s*(\S+)/ig;
     }
     close CONF;
     $have_conffile = "Yes";
@@ -90,35 +90,27 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
 }
 
 ## Run user hook script here, if any
-if (-x "$doc_postinst_hook") {
-    system ("$doc_postinst_hook", $package, $version) &&
-	warn "User hook script $doc_postinst_hook failed";
+if (-x "$doc_preinst_hook") {
+    system ("$doc_preinst_hook", $package, $version) &&
+	warn "User hook script $doc_preinst_hook failed";
 }
 
-if (-d "/etc/kernel/doc_postinst.d") {
-  print STDERR "Examining /etc/kernel/doc_postinst.d.\n";
+if (-d "/etc/kernel/doc_preinst.d") {
+  print STDERR "Examining /etc/kernel/doc_preinst.d.\n";
   system ("run-parts --verbose --exit-on-error --arg=$version " .
           "--arg=$realimageloc$kimage-$version " .
-          "/etc/kernel/doc_postinst.d") &&
-            die "Failed to process /etc/kernel/doc_postinst.d";
+          "/etc/kernel/doc_preinst.d") &&
+            die "Failed to process /etc/kernel/doc_preinst.d";
 }
 
-if (-d "/etc/kernel/doc_postinst.d/$version") {
-  print STDERR "Examining /etc/kernel/doc_postinst.d/$version.\n";
+if (-d "/etc/kernel/doc_preinst.d/$version") {
+  print STDERR "Examining /etc/kernel/doc_preinst.d/$version.\n";
   system ("run-parts --verbose --exit-on-error --arg=$version " .
           "--arg=$realimageloc$kimage-$version " .
-          "/etc/kernel/doc_postinst.d/$version") &&
-            die "Failed to process /etc/kernel/doc_postinst.d/$version";
+          "/etc/kernel/doc_preinst.d/$version") &&
+            die "Failed to process /etc/kernel/doc_preinst.d/$version";
 }
 
-
-if (-l 'linux') {
-  if (-e "linux-$version" ){
-    if (! unlink "linux-$version") {
-      exit 0;
-    }
-  }
-}
 
 exit 0;
 
