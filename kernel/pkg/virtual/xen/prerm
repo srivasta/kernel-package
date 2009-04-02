@@ -35,9 +35,6 @@ set -e
 
 # Predefined values:
 version="=V";
-link_in_boot="=IB";   # Should be empty, mostly
-no_symlink="=S";   # Should be empty, mostly
-reverse_symlink="=R";   # Should be empty, mostly
 kimage="=K";   # Should be empty, mostly
 image_dir="=D";        # where the image is located
 initrd="=I";        # initrd kernel

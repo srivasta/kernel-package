@@ -76,13 +76,6 @@ endif
 
 
 #  Package specific stuff
-# decide if image is meant to be in /boot rather than /
-link_in_boot :=
-# Can we use symlinks?
-no_symlink :=
-# If so, where is the real file (usually, vmlinuz-X.X.X is real, and
-# vmlinuz is the link, this variable reverses it.
-reverse_symlink :=
 
 # The version numbers for kernel-image, kernel-headers and
 # kernel-source are deduced from the Makefile (see below,

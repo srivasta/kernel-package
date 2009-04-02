@@ -106,18 +106,6 @@ are set, then not providing a debian revision results in an error (and
 .B make\-kpkg
 shall not provide a default value of 10.0.0.Custom)
 .TP
-.B link_in_boot
-Set to True if you want the symbolic link to the kernel image, namely, 
-.I vmlinuz 
-in 
-.I /boot 
-rather than the default 
-.I /.  
-Can be overridden by the environment variable
-.B LINK_IN_BOOT. 
-Defaults to undefined.
-(Optional)
-.TP
 .B kimage         
 The kernel image type (i.e. zImage or bzImage). Can be
 overridden from the environment variable 
@@ -131,48 +119,6 @@ of
 Defaults to 
 .I bzImage.
 (Optional)
-.TP
-.B no_symlinks
-Whether to use symlinks to the 
-.I image
-file. Can be overridden by the environment variable
-.B NO_SYMLINK
-Mutually exclusive to 
-.I reverse_symlinks. 
-Can be used with
-.I link_in_boot. 
-The image is placed in vmlinuz (instead of /boot/vmlinuz\-X.X.XX). The
-old vmlinuz is moved to vmlinuz.old unconditionally. (Normally, that
-is only done if the version of the new image differs from the old
-one). This restricts you to two images, unless you take additional
-action and save copies of older images. This is for people who have
-.I /boot
-on a system that does not use symbolic links (and say, they use
-loadlin as a boot loader). This is a Hack.
-Defaults to  undefined (optional)
-.TP
-.B reverse_symlinks
-Whether to use reverse symlinks (that is, the real file is the one
-without the version number, and the numbered version is the link) to the 
-.I image
-file. Can be overridden by the environment variable
-.B REVERSE_SYMLINK
-Mutually exclusive to 
-.I no_symlinks.
-Can be used with
-.I link_in_boot.
-Just like 
-.I no_symlinks, 
-except that the
-/boot/vmlinuz\-X.XX is symlinked to the real new
-image, vmlinuz. This, too, restricts you to just two
-images unless further action is taken. The older
-symlinks are left dangling. This is for people with
-.I /boot
-on umsdos, and who can't see the link in dos, but
-do want to know the image version when in Linux. 
-This is a Hack.
-Defaults to  undefined. (optional)
 .TP
 .B config_target
 What type of configure step to do.

@@ -44,118 +44,10 @@ pair. Boolean values may be specified as
 and
 .I No, False, 0,
 and are case insensitive. 
-This file is automatically created by the installation script if
-it does not exist, and neither does the symbolic link
-.I /vmlinuz.
-The script asks the user whether the symbolic link should be created, 
-and stashes the answer into 
-.I /etc/kernel\-img.conf
+This file is automatically created by the installation script in
+certain circumstances.
 .PP
 At the moment, the user modifiable variables supported are:
-.TP
-.B link_in_boot 
-Set to Yes if you want the symbolic link to the kernel image, namely, 
-.I vmlinuz 
-in 
-.I /boot 
-rather than the default 
-.I /.  
-Defaults to No.
-.TP
-.B do_symlinks
-By default, the kernel image post installation script shall create or
-update the 
-.I /vmlinuz
-and 
-.I /vmlinuz.old 
-symbolic links. This is true if a 
-.I /vmlinuz
-link already exists, however, in absence of
-.I /vmlinuz,
-the script looks to see if this configuration file exists. If it does
-not, the configuration script asks the user whether to create the
-symbolic link, and stashes the answer in a newly created
-.I /etc/kernel\-img.conf.
-If the configuration file already exists, and 
-if this option is set to No, no symbolic link is ever created. This
-for people who have other means of booting their machines, and do not
-like the symbolic links cluttering up their / directory.  Defaults to Yes. 
-.TP
-.B minimal_swap
-By default, if the /vmlinuz symbolic link does not point to an image
-which is the same as the image being installed, the postinst moves
-/vmlinuz to /vmlinuz.old, and creates a symbolic link to the kernel
-image in /vmlinuz (the exception is to prevent both /vmlinuz and
-/vmlinuz.old from pointing to the current kernel image -- potentially
-disastrous if the current image is defective or lacking in any
-way). However, if this option is enabled, no action is taken if
-/vmlinuz.old points to the currently installed image (by default, the
-symbolic links are swapped).  Defaults to no.
-.TP
-.B no_symlinks
-Whether to use symlinks to the 
-.I image
-file. 
-Mutually exclusive to 
-.I reverse_symlinks. 
-Can be used with
-.I link_in_boot.
-If set to Yes, the real image is placed in vmlinuz (instead of
-/boot/vmlinuz\-X.X.XX). If you use link_in_boot in conjunction with
-this, /boot/vmlinuz\-X.X.XX is moved to /boot/vmlinuz.  The old vmlinuz
-is moved to vmlinuz.old unconditionally. (Normally, that is only done
-if the version of the new image differs from the old one). This
-restricts you to two images, unless you take additional action and
-save copies of older images. This is for people who have
-.I /boot 
-on a system that does not use symbolic links (and say, they use
-loadlin as a bootloader). This is a Hack.
-Defaults to No. 
-.TP
-.B reverse_symlinks
-Whether to use reverse symlinks (that is, the real file is the one
-without the version number, and the number version is the link) to the 
-.I image
-file. 
-Mutually exclusive to 
-.I no_symlinks.
-Can be used with
-.I link_in_boot.
-Just like 
-.I no_symlinks, 
-except that the
-/boot/vmlinuz\-X.XX is a symbolic link to the real new
-image, vmlinuz. This, too, restricts you to just two
-images unless further action is taken. The older
-symlinks are left dangling. This is for people with
-.I /boot 
-on umsdos, and who can't see the link in dos, but
-do want to know the image version when in Linux. 
-This is a Hack.
-Defaults to  No.
-.TP
-.B image_dest 
-If you want the symbolic link (or image, if 
-.B move_image 
-is set) to be stored elsewhere than
-.I /
-set this variable to the dir where you want the symbolic link.
-Please note that this is not a boolean variable.  This may be of
-help to
-.B loadlin
-users, who may set both this and
-.B move_image 
-Defaults to 
-.I /.
-This can be used in conjunction with all above options except
-.B link_in_boot,
-which would not make sense. (If both 
-.B image_dest 
-and 
-.B link_in_boot
-are set, 
-.B link_in_boot
-overrides)
 .TP
 .B postinst_hook 
 Set this variable to a script to be executed during installation. The
@@ -272,24 +164,6 @@ of the package being installed (kernel\-headers\-X.X.XX), and the second argumen
 of the package being installed. Errors in the script shall cause the
 postinst to fail. 
 .TP
-.B move_image 
-Instead of creating symbolic links to (or, if 
-.B reverse_symlinks 
-is set, from)
-.B image_dest,
-the image is moved from its location in
-.I /boot
-into 
-.B image_dest.
-If 
-.B reverse_symlinks 
-is set, 
-.I /boot
-shall contain a symbolic link to the actual image.
-This option can be useful to people using loadlin, who may need the
-image to be moved to a different, dos partition.
-This variable is unset by default.
-.TP
 .B clobber_modules
 If set, the preinst shall silently try to move /lib/modules/version
 out of the way if it is the same version as the image being
@@ -305,13 +179,6 @@ may not run correctly on the running kernel if the kernel ABI has
 changed in the meanwhile. It is a good idea to reboot, and this is a
 note to remind you. If you know what you are doing, you can set this
 variable to no. This variable is set by default.
-.TP
-.B relative_links
-If set to yes, the kernel image postinst script shall go to extra
-ordinary lengths to ensure that the symbolic links are
-relative. Normally, the symbolic links are relative when it is easily
-determinable that relative links shall work. Defaults to No.
-.TP
 .B do_initrd
 Set to YES to prevent the
 .I kernel\-image
@@ -332,23 +199,6 @@ to be able to boot the initrd image. This is now preferred to
 since 
 .I warnings
 are what are prevented. Default: YES
-.TP
-.B use_hard_links
-This option has been put in for the people who can't handle symbolic
-links (a boot loader that does not handle symbolic links, for
-example). If set to YES, this shall cause the kernel image  postinst
-to use hard link instead of symbolic links for the automatically
-handled /vmlinuz and /vmlinuz.old.  I have tried to make it compatible
-with 
-.B move_image
-and
-.B reverse_symlinks
-Caveat: It is up to the end user to ensure that the 
-.B image_dest
-directory and the location of the image (nominally /boot) live on the
-same file system (since one can't make hard links across file
-systems). 
-.B You have been warned.
 .TP
 .B relink_build_link
 This option manipulates the build link created by recent kernels. If

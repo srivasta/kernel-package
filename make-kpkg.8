@@ -489,18 +489,6 @@ and the kernel versions is passed in through the environment variable
 .B version
 for all these scripts.
 .IP
-On initial installation, the image package updates symbolic links in
-the symbolic link destination directory (the root directory by
-default) to point to the new kernel image in the image directory,
-which is nominally
-.I /boot.
-If the symbolic link already points to the current kernel image, no
-action is taken.  If a prior symbolic link exists, it is rotated out
-with a suffix.old, and a new symbolic link, properly updated is
-installed in its place (the variable minimal_swap in 
-.I /etc/kernel\-img.conf
-further modifies this behaviour). No action is taken on upgrades.
-.IP
 Please see the documentation about hooks in
 .B kernel\-img.conf(5).
 These hooks are variables that can be pointed by the local sysadmin to

@@ -343,35 +343,9 @@ debian 		The Debian revision of the kernel packages. Can be set
 		from the environment variable DEBIAN_REVISION. Defaults
 		to 1.0.
 
-link_in_boot	Set to True if you want the kernel image symlink (vmlinuz)
-                in /boot rather than the default /. Can be set from the
-		environment variable LINK_IN_BOOT. Defaults to
-		undefined. 
-
 kimage		The kernel image type (i.e. zImage or bzImage). Can be
 		set from the environment variable IMAGE_TYPE. Defaults
 		to bzImage.
-
-no_symlinks     Mutually exclusive to reverse_symlinks Can be used with
-                link_in_boot. The image is placed in vmlinuz (instead
-                of /boot/vmlinuz-X.X.XX). The old vmlinuz is moved to
-                vmlinuz.old unconditionally. (Normally, that is only
-                done if the version of the new image differs from the
-                old one). This restricts you to two images, unless you
-                take additional action and save copies of older
-                images. This is for people who have /boot on a system
-                that does not use symlinks (and say, they use loadlin)
-                This is a Hack.
-
-reverse_symlinks Mutually exclusive to no_symlinks. Can be used with
-                link_in_boot. Just like no_symlinks, except that the
-                /boot/vmlinuz-X.XX is symlinked to the real new
-                image, vmlinuz. This too restricts you to just two
-                images unless further action is taken. The older
-                symlinks are left dangling. This is for people with
-                /boot on umsdos, and who can't see the link in dos, 
-                but do want to know the image version when in Linux. 
-                This is a Hack.
 
 image_dest    If  you  want  the  symbolic  link  (or  image,  if
               move_image is set) to be stored elsewhere than /
@@ -379,10 +353,7 @@ image_dest    If  you  want  the  symbolic  link  (or  image,  if
               symbolic  link.   Please  note  that  this is not a
               boolean variable.  This may be of help  to  loadlin
               users,  who  may  set  both  this  and  move_image.
-              Defaults to /. This can be used in conjunction with
-              all above options except link_in_boot, which would
-              not   make   sense.   (If   both   image_dest   and
-              link_in_boot are set, link_in_boot overrides).
+              Defaults to /. 
 
 root_cmd         This should be set to a means of gaining superuser
                  access (for example, `sudo' or `fakeroot') as needed
@@ -442,50 +413,6 @@ and such. With this in mind, there is the configuration file
 /etc/kernel-img.conf which sits on the target machine (the machine
 that the dpkg -i is run on, which need not be the same machine the
 kernel was compiled on), and that allows you to tweak these variables: 
-
-This file is automatically created by the installation script if it
-does not exist, and neither does the symbolic link /vmlinuz.  The
-script asks the user whether the symbolic link should be created, and
-stashes the answer into /etc/kernel-img.conf
-
-no_symlinks     Mutually exclusive to reverse_symlinks Can be used with
-                link_in_boot. The image is placed in vmlinuz (instead
-                of /boot/vmlinuz-X.X.XX). The old vmlinuz is moved to
-                vmlinuz.old unconditionally. (Normally, that is only
-                done if the version of the new image differs from the
-                old one). This restricts you to two images, unless you
-                take additional action and save copies of older
-                images. This is for people who have /boot on a system
-                that does not use symlinks (and say, they use loadlin)
-                This is a Hack.
-
-reverse_symlinks Mutually exclusive to no_symlinks. Can be used with
-                link_in_boot. Just like no_symlinks, except that the
-                /boot/vmlinuz-X.XX is symlinked to the real new
-                image, vmlinuz. This too restricts you to just two
-                images unless further action is taken. The older
-                symlinks are left dangling. This is for people with
-                /boot on umsdos, and who can't see the link in dos, but
-                do want to know the image version when in Linux. 
-                This is a Hack.
-
-do_symlinks   By  default,  the  kernel  image  post installation
-              script shall create or update the /vmlinuz and
-              /vmlinuz.old symbolic links.  This is true if a /vmlinuz
-              link already exists, however, in absence of /vmlinuz,
-              the script looks to see if this configuration file
-              exists. If it does not, the configuration script asks
-              the user whether to create the symbolic link, and
-              stashes the answer in a newly created
-              /etc/kernel-img.conf.  If the configuration file already
-              exists, and if this option is set to no, no symbolic
-              link is ever created. This for people who have other
-              means of booting their machines, and do not like the
-              symbolic links cluttering up their / directory.
-
-link_in_boot	Set to True if you want the kernel image symlink
-                (vmlinuz) in /boot rather than the default /.
-                Defaults to undefined. 
 
 image_dest    If  you  want  the  symbolic  link  (or  image,  if
               move_image is set)   to be stored elsewhere than  /
@@ -644,10 +571,6 @@ sample script to add lines to a grub menu file is included in the dir
  can be put in a script and added to the postrm hook script to remove
  the lines added by kernel_grub_conf.sh
 
-So that loadlin people don't feel left out, all this talk about LILO
-does not mean to ignore loadlin, you can use the generated
-kernel-image just as easily (simply ignore the fol-de-rol with symlinks
-in /). For instance, you could:
 
  [1]# dpkg -BRGiE kernel-image-X.X.XX, # need to be root
         and then
@@ -938,10 +861,9 @@ next kernel compilation, but you have not yet compiled it.
    computer). This step is a Debian-way of compiling the kernel. The
    "other" way is to do it manually, which consists of several steps
    such as "make dep" and "make modules" and "make modules_install"
-   and manually finding and moving the kernel to where it needs to be
-   and setting up symlinks and configuring lilo.conf and running
-   lilo. The Debian-way is much easier. The result will be a file
-   named something like "kernel-image-2.4.18_2.4.18-10.00.Custom_i386.deb",
+   and manually finding and moving the kernel to where it needs to
+   be. The Debian-way is much easier. The result will be a file named
+   something like "kernel-image-2.4.18_2.4.18-10.00.Custom_i386.deb",
    one level up, in "/usr/local/src".
 
    You can try reading the documentation in the "kernel-package"

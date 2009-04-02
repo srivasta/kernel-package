@@ -103,12 +103,8 @@ system being aware of these packages).
 .TP
 .B x) Maintainer script services
 Since the kernel image package is a full fledged Debian package, it
-comes with maintainer scripts, which take care of details like
-offering to make a boot disk, manipulating symbolic links in / so that
-you can make boot loader scripts static (just refer to the symbolic
-links, rather than the real image files; the names of the symbolic
-links do not change, but the kernel image file names change with the
-version).
+comes with maintainer scripts, which allow the user to add hook
+scripts to run when the package status changes.
 .TP
 .B xi) Sub architecture support
 There is support for the multitudinous sub architectures that have

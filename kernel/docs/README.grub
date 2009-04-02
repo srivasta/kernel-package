@@ -9,11 +9,6 @@ perfect on my system with the following kernel-package configuration:
 
 ,----
 | $ cat /etc/kernel-img.conf
-| link_in_boot = yes
-| do_symlinks = yes
-| no_symlinks = no
-| relative_links = yes
-| reverse_symlink = no
 |
 | postinst_hook = /usr/local/sbin/kernel_grub_conf.sh
 | postrm_hook = /usr/local/sbin/kernel_grub_rm.sh

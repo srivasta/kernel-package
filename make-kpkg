@@ -448,10 +448,7 @@ B<kernel_doc> and B<kernel_image>.
 =over 3
 
 This target produces a debianised package of the Linux kernel
-sources. The package produced also has scripts called at install and
-delete times that manage the symbolic link I</usr/src/linux> and
-ensure that the link is pointed at the latest source/header package on
-the system.
+sources.
 
 =back
 
@@ -460,10 +457,7 @@ the system.
 =over 3
 
 This target produces a Debian package containing the header files
-included in the Linux kernel. The package produced also has scripts
-called at install and delete times that manage the symbolic link
-I</usr/src/linux> and ensure that the link is pointed at the latest
-source/header package on the system.
+included in the Linux kernel.
 
 =back
 
@@ -491,12 +485,8 @@ pages included in the Linux kernel.
 
 This target produces a Debian package of the Linux kernel source
 image, and any modules configured in the kernel configuration file
-I<.config>.  If there is no I<.config> file in the kernel source
-directory, a default configuration is provided similar to the one used
-to create the B<Debian> boot-floppies.  The package produced updates
-the symbolic links in the root directory to point to the new kernel
-image in I</boot>.  On deletion, the package checks the version of the
-kernel running, and refuses to delete a running kernel.
+I<.config>.  On deletion, the package checks the version of the kernel
+running, and refuses to delete a running kernel.
 
 =back
 

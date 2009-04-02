@@ -181,22 +181,6 @@ delete_build_link := NO
 endif
 endif
 
-ifneq ($(strip $(IMAGE_IN_BOOT)),)
-link_in_boot := $(IMAGE_IN_BOOT)
-endif
-
-ifneq ($(strip $(LINK_IN_BOOT)),)
-link_in_boot := $(LINK_IN_BOOT)
-endif
-
-ifneq ($(strip $(NO_SYMLINK)),)
-no_symlink := $(NO_SYMLINK)
-endif
-
-ifneq ($(strip $(REVERSE_SYMLINK)),)
-reverse_symlink := $(REVERSE_SYMLINK)
-endif
-
 ifneq ($(strip $(IMAGE_TYPE)),)
 kimage = $(IMAGE_TYPE)
 endif

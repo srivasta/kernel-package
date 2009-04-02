@@ -110,18 +110,6 @@ están establecidas, entonces, la falta de una revisión de Debian causa un error 
 .B make\-kpkg
 no proporcionará un valor por omisión de 10.0.0.Custom)
 .TP
-.B link_in_boot
-Póngalo a True si quiere el enlace simbólico a la imagen del núcleo, llamado
-.I vmlinuz 
-en 
-.I /boot 
-en vez de en el sitio predeterminado 
-.I /.  
-Puede ser modificado mediante la variable de entorno
-.B LINK_IN_BOOT. 
-Por omisión está indeterminado.
-(Opcional)
-.TP
 .B kimage         
 El tipo de imagen del núcleo (e.g. zImage o bzImage). Puede ser modificado
 mediante la variable de entorno
@@ -135,46 +123,6 @@ de
 Por omisión es 
 .I bzImage.
 (Opcional)
-.TP
-.B no_symlinks
-Determina si se usan o no enlaces al fichero con la 
-.I imagen.
-Puede ser modificado mediante la variable de entorno
-.B NO_SYMLINK
-Mutuamente excluyente con
-.I reverse_symlinks. 
-Puede usarse con
-.I link_in_boot. 
-La imagen se coloca en vmlinuz (en vez de en /boot/vmlinuz\-X.X.XX). El vmlinuz
-anterior se mueve a vmlinuz.old incondicionalmente. (Normalmente, sólo se hace
-si la versión de la nueva imagen difiere de la anterior). Esto le restringe a
-dos imágenes, a menos que usted tome medidas adicionales y guarde copias de
-imágenes anteriores. Esto es para aquellos que tienen
-.I /boot
-en un sistema que no usa los enlaces simbólicos (y digamos, que usan loadlin
-como gestor de arranque). Esto es una chapuza.
-Por omisión está indefinido (opcional)
-.TP
-.B reverse_symlinks
-Determina si se usan enlaces simbólicos invertidos (esto es, el fichero real es
-el que no tiene número de versión, la versión numerada es el enlace) al fichero
-con la
-.I imagen.
-Puede ser modificado mediante la variable de entorno
-.B REVERSE_SYMLINK
-Mutuamente excluyente con
-.I no_symlinks.
-Se puede usar junto con
-.I link_in_boot.
-Igual que
-.I no_symlinks, 
-excepto porque /boot/vmlinuz\-X.XX es enlazado con la nueva imagen real,
-vmlinuz. Esto también le restringe a dos imágenes a menos que tome alguna acción
-adicional. Los enlaces anteriores quedan colgando. Esto es para aquellos con
-.I /boot
-en umsdos, y no pueden ver el enlace en dos, pero quieren saber el número de la
-versión cuando estén en Linux. Esto es una chapuza.
-Por omisión está sin definir. (opcional)
 .TP
 .B config_target
 Define el tipo de configuración a usar. Por omisión es oldconfig, lo que está
