@@ -312,6 +312,12 @@ shall not have any effect)
          beginning)
    $Get_Root make-kpkg --initrd --revision=3:custom.2.0 kernel_image
 
+With the new kernel-package conventions, you also need the example
+scripts in /etc/kernel/postinst.d/ and /etc/kernel/postrm.d, to create
+and remove the initramfs. Make sure that these scripts pay attention
+to the INITRD env variable to determine whether or not to take any
+action.
+
 When make-kpkg is finished, you'll have 
 kernel-image-2.0.29_custom.1.0_i386.deb and all it takes now is to
 install the package (as root):

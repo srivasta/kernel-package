@@ -267,24 +267,11 @@ printed  to  the  screen  while executed.  This is very useful for debugging.
 =over 2
 
 If make-kpkg is generating a linux-image package, perform any actions
-necessary for a kernel loaded using initrd. B<NOTE:> in older kernels,
-this required a non-standard cramfs initrd patch to the kernel, unless
-the mkinitrd configuration was modified not to use cramfs. The patch
-usually shipped with B<Debian>.  Some architectures still need patches
-to fix cramfs problems.
+necessary for a kernel loaded using initrd
 
 This may include extra dependencies, and modifications to maintainer
 scripts.  It has no effect when make-kpkg is not making a linux-image
 package.(The INITRD_OK variable is now obsolete).
-
-=back
-
-=item B<--mkimage> foo
-
-=over 2
-
-This should be a command that produces an initrd image given a directory.
-It is passed to the I<mkinitrd> as B<-m> option.
 
 =back
 
@@ -372,7 +359,6 @@ usage: $main::MYNAME [options] target [target ...]
  --arch_in_name        Embed the subarch in the image package name
  --stem     foo        Call the packages foo-* instead of kernel-*
  --initrd              Create a image package suitable for initrd.
- --mkimage  foo        Command to generate the initrd image.
  --pgpsign  name       An ID used to sign the changes file using pgp.
  --config target       Change the type of configure done from the  default
                        oldconfig.
@@ -937,13 +923,6 @@ EOMSG
   if ($initrd) {
     $command .= " INITRD=YES ";
     $alt_cmd .= " INITRD=YES "
-      unless -f "debian/ruleset/kernel_version.mk";
-  }
-  if ($mkimage) {
-    my $temp_string = $mkimage;
-    $temp_string =~ s/\$/$$/g;
-    $command .= " MKIMAGE='$temp_string' ";
-    $alt_cmd .= " MKIMAGE='$temp_string' "
       unless -f "debian/ruleset/kernel_version.mk";
   }
   if ($root_cmd){

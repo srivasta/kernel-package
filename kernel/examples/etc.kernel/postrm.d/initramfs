@@ -1,0 +1,19 @@
+#! /bin/sh
+
+set -e
+
+if [ -n "$INITRD" ] && [ "$INITRD" = 'No' ]; then
+    exit 0
+fi
+
+# passing the kernel version is required
+[ -z "$1" ] && exit 1
+
+if [  -n "$2" ]; then
+    # Where is the image located? We'll place the initrd there.
+    boot=$(dirname "$2")
+    bootarg="-b $boot"
+fi
+
+# 
+update-initramfs -d -k "$1" $bootarg

@@ -26,9 +26,6 @@ my $kimage            = "=K";   # Should be empty, mostly
 my $image_dir         = "=D";        # where the image is located
 my $clobber_modules   = '';          # target machine defined
 my $initrd            = "=I";        # initrd kernel
-my $mkimage           = "=M";   # command to generate the initrd image
-my $do_initrd         = '';     # Normally we do not
-my $warn_initrd       = 'YES';  # Normally we do
 my $postinst_hook     = '';          #Normally we do not
 my $postrm_hook       = '';          #Normally we do not
 my $preinst_hook      = '';          #Normally we do not
@@ -39,8 +36,6 @@ my $relink_build_link = 'YES'; # There is no harm in checking the link
 my $force_build_link  = '';    # There is no harm in checking the link
 my $arch              = "=A"; #  should be same as dpkg --print-installation-architecture
 my $kernel_arch       = "=B";
-my $ramdisk           = "=MK";  # List of tools to create initial ram fs.
-my $initrddep         = "=MD";  # List of dependencies for such tools
 my $package_name    = "=ST-image-$version";
 
 #known variables
@@ -68,8 +63,6 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
 
       $move_image      = "" if /move_image\s*=\s*(no|false|0)\s*$/ig;
       $clobber_modules = '' if /clobber_modules\s*=\s*(no|false|0)\s*$/ig;
-      $do_initrd       = '' if /do_initrd\s*=\s*(no|false|0)\s*$/ig;
-      $warn_initrd     = '' if /warn_initrd\s*=\s*(no|false|0)\s*$/ig;
       $silent_modules  = '' if /silent_modules\s*=\s*(no|false|0)\s*$/ig;
       $ignore_depmod_err = '' if /ignore_depmod_err\s*=\s*(no|false|0)\s*$/ig;
       $relink_src_link   = '' if /relink_src_link\s*=\s*(no|false|0)\s*$/ig;
@@ -78,7 +71,6 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
 
       $move_image      = "Yes" if /move_image\s*=\s*(yes|true|1)\s*$/ig;
       $clobber_modules = "Yes" if /clobber_modules\s*=\s*(yes|true|1)\s*$/ig;
-      $warn_initrd     = "Yes" if /warn_initrd\s*=\s*(yes|true|1)\s*$/ig;
       $silent_modules  = 'Yes' if /silent_modules\s*=\s*(yes|true|1)\s*$/ig;
       $ignore_depmod_err = 'Yes' if /ignore_depmod_err\s*=\s*(yes|true|1)\s*$/ig;
       $relink_src_link   = 'Yes' if /relink_src_link\s*=\s*(yes|true|1)\s*$/ig;
@@ -140,45 +132,6 @@ if (-d "$kimage" ) {
     die "Error asking debconf question $note: $seen";
   }
 }
-
-if ($initrd && -l "$image_dest/initrd" ) {
-  my $ret;
-  my $seen;
-  my $question = "${package_name}/postinst/old-initrd-link-$version";
-
-  ($ret,$seen) = input('medium', "$question");
-  if ($ret && $ret != 30 ) {
-    die "Error setting debconf question $question: $seen";
-  }
-
-  ($ret,$seen) = go ();
-  if ($ret && $ret != 30 ) {
-    die "Error asking debconf question $question: $seen";
-  }
-}
-
-if ($initrd && -l "$image_dir/initrd" && ! $link_in_boot) {
-  my $ret;
-  my $seen;
-  my $question = "${package_name}/postinst/old-dir-initrd-link-$version";
-
-  $ret = subst("$question", 'image_dir', "$image_dir");
-  die "Error setting debconf substitutions in $question: $seen" if $ret;
-
-  $ret = subst("$question", 'image_dest', "$image_dest");
-  die "Error setting debconf substitutions in $question: $seen" if $ret;
-
-  ($ret,$seen) = input('medium', "$question");
-  if ($ret && $ret != 30 ) {
-    die "Error setting debconf question $question: $seen";
-  }
-
-  ($ret,$seen) = go ();
-  if ($ret && $ret != 30 ) {
-    die "Error asking debconf question $question: $seen";
-  }
-}
-
 
 # We used to have System.* files in /
 if (-e "/System.map" || -e "/System.old") {

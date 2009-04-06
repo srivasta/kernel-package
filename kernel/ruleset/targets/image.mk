@@ -235,20 +235,16 @@ ifneq ($(strip $(KERNEL_ARCH)),um)
 	    -e 's/=ST/$(INT_STEM)/g'  -e 's/=R/$(reverse_symlink)/g' \
 	    -e 's/=K/$(kimage)/g'   	     \
 	    -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'	     \
-	    -e 's/=MD/$(initrddep)/g'				     \
-	    -e 's@=MK@$(initrdcmd)@g' -e 's@=A@$(DEB_HOST_ARCH)@g'   \
-	    -e 's@=M@$(MKIMAGE)@g'    -e 's/=OF/$(AM_OFFICIAL)/g'    \
-	    -e 's/=S/$(no_symlink)/g' -e 's@=B@$(KERNEL_ARCH)@g'     \
+	    -e 's@=A@$(DEB_HOST_ARCH)@g'   \
+	    -e 's@=B@$(KERNEL_ARCH)@g'     \
 	  $(DEBDIR)/pkg/image/postinst > $(TMPTOP)/DEBIAN/postinst
 	chmod 755 $(TMPTOP)/DEBIAN/postinst
 	sed -e 's/=V/$(KERNELRELEASE)/g'	   -e 's/=IB/$(link_in_boot)/g' \
 	    -e 's/=ST/$(INT_STEM)/g'  -e 's/=R/$(reverse_symlink)/g' \
 	    -e 's/=K/$(kimage)/g'   	     \
 	    -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'	     \
-	    -e 's/=MD/$(initrddep)/g'				     \
-	    -e 's@=MK@$(initrdcmd)@g' -e 's@=A@$(DEB_HOST_ARCH)@g'   \
-	    -e 's@=M@$(MKIMAGE)@g'    -e 's/=OF/$(AM_OFFICIAL)/g'    \
-	    -e 's/=S/$(no_symlink)/g'  -e 's@=B@$(KERNEL_ARCH)@g'    \
+	    -e 's@=A@$(DEB_HOST_ARCH)@g'   \
+	    -e 's@=B@$(KERNEL_ARCH)@g'    \
 	 $(DEBDIR)/pkg/image/config > $(TMPTOP)/DEBIAN/config
 	chmod 755 $(TMPTOP)/DEBIAN/config
 	sed -e 's/=V/$(KERNELRELEASE)/g'	   -e 's/=IB/$(link_in_boot)/g' \

@@ -38,9 +38,7 @@ version="=V";
 kimage="=K";   # Should be empty, mostly
 image_dir="=D";        # where the image is located
 initrd="=I";        # initrd kernel
-mkimage="=M";        # command to generate the initrd image
 subarch="=SA";          # should be xen0 or xenu 
-ramdisk='/usr/sbin/mkinitrd'    # Tool to create initial ram fs.
 realimageloc="/$image_dir/";
 realimageloc=$(echo $realimageloc | sed -e 's|^/*|/|' -e 's|/+|/|g')
 
@@ -182,12 +180,6 @@ case "$1" in
 
         ### done! now we'll just clear up our cruft.
         #rm -f $tempfile
-
-        if [ -n "$initrd" ]; then
-            echo "Please manually create an initrd image"
-        fi
-        
-
 
         # There are three sub-cases:
         if test "${2+set}" != set; then

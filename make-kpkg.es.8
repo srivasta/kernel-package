@@ -327,17 +327,6 @@ Crea una imagen del núcleo del tipo zImage en vez de bzImage (predeterminada).
 Crea un núcleo bzImage. Útil para gente que quiera un núcleo bzImage donde el
 núcleo predeterminado es un zImage. 
 .TP
- .B \-\-mkimage
-Debe ser una orden que produzca una imagen initrd dado un directorio. Se pasa a
-la opción
-.I \-m
-del programa
-.I mkinitrd.
-Por ejemplo, puede ser
- "genromfs \-d %s \-f %s"
-o
- "mkcramfs %s %s"
-.TP
 .B \-\-rootcmd tal
 La orden que proporciona acceso de superusuario (por ejemplo, `sudo' o
 `fakeroot'), necesitado por la opción \-r de dpkg\-buildpackage.
@@ -711,7 +700,6 @@ y es recomendable que lo lea antes de usar esta utilidad.
 .SH "VÉASE TAMBIÉN"
 .BR kernel\-pkg.conf (5),
 .BR kernel\-img.conf (5),
-.BR mkinitrd (8),
 .BR Getopt::Long (3perl),
 .BR dpkg\-deb (1),
 .BR dpkg\-source (1),

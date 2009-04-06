@@ -86,7 +86,9 @@ check:
 	bash  -n  kernel/examples/kernel_grub_conf.sh
 	bash  -n  kernel/examples/kernel_grub_rm.sh
 	bash  -n  kernel/examples/sample.posthook.sh
-	bash -n kernel/examples/etc.kernel/header_postinst.d/link
+	bash  -n  kernel/examples/etc.kernel/header_postinst.d/link
+	bash  -n  kernel/examples/etc.kernel/postinst.d/initramfs
+	bash  -n  kernel/examples/etc.kernel/postrm.d/initramfs
 
 install: genpo4a
 	$(make_directory)  $(MAN1DIR)

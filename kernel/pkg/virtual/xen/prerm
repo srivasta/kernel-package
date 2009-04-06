@@ -38,7 +38,6 @@ version="=V";
 kimage="=K";   # Should be empty, mostly
 image_dir="=D";        # where the image is located
 initrd="=I";        # initrd kernel
-mkimage="=M";        # command to generate the initrd image
 subarch="=SA";		# should be xen0 or xenu
 
 package_name="kernel-$subarch-$version";

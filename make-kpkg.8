@@ -274,17 +274,7 @@ is generating a
 package, perform any actions
 necessary for a kernel loaded using 
 .B initrd.  
-.B NOTE:
-in older kernels, this required a non\-standard cramfs initrd patch to
-the kernel sources, (unless the mkinitrd configuration was modified
-not to use cramfs) or may result in a unbootable kernel. The patch was
-usually present in the kernel sources shipped by Debian.  Some
-architectures still need patches to fix cramfs problems. This option
-may include extra dependencies, and modifications to maintainer
-scripts.  It has no effect when
-.B make\-kpkg is not making a 
-.I kernel\-image 
-package. The same effect can be achieved by setting the environment
+The same effect can be achieved by setting the environment
 variable
 .B INITRD
 to any non empty value. 
@@ -296,17 +286,6 @@ Useful for people having problems with bzImage kernels.
 .B \-\-bzimage
 Makes a bzImage kernel. Useful for people who want a bzImage kernel on
 sites where the default is zImage kernels. 
-.TP
-.B \-\-mkimage
-This should be a command that produces an initrd image given a
-directory. It is passed to the 
-.I mkinitrd
-program's 
-.I \-m
-option. For example, it can be
-  "genromfs \-d %s \-f %s"
-or
-  "mkcramfs %s %s"
 .TP
 .B \-\-rootcmd foo
 The command that provides a means of gaining super user access (for
@@ -690,7 +669,6 @@ and it is recommended that one read that before using this utility.
 .SH "SEE ALSO"
 .BR kernel\-pkg.conf (5),
 .BR kernel\-img.conf (5),
-.BR mkinitrd (8),
 .BR Getopt::Long (3perl),
 .BR dpkg\-deb (1),
 .BR dpkg\-source (1),

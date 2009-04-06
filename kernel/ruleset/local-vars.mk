@@ -50,7 +50,6 @@ include $(DEBDIR)/ruleset/misc/pkg_names.mk
 
 $(eval $(which_debdir))
 include $(DEBDIR)/ruleset/misc/config.mk
-include $(DEBDIR)/ruleset/misc/initrd.mk
 include $(DEBDIR)/ruleset/misc/patches.mk
 include $(DEBDIR)/ruleset/misc/modules.mk
 include $(DEBDIR)/ruleset/misc/checks.mk

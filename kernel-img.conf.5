@@ -117,24 +117,6 @@ postinst does call
 .B db_stop
 , debconf does not restore stdout, so messages to stdout disappear.  
 .TP
-.B ramdisk
-Set this variable to a space separated list of executables that create
-an initial RAM disk. This only has any effect if installing a
-kernel-image that uses an initial RAM disk. The commands so pointed
-must be drop-in compatible with
-.I mkinitrd.
-Using the command line options
-.I --supported-host-version
-and
-.I --supported-target-version, 
-these executables are queried at installation time to see if the
-combination of the currently running kernel as host kernel, and the
-kernel version being installed as the target kernel, and removed from
-the list if not.  The first viable tool is used to create the actual
-initial RAM disk. The install shall fail if no suitable tool is found.
-Defaults to a subset of
-.I "mkinitrd mkinitrd.yaird mkinitramfs"
-.TP
 .B src_postinst_hook 
 Unlike the other hook variables, this is meant for a script run during
 the post inst of a docs, headers or a source package. Using this hook
@@ -179,26 +161,6 @@ may not run correctly on the running kernel if the kernel ABI has
 changed in the meanwhile. It is a good idea to reboot, and this is a
 note to remind you. If you know what you are doing, you can set this
 variable to no. This variable is set by default.
-.B do_initrd
-Set to YES to prevent the
-.I kernel\-image
-post installation script from issuing a warning when installing an
-initrd kernel. This assumes you have correctly set up your boot loader
-to be able to boot the initrd image. Default: no. This is deprecated
-in favor of the more descriptive
-.B warn_initrd
-option (please note that the sense of the option is inverted).
-.TP
-.B warn_initrd
-Set to NO to prevent the
-.I kernel\-image
-post installation script from issuing a warning when installing an
-initrd kernel. This assumes you have correctly set up your boot loader
-to be able to boot the initrd image. This is now preferred to 
-.B do_initrd,
-since 
-.I warnings
-are what are prevented. Default: YES
 .TP
 .B relink_build_link
 This option manipulates the build link created by recent kernels. If
@@ -218,17 +180,6 @@ symlinks by default.
 This option manipulates the source link created by recent kernels. If
 the link is a dangling link it is deleted at install time. The default
 is to relink (delete) the source link (YES).
-.TP
-.B mkimage
-This should be a command that produces an initrd image given a
-directory. It is passed to the 
-.I mkinitrd
-program's 
-.I \-m
-option. For example, it can be
-  mkimage=genromfs \-d %s \-f %s
-or
-  mkimage=mkcramfs %s %s
 .TP
 .B silent_modules
 This option has been put in for the people who are vastly irritated on

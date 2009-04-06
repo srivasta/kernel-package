@@ -26,9 +26,6 @@ $|=1;
 # Predefined values:
 my $version         = "=V";
 my $move_image      = '';       # target machine defined
-my $mkimage         = "=M";     # command to generate the initrd image
-my $do_initrd       = '';       # target machine defined
-my $warn_initrd     = 'YES';    # target machine defined
 my $kimage          = "=K";     # Should be empty, mostly
 my $image_dir       = "=D";     # where the image is located
 my $clobber_modules = '';       # target machine defined
@@ -43,8 +40,6 @@ my $relink_build_link = 'YES'; # There is no harm in checking the link
 my $force_build_link  = '';	 # There is no harm in checking the link
 my $arch              = "=A";  #  should be same as dpkg --print-installation-architecture
 my $kernel_arch       = "=B";
-my $ramdisk           = "=MK";  # List of tools to create initial ram fs.
-my $initrddep         = "=MD";  # List of dependencies for such tools
 my $package_name    = "=ST-image-$version";
 
 #known variables
@@ -76,8 +71,6 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
 
       $move_image      = "" if /move_image\s*=\s*(no|false|0)\s*$/ig;
       $clobber_modules = '' if /clobber_modules\s*=\s*(no|false|0)\s*$/ig;
-      $do_initrd       = '' if /do_initrd\s*=\s*(no|false|0)\s*$/ig;
-      $warn_initrd     = '' if /warn_initrd\s*=\s*(no|false|0)\s*$/ig;
       $silent_modules  = '' if /silent_modules\s*=\s*(no|false|0)\s*$/ig;
       $warn_reboot     = '' if /warn_reboot\s*=\s*(no|false|0)\s*$/ig;
       $ignore_depmod_err = '' if /ignore_depmod_err\s*=\s*(no|false|0)\s*$/ig;
@@ -87,8 +80,6 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
 
       $move_image      = "Yes" if /move_image\s*=\s*(yes|true|1)\s*$/ig;
       $clobber_modules = "Yes" if /clobber_modules\s*=\s*(yes|true|1)\s*$/ig;
-      $do_initrd       = "Yes" if /do_initrd\s*=\s*(yes|true|1)\s*$/ig;
-      $warn_initrd     = "Yes" if /warn_initrd\s*=\s*(yes|true|1)\s*$/ig;
       $silent_modules  = 'Yes' if /silent_modules\s*=\s*(yes|true|1)\s*$/ig;
       $warn_reboot     = 'Yes' if /warn_reboot\s*=\s*(yes|true|1)\s*$/ig;
       $ignore_depmod_err = 'Yes' if /ignore_depmod_err\s*=\s*(yes|true|1)\s*$/ig;
@@ -110,72 +101,13 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
   }
 }
 
-if ($do_initrd)    {   $warn_initrd = '';   }
-if (!$warn_initrd) {   $do_initrd   = "YES";}
-
 $ENV{KERNEL_ARCH}=$kernel_arch if $kernel_arch;
-
-# About to upgrade this package from version $2 TO THIS VERSION.
-# "prerm upgrade" has already been called for the old version of
-# this package.
-
-sub find_inird_tool {
-  my $hostversion = shift;
-  my $version = shift;
-  my @ramdisks =
-    grep {
-      my $args = 
-        "$_ " .
-          "--supported-host-version=$hostversion " .
-            "--supported-target-version=$version " .
-              "1>/dev/null 2>&1"
-                ;
-      system($args) == 0;
-    }
-      split (/[:,\s]+/, $ramdisk);
-}
 
 # For some versions of kernel-package, we had this warning in the
 # postinst, but the rules did not really interpolate the value in.
 # Here is a sanity check.
 my $pattern = "=" . "I";
 $initrd=~ s/^$pattern$//;
-
-if ($initrd) {
-  chomp (my $hostversion = `uname -r`);
-  my @ramdisklist;
-  @ramdisklist = find_inird_tool($hostversion, $version, $ramdisk) if $ramdisk;
-  if ($#ramdisklist < 0) {
-    my $ret;
-    my $seen;
-    my $text = "${package_name}/preinst/initrd-$version";
-    ($ret,$seen) = fset ("$text", 'seen', 'false');
-    die "Error setting debconf flags in $text: $seen" if $ret;
-
-    ($ret,$seen) = subst("$text", 'hostversion', "$hostversion");
-    die "Error setting debconf substitutions in $text: $seen" if $ret;
-
-    ($ret,$seen) = subst("$text", 'ramdisk', "$ramdisk");
-    die "Error setting debconf substitutions in $text: $seen" if $ret;
-
-    ($ret,$seen) = subst("$text", 'initrddep', "$initrddep");
-    die "Error setting debconf substitutions in $text: $seen" if $ret;
-
-    ($ret,$seen) = input('medium', "$text");
-    if ($ret && $ret != 30 ) {
-      die "Error setting debconf question $text: $seen";
-    }
-
-    ($ret,$seen) = go ();
-    if ($ret && $ret != 30 ) {
-      die "Error asking debconf question $text: $seen";
-    }
-    # I no longer claim this question
-    ($ret,$seen) = unregister("$text");
-    die "Error unregistering debconf question $text: $seen" if $ret;
-    warn "Could not find $ramdisk.";
-  }
-}
 
 
 sub check {
@@ -400,6 +332,9 @@ sub run_hook {
 }
 
 
+if (!$initrd) {
+  $ENV{INITRD}='No';
+}
 ## Run user hook script here, if any
 if (-x "$preinst_hook") {
   &run_hook("preinst", $preinst_hook);
