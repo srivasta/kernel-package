@@ -56,18 +56,18 @@ USE_KBUILD=$(shell if [ $(VERSION) -lt 2 ]; then			   \
 	   fi)
 
 define save_upstream_debianization
-	test ! -e scripts/package/builddeb ||					  \
-	    mv -f scripts/package/builddeb scripts/package/builddeb.kpkg-dist
-	test ! -e scripts/package/Makefile ||					  \
-	    test -f scripts/package/Makefile.kpkg-dist ||			  \
-	    (mv -f scripts/package/Makefile scripts/package/Makefile.kpkg-dist && \
-	       (echo "# Dummy file "; echo "help:") >  scripts/package/Makefile)
+@echo save_upstream_debianization
+test ! -e scripts/package/builddeb || mv -f scripts/package/builddeb scripts/package/builddeb.kpkg-dist
+test ! -e scripts/package/Makefile ||					  \
+    test -f scripts/package/Makefile.kpkg-dist ||			  \
+    (mv -f scripts/package/Makefile scripts/package/Makefile.kpkg-dist && \
+       (echo "# Dummy file "; echo "help:") >  scripts/package/Makefile)
 endef
+
 define restore_upstream_debianization
-	test ! -f scripts/package/builddeb.kpkg-dist ||			    \
-	  mv -f scripts/package/builddeb.kpkg-dist scripts/package/builddeb
-	test ! -f scripts/package/Makefile.kpkg-dist ||			    \
-	  mv -f scripts/package/Makefile.kpkg-dist scripts/package/Makefile
+@echo restore_upstream_debianization
+test ! -f scripts/package/builddeb.kpkg-dist ||	mv -f scripts/package/builddeb.kpkg-dist scripts/package/builddeb
+test ! -f scripts/package/Makefile.kpkg-dist ||	mv -f scripts/package/Makefile.kpkg-dist scripts/package/Makefile
 endef
 
 sanity_check:
@@ -314,38 +314,16 @@ endif
 	echo done > $@
 
 
-# Perhaps a list of patches should be dumped to a file on patching? so we
-# only unpatch what we have applied? That would be changed, though saner,
-# behaviour
-unpatch_now:
-	$(REASON)
-ifeq ($(strip $(patch_the_kernel)),YES)
-  ifneq ($(strip $(valid_unpatches)),)
-	-test ! -f applied-patches ||			\
-	  for patch in $(valid_unpatches) ; do		\
-	    if test -x	$$patch; then			\
-		 if $$patch; then			\
-		    echo "Removed Patch $$patch ";	\
-		else					\
-		     echo "Patch $$patch  failed.";	\
-		     echo "Hit return to Continue";	\
-		     read ans;				\
-		fi;					\
-	    fi;						\
-	  done
-	rm -f applied-patches
-  endif
-endif
-
-real_stamp_clean: unpatch_now
+real_stamp_clean: 
 	$(REASON)
 	@echo running clean
-ifeq ($(DEB_HOST_ARCH_OS), linux)
+ifeq ($(strip $(DEB_HOST_ARCH_OS)), linux)
 	$(save_upstream_debianization)
 	test ! -f .config  || cp -pf .config ,,precious
 	$(MAKE) $(FLAV_ARG) $(EXTRAV_ARG) $(CROSS_ARG) ARCH=$(KERNEL_ARCH) -C Documentation/lguest clean
 	test ! -f Makefile || \
 	    $(MAKE) $(FLAV_ARG) $(EXTRAV_ARG) $(CROSS_ARG) ARCH=$(KERNEL_ARCH) distclean
+	test ! -f ,,precious || mv -f ,,precious .config
 	$(restore_upstream_debianization)
 else
 	rm -f .config
@@ -360,8 +338,6 @@ endif
 	test -f stamp-building || rm -rf debian
 	rm -f $(FILES_TO_CLEAN) $(STAMPS_TO_CLEAN)
 	rm -rf $(DIRS_TO_CLEAN)
-	test ! -f ,,precious || mv -f ,,precious .config
-
 
 
 
