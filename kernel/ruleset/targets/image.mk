@@ -210,10 +210,6 @@ endif
 ifeq ($(strip $(NEED_IMAGE_POST_PROCESSING)),YES)
 	$(DO_IMAGE_POST_PROCESSING)
 endif
-	test ! -s applied_patches || cp applied_patches			       \
-			$(TMPTOP)/$(IMAGEDIR)/patches-$(KERNELRELEASE)
-	test ! -s applied_patches || chmod 644				       \
-			$(TMPTOP)/$(IMAGEDIR)/patches-$(KERNELRELEASE)
 # For LKCD enabled kernels
 	test ! -f Kerntypes ||	cp Kerntypes				       \
 			$(TMPTOP)/$(IMAGEDIR)/Kerntypes-$(KERNELRELEASE)

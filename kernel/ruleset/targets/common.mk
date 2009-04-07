@@ -306,11 +306,6 @@ ifneq ($(strip $(shell test -f version.Debian && cat version.Debian)),)
 	echo kernel source package used: >> debian/buildinfo
 	echo $(INT_STEM)-source-$(shell cat version.Debian) >> debian/buildinfo
 endif
-	echo applied kernel patches: >> debian/buildinfo
-ifneq ($(strip $(valid_patches)),)
-	COLUMNS=150 dpkg -l $(shell dpkg -S $(valid_patches) | cut -d: -f1) | \
-	      awk '$$1 ~ /[hi]i/  { printf("%s-%s\n", $$2, $$3) }' >> debian/buildinfo
-endif
 	echo done > $@
 
 

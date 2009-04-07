@@ -54,7 +54,7 @@ ifneq ($(strip $(filter ppc powerpc ppc64 powerpc64,$(architecture))),)
 endif
 
 FILES_TO_CLEAN  = modules/modversions.h modules/ksyms.ver conf.vars \
-                  scripts/cramfs/cramfsck scripts/cramfs/mkcramfs applied_patches 
+                  scripts/cramfs/cramfsck scripts/cramfs/mkcramfs 
 STAMPS_TO_CLEAN = 
 DIRS_TO_CLEAN   = debian/stamp
 
