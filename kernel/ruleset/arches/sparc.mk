@@ -67,6 +67,7 @@ ifeq ($(KERNEL_ARCH_VERSION),pre-2.6.29)
      else
         KERNEL_ARCH = $(strip $(shell uname -m))
      endif
+  endif
 else
     KERNEL_ARCH = sparc
 endif
