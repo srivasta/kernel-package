@@ -75,14 +75,6 @@ ifeq (,$(findstring nostrip,$(DEB_BUILD_OPTIONS)))
 INSTALL_MOD_STRIP:=1
 endif
 
-# Pass on cross arg, if not empty
-ifneq ($(strip $(CROSS_ARG)),)
-  int_ca := "CROSS_ARG=$(CROSS_ARG)"
-else
-  int_ca :=
-endif
-
-
 # only generate module image packages
 modules-image modules_image: .config
 ifeq ($(strip $(shell grep -E ^[^\#]*CONFIG_MODULES $(CONFIG_FILE))),)
@@ -106,7 +98,7 @@ endif
                              KPKG_DEST_DIR="$(KPKG_DEST_DIR)"       \
                              KPKG_MAINTAINER="$(maintainer)"        \
                              KPKG_EXTRAV_ARG="$(EXTRAV_ARG)"        \
-                             ARCH="$(KERNEL_ARCH)" $(int_ca)        \
+                             ARCH="$(KERNEL_ARCH)" $(CROSS_ARG)     \
                              KDREV="$(debian)" kdist_image; then    \
                   echo "Module $$module processed fine";            \
               else                                                  \
@@ -118,9 +110,9 @@ endif
                       echo "against $$module.";                     \
                    fi;                                              \
                    echo "Hit return to Continue";                   \
-		 read ans;                                        \
+		 read ans;                                          \
               fi;                                                   \
-	     );                                                    \
+	     );                                                     \
 	  else                                                      \
                echo "Module $$module does not exist";               \
                echo "Hit return to Continue?";                      \
@@ -150,7 +142,7 @@ endif
                              KMAINT="$(pgp)" KEMAIL="$(email)"      \
                              KPKG_DEST_DIR="$(KPKG_DEST_DIR)"       \
                              KPKG_MAINTAINER="$(maintainer)"        \
-                             ARCH=$(KERNEL_ARCH) $(int_ca)          \
+                             ARCH=$(KERNEL_ARCH) $(CROSS_ARG)       \
                              KPKG_EXTRAV_ARG="$(EXTRAV_ARG)"        \
                              KDREV="$(debian)" kdist; then          \
                   echo "Module $$module processed fine";            \
@@ -195,16 +187,16 @@ endif
                              KMAINT="$(pgp)" KEMAIL="$(email)"      \
                              KPKG_DEST_DIR="$(KPKG_DEST_DIR)"       \
                              KPKG_MAINTAINER="$(maintainer)"        \
-                             ARCH=$(KERNEL_ARCH) $(int_ca)          \
+                             ARCH=$(KERNEL_ARCH) $(CROSS_ARG)       \
                              KPKG_EXTRAV_ARG="$(EXTRAV_ARG)"        \
                              KDREV="$(debian)" kdist_configure; then\
                   echo "Module $$module configured fine";           \
               else                                                  \
                    echo "Module $$module failed to configure";      \
                    echo "Hit return to Continue?";                  \
-		 read ans;                                        \
+		 read ans;                                          \
               fi;                                                   \
-	     );                                                    \
+	     );                                                     \
 	  else                                                      \
                echo "Module $$module does not exist";               \
                echo "Hit return to Continue?";                      \
@@ -230,7 +222,7 @@ else
                              KMAINT="$(pgp)" KEMAIL="$(email)"      \
                              KPKG_DEST_DIR="$(KPKG_DEST_DIR)"       \
                              KPKG_MAINTAINER="$(maintainer)"        \
-                             ARCH=$(KERNEL_ARCH) $(int_ca)          \
+                             ARCH=$(KERNEL_ARCH) $(CROSS_ARG)       \
                              KPKG_EXTRAV_ARG="$(EXTRAV_ARG)"        \
                              KDREV="$(debian)" kdist_clean; then    \
                   echo "Module $$module cleaned";                   \
