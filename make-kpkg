@@ -19,6 +19,7 @@
 require 5.002;
 use strict;
 use Getopt::Long;
+use File::Path;
 
 =head1 NAME
 
@@ -740,49 +741,23 @@ EOERR3
     }
   }
 
-  if ($Targets =~ m/^\s*modules_/o && ! -d "./debian") {
-    die "The modules_* targets should be called from a fully configured " .
-      "source tree,\n and one where at least make-kpkg debian has been run\n";
-  }
 
 
   # Fine. Just do it!
-  my $alt_cmd = "make kpkg_version=$main::Version -f $alt_rules_file " 
-    unless -f "debian/ruleset/kernel_version.mk";
+  my $alt_cmd = "make kpkg_version=$main::Version -f $alt_rules_file " ;
   my $command = "$rules_file ";
   if ($signature){
     $command .= "  PGP_SIGNATURE=$signature ";
   }
   if ($Targets =~ m/^\s*clean\s*$/) {
-    $alt_cmd  .= "clean " unless -f "debian/ruleset/kernel_version.mk";
+    $alt_cmd  .= "clean ";
   }
   else {
-    $alt_cmd  .= "debian" unless -f "debian/ruleset/kernel_version.mk";
+    $alt_cmd  .= "debian";
   }
 
   if ($revision) {
     if ($Targets !~ m/^\s*clean\s*$/) { # No need to do all this for just clean
-      if (-e "debian/changelog") {
-        open(INPUT, "debian/changelog") or die "Can not open debian/changelog";
-        my $line=<INPUT>;
-        close INPUT;
-        chomp $line;
-        my $version = '';
-        $line =~ m/\((\S+)\)/;
-        $version = $1;
-        if ($revision && $version ne $revision) {
-          print STDERR <<"EOMSG";
-I note that you are using the --revision flag with the value
-   $revision.
-However, the ./debian/changelog file exists, and has a different value
-   $version.
-I am confused by this discrepancy, and am halting.
-EOMSG
-	  ;
-	  exit (2);
-	}
-      }
-      
       $command .= " DEBIAN_REVISION=$revision ";
       $alt_cmd .= " DEBIAN_REVISION=$revision ";
       if ($revision !~ m/^(\d+:)?[a-zA-Z\d\~\.\+\-]+$/o) {
@@ -821,26 +796,6 @@ EOMSG
       $alt_cmd .= " DEBIAN_REVISION=$revision ";
     }
   }
-  else {
-    if ($Targets !~ m/^\s*clean\s*$/) {
-      if (-e "debian/changelog") {
-	open(INPUT, "debian/changelog") or die "Can not open debian/changelog";
-	my $line=<INPUT>;
-	close INPUT;
-	chomp $line;
-	my $version = '';
-	$line =~ m/\((\S+)\)/;
-	$version = $1;
-	$command .= " DEBIAN_REVISION=$version ";
-      }
-      else {
-	# $command .= " DEBIAN_REVISION=5:123.Custom ";
-      }
-    }
-    else {
-      $command .= " DEBIAN_REVISION=5:10.Custom ";
-    }
-  }
 
   if ($Targets !~ m/^\s*clean\s*$/) {
     if ($append_to_version) {
@@ -862,15 +817,13 @@ EOMSG
       }
 
       $command .= " APPEND_TO_VERSION=$append_to_version ";
-      $alt_cmd .= " APPEND_TO_VERSION=$append_to_version "
-        unless -f "debian/ruleset/kernel_version.mk";
+      $alt_cmd .= " APPEND_TO_VERSION=$append_to_version ";
     }
   }
 
   if ($arch){
     $command .= " KPKG_ARCH=$arch ";
-    $alt_cmd .= " KPKG_ARCH=$arch  "
-      unless -f "debian/ruleset/kernel_version.mk";
+    $alt_cmd .= " KPKG_ARCH=$arch  ";
   }
   if ($config_target ne 'oldconfig') {
     $command .= " CONFIG_TARGET=$config_target ";
@@ -878,23 +831,19 @@ EOMSG
   }
   if ($cross_compile){
     $command .= " CROSS_COMPILE=$cross_compile ";
-    $alt_cmd .= " CROSS_COMPILE=$cross_compile "
-      unless -f "debian/ruleset/kernel_version.mk";
+    $alt_cmd .= " CROSS_COMPILE=$cross_compile ";
   }
   if ($subarch){
     $command .= " KPKG_SUBARCH=$subarch ";
-    $alt_cmd .= " KPKG_SUBARCH=$subarch "
-      unless -f "debian/ruleset/kernel_version.mk";
+    $alt_cmd .= " KPKG_SUBARCH=$subarch ";
   }
   if ($added_modules) {
     $command .= " KPKG_SELECTED_MODULES=\"$added_modules\" ";
-    $alt_cmd .= " KPKG_SELECTED_MODULES=\"$added_modules\" "
-      unless -f "debian/ruleset/kernel_version.mk";
+    $alt_cmd .= " KPKG_SELECTED_MODULES=\"$added_modules\" ";
   }
   if ($arch_in_name){
     $command .= " ARCH_IN_NAME=YES ";
-    $alt_cmd .= " ARCH_IN_NAME=YES "
-      unless -f "debian/ruleset/kernel_version.mk";
+    $alt_cmd .= " ARCH_IN_NAME=YES ";
   }
   if ($stem) {
     if (! $stem =~ m/[a-z0-9][a-z0-9\.\+\-]+/) {
@@ -907,28 +856,23 @@ EOMSG
       die "Illegal stem option.\n";
     }
     $command .= " KPKG_STEM=$stem ";
-    $alt_cmd .= " KPKG_STEM=$stem "
-      unless -f "debian/ruleset/kernel_version.mk";
+    $alt_cmd .= " KPKG_STEM=$stem ";
   }
   if ($noexec){
     $command .= " -n ";
-    $alt_cmd .= " -n "
-      unless -f "debian/ruleset/kernel_version.mk";
+    $alt_cmd .= " -n ";
   }
   if ($verbose){
     $command .= " V=1 ";
-    $alt_cmd .= " V=1 "
-      unless -f "debian/ruleset/kernel_version.mk";
+    $alt_cmd .= " V=1 ";
   }
   if ($initrd) {
     $command .= " INITRD=YES ";
-    $alt_cmd .= " INITRD=YES "
-      unless -f "debian/ruleset/kernel_version.mk";
+    $alt_cmd .= " INITRD=YES ";
   }
   if ($root_cmd){
      $command .= " ROOT_CMD=$root_cmd ";
-     $alt_cmd .= " ROOT_CMD=$root_cmd "
-       unless -f "debian/ruleset/kernel_version.mk";
+     $alt_cmd .= " ROOT_CMD=$root_cmd ";
   }
   if ($unsign_changelog){
     $command .= " UNSIGN_CHANGELOG=YES ";
@@ -964,7 +908,13 @@ EOMSG
   $command .= " $Targets";
   # print STDERR $command;
 
-  if (! -f "debian/ruleset/kernel_version.mk" && "$alt_cmd" !~ /^\s*$/) {
+  # OK. Time to get rid of ./debian
+  if (-d "./debian") {
+     rmtree(['debian'], 1, 1);
+  }
+
+  # Now, recreate ./debian
+  if ("$alt_cmd" !~ /^\s*$/) {
     print STDERR "exec $alt_cmd\n";
     if ($Targets =~ m/^\s*clean\s*$/ || $Targets =~ m/^\s*debian\s*$/ ) {
       # There is no ./debian, and we do need to preserve .config, and so on
