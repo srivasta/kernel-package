@@ -351,7 +351,8 @@ endif
 # However, this makes it harder to use git versions of the kernel
 	$(save_upstream_debianization)
 	dpkg-buildpackage -nc $(strip $(int_root_cmd)) $(strip $(int_us))  \
-	       $(strip $(int_uc)) -m"$(maintainer) <$(email)>" -k"$(pgp)"
+	       $(strip $(int_uc)) $(strip $(do_parallel)) -k"$(pgp)"       \
+               -m"$(maintainer) <$(email)>"
 	rm -f stamp-building
 	echo done >  $@
 
