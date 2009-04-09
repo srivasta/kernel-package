@@ -15,9 +15,11 @@
 # 
 # This is an example of a script that can be run as a postinst hook,
 # and manages the symbolic links in a manner similar to the kernel
-# image defaul behaviour, except that the latest ttwo version (as
-# determined by ls -lt) are kept. You can modify this script 
+# image default behaviour, except that the latest two versions (as
+# determined by ls -lct) are kept. You can modify this script 
 # 
+# Copyright 2003, 2004, 2005, 2006, 2007, 2008, 2009 Manoj Srivastava
+# Copyright 2009 Darren Salt
 
 set -e
 
@@ -31,7 +33,7 @@ fi
 
 version="$1"
 vmlinuz_location="$2"
-
+vmlinuz_dir="$(dirname "$2")"
 
 cd $SYMLINKDIR || exit 1
 
@@ -46,7 +48,7 @@ else
     outfile=/tmp/kernel-image-$version-$$/output
 fi
 
-ls -t vmlinuz-*   > $outfile
+(cd "$vmlinuz_dir" && ls -ct vmlinuz-*) > $outfile
 
 STD="$(head -n 1 $outfile |             sed 's/vmlinuz-//')" 
 OLD="$(head -n 2 $outfile | tail -n 1 | sed 's/vmlinuz-//')" 
@@ -55,7 +57,7 @@ if [ "X$STD" = "X" ]; then
     exit 0;
 fi
 
-# If you want version specific links, here's how to start
+# If you want version-specific links, here's how to start
 STD24="$(grep vmlinuz-2.4 $outfile | head -n 1 | sed 's/vmlinuz-//')" || true
 OLD24="$(grep vmlinuz-2.4 $outfile | head -n 1 | tail -n 1 | sed 's/vmlinuz-//')" || true
 
@@ -64,36 +66,36 @@ OLD25="$(grep vmlinuz-2.5 $outfile | head -n 1 | tail -n 1 | sed 's/vmlinuz-//')
 
 echo Booting $STD, old is $OLD
 
-if [ -f initrd.img-$STD ] ; then 
-   ln -s initrd.img-$STD initrd.img
-   ln -s vmlinuz-$STD vmlinuz-rd
+if [ -f "$vmlinuz_dir/"initrd.img-$STD ] ; then 
+   ln -s "$vmlinuz_dir/"initrd.img-$STD initrd.img
+   ln -s "$vmlinuz_dir/"vmlinuz-$STD vmlinuz-rd
 else
-   ln -s vmlinuz-$STD vmlinuz
+   ln -s "$vmlinuz_dir/"vmlinuz-$STD vmlinuz
 fi
 
 if [ "X$OLD" != "X" ]; then
-    if [ -f initrd.img-$OLD ] ; then
-	ln -s initrd.img-$OLD initrd.img.old
-	ln -s vmlinuz-$OLD vmlinuz-rd.old
+    if [ -f "$vmlinuz_dir/"initrd.img-$OLD ] ; then
+	ln -s "$vmlinuz_dir/"initrd.img-$OLD initrd.img.old
+	ln -s "$vmlinuz_dir/"vmlinuz-$OLD vmlinuz-rd.old
     else
-	ln -s vmlinuz-$OLD vmlinuz.old
+	ln -s "$vmlinuz_dir/"vmlinuz-$OLD vmlinuz.old
     fi
 fi
 
 # if [ "X$STD24" != "X" ]; then
-#     if [ -f initrd.img-$STD24 ] ; then 
-# 	ln -s initrd.img-$STD24 initrd24.img
-# 	ln -s vmlinuz-$STD24 vmlinuz24-rd
+#     if [ -f "$vmlinuz_dir/"initrd.img-$STD24 ] ; then 
+# 	ln -s "$vmlinuz_dir/"initrd.img-$STD24 initrd24.img
+# 	ln -s "$vmlinuz_dir/"vmlinuz-$STD24 vmlinuz24-rd
 #     else
-# 	ln -s vmlinuz-$STD24 vmlinuz24
+# 	ln -s "$vmlinuz_dir/"vmlinuz-$STD24 vmlinuz24
 #     fi
 # fi
 # if [ "X$OLD24" != "X" ]; then
-#     if [ -f initrd.img-$OLD24 ] ; then
-# 	ln -s initrd.img-$OLD24 initrd24.img.old
-# 	ln -s vmlinuz-$OLD vmlinuz24-rd.old
+#     if [ -f "$vmlinuz_dir/"initrd.img-$OLD24 ] ; then
+# 	ln -s "$vmlinuz_dir/"initrd.img-$OLD24 initrd24.img.old
+# 	ln -s "$vmlinuz_dir/"vmlinuz-$OLD vmlinuz24-rd.old
 #     else
-# 	ln -s vmlinuz-$OLD vmlinuz24.old
+# 	ln -s "$vmlinuz_dir/"vmlinuz-$OLD vmlinuz24.old
 #     fi
 # fi
 
