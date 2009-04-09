@@ -46,12 +46,14 @@ debian/stamp/INST/$(i_package): debian/stamp/install/$(i_package)
 debian/stamp/INST/$(d_package): debian/stamp/install/$(d_package)
 debian/stamp/INST/$(m_package): debian/stamp/install/$(m_package)
 debian/stamp/INST/$(h_package): debian/stamp/install/$(h_package)
+debian/stamp/INST/$(b_package): debian/stamp/install/$(b_package)
 
 debian/stamp/BIN/$(s_package): debian/stamp/binary/pre-$(s_package)
 debian/stamp/BIN/$(i_package): debian/stamp/binary/pre-$(i_package)
 debian/stamp/BIN/$(d_package): debian/stamp/binary/pre-$(d_package)
 debian/stamp/BIN/$(m_package): debian/stamp/binary/pre-$(m_package)
 debian/stamp/BIN/$(h_package): debian/stamp/binary/pre-$(h_package)
+debian/stamp/BIN/$(b_package): debian/stamp/binary/pre-$(b_package)
 
 
 CLN-common:: real_stamp_clean
@@ -62,14 +64,10 @@ CLEAN/$(i_package)::
 	test ! -d $(TMPTOP) || rm -rf $(TMPTOP)
 ifneq ($(strip $(KERNEL_ARCH)),um)
   ifeq  ($(strip $(CONFIG_XEN)),)
-	test ! -d ./debian || test ! -e stamp-building ||            \
-	sed -e 's/=V/$(KERNELRELEASE)/g'      \
-            -e 's/=ST/$(INT_STEM)/g' \
-            -e 's/=K/$(kimage)/g'            \
-            -e 's@=MK@$(initrdcmd)@g' -e 's@=A@$(DEB_HOST_ARCH)@g'   \
-            -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'        \
-            -e 's/=MD/$(initrddep)/g'                                \
-            -e 's@=M@$(MKIMAGE)@g'    -e 's/=OF/$(AM_OFFICIAL)/g'    \
+	test ! -d ./debian || test ! -e stamp-building ||             \
+	sed -e 's/=V/$(KERNELRELEASE)/g' -e 's/=ST/$(INT_STEM)/g'     \
+            -e 's/=K/$(kimage)/g'        -e 's@=A@$(DEB_HOST_ARCH)@g' \
+            -e 's/=I/$(INITRD)/g'        -e 's,=D,$(IMAGEDIR),g'      \
             -e 's@=B@$(KERNEL_ARCH)@g'     \
           $(DEBDIR)/templates.in   > ./debian/templates.master
 	test ! -d ./debian || test ! -e stamp-building || $(INSTALL_TEMPLATE)
@@ -81,6 +79,8 @@ CLEAN/$(d_package)::
 CLEAN/$(m_package)::
 	test ! -d $(TMPTOP) || rm -rf $(TMPTOP)
 CLEAN/$(h_package)::
+	test ! -d $(TMPTOP) || rm -rf $(TMPTOP)
+CLEAN/$(b_package)::
 	test ! -d $(TMPTOP) || rm -rf $(TMPTOP)
 
 buildpackage: debian/stamp/build/buildpackage
@@ -104,6 +104,9 @@ linux-headers linux_headers kernel-headers kernel_headers: debian/stamp/build/ke
 linux-image   linux_image   kernel-image   kernel_image:   debian/stamp/build/kernel 
 	$(eval $(deb_rule))
 	$(root_run_command) 	debian/stamp/binary/pre-$(i_package)
+linux-debug   linux_debug   kernel-debug   kernel_debug:   debian/stamp/build/kernel 
+	$(eval $(deb_rule))
+	$(root_run_command) 	debian/stamp/binary/pre-$(b_package)
 kernel-manual kernel_manual:  debian/stamp/build/kernel 
 	$(eval $(deb_rule))
 	$(root_run_command) 	 debian/stamp/binary/pre-$(m_package)

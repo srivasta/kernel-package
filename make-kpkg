@@ -477,6 +477,15 @@ running, and refuses to delete a running kernel.
 
 =back
 
+=item B<kernel_debug>
+
+=over 3
+
+This target produces a Debian package of just the debugging symbols
+for a linux kernel, and is not meant to be bootable.
+
+=back
+
 =item B<build>
 
 =over 3
@@ -562,6 +571,10 @@ my %Known_targets=
    "kernel-headers" => 3,
    "linux_headers"  => 3,
    "linux-headers"  => 3,
+   "kernel_debug" => 3,
+   "kernel-debug" => 3,
+   "linux_debug"  => 3,
+   "linux-debug"  => 3,
    "kernel-manual" => 3,
    "kernel_manual" => 3,
    "libc-kheaders"  => 3,
@@ -599,6 +612,7 @@ my $targets_help =<<EOTRGT;
 |            kernel_manual         |                                          |
 |*      binary-arch                |                                          |
 |            kernel_headers        |                                          |
+|            kernel_debug          |                                          |
 |            kernel_image          | Builds build                             |
 |                           build  |                                          |
 | modules                          |                                          |

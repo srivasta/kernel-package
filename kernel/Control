@@ -50,12 +50,12 @@ Description: Linux kernel source for version =V
 
 Package: =ST-image-=V=SA
 Architecture: =A
-Section: admin
+Section: kernel
 Priority: optional
 Provides: =ST-image,  =ST-image-=CV
 Pre-Depends: debconf (>= 0.2.17) | debconf-2.0
 Depends: =I coreutils (>= 5.96)
-Suggests: fdutils, =ST-doc-=V=SA | =ST-source-=V, ksymoops
+Suggests: fdutils, =ST-doc-=V=SA | =ST-source-=V, ksymoops, =ST-image-=V=SA-dbg
 Description: Linux kernel binary image for version =V=SA
  This package contains the Linux kernel image for version 
  =V=SA.
@@ -70,6 +70,21 @@ Description: Linux kernel binary image for version =V=SA
  and /usr/share/doc/kernel-package/README.gz  from the package kernel-package
  for details on how to tailor the  installation of this or any other kernel 
  image package
+
+Package: =ST-image-=V=SA-dbg
+Architecture: =A 
+Section: kernel 
+Priority: optional 
+Depends: =ST-image-=V=SA
+Provides: =ST-debug,  =ST-debug-=CV, =ST-debug-=V=SA
+Suggests: systemtap
+Description: Linux kernel debug image for version =V=SA 
+ This package contains the Linux kernel debug image for version
+  =V=SA.
+ This means the debugging information for the modules in the kernel
+ image package, and the uncompressed vmlinux image; it is not intended
+ to be bootable. This is useful for debugging the Linux kernel. 
+
 
 Package: =ST-doc-=V
 Architecture: all

@@ -362,6 +362,7 @@ include $(DEBDIR)/ruleset/targets/headers.mk
 include $(DEBDIR)/ruleset/targets/manual.mk
 include $(DEBDIR)/ruleset/targets/doc.mk
 include $(DEBDIR)/ruleset/targets/image.mk
+include $(DEBDIR)/ruleset/targets/debug.mk
 
 #Local variables:
 #mode: makefile

@@ -94,7 +94,7 @@ CROSS_ARG:=
 #
 # VERSION=$(shell LC_ALL=C dpkg-parsechangelog | grep ^Version: | \
 #                          sed 's/^Version: *//')
-#
+#'
 
 # architecture is used mostly to select which arch specific snippet
 # shall be loaded from the rulesets/arches/ directory, and for nothing
@@ -139,6 +139,7 @@ endif
 
 DEBCONFIG = $(CONFDIR)/config
 IMAGEDIR=/boot
+DEBUGDIR=/usr/lib/debug
 
 comma:= ,
 empty:=

@@ -425,6 +425,14 @@ and documentation just before packaging respectively, so people may
 take any action they see fit. This also has no effect on anything
 other than the sources that are being packaged.
 .TP
+.B kernel_debug
+This target produces a Debian package containing the debugging symbols
+for the modules contained in the corresponding image package. The
+basic idea here is to keep the space in 
+.I /lib/modules/<kver>
+under control, since this could be on a root partition with space
+restrictions.
+.TP
 .B kernel_headers
 This target produces a Debian package containing the header files
 included in the Linux kernel.
