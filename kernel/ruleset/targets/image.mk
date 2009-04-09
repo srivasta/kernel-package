@@ -101,7 +101,7 @@ ifneq ($(filter kfreebsd, $(DEB_HOST_ARCH_OS)):$(strip $(shell grep -E ^[^\#]*CO
 	$(restore_upstream_debianization)
 	$(MAKE) $(EXTRAV_ARG) INSTALL_MOD_PATH=$(INSTALL_MOD_PATH)	     \
 		INSTALL_FW_PATH=$(INSTALL_MOD_PATH)/lib/firmware/$(KERNELRELEASE)  \
-		$(CROSS_ARG) ARCH=$(KERNEL_ARCH) modules_install
+		$(CROSS_ARG) ARCH=$(KERNEL_ARCH) INSTALL_MOD_STRIP=1 modules_install
 	$(save_upstream_debianization)
       ifneq ($(strip $(KERNEL_CROSS)),)
 	mv System.precious System.map
