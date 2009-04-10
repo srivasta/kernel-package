@@ -86,6 +86,14 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
   }
 }
 
+# Set up the env variable containing our arguments
+my $out;
+for (@ARGV) {
+  s,','\\'',g;
+  $out.=" '$_'";
+}
+$ENV{'DEB_MAINT_PARAMS'}="$out";
+
 ## Run user hook script here, if any
 if (-x "$doc_prerm_hook") {
     system ("$doc_prerm_hook", $package, $version) &&

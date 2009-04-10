@@ -21,8 +21,7 @@ MODULE_LOC := /usr/src/modules
 
 DOCFILES = README.modules README.tecra README.grub HOWTO-Linux-2.6-Woody \
            Rationale
-EXAMPLES = sample.kernel-img.conf kernel_grub_conf.sh sample.posthook.sh \
-           etc.kernel
+EXAMPLES = sample.kernel-img.conf etc
 
 # where kernel-package files go to
 DEBDIR     = $(LIBLOC)
@@ -83,12 +82,12 @@ check:
 	bash  -n  kernel/pkg/virtual/um/prerm
 	bash  -n  kernel/pkg/virtual/xen/postinst
 	bash  -n  kernel/pkg/virtual/xen/prerm
-	bash  -n  kernel/examples/kernel_grub_conf.sh
-	bash  -n  kernel/examples/kernel_grub_rm.sh
-	bash  -n  kernel/examples/sample.posthook.sh
-	bash  -n  kernel/examples/etc.kernel/header_postinst.d/link
-	bash  -n  kernel/examples/etc.kernel/postinst.d/initramfs
-	bash  -n  kernel/examples/etc.kernel/postrm.d/initramfs
+	bash  -n  kernel/examples/etc/kernel/postinst.d/initramfs
+	bash  -n  kernel/examples/etc/kernel/postinst.d/symlink_hook
+	bash  -n  kernel/examples/etc/kernel/postinst.d/grub_conf
+	bash  -n  kernel/examples/etc/kernel/postinst.d/force-build-link
+	bash  -n  kernel/examples/etc/kernel/postrm.d/initramfs
+	bash  -n  kernel/examples/etc/kernel/postrm.d/grub_rm
 
 install: genpo4a
 	$(make_directory)  $(MAN1DIR)

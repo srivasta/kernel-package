@@ -102,6 +102,14 @@ sub run_hook {
   }
 }
 
+# Set up the env variable containing our arguments
+my $out;
+for (@ARGV) {
+  s,','\\'',g;
+  $out.=" '$_'";
+}
+$ENV{'DEB_MAINT_PARAMS'}="$out";
+
 ## Run user hook script here, if any
 if (-x "$src_postinst_hook") {
   &run_hook("postinst", $src_postinst_hook);

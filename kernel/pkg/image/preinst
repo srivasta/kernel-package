@@ -331,6 +331,13 @@ sub run_hook {
   }
 }
 
+# Set up the env variable containing our arguments
+my $out;
+for (@ARGV) {
+  s,','\\'',g;
+  $out.=" '$_'";
+}
+$ENV{'DEB_MAINT_PARAMS'}="$out";
 
 if (!$initrd) {
   $ENV{INITRD}='No';

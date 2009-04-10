@@ -136,8 +136,15 @@ sub run_hook {
   }
 }
 
-## Run user hook script here, if any
+# Set up the env variable containing our arguments
+my $out;
+for (@ARGV) {
+  s,','\\'',g;
+  $out.=" '$_'";
+}
+$ENV{'DEB_MAINT_PARAMS'}="$out";
 
+## Run user hook script here, if any
 if (-x "$header_prerm_hook") {
   system ("$header_prerm_hook", $package, $version) &&
     warn "User hook script $header_prerm_hook failed";

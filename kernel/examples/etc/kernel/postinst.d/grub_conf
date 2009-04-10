@@ -57,6 +57,15 @@ fi
 version="$1"
 vmlinuz_location="$2"
 
+# Look at maintainer script options
+if [ -n "$DEB_MAINT_PARAMS" ]; then
+    eval set -- "$DEB_MAINT_PARAMS"
+fi
+
+if [ -z "$1" ] || [ "$1" != "configure" ]; then
+    exit 0;
+fi
+
 # This means we have a separate boot partition
 if [ "$kernel_not_on_root_partition" = 'YES' ]; then
     vmlinuz_location=`basename "$vmlinuz_location"`

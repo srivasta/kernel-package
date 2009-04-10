@@ -37,6 +37,14 @@ vmlinuz_dir="$(dirname "$2")"
 
 cd $SYMLINKDIR || exit 1
 
+if [ -n "$DEB_MAINT_PARAMS" ]; then
+    eval set -- "$DEB_MAINT_PARAMS"
+fi
+
+if [ -z "$1" ] || [ "$1" != "configure" ]; then
+    exit 0;
+fi
+
 rm -f vmlinuz vmlinuz.old vmlinuz-rd vmlinuz-rd.old initrd.img initrd.img.old 
 
 # Create a temporary file safely

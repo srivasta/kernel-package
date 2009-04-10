@@ -17,6 +17,11 @@ if [  -n "$2" ]; then
     bootarg="-b $boot"
 fi
 
+if [ -z "$1" ] || [ "$1" != "configure" ]; then
+    exit 0;
+fi
+
+
 # 
 update-initramfs -c -t -k "$1" $bootarg
 
