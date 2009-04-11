@@ -71,7 +71,9 @@ ifneq ($(filter kfreebsd, $(DEB_HOST_ARCH_OS)):$(strip $(shell grep -E ^[^\#]*CO
 	$(MAKE) $(EXTRAV_ARG) INSTALL_MOD_PATH=$(TMPTOP)$(DEBUGDIR)                   \
                 $(CROSS_ARG) ARCH=$(KERNEL_ARCH) modules_install
 	find $(TMPTOP)$(DEBUGDIR) -type f -name \*.ko |                               \
-              xargs -r objcopy --only-keep-debug
+              while read file; do                                                     \
+                objcopy --only-keep-debug $$file;                                     \
+             done
 	test ! -f System.map ||	 cp System.map			                      \
 			$(TMPTOP)/$(DEBUGDIR)/System.map-$(KERNELRELEASE);
 	test ! -f System.map ||	 chmod 644			                      \
