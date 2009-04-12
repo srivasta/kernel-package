@@ -96,7 +96,7 @@ debian/stamp/conf/minimal_debian:
 	for dir  in $(DEBIAN_DIRS);  do                                      \
           cp -af $(LIBLOC)/$$dir  ./debian/;                                 \
         done
-	test -f debian/control || sed         -e 's/=V/$(KERNELRELEASE)/g'  \
+	test -f debian/control || sed         -e 's/=V/$(version)/g'  \
                 -e 's/=D/$(debian)/g'         -e 's/=A/$(DEB_HOST_ARCH)/g'  \
 		-e 's/=SA/$(INT_SUBARCH)/g'  \
 		-e 's/=I/$(initrddep)/g'				    \
@@ -104,7 +104,7 @@ debian/stamp/conf/minimal_debian:
 		-e 's/=M/$(maintainer) <$(email)>/g'			    \
 		-e 's/=ST/$(INT_STEM)/g'      -e 's/=B/$(KERNEL_ARCH)/g'    \
                   $(CONTROL) > debian/control
-	test -f debian/changelog ||  sed -e 's/=V/$(KERNELRELEASE)/g'       \
+	test -f debian/changelog ||  sed -e 's/=V/$(version)/g'       \
             -e 's/=D/$(debian)/g'        -e 's/=A/$(DEB_HOST_ARCH)/g'       \
             -e 's/=ST/$(INT_STEM)/g'     -e 's/=B/$(KERNEL_ARCH)/g'         \
             -e 's/=M/$(maintainer) <$(email)>/g'                            \
