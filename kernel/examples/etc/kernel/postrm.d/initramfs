@@ -10,16 +10,14 @@ vmlinuz_location="$2"
 
 if [ -n "$DEB_MAINT_PARAMS" ]; then
     eval set -- "$DEB_MAINT_PARAMS"
+    case "$1" in
+        remove|purge)
+            : echo nop
+            ;;
+        *)
+            exit 0;
+    esac
 fi
-
-
-case "$1" in
-    remove|purge)
-        : echo nop
-        ;;
-    *)
-        exit 0;
-esac
 
 # passing the kernel version is required
 [ -z "$version" ] && exit 1

@@ -5,9 +5,9 @@
 # Created On       : Mon Aug 11 14:00:58 2003
 # Created On Node  : glaurung.green-gryphon.com
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Mon Aug 11 14:29:49 2003
-# Last Machine Used: glaurung.green-gryphon.com
-# Update Count     : 9
+# Last Modified On : Sun Apr 12 17:16:52 2009
+# Last Machine Used: anzu.internal.golden-gryphon.com
+# Update Count     : 10
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
@@ -39,10 +39,9 @@ cd $SYMLINKDIR || exit 1
 
 if [ -n "$DEB_MAINT_PARAMS" ]; then
     eval set -- "$DEB_MAINT_PARAMS"
-fi
-
-if [ -z "$1" ] || [ "$1" != "configure" ]; then
-    exit 0;
+    if [ -z "$1" ] || [ "$1" != "configure" ]; then
+        exit 0;
+    fi
 fi
 
 rm -f vmlinuz vmlinuz.old vmlinuz-rd vmlinuz-rd.old initrd.img initrd.img.old 

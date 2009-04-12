@@ -5,9 +5,9 @@
 # Created On       : Wed Jul  4 22:18:43 2001
 # Created On Node  : glaurung.green-gryphon.com
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Tue Oct  7 22:40:51 2008
+# Last Modified On : Sun Apr 12 17:17:25 2009
 # Last Machine Used: anzu.internal.golden-gryphon.com
-# Update Count     : 11
+# Update Count     : 12
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
@@ -52,15 +52,14 @@ vmlinuz_location="$2"
 
 if [ -n "$DEB_MAINT_PARAMS" ]; then
     eval set -- "$DEB_MAINT_PARAMS"
+    case "$1" in
+        remove|purge)
+            : echo nop
+            ;;
+        *)
+            exit 0;
+    esac
 fi
-
-case "$1" in
-    remove|purge)
-        : echo nop
-        ;;
-    *)
-        exit 0;
-esac
 
 # This means we have a separate boot partition
 if [ "$kernel_not_on_root_partition" = 'YES' ]; then

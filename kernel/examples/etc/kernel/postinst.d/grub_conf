@@ -5,9 +5,9 @@
 # Created On       : Fri Jan 19 12:25:31 2001
 # Created On Node  : glaurung.green-gryphon.com
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Tue Oct  7 22:40:25 2008
+# Last Modified On : Sun Apr 12 17:16:34 2009
 # Last Machine Used: anzu.internal.golden-gryphon.com
-# Update Count     : 16
+# Update Count     : 17
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
@@ -60,10 +60,9 @@ vmlinuz_location="$2"
 # Look at maintainer script options
 if [ -n "$DEB_MAINT_PARAMS" ]; then
     eval set -- "$DEB_MAINT_PARAMS"
-fi
-
-if [ -z "$1" ] || [ "$1" != "configure" ]; then
-    exit 0;
+    if [ -z "$1" ] || [ "$1" != "configure" ]; then
+        exit 0;
+    fi
 fi
 
 # This means we have a separate boot partition
