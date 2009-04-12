@@ -62,8 +62,8 @@ ifeq ($(strip $(KERNEL_ARCH)),um)
 	$(install_file) $(DEBDIR)/docs/linux.1 $(MAN1DIR)/linux-$(KERNELRELEASE).1
 	gzip -9fq			       $(MAN1DIR)/linux-$(KERNELRELEASE).1
 endif
-	$(install_script) $(DEBDIR)/examples/sample.force-build-link.sh	     \
-						      $(DOCDIR)/examples/
+	test ! -d $(DEBDIR)/examples/ ||                                     \
+          (cd $(DEBDIR); tar cf - examples | (cd $(DOCDIR);  umask 000; tar xsf -)); 
 	$(install_file) $(DEBDIR)/pkg/image/README    $(DOCDIR)/debian.README
 ifeq ($(strip $(KERNEL_ARCH)),um)
 	$(install_file) $(config)	 $(DOCDIR)/config-$(KERNELRELEASE)

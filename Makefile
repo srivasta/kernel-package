@@ -140,9 +140,6 @@ install: genpo4a
                            tar xpf -))
 	test ! -d          $(prefix)/usr/share/$(package)/ruleset/common/\{arch\} || \
                rm -rf      $(prefix)/usr/share/$(package)/ruleset/common/\{arch\}
-	(cd $(DOCDIR);     for file in $(EXAMPLES); do                          \
-                            mv ../../$(package)/examples/$$file examples/;      \
-                           done)
 	find $(prefix)/usr/share/$(package) -type d -name .arch-ids -print0 |   \
            xargs -0r rm -rf
 # Hack, tell the   rules file what version of kernel package it is
