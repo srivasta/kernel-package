@@ -35,10 +35,10 @@ esac
 if [ -d "/usr/src/linux-headers-$version" ]; then
     # See if we have a kernel image of the same version already
     # installed.
-    if  [ -d "/lib/modiles/$version"  ] &&
-        [ ! -e "/lib/modiles/$version/build" ]; then
-        if ! ln -s "/usr/src/linux-headers-$version"  "/lib/modiles/$version/build" ; then
-            echo >&2 "Could not link /usr/src/linux-headers-$version to /lib/modiles/$version/build";
+    if  [ -d "/lib/modules/$version"  ] &&
+        [ ! -e "/lib/modules/$version/build" ]; then
+        if ! ln -s "/usr/src/linux-headers-$version"  "/lib/modules/$version/build" ; then
+            echo >&2 "Could not link /usr/src/linux-headers-$version to /lib/modules/$version/build";
         fi
     fi
     # Make sure the asm link is sane
