@@ -82,7 +82,6 @@ ifneq ($(filter kfreebsd, $(DEB_HOST_ARCH_OS)):$(strip $(shell grep -E ^[^\#]*CO
 #            rm -f $(TMPTOP)$(DEBUGDIR)/lib/modules/$(KERNELRELEASE)/build 
 #	test ! -L $(TMPTOP)$(DEBUGDIR)/lib/modules/$(KERNELRELEASE)/source ||         \
 #            rm -f $(TMPTOP)$(DEBUGDIR)/lib/modules/$(KERNELRELEASE)/source
-	$(save_upstream_debianization)
   endif
 	$(install_file) $(SRCTOP)/vmlinux  $(TMPTOP)/$(DEBUGDIR)/vmlinux
 ######################################################################

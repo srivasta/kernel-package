@@ -102,7 +102,6 @@ ifneq ($(filter kfreebsd, $(DEB_HOST_ARCH_OS)):$(strip $(shell grep -E ^[^\#]*CO
 	$(MAKE) $(EXTRAV_ARG) INSTALL_MOD_PATH=$(INSTALL_MOD_PATH)	     \
 		INSTALL_FW_PATH=$(INSTALL_MOD_PATH)/lib/firmware/$(KERNELRELEASE)  \
 		$(CROSS_ARG) ARCH=$(KERNEL_ARCH) INSTALL_MOD_STRIP=1 modules_install
-	$(save_upstream_debianization)
       ifneq ($(strip $(KERNEL_CROSS)),)
 	mv System.precious System.map
       endif
@@ -166,7 +165,6 @@ else
 	$(MAKE) $(EXTRAV_ARG) INSTALL_MOD_PATH=$(INSTALL_MOD_PATH)	     \
 		INSTALL_FW_PATH=$(INSTALL_MOD_PATH)/lib/firmware/$(KERNELRELEASE)  \
 		INSTALL_PATH=$(INT_IMAGE_DESTDIR) $(CROSS_ARG) install
-	$(save_upstream_debianization)
   endif
 endif
 ifeq ($(strip $(HAVE_COFF_IMAGE)),YES)
@@ -317,7 +315,6 @@ endif
 	dpkg --build		       $(TMPTOP) $(DEB_DEST)
 ifeq ($(strip $(do_clean)),YES)
 # just to be sure we are not nuking ./debian
-	$(save_upstream_debianization)
 	$(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) ARCH=$(KERNEL_ARCH) clean
 	test ! -d Documentation/lguest	||					\
 	   $(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) ARCH=$(KERNEL_ARCH)	\

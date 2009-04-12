@@ -184,7 +184,6 @@ endif
 ### Prepare the version number
 ######################################################################
 ifeq ($(DEB_HOST_ARCH_OS), linux)
-	$(save_upstream_debianization)
 	$(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) ARCH=$(KERNEL_ARCH) \
                     $(config_target);                                      
   ifeq ($(shell if   [ $(VERSION) -gt 2 ]; then				   \
@@ -289,7 +288,6 @@ ifeq ($(DEB_HOST_ARCH_OS), linux)
 	$(MAKE) $(do_parallel) $(EXTRAV_ARG) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) \
 			    $(CROSS_ARG) -C Documentation/lguest
   endif
-	$(save_upstream_debianization)
 else
   ifeq ($(DEB_HOST_ARCH_OS), kfreebsd)
 	$(PMAKE) -C $(architecture)/compile/GENERIC
@@ -354,6 +352,7 @@ endif
 	       $(strip $(int_uc)) $(strip $(do_parallel)) -k"$(pgp)"       \
                -m"$(maintainer) <$(email)>"
 	rm -f stamp-building
+	$(restore_upstream_debianization)
 	echo done >  $@
 
 

@@ -58,21 +58,6 @@ FILES_TO_CLEAN  = modules/modversions.h modules/ksyms.ver conf.vars \
 STAMPS_TO_CLEAN = 
 DIRS_TO_CLEAN   = debian/stamp
 
-define save_upstream_debianization
-@echo save_upstream_debianization
-test ! -e scripts/package/builddeb || mv -f scripts/package/builddeb scripts/package/builddeb.kpkg-dist
-test ! -e scripts/package/Makefile ||					  \
-    test -f scripts/package/Makefile.kpkg-dist ||			  \
-    (mv -f scripts/package/Makefile scripts/package/Makefile.kpkg-dist && \
-       (echo "# Dummy file "; echo "help:") >  scripts/package/Makefile)
-endef
-
-define restore_upstream_debianization
-@echo restore_upstream_debianization
-test ! -f scripts/package/builddeb.kpkg-dist ||	mv -f scripts/package/builddeb.kpkg-dist scripts/package/builddeb
-test ! -f scripts/package/Makefile.kpkg-dist ||	mv -f scripts/package/Makefile.kpkg-dist scripts/package/Makefile
-endef
-
 # The assumption is that we have already cleaned out the source tree;
 # we are only concerned now with running clean and saving the .config
 # file
@@ -81,13 +66,11 @@ minimal_clean:
 	$(REASON)
 	@echo $(if $(strip $(kpkg_version)),"This is kernel package version $(kpkg_version).","Cleaning.")
 ifeq ($(DEB_HOST_ARCH_OS), linux)
-	$(save_upstream_debianization)
 	test ! -f .config || cp -pf .config config.precious
 	test ! -e stamp-building || rm -f stamp-building
 	test ! -f Makefile || \
             $(MAKE) $(FLAV_ARG) $(EXTRAV_ARG) $(CROSS_ARG) ARCH=$(KERNEL_ARCH) distclean
 	test ! -f config.precious || mv -f config.precious .config
-	$(restore_upstream_debianization)
 else
 	rm -f .config
   ifeq ($(DEB_HOST_ARCH_OS), kfreebsd)
