@@ -4,9 +4,9 @@
 ## Created On       : Tue Nov 18 15:53:52 2003
 ## Created On Node  : glaurung.green-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Sat Aug  5 21:03:26 2006
-## Last Machine Used: glaurung.internal.golden-gryphon.com
-## Update Count     : 28
+## Last Modified On : Sun Apr 12 17:30:12 2009
+## Last Machine Used: anzu.internal.golden-gryphon.com
+## Update Count     : 29
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : 
@@ -99,7 +99,7 @@ install: genpo4a
 	$(make_directory)  $(FR_MAN1DIR)
 	$(make_directory)  $(FR_MAN5DIR)
 	$(make_directory)  $(FR_MAN8DIR)
-	$(make_directory)  $(DOCDIR)/examples
+	$(make_directory)  $(DOCDIR)/
 	$(make_directory)  $(BASH_DIR)
 	$(make_directory)  $(prefix)/usr/bin
 	$(make_directory)  $(prefix)/usr/sbin
@@ -116,6 +116,7 @@ install: genpo4a
 	(cd $(DOCDIR);     for file in $(DOCFILES); do                  \
                             ln -s ../../$(package)/docs/$$file $$file;  \
                            done)
+	test ! -d 
 	$(install_file)    debian/copyright  	      $(DOCDIR)/copyright
 	$(install_file)    kernel-pkg.conf.5 	      $(MAN5DIR)/kernel-pkg.conf.5
 	$(install_file)    kernel-img.conf.5 	      $(MAN5DIR)/kernel-img.conf.5
@@ -142,6 +143,8 @@ install: genpo4a
                rm -rf      $(prefix)/usr/share/$(package)/ruleset/common/\{arch\}
 	find $(prefix)/usr/share/$(package) -type d -name .arch-ids -print0 |   \
            xargs -0r rm -rf
+	test ! -d $(prefix)/usr/share/$(package)/examples ||                    \
+             (cd $(DOCDIR)/; ln -s ../../$(package)/examples )
 # Hack, tell the   rules file what version of kernel package it is
 	sed -e             's/=K=V/$(version)/' kernel/rules > \
                               $(prefix)/usr/share/$(package)/rules
