@@ -4,9 +4,9 @@
 ## Created On       : Thu Apr  9 01:54:37 2009
 ## Created On Node  : anzu.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Thu Apr  9 11:11:31 2009
+## Last Modified On : Mon Apr 13 12:18:32 2009
 ## Last Machine Used: anzu.internal.golden-gryphon.com
-## Update Count     : 17
+## Update Count     : 18
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : 
@@ -75,15 +75,16 @@ ifneq ($(filter kfreebsd, $(DEB_HOST_ARCH_OS)):$(strip $(shell grep -E ^[^\#]*CO
                 objcopy --only-keep-debug $$file;                                     \
              done
 	test ! -f System.map ||	 cp System.map			                      \
-			$(TMPTOP)/$(DEBUGDIR)/System.map-$(KERNELRELEASE);
+			$(TMPTOP)/$(DEBUGDIR)/lib/modules/$(KERNELRELEASE)/System.map;
 	test ! -f System.map ||	 chmod 644			                      \
-			$(TMPTOP)/$(DEBUGDIR)/System.map-$(KERNELRELEASE);
+			$(TMPTOP)/$(DEBUGDIR)/lib/modules/$(KERNELRELEASE)/System.map;
 #	test ! -L $(TMPTOP)$(DEBUGDIR)/lib/modules/$(KERNELRELEASE)/build  ||         \
 #            rm -f $(TMPTOP)$(DEBUGDIR)/lib/modules/$(KERNELRELEASE)/build 
 #	test ! -L $(TMPTOP)$(DEBUGDIR)/lib/modules/$(KERNELRELEASE)/source ||         \
 #            rm -f $(TMPTOP)$(DEBUGDIR)/lib/modules/$(KERNELRELEASE)/source
   endif
-	$(install_file) $(SRCTOP)/vmlinux  $(TMPTOP)/$(DEBUGDIR)/vmlinux
+	$(install_file) $(SRCTOP)/vmlinux                                             \
+                       $(TMPTOP)/$(DEBUGDIR)/lib/modules/$(KERNELRELEASE)/vmlinux
 ######################################################################
 ###   INSTALL system.map and image
 ######################################################################
