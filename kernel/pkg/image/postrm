@@ -5,9 +5,9 @@
 # Created On       : Sat May 15 11:05:13 1999
 # Created On Node  : glaurung.green-gryphon.com
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Wed Sep 13 11:26:19 2006
-# Last Machine Used: glaurung.internal.golden-gryphon.com
-# Update Count     : 57
+# Last Modified On : Mon Apr 13 14:25:49 2009
+# Last Machine Used: anzu.internal.golden-gryphon.com
+# Update Count     : 59
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
@@ -260,9 +260,6 @@ if (!$initrd) {
   $ENV{INITRD}='No';
 }
 ## Run user hook script here, if any
-if ($postrm_hook) {
-  &run_hook("postrm", $postrm_hook);
-}
 if (-d "/etc/kernel/postrm.d") {
   warn "Examining /etc/kernel/postrm.d .\n";
   system ("run-parts --verbose --exit-on-error --arg=$version " .
@@ -276,6 +273,10 @@ if (-d "/etc/kernel/postrm.d/$version") {
           "--arg=$realimageloc$kimage-$version " .
           "/etc/kernel/postrm.d/$version") &&
             die "Failed to process /etc/kernel/postrm.d/$version";
+}
+
+if ($postrm_hook) {
+  &run_hook("postrm", $postrm_hook);
 }
 
 # check and remove damaged and dangling symlinks

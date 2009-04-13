@@ -5,9 +5,9 @@
 # Created On       : Sat Apr 27 05:42:43 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Sat Aug  5 13:18:29 2006
-# Last Machine Used: glaurung.internal.golden-gryphon.com
-# Update Count     : 43
+# Last Modified On : Mon Apr 13 14:24:56 2009
+# Last Machine Used: anzu.internal.golden-gryphon.com
+# Update Count     : 44
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
@@ -111,10 +111,6 @@ for (@ARGV) {
 $ENV{'DEB_MAINT_PARAMS'}="$out";
 
 ## Run user hook script here, if any
-if (-x "$src_postinst_hook") {
-  &run_hook("postinst", $src_postinst_hook);
-}
-
 if (-d "/etc/kernel/src_postinst.d") {
   print STDERR "Examining /etc/kernel/src_postinst.d.\n";
   system ("run-parts --verbose --exit-on-error --arg=$version " .
@@ -129,6 +125,10 @@ if (-d "/etc/kernel/src_postinst.d/$version") {
           "--arg=$realimageloc$kimage-$version " .
           "/etc/kernel/src_postinst.d/$version") &&
             die "Failed to process /etc/kernel/src_postinst.d/$version";
+}
+
+if (-x "$src_postinst_hook") {
+  &run_hook("postinst", $src_postinst_hook);
 }
 
 

@@ -5,9 +5,9 @@
 # Created On       : Sun Jun 14 03:38:02 1998
 # Created On Node  : tiamat.datasync.com
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Sun Sep 24 14:04:42 2006
-# Last Machine Used: glaurung.internal.golden-gryphon.com
-# Update Count     : 99
+# Last Modified On : Mon Apr 13 14:21:59 2009
+# Last Machine Used: anzu.internal.golden-gryphon.com
+# Update Count     : 100
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
@@ -343,9 +343,6 @@ if (!$initrd) {
   $ENV{INITRD}='No';
 }
 ## Run user hook script here, if any
-if (-x "$preinst_hook") {
-  &run_hook("preinst", $preinst_hook);
-}
 if (-d "/etc/kernel/preinst.d") {
   print STDERR "Examining /etc/kernel/preinst.d/\n";
   system ("run-parts --verbose --exit-on-error --arg=$version" .
@@ -360,6 +357,11 @@ if (-d "/etc/kernel/preinst.d/$version") {
           " /etc/kernel/preinst.d/$version") &&
             die "Failed to process /etc/kernel/preinst.d/$version";
 }
+
+if (-x "$preinst_hook") {
+  &run_hook("preinst", $preinst_hook);
+}
+
 print STDERR "Done.\n";
 
 exit 0;

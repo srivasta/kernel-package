@@ -5,9 +5,9 @@
 # Created On       : Sat Apr 27 05:42:43 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Sat Aug  5 13:20:22 2006
-# Last Machine Used: glaurung.internal.golden-gryphon.com
-# Update Count     : 45
+# Last Modified On : Mon Apr 13 14:22:45 2009
+# Last Machine Used: anzu.internal.golden-gryphon.com
+# Update Count     : 47
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
@@ -145,12 +145,6 @@ for (@ARGV) {
 $ENV{'DEB_MAINT_PARAMS'}="$out";
 
 ## Run user hook script here, if any
-if (-x "$header_prerm_hook") {
-  system ("$header_prerm_hook", $package, $version) &&
-    warn "User hook script $header_prerm_hook failed";
-  #&run_hook("prerm", $header_prerm_hook);
-}
-
 if (-d "/etc/kernel/header_prerm.d") {
   print STDERR "Examining /etc/kernel/header_prerm.d.\n";
   system ("run-parts --verbose --exit-on-error --arg=$version " .
@@ -167,7 +161,11 @@ if (-d "/etc/kernel/header_prerm.d/$version") {
             die "Failed to process /etc/kernel/header_prerm.d/$version";
 }
 
-
+if (-x "$header_prerm_hook") {
+  system ("$header_prerm_hook", $package, $version) &&
+    warn "User hook script $header_prerm_hook failed";
+  #&run_hook("prerm", $header_prerm_hook);
+}
 
 exit 0;
 

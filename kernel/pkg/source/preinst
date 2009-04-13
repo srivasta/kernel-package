@@ -5,9 +5,9 @@
 # Created On       : Sat Apr 27 05:42:43 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Thu Oct 27 13:38:59 2005
-# Last Machine Used: glaurung.internal.golden-gryphon.com
-# Update Count     : 43
+# Last Modified On : Mon Apr 13 14:22:13 2009
+# Last Machine Used: anzu.internal.golden-gryphon.com
+# Update Count     : 44
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
@@ -94,11 +94,6 @@ for (@ARGV) {
 $ENV{'DEB_MAINT_PARAMS'}="$out";
 
 ## Run user hook script here, if any
-if (-x "$src_preinst_hook") {
-    system ("$src_preinst_hook", $package, $version) &&
-	warn "User hook script $src_preinst_hook failed";
-}
-
 if (-d "/etc/kernel/src_preinst.d") {
   print STDERR "Examining /etc/kernel/src_preinst.d.\n";
   system ("run-parts --verbose --exit-on-error --arg=$version " .
@@ -113,6 +108,11 @@ if (-d "/etc/kernel/src_preinst.d/$version") {
           "--arg=$realimageloc$kimage-$version " .
           "/etc/kernel/src_preinst.d/$version") &&
             die "Failed to process /etc/kernel/src_preinst.d/$version";
+}
+
+if (-x "$src_preinst_hook") {
+    system ("$src_preinst_hook", $package, $version) &&
+      warn "User hook script $src_preinst_hook failed";
 }
 
 

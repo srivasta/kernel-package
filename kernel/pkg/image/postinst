@@ -5,9 +5,9 @@
 # Created On       : Sat Apr 27 05:55:26 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Wed Oct  8 00:03:41 2008
+# Last Modified On : Mon Apr 13 14:24:43 2009
 # Last Machine Used: anzu.internal.golden-gryphon.com
-# Update Count     : 360
+# Update Count     : 362
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
@@ -341,10 +341,6 @@ if (!$initrd) {
   $ENV{INITRD}='No';
 }
 ## Run user hook script here, if any
-if ($postinst_hook) {
-  &run_hook("postinst", $postinst_hook);
-}
-
 if (-d "/etc/kernel/postinst.d") {
   print STDERR "Examining /etc/kernel/postinst.d.\n";
   system ("run-parts --verbose --exit-on-error --arg=$version " .
@@ -359,6 +355,10 @@ if (-d "/etc/kernel/postinst.d/$version") {
           "--arg=$realimageloc$kimage-$version " .
           "/etc/kernel/postinst.d/$version") &&
             die "Failed to process /etc/kernel/postinst.d/$version";
+}
+
+if ($postinst_hook) {
+  &run_hook("postinst", $postinst_hook);
 }
 
 # creating some info about kernel and initrd

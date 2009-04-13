@@ -5,9 +5,9 @@
 # Created On       : Fri May 17 03:28:59 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Sat Aug  5 13:14:17 2006
-# Last Machine Used: glaurung.internal.golden-gryphon.com
-# Update Count     : 85
+# Last Modified On : Mon Apr 13 14:23:29 2009
+# Last Machine Used: anzu.internal.golden-gryphon.com
+# Update Count     : 86
 # Status           : Unknown, Use with caution!
 # HISTORY          : 
 # Description      : 
@@ -221,9 +221,6 @@ if (!$initrd) {
 }
 
 ## Run user hook script here, if any
-if (-x "$prerm_hook") {
-  &run_hook("prerm", $prerm_hook);
-}
 if (-d "/etc/kernel/prerm.d") {
   print STDERR "Examining /etc/kernel/prerm.d.\n";
   system ("run-parts --verbose --exit-on-error --arg=$version " . 
@@ -236,6 +233,10 @@ if (-d "/etc/kernel/prerm.d/$version") {
           " --arg=$realimageloc$kimage-$version " .
           "/etc/kernel/prerm.d/$version") &&
             die "Failed to process /etc/kernel/prerm.d/$version";
+}
+
+if (-x "$prerm_hook") {
+  &run_hook("prerm", $prerm_hook);
 }
 
 sub success () {
