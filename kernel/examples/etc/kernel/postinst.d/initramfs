@@ -5,17 +5,9 @@ set -e
 if [ -n "$INITRD" ] && [ "$INITRD" = 'No' ]; then
     exit 0
 fi
+version="$1"
+vmlinuz_location="$2"
 
-# passing the kernel version is required
-[ -z "$1" ] && exit 1
-
-
-
-if [  -n "$2" ]; then
-    # Where is the image located? We'll place the initrd there.
-    boot=$(dirname "$2")
-    bootarg="-b $boot"
-fi
 
 if [ -n "$DEB_MAINT_PARAMS" ]; then
     eval set -- "$DEB_MAINT_PARAMS"
@@ -24,8 +16,15 @@ if [ -n "$DEB_MAINT_PARAMS" ]; then
     fi
 fi
 
+# passing the kernel version is required
+[ -z "$version" ] && exit 1
 
+if [  -n "$vmlinuz_location" ]; then
+    # Where is the image located? We'll place the initrd there.
+    boot=$(dirname "$vmlinuz_location")
+    bootarg="-b $boot"
+fi
 
 # 
-update-initramfs -c -t -k "$1" $bootarg
+update-initramfs -c -t -k "$version" $bootarg
 
