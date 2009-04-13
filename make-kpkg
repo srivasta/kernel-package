@@ -5,9 +5,9 @@
 # Created On       : Mon Jun 17 01:10:11 1996
 # Created On Node  : melkor.pilgrim.umass.edu
 # Last Modified By : Manoj Srivastava
-# Last Modified On : Fri Oct 10 02:19:17 2008
+# Last Modified On : Mon Apr 13 01:18:41 2009
 # Last Machine Used: anzu.internal.golden-gryphon.com
-# Update Count     : 237
+# Update Count     : 242
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
@@ -54,6 +54,7 @@ my $unsign_changelog='';
 my $unsign_source='';
 my $zimage;
 my $mkimage='';
+my $overlay_dir='';
 
 my %option_ctl = 
   (
@@ -74,6 +75,7 @@ my %option_ctl =
    "stem=s"              => \$stem,
    "arch_in_name"        => \$arch_in_name,
    "arch-in-name"        => \$arch_in_name,
+   "overlay-dir=s"       => \$overlay_dir,
    "pgpsign=s"           => \$signature,
    "key_id=s"            => \$key_id,
    "targets"             => \$targ_opt,
@@ -276,6 +278,29 @@ package.(The INITRD_OK variable is now obsolete).
 
 =back
 
+=item B<--overlay-dir> /path/to/directory
+
+=over 2
+
+The specified directory should contain files that will be placed in
+C<./debian> directory of the kernel sources, in preparation to
+building the debian packages. The files will replace anything in
+C</usr/share/kernel-package> that would normally be placed there, and
+it is up to the user to make sure that the files in the overlay
+directory are compatible. f you break C<make-kpkg> with an overlay
+file, you get to keep the pieces.
+
+Please note that C<overlay-dir/Control> and C<overlay-dir/changelog>
+are special, and variable substitution is done on these files.
+
+If a C<overlay-dir/post-install> executable (or executable script)
+exists, it shall be run immediately after C<./debian> is
+populated. The script shall be executed in the C<./debian>
+directory. This can be used, For instance, to delete files the user
+does not want, or to take actions other than simple replacement.
+
+=back
+
 =item B<--zimage>
 
 =over 2
@@ -365,6 +390,7 @@ usage: $main::MYNAME [options] target [target ...]
                        oldconfig.
  --targets             Lists the known targets.
  --noexec              Pass a -n option to the make process
+ --overlay dir         An overlay directory to (re))place file in ./debian
  --verbose             Pass a V=1 option to the make process
  --zimage              Create a kernel using zImage rather than bzImage
  --bzimage             Create a kernel using bzImage (in case the site
@@ -850,6 +876,10 @@ EOERR3
   if ($subarch){
     $command .= " KPKG_SUBARCH=$subarch ";
     $alt_cmd .= " KPKG_SUBARCH=$subarch ";
+  }
+  if ($overlay_dir) {
+    $command .= " KPKG_OVERLAY_DIR=\"$overlay_dir\" ";
+    $alt_cmd .= " KPKG_OVERLAY_DIR=\"$overlay_dir\" ";
   }
   if ($added_modules) {
     $command .= " KPKG_SELECTED_MODULES=\"$added_modules\" ";

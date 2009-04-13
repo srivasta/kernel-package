@@ -4,9 +4,9 @@
 ## Created On       : Tue Nov  1 03:31:22 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Fri Oct 10 00:27:07 2008
+## Last Modified On : Mon Apr 13 01:19:49 2009
 ## Last Machine Used: anzu.internal.golden-gryphon.com
-## Update Count     : 31
+## Update Count     : 33
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : 
@@ -109,6 +109,27 @@ debian/stamp/conf/minimal_debian:
             -e 's/=ST/$(INT_STEM)/g'     -e 's/=B/$(KERNEL_ARCH)/g'         \
             -e 's/=M/$(maintainer) <$(email)>/g'                            \
              $(LIBLOC)/changelog > debian/changelog
+ifneq (,$(strip $(KPKG_OVERLAY_DIR)))
+	test ! -d $(strip $(KPKG_OVERLAY_DIR))  ||                          \
+          (cd $(strip $(KPKG_OVERLAY_DIR)); tar cf - . | (cd $(SRCTOP)/debian; umask 000; tar xsf -))
+	test ! -f $(strip $(KPKG_OVERLAY_DIR))/Control ||                   \
+                sed         -e 's/=V/$(version)/g'  \
+                -e 's/=D/$(debian)/g'         -e 's/=A/$(DEB_HOST_ARCH)/g'  \
+		-e 's/=SA/$(INT_SUBARCH)/g'  \
+		-e 's/=I/$(initrddep)/g'				    \
+		-e 's/=CV/$(VERSION).$(PATCHLEVEL)/g'			    \
+		-e 's/=M/$(maintainer) <$(email)>/g'			    \
+		-e 's/=ST/$(INT_STEM)/g'      -e 's/=B/$(KERNEL_ARCH)/g'    \
+                  $(strip $(KPKG_OVERLAY_DIR))/Control > debian/control
+	test ! -f $(strip $(KPKG_OVERLAY_DIR))/changelog ||                 \
+            sed -e 's/=V/$(version)/g'       \
+            -e 's/=D/$(debian)/g'        -e 's/=A/$(DEB_HOST_ARCH)/g'       \
+            -e 's/=ST/$(INT_STEM)/g'     -e 's/=B/$(KERNEL_ARCH)/g'         \
+            -e 's/=M/$(maintainer) <$(email)>/g'                            \
+             $(strip $(KPKG_OVERLAY_DIR))/changelog > debian/changelog
+	test ! -x $(strip $(KPKG_OVERLAY_DIR))/post-install ||              \
+            (cd debian; $(strip $(KPKG_OVERLAY_DIR))/post-install)
+endif
 	chmod 0644 debian/control debian/changelog
 	test -d ./debian/stamp || mkdir debian/stamp 
 	$(MAKE) -f debian/rules debian/stamp/conf/kernel-conf

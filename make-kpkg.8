@@ -241,7 +241,7 @@ Change the type of configure done from the default \f(CWoldconfig\fR.
 .B Note
 however that 
 .BR make\-kpkg
-scans the config file at startup for some options, notably the fact
+scans the config file at start up for some options, notably the fact
 that modules are enabled or not, so toggling the status during the
 delayed configuration results in an error. If needed, create the
 configuration file as close to the desired one before calling
@@ -278,6 +278,43 @@ The same effect can be achieved by setting the environment
 variable
 .B INITRD
 to any non empty value. 
+.TP
+.B \-\-overlay\-dir "/path/to/directory"
+The specified directory should contain files that will be placed in
+the 
+.I ./debian 
+directory of the kernel sources, in preparation to
+building the debian packages. The files will replace anything in
+.I /usr/share/kernel-package 
+that would normally be placed there, and it is up to the user to make
+sure that the files in the overlay directory are compatible with
+.B make-kpkg. 
+If you break 
+.B make-kpkg
+with an overlay file, you get to keep the pieces. The same effect can
+be achieved by setting the environment variable
+.B KPKG_OVERLAY_DIR.
+.sp
+Please note that 
+.I overlay\-dir/Control 
+and 
+.I overlay-dir/changelog
+are special, and variable substitution is performed on these
+files. Use 
+.I /usr/share/kernel\-package/Control
+and
+.I /usr/share/kernel\-package/changelog
+files as templates.
+.sp
+If a 
+.I overlay\-dir/post\-install
+executable (or executable script) exists, it shall be run immediately
+after 
+.I ./debian 
+is populated. The script shall be executed in the 
+.I ./debian
+directory. This can be used, For instance, to delete files the user
+does not want, or to take actions other than simple replacement.
 .TP
 .B \-\-zimage
 Makes a zImage kernel rather than a bzImage kernel (the default).
@@ -643,6 +680,7 @@ The following variables (documented above) also affect
 .I KPKG_ARCH
 .I CROSS_COMPILE
 .I KPKG_SUBARCH
+.I KPKG_OVERLAY_DIR
 .I ARCH_IN_NAME
 .I INITRD
 .I SOURCE_CLEAN_HOOK

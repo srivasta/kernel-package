@@ -4,9 +4,9 @@
 ## Created On	    : Mon Oct 31 10:41:41 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Fri Oct 10 02:45:00 2008
+## Last Modified On : Mon Apr 13 01:21:30 2009
 ## Last Machine Used: anzu.internal.golden-gryphon.com
-## Update Count	    : 93
+## Update Count	    : 97
 ## Status	    : Unknown, Use with caution!
 ## HISTORY	    :
 ## Description	    : This file provides the commands commaon to a number of
@@ -213,11 +213,6 @@ debian/control debian/changelog debian/rules debian/stamp/conf/full-changelog:
 	@test -f $(LIBLOC)/rules   || exit 4
 	@test -d debian/stamp	   || mkdir debian/stamp
 	@test -d debian/stamp/conf || mkdir debian/stamp/conf
-	sed -e 's/=V/$(KERNELRELEASE)/g' -e 's/=D/$(debian)/g'	      \
-	    -e 's/=A/$(DEB_HOST_ARCH)/g' -e 's/=M/$(maintainer) <$(email)>/g' \
-	    -e 's/=ST/$(INT_STEM)/g'	 -e 's/=B/$(KERNEL_ARCH)/g'	      \
-		$(LIBLOC)/changelog > debian/changelog
-	chmod 0644 debian/control debian/changelog
 	for file in $(DEBIAN_FILES); do				\
 	     cp -f  $(LIBLOC)/$$file ./debian/;			\
 	done
@@ -225,6 +220,41 @@ debian/control debian/changelog debian/rules debian/stamp/conf/full-changelog:
 	   cp -af $(LIBLOC)/$$dir  ./debian/;				\
 	done
 	install -p -m 755 $(LIBLOC)/rules debian/rules
+	sed         -e 's/=V/$(version)/g'  \
+                -e 's/=D/$(debian)/g'         -e 's/=A/$(DEB_HOST_ARCH)/g'  \
+		-e 's/=SA/$(INT_SUBARCH)/g'  \
+		-e 's/=I/$(initrddep)/g'				    \
+		-e 's/=CV/$(VERSION).$(PATCHLEVEL)/g'			    \
+		-e 's/=M/$(maintainer) <$(email)>/g'			    \
+		-e 's/=ST/$(INT_STEM)/g'      -e 's/=B/$(KERNEL_ARCH)/g'    \
+                  $(CONTROL) > debian/control
+	sed -e 's/=V/$(KERNELRELEASE)/g' -e 's/=D/$(debian)/g'	      \
+	    -e 's/=A/$(DEB_HOST_ARCH)/g' -e 's/=M/$(maintainer) <$(email)>/g' \
+	    -e 's/=ST/$(INT_STEM)/g'	 -e 's/=B/$(KERNEL_ARCH)/g'	      \
+		$(LIBLOC)/changelog > debian/changelog
+ifneq (,$(strip $(KPKG_OVERLAY_DIR)))
+	test ! -d $(strip $(KPKG_OVERLAY_DIR))  ||                          \
+          (cd $(strip $(KPKG_OVERLAY_DIR)); tar cf - . | (cd $(SRCTOP)/debian; umask 000; tar xsf -))
+	test ! -f $(strip $(KPKG_OVERLAY_DIR))/Control ||                   \
+                sed         -e 's/=V/$(version)/g'  \
+                -e 's/=D/$(debian)/g'         -e 's/=A/$(DEB_HOST_ARCH)/g'  \
+		-e 's/=SA/$(INT_SUBARCH)/g'  \
+		-e 's/=I/$(initrddep)/g'				    \
+		-e 's/=CV/$(VERSION).$(PATCHLEVEL)/g'			    \
+		-e 's/=M/$(maintainer) <$(email)>/g'			    \
+		-e 's/=ST/$(INT_STEM)/g'      -e 's/=B/$(KERNEL_ARCH)/g'    \
+                  $(strip $(KPKG_OVERLAY_DIR))/Control > debian/control
+	test ! -f $(strip $(KPKG_OVERLAY_DIR))/changelog ||                 \
+            sed -e 's/=V/$(version)/g'       \
+            -e 's/=D/$(debian)/g'        -e 's/=A/$(DEB_HOST_ARCH)/g'       \
+            -e 's/=ST/$(INT_STEM)/g'     -e 's/=B/$(KERNEL_ARCH)/g'         \
+            -e 's/=M/$(maintainer) <$(email)>/g'                            \
+             $(strip $(KPKG_OVERLAY_DIR))/changelog > debian/changelog
+	test ! -x $(strip $(KPKG_OVERLAY_DIR))/post-install ||              \
+            (cd debian; $(strip $(KPKG_OVERLAY_DIR))/post-install)
+endif
+	chmod 0644 debian/control debian/changelog
+	$(MAKE) -f debian/rules debian/stamp/conf/kernel-conf
 	@echo done > debian/stamp/conf/full-changelog
 
 debian/stamp/conf/common: debian/stamp/conf/full-changelog
@@ -237,9 +267,6 @@ ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
 	exit 3
 endif
 	echo done >  $@
-
-
-
 
 
 debian/stamp/build/kernel: conf.vars

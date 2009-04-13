@@ -19,7 +19,7 @@ _make_kpkg()
              --append_to_version --append-to-version --arch --arch_in_name \
              --arch-in-name binary build buildpackage --bzimage clean \
              --config configure --cross_compile --cross-compile debian \
-             --help --initrd kernel_doc kernel_headers kernel_image \
+             --help --initrd --overlay-dir kernel_doc kernel_headers kernel_image \
              kernel_source linux_doc linux_headers linux_image \
              linux_source libc-kheaders modules modules_clean modules_config \
              modules_image --noexec --pgpsign --stem --revision --rootcmd --subarch \
@@ -38,6 +38,7 @@ _make_kpkg()
     [[ "$CROSS_COMPILE" ]] && paroptions=${paroptions//--cross[-_]compile}
     [[ "$KPKG_ARCH" ]] && paroptions=${paroptions/--arch}
     [[ "$KPKG_SUBARCH" ]] && paroptions=${paroptions/--subarch}
+    [[ "$KPKG_OVERLAY_DIR" ]] && paroptions=${paroptions/--overlay-dir}
     [[ $(grep CONFIG_BLK_DEV_INITRD .config 2>/dev/null \
         | cut -d= -f2) == "y" ]] && \
 	[[ "$INITRD" == "YES" ]] && paroptions=${paroptions/--initrd}
