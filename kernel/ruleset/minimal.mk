@@ -4,9 +4,9 @@
 ## Created On       : Tue Nov  1 03:31:22 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
-## Last Modified On : Mon Apr 13 01:19:49 2009
+## Last Modified On : Mon Apr 13 22:43:53 2009
 ## Last Machine Used: anzu.internal.golden-gryphon.com
-## Update Count     : 33
+## Update Count     : 35
 ## Status           : Unknown, Use with caution!
 ## HISTORY          : 
 ## Description      : 
@@ -51,6 +51,12 @@ include $(DEBDIR)/ruleset/misc/config.mk
 
 ifneq ($(strip $(filter ppc powerpc ppc64 powerpc64,$(architecture))),)
   include $(DEBDIR)/ruleset/arches/what_is_ppc_called_today.mk
+endif
+ifeq ($(strip $(architecture)),armel)
+  KERNEL_ARCH = arm
+endif
+ifeq ($(strip $(architecture)),armeb)
+  KERNEL_ARCH = arm
 endif
 
 FILES_TO_CLEAN  = modules/modversions.h modules/ksyms.ver conf.vars \
