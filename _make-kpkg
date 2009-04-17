@@ -29,7 +29,7 @@ _make_kpkg()
 
 
     [[ $prev == '--config' ]] && \
-	paroptions='config oldconfig menuconfig xconfig'
+	paroptions='config oldconfig silentoldconfig menuconfig xconfig'
 
     #exclude some options
     [[ "$DEBIAN_REVISION_MANDATORY" ]] ||\
