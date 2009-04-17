@@ -340,9 +340,12 @@ real_stamp_clean:
 ifeq ($(strip $(DEB_HOST_ARCH_OS)), linux)
 	$(save_upstream_debianization)
 	test ! -f .config  || cp -pf .config ,,precious
-	$(MAKE) $(FLAV_ARG) $(EXTRAV_ARG) $(CROSS_ARG) ARCH=$(KERNEL_ARCH) -C Documentation/lguest clean
+	test ! -d Documentation/lguest  ||                   \
+            $(MAKE) $(FLAV_ARG) $(EXTRAV_ARG) $(CROSS_ARG)   \
+               ARCH=$(KERNEL_ARCH) -C Documentation/lguest clean
 	test ! -f Makefile || \
-	    $(MAKE) $(FLAV_ARG) $(EXTRAV_ARG) $(CROSS_ARG) ARCH=$(KERNEL_ARCH) distclean
+	    $(MAKE) $(FLAV_ARG) $(EXTRAV_ARG) $(CROSS_ARG)    \
+                ARCH=$(KERNEL_ARCH) distclean
 	test ! -f ,,precious || mv -f ,,precious .config
 	$(restore_upstream_debianization)
 else
