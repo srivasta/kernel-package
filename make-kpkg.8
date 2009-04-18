@@ -271,13 +271,26 @@ If
 .B make\-kpkg 
 is generating a 
 .I kernel\-image 
-package, perform any actions
-necessary for a kernel loaded using 
-.B initrd.  
+package, arrange to convey to the hook scripts that this image
+requires an 
+.I initrd,
+and that the 
+.I initrd
+generation hook scripts should not short circuit early. Without this
+option, the example
+.I initramfs
+hook scripts bundled in with
+.B kernel-package
+will take no action on installation.
 The same effect can be achieved by setting the environment
 variable
 .B INITRD
-to any non empty value. 
+to any non empty value.  Please note that unless there are hook
+scripts in 
+.I /etc/kenel
+or added into the hook script parameter of
+.I /etc/kernel-img.conf.
+no initrd will be created.
 .TP
 .B \-\-overlay\-dir "/path/to/directory"
 The specified directory should contain files that will be placed in
