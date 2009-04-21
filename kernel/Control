@@ -73,7 +73,7 @@ Description: Linux kernel binary image for version =V=SA
 
 Package: =ST-image-=V=SA-dbg
 Architecture: =A 
-Section: kernel 
+Section: debug
 Priority: optional 
 Depends: =ST-image-=V=SA
 Provides: =ST-debug,  =ST-debug-=CV, =ST-debug-=V=SA
