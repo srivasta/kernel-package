@@ -40,13 +40,11 @@ debian/stamp/install/$(i_package):
 		echo "	   \"$(strip $(KERNELRELEASE))\" "; \
 		echo "Please correct this."; \
 		exit 2,)
-	rm -f -r ./$(TMPTOP) ./$(TMPTOP).deb
-	@test -d debian/stamp/install || mkdir debian/stamp/install
-	$(make_directory) $(TMPTOP)/etc/kernel/postinst.d
-	$(make_directory) $(TMPTOP)/etc/kernel/preinst.d
-	$(make_directory) $(TMPTOP)/etc/kernel/postrm.d
-	$(make_directory) $(TMPTOP)/etc/kernel/prerm.d
 	$(eval $(which_debdir))
+	rm -f -r ./$(TMPTOP) ./$(TMPTOP).deb
+	@test -d debian/stamp/install || mkdir -p debian/stamp/install
+	$(make_directory) $(TMPTOP)/etc/kernel/postinst.d $(TMPTOP)/etc/kernel/preinst.d \
+	                  $(TMPTOP)/etc/kernel/postrm.d $(TMPTOP)/etc/kernel/prerm.d
 	$(make_directory) $(TMPTOP)/$(IMAGEDIR)
 	$(make_directory) $(DOCDIR)/examples
 ######################################################################
