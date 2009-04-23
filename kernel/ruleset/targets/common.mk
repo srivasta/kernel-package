@@ -32,6 +32,15 @@
 ##
 ###############################################################################
 
+# fakeroot has a bad interaction with parrallel builds and the
+# buildpackage target
+SERIAL_BUILD_OPTIONS=$(DEB_BUILD_OPTIONS)
+ifneq (,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
+  ifeq (fakeroot,$(strip $(root_cmd)))
+    SERIAL_BUILD_OPTIONS=$(strip $(filter-out parallel=%,$(DEB_BUILD_OPTIONS)))
+  endif
+endif
+
 # Find out whether we need to have a pre-defined .config
 NEED_CONFIG = $(shell if [ $(VERSION) -lt 2 ]; then			   \
 			   echo "";					   \
@@ -378,9 +387,9 @@ endif
 # work around idiocy in recent kernel versions
 # However, this makes it harder to use git versions of the kernel
 	$(save_upstream_debianization)
-	dpkg-buildpackage -nc $(strip $(int_root_cmd)) $(strip $(int_us))  \
-	       $(strip $(int_uc)) $(strip $(do_parallel)) -k"$(pgp)"       \
-               -m"$(maintainer) <$(email)>"
+	DEB_BUILD_OPTIONS=$(SERIAL_BUILD_OPTIONS) CONCURRENCY_LEVEL=1 \
+          dpkg-buildpackage -nc $(strip $(int_root_cmd)) $(strip $(int_us)) \
+            $(strip $(int_uc)) -j1 -k"$(pgp)"  -m"$(maintainer) <$(email)>"
 	rm -f stamp-building
 	$(restore_upstream_debianization)
 	echo done >  $@
