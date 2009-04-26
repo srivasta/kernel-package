@@ -46,17 +46,12 @@ $(eval $(which_debdir))
 include $(DEBDIR)/ruleset/common/archvars.mk
 include $(DEBDIR)/ruleset/misc/version_vars.mk
 include $(DEBDIR)/ruleset/misc/defaults.mk
+include $(DEBDIR)/ruleset/misc/kernel_arch.mk
 -include $(CONFLOC)
 include $(DEBDIR)/ruleset/misc/config.mk
 
 ifneq ($(strip $(filter ppc powerpc ppc64 powerpc64,$(architecture))),)
   include $(DEBDIR)/ruleset/arches/what_is_ppc_called_today.mk
-endif
-ifeq ($(strip $(architecture)),armel)
-  KERNEL_ARCH = arm
-endif
-ifeq ($(strip $(architecture)),armeb)
-  KERNEL_ARCH = arm
 endif
 
 FILES_TO_CLEAN  = modules/modversions.h modules/ksyms.ver conf.vars \
