@@ -44,9 +44,12 @@ endef
 $(eval $(which_debdir))
 
 include $(DEBDIR)/ruleset/common/archvars.mk
-include $(DEBDIR)/ruleset/misc/version_vars.mk
+include $(DEBDIR)/ruleset/common/pkgvars.mk
+include $(DEBDIR)/ruleset/common/install_cmds.mk
 include $(DEBDIR)/ruleset/misc/defaults.mk
+include $(DEBDIR)/ruleset/misc/version_vars.mk
 include $(DEBDIR)/ruleset/misc/kernel_arch.mk
+include $(DEBDIR)/ruleset/misc/pkg_names.mk
 -include $(CONFLOC)
 include $(DEBDIR)/ruleset/misc/config.mk
 
