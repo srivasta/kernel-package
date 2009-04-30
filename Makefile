@@ -82,10 +82,12 @@ check:
 	bash  -n  kernel/pkg/virtual/um/prerm
 	bash  -n  kernel/pkg/virtual/xen/postinst
 	bash  -n  kernel/pkg/virtual/xen/prerm
+	bash  -n  kernel/examples/etc/kernel/postinst.d/yaird
 	bash  -n  kernel/examples/etc/kernel/postinst.d/initramfs
 	bash  -n  kernel/examples/etc/kernel/postinst.d/symlink_hook
 	bash  -n  kernel/examples/etc/kernel/postinst.d/grub_conf
 	bash  -n  kernel/examples/etc/kernel/postinst.d/force-build-link
+	bash  -n  kernel/examples/etc/kernel/postrm.d/yaird
 	bash  -n  kernel/examples/etc/kernel/postrm.d/initramfs
 	bash  -n  kernel/examples/etc/kernel/postrm.d/grub_rm
 

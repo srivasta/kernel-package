@@ -93,6 +93,8 @@ Phase TWO: Create a portable kernel image .deb file
       since then adding third party modules to the machine has fewer
       gotchas. Note that you will have to arrange for the actual
       initrd creation to take place by installting a script like
+      /usr/share/kerne-package/examples/etc/kernel/post{inst,rm}.d/yaird,
+      or, alternately,
       /usr/share/kerne-package/examples/etc/kernel/post{inst,rm}.d/initramfs 
       into the correspondung directories /etc/kernel/post{inst,rm}.d,
       since the kernel-postinst does not arrange for the initramfs
@@ -296,7 +298,9 @@ shall not have any effect)
 
 Note that you will have to arrange for the actual initrd creation to
 take place by installting a script like
-/usr/share/kerne-package/examples/etc/kernel/post{inst,rm}.d/initramfs
+/usr/share/kernel-package/examples/etc/kernel/post{inst,rm}.d/yaird,
+or, alternately,
+/usr/share/kernel-package/examples/etc/kernel/post{inst,rm}.d/initramfs
 into the correspondung directories /etc/kernel/post{inst,rm}.d, since
 the kernel-postinst does not arrange for the initramfs creatorto be
 called. You can thuse select your own; initramfs-tools or yaird
@@ -328,6 +332,14 @@ action.
  script for things to happen when you install the kernel imaeg
  package.  The user provides such scripts. For example, to invoke
  mkinitramfs, I did:
+--8<---------------cut here---------------start------------->8---
+ cp /usr/share/kernel-package/examples/etc/kernel/postinst.d/yaird \
+    /etc/kernel/postinst.d/
+ cp /usr/share/kernel-package/examples/etc/kernel/postrm.d/yaird \
+    /etc/kernel/postrm.d/
+--8<---------------cut here---------------end--------------->8---
+
+        Or, alternately, you could do:
 --8<---------------cut here---------------start------------->8---
  cp /usr/share/kernel-package/examples/etc/kernel/postinst.d/initramfs \
     /etc/kernel/postinst.d/
