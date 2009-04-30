@@ -271,7 +271,8 @@ If
 .B make\-kpkg 
 is generating a 
 .I kernel\-image 
-package, arrange to convey to the hook scripts that this image
+package, arrange to convey to the hook scripts run from the post
+installation maintainer scripts that this image
 requires an 
 .I initrd,
 and that the 
@@ -290,7 +291,8 @@ scripts in
 .I /etc/kenel
 or added into the hook script parameter of
 .I /etc/kernel-img.conf.
-no initrd will be created.
+no initrd will be created (the bundled in example scripts are
+just examples -- user action is required before anything happens).
 .TP
 .B \-\-overlay\-dir "/path/to/directory"
 The specified directory should contain files that will be placed in

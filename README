@@ -71,13 +71,23 @@ Phase TWO: Create a portable kernel image .deb file
    % $Get_Root make-kpkg --initrd --revision=custom.1.0 kernel_image 
       Personally, I prefer non initrd images for my personal machines,
       since then adding third party modules to the machine has fewer
-      gotchas
+      gotchas. Note that you will have to arrange for the actual
+      initrd creation to take place by installting a script like
+      /usr/share/kerne-package/examples/etc/kernel/post{inst,rm}.d/initramfs 
+      into the correspondung directories /etc/kernel/post{inst,rm}.d,
+      since the kernel-postinst does not arrange for the initramfs
+      creatorto be called. You can thuse select your own;
+      initramfs-tools or yaird.
 
 Phase THREE: Install the kernel image on one or more machines
  5# dpkg -i ../kernel-image-X.XXX_1.0_<arch>.deb
  6# shutdown -r now # If and only if LILO/SILO/QUIK/PALO/VMELILO/ZIPL/yaboot/..
                     # worked or you have a means of
                     # booting the new kernel. YOU HAVE BEEN WARNED!!
+
+Also, make sure you have configured /etc/kernel-img.conf and also
+/etc/kernel/*.d by dropping in the correct scripts there. (symlink
+creation, initramfs generation, running boot loaders, etc)
 
  With the addition of fakeroot ( a really nice program, I recommend
  it). Steps 1 to 4 can be carried out as a non root user. Step 5 does
@@ -268,6 +278,15 @@ kernel enabled, you'll type:
 compile again with a different revision, or else the revision flag
 shall not have any effect)
 
+
+Note that you will have to arrange for the actual initrd creation to
+take place by installting a script like
+/usr/share/kerne-package/examples/etc/kernel/post{inst,rm}.d/initramfs
+into the correspondung directories /etc/kernel/post{inst,rm}.d, since
+the kernel-postinst does not arrange for the initramfs creatorto be
+called. You can thuse select your own; initramfs-tools or yaird
+
+
  NOTE about using initial ram disk images (initrd).  Recent
  kitchen sink kernel image packages tend to use this, in order to
  accommodate as wide a variety of root file system types as humanly
@@ -288,6 +307,30 @@ scripts in /etc/kernel/postinst.d/ and /etc/kernel/postrm.d, to create
 and remove the initramfs. Make sure that these scripts pay attention
 to the INITRD env variable to determine whether or not to take any
 action. 
+
+
+ Let me repeat: 
+ Since nothing is created automatically. you need to provide a hook
+ script for things to happen when you install the kernel imaeg
+ package.  The user provides such scripts. For example, to invoke
+ mkinitramfs, I did:
+--8<---------------cut here---------------start------------->8---
+ cp /usr/share/kernel-package/examples/etc/kernel/postinst.d/initramfs \
+    /etc/kernel/postinst.d/
+ cp /usr/share/kernel-package/examples/etc/kernel/postrm.d/initramfs \
+    /etc/kernel/postrm.d/
+--8<---------------cut here---------------end--------------->8---
+
+        To run grub, I have in /etc/kernel-img.conf:
+--8<---------------cut here---------------start------------->8---
+postinst_hook = update-grub
+postrm_hook   = update-grub
+--8<---------------cut here---------------end--------------->8---
+
+You can look at other example in the examples directory:
+/usr/share/kernel-package/examples/ to see if there are other example
+script you want to cp into /etc/kernel -- and you can create your own
+scripts.
 
 When make-kpkg is finished, you'll have 
 kernel-image-2.0.29_custom.1.0_i386.deb and all it takes now is to
