@@ -23,7 +23,7 @@ case $architecture in
     mipsel)
         architecture='mips'
         ;;
-    amd64)
+    amd64|i386)
         architecture='x86'
         ;;
     *)
@@ -49,7 +49,7 @@ if [ -d "/usr/src/linux-headers-$version" ]; then
     if [ ! -s "asm-$architecture" ]; then
         echo >&2 "/usr/src/linux-headers-$version/include/asm-$architecture does not exist"
     elif [ -e 'asm' ]; then
-        if [ ~ -l 'asm' ]; then
+        if [ ! -L 'asm' ]; then
             echo >&2 "/usr/src/linux-headers-$version/include/asm is not a symbolic link"
         else
             rm -f asm
