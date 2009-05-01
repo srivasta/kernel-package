@@ -26,5 +26,6 @@ if [  -n "$vmlinuz_location" ]; then
 fi
 
 # 
-yaird -o $boot/initrd.img-$version $version
-
+if which yaird >/dev/null ; then
+    yaird -o $boot/initrd.img-$version $version
+fi

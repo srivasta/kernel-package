@@ -19,6 +19,7 @@ fi
 # passing the kernel version is required
 [ -z "$version" ] && exit 1
 
+
 if [  -n "$vmlinuz_location" ]; then
     # Where is the image located? We'll place the initrd there.
     boot=$(dirname "$vmlinuz_location")
@@ -26,5 +27,7 @@ if [  -n "$vmlinuz_location" ]; then
 fi
 
 # 
-update-initramfs -c -t -k "$version" $bootarg
+if which update-initramfs >/dev/null ; then
+    update-initramfs -c -t -k "$version" $bootarg
+fi
 

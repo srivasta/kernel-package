@@ -30,4 +30,10 @@ if [  -n "$vmlinuz_location" ]; then
 fi
 
 # try and remove the initramfs, and do not care if it fails
-update-initramfs -d -k "$version" $bootarg || true
+if which update-initramfs >/dev/null ; then
+    update-initramfs -d -k "$version" $bootarg || true
+fi
+# try and remove the initramfs, and do not care if it fails
+if [ -e "$boot/initrd.img-$version" ]; then
+   rm -f "$boot/initrd.img-$version"  || true
+fi
