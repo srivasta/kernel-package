@@ -22,8 +22,8 @@
 set -e
 
 
-VERSION=$1
-KERNELDIR=$2
+version=$1
+vmlinuz_location=$2
 
 if [ -n "$DEB_MAINT_PARAMS" ]; then
     eval set -- "$DEB_MAINT_PARAMS"
@@ -32,8 +32,11 @@ if [ -n "$DEB_MAINT_PARAMS" ]; then
     fi
 fi
 
-MODULEDIR=/lib/modules/$VERSION
-HEADERDIR=/usr/src/linux-headers-$VERSION
+# passing the kernel version is required
+[ -z "$version" ] && exit 1
+
+MODULEDIR=/lib/modules/$version
+HEADERDIR=/usr/src/linux-headers-$version
 
 # exit silently if there is no module dir
 test -d $MODULEDIR || exit 0
