@@ -347,6 +347,12 @@ action.
     /etc/kernel/postrm.d/
 --8<---------------cut here---------------end--------------->8---
 
+
+        These scripts above to nothing unless the correspondig
+ packages are isntalled (initramfs-tools or yaird), so you could
+ potentially cp both over -- as long as you never install both yaired
+ and initramfs-tools at the same time.
+
         To run grub, I have in /etc/kernel-img.conf:
 --8<---------------cut here---------------start------------->8---
 postinst_hook = update-grub
@@ -357,6 +363,23 @@ You can look at other example in the examples directory:
 /usr/share/kernel-package/examples/ to see if there are other example
 script you want to cp into /etc/kernel -- and you can create your own
 scripts.
+
+For example, if you use linux-headers-* packages to compile third
+party modules so that you do not havce to keep the sources directory
+around, you might be interested in:
+--8<---------------cut here---------------start------------->8---
+/etc/kernel/header_postinst.d/link
+/etc/kernel/header_postrm.d/link
+/etc/kernel/header_prerm.d/link
+/etc/kernel/postinst.d/force-build-link
+/etc/kernel/postrm.d/force-build-link
+--8<---------------cut here---------------end--------------->8---
+
+        These scripts will try to make sure that the symlink
+ /lib/modules/$VERSION/build 
+ is sane -- that is points to the header packages whether you install
+ the image packages first, or the header packages first -- and takes
+ care of cleanup when either of the packages are installed.
 
 When make-kpkg is finished, you'll have 
 kernel-image-2.0.29_custom.1.0_i386.deb and all it takes now is to
