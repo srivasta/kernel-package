@@ -82,14 +82,18 @@ check:
 	bash  -n  kernel/pkg/virtual/um/prerm
 	bash  -n  kernel/pkg/virtual/xen/postinst
 	bash  -n  kernel/pkg/virtual/xen/prerm
-	bash  -n  kernel/examples/etc/kernel/postinst.d/yaird
-	bash  -n  kernel/examples/etc/kernel/postinst.d/initramfs
-	bash  -n  kernel/examples/etc/kernel/postinst.d/symlink_hook
-	bash  -n  kernel/examples/etc/kernel/postinst.d/grub_conf
-	bash  -n  kernel/examples/etc/kernel/postinst.d/force-build-link
-	bash  -n  kernel/examples/etc/kernel/postrm.d/yaird
-	bash  -n  kernel/examples/etc/kernel/postrm.d/initramfs
-	bash  -n  kernel/examples/etc/kernel/postrm.d/grub_rm
+	bash -n  kernel/examples/etc/kernel/header_postinst.d/link
+	bash -n  kernel/examples/etc/kernel/postinst.d/initramfs
+	bash -n  kernel/examples/etc/kernel/postinst.d/symlink_hook
+	bash -n  kernel/examples/etc/kernel/postinst.d/grub_conf
+	bash -n  kernel/examples/etc/kernel/postinst.d/force-build-link
+	bash -n  kernel/examples/etc/kernel/postinst.d/yaird
+	bash -n  kernel/examples/etc/kernel/header_prerm.d/link
+	bash -n  kernel/examples/etc/kernel/postrm.d/initramfs
+	bash -n  kernel/examples/etc/kernel/postrm.d/grub_rm
+	bash -n  kernel/examples/etc/kernel/postrm.d/force-build-link
+	bash -n  kernel/examples/etc/kernel/postrm.d/yaird
+	bash -n  kernel/examples/etc/kernel/header_postrm.d/link
 
 install: genpo4a
 	$(make_directory)  $(MAN1DIR)
