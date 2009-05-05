@@ -127,8 +127,8 @@ that is, if it lives in /bin, /sbin, /usr/bin, or /usr/sbin, or must
 be an absolute path instead. This script shall be called with two
 arguments, the first being the
 .I name
-of the package being installed (could be kernel\-source\-X.X.XX or
-kernel\-headers\-X.X.XX), and the second argument being the
+of the package being installed (could be kernel source or headers),
+and the second argument being the
 .I version
 of the package being installed. Errors in the script shall cause the
 postinst to fail. 
@@ -141,7 +141,7 @@ path if the script lives in a safe path -- that is, if it lives in
 instead. This script shall be called with two arguments, the first
 being the
 .I name
-of the package being installed (kernel\-headers\-X.X.XX), and the second argument being the
+of the package being installed, and the second argument being the
 .I version
 of the package being installed. Errors in the script shall cause the
 postinst to fail. 
@@ -164,7 +164,7 @@ variable to no. This variable is set by default.
 .TP
 .B relink_build_link
 This option manipulates the build link created by recent kernels. If
-the link is a dangling link, and if a the corresponding kernel\-headers
+the link is a dangling link, and if a the corresponding kernel headers
 appear to have been installed on the system, a new symlink shall be
 created to point to them. The default is to relink the build link
 (YES).
@@ -172,7 +172,7 @@ created to point to them. The default is to relink the build link
 .B force_build_link
 This option manipulates the build link created by recent kernels. If
 the link is a dangling link, a new symlink shall be created to point
-to /usr/src/kernel\-headers\-X.Y.ZZ, whether they have been installed or
+to kernel headers data in /usr/src, whether they have been installed or
 not. The default is unset, we don't create potentially dangling
 symlinks by default.
 .TP
@@ -185,14 +185,13 @@ is to relink (delete) the source link (YES).
 This option has been put in for the people who are vastly irritated on
 being warned about preexisting modules directory 
 .I /lib/modules/$version
-That directory may belong to an old or defunct 
-.I kernel\-image\-$version 
-package, in which case problems may arise with leftover modules in that
-dir tree, or the directory may legitimately exist due to a independent
-modules package being installed for this kernel version that has
-already been unpacked.  In this latter case the existence of the
-directory is benign.  If you set this variable, you shall no longer be
-given a chance to abort if a preexisting modules directory 
+That directory may belong to an old or defunct kernel image package,
+in which case problems may arise with leftover modules in that
+directory tree, or the directory may legitimately exist due to a
+independent modules package being installed for this kernel version
+that has already been unpacked.  In this latter case the existence of
+the directory is benign.  If you set this variable, you shall no
+longer be given a chance to abort if a preexisting modules directory
 .I /lib/modules/$version
 is detected.  This is unset be default.
 .TP 
