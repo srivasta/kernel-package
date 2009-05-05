@@ -27,7 +27,7 @@
 .\" NAME should be all caps, SECTION should be 1-8, maybe w/ subsection
 .\" other parms are allowed: see man(7), man(1)
 .SH NAME
-kernel\-pkg.conf \- site wide configuration file for make\-kpkg
+kernel\-pkg.conf \- configuration file for make\-kpkg
 .SH SYNOPSIS
 .I /etc/kernel\-pkg.conf
 or
@@ -55,8 +55,8 @@ overridden by options to
 At the moment, the user modifiable variables supported are:
 .TP
 .B maintainer
-Local kernel-* package maintainer. Set up at package installation by
-the 
+Local kernel (image, header, doc, etc) package maintainer. Set up at
+package installation by the
 .IR postinst.
 Can be overridden by the environment variable 
 .B KPKG_MAINTAINER.
@@ -71,10 +71,15 @@ Can be overridden by the environment variable
 .B KPKG_EMAIL.
 .TP
 .B pgp           
-Name to search for in the pgp database 
-.BI if
-separate modules (like pcmcia etc) are being built in
-.IR /usr/src/modules/.
+A key-ID to use when signing packages. Usually passed along to
+.I dpkg\-buildpackage
+using the 
+.I \-k
+option, and also third party modules in the 
+.B KMAINT
+environment variable, if separate modules (like pcmcia etc) are being
+built in
+.IR $MODULE_PATH.
 Can be overridden by the environment variable 
 .B PGP_SIGNATURE, 
 and is overridden (again) by the 
@@ -86,8 +91,7 @@ Defaults to
 (Optional)
 .TP
 .B debian         
-The version of the kernel packages, includes both the upstream
-Set to YES, this causes a make clean to be run in the version 
+The version of the kernel packages, includes both the upstream version
 and the Debian revision. Can be overridden
 by the environment variable 
 .B DEBIAN_REVISION, 
@@ -126,9 +130,8 @@ Defaults to oldconfig, which is good for non\-interactive (or minimally
 interactive) runs.
 (ENV variable
 .B CONFIG_TARGET
-overrides this setting.)
-If the value of config_target is other than config, oldconfig,
-menuconfig or xconfig then it is reset to oldconfig.
+overrides this setting.)  If the value of config_target is not
+recognized, then it is reset to oldconfig.
 .TP
 .B use_saved_config
 This is an experts only variable. If set to NO (ENV
@@ -180,8 +183,7 @@ overrides this.
 .TP
 .B install_vmlinux
 Set to YES to install the uncompressed kernel ELF image along with the bootable
-compressed kernel image (vmlinuz).  This image is necessary for profiling
-kernel and userspace with oprofile (oprofile.sourceforge.net, i386 only).
+compressed kernel image (vmlinuz).
 .TP 
 .B image_clean_hook
 Set to point to an executable, this shall cause that executable to run
