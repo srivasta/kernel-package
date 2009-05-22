@@ -44,7 +44,6 @@ endef
 $(eval $(which_debdir))
 
 include $(DEBDIR)/ruleset/common/archvars.mk
-include $(DEBDIR)/ruleset/common/pkgvars.mk
 include $(DEBDIR)/ruleset/common/install_cmds.mk
 include $(DEBDIR)/ruleset/misc/defaults.mk
 include $(DEBDIR)/ruleset/misc/version_vars.mk
