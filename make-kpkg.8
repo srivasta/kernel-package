@@ -288,7 +288,7 @@ variable
 .B INITRD
 to any non empty value.  Please note that unless there are hook
 scripts in 
-.I /etc/kenel
+.I /etc/kernel
 or added into the hook script parameter of
 .I /etc/kernel-img.conf.
 no initrd will be created (the bundled in example scripts are
@@ -564,7 +564,7 @@ of the kernel image, and the second argument being the
 .I location
 of the kernel image itself. Since debconf is in
 use before the script is called, this script should issue no
-diagnostic messgaes to stdout --  while the postinst does call
+diagnostic messages to stdout --  while the postinst does call
 .B db_stop
 , debconf does not restore stdout, so messages to stdout disappear. 
 .IP

@@ -135,7 +135,7 @@ make: *** [all] Error 2
 	withdrawn. Problems seem to go away when one downgrades to 5.004.
 
 	This is also caused by a broken grep, (for example, grep
-	2.3-1). Upgrading to a fixed grep solves this (2.3-4 is knownn
+	2.3-1). Upgrading to a fixed grep solves this (2.3-4 is known
 	to work, at the time of writing this).
 
      m) Some versions of gcc do not interact well with the kernel
@@ -197,7 +197,7 @@ VFS: Cannot open root device "308" or 03:08
         r) When run in a git sourced tree, scripts/setlocalversion
            checks to see if the tree is the trunk, if not, it adds
            version information to the kernel version. It also checks
-           to see if there are uncommited changes, if so, it adds the
+           to see if there are uncommitted changes, if so, it adds the
            string "-dirty" to the version. Since we change a couple of
            files in ./scripts/, this falls afoul of the make-kpkg
            checks, since the version number is now different from what
@@ -211,8 +211,8 @@ VFS: Cannot open root device "308" or 03:08
 
       t)
          There is a problem when GREP_OPTIONS are exported, since it
-         may impact the results comoing out of grep in scripts that
-         are tun in shubshells -- and, of course, make-kpkg is one of
+         may impact the results coming out of grep in scripts that
+         are tun in subshells -- and, of course, make-kpkg is one of
          them.
 
            $ echo $GREP_OPTIONS --colour=always

@@ -92,13 +92,13 @@ Phase TWO: Create a portable kernel image .deb file
       Personally, I prefer non initrd images for my personal machines,
       since then adding third party modules to the machine has fewer
       gotchas. Note that you will have to arrange for the actual
-      initrd creation to take place by installting a script like
-      /usr/share/kerne-package/examples/etc/kernel/post{inst,rm}.d/yaird,
+      initrd creation to take place by installing a script like
+      /usr/share/kernel-package/examples/etc/kernel/post{inst,rm}.d/yaird,
       or, alternately,
       /usr/share/kerne-package/examples/etc/kernel/post{inst,rm}.d/initramfs 
-      into the correspondung directories /etc/kernel/post{inst,rm}.d,
+      into the corresponding directories /etc/kernel/post{inst,rm}.d,
       since the kernel-postinst does not arrange for the initramfs
-      creatorto be called. You can thuse select your own;
+      creator to be called. You can thus select your own;
       initramfs-tools or yaird.
 
 Phase THREE: Install the kernel image on one or more machines
@@ -297,13 +297,13 @@ compile again with a different revision, or else the revision flag
 shall not have any effect)
 
 Note that you will have to arrange for the actual initrd creation to
-take place by installting a script like
+take place by installing a script like
 /usr/share/kernel-package/examples/etc/kernel/post{inst,rm}.d/yaird,
 or, alternately,
 /usr/share/kernel-package/examples/etc/kernel/post{inst,rm}.d/initramfs
-into the correspondung directories /etc/kernel/post{inst,rm}.d, since
-the kernel-postinst does not arrange for the initramfs creatorto be
-called. You can thuse select your own; initramfs-tools or yaird
+into the corresponding directories /etc/kernel/post{inst,rm}.d, since
+the kernel-postinst does not arrange for the initramfs creator to be
+called. You can thus select your own; initramfs-tools or yaird
 
 
  NOTE about using initial ram disk images (initrd).  Recent kitchen
@@ -329,7 +329,7 @@ action.
 
  Let me repeat: 
  Since nothing is created automatically. you need to provide a hook
- script for things to happen when you install the kernel imaeg
+ script for things to happen when you install the kernel image
  package.  The user provides such scripts. For example, to invoke
  mkinitramfs, I did:
 --8<---------------cut here---------------start------------->8---
@@ -348,9 +348,9 @@ action.
 --8<---------------cut here---------------end--------------->8---
 
 
-        These scripts above to nothing unless the correspondig
- packages are isntalled (initramfs-tools or yaird), so you could
- potentially cp both over -- as long as you never install both yaired
+        These scripts above do nothing unless the corresponding
+ packages are installed (initramfs-tools or yaird), so you could
+ potentially cp both over -- as long as you never install both yaird
  and initramfs-tools at the same time.
 
         To run grub, I have in /etc/kernel-img.conf:
@@ -365,7 +365,7 @@ script you want to cp into /etc/kernel -- and you can create your own
 scripts.
 
 For example, if you use linux-headers-* packages to compile third
-party modules so that you do not havce to keep the sources directory
+party modules so that you do not have to keep the sources directory
 around, you might be interested in:
 --8<---------------cut here---------------start------------->8---
 /etc/kernel/header_postinst.d/link

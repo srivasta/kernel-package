@@ -851,7 +851,7 @@ EOERR3
         print STDERR "the extended version, since the version becomes\n";
         print STDERR "part of the kernel-image name; and package names\n";
         print STDERR "may only contain lowercase alphanumerics.\n";
-        print STDERR "I have $append_to_version, which shall be dissallowed \n";
+        print STDERR "I have $append_to_version, which shall be disallowed \n";
         print STDERR "by the packaging tools. Aborting.\n";
         exit 1;
       }

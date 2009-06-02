@@ -23,7 +23,7 @@ use strict;
 my $conffile = '/etc/kernel-pkg.conf';
 my $prompt = <<"EOP";
 
-You have installed the debian package kernel-package.  This package
+You have installed the Debian package kernel-package.  This package
 essentially consists of a Makefile called debian.rules and supporting
 scripts and documentation, and also a site over-ride file 
  $conffile.
