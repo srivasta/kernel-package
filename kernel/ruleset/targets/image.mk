@@ -162,7 +162,7 @@ else
 	$(restore_upstream_debianization)
 	$(MAKE) $(EXTRAV_ARG) INSTALL_MOD_PATH=$(INSTALL_MOD_PATH)	     \
 		INSTALL_FW_PATH=$(INSTALL_MOD_PATH)/lib/firmware/$(KERNELRELEASE)  \
-		INSTALL_PATH=$(INT_IMAGE_DESTDIR) $(CROSS_ARG) install
+		INSTALL_PATH=$(INT_IMAGE_DESTDIR) $(CROSS_ARG) $(KPKG_KBUILD_INSTALL_TARGET)
   endif
 endif
 ifeq ($(strip $(HAVE_COFF_IMAGE)),YES)

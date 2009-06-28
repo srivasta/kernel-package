@@ -311,7 +311,7 @@ ifeq ($(DEB_HOST_ARCH_OS), linux)
 	$(restore_upstream_debianization)
   ifeq ($(strip $(USE_KBUILD)),yes)
 	$(MAKE) $(do_parallel) $(EXTRAV_ARG) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) \
-			    $(CROSS_ARG) all
+			    $(CROSS_ARG) $(KPKG_KBUILD_DEFAULT_TARGET)
   else
 	$(MAKE) $(do_parallel) $(EXTRAV_ARG) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) \
 			    $(CROSS_ARG) $(target)

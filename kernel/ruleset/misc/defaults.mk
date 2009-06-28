@@ -1,4 +1,4 @@
-######################### -*- Mode: Makefile-Gmake -*- ########################
+ kern######################### -*- Mode: Makefile-Gmake -*- ########################
 ## defaults.mk --- 
 ## Author           : Manoj Srivastava ( srivasta@glaurung.internal.golden-gryphon.com ) 
 ## Created On       : Mon Oct 31 17:43:59 2005
@@ -76,6 +76,15 @@ endif
 
 
 #  Package specific stuff
+
+# These are what are used in ruleset/targets/{common,image}.mk to
+# build and install the default target. Change this at your
+# peril. since the targets called isntead of these might subtly break
+# the rest of the kerel package building. But, at least, this is a
+# start to being able to build alternate targets, as long as theya re
+# drop in replacements as far as packaging is concerned.
+KPKG_KBUILD_DEFAULT_TARGET:=all
+KPKG_KBUILD_INSTALL_TARGET:=install
 
 # The version numbers for kernel-image, kernel-headers and
 # kernel-source are deduced from the Makefile (see below,
