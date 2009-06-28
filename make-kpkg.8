@@ -88,12 +88,7 @@ Print out a usage message.
 .BR \-\-revision " number"
 Changes the Debian revision number for the packages produced to the argument
 .BR number.
-This has certain constraints: the \-\-revision option only has an effect
-during the configure phase.
-So, if you want to re\-run 
-.B make\-kpkg 
-with a different revision number, you have to make sure you start with
-a clean slate.  Secondly, the version may contain only 
+This has certain constraints: the version may contain only 
 alphanumerics and the characters ~ + . (tilde, full stop and plus)
 and must contain a digit. (Look at the Policy manual for
 details).  Optionally, you may prepend the revision with a digit followed by a
@@ -125,42 +120,6 @@ or in the
 file. 
 This option over rides the environment variable
 .B APPEND_TO_VERSION
-Please  note  that you \fB\s-1must\s0\fR run a 
-.B make\-kpkg 
-.I clean
-after configuring the kernel using 
-.I make (x|menu)?config, 
-since that creates the file
-.I include/linux/version.h
-.B without 
-the 
-.I append_to_version
-data (foo). This file won't be updated by the make\-kpkg run (make\-kpkg
-creates version.h if it doesn't exist, but doesn't touch if exists),
-so the final kernel will _not_ have the append_to_version data in its
-version number it shall look for the modules and symbols in all the
-wrong places. The simplest solution is either to remove
-include/linux/version.h after configuring and before compiling, or
-running 
-.B make\-kpkg clean
-after configuring, before compiling.
-.B Note
-also that once you use 
-.BR \-\-append_to_version " foo"
-for configuring, or building the kernel\-image, you need to also use
-the same option in any later invocation of make\-kpkg (say, for
-building stand alone modules, or something).  
-.B make\-kpkg
-does not remember the argument foo in between invocations (this is
-different from the behavior of \-\-revision, which we do remember in
-between invocations). If you are annoyed by make\-kpkg whining about
-using 
-.BR \-\-append_to_version 
-and there already being a 
-.B version.h
-file from before, you can set the environment variable
-.B VERSION_H_OK
-which shall shut off the warning.
 .TP
 .BR \-\-added\-modules\ foo
 .TP
