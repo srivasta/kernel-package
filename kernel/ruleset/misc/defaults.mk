@@ -1,4 +1,4 @@
- kern######################### -*- Mode: Makefile-Gmake -*- ########################
+######################### -*- Mode: Makefile-Gmake -*- ########################
 ## defaults.mk --- 
 ## Author           : Manoj Srivastava ( srivasta@glaurung.internal.golden-gryphon.com ) 
 ## Created On       : Mon Oct 31 17:43:59 2005
