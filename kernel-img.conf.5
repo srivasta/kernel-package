@@ -23,7 +23,7 @@
 .\"
 .\" $Id: kernel-img.conf.5,v 1.25 2003/09/28 01:16:52 srivasta Exp $
 .\"
-.TH KERNEL\-IMG.CONF 5 "Mar 21 2000" "Debian" "Debian GNU/Linux manual" 
+.TH KERNEL\-IMG.CONF 5 "Mar 21 2000" "Debian" "Debian GNU/Linux manual"
 .\" NAME should be all caps, SECTION should be 1-8, maybe w/ subsection
 .\" other parms are allowed: see man(7), man(1)
 .SH NAME
@@ -31,31 +31,31 @@ kernel\-img.conf \- site wide configuration file for kernel image packages
 .SH SYNOPSIS
 .I /etc/kernel\-img.conf
 .SH "DESCRIPTION"
-The file 
+The file
 .I /etc/kernel\-img.conf
 is a simple file looked at by the kernel image post installation
 process to allow local options for handling some aspects of the
-installation, overriding the defaults built into the image itself. 
+installation, overriding the defaults built into the image itself.
 .PP
-The format of the file is a simple 
-.B VAR = VALUE 
+The format of the file is a simple
+.B VAR = VALUE
 pair. Boolean values may be specified as
 .I Yes, True, 1,
 and
 .I No, False, 0,
-and are case insensitive. 
+and are case insensitive.
 This file is automatically created by the installation script in
 certain circumstances.
 .PP
 At the moment, the user modifiable variables supported are:
 .TP
-.B postinst_hook 
+.B postinst_hook
 Set this variable to a script to be executed during installation. The
 path can be a relative path if the script lives in a safe path -- that
 is, if it lives in /bin, /sbin, /usr/bin, or /usr/sbin, or must be an
 absolute path instead. Before calling this script, the env variable
 .B STEM
-shall be set to the value of the 
+shall be set to the value of the
 .I \-\-stem
 argument (or the default value, linux). This script
 shall be called with two arguments, the first being the
@@ -71,7 +71,7 @@ postinst does call
 An example script for grub users is present in
 /usr/share/doc/kernel\-package/ directory.
 .TP
-.B postrm_hook 
+.B postrm_hook
 Set this variable to a script to be executed in the postrm (that is,
 after the image has been removed) after all the remove actions have
 been performed. The path can be a relative path if the script lives in
@@ -86,9 +86,9 @@ warning message, but shall be otherwise ignored. Since debconf is in
 use before the script is called, this script should issue no
 diagnostic messages to stdout --  while the postinst does call
 .B db_stop
-, debconf does not restore stdout, so messages to stdout disappear.  
+, debconf does not restore stdout, so messages to stdout disappear.
 .TP
-.B preinst_hook 
+.B preinst_hook
 Set this variable to a script to be executed before the package is
 unpacked, and can be used to put in additional checks. The path can be
 a relative path if the script lives in a safe path -- that is, if it
@@ -98,9 +98,9 @@ first being the
 .I version
 of the kernel image, and the second argument being the
 .I location
-of the kernel image itself. 
+of the kernel image itself.
 .TP
-.B prerm_hook 
+.B prerm_hook
 Set this variable to a script to be executed before the package files
 are removed (so any added files may be removed) . The path can be a
 relative path if the script lives in a safe path -- that is, if it
@@ -115,9 +115,9 @@ to fail. Since debconf is in use before the script is called, this
 script should issue no diagnostic messages to stdout -- while the
 postinst does call
 .B db_stop
-, debconf does not restore stdout, so messages to stdout disappear.  
+, debconf does not restore stdout, so messages to stdout disappear.
 .TP
-.B src_postinst_hook 
+.B src_postinst_hook
 Unlike the other hook variables, this is meant for a script run during
 the post inst of a docs, headers or a source package. Using this hook
 for the headers package is now being deprecated, at some point the
@@ -131,9 +131,9 @@ of the package being installed (could be kernel source or headers),
 and the second argument being the
 .I version
 of the package being installed. Errors in the script shall cause the
-postinst to fail. 
+postinst to fail.
 .TP
-.B header_postinst_hook 
+.B header_postinst_hook
 Unlike the other hook variables, this is meant for a script run during
 the post inst of a headers package only. The path can be a relative
 path if the script lives in a safe path -- that is, if it lives in
@@ -144,7 +144,7 @@ being the
 of the package being installed, and the second argument being the
 .I version
 of the package being installed. Errors in the script shall cause the
-postinst to fail. 
+postinst to fail.
 .TP
 .B clobber_modules
 If set, the preinst shall silently try to move /lib/modules/version
@@ -183,7 +183,7 @@ is to relink (delete) the source link (YES).
 .TP
 .B silent_modules
 This option has been put in for the people who are vastly irritated on
-being warned about preexisting modules directory 
+being warned about preexisting modules directory
 .I /lib/modules/$version
 That directory may belong to an old or defunct kernel image package,
 in which case problems may arise with leftover modules in that
@@ -194,11 +194,12 @@ the directory is benign.  If you set this variable, you shall no
 longer be given a chance to abort if a preexisting modules directory
 .I /lib/modules/$version
 is detected.  This is unset be default.
-.TP 
+.TP
 .B ignore_depmod_err
 If set, does not prompt to continue after a depmod problem in the
 postinstall script. This facilitates automated installs, though it may
-mask a problem with the kernel image. A diagnostic is still issued.
+mask a problem with the kernel image. A diagnostic is still
+issued. This is unset be default.
 .SH FILES
 The file described here is
 .I /etc/kernel\-img.conf.
