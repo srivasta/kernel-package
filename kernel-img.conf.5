@@ -50,6 +50,7 @@ certain circumstances.
 At the moment, the user modifiable variables supported are:
 .TP
 .B postinst_hook
+.BR DEPRECATED:
 Set this variable to a script to be executed during installation. The
 path can be a relative path if the script lives in a safe path -- that
 is, if it lives in /bin, /sbin, /usr/bin, or /usr/sbin, or must be an
@@ -70,8 +71,12 @@ postinst does call
 , debconf does not restore stdout, so messages to stdout disappear.
 An example script for grub users is present in
 /usr/share/doc/kernel\-package/ directory.
+This script is run
+.I after
+the scripts in /etc/kernel/postinst.d directory.
 .TP
 .B postrm_hook
+.BR DEPRECATED:
 Set this variable to a script to be executed in the postrm (that is,
 after the image has been removed) after all the remove actions have
 been performed. The path can be a relative path if the script lives in
@@ -87,8 +92,12 @@ use before the script is called, this script should issue no
 diagnostic messages to stdout --  while the postinst does call
 .B db_stop
 , debconf does not restore stdout, so messages to stdout disappear.
+This script is run
+.I after
+the scripts in /etc/kernel/postrm.d directory.
 .TP
 .B preinst_hook
+.BR DEPRECATED:
 Set this variable to a script to be executed before the package is
 unpacked, and can be used to put in additional checks. The path can be
 a relative path if the script lives in a safe path -- that is, if it
@@ -99,8 +108,12 @@ first being the
 of the kernel image, and the second argument being the
 .I location
 of the kernel image itself.
+This script is run
+.I after
+the scripts in /etc/kernel/preinst.d directory.
 .TP
 .B prerm_hook
+.BR DEPRECATED:
 Set this variable to a script to be executed before the package files
 are removed (so any added files may be removed) . The path can be a
 relative path if the script lives in a safe path -- that is, if it
@@ -116,8 +129,12 @@ script should issue no diagnostic messages to stdout -- while the
 postinst does call
 .B db_stop
 , debconf does not restore stdout, so messages to stdout disappear.
+This script is run
+.I after
+the scripts in /etc/kernel/prerm.d directory.
 .TP
 .B src_postinst_hook
+.BR DEPRECATED:
 Unlike the other hook variables, this is meant for a script run during
 the post inst of a docs, headers or a source package. Using this hook
 for the headers package is now being deprecated, at some point the
@@ -132,8 +149,12 @@ and the second argument being the
 .I version
 of the package being installed. Errors in the script shall cause the
 postinst to fail.
+This script is run
+.I after
+the scripts in /etc/kernel/src_postinst.d directory.
 .TP
 .B header_postinst_hook
+.BR DEPRECATED:
 Unlike the other hook variables, this is meant for a script run during
 the post inst of a headers package only. The path can be a relative
 path if the script lives in a safe path -- that is, if it lives in
@@ -145,6 +166,9 @@ of the package being installed, and the second argument being the
 .I version
 of the package being installed. Errors in the script shall cause the
 postinst to fail.
+This script is run
+.I after
+the scripts in /etc/kernel/header_postinst.d directory.
 .TP
 .B clobber_modules
 If set, the preinst shall silently try to move /lib/modules/version

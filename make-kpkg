@@ -56,7 +56,7 @@ my $zimage;
 my $mkimage='';
 my $overlay_dir='';
 
-my %option_ctl = 
+my %option_ctl =
   (
    "help"                => \$help_opt,
    "noexec"              => \$noexec,
@@ -399,7 +399,8 @@ usage: $main::MYNAME [options] target [target ...]
  --rootcmd method      A command that provides a means of gaining
                        superuser access (for example, `sudo' or
                        `fakeroot') as needed by dpkg-buildpackages'
-                       -r option.
+                       -r option. Does not work for targets binary,
+                        binary-indep,  and  binary-arch.
  --us                  This option is passed to dpkg-buildpackage, and
                        directs that package not to sign the
                        source. This is only relevant for the
@@ -690,14 +691,14 @@ sub main (){
   }
   $config_target = 'config' unless $2;
 
-  if ($ENV{'MAKEFLAGS'} && 
+  if ($ENV{'MAKEFLAGS'} &&
       ($ENV{'MAKEFLAGS'} =~ /-j/ || $ENV{'MAKEFLAGS'} =~ /--jobs/ )) {
     $errors .= "The environment variable MAKEFLAGS contains the flag -j.\n" .
       "Unfortunately, this is not supported at this time. Instead, please\n" .
         "use the supported mechanism by setting CONCURRENCY_LEVEL\n" ;
   }
 
-  if ($ENV{'MFLAGS'} && 
+  if ($ENV{'MFLAGS'} &&
       ($ENV{'MFLAGS'} =~ /-j/ || $ENV{'MFLAGS'} =~ /--jobs/ )) {
     $errors .= "The environment variable MFLAGS contains the flag -j.\n" .
       "Unfortunately, this is not supported at this time. Instead, please\n" .
