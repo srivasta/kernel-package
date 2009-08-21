@@ -106,15 +106,19 @@ debian/stamp/binary/$(d_package):
 	$(make_directory) $(TMPTOP)/DEBIAN
 	$(eval $(deb_rule))
 	sed -e 's/=P/$(package)/g' -e 's/=V/$(KERNELRELEASE)/g' \
+            -e 's/=KPV/$(kpkg_version)/g'                       \
 		$(DEBDIR)/pkg/doc/postinst >        $(TMPTOP)/DEBIAN/preinst
 	chmod 755                                   $(TMPTOP)/DEBIAN/preinst
 	sed -e 's/=P/$(package)/g' -e 's/=V/$(KERNELRELEASE)/g' \
+            -e 's/=KPV/$(kpkg_version)/g'                       \
 		$(DEBDIR)/pkg/doc/postinst >        $(TMPTOP)/DEBIAN/postinst
 	chmod 755                                   $(TMPTOP)/DEBIAN/postinst
 	sed -e 's/=P/$(package)/g' -e 's/=V/$(KERNELRELEASE)/g' \
+            -e 's/=KPV/$(kpkg_version)/g'                       \
 		$(DEBDIR)/pkg/doc/postinst >        $(TMPTOP)/DEBIAN/prerm
 	chmod 755                                   $(TMPTOP)/DEBIAN/prerm
 	sed -e 's/=P/$(package)/g' -e 's/=V/$(KERNELRELEASE)/g' \
+            -e 's/=KPV/$(kpkg_version)/g'                       \
 		$(DEBDIR)/pkg/doc/postinst >        $(TMPTOP)/DEBIAN/postrm
 	chmod 755                                   $(TMPTOP)/DEBIAN/postrm
 	dpkg-gencontrol -isp -p$(package)         -P$(TMPTOP)/

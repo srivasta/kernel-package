@@ -35,23 +35,24 @@ if ( ! $@ )
 
 $|=1;
 # Predefined values:
-my $version           = "=V";
-my $move_image        = '';       # target machine defined
-my $kimage            = "=K";	# Should be empty, mostly
-my $image_dir         = "=D";     # where the image is located
-my $clobber_modules   = '';       # target machine defined
-my $initrd            = "=I";     # initrd kernel
-my $warn_initrd       = 'YES';    # Normally we do
-my $postinst_hook     = '';       #Normally we do not
-my $postrm_hook       = '';       #Normally we do not
-my $preinst_hook      = '';       #Normally we do not
-my $prerm_hook        = '';       #Normally we do not
-my $ignore_depmod_err = '';	# normally we do not
-my $relink_build_link = 'YES';	# There is no harm in checking the link
-my $force_build_link  = '';	# we shall not create a dangling link
-my $arch              = "=A";  #  should be same as dpkg --print-installation-architecture
-my $kernel_arch       = "=B";
-my $package_name    = "=ST-image-$version";
+my $version            = "=V";
+my $move_image         = '';       # target machine defined
+my $kimage             = "=K";	# Should be empty, mostly
+my $image_dir          = "=D";     # where the image is located
+my $clobber_modules    = '';       # target machine defined
+my $initrd             = "=I";     # initrd kernel
+my $warn_initrd        = 'YES';    # Normally we do
+my $postinst_hook      = '';       #Normally we do not
+my $postrm_hook        = '';       #Normally we do not
+my $preinst_hook       = '';       #Normally we do not
+my $prerm_hook         = '';       #Normally we do not
+my $ignore_depmod_err  = '';	# normally we do not
+my $relink_build_link  = 'YES';	# There is no harm in checking the link
+my $force_build_link   = '';	# we shall not create a dangling link
+my $arch               = "=A";  #  should be same as dpkg --print-installation-architecture
+my $kernel_arch        = "=B";
+my $package_name       = "=ST-image-$version";
+my $kernel_pkg_version = "=KPV";
 
 #known variables
 my $image_dest      = "/";
@@ -255,6 +256,7 @@ for (@ARGV) {
   $out.=" '$_'";
 }
 $ENV{'DEB_MAINT_PARAMS'}="$out";
+$ENV{'KERNEL_PACKAGE_VERSION'}="$kernel_pkg_version";
 
 if (!$initrd) {
   $ENV{INITRD}='No';

@@ -521,8 +521,11 @@ scripts, the env variable
 .B STEM
 shall be set to the value of the 
 .I \-\-stem
-argument (or the default value, linux). These scripts shall be
-called with two arguments, the first being the
+argument (or the default value, linux), and the variable
+.B KERNEL_PACKAGE_VERSION
+shall be set to the version of the kernel\-package that created the
+package. . These scripts shall be called with two arguments, the first
+being the
 .I version
 of the kernel image, and the second argument being the
 .I location

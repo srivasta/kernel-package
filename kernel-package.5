@@ -129,7 +129,11 @@ kernel image stanzas from the grub menu (example scripts to do this
 are in the package). There are directories under
 .I /etc/kernel
 where related package may drop off scripts that will be run by the
-maintainer scripts of the packages created by kernel package.
+maintainer scripts of the packages created by kernel package. Before
+running these scripts, the environment variable
+.B KERNEL_PACKAGE_VERSION
+shall be set to the version of the kernel\-package that created the
+package.
 .TP
 .B xvi) Append descriptive bits to the kernel version
 One can append to the kernel version on the command line, or by

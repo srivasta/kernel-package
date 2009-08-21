@@ -225,6 +225,7 @@ debian/stamp/binary/$(i_package):
 ifneq ($(strip $(KERNEL_ARCH)),um)
 	sed -e 's/=V/$(KERNELRELEASE)/g'    -e 's/=IB/$(link_in_boot)/g' \
 	    -e 's/=ST/$(INT_STEM)/g'  -e 's/=R/$(reverse_symlink)/g' \
+            -e 's/=KPV/$(kpkg_version)/g'                       \
 	    -e 's/=K/$(kimage)/g'   	     \
 	    -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'	     \
 	    -e 's@=A@$(DEB_HOST_ARCH)@g'   \
@@ -233,6 +234,7 @@ ifneq ($(strip $(KERNEL_ARCH)),um)
 	chmod 755 $(TMPTOP)/DEBIAN/postinst
 	sed -e 's/=V/$(KERNELRELEASE)/g'	   -e 's/=IB/$(link_in_boot)/g' \
 	    -e 's/=ST/$(INT_STEM)/g'  -e 's/=R/$(reverse_symlink)/g' \
+            -e 's/=KPV/$(kpkg_version)/g'                       \
 	    -e 's/=K/$(kimage)/g'   	     \
 	    -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'	     \
 	    -e 's@=A@$(DEB_HOST_ARCH)@g'   \
@@ -241,6 +243,7 @@ ifneq ($(strip $(KERNEL_ARCH)),um)
 	chmod 755 $(TMPTOP)/DEBIAN/config
 	sed -e 's/=V/$(KERNELRELEASE)/g'	   -e 's/=IB/$(link_in_boot)/g' \
 	    -e 's/=ST/$(INT_STEM)/g'  -e 's/=R/$(reverse_symlink)/g' \
+            -e 's/=KPV/$(kpkg_version)/g'                       \
 	    -e 's/=K/$(kimage)/g'  	     \
 	    -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'	     \
 	    -e 's/=MD/$(initrddep)/g'				     \
@@ -251,6 +254,7 @@ ifneq ($(strip $(KERNEL_ARCH)),um)
 	chmod 755 $(TMPTOP)/DEBIAN/postrm
 	sed -e 's/=V/$(KERNELRELEASE)/g'	   -e 's/=IB/$(link_in_boot)/g'	   \
 	    -e 's/=ST/$(INT_STEM)/g'  -e 's/=R/$(reverse_symlink)/g' \
+            -e 's/=KPV/$(kpkg_version)/g'                       \
 	    -e 's/=K/$(kimage)/g'  	     \
 	    -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'	     \
 	    -e 's/=MD/$(initrddep)/g'				     \
@@ -261,6 +265,7 @@ ifneq ($(strip $(KERNEL_ARCH)),um)
 	chmod 755 $(TMPTOP)/DEBIAN/preinst
 	sed -e 's/=V/$(KERNELRELEASE)/g'    -e 's/=IB/$(link_in_boot)/g'    \
 	    -e 's/=ST/$(INT_STEM)/g'  -e 's/=R/$(reverse_symlink)/g' \
+            -e 's/=KPV/$(kpkg_version)/g'                       \
 	    -e 's/=K/$(kimage)/g'  	     \
 	    -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'	     \
 	    -e 's/=MD/$(initrddep)/g'				     \
@@ -272,6 +277,7 @@ ifneq ($(strip $(KERNEL_ARCH)),um)
 	$(INSTALL_TEMPLATE)
 	sed -e 's/=V/$(version)/g'    -e 's/=IB/$(link_in_boot)/g'    \
 	    -e 's/=ST/$(INT_STEM)/g'  -e 's/=R/$(reverse_symlink)/g' \
+            -e 's/=KPV/$(kpkg_version)/g'                       \
 	    -e 's/=K/$(kimage)/g'           \
 	    -e 's@=MK@$(initrdcmd)@g' -e 's@=A@$(DEB_HOST_ARCH)@g'   \
 	    -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'        \
@@ -283,6 +289,7 @@ ifneq ($(strip $(KERNEL_ARCH)),um)
 else
 	sed -e 's/=V/$(KERNELRELEASE)/g'    -e 's/=IB/$(link_in_boot)/g'    \
 	    -e 's/=ST/$(INT_STEM)/g'  -e 's/=R/$(reverse_symlink)/g' \
+            -e 's/=KPV/$(kpkg_version)/g'                       \
 	    -e 's/=K/$(kimage)/g'       \
 	    -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'	     \
 	    -e 's/=MD/$(initrddep)/g'				     \
@@ -293,6 +300,7 @@ else
 	chmod 755 $(TMPTOP)/DEBIAN/postinst
 	sed -e 's/=V/$(KERNELRELEASE)/g'    -e 's/=IB/$(link_in_boot)/g'    \
 	    -e 's/=ST/$(INT_STEM)/g'  -e 's/=R/$(reverse_symlink)/g' \
+            -e 's/=KPV/$(kpkg_version)/g'                       \
 	    -e 's/=K/$(kimage)/g'   	     \
 	    -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'	     \
 	    -e 's/=MD/$(initrddep)/g'				     \

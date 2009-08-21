@@ -192,6 +192,7 @@ debian/stamp/binary/$(h_package):
 	$(eval $(deb_rule))
 	sed -e 's/=V/$(KERNELRELEASE)/g'    -e 's/=IB/$(link_in_boot)/g'   \
             -e 's/=ST/$(INT_STEM)/g'  -e 's/=R/$(reverse_symlink)/g' \
+            -e 's/=KPV/$(kpkg_version)/g'                       \
             -e 's/=K/$(kimage)/g'          \
             -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'        \
             -e 's/=P/$(package)/g'         \
@@ -201,6 +202,7 @@ debian/stamp/binary/$(h_package):
 	chmod 755                                       $(TMPTOP)/DEBIAN/preinst
 	sed -e 's/=V/$(KERNELRELEASE)/g'    -e 's/=IB/$(link_in_boot)/g'   \
             -e 's/=ST/$(INT_STEM)/g'  -e 's/=R/$(reverse_symlink)/g' \
+            -e 's/=KPV/$(kpkg_version)/g'                       \
             -e 's/=K/$(kimage)/g'          \
             -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'        \
             -e 's/=P/$(package)/g'         \
@@ -210,6 +212,7 @@ debian/stamp/binary/$(h_package):
 	chmod 755                                       $(TMPTOP)/DEBIAN/postinst
 	sed -e 's/=V/$(KERNELRELEASE)/g'    -e 's/=IB/$(link_in_boot)/g'   \
             -e 's/=ST/$(INT_STEM)/g'  -e 's/=R/$(reverse_symlink)/g' \
+            -e 's/=KPV/$(kpkg_version)/g'                       \
             -e 's/=K/$(kimage)/g'          \
             -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'        \
             -e 's/=P/$(package)/g'         \
@@ -219,6 +222,7 @@ debian/stamp/binary/$(h_package):
 	chmod 755                                       $(TMPTOP)/DEBIAN/prerm
 	sed -e 's/=V/$(KERNELRELEASE)/g'    -e 's/=IB/$(link_in_boot)/g'   \
             -e 's/=ST/$(INT_STEM)/g'  -e 's/=R/$(reverse_symlink)/g' \
+            -e 's/=KPV/$(kpkg_version)/g'                       \
             -e 's/=K/$(kimage)/g'      \
             -e 's/=I/$(INITRD)/g'     -e 's,=D,$(IMAGEDIR),g'        \
             -e 's/=P/$(package)/g'         \

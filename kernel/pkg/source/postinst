@@ -24,6 +24,8 @@ $|=1;
 my $package="=P";
 my $version="=V";
 
+my $kernel_pkg_version = "=KPV";
+
 # Ignore all invocations uxcept when called on to configure.
 exit 0 unless ($ARGV[0] && $ARGV[0] =~ /configure/);
 
@@ -109,6 +111,7 @@ for (@ARGV) {
   $out.=" '$_'";
 }
 $ENV{'DEB_MAINT_PARAMS'}="$out";
+$ENV{'KERNEL_PACKAGE_VERSION'}="$kernel_pkg_version";
 
 ## Run user hook script here, if any
 if (-d "/etc/kernel/src_postinst.d") {
