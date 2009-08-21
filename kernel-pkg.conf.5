@@ -170,20 +170,23 @@ if you just wish to build the kernel image, for instance.
 .B delete_build_link
 If set to YES, the symbolic link
 .I /lib/modules/$VERSION/build
-shall be removed from the resulting .deb package.  The environment variable
+shall be removed from the resulting .deb package.  The environment
+variable
 .B DELETE_BUILD_LINK
-overrides this. The default is unset.
+overrides this. The default is unset. Note that this is case
+sensitive, yes shall not work.
 .TP
 .B do_clean
-Set to YES, this causes a make clean to be run in the
-kernel source tree after building the kernel image package. The
-environment variable
+Set to YES, this causes a make clean to be run in the kernel source
+tree after building the kernel image package. The environment variable
 .B CLEAN_SOURCE
-overrides this.  The default is unset.
+overrides this.  The default is unset. Note that this is case
+sensitive, yes shall not work.
 .TP
 .B install_vmlinux
-Set to YES to install the uncompressed kernel ELF image along with the bootable
-compressed kernel image (vmlinuz).  The default is unset.
+Set to YES to install the uncompressed kernel ELF image along with the
+bootable compressed kernel image (vmlinuz).  The default is
+unset. Note that this is case sensitive, yes shall not work.
 .TP
 .B image_clean_hook
 Set to point to an executable, this shall cause that executable to run
