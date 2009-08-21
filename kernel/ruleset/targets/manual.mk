@@ -57,7 +57,7 @@ debian/stamp/binary/$(m_package):
 	@test -d debian/stamp/binary || mkdir debian/stamp/binary
 	$(make_directory) $(TMPTOP)/DEBIAN
 	dpkg-gencontrol -isp -p$(package)       -P$(TMPTOP)/
-	$(create_md5sums)                         $(TMPTOP)
+	$(create_md5sum)                         $(TMPTOP)
 	chmod -R og=rX                            $(TMPTOP)
 	chown -R root:root                        $(TMPTOP)
 	dpkg --build                              $(TMPTOP) $(DEB_DEST)

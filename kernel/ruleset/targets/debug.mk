@@ -101,7 +101,7 @@ debian/stamp/binary/$(b_package):
 	$(eval $(deb_rule))
 	dpkg-gencontrol -isp -DArchitecture=$(DEB_HOST_ARCH) -p$(package) \
                                           -P$(TMPTOP)/
-	$(create_md5sums)                   $(TMPTOP)
+	$(create_md5sum)                   $(TMPTOP)
 	chown -R root:root                  $(TMPTOP)
 	chmod -R og=rX                      $(TMPTOP)
 	dpkg --build                        $(TMPTOP) $(DEB_DEST)

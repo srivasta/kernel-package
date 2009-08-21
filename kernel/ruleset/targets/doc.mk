@@ -122,7 +122,7 @@ debian/stamp/binary/$(d_package):
 		$(DEBDIR)/pkg/doc/postinst >        $(TMPTOP)/DEBIAN/postrm
 	chmod 755                                   $(TMPTOP)/DEBIAN/postrm
 	dpkg-gencontrol -isp -p$(package)         -P$(TMPTOP)/
-	$(create_md5sums)                           $(TMPTOP)
+	$(create_md5sum)                           $(TMPTOP)
 	chmod -R og=rX                              $(TMPTOP)
 	chown -R root:root                          $(TMPTOP)
 	dpkg --build                                $(TMPTOP) $(DEB_DEST)
