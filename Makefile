@@ -115,7 +115,6 @@ install: genpo4a
 	$(install_file)    kernel/docs/HOWTO-Linux-2.6-Woody $(DOCDIR)/
 	$(install_file)    Problems                          $(DOCDIR)/Problems
 	$(install_file)    Multi-Arch                        $(DOCDIR)/Multi-Arch
-	$(install_file)    Rationale                         $(DOCDIR)/Rationale
 	$(install_file)    debian/NEWS.Debian                $(DOCDIR)/
 	$(install_file)    _make-kpkg                        $(BASH_DIR)/make_kpkg
 	gzip -9fqr         $(DOCDIR)
@@ -128,13 +127,6 @@ install: genpo4a
 	$(install_file)    kernel-package.5  	      $(MAN5DIR)/kernel-package.5
 	$(install_file)    make-kpkg.8       	      $(MAN1DIR)/make-kpkg.1
 	$(install_file)    kernel-packageconfig.8     $(MAN8DIR)/
-	for lang in es fr; do                                                                           \
-	 $(install_file)    kernel-pkg.conf.$$lang.5      $(MANTOP)/$$lang/man5/kernel-pkg.conf.5;      \
-	 $(install_file)    kernel-img.conf.$$lang.5      $(MANTOP)/$$lang/man5/kernel-img.conf.5;      \
-	 $(install_file)    kernel-package.$$lang.5       $(MANTOP)/$$lang/man5/kernel-package.5;       \
-	 $(install_file)    make-kpkg.$$lang.8            $(MANTOP)/$$lang/man1/make-kpkg.1;            \
-	 $(install_file)    kernel-packageconfig.$$lang.8 $(MANTOP)/$$lang/man8/kernel-packageconfig.8; \
-        done
 	gzip -9fqr         $(prefix)/usr/share/man
 	$(install_file)    kernel-pkg.conf            $(prefix)/etc/kernel-pkg.conf
 	$(install_program) kernel-packageconfig       $(prefix)/usr/sbin/kernel-packageconfig
