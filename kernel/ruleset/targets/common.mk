@@ -387,7 +387,7 @@ endif
 # work around idiocy in recent kernel versions
 # However, this makes it harder to use git versions of the kernel
 	$(save_upstream_debianization)
-	DEB_BUILD_OPTIONS=$(SERIAL_BUILD_OPTIONS) CONCURRENCY_LEVEL=1 \
+	DEB_BUILD_OPTIONS="$(SERIAL_BUILD_OPTIONS)" CONCURRENCY_LEVEL=1     \
           dpkg-buildpackage -nc $(strip $(int_root_cmd)) $(strip $(int_us)) \
             $(strip $(int_uc)) -j1 -k"$(pgp)"  -m"$(maintainer) <$(email)>"
 	rm -f stamp-building
