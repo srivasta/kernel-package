@@ -332,15 +332,15 @@ else
   endif
 endif
 	COLUMNS=150 dpkg -l 'gcc*' perl dpkg 'libc6*' binutils make dpkg-dev |\
-	 awk '$$1 ~ /[hi]i/ { printf("%s-%s\n", $$2, $$3) }'> debian/buildinfo
-	@echo this was built on a machine with the kernel: >> debian/buildinfo
-	uname -a >> debian/buildinfo
-	echo using the compiler: >> debian/buildinfo
+	 awk '$$1 ~ /[hi]i/ { printf("%s-%s\n", $$2, $$3) }'> debian/stamp/build/info
+	@echo this was built on a machine with the kernel: >> debian/stamp/build/info
+	uname -a >> debian/stamp/build/info
+	echo using the compiler: >> debian/stamp/build/info
 	grep LINUX_COMPILER include/linux/compile.h | \
-	   sed -e 's/.*LINUX_COMPILER "//' -e 's/"$$//' >> debian/buildinfo
+	   sed -e 's/.*LINUX_COMPILER "//' -e 's/"$$//' >> debian/stamp/build/info
 ifneq ($(strip $(shell test -f version.Debian && cat version.Debian)),)
-	echo kernel source package used: >> debian/buildinfo
-	echo $(INT_STEM)-source-$(shell cat version.Debian) >> debian/buildinfo
+	echo kernel source package used: >> debian/stamp/build/info
+	echo $(INT_STEM)-source-$(shell cat version.Debian) >> debian/stamp/build/info
 endif
 	echo done > $@
 

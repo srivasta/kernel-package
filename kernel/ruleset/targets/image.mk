@@ -73,7 +73,8 @@ endif
 	echo "This was produced by kernel-package version $(kpkg_version)." > \
 		   $(DOCDIR)/Buildinfo
 	chmod 0644 $(DOCDIR)/Buildinfo
-	$(install_file) debian/buildinfo $(DOCDIR)/buildinfo
+	test ! -f       debian/stamp/build/info || \
+	 $(install_file) debian/stamp/build/info $(DOCDIR)/buildinfo
 	if test -f README.Debian ; then \
 	   $(install_file) README.Debian $(DOCDIR)/README.Debian.1st;\
 	fi

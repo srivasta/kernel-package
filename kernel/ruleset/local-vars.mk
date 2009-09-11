@@ -32,8 +32,7 @@
 
 
 FILES_TO_CLEAN  = modules/modversions.h modules/ksyms.ver debian/files \
-                  scripts/cramfs/cramfsck  scripts/cramfs/mkcramfs     \
-                  debian/buildinfo
+                  scripts/cramfs/cramfsck  scripts/cramfs/mkcramfs 
 STAMPS_TO_CLEAN =
 DIRS_TO_CLEAN   = 
 
