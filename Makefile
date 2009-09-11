@@ -32,12 +32,6 @@ MAN5DIR    = $(prefix)/usr/share/man/man5
 MAN1DIR    = $(prefix)/usr/share/man/man1
 MAN5DIR    = $(prefix)/usr/share/man/man5
 MAN8DIR    = $(prefix)/usr/share/man/man8
-ES_MAN1DIR = $(prefix)/usr/share/man/es/man1
-ES_MAN5DIR = $(prefix)/usr/share/man/es/man5
-ES_MAN8DIR = $(prefix)/usr/share/man/es/man8
-FR_MAN1DIR = $(prefix)/usr/share/man/fr/man1
-FR_MAN5DIR = $(prefix)/usr/share/man/fr/man5
-FR_MAN8DIR = $(prefix)/usr/share/man/fr/man8
 
 
 
@@ -98,12 +92,6 @@ install: genpo4a
 	$(make_directory)  $(MAN1DIR)
 	$(make_directory)  $(MAN5DIR)
 	$(make_directory)  $(MAN8DIR)
-	$(make_directory)  $(ES_MAN1DIR)
-	$(make_directory)  $(ES_MAN5DIR)
-	$(make_directory)  $(ES_MAN8DIR)
-	$(make_directory)  $(FR_MAN1DIR)
-	$(make_directory)  $(FR_MAN5DIR)
-	$(make_directory)  $(FR_MAN8DIR)
 	$(make_directory)  $(DOCDIR)/examples
 	$(make_directory)  $(BASH_DIR)
 	$(make_directory)  $(prefix)/usr/bin
@@ -125,14 +113,24 @@ install: genpo4a
 	$(install_file)    make-kpkg.8       	      $(MAN1DIR)/make-kpkg.1
 	$(install_file)    kernel-packageconfig.8     $(MAN8DIR)/
 	for lang in fr; do                                                                             \
+          test ! -f kernel-pkg.conf.$$lang.5          || test -d $(MANTOP)/$$lang/man5    ||           \
+                                                         mkdir -p $(MANTOP)/$$lang/man5;               \
           test ! -f kernel-pkg.conf.$$lang.5          ||                                               \
            $(install_file) kernel-pkg.conf.$$lang.5   $(MANTOP)/$$lang/man5/kernel-pkg.conf.5;         \
+          test ! -f kernel-img.conf.$$lang.5          || test -d $(MANTOP)/$$lang/man5    ||           \
+                                                         mkdir -p $(MANTOP)/$$lang/man5;               \
           test ! -f kernel-img.conf.$$lang.5          ||                                               \
            $(install_file) kernel-img.conf.$$lang.5   $(MANTOP)/$$lang/man5/kernel-img.conf.5;         \
+          test ! -f kernel-package.$$lang.5           || test -d $(MANTOP)/$$lang/man5    ||           \
+                                                         mkdir -p $(MANTOP)/$$lang/man5;               \
           test ! -f kernel-package.$$lang.5           ||                                               \
            $(install_file) kernel-package.$$lang.5    $(MANTOP)/$$lang/man5/kernel-package.5;          \
+          test ! -f make-kpkg.$$lang.8                || test -d $(MANTOP)/$$lang/man1    ||           \
+                                                         mkdir -p $(MANTOP)/$$lang/man1;               \
           test ! -f make-kpkg.$$lang.8                ||                                               \
            $(install_file) make-kpkg.$$lang.8         $(MANTOP)/$$lang/man1/make-kpkg.1;               \
+          test ! -f kernel-packageconfig.$$lang.8     || test -d $(MANTOP)/$$lang/man8    ||           \
+                                                         mkdir -p $(MANTOP)/$$lang/man8;               \
           test ! -f kernel-packageconfig.$$lang.8     ||                                               \
            $(install_file) kernel-packageconfig.$$lang.8 $(MANTOP)/$$lang/man8/kernel-packageconfig.8; \
         done
