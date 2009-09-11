@@ -142,41 +142,43 @@ endif
 # file at this point
 
 
-conf.vars:
+debian/stamp/conf/vars:
 	$(REASON)
 	$(checkdir)
-	@test -d ./debian || mkdir debian
-	@rm -f .mak
-	@touch .mak
-	@echo "This is kernel package version $(kpkg_version)." >> .mak
-	@echo "VERSION		= $(VERSION)"	    >> .mak
-	@echo "PATCHLEVEL	= $(PATCHLEVEL)"    >> .mak
-	@echo "SUBLEVEL		= $(SUBLEVEL)"	    >> .mak
-	@echo "EXTRAVERSION	= $(EXTRAVERSION)"  >> .mak
+	@test -d ./debian          || mkdir debian
+	@test -d debian/stamp	   || mkdir debian/stamp
+	@test -d debian/stamp/conf || mkdir debian/stamp/conf
+	@rm -f debian/stamp/conf/mak
+	@touch debian/stamp/conf/mak
+	@echo "This is kernel package version $(kpkg_version)." >> debian/stamp/conf/mak
+	@echo "VERSION		= $(VERSION)"	    >> debian/stamp/conf/mak
+	@echo "PATCHLEVEL	= $(PATCHLEVEL)"    >> debian/stamp/conf/mak
+	@echo "SUBLEVEL		= $(SUBLEVEL)"	    >> debian/stamp/conf/mak
+	@echo "EXTRAVERSION	= $(EXTRAVERSION)"  >> debian/stamp/conf/mak
 ifneq ($(strip $(iatv)),)
-	@echo "APPEND_TO_VERSION = $(iatv)"	    >> .mak
+	@echo "APPEND_TO_VERSION = $(iatv)"	    >> debian/stamp/conf/mak
 endif
 ifeq ($(strip $(MODULES_ENABLED)),YES)
-	@echo "KPKG_SELECTED_MODULES = $(KPKG_SELECTED_MODULES)" >> .mak
+	@echo "KPKG_SELECTED_MODULES = $(KPKG_SELECTED_MODULES)" >> debian/stamp/conf/mak
 endif
-	@echo "Debian Revision	= $(debian)"	    >> .mak
-	@echo "KPKG_ARCH	= $(KPKG_ARCH)"	       >> .mak
+	@echo "Debian Revision	= $(debian)"	    >> debian/stamp/conf/mak
+	@echo "KPKG_ARCH	= $(KPKG_ARCH)"	       >> debian/stamp/conf/mak
 # Fetch the rest of the information from the kernel's Makefile
 	$(eval $(which_debdir))
 ifeq ($(DEB_HOST_ARCH_OS), linux)
 	@$(MAKE) --no-print-directory -sf $(DEBDIR)/ruleset/kernel_version.mk  \
-	  ARCH=$(KERNEL_ARCH) $(CROSS_ARG) debian_conf_var		>> .mak
+	  ARCH=$(KERNEL_ARCH) $(CROSS_ARG) debian_conf_var >> debian/stamp/conf/mak
 endif
-	@echo "do_parallel	= $(do_parallel)"   >> .mak
-	@echo "fast_dep		= $(fast_dep)"	    >> .mak
-#	@sed -e 's%$(TOPDIR)%$$(TOPDIR)%g' .mak	    > conf.vars
+	@echo "do_parallel	= $(do_parallel)"   >> debian/stamp/conf/mak
+	@echo "fast_dep		= $(fast_dep)"	    >> debian/stamp/conf/mak
+#	@sed -e 's%$(TOPDIR)%$$(TOPDIR)%g' debian/stamp/conf/mak	    > debian/stamp/conf/vars
 # Use the kernel's Makefile to calculate the TOPDIR.
 # TOPDIR is obsolete in 2.6 kernels, so the kernel_version.mk
 # will get us the right answer
 	@echo $(shell $(MAKE) --no-print-directory -sf $(DEBDIR)/ruleset/kernel_version.mk debian_TOPDIR 2>/dev/null | tail -n 1) >/dev/null
-	@sed -e 's%$(shell $(MAKE) --no-print-directory -sf $(DEBDIR)/ruleset/kernel_version.mk debian_TOPDIR 2>/dev/null | tail -n 1)%$$(TOPDIR)%g' .mak     > conf.vars
-	@rm -f .mak
-	@touch conf.vars
+	@sed -e 's%$(shell $(MAKE) --no-print-directory -sf $(DEBDIR)/ruleset/kernel_version.mk debian_TOPDIR 2>/dev/null | tail -n 1)%$$(TOPDIR)%g' debian/stamp/conf/mak     > debian/stamp/conf/vars
+	@rm -f debian/stamp/conf/mak
+	@touch debian/stamp/conf/vars
 
 debian/stamp/conf/kernel-conf:
 	$(REASON)
@@ -278,7 +280,7 @@ endif
 	echo done >  $@
 
 
-debian/stamp/build/kernel: conf.vars
+debian/stamp/build/kernel: debian/stamp/conf/vars
 	$(REASON)
 	@test -d debian/stamp	   || mkdir debian/stamp
 	@test -d debian/stamp/build || mkdir debian/stamp/build

@@ -68,7 +68,8 @@ ifeq ($(strip $(KERNEL_ARCH)),um)
 else
 	$(install_file) $(config)	 $(TMPTOP)/$(IMAGEDIR)/config-$(KERNELRELEASE)
 endif
-	$(install_file) conf.vars	 $(DOCDIR)/conf.vars
+	test ! -f debian/stamp/conf/vars                || \
+          $(install_file) debian/stamp/conf/vars  	$(DOCDIR)/conf.vars
 	echo "This was produced by kernel-package version $(kpkg_version)." > \
 		   $(DOCDIR)/Buildinfo
 	chmod 0644 $(DOCDIR)/Buildinfo

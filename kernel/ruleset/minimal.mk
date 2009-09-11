@@ -56,7 +56,7 @@ ifneq ($(strip $(filter ppc powerpc ppc64 powerpc64,$(architecture))),)
   include $(DEBDIR)/ruleset/arches/what_is_ppc_called_today.mk
 endif
 
-FILES_TO_CLEAN  = modules/modversions.h modules/ksyms.ver conf.vars \
+FILES_TO_CLEAN  = modules/modversions.h modules/ksyms.ver  \
                   scripts/cramfs/cramfsck scripts/cramfs/mkcramfs 
 STAMPS_TO_CLEAN = 
 DIRS_TO_CLEAN   = debian/stamp

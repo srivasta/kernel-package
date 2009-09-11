@@ -32,11 +32,9 @@
 
 
 FILES_TO_CLEAN  = modules/modversions.h modules/ksyms.ver debian/files \
-                  conf.vars scripts/cramfs/cramfsck scripts/cramfs/mkcramfs \
+                  scripts/cramfs/cramfsck  scripts/cramfs/mkcramfs     \
                   debian/buildinfo
-STAMPS_TO_CLEAN = stamp-build stamp-configure stamp-image stamp-headers   \
-                  stamp-src stamp-diff stamp-doc stamp-manual stamp-patch \
-                  stamp-buildpackage stamp-debian
+STAMPS_TO_CLEAN =
 DIRS_TO_CLEAN   = 
 
 

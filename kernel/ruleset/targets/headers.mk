@@ -65,7 +65,8 @@ debian/stamp/install/$(h_package):
 	$(install_file) debian/changelog                $(DOCDIR)/changelog.Debian
 	$(install_file) $(DEBDIR)/pkg/headers/README    $(DOCDIR)/debian.README
 	$(install_file) $(config)  	                $(DOCDIR)/config-$(KERNELRELEASE)
-	$(install_file) conf.vars  	                $(DOCDIR)/conf.vars
+	test ! -f debian/stamp/conf/vars                || \
+          $(install_file) debian/stamp/conf/vars  	$(DOCDIR)/conf.vars
 	$(install_file) CREDITS                         $(DOCDIR)/
 	$(install_file) MAINTAINERS                     $(DOCDIR)/
 	$(install_file) REPORTING-BUGS                  $(DOCDIR)/
