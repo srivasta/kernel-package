@@ -52,22 +52,27 @@ ifeq (,$(findstring $(KPKG_SUBARCH), xen i386 i486 i586 i686))
   KPKG_SUBARCH:=$(GUESS_SUBARCH)
 endif
 DEBCONFIG= $(CONFDIR)/config.$(KPKG_SUBARCH)
+
 ifeq ($(DEB_HOST_ARCH_OS), linux)
   kimage := bzImage
-  target = $(kimage)
-  kimagesrc = $(strip arch/$(IMAGE_SRC_DIR)/boot/$(kimage))
-  kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(KERNELRELEASE)
-  ifeq ($(strip $(CONFIG_X86_XEN)),)
+  ifeq ($(strip $(CONFIG_X86_XEN)$(CONFIG_X86_64_XEN)),)
+    target = $(kimage)
+    kimagesrc = $(strip arch/$(IMAGE_SRC_DIR)/boot/$(kimage))
+    kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(KERNELRELEASE)
     kelfimagesrc = vmlinux
     kelfimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(KERNELRELEASE)
   else
+    target = vmlinux
+    kimagesrc = vmlinux
     kelfimagesrc = vmlinux
+    int_install_vmlinux:=YES
     ifeq ($(strip $(CONFIG_XEN_PRIVILEGED_GUEST)),)
+      kimagedest = $(INT_IMAGE_DESTDIR)/xenu-linux-$(KERNELRELEASE)
       kelfimagedest = $(INT_IMAGE_DESTDIR)/xenu-linux-$(KERNELRELEASE)
     else
+      kimagedest = $(INT_IMAGE_DESTDIR)/xen0-linux-$(KERNELRELEASE)
       kelfimagedest = $(INT_IMAGE_DESTDIR)/xen0-linux-$(KERNELRELEASE)
     endif
-    int_install_vmlinux:=YES
   endif
 else
   ifeq ($(DEB_HOST_ARCH_OS), kfreebsd)
