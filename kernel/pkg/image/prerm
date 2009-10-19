@@ -75,11 +75,12 @@ if ($ARGV[0] && ($ARGV[0] =~ /remove/ || $ARGV[0] =~ /upgrade/)) {
 exit 0 unless ($ARGV[0] && $ARGV[0] =~ /remove/) ;
 
 # Paranoid check to make sure that the correct value is put in there
-if (! $kimage)                    { $kimage = "vmlinuz";} # Hmm. empty
-elsif ($kimage =~ m/^b?zImage$/o) { $kimage = "vmlinuz";} # these produce vmlinuz
-elsif ($kimage =~ m/^[iI]mage$/o) { my $nop = $kimage;  }
-elsif ($kimage =~ m/^vmlinux$/o)  { my $nop = $kimage;  }
-else                              { $kimage = "vmlinuz";} # Default
+if (! $kimage)                      { $kimage = "vmlinuz";} # Hmm. empty
+elsif ($kimage =~ m/^b?zImage$/o)   { $kimage = "vmlinuz";} # these produce vmlinuz
+elsif ($kimage =~ m/^[iI]mage$/o)   { my $nop = $kimage;  }
+elsif ($kimage =~ m/^vmlinux$/o)    { my $nop = $kimage;  }
+elsif ($kimage =~ m/^xen?-linux$/o) { my $nop = $kimage;   }
+else                                { $kimage = "vmlinuz";} # Default
 
 if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
   if (open(CONF, "$CONF_LOC")) {

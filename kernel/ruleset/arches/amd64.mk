@@ -45,8 +45,9 @@ KERNEL_ARCH=x86_64
 DEBCONFIG= $(CONFDIR)/config.$(KPKG_SUBARCH)
 
 ifeq ($(DEB_HOST_ARCH_OS), linux)
-  kimage := bzImage
   ifeq ($(strip $(CONFIG_XEN)$(CONFIG_X86_64_XEN)),)
+    # This is changed in the postinst
+    kimage := bzImage
     target	  = $(kimage)
     kimagesrc	  = $(strip arch/$(IMAGE_SRC_DIR)/boot/$(kimage))
     kimagedest	  = $(INT_IMAGE_DESTDIR)/vmlinuz-$(KERNELRELEASE)
@@ -58,9 +59,11 @@ ifeq ($(DEB_HOST_ARCH_OS), linux)
     kelfimagesrc = vmlinux
     int_install_vmlinux:=YES
     ifeq ($(strip $(CONFIG_XEN_PRIVILEGED_GUEST)),)
+      kimage := xenu-linux
       kimagedest = $(INT_IMAGE_DESTDIR)/xenu-linux-$(KERNELRELEASE)
       kelfimagedest = $(INT_IMAGE_DESTDIR)/xenu-linux-$(KERNELRELEASE)
     else
+      kimage := xen0-linux
       kimagedest = $(INT_IMAGE_DESTDIR)/xen0-linux-$(KERNELRELEASE)
       kelfimagedest = $(INT_IMAGE_DESTDIR)/xen0-linux-$(KERNELRELEASE)
     endif
