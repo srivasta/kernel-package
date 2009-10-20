@@ -106,7 +106,8 @@ if    (! $kimage)                     { $kimage = "vmlinuz"; } # Hmm. empty
 elsif ($kimage =~ m/^b?zImage$/o)     { $kimage = "vmlinuz"; } # these produce vmlinuz
 elsif ($kimage =~ m/^[iI]mage$/o)     { my $nop = $kimage;   }
 elsif ($kimage =~ m/^vmlinux$/o)      { my $nop = $kimage;   }
-elsif ($kimage =~ m/^xen?-linux$/o) { my $nop = $kimage;   }
+elsif ($kimage =~ m/^xen[0u]-linux$/o){
+    $package_name       = "${kimage}-$version";}
 else                                  { $kimage = "vmlinuz"; } # Default
 
 if (-d "$kimage" ) {
