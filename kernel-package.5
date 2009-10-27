@@ -110,18 +110,13 @@ scripts to run when the package status changes.
 There is support for the multitudinous sub architectures that have
 blossomed under the umbrella of the m68k and power\-PC architectures.
 .TP
-.B xii) kernel\-patch support
-There is support there for optionally applying patches to the kernel
-provided as a kernel\-patch .deb file, and building a patched kernel
-auto\-magically, and still retain an UN\-patched kernel source tree.
-.TP
-.B xiii) Portable kernel images
+.B xii) Portable kernel images
 Allows one to compile a kernel for another computer, for example using
 a fast machine to compile the kernel for installation on a slower
 machine. This is really nice since the modules are all included in
 the .deb; and one does not have to deal with modules manually.
 .TP
-.B  xv) runtime hooks
+.B  xiii) runtime hooks
 The preinst, postinst, prerm and the postrm scripts allow the local
 admin on the installation machine to add a script into runtime hooks;
 this can allow, amongst other things, grub users to add and remove
@@ -135,7 +130,7 @@ running these scripts, the environment variable
 shall be set to the version of the kernel\-package that created the
 package.
 .TP
-.B xvi) Append descriptive bits to the kernel version
+.B xiv) Append descriptive bits to the kernel version
 One can append to the kernel version on the command line, or by
 setting an environment variable. So if your kernel is called
 kernel\-image\-2.4.1John.Home; it is unlikely to be overridden by the
