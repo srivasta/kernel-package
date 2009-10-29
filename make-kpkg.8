@@ -86,18 +86,21 @@ build to fail. Use CONCURRENCY_LEVEL as specified below.
 Print out a usage message.
 .TP
 .BR \-\-revision " number"
-Changes the Debian revision number for the packages produced to the argument
+Changes the version number for the packages produced to the argument
 .BR number.
-This has certain constraints: the version may contain only 
-alphanumerics and the characters ~ + . (tilde, full stop and plus)
-and must contain a digit. (Look at the Policy manual for
-details).  Optionally, you may prepend the revision with a digit followed by a
-colon (:). The default is
+This has certain constraints: the version may contain only
+alphanumerics and the characters ~ + . (tilde, full stop and plus) and
+must contain a digit. (Look at the Policy manual for
+details). Optionally, you may prepend the revision with a digit
+followed by a colon (:). The default is
 .B 10.00.Custom
 unless the environment variable
 .B DEBIAN_REVISION_MANDATORY
 is set, in which case an error is generated if the revision is not set
 on the command line or the configuration file.
+.BR Hint:
+You may set it to $(version)-<foo> in the configuration file to get
+the upstream version number prepended to your custom string <foo>.
 .TP
 .BR \-\-append\-to\-version " foo"
 .TP
