@@ -748,6 +748,14 @@ Also, if you try to recompile with a changed --revision option or a
 different debian revision, you shall have to remove ./debian, and then
 recompile. 
 
+Cross Compiling for a subarchitecture
+----- --------- --- - ---------------
+
+Suppose you want to compile a 32 bit kernel on a 64 bit (amd64, say)
+machine, this is the incantation to use:
+
+DEB_HOST_ARCH=i386 make-kpkg --arch i386 --cross-compile - <other options>
+
 Tecras and other notebooks 
 --------------------------
           (Many thanks to Philip Hands <phil@hands.com> and
