@@ -99,9 +99,20 @@ ifneq ($(filter kfreebsd, $(DEB_HOST_ARCH_OS)):$(strip $(shell grep -E ^[^\#]*CO
 	mv System.map System.precious
       endif
 	$(restore_upstream_debianization)
-	$(MAKE) $(EXTRAV_ARG) INSTALL_MOD_PATH=$(INSTALL_MOD_PATH)	     \
-		INSTALL_FW_PATH=$(INSTALL_MOD_PATH)/lib/firmware/$(KERNELRELEASE)  \
+	$(MAKE) $(EXTRAV_ARG) INSTALL_MOD_PATH=$(INSTALL_MOD_PATH)	              \
+		INSTALL_FW_PATH=$(INSTALL_MOD_PATH)/lib/firmware/$(KERNELRELEASE)     \
 		$(CROSS_ARG) ARCH=$(KERNEL_ARCH) INSTALL_MOD_STRIP=1 modules_install
+	$(MAKE) $(EXTRAV_ARG) INSTALL_MOD_PATH=$(TMPTOP)$(DEBUGDIR)                   \
+                $(CROSS_ARG) ARCH=$(KERNEL_ARCH) modules_install
+	find $(TMPTOP)$(DEBUGDIR) -type f -name \*.ko |                               \
+              while read file; do                                                     \
+                origfile=`echo $$file | sed -e 's,$(DEBUGDIR),,g'`;                   \
+                echo objcopy --only-keep-debug   $$file;                              \
+                objcopy --only-keep-debug   $$file;                                   \
+                echo objcopy --add-gnu-debuglink=$$file $$origfile;                   \
+                objcopy --add-gnu-debuglink=$$file $$origfile;                        \
+             done
+	rm -rf $(TMPTOP)$(DEBUGDIR)
       ifneq ($(strip $(KERNEL_CROSS)),)
 	mv System.precious System.map
       endif
