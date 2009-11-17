@@ -19,7 +19,7 @@ CONFLOC    := /etc/kernel-pkg.conf
 LIBLOC     := /usr/share/kernel-package
 MODULE_LOC := /usr/src/modules
 
-DOCFILES = README.modules Rationale
+DOCFILES = README.modules Rationale Kernel.htm
 EXAMPLES = sample.kernel-img.conf etc
 
 # where kernel-package files go to
