@@ -58,11 +58,11 @@ ifeq ($(strip $(KERNEL_ARCH)),um)
 else
   ifneq ($(strip $(CONFIG_XEN)$(CONFIG_X86_64_XEN)),)
 	ifeq ($(strip $(CONFIG_XEN_PRIVILEGED_GUEST)),)
-	  i_package  = $(INT_STEM)-xenu-$(KERNELRELEASE)$(INT_SUBARCH)
-	  b_package  = $(INT_STEM)-xenu-$(KERNELRELEASE)$(INT_SUBARCH)-dbg
+	  i_package  = $(INT_STEM)-image-$(KERNELRELEASE)-xenu$(INT_SUBARCH)
+	  b_package  = $(INT_STEM)-image-$(KERNELRELEASE)-xenu$(INT_SUBARCH)-dbg
         else
-          i_package  = $(INT_STEM)-xen0-$(KERNELRELEASE)$(INT_SUBARCH)
-          b_package  = $(INT_STEM)-xen0-$(KERNELRELEASE)$(INT_SUBARCH)-dbg
+          i_package  = $(INT_STEM)-image-$(KERNELRELEASE)-xen0$(INT_SUBARCH)
+          b_package  = $(INT_STEM)-image-$(KERNELRELEASE)-xen0$(INT_SUBARCH)-dbg
         endif
   else
 	i_package  = $(INT_STEM)-image-$(KERNELRELEASE)$(INT_SUBARCH)

@@ -60,12 +60,12 @@ ifeq ($(DEB_HOST_ARCH_OS), linux)
     int_install_vmlinux:=YES
     ifeq ($(strip $(CONFIG_XEN_PRIVILEGED_GUEST)),)
       kimage := xenu-linux
-      kimagedest = $(INT_IMAGE_DESTDIR)/xenu-linux-$(KERNELRELEASE)
-      kelfimagedest = $(INT_IMAGE_DESTDIR)/xenu-linux-$(KERNELRELEASE)
+      kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(KERNELRELEASE)-xenu
+      kelfimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(KERNELRELEASE)-xenu
     else
       kimage := xen0-linux
-      kimagedest = $(INT_IMAGE_DESTDIR)/xen0-linux-$(KERNELRELEASE)
-      kelfimagedest = $(INT_IMAGE_DESTDIR)/xen0-linux-$(KERNELRELEASE)
+      kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(KERNELRELEASE)-xen0
+      kelfimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(KERNELRELEASE)-xen0
     endif
   endif
 endif
