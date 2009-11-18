@@ -125,7 +125,7 @@ Description: Linux uml kernel binary image for version =V=SA
  This package contains the Linux uml kernel image for version =V=SA
  and the modules built by the packager.  
 
-Package: =ST-iamge-=V-xen0=SA
+Package: =ST-image-=V-xen0=SA
 Architecture: =A 
 Section: utils
 Priority: optional 
