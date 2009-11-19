@@ -46,7 +46,7 @@ else
 endif
 
 
-kimagesrc  = $(strip $(kimage))
+kimagesrc  = $(strip $(target))
 INT_IMAGE_DESTDIR=$(DOCDIR)
 IMAGEDIR = /usr/bin
 kimagedest = $(TMPTOP)/$(IMAGEDIR)/linux-$(KERNELRELEASE)

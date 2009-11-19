@@ -36,7 +36,7 @@ include $(DEBDIR)/ruleset/arches/what_is_ppc_called_today.mk
 kimagesrc = vmlinux
 kimage := vmlinux
 kimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(KERNELRELEASE)
-target := $(kimage)
+target := vmlinux
 DEBCONFIG= $(CONFDIR)/config.$(KPKG_SUBARCH)
 
 # 32bit generic powerpc subarches.

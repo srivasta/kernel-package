@@ -59,7 +59,7 @@ ifeq (,$(findstring /$(KPKG_SUBARCH)/,/amiga/atari/mac/mvme147/mvme16x/bvme6000/
 endif
 NEED_DIRECT_GZIP_IMAGE=NO
 kimage := vmlinuz
-target = $(kimage)
+target = zImage
 kimagesrc = vmlinux.gz
 kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(KERNELRELEASE)
 kelfimagesrc = vmlinux

@@ -50,8 +50,8 @@ ifeq ($(DEB_HOST_ARCH_OS), linux)
   kimagedest	  = $(INT_IMAGE_DESTDIR)/vmlinuz-$(KERNELRELEASE)
   kelfimagedest   = $(INT_IMAGE_DESTDIR)/vmlinux-$(KERNELRELEASE)
   ifeq ($(strip $(CONFIG_XEN)$(CONFIG_X86_64_XEN)),)
-    target	  = $(kimage)
-    kimagesrc	  = $(strip arch/$(IMAGE_SRC_DIR)/boot/$(kimage))
+    target	  = bzImage
+    kimagesrc	  = $(strip arch/$(IMAGE_SRC_DIR)/boot/$(target))
   else
     target        = vmlinux
     kimagesrc     = vmlinux

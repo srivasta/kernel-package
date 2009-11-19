@@ -32,7 +32,7 @@
 
 KERNEL_ARCH := m32r
 kimage := vmlinuz
-target = $(kimage)
+target = zImage
 kimagesrc = $(strip arch/$(KERNEL_ARCH)/boot/$(kimage))
 kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(KERNELRELEASE)
 DEBCONFIG= $(CONFDIR)/config.$(KPKG_SUBARCH)

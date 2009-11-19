@@ -31,11 +31,11 @@
 ###############################################################################
 
 kimage := vmlinux
-target=$(kimage)
+target=vmlinux
 NEED_DIRECT_GZIP_IMAGE=NO
 # Override arch name because hppa uses arch/parisc not arch/hppa
 KERNEL_ARCH := parisc
-kimagesrc=$(kimage)
+kimagesrc=vmlinux
 kimagedest=$(INT_IMAGE_DESTDIR)/vmlinux-$(KERNELRELEASE)
 # This doesn't seem to work, but the other archs do it...
 DEBCONFIG=$(CONFDIR)/config.$(KPKG_SUBARCH)
