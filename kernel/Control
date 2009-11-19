@@ -124,26 +124,3 @@ Replaces: user-mode-linux (<= 2.6)
 Description: Linux uml kernel binary image for version =V=SA
  This package contains the Linux uml kernel image for version =V=SA
  and the modules built by the packager.  
-
-Package: =ST-image-=V-xen0=SA
-Architecture: =A 
-Section: utils
-Priority: optional 
-Provides: =ST-xen0,  =ST-xen0-=CV 
-Depends: =I coreutils (>= 5.96) | fileutils (>= 4.0) 
-Suggests: fdutils, =ST-doc-=V=SA | =ST-source-=V 
-Description: Linux xen kernel binary image for version =V=SA 
- This package contains the Linux xen kernel image for version =V=SA 
- and the modules built by the packager.
-
-Package: =ST-image-=V-xenu=SA
-Architecture: =A 
-Section: utils
-Priority: optional 
-Provides: =ST-xenu,  =ST-xenu-=CV 
-Depends: =I coreutils (>= 5.96) | fileutils (>= 4.0) 
-Suggests: fdutils, =ST-doc-=V=SA | =ST-source-=V 
-Description: Linux xen kernel binary image for version =V=SA 
- This package contains the Linux xen kernel image for version =V=SA 
- and the modules built by the  packager.
-

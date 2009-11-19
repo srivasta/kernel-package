@@ -35,14 +35,14 @@ ifeq ($(strip $(architecture)),arm)
 
   ifneq (,$(findstring $(KPKG_SUBARCH),netwinder))
     KPKG_SUBARCH:=$(GUESS_SUBARCH)
-    kimage := zImage
+    kimage := vmlinuz
     target = Image
     kimagesrc = arch/$(KERNEL_ARCH)/boot/Image
     kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(KERNELRELEASE)
     NEED_DIRECT_GZIP_IMAGE=NO
     DEBCONFIG= $(CONFDIR)/config.netwinder
   else
-    kimage := zImage
+    kimage := vmlinuz
     target = zImage
     NEED_DIRECT_GZIP_IMAGE=NO
     kimagesrc = arch/$(KERNEL_ARCH)/boot/zImage

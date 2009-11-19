@@ -22,7 +22,7 @@
 ### ARM (big endian)
 ifeq ($(strip $(architecture)),armeb)
 
-  kimage := zImage
+  kimage := vmlinuz
   target = zImage
   NEED_DIRECT_GZIP_IMAGE=NO
   kimagesrc = arch/$(KERNEL_ARCH)/boot/zImage

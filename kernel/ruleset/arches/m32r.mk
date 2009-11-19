@@ -31,7 +31,7 @@
 ###############################################################################
 
 KERNEL_ARCH := m32r
-kimage := zImage
+kimage := vmlinuz
 target = $(kimage)
 kimagesrc = $(strip arch/$(KERNEL_ARCH)/boot/$(kimage))
 kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(KERNELRELEASE)

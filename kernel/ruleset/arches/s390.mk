@@ -42,7 +42,7 @@ ifeq (4,$(PATCHLEVEL))
     export UNAME_MACHINE
   endif
 endif
-kimage := zimage
+kimage := vmlinuz
 target = image
 NEED_DIRECT_GZIP_IMAGE=NO
 kimagesrc = $(strip arch/$(KERNEL_ARCH)/boot/$(target))

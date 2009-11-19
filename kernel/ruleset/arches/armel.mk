@@ -22,7 +22,7 @@
 ### ARM (new abi)
 ifeq ($(strip $(architecture)),armel)
 
-  kimage := zImage
+  kimage := vmlinuz
   target = zImage
   NEED_DIRECT_GZIP_IMAGE=NO
   kimagesrc = arch/$(KERNEL_ARCH)/boot/zImage
