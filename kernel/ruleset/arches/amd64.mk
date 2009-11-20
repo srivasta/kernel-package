@@ -55,7 +55,7 @@ ifeq ($(DEB_HOST_ARCH_OS), linux)
   else
     target        = vmlinux
     kimagesrc     = vmlinux
-    int_install_vmlinux:=YES
+#    int_install_vmlinux:=YES
 #    ifeq ($(strip $(CONFIG_XEN_PRIVILEGED_GUEST)),)
 #    else
 #    endif
