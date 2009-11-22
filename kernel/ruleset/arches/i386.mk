@@ -58,17 +58,15 @@ ifeq ($(DEB_HOST_ARCH_OS), linux)
   kelfimagesrc   = vmlinux
   kimagedest     = $(INT_IMAGE_DESTDIR)/vmlinuz-$(KERNELRELEASE)
   kelfimagedest  = $(INT_IMAGE_DESTDIR)/vmlinux-$(KERNELRELEASE)
-  ifeq ($(strip $(CONFIG_X86_XEN)$(CONFIG_X86_64_XEN)),)
-    target       = bzImage
-    kimagesrc    = $(strip arch/$(IMAGE_SRC_DIR)/boot/bzImage)
-  else
-    target       = vmlinux
-    kimagesrc    = vmlinux
+  target       = bzImage
+  kimagesrc    = $(strip arch/$(IMAGE_SRC_DIR)/boot/bzImage)
+#  ifeq ($(strip $(CONFIG_X86_XEN)$(CONFIG_X86_64_XEN)),)
+#  else
 #    int_install_vmlinux:=YES
 #    ifeq ($(strip $(CONFIG_XEN_PRIVILEGED_GUEST)),)
 #    else
 #    endif
-  endif
+#  endif
 else
   ifeq ($(DEB_HOST_ARCH_OS), kfreebsd)
     kimagesrc = $(strip $(KERNEL_ARCH)/compile/GENERIC/kernel)
