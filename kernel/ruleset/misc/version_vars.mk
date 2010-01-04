@@ -138,11 +138,13 @@ iatv :=
 EXTRAV_ARG :=
 endif
 
-UTS_RELEASE_HEADER=$(call doit,if [ -f include/linux/utsrelease.h ]; then  \
-	                       echo include/linux/utsrelease.h;            \
-	                   else                                            \
-                               echo include/linux/version.h ;              \
-	                   fi)
+UTS_RELEASE_HEADER=$(call doit,if [ -f include/generated/utsrelease.h ]; then \
+	                         echo include/generated/utsrelease.h;         \
+                               elif [ -f include/linux/utsrelease.h ]; then   \
+	                         echo include/linux/utsrelease.h;             \
+	                       else                                           \
+                                 echo include/linux/version.h ;               \
+	                       fi)
 UTS_RELEASE_VERSION=$(call doit,if [ -f $(UTS_RELEASE_HEADER) ]; then                    \
                  grep 'define UTS_RELEASE' $(UTS_RELEASE_HEADER) |                       \
                  perl -nle  'm/^\s*\#define\s+UTS_RELEASE\s+("?)(\S+)\1/g && print $$2;';\

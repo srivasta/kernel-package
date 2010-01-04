@@ -336,8 +336,15 @@ endif
 	@echo this was built on a machine with the kernel: >> debian/stamp/build/info
 	uname -a >> debian/stamp/build/info
 	echo using the compiler: >> debian/stamp/build/info
-	grep LINUX_COMPILER include/linux/compile.h | \
-	   sed -e 's/.*LINUX_COMPILER "//' -e 's/"$$//' >> debian/stamp/build/info
+	if [ -f  -f include/generated/compile.h ]; then                  \
+	   grep LINUX_COMPILER include/generated/compile.h |             \
+	     sed -e 's/.*LINUX_COMPILER "//' -e 's/"$$//' >>             \
+               debian/stamp/build/info;                                  \
+        elif [ -f include/linux/compile.h  ]; then                       \
+	    grep LINUX_COMPILER include/linux/compile.h |                \
+	      sed -e 's/.*LINUX_COMPILER "//' -e 's/"$$//' >>            \
+                debian/stamp/build/info;                                 \
+         fi
 ifneq ($(strip $(shell test -f version.Debian && cat version.Debian)),)
 	echo kernel source package used: >> debian/stamp/build/info
 	echo $(INT_STEM)-source-$(shell cat version.Debian) >> debian/stamp/build/info
