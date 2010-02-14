@@ -68,10 +68,10 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
       s/\#.*$//g;
       next if /^\s*$/;
 
-      $header_preinst_hook  = "$1"  if /header_preinst_hook\s*=\s*(\S+)/ig;
-      $header_postinst_hook = "$1"  if /header_postinst_hook\s*=\s*(\S+)/ig;
-      $header_prerm_hook    = "$1"  if /header_prerm_hook\s*=\s*(\S+)/ig;
-      $header_postinst_hook = "$1"  if /header_postinst_hook\s*=\s*(\S+)/ig;
+      $header_preinst_hook  = "$1"  if m/^\s*header_preinst_hook\s*=\s*(\S+)/i;
+      $header_postinst_hook = "$1"  if m/^\s*header_postinst_hook\s*=\s*(\S+)/i;
+      $header_prerm_hook    = "$1"  if m/^\s*header_prerm_hook\s*=\s*(\S+)/i;
+      $header_postinst_hook = "$1"  if m/^\s*header_postinst_hook\s*=\s*(\S+)/i;
 
     }
     close CONF;

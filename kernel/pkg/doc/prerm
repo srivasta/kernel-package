@@ -77,10 +77,10 @@ if (-r "$CONF_LOC" && -f "$CONF_LOC"  ) {
       s/\#.*$//g;
       next if /^\s*$/;
 
-      $doc_preinst_hook    = "$1"  if /doc_preinst_hook\s*=\s*(\S+)/ig;
-      $doc_postinst_hook   = "$1"  if /doc_postinst_hook\s*=\s*(\S+)/ig;
-      $doc_prerm_hook   = "$1"  if /doc_prerm_hook\s*=\s*(\S+)/ig;
-      $doc_postinst_hook   = "$1"  if /doc_postinst_hook\s*=\s*(\S+)/ig;
+      $doc_preinst_hook    = "$1"  if m/^\s*doc_preinst_hook\s*=\s*(\S+)/i;
+      $doc_postinst_hook   = "$1"  if m/^\s*doc_postinst_hook\s*=\s*(\S+)/i;
+      $doc_prerm_hook      = "$1"  if m/^\s*doc_prerm_hook\s*=\s*(\S+)/i;
+      $doc_postinst_hook   = "$1"  if m/^\s*doc_postinst_hook\s*=\s*(\S+)/i;
     }
     close CONF;
     $have_conffile = "Yes";
