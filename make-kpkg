@@ -45,7 +45,7 @@ my $help_opt=0;
 my $noexec;
 my $verbose;
 my $initrd=0;
-my $revision=0;
+my $revision;
 my $root_cmd;
 my $signature="" ;
 my $subarch='';
@@ -810,7 +810,7 @@ EOERR3
     $alt_cmd  .= "debian";
   }
 
-  if ($revision) {
+  if (defined($revision) && ! ("$revision" eq "")) {
     if ($Targets !~ m/^\s*clean\s*$/) { # No need to do all this for just clean
       $command .= " DEBIAN_REVISION=$revision ";
       $alt_cmd .= " DEBIAN_REVISION=$revision ";
