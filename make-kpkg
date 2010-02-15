@@ -37,6 +37,7 @@ my $append_to_version='';
 my $arch='';
 my $arch_in_name=0;
 my $bzimage;
+my $concurrency=0;
 my $config_target='oldconfig';
 my $cross_compile='';
 my $key_id='';
@@ -84,7 +85,8 @@ my %option_ctl =
    "us"                  => \$unsign_source,
    "uc"                  => \$unsign_changelog,
    "bzimage"             => \$bzimage,
-   "mkimage=s"           => \$mkimage
+   "mkimage=s"           => \$mkimage,
+   "jobs|j=i"            => \$concurrency
   );
 
 =head1 SYNOPSIS
@@ -278,6 +280,8 @@ package.(The INITRD_OK variable is now obsolete).
 
 =back
 
+=item B<-j> -I<jobs>, B<--jobs> -I<jobs> Set CONCURRENCY_LEVEL=-I<jobs>
+
 =item B<--overlay-dir> /path/to/directory
 
 =over 2
@@ -385,6 +389,8 @@ usage: $main::MYNAME [options] target [target ...]
  --arch_in_name        Embed the subarch in the image package name
  --stem     foo        Call the packages foo-* instead of kernel-*
  --initrd              Create a image package suitable for initrd.
+ -j         jobs       Sec CONCURRENCY_LEVEL to -I<jobs> for this action.
+ --jobs     jobs       Set CONCURRENCY_LEVEL to -I<jobs> for this action.
  --pgpsign  name       An ID used to sign the changes file using pgp.
  --config target       Change the type of configure done from the  default
                        oldconfig.
@@ -666,6 +672,7 @@ sub main (){
   $rules_file = "debian/rules";
   $alt_rules_file = "/usr/share/kernel-package/ruleset/minimal.mk";
 
+  Getopt::Long::Configure("bundling");
   $ret = GetOptions(%option_ctl);
   if(!$ret) {
         print "use --help to display command line syntax help.\n" ;
@@ -695,14 +702,20 @@ sub main (){
       ($ENV{'MAKEFLAGS'} =~ /-j/ || $ENV{'MAKEFLAGS'} =~ /--jobs/ )) {
     $errors .= "The environment variable MAKEFLAGS contains the flag -j.\n" .
       "Unfortunately, this is not supported at this time. Instead, please\n" .
-        "use the supported mechanism by setting CONCURRENCY_LEVEL\n" ;
+        "use the supported mechanism by setting CONCURRENCY_LEVEL, or the -j flag" .
+        "of" . $main::MYNAME . "\n" ;
   }
 
   if ($ENV{'MFLAGS'} &&
       ($ENV{'MFLAGS'} =~ /-j/ || $ENV{'MFLAGS'} =~ /--jobs/ )) {
     $errors .= "The environment variable MFLAGS contains the flag -j.\n" .
       "Unfortunately, this is not supported at this time. Instead, please\n" .
-        "use the supported mechanism by setting CONCURRENCY_LEVEL\n" ;
+        "use the supported mechanism by setting CONCURRENCY_LEVEL, or the -j flag" .
+        "of" . $main::MYNAME . "\n" ;
+  }
+
+  if($concurrency > 0){
+      $ENV{'CONCURRENCY_LEVEL'} = $concurrency;
   }
 
   if ($root_cmd || $unsign_source || $unsign_changelog){

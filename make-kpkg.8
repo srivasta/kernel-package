@@ -80,7 +80,8 @@ set).
 .PP
 .B WARNING: 
 Do NOT set the \-j option in MAKEFLAGS directly, this shall cause the
-build to fail. Use CONCURRENCY_LEVEL as specified below.
+build to fail. Use CONCURRENCY_LEVEL as specified below. There is
+also a -j flag that can be used.
 .SH OPTIONS
 .B \-\-help
 Print out a usage message.
@@ -261,6 +262,10 @@ or added into the hook script parameter of
 no initrd will be created (the bundled in example scripts are
 just examples -- user action is required before anything happens).
 .TP
+.B \-\-jobs " number"
+.B \-j " number"
+Set the environment variable CONCURRENCY_LEVEL to "number".
+.TP
 .B \-\-overlay\-dir "/path/to/directory"
 The specified directory should contain files that will be placed in
 the 
@@ -356,7 +361,7 @@ of CPUs using the command:
  "grep \-c '^processor' /proc/cpuinfo"
 .B WARNING: 
 Do NOT set the \-j option in MAKEFLAGS directly, this shall call the
-build to fail. 
+build to fail. It is possible to set \-j as a make-kpkg argument.
 .SH TARGETS
 .TP
 .B clean
