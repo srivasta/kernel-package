@@ -336,7 +336,7 @@ endif
 	@echo this was built on a machine with the kernel: >> debian/stamp/build/info
 	uname -a >> debian/stamp/build/info
 	echo using the compiler: >> debian/stamp/build/info
-	if [ -f  -f include/generated/compile.h ]; then                  \
+	if [ -f include/generated/compile.h ]; then                      \
 	   grep LINUX_COMPILER include/generated/compile.h |             \
 	     sed -e 's/.*LINUX_COMPILER "//' -e 's/"$$//' >>             \
                debian/stamp/build/info;                                  \
