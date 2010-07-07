@@ -80,7 +80,8 @@ else
    ln -s "$vmlinuz_dir/"vmlinuz-$STD vmlinuz
 fi
 
-if [ "X$OLD" != "X" ]; then
+# Don't create old link if STD and OLD are the same
+if [ "X$OLD" != "X" -a "$STD" != "$OLD" ]; then
     if [ -f "$vmlinuz_dir/"initrd.img-$OLD ] ; then
 	ln -s "$vmlinuz_dir/"initrd.img-$OLD initrd.img.old
 	ln -s "$vmlinuz_dir/"vmlinuz-$OLD vmlinuz-rd.old
