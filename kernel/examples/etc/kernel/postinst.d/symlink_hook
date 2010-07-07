@@ -39,7 +39,7 @@ cd $SYMLINKDIR || exit 1
 
 if [ -n "$DEB_MAINT_PARAMS" ]; then
     eval set -- "$DEB_MAINT_PARAMS"
-    if [ -z "$1" ] || [ "$1" != "configure" ]; then
+    if [ -z "$1" ] || [ "$1" != "configure" -a "$1" != "remove" ]; then
         exit 0;
     fi
 fi
