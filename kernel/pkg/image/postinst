@@ -129,7 +129,12 @@ if (! -d "$image_dest") {
 chdir("$image_dest") or die "could not chdir to $image_dest:$!\n";
 
 # Paranoid check to make sure that the correct value is put in there
-if    (! $kimage)                    { $kimage = "vmlinuz"; } # Hmm. empty
+if    (! $kimage)                      { $kimage = "vmlinuz"; } # Hmm. empty
+elsif ($kimage =~ m/^b?zImage$/o)     {$kimage = "vmlinuz"} # these produce vmlinuz
+elsif ($kimage =~ m/^[iI]mage$/o)     { my $nop = $kimage;}
+elsif ($kimage =~ m/^vmlinux$/o)      { my $nop = $kimage;}
+elsif ($kimage =~ m/^xen[0u]-linux$/o){ $package_name  = "${kimage}-$version";}
+else                                   {$kimage = "vmlinuz"} # default
 
 $ENV{KERNEL_ARCH}=$kernel_arch if $kernel_arch;
 
