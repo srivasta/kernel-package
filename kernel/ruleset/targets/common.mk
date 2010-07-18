@@ -231,7 +231,7 @@ debian/control debian/changelog debian/rules debian/stamp/conf/full-changelog:
 	   cp -af $(LIBLOC)/$$dir  ./debian/;				\
 	done
 	install -p -m 755 $(LIBLOC)/rules debian/rules
-	sed         -e 's/=V/$(version)/g'  \
+	sed         -e 's/=V/$(KERNELRELEASE)/g'  \
                 -e 's/=D/$(debian)/g'         -e 's/=A/$(DEB_HOST_ARCH)/g'  \
 		-e 's/=SA/$(INT_SUBARCH)/g'  \
 		-e 's/=I/$(initrddep)/g'				    \
@@ -247,7 +247,7 @@ ifneq (,$(strip $(KPKG_OVERLAY_DIR)))
 	test ! -d $(strip $(KPKG_OVERLAY_DIR))  ||                          \
           (cd $(strip $(KPKG_OVERLAY_DIR)); tar cf - . | (cd $(SRCTOP)/debian; umask 000; tar xsf -))
 	test ! -f $(strip $(KPKG_OVERLAY_DIR))/Control ||                   \
-                sed         -e 's/=V/$(version)/g'  \
+                sed         -e 's/=V/$(KERNELRELEASE)/g'  \
                 -e 's/=D/$(debian)/g'         -e 's/=A/$(DEB_HOST_ARCH)/g'  \
 		-e 's/=SA/$(INT_SUBARCH)/g'  \
 		-e 's/=I/$(initrddep)/g'				    \
@@ -256,7 +256,7 @@ ifneq (,$(strip $(KPKG_OVERLAY_DIR)))
 		-e 's/=ST/$(INT_STEM)/g'      -e 's/=B/$(KERNEL_ARCH)/g'    \
                   $(strip $(KPKG_OVERLAY_DIR))/Control > debian/control
 	test ! -f $(strip $(KPKG_OVERLAY_DIR))/changelog ||                 \
-            sed -e 's/=V/$(version)/g'       \
+            sed -e 's/=V/$(KERNELRELEASE)/g'       \
             -e 's/=D/$(debian)/g'        -e 's/=A/$(DEB_HOST_ARCH)/g'       \
             -e 's/=ST/$(INT_STEM)/g'     -e 's/=B/$(KERNEL_ARCH)/g'         \
             -e 's/=M/$(maintainer) <$(email)>/g'                            \

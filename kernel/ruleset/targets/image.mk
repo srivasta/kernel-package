@@ -288,7 +288,7 @@ ifneq ($(strip $(KERNEL_ARCH)),um)
 	 $(DEBDIR)/pkg/image/prerm > $(TMPTOP)/DEBIAN/prerm
 	chmod 755 $(TMPTOP)/DEBIAN/prerm
 	$(INSTALL_TEMPLATE)
-	sed -e 's/=V/$(version)/g'    -e 's/=IB/$(link_in_boot)/g'    \
+	sed -e 's/=V/$(KERNELRELEASE)/g'    -e 's/=IB/$(link_in_boot)/g'    \
 	    -e 's/=ST/$(INT_STEM)/g'  -e 's/=R/$(reverse_symlink)/g' \
             -e 's/=KPV/$(kpkg_version)/g'                       \
 	    -e 's/=K/$(kimage)/g'           \
