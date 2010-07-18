@@ -968,7 +968,7 @@ EOERR3
 
   # OK. Time to get rid of ./debian
   if (-d "./debian") {
-     rmtree(['debian'], 1, 1);
+     rmtree(['debian'], 0, 1);
   }
 
   # Now, recreate ./debian
