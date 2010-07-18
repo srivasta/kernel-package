@@ -86,7 +86,7 @@ DIRS_TO_CLEAN += $(TMP_MAN)
 
 # The destination of all .deb files
 # (suggested by Rob Browning <osiris@cs.utexas.edu>)
-DEB_DEST := ..
+DEB_DEST ?= ..
 INSTALL_MOD_PATH=$(TMPTOP)
 KPKG_DEST_DIR ?= $(SRCTOP)/$(DEB_DEST)
 
