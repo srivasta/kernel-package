@@ -107,10 +107,10 @@ ifneq ($(filter kfreebsd, $(DEB_HOST_ARCH_OS)):$(strip $(shell grep -E ^[^\#]*CO
 	find $(TMPTOP)$(DEBUGDIR) -type f -name \*.ko |                               \
               while read file; do                                                     \
                 origfile=`echo $$file | sed -e 's,$(DEBUGDIR),,g'`;                   \
-                echo objcopy --only-keep-debug   $$file;                              \
-                objcopy --only-keep-debug   $$file;                                   \
-                echo objcopy --add-gnu-debuglink=$$file $$origfile;                   \
-                objcopy --add-gnu-debuglink=$$file $$origfile;                        \
+                echo $(OBJCOPY) --only-keep-debug   $$file;                              \
+                $(OBJCOPY) --only-keep-debug   $$file;                                   \
+                echo $(OBJCOPY) --add-gnu-debuglink=$$file $$origfile;                   \
+                $(OBJCOPY) --add-gnu-debuglink=$$file $$origfile;                        \
              done
 	rm -rf $(TMPTOP)$(DEBUGDIR)
       ifneq ($(strip $(KERNEL_CROSS)),)

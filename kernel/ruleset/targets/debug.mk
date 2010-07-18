@@ -73,7 +73,7 @@ ifneq ($(filter kfreebsd, $(DEB_HOST_ARCH_OS)):$(strip $(shell grep -E ^[^\#]*CO
                 $(CROSS_ARG) ARCH=$(KERNEL_ARCH) modules_install
 	find $(TMPTOP)$(DEBUGDIR) -type f -name \*.ko |                               \
               while read file; do                                                     \
-                objcopy --only-keep-debug $$file;                                     \
+                $(OBJCOPY) --only-keep-debug $$file;                                     \
              done
 	test ! -f System.map ||	 cp System.map			                      \
 			$(TMPTOP)/$(DEBUGDIR)/lib/modules/$(KERNELRELEASE)/System.map;

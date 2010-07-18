@@ -32,6 +32,11 @@
 # The version of kernel-package this belongs to
 kpkg_version := =K=V
 
+CROSS_COMPILE   ?=
+OBJCOPY         = $(CROSS_COMPILE)objcopy
+OBJDUMP         = $(CROSS_COMPILE)objdump
+export OBJCOPY OBJDUMP CROSS_COMPILE
+
 # Where the package libs are stored
 LIBLOC     :=/usr/share/kernel-package
 
