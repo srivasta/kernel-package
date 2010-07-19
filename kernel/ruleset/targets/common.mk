@@ -196,7 +196,7 @@ endif
 ######################################################################
 ifeq ($(DEB_HOST_ARCH_OS), linux)
 	$(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) ARCH=$(KERNEL_ARCH) \
-                    $(config_target);                                      
+                    $(config_target);
   ifeq ($(shell if   [ $(VERSION) -gt 2 ]; then				   \
 		   echo new;						   \
 		elif [ $(VERSION) -ge 2 ] && [ $(PATCHLEVEL) -ge 5 ]; then \
@@ -397,7 +397,7 @@ endif
 # However, this makes it harder to use git versions of the kernel
 	$(save_upstream_debianization)
 	DEB_BUILD_OPTIONS="$(SERIAL_BUILD_OPTIONS)" CONCURRENCY_LEVEL=1     \
-          dpkg-buildpackage -nc $(strip $(int_root_cmd)) $(strip $(int_us)) \
+          dpkg-buildpackage $(strip $(int_root_cmd)) $(strip $(int_us))     \
             $(strip $(int_uc)) -j1 -k"$(pgp)"  -m"$(maintainer) <$(email)>"
 	rm -f stamp-building
 	$(restore_upstream_debianization)
