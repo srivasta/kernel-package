@@ -33,8 +33,13 @@
 kpkg_version := =K=V
 
 CROSS_COMPILE   ?=
+ifneq ($(CROSS_COMPILE),-)
 OBJCOPY         = $(CROSS_COMPILE)objcopy
 OBJDUMP         = $(CROSS_COMPILE)objdump
+else
+OBJCOPY         = objcopy
+OBJDUMP         = objdump
+endif
 export OBJCOPY OBJDUMP CROSS_COMPILE
 
 # Where the package libs are stored
