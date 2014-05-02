@@ -61,7 +61,7 @@ ifeq ($(strip $(KERNEL_ARCH)),um)
 	gzip -9fq			       $(MAN1DIR)/linux-$(KERNELRELEASE).1
 endif
 	test ! -d $(DEBDIR)/examples/ ||                                     \
-          (cd $(DEBDIR); tar cf - examples | (cd $(DOCDIR);  umask 000; tar xsf -)); 
+          (cd $(DEBDIR); tar cf - examples | (cd $(DOCDIR);  umask 000; tar xsf -));
 	$(install_file) $(DEBDIR)/pkg/image/README    $(DOCDIR)/debian.README
 ifeq ($(strip $(KERNEL_ARCH)),um)
 	$(install_file) $(config)	 $(DOCDIR)/config-$(KERNELRELEASE)
@@ -89,7 +89,7 @@ endif
 ######################################################################
 ###   For linux, if modules are defined, install modules
 ######################################################################
-ifneq ($(filter kfreebsd, $(DEB_HOST_ARCH_OS)):$(strip $(shell grep -E ^[^\#]*CONFIG_MODULES $(CONFIG_FILE))),:)
+ifneq ($(filter kfreebsd, $(DEB_HOST_ARCH_OS)):$(strip $(shell grep -E ^[^\#]*CONFIG_MODULES[^_] $(CONFIG_FILE))),:)
   ifeq	($(DEB_HOST_ARCH_OS):$(strip $(HAVE_NEW_MODLIB)),linux:)
 	$(old_mod_inst_cmds)
   else

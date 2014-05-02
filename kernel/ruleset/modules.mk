@@ -1,6 +1,6 @@
 ######################### -*- Mode: Makefile-Gmake -*- ########################
-## modules.mk --- 
-## Author           : Manoj Srivastava ( srivasta@glaurung.internal.golden-gryphon.com ) 
+## modules.mk ---
+## Author           : Manoj Srivastava ( srivasta@glaurung.internal.golden-gryphon.com )
 ## Created On       : Mon Oct 31 10:37:44 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
@@ -8,13 +8,13 @@
 ## Last Machine Used: anzu.internal.golden-gryphon.com
 ## Update Count     : 14
 ## Status           : Unknown, Use with caution!
-## HISTORY          : 
+## HISTORY          :
 ## Description      : This file contains the targets responsible for third party
-##                    module interaction. 
+##                    module interaction.
 ##
 ## arch-tag: 0c2c8a37-03da-48a2-9d87-27330c559025
 ##
-## 
+##
 ## This program is free software; you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
 ## the Free Software Foundation; either version 2 of the License, or
@@ -77,7 +77,7 @@ endif
 
 # only generate module image packages
 modules-image modules_image: .config
-ifeq ($(strip $(shell grep -E ^[^\#]*CONFIG_MODULES $(CONFIG_FILE))),)
+ifeq ($(strip $(shell grep -E ^[^\#]*CONFIG_MODULES[^_] $(CONFIG_FILE))),)
 	@echo Modules not configured, so not making $@
 else
 ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
@@ -122,7 +122,7 @@ endif
 
 # generate the modules packages and sign them
 modules: .config
-ifeq ($(strip $(shell grep -E ^[^\#]*CONFIG_MODULES $(CONFIG_FILE))),)
+ifeq ($(strip $(shell grep -E ^[^\#]*CONFIG_MODULES[^_] $(CONFIG_FILE))),)
 	@echo Modules not configured, so not making $@
 else
 ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
@@ -167,7 +167,7 @@ endif
 
 # configure the modules packages
 modules-config modules_config: .config
-ifeq ($(strip $(shell grep -E ^[^\#]*CONFIG_MODULES $(CONFIG_FILE))),)
+ifeq ($(strip $(shell grep -E ^[^\#]*CONFIG_MODULES[^_] $(CONFIG_FILE))),)
 	@echo Modules not configured, so not making $@
 else
 ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
@@ -205,7 +205,7 @@ endif
 endif
 
 modules-clean modules_clean:
-ifeq ($(strip $(shell if [ -e $(CONFIG_FILE) ]; then grep -E ^[^\#]*CONFIG_MODULES $(CONFIG_FILE); fi)),)
+ifeq ($(strip $(shell if [ -e $(CONFIG_FILE) ]; then grep -E ^[^\#]*CONFIG_MODULES[^_] $(CONFIG_FILE); fi)),)
 	@echo Modules not configured, so not making $@
 else
 	$(if $(subst $(strip $(UTS_RELEASE_VERSION)),,$(strip $(KERNELRELEASE))), \
