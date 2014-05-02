@@ -124,7 +124,7 @@ endif
 
 ifndef CROSS_COMPILE
   ifeq ($(strip $(MAKING_VIRTUAL_IMAGE)),)
-    ifneq ($(strip $(architecture)),$(strip $(DEB_BUILD_ARCH)))
+    ifneq ($(strip $(architecture)),$(strip $(word 1,$(DEB_BUILD_ARCH_CPU) $(DEB_BUILD_GNU_CPU))))
       #KERNEL_CROSS:=$(architecture)-$(strip $(DEB_HOST_ARCH_OS))-
       KERNEL_CROSS:=$(DEB_HOST_GNU_TYPE)-
       ifeq ($(architecture), amd64)

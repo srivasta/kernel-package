@@ -64,6 +64,8 @@ USE_KBUILD=$(shell if [ $(VERSION) -lt 2 ]; then			   \
 			   echo "YES";					   \
 	   fi)
 
+LGUEST_SUBDIR = $(word 1,$(wildcard Documentation/lguest Documentation/virtual/lguest tools/lguest))
+
 define save_upstream_debianization
 @echo save_upstream_debianization
 test ! -e scripts/package/builddeb || mv -f scripts/package/builddeb scripts/package/builddeb.kpkg-dist
@@ -323,8 +325,11 @@ ifeq ($(DEB_HOST_ARCH_OS), linux)
     endif
   endif
   ifneq ($(strip $(shell grep -E ^[^\#]*CONFIG_LGUEST $(CONFIG_FILE))),)
+    ifeq ($(LGUEST_SUBDIR),)
+	$(error Cannot find lguest tools)
+    endif
 	$(MAKE) $(do_parallel) $(EXTRAV_ARG) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) \
-			    $(CROSS_ARG) -C Documentation/lguest
+			    $(CROSS_ARG) -C $(LGUEST_SUBDIR)
   endif
 else
   ifeq ($(DEB_HOST_ARCH_OS), kfreebsd)
@@ -358,9 +363,10 @@ real_stamp_clean:
 ifeq ($(strip $(DEB_HOST_ARCH_OS)), linux)
 	$(save_upstream_debianization)
 	test ! -f .config  || cp -pf .config ,,precious
-	test ! -d Documentation/lguest  ||                   \
-            $(MAKE) $(FLAV_ARG) $(EXTRAV_ARG) $(CROSS_ARG)   \
-               ARCH=$(KERNEL_ARCH) -C Documentation/lguest clean
+  ifneq ($(LGUEST_SUBDIR),)
+	$(MAKE) $(FLAV_ARG) $(EXTRAV_ARG) $(CROSS_ARG)   \
+           ARCH=$(KERNEL_ARCH) -C $(LGUEST_SUBDIR) clean
+  endif
 	test ! -f Makefile || \
 	    $(MAKE) $(FLAV_ARG) $(EXTRAV_ARG) $(CROSS_ARG)    \
                 ARCH=$(KERNEL_ARCH) distclean

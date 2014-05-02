@@ -29,8 +29,8 @@
 make\-kpkg \- build Debian kernel packages from Linux kernel sources
 .SH SYNOPSIS
 .B make\-kpkg
-.I [options]
-\&[target [target ...]]
+.RI [ options ]
+.RI [ target " [" target " ...]]"
 .SH DESCRIPTION
 This manual page explains the Debian
 .B "make\-kpkg"
@@ -46,7 +46,7 @@ kernels for that architecture), and then calls
 .B make oldconfig
 to let the user answer any new questions. Typically, you run this
 command as root, or under
-.B fakeroot,
+.BR fakeroot ,
 or tell 
 .B make\-kpkg
 how to become root, like so:
@@ -60,14 +60,14 @@ kernel source directory where this command is run.
 Also, please note that some versions of gcc do not interact well with
 the kernel sources (gcc 2.95 has problems compiling the kernel without
 the flag 
-.I '\-fno\-strict\-aliasing'. 
+.IR '\-fno\-strict\-aliasing' . 
 This issue has been taken care of for
 recent kernels (2.2 and 2.4 series are fine) (I think you may have to
 edit the makefile for older kernels, or something).  You may control
 which version of gcc used in kernel compilation by setting the
 Makefile variables CC and HOSTCC in the top level kernel Makefile. You
 can do this simply by setting the environment variable
-.B MAKEFLAGS.
+.BR MAKEFLAGS .
 To observe, try:
 .PP
   % KBUILD_VERBOSE=1 MAKEFLAGS="CC=gcc\-4.4" make\-kpkg configure
@@ -78,17 +78,18 @@ shows the details of the commands being run.
 (please see the top level kernel Makefile for variables that can be
 set).
 .PP
-.B WARNING: 
+.BR WARNING :
 Do NOT set the \-j option in MAKEFLAGS directly, this shall cause the
 build to fail. Use CONCURRENCY_LEVEL as specified below. There is
 also a -j flag that can be used.
 .SH OPTIONS
+.TP
 .B \-\-help
 Print out a usage message.
 .TP
-.BR \-\-revision " number"
+.BI \-\-revision " number"
 Changes the version number for the packages produced to the argument
-.BR number.
+.IR number .
 This has certain constraints: the version may contain only
 alphanumerics and the characters ~ + . (tilde, full stop and plus) and
 must contain a digit. (Look at the Policy manual for
@@ -99,16 +100,16 @@ unless the environment variable
 .B DEBIAN_REVISION_MANDATORY
 is set, in which case an error is generated if the revision is not set
 on the command line or the configuration file.
-.BR Hint:
+.BR Hint :
 You may set it to $(version)-<foo> in the configuration file to get
 the upstream version number prepended to your custom string <foo>.
 .TP
-.BR \-\-append\-to\-version " foo"
+.BI \-\-append\-to\-version " foo"
 .TP
-.BR \-\-append_to_version " foo"
-This argument (
-.B foo
-) is appended to the value of the  EXTRAVERSION variable present in
+.BI \-\-append_to_version " foo"
+This argument
+.RI ( foo )
+is appended to the value of the  EXTRAVERSION variable present in
 the kernel Makefile. Since EXTRAVERSION is a component of the kernel
 version, it is also added to the Debian package name, and, as such
 must obey the policy governing the package name. That means it may
@@ -122,22 +123,22 @@ is set, make\-kpkg shall lower case version numbers set in the Makefile
 or in the 
 .I localversion
 file. 
-This option over rides the environment variable
-.B APPEND_TO_VERSION
+This option overrides the environment variable
+.BR APPEND_TO_VERSION .
 .TP
-.BR \-\-added\-modules\ foo
+.BI \-\-added\-modules \ foo
 .TP
-.BR \-\-added_modules\ foo
+.BI \-\-added_modules \ foo
 The argument should be a comma separated list of additional
 add\-on modules (not in the main kernel tree) that you wish to
 build when you invoke the modules_blah targets. You may give full path
 names of the directory the modules 
 reside in, or just the module name if it can be found in 
-.B MODULE_LOC,
+.BR MODULE_LOC ,
 which defaults to 
-.I /usr/src/modules.
+.IR /usr/src/modules .
 The default is that all modules in
-.B MODULE_LOC,
+.BR MODULE_LOC ,
 are compiled when the modules_blah targets are invoked.
 .TP
 .BR \-\-arch\ foo
@@ -153,9 +154,9 @@ contains when
 is run on the target machine, or it can be an other architecture in a
 multi\-arch set (like i386/amd64).
 .TP
-.BR \-\-cross\-compile\ foo
+.BI \-\-cross\-compile \ foo
 .TP
-.BR \-\-cross_compile\ foo
+.BI \-\-cross_compile \ foo
 This is useful for setting the target string when you are cross
 compiling. Use the dummy target "\-" if you are building for other
 arches of a multiarch set, like i386/amd64. The same effect can be
@@ -166,14 +167,14 @@ one desired, please explicitly specify the compiler that should be
 used. 
 .B CROSS_COMPILE
 .TP
-.BR \-\-subarch\ foo
+.BI \-\-subarch \ foo
 Some architectures (the Alpha, and the m68k) require a different
 kernel for each sub\-architecture. This option provides a way of
 specifying it as an argument to \fBmake\-kpkg\fR. \fBPlease note\fR
 that additional support for sub\-architectures may be required in the
 kernel sources to actually make this do anything. The same effect can
 be achieved by setting the environment variable 
-.B KPKG_SUBARCH
+.BR KPKG_SUBARCH .
 .TP
 .BR \-\-arch\-in\-name
 .TP
@@ -182,12 +183,12 @@ This option uses an extended name for the kernel image package by
 embedding the sub\-architecture in the image name, so one could write a
 script to create multiple sub\-architectures one after the other. You
 may also do this by setting the environment variable
-.B ARCH_IN_NAME. 
+.BR ARCH_IN_NAME .
 \fBPlease note\fR that only the package
 .I name
 is affected, not modules locations etc.
 .TP
-.BR \-\-pgpsign " name"
+.BI \-\-pgpsign " name"
 Set the string used to sign the 
 .B changes 
 file for any external modules in 
@@ -196,14 +197,14 @@ using PGP. This option will override the builtin default and the site
 wide customizations stored in the file
 .IR /etc/kernel\-pkg.conf
 or
-.IR ~/.kernel\-pkg.conf.
+.IR ~/.kernel\-pkg.conf .
 .TP
-.BR \-\-config " target"
+.BI \-\-config " target"
 Change the type of configure done from the default \f(CWoldconfig\fR.
 \fItarget\fR must be one of \f(CWoldconfig\fR, \f(CWconfig\fR,
-\f(CWmenuconfig\fR, \f(CWgconfig\fR, \f(CWxconfig\fR, \f(CWrandconfig\fR,,
+\f(CWmenuconfig\fR, \f(CWgconfig\fR, \f(CWxconfig\fR, \f(CWrandconfig\fR,
 \f(CWdefconfig\fR, \f(CWallmodconfig\fR, \f(CWallyesconfig\fR,
-\f(CWallnoconfig\fR;  \f(CWold\fR,
+\f(CWallnoconfig\fR,  \f(CWold\fR,
 \f(CWmenu\fR, \f(CWg\fR, or \f(CWx\fR.
 .sp
 .B Note
@@ -242,7 +243,7 @@ is generating a
 package, arrange to convey to the hook scripts run from the post
 installation maintainer scripts that this image
 requires an 
-.I initrd,
+.IR initrd ,
 and that the 
 .I initrd
 generation hook scripts should not short circuit early. Without this
@@ -258,15 +259,19 @@ to any non empty value.  Please note that unless there are hook
 scripts in 
 .I /etc/kernel
 or added into the hook script parameter of
-.I /etc/kernel-img.conf.
+.IR /etc/kernel-img.conf ,
 no initrd will be created (the bundled in example scripts are
 just examples -- user action is required before anything happens).
 .TP
-.B \-\-jobs " number"
-.B \-j " number"
-Set the environment variable CONCURRENCY_LEVEL to "number".
+.BI \-\-jobs " number"
 .TP
-.B \-\-overlay\-dir "/path/to/directory"
+.BI \-j " number"
+Set the environment variable 
+.B CONCURRENCY_LEVEL
+to
+.IR number .
+.TP
+.BI \-\-overlay\-dir " /path/to/directory"
 The specified directory should contain files that will be placed in
 the 
 .I ./debian 
@@ -275,12 +280,12 @@ building the debian packages. The files will replace anything in
 .I /usr/share/kernel-package 
 that would normally be placed there, and it is up to the user to make
 sure that the files in the overlay directory are compatible with
-.B make-kpkg. 
+.BR make-kpkg . 
 If you break 
 .B make-kpkg
 with an overlay file, you get to keep the pieces. The same effect can
 be achieved by setting the environment variable
-.B KPKG_OVERLAY_DIR.
+.BR KPKG_OVERLAY_DIR .
 .sp
 Please note that 
 .I overlay\-dir/Control 
@@ -300,7 +305,7 @@ after
 .I ./debian 
 is populated. The script shall be executed in the 
 .I ./debian
-directory. This can be used, For instance, to delete files the user
+directory. This can be used, for instance, to delete files the user
 does not want, or to take actions other than simple replacement.
 .TP
 .B \-\-zimage
@@ -315,15 +320,18 @@ sites where the default is zImage kernels.
 The command that provides a means of gaining super user access (for
 example, `sudo' or `fakeroot') as needed by dpkg\-buildpackage's \-r
 option. This option does not work for three of the targets, namely,
-.I binary, binary\-indep,
+.IR binary ,
+.IR binary\-indep ,
 and
-.I binary\-arch.
+.IR binary\-arch .
 For those targets the entire
 .I make\-kpkg
 command must be run as (fake)root.
 .TP
-.B \-\-stem foo
-Call the packages foo\-* instead of kernel\-*. This is useful in
+.BI \-\-stem \ foo
+Call the packages 
+.IR foo \-*
+instead of kernel\-*. This is useful in
 helping transition from calling the packages kernel\-* to linux\-*
 packages, in preparation for non\-linux kernels in the
 distribution. The default is linux. The stem, since it is the initial
@@ -346,7 +354,8 @@ The options maybe shortened to the smallest unique string, and may
 be entered with either a \- or a \-\- prefix, and you may use a space
 or an = symbol between an option string and a value. You may also use
 the form option=value; for details these and other variant forms
-supported, please read man Getopt::Long (3perl).
+supported, please read
+.BR Getopt::Long (3perl).
 .TP
 .B CONCURRENCY_LEVEL
 If defined, this environment variable sets the concurrency level of
@@ -355,11 +364,14 @@ make used to compile the kernel and the modules set using
 flags to the sub make in the 
 .B build
 target of 
-.B make\-kpkg.
+.BR make\-kpkg .
 Should be a (small) integer, if used. You can get the current number
 of CPUs using the command:
- "grep \-c '^processor' /proc/cpuinfo"
-.B WARNING: 
+.sp 1
+.ti +5
+grep \-c '^processor' /proc/cpuinfo
+.sp 1
+.BR WARNING :
 Do NOT set the \-j option in MAKEFLAGS directly, this shall call the
 build to fail. It is possible to set \-j as a make-kpkg argument.
 .SH TARGETS
@@ -370,7 +382,7 @@ Cleans the kernel source directory of all files created by target
 and runs a make distclean. (Please look at a Linux kernel Makefile for
 details).  Please note that although we take care of the list of
 current kernel configuration contained in the file
-.I .config,
+.IR .config ,
 the file 
 .I include/linux/autoconf.h
 is not preserved. This target should not be combined with other
@@ -383,18 +395,18 @@ data, which may not be what you want.
 .TP
 .B buildpackage
 This target runs the targets 
-.B clean, 
+.BR clean ,
 and
-.B binary,
+.BR binary ,
 and produces the complete package using 
-.B dpkg\-buildpackage
+.BR dpkg\-buildpackage .
 .TP
 .B binary
 This target produces all four Debian kernel packages by running the
 targets
 .B binary\-indep 
 and
-.B binary\-arch.
+.BR binary\-arch .
 However, this requires
 .I make-kpkg
 to be run as root (or fakeroot), since 
@@ -404,10 +416,10 @@ will not work.
 .B binary\-indep
 This target produces the arch independent packages by running the
 targets
-.B kernel_source,
+.BR kernel_source ,
 .B kernel_manual
 and
-.B kernel_doc.
+.BR kernel_doc .
 However, this also requires
 .I make-kpkg
 to be run as root (or fakeroot), since 
@@ -419,13 +431,12 @@ This target produces the arch dependent packages by running the
 targets
 .B kernel_headers
 and
-.B kernel_image.
+.BR kernel_image .
 However, this also requires
 .I make-kpkg
 to be run as root (or fakeroot), since 
 .I \-\-rootcmd
 will not work.
-.B kernel_image.
 .TP
 .B kernel_source
 This target produces a debianised package of the Linux kernel sources.
@@ -437,7 +448,7 @@ temporary (top) directory of the kernel sources just before packaging it,
 so people may take any action they see fit (remove arch trees, prune
 version control directories, 
 .I find . \-type d \-name CVS \-prune \-exec rm \-rf {} \\;
-etc). This has no effect on anything
+etc.). This has no effect on anything
 other than the kernel sources that are being packaged -- if the script
 operates on the current directory and its children, the original
 source tree should remain intact. The environment variables
@@ -478,7 +489,7 @@ target, but not the other way around.
 .B kernel_image
 This target produces a Debian package of the Linux kernel source
 image, and any modules configured in the kernel configuration file
-.I .config.
+.IR .config .
 If there is no 
 .I .config
 file in the kernel source directory, a default configuration is
@@ -496,13 +507,13 @@ directory,
 shall be called on that directory just before the kernel image package is
 built. The location of the root of the image package being built shall
 be passed in the environment variable 
-.B IMAGE_TOP,
-and the kernel versions is passed in through the environment variable
+.BR IMAGE_TOP ,
+and the kernel version is passed in through the environment variable
 .B version
 for all these scripts.
 .IP
 Please see the documentation about hooks in
-.B kernel\-img.conf(5).
+.BR kernel\-img.conf (5).
 These hooks are variables that can be pointed by the local sysadmin to
 scripts that add or remove a line from the grub menu list at kernel
 image install and remove times. A sample script to add lines to a grub
@@ -512,15 +523,15 @@ menu file is included in the directory
 Apart from hook variables that the local admin may set, there are a
 set of directories where packages, or the local admin, may drop in
 script files. The directories are
-.I /etc/kernel/preinst.d/,
-.I /etc/kernel/postinst.d/,
-.I /etc/kernel/prerm.d/,
-.I /etc/kernel/postrm.d/,
+.IR /etc/kernel/preinst.d/ ,
+.IR /etc/kernel/postinst.d/ ,
+.IR /etc/kernel/prerm.d/ ,
+.IR /etc/kernel/postrm.d/ ,
+.IR /etc/kernel/preinst.d/<VERSION>/ ,
+.IR /etc/kernel/postinst.d/<VERSION>/ ,
+.IR /etc/kernel/prerm.d/<VERSION>/ ,
 and 
-.I /etc/kernel/preinst.d/<VERSION>/,
-.I /etc/kernel/postinst.d/<VERSION>/,
-.I /etc/kernel/prerm.d/<VERSION>/,
-.I /etc/kernel/postrm.d/<VERSION>/.
+.IR /etc/kernel/postrm.d/<VERSION>/ .
 If they exists, the kernel\-image package shall run a 
 .B run\-parts
 program over the directory (including the versioned one), giving the
@@ -533,7 +544,7 @@ shall be set to the value of the
 argument (or the default value, linux), and the variable
 .B KERNEL_PACKAGE_VERSION
 shall be set to the version of the kernel\-package that created the
-package. . These scripts shall be called with two arguments, the first
+package. These scripts shall be called with two arguments, the first
 being the
 .I version
 of the kernel image, and the second argument being the
@@ -541,16 +552,22 @@ of the kernel image, and the second argument being the
 of the kernel image itself. Since debconf is in
 use before the script is called, this script should issue no
 diagnostic messages to stdout --  while the postinst does call
-.B db_stop
-, debconf does not restore stdout, so messages to stdout disappear. 
+.BR db_stop ,
+debconf does not restore stdout, so messages to stdout disappear. 
 .IP
 On installation, it also offers to run the Linux loader,
 .I LILO
 (or alternates like 
-.I loadlin, SILO, QUIK, VMELILO, ZIPL, yaboot, PALO 
+.IR loadlin ,
+.IR SILO ,
+.IR QUIK ,
+.IR VMELILO ,
+.IR ZIPL ,
+.IR yaboot ,
+.I PALO 
 or 
-.I GRUB
-), creating a configuration file for supported boot loaders
+.IR GRUB ),
+creating a configuration file for supported boot loaders
 if needed. At that time it also offers to put the new kernel on a
 floppy, formatting the floppy if needed.  On deletion, the package
 checks the version of the kernel running, and refuses to delete a
@@ -574,8 +591,8 @@ very dependent on the precise kernel version they are compiled for at the
 same time you build your kernel image.  This target expects to find the 
 modules or packages under /usr/src/modules, and, for all such directories,
 changes to MODULE_LOC/x (MODULE_LOC defaults to 
-.I /usr/src/modules.
-), and runs the 
+.IR /usr/src/modules ),
+and runs the
 .B kdist
 rule in the local 
 .I debian.rules
@@ -585,31 +602,31 @@ module package(s), and may also produce a compressed tar file, and a
 compressed diff file, with
 .I md5sums
 recorded in a changes file using
-.B dpkg\-genchanges.
+.BR dpkg\-genchanges .
 The file is signed by the same identity that would be used to sign the
 kernel packages. This option is used by maintainers uploading the
 package to the Debian archives. 
 .TP
 .B modules_config
 This target allows you to configure all packages under
-.B MODULE_LOC,
+.BR MODULE_LOC ,
 which defaults to 
-.B /usr/src/modules.
+.BR /usr/src/modules .
 This is useful if you need to manually modify some aspects of the
 configuration, or if you want to manually compile the add on modules. 
 This should not be called unless you already have a ./debian directory.
 .TP
 .B modules_image
 This target allows you to build all packages under
-.B MODULE_LOC,
+.BR MODULE_LOC ,
 which defaults to 
-.B /usr/src/modules,
+.BR /usr/src/modules ,
 but does not create the source or diff files, and does not create and sign
 a changes file. This is the only modules related option you need if
 you just want to compile the add on modules image files for
 installation on one or more machines. Generally called in conjunction
 with 
-.B kernel_image,
+.BR kernel_image ,
 especially if also using the option
 .B append_to_version
 (prevents spurious warnings).
@@ -617,21 +634,21 @@ This should not be called unless you already have a ./debian directory.
 .TP
 .B modules_clean
 This target allows you to clean all packages under
-.B MODULE_LOC,
+.BR MODULE_LOC ,
 which defaults to 
-.B /usr/src/modules,
+.BR /usr/src/modules ,
 and this should be all that is needed to undo the effect of any of the
 other modules_ targets.
 This should not be called unless you already have a ./debian directory.
 .TP
 .B configure
 This target runs configure (actually,
-.B config_target,
+.BR config_target ,
 set by 
 .B \-\-config 
 which defaults to 
-.I oldconfig
-) early, so you may edit files generated by
+.IR oldconfig )
+early, so you may edit files generated by
 .B make config
 in the kernel source directory and not have them stomped by 
 .B make\-kpkg 
@@ -658,44 +675,45 @@ for details.  Creating and installing a self created libc\-kheaders
 package may break your system unless you know what you are doing. You
 have been warned.
 .SH "ENVIRONMENT VARIABLES"
-.I KPKG_DEBUG, 
+.BR KPKG_DEBUG ,
 if set, causes make-kpkg to spit out debugging messages about some
 shell functions executed internally. This is probably of not interest
 to anyone not debugging 
-.B make\-kpkg.
+.BR make\-kpkg .
 The following variables (documented above) also affect 
-.B make\-kpkg:
-.I DEBIAN_REVISION_MANDATORY
-.I APPEND_TO_VERSION
-.I VERSION_H_OK
-.I KPKG_ARCH
-.I CROSS_COMPILE
-.I KPKG_SUBARCH
-.I KPKG_OVERLAY_DIR
-.I ARCH_IN_NAME
-.I INITRD
-.I SOURCE_CLEAN_HOOK
-.I MODULE_LOC
-.I CONCURRENCY_LEVEL
-.I IGNORE_UPPERCASE_VERSION
+.BR make\-kpkg :
+.BR DEBIAN_REVISION_MANDATORY ,
+.BR APPEND_TO_VERSION ,
+.BR VERSION_H_OK ,
+.BR KPKG_ARCH ,
+.BR CROSS_COMPILE ,
+.BR KPKG_SUBARCH ,
+.BR KPKG_OVERLAY_DIR ,
+.BR ARCH_IN_NAME ,
+.BR INITRD ,
+.BR SOURCE_CLEAN_HOOK ,
+.BR MODULE_LOC ,
+.B CONCURRENCY_LEVEL
+and
+.BR IGNORE_UPPERCASE_VERSION .
 .SH FILES
 Apart from the runtime options, the 
 .I debian.rules
 file run by
 .B make\-kpkg
 also looks for a per user configuration file
-.I ~/.kernel\-pkg.conf.
+.IR ~/.kernel\-pkg.conf .
 Failing that, it looks for site\-wide defaults in the file 
-.I /etc/kernel\-pkg.conf.
+.IR /etc/kernel\-pkg.conf .
 The default configuration allows there to be a site wide override for
 the full name and email address of the person responsible for maintaining 
 the kernel packages on the site, but the 
 .I /etc/kernel\-pkg.conf
 (or
-.I ~/.kernel\-pkg.conf.
-) file is actually a Makefile snippet, and any legal make directives
+.IR ~/.kernel\-pkg.conf )
+file is actually a Makefile snippet, and any legal make directives
 may be included in there.  
-.B Note:
+.BR Note :
 Caution is urged with this file, since you can totally change the way that the 
 make is run by suitably editing this file. Please look at
 .I /usr/share/doc/kernel\-package/Problems.gz
@@ -704,16 +722,17 @@ tutorial like documentation is also available in
 .I /usr/share/doc/kernel\-package/README.gz
 and it is recommended that one read that before using this utility.
 .SH "SEE ALSO"
-.BR kernel\-pkg.conf (5),
-.BR kernel\-img.conf (5),
-.BR Getopt::Long (3perl),
 .BR dpkg\-deb (1),
 .BR dpkg\-source (1),
 .BR make (1),
-.BR The\ Programmers\ manual, 
-.BR The\ GNU\ Make\ manual,
-and the extensive documentation in the directory 
-.B /usr/share/doc/kernel\-package
+.BR Getopt::Long (3perl),
+.BR kernel\-img.conf (5),
+.BR kernel\-pkg.conf (5),
+.BR The\ Programmers\ manual , 
+.BR The\ GNU\ Make\ manual ,
+and the extensive documentation in the
+.I /usr/share/doc/kernel\-package
+directory
 .SH AUTHOR
 This manual page was written by Manoj Srivastava <srivasta@debian.org>,
 for the Debian GNU/Linux system.

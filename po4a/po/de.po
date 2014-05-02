@@ -1,24 +1,22 @@
-# French translation of kernel-package manual pages.
-# Copyright (C) 2007, 2009, 2010, 2012 Debian French l10n team <debian-l10n-french@lists.debian.org>.
-# This file is distributed under the same license as the kernel-package package.
+# Translation of the kernel-package documentation to German.
+# Copyright (C) 1996-2006 Manoj Srivastava.
+# This file is distributed under the GPL version 2 or later.
+# Copyright (C) of this file 2011, 2012 Chris Leick.
 #
-# Sylvain Cherrier <sylvain.cherrier@free.fr>, 2007, 2009.
-# David Prévot <david@tilapin.org>, 2010, 2012.
 msgid ""
 msgstr ""
-"Project-Id-Version: kernel-package\n"
+"Project-Id-Version: kernel-package 12.036+nmu3\n"
+"Report-Msgid-Bugs-To: kernel-package@packages.debian.org\n"
 "POT-Creation-Date: 2012-08-13 16:51-0400\n"
-"PO-Revision-Date: 2012-08-06 19:41-0400\n"
-"Last-Translator: David Prévot <david@tilapin.org>\n"
-"Language-Team: French <debian-l10n-french@lists.debian.org>\n"
-"Language: fr\n"
+"PO-Revision-Date: 2012-08-07 18:07+0200\n"
+"Last-Translator: Chris Leick <c.leick@vollbio.de>\n"
+"Language-Team: German <debian-l10n-german@lists.debian.org>\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 1.4\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-# type: TH
 #. type: TH
 #: kernel-img.conf.5:26
 #, no-wrap
@@ -29,9 +27,8 @@ msgstr "KERNEL-IMG.CONF"
 #: kernel-img.conf.5:26
 #, no-wrap
 msgid "Aug 20 2009"
-msgstr "20 août 2009"
+msgstr "20. August 2009"
 
-# type: TH
 #. type: TH
 #: kernel-img.conf.5:26 kernel-package.5:26 kernel-packageconfig.8:27
 #: kernel-pkg.conf.5:26 make-kpkg.8:27
@@ -39,55 +36,47 @@ msgstr "20 août 2009"
 msgid "Debian"
 msgstr "Debian"
 
-# type: TH
 #. type: TH
 #: kernel-img.conf.5:26 kernel-package.5:26 kernel-packageconfig.8:27
 #: kernel-pkg.conf.5:26 make-kpkg.8:27
 #, no-wrap
 msgid "Debian GNU/Linux manual"
-msgstr "Manuel Debian GNU/Linux"
+msgstr "Debian-GNU/Linux-Handbuch"
 
-# type: SH
 #. type: SH
 #: kernel-img.conf.5:29 kernel-package.5:29 kernel-packageconfig.8:28
 #: kernel-pkg.conf.5:29 make-kpkg.8:28
 #, no-wrap
 msgid "NAME"
-msgstr "NOM"
+msgstr "BEZEICHNUNG"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-img.conf.5:31
 msgid ""
 "kernel-img.conf - site wide configuration file for kernel image packages"
 msgstr ""
-"kernel-img.conf - Fichier de configuration général pour les paquets d'images "
-"du noyau"
+"kernel-img.conf - Site-weite Konfigurationsdatei für Kernel-Image-Pakete"
 
-# type: SH
 #. type: SH
 #: kernel-img.conf.5:31 kernel-packageconfig.8:30 kernel-pkg.conf.5:31
 #: make-kpkg.8:30
 #, no-wrap
 msgid "SYNOPSIS"
-msgstr "SYNOPSIS"
+msgstr "ÜBERSICHT"
 
-# type: Plain text
 #. type: TP
 #: kernel-img.conf.5:33 kernel-package.5:164
 #, no-wrap
 msgid "I</etc/kernel-img.conf>"
 msgstr "I</etc/kernel-img.conf>"
 
-# type: SH
 #. type: SH
 #: kernel-img.conf.5:33 kernel-package.5:31 kernel-packageconfig.8:32
 #: kernel-pkg.conf.5:35 make-kpkg.8:34
 #, no-wrap
 msgid "DESCRIPTION"
-msgstr "DESCRIPTION"
+msgstr "BESCHREIBUNG"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-img.conf.5:39
 msgid ""
@@ -96,12 +85,13 @@ msgid ""
 "aspects of the installation, overriding the defaults built into the image "
 "itself."
 msgstr ""
-"Le processus de post-installation de l'image du noyau recherche le fichier "
-"I</etc/kernel-img.conf>. Ce simple fichier permet d'utiliser des options "
-"locales pour gérer certains des aspects de l'installation, outrepassant "
-"ainsi les valeurs par défaut intégrées dans l'image elle-même."
+"Die Datei I</etc/kernel-img.conf> ist eine einfache Datei, die vor dem "
+"Installationsprozess des Kernel-Images eingesehen wird, um lokale Optionen "
+"zu ermöglichen, die einige Aspekte der Installation behandeln und die "
+"Vorgaben, die im Image selbst eingebaut sind, außer Kraft setzen."
 
-# type: Plain text
+# Punctuation characters at the end are included in the highlighting, see
+# http://www.din-5008-richtlinien.de/hervorheben.php
 #. type: Plain text
 #: kernel-img.conf.5:53
 msgid ""
@@ -110,28 +100,23 @@ msgid ""
 "are case insensitive.  This file is automatically created by the "
 "installation script in certain circumstances."
 msgstr ""
-"Le format de ce fichier consiste simplement en paires "
-"I<VARIABLE>B<=>I<VALEUR>. Des valeurs booléennes peuvent être écrites "
-"I<Yes>, I<True>, I<1>, ou I<No>, I<False>, I<0>, sans distinction entre les "
-"majuscules et les minuscules. Ce fichier est automatiquement créé par le "
-"script d'installation dans certaines circonstances."
+"Das Format der Datei ist ein einfaches Paar B<VAR = WERT>. Boole'sche Werte "
+"können als I<Yes,> I<True,> I<1> und I<No,> I<False,> I<0> angegeben werden "
+"und berücksichtigen keine Groß-/Kleinschreibung. Diese Datei wird unter "
+"bestimmten Umständen automatisch durch das Installationsskript erstellt."
 
-# type: Plain text
 #. type: Plain text
 #: kernel-img.conf.5:55 kernel-pkg.conf.5:56
 msgid "At the moment, the user modifiable variables supported are:"
 msgstr ""
-"Les variables actuellement modifiables par l'utilisateur sont les suivantes"
-"\\ :"
+"Momentan werden folgende vom Benutzer veränderbaren Variablen unterstützt:"
 
-# type: TP
 #. type: TP
 #: kernel-img.conf.5:55
 #, no-wrap
 msgid "B<postinst_hook>"
 msgstr "B<postinst_hook>"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-img.conf.5:84
 msgid ""
@@ -151,32 +136,30 @@ msgid ""
 "users is present in /usr/share/doc/kernel-package/ directory.  This script "
 "is run I<after> the scripts in /etc/kernel/postinst.d directory."
 msgstr ""
-"B<OBSOLETE>\\ : Indiquez ici un script à exécuter pendant l'installation. Le "
-"chemin peut être un chemin relatif si le script est situé dans un répertoire "
-"«\\ sûr\\ » (c'est-à-dire s'il est dans /bin, /sbin, /usr/bin, ou /usr/"
-"sbin), sinon il doit être exprimé en absolu. Avant d'appeler ce script, la "
-"variable d'environnement B<STEM> doit être définie avec la même valeur que "
-"l'argument I<--stem> (ou contenir la valeur par défaut, linux), tandis que "
-"B<KERNEL_PACKAGE_VERSION> doit contenir la version de kernel-package en "
-"charge de la création du paquet. Ce script doit être appelé avec deux "
-"arguments, le premier est la I<version> de l'image du noyau, et le second "
-"est l'I<adresse> de l'image du noyau elle-même. Des erreurs dans le script "
-"déclencheront un échec de la post-installation. Lorsqu'on utilise debconf "
-"pour l'appel du script, ce dernier ne générera pas de message de diagnostic "
-"sur la sortie standard. En effet, au moment où la post-installation appelle "
-"B<db_stop>, debconf ne rétablit pas la sortie standard, et tous les messages "
-"en sa direction disparaissent. Un exemple de script pour les utilisateurs de "
-"GRUB est donné dans le répertoire /usr/share/doc/kernel-package/. Ce script "
-"sera exécuté I<après> les scripts du répertoire /etc/kernel/postinst.d."
+"B<MISSBILLIGT:> Setzen Sie diese Variable auf ein Skript, das während der "
+"Installation ausgeführt werden soll. Der Pfad kann relativ sein, falls das "
+"Skript in einem sicheren Pfad liegt – dies sind /bin, /sbin, /usr/bin, oder /"
+"usr/sbin oder es muss stattdessen ein absoluter Pfad sein. Bevor Sie dieses "
+"Skript aufrufen, soll die Umgebungsvariable B<STEM> auf den Wert des "
+"Arguments I<--stem> (oder den Standardwert, linux) gesetzt werden und "
+"B<KERNEL_PACKAGE_VERSION> soll auf die Version von kernel-package gesetzt "
+"werden, das dieses Paket erstellte. Dieses Skript soll mit zwei Argumenten "
+"aufgerufen werden. Das erste ist die I<Version> des Kernel-Images und das "
+"zweite der Speicherplatz des Kernel-Images selbst. Fehler im Skript sollen "
+"das Fehlschlagen von »postinst« verursachen. Da vor dem Aufruf des Skripts "
+"Debconf benutzt wird, sollte das Skript keine Diagnosenachrichten auf die "
+"Standardausgabe ausgeben – solange »postinst« B<db_stop> aufruft, stellt "
+"Debconf die Standardausgabe nicht wieder her, daher verschwinden Nachrichten "
+"an die Standardausgabe. Ein Beispielskript für Grub-Benutzer liegt im "
+"Verzeichnis /usr/share/doc/kernel-package/. Dieses Skript wird I<nach> den "
+"Skripten im Verzeichnis /etc/kernel/postinst.d ausgeführt."
 
-# type: TP
 #. type: TP
 #: kernel-img.conf.5:84
 #, no-wrap
 msgid "B<postrm_hook>"
 msgstr "B<postrm_hook>"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-img.conf.5:109
 msgid ""
@@ -195,31 +178,29 @@ msgid ""
 "not restore stdout, so messages to stdout disappear.  This script is run "
 "I<after> the scripts in /etc/kernel/postrm.d directory."
 msgstr ""
-"B<OBSOLETE>\\ : Indiquez ici un script à exécuter dans le postrm, c'est-à-"
-"dire, après que l'image ait été supprimée et toutes les actions de "
-"suppression effectuées). Le chemin peut être un chemin relatif si le script "
-"est situé dans un répertoire «\\ sûr\\ » (c'est-à-dire s'il est dans /bin, /"
-"sbin, /usr/bin, ou /usr/sbin), sinon il doit être exprimé en absolu. La "
-"variable d'environnement B<KERNEL_PACKAGE_VERSION> doit contenir la version "
-"de kernel-package chargée de la création du paquet. Ce script doit être "
-"appelé avec deux arguments, le premier est la I<version> de l'image du "
-"noyau, et le second est l'I<adresse> de l'image du noyau elle-même. Des "
-"erreurs dans le script déclencheront des messages d'avertissement mais "
-"seront ignorées. Lorsqu'on utilise debconf pour l'appel du script, ce "
-"dernier ne générera pas de message de diagnostic sur la sortie standard. En "
-"effet, au moment où la post-installation appelle B<db_stop>, debconf ne "
-"rétablit pas la sortie standard, tous les messages en sa direction "
-"disparaissent. Ce script est exécuté I<après> les scripts du répertoire /etc/"
-"kernel/postrm.d."
+"B<MISSBILLIGT:> Setzen Sie diese Variable auf ein Skript, das in "
+"»postrm« (das ist, nachdem das Image entfernt wurde) ausgeführt wird, "
+"nachdem all Entfernungsaktionen durchgeführt wurden. Der Pfad kann relativ "
+"sein, falls das Skript in einem sicheren Pfad liegt – dies sind /bin, /"
+"sbin, /usr/bin oder /usr/sbin oder es muss stattdessen ein absoluter Pfad "
+"sein. Die Umgebungsvariable B<KERNEL_PACKAGE_VERSION> soll auf die Version "
+"von kernel-package gesetzt werden, das dieses Paket erstellte. Dieses Skript "
+"soll mit zwei Argumenten aufgerufen werden. Das erste ist die I<Version> des "
+"Kernel-Images und das zweite der Speicherplatz des Kernel-Images selbst. "
+"Fehler im Skript sollen ein Warnung ausgeben, aber ansonsten ignoriert "
+"werden. Da vor dem Aufruf des Skripts Debconf benutzt wird, sollte das "
+"Skript keine Diagnosenachrichten auf die Standardausgabe ausgeben – solange "
+"»postinst« B<db_stop> aufruft, stellt Debconf die Standardausgabe nicht "
+"wieder her, daher verschwinden Nachrichten an die Standardausgabe. Dieses "
+"Skript wird I<nach> den Skripten im Verzeichnis /etc/kernel/postrm.d "
+"ausgeführt."
 
-# type: TP
 #. type: TP
 #: kernel-img.conf.5:109
 #, no-wrap
 msgid "B<preinst_hook>"
 msgstr "B<preinst_hook>"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-img.conf.5:128
 msgid ""
@@ -234,25 +215,24 @@ msgid ""
 "image itself.  This script is run I<after> the scripts in /etc/kernel/"
 "preinst.d directory."
 msgstr ""
-"B<OBSOLETE>\\ : Indiquez ici un script à exécuter avant que le paquet ne "
-"soit dépaqueté\\ ; il peut servir à effectuer d'autres contrôles. Le chemin "
-"peut être un chemin relatif si le script est situé dans un répertoire «\\ sûr"
-"\\ » (c'est-à-dire s'il est dans /bin, /sbin, /usr/bin, ou /usr/sbin), sinon "
-"il doit être exprimé en absolu. La variable d'environnement "
-"B<KERNEL_PACKAGE_VERSION> doit contenir la version de kernel-package chargée "
-"de la création du paquet. Ce script doit être appelé avec deux arguments, le "
-"premier est la I<version> de l'image du noyau, et le second est l'I<adresse> "
-"de l'image du noyau elle-même. Ce script est exécuté I<après> les scripts du "
-"répertoire /etc/kernel/preinst.d."
+"B<MISSBILLIGT:> Setzen Sie diese Variable auf ein Skript, das vor dem "
+"Entpacken des Pakets ausgeführt werden soll und benutzt werden kann, um in "
+"zusätzliche Prüfungen einzufließen. Der Pfad kann relativ sein, falls das "
+"Skript in einem sicheren Pfad liegt – dies sind /bin, /sbin, /usr/bin oder /"
+"usr/sbin oder es muss stattdessen ein absoluter Pfad sein. Die "
+"Umgebungsvariable B<KERNEL_PACKAGE_VERSION> soll auf die Version von kernel-"
+"package gesetzt werden, das dieses Paket erstellte. Dieses Skript soll mit "
+"zwei Argumenten aufgerufen werden. Das erste ist die I<Version> des Kernel-"
+"Images und das zweite der Speicherplatz des Kernel-Images selbst. Dieses "
+"Skript wird I<nach> den Skripten im Verzeichnis /etc/kernel/preinst.d "
+"ausgeführt."
 
-# type: TP
 #. type: TP
 #: kernel-img.conf.5:128
 #, no-wrap
 msgid "B<prerm_hook>"
 msgstr "B<prerm_hook>"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-img.conf.5:152
 msgid ""
@@ -270,29 +250,28 @@ msgid ""
 "debconf does not restore stdout, so messages to stdout disappear.  This "
 "script is run I<after> the scripts in /etc/kernel/prerm.d directory."
 msgstr ""
-"B<OBSOLETE>\\ : Indiquez ici un script à exécuter avant que les fichiers du "
-"paquet ne soient supprimés (donc tout fichier ajouté peut être supprimé). Le "
-"chemin peut être un chemin relatif si le script est situé dans un répertoire "
-"«\\ sûr\\ » (c'est-à-dire s'il est dans /bin, /sbin, /usr/bin, ou /usr/"
-"sbin), sinon il doit être exprimé en absolu. La variable d'environnement "
-"B<KERNEL_PACKAGE_VERSION> doit contenir la version de kernel-package chargée "
-"de la création du paquet. Ce script doit être appelé avec deux arguments, le "
-"premier est la I<version> de l'image du noyau, et le second est l'I<adresse> "
-"de l'image du noyau elle-même. Des erreurs dans le script déclencheront un "
-"échec de prerm. Lorsqu'on utilise debconf pour l'appel du script, ce dernier "
-"ne générera pas de message de diagnostic sur la sortie standard. En effet, "
-"au moment où la post-installation appelle B<db_stop> debconf ne rétablit pas "
-"la sortie standard, tous les messages en sa direction disparaissent. Ce "
-"script est exécuté I<après> les scripts du répertoire /etc/kernel/prerm.d."
+"B<MISSBILLIGT:> Setzen Sie diese Variable auf ein Skript, das vor dem "
+"Entfernen der Paketdateien ausgeführt wird (falls irgendwelche hinzugefügten "
+"Dateien entfernt werden können). Der Pfad kann relativ sein, falls das "
+"Skript in einem sicheren Pfad liegt – dies sind /bin, /sbin, /usr/bin oder /"
+"usr/sbin oder es muss stattdessen ein absoluter Pfad sein. Die "
+"Umgebungsvariable B<KERNEL_PACKAGE_VERSION> soll auf die Version von kernel-"
+"package gesetzt werden, das dieses Paket erstellte. Dieses Skript soll mit "
+"zwei Argumenten aufgerufen werden. Das erste ist die I<Version> des Kernel-"
+"Images und das zweite der Speicherplatz des Kernel-Images selbst. Fehler im "
+"Skript sollen das Fehlschlagen von »prerm« verursachen. Da vor dem Aufruf "
+"des Skripts Debconf benutzt wird, sollte das Skript keine "
+"Diagnosenachrichten auf die Standardausgabe ausgeben – solange »postinst« "
+"B<db_stop> aufruft, stellt Debconf die Standardausgabe nicht wieder her, "
+"daher verschwinden Nachrichten an die Standardausgabe. Dieses Skript wird "
+"I<nach> den Skripten im Verzeichnis /etc/kernel/prerm.d ausgeführt."
 
-# type: TP
 #. type: TP
 #: kernel-img.conf.5:152
 #, no-wrap
 msgid "B<src_postinst_hook>"
 msgstr "B<src_postinst_hook>"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-img.conf.5:175
 msgid ""
@@ -310,30 +289,27 @@ msgid ""
 "in the script shall cause the postinst to fail.  This script is run I<after> "
 "the scripts in /etc/kernel/src_postinst.d directory."
 msgstr ""
-"B<OBSOLETE>\\ : Contrairement aux autres variables de type «\\ hook\\ », "
-"cette variable indique un script qui sera exécuté pendant la phase de post-"
-"installation d'un paquet de documentation, d'en-têtes ou de sources. "
-"L'utilisation de cette possibilité pour les paquets d'en-têtes est "
-"maintenant déconseillé\\ ; le script de post-installation des paquets d'en-"
-"têtes doit seulement lancer le script headers_postinst_hook. Le chemin peut "
-"être un chemin relatif si le script est situé dans un répertoire «\\ sûr\\ "
-"» (c'est-à-dire s'il est dans /bin, /sbin, /usr/bin, ou /usr/sbin), sinon il "
-"doit être exprimé en absolu. La variable d'environnement "
-"B<KERNEL_PACKAGE_VERSION> doit contenir la version de kernel-package chargée "
-"de la création du paquet. Ce script doit être appelé avec deux arguments, le "
-"premier est le I<nom>du paquet à installer (ce peut être les sources noyau, "
-"ou les entêtes), et le second est la I<version> du paquet à installer. Des "
-"erreurs dans le script déclencheront un échec de postinst. Ce script est "
-"exécuté I<après> les scripts du répertoire /etc/kernel/src_postinst.d."
+"B<MISSBILLIGT:> Anders als die anderen Hook-Variablen ist dies für ein "
+"Skript gedacht, das während der Vorinstallation (»post inst«) eines "
+"Dokumentations-, Header- oder Quellpakets ausgeführt wird. Die Verwendung "
+"dieses Hooks ist nun missbilligt, das Vorinstallationsskript für das Headers-"
+"Skript soll nur den »header_postinst_hook« ausführen. Der Pfad kann relativ "
+"sein, falls das Skript in einem sicheren Pfad liegt – dies sind /bin, /"
+"sbin, /usr/bin oder /usr/sbin oder es muss stattdessen ein absoluter Pfad "
+"sein. Die Umgebungsvariable B<KERNEL_PACKAGE_VERSION> soll auf die Version "
+"von kernel-package gesetzt werden, das dieses Paket erstellte. Dieses Skript "
+"soll mit zwei Argumenten aufgerufen werden. Das erste ist die I<Version> des "
+"Kernel-Images und das zweite der Speicherplatz des Kernel-Images selbst. "
+"Fehler im Skript sollen das Fehlschlagen von »postinst« verursachen. Dieses "
+"Skript wird I<nach> den Skripten im Verzeichnis /etc/kernel/postinst.d "
+"ausgeführt."
 
-# type: TP
 #. type: TP
 #: kernel-img.conf.5:175
 #, no-wrap
 msgid "B<header_postinst_hook>"
 msgstr "B<header_postinst_hook>"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-img.conf.5:195
 msgid ""
@@ -349,27 +325,24 @@ msgid ""
 "script is run I<after> the scripts in /etc/kernel/header_postinst.d "
 "directory."
 msgstr ""
-"B<OBSOLETE>\\ : Contrairement aux autres variables de type «\\ hook\\ », "
-"cette variable indique un script qui sera exécuté pendant la phase de post-"
-"installation d'un paquet d'en-têtes seulement. Le chemin peut être un chemin "
-"relatif si le script est situé dans un répertoire «\\ sûr\\ » (c'est-à-dire "
-"s'il est dans /bin, /sbin, /usr/bin, ou /usr/sbin), sinon il doit être "
-"exprimé en absolu. La variable d'environnement B<KERNEL_PACKAGE_VERSION> "
-"doit contenir la version de kernel-package chargée de la création du paquet. "
-"Ce script sera appelé avec deux arguments, le premier étant le I<nom> du "
-"paquet à installer, le second étant la I<version> du paque à installert. Des "
-"erreurs dans le script déclencheront un échec de la post-installation. Ce "
-"script est exécuté I<après> les scripts du répertoire /etc/kernel/"
-"src_postinst.d."
+"B<MISSBILLIGT:> Anders als die anderen Hook-Variablen ist dies für ein "
+"Skript gedacht, das nur während der Vorinastallation (»post inst«) eines "
+"Header-Pakets ausgeführt wird. Der Pfad kann relativ sein, falls das Skript "
+"in einem sicheren Pfad liegt – dies sind /bin, /sbin, /usr/bin oder /usr/"
+"sbin oder es muss stattdessen ein absoluter Pfad sein. Die Umgebungsvariable "
+"B<KERNEL_PACKAGE_VERSION> soll auf die Version von kernel-package gesetzt "
+"werden, das dieses Paket erstellte. Dieses Skript soll mit zwei Argumenten "
+"aufgerufen werden. Das erste ist die I<Version> des Kernel-Images und das "
+"zweite der Speicherplatz des Kernel-Images selbst. Fehler im Skript sollen "
+"das Fehlschlagen von »postinst« verursachen. Dieses Skript wird I<nach> den "
+"Skripten im Verzeichnis /etc/kernel/header_postinst.d ausgeführt."
 
-# type: TP
 #. type: TP
 #: kernel-img.conf.5:195
 #, no-wrap
 msgid "B<clobber_modules>"
 msgstr "B<clobber_modules>"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-img.conf.5:201
 msgid ""
@@ -377,19 +350,17 @@ msgid ""
 "the way if it is the same version as the image being installed. Use at your "
 "own risk.  This variable is unset by default."
 msgstr ""
-"Quand cette variable est déclarée, le script de pré-installation cherchera à "
-"déplacer silencieusement /lib/modules/version, si cette version est la même "
-"que celle de l'image à installer. Utilisez-la à vos risques et périls. Cette "
-"variable n'a pas de valeur par défaut."
+"Falls gesetzt, soll »preinst« stillschweigend versuchen, /lib/modules/"
+"version aus dem Weg zu räumen, wenn die gleiche Version wie das Image "
+"installiert wird. Benutzung auf eigene Gefahr. Diese Variable ist "
+"standardmäßig nicht gesetzt."
 
-# type: TP
 #. type: TP
 #: kernel-img.conf.5:201
 #, no-wrap
 msgid "B<warn_reboot>"
 msgstr "B<warn_reboot>"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-img.conf.5:211
 msgid ""
@@ -401,24 +372,22 @@ msgid ""
 "reboot, and this is a note to remind you. If you know what you are doing, "
 "you can set this variable to no. This variable is set by default."
 msgstr ""
-"Cette variable peut être utilisée pour désactiver l'émission des alertes "
-"(«\\ warnings\\ ») lors de l'installation d'une image du noyau qui est de la "
-"même version que celle actuellement lancée. Si la liste des modules a "
-"changé, les dépendances entre modules ont peut-être été modifiées, et les "
-"modules du nouveau noyau pourraient ne pas fonctionner correctement avec le "
-"noyau actuel, notamment si la liste des ABI du noyau a changé entre les "
-"deux. C'est une bonne idée de redémarrer la machine, et un message vous le "
-"précisera. Si vous savez ce que vous faites, vous pouvez définir cette "
-"variable à «\\ no\\ ». Cette variable est active par défaut."
+"Diese Variable kann benutzt werden, um die Warnung abzuschalten, wenn ein "
+"Kernel-Image installiert wird, das die gleiche Version hat wie das aktuell "
+"laufende. Falls die Liste der Module geändert wurde, könnten sich die "
+"Modulabhängigkeiten geändert haben und die Module für den neuen Kernel "
+"werden möglicherweise nicht korrekt auf dem laufenden Kernel ausgeführt, "
+"falls sich das ABI in der Zwischenzeit geändert hat. Es ist empfehlenswert, "
+"den Rechner neu zu starten und dieser Hinweis soll Sie daran erinnern. Falls "
+"Sie wissen, was Sie tun, können Sie diese Variable auf »no« setzen. "
+"Standardmäßig ist diese Variable gesetzt."
 
-# type: TP
 #. type: TP
 #: kernel-img.conf.5:211
 #, no-wrap
 msgid "B<relink_build_link>"
 msgstr "B<relink_build_link>"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-img.conf.5:218
 msgid ""
@@ -427,20 +396,18 @@ msgid ""
 "have been installed on the system, a new symlink shall be created to point "
 "to them. The default is to relink the build link (YES)."
 msgstr ""
-"Cette option manipule le «\\ build link\\ » créé par les noyaux récents. Si "
-"le lien est un lien ballant et si les en-têtes du noyau correspondants "
-"semblent avoir été installés sur le système, un nouveau lien symbolique sera "
-"créé et pointera sur eux. La valeur par défaut est de relier le lien de "
-"construction («\\ YES\\ »)."
+"Diese Option manipuliert den von aktuellen Kerneln erstellten Bauverweis. "
+"Falls der Verweis defekt ist und die entsprechenden Kernel-Header auf dem "
+"System installiert zu sein scheinen, soll ein neuer symbolischer Verweis "
+"erstellt werden, der darauf zeigt. Vorgabe ist, den Bauverweis erneut zu "
+"verknüpfen (YES)."
 
-# type: TP
 #. type: TP
 #: kernel-img.conf.5:218
 #, no-wrap
 msgid "B<force_build_link>"
 msgstr "B<force_build_link>"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-img.conf.5:225
 msgid ""
@@ -449,20 +416,18 @@ msgid ""
 "headers data in /usr/src, whether they have been installed or not. The "
 "default is unset, we don't create potentially dangling symlinks by default."
 msgstr ""
-"Cette option manipule le lien de construction «\\ build link\\ » créé par "
-"les noyaux récents. Si le lien est un lien ballant, un nouveau lien "
-"symbolique sera créé et pointera sur /usr/src/, que ces en-têtes aient été "
-"installées ou non. Il n'y a pas de valeur par défaut, les liens symboliques "
-"potentiellement ballants ne sont pas créés par défaut."
+"Diese Option manipuliert den durch aktuelle Kernel erstellten Bauverweis. "
+"Falls der Verweis defekt ist, soll ein neuer symbolischer Verweis erstellt "
+"werden, der auf die Kernel-Header-Daten in /usr/src verweist, unabhängig "
+"davon, ob sie installiert sind oder nicht. Standardmäßig ist sie nicht "
+"gesetzt, damit keine potentiell defekten Verweise erstellt werden."
 
-# type: TP
 #. type: TP
 #: kernel-img.conf.5:225
 #, no-wrap
 msgid "B<relink_src_link>"
 msgstr "B<relink_src_link>"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-img.conf.5:230
 msgid ""
@@ -470,18 +435,16 @@ msgid ""
 "link is a dangling link it is deleted at install time. The default is to "
 "relink (delete) the source link (YES)."
 msgstr ""
-"Cette option manipule le «\\ source link\\ » créé par les noyaux récents. Si "
-"le lien est un lien ballant, il sera effacé au moment de l'installation. La "
-"valeur par défaut est de relier (effacer) le lien des sources («\\ YES\\ »)."
+"Diese Option manipuliert den durch aktuelle Kernel erstellten Quellverweis. "
+"Falls der Verweis defekt ist, wird er bei der Installation gelöscht. Vorgabe "
+"ist, den Quellverweis wieder zu verknüpfen (löschen) (YES)."
 
-# type: TP
 #. type: TP
 #: kernel-img.conf.5:230
 #, no-wrap
 msgid "B<silent_modules>"
 msgstr "B<silent_modules>"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-img.conf.5:244
 msgid ""
@@ -496,25 +459,24 @@ msgid ""
 "modules directory I</lib/modules/$version> is detected.  This is unset by "
 "default."
 msgstr ""
-"Cette option est là pour ceux qui sont excédés par les avertissements "
-"concernant l'existence d'un répertoire de modules I</lib/modules/$version>. "
-"Ce répertoire peut appartenir à un ancien paquet image du noyay, qui a peut-"
-"être même disparu, auquel cas les modules restant dans ce répertoire peuvent "
-"poser problème\\ ; ou bien, ce répertoire a le droit d'exister parce qu'on "
-"installe un paquet indépendant des modules d'une version du noyau qui a déjà "
-"été dépaquetée. Dans ce dernier cas, l'existence de ce répertoire est "
-"bénigne. Si vous utilisez cette variable, vous n'aurez plus la possibilité "
-"d'interrompre l'installation si un répertoire I</lib/modules/$version> est "
-"détecté. Cette variable n'a pas de valeur par défaut."
+"Diese Option wurde für die Leute eingebaut, die durch die Warnung über das "
+"vorher existierende Verzeichnis I</lib/modules/$version> erheblich irritiert "
+"wurden. Dieses Verzeichnis könnte zu einem alten oder nicht mehr "
+"existierenden Kernel-Image-Paket gehören. In diesem Fall können Probleme mit "
+"übriggebliebenen Modulen in diesem Verzeichnisbaum auftreten oder das "
+"Verzeichnis könnte aufgrund eines unabhängigen Modulpakets zu Recht "
+"existieren, das für diese Kernel-Version installiert wird und bereits "
+"entpackt wurde. In diesem letzeren Fall ist die Existenz des Verzeichnisses "
+"ungefährlich. Falls Sie diese Variable setzen, haben Sie nicht länger die "
+"Möglichkeit abzubrechen, falls ein vorher existierendes Modulverzeichnis I</"
+"lib/modules/$version> entdeckt wird. Dies ist standardmäßig nicht gesetzt."
 
-# type: TP
 #. type: TP
 #: kernel-img.conf.5:244
 #, no-wrap
 msgid "B<ignore_depmod_err>"
 msgstr "B<ignore_depmod_err>"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-img.conf.5:250
 msgid ""
@@ -523,66 +485,56 @@ msgid ""
 "a problem with the kernel image. A diagnostic is still issued. This is unset "
 "be default."
 msgstr ""
-"Si elle est déclarée, cette variable empêchera une interrogation de "
-"l'utilisateur après un problème avec depmod dans le script de post-"
-"installation. Cela facilite les installations automatiques, mais cela peut "
-"cacher un problème avec l'image du noyau. Un diagnostic est affiché. Cette "
-"variable n'a pas de valeur par défaut."
+"Falls gesetzt, wird nach einem Depmod-Problem im Vorinstallationsskript "
+"nicht gefragt, ob fortgesetzt werden soll. Dies erleichtert automatische "
+"Installationen, könnte allerdings ein Problem mit dem Kernel-Image "
+"verbergen. Eine Diagnose wird immer noch ausgegeben. Dies ist standardmäßig "
+"nicht gesetzt."
 
-# type: SH
 #. type: SH
 #: kernel-img.conf.5:250 kernel-package.5:161 kernel-packageconfig.8:44
 #: kernel-pkg.conf.5:338 make-kpkg.8:699
 #, no-wrap
 msgid "FILES"
-msgstr "FICHIERS"
+msgstr "DATEIEN"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-img.conf.5:253
 msgid "The file described here is I</etc/kernel-img.conf>."
-msgstr "Le fichier décrit ici est I</etc/kernel-img.conf>."
+msgstr "Die hier beschriebene Datei ist I</etc/kernel-img.conf.>"
 
-# type: SH
 #. type: SH
 #: kernel-img.conf.5:253 kernel-package.5:166 kernel-packageconfig.8:47
 #: kernel-pkg.conf.5:343 make-kpkg.8:724
 #, no-wrap
 msgid "SEE ALSO"
-msgstr "VOIR AUSSI"
+msgstr "SIEHE AUCH"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-img.conf.5:258
 msgid ""
 "B<make>(1), B<make-kpkg>(1), B<kernel-pkg.conf>(5), B<The GNU Make manual>"
 msgstr ""
-"B<make>(1), B<make-kpkg>(1), B<kernel-pkg.conf>(5), B<le manuel de GNU Make>"
+"B<make>(1), B<make-kpkg>(1), B<kernel-pkg.conf>(5), B<The GNU Make manual>"
 
-# type: SH
 #. type: SH
 #: kernel-img.conf.5:258 kernel-package.5:170 kernel-pkg.conf.5:348
 #, no-wrap
 msgid "BUGS"
-msgstr "BOGUES"
+msgstr "BUGS"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-img.conf.5:260 kernel-package.5:172 kernel-pkg.conf.5:350
 msgid "There are no bugs.  Any resemblance thereof is delirium. Really."
-msgstr ""
-"Il n'y a pas d'erreur. Toute ressemblance avec un bogue est du délire. "
-"Vraiment."
+msgstr "Es gibt hier keine Bugs. Jede Ähnlichkeit damit ist Wahn. Wirklich."
 
-# type: SH
 #. type: SH
 #: kernel-img.conf.5:260 kernel-package.5:172 kernel-packageconfig.8:49
 #: kernel-pkg.conf.5:350 make-kpkg.8:736
 #, no-wrap
 msgid "AUTHOR"
-msgstr "AUTEUR"
+msgstr "AUTOR"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-img.conf.5:262 kernel-package.5:174 kernel-packageconfig.8:52
 #: kernel-pkg.conf.5:352 make-kpkg.8:738
@@ -590,30 +542,26 @@ msgid ""
 "This manual page was written by Manoj Srivastava E<lt>srivasta@debian."
 "orgE<gt>, for the Debian GNU/Linux system."
 msgstr ""
-"Cette page a été écrite par Manoj Srivastava, E<lt>srivasta@debian.orgE<gt>, "
-"pour le système Debian GNU/Linux."
+"Diese Handbuchseite wurde von Manoj Srivastava E<lt>srivasta@debian.orgE<gt> "
+"für das Debian-GNU/Linux-System geschrieben."
 
-# type: TH
 #. type: TH
 #: kernel-package.5:26
 #, no-wrap
 msgid "KERNEL-PACKAGE"
 msgstr "KERNEL-PACKAGE"
 
-# type: TH
 #. type: TH
 #: kernel-package.5:26
 #, no-wrap
 msgid "May  25 1999"
-msgstr "25 mai 1999"
+msgstr "25. Mai 1999"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-package.5:31
 msgid "kernel-package - system for creating kernel related packages"
-msgstr "kernel-package - Système pour créer des paquets liés aux noyaux"
+msgstr "kernel-package - System zum Erstellen Kernel-zugehöriger Pakete"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-package.5:42
 msgid ""
@@ -623,27 +571,25 @@ msgid ""
 "manual B<make-kpkg>(1).  Configuring instructions are to be found in "
 "B<kernel-pkg.conf>(5)."
 msgstr ""
-"Le paquet B<kernel-package> est né du désir d'automatiser les étapes du "
-"processus requis pour compiler et installer un noyau personnalisé. Si vous "
-"cherchez des informations sur la façon d'utiliser B<kernel-package>, jetez "
-"un coup d'œil sur le manuel B<make-kpkg>(1). Vous trouverez les instructions "
-"de configuration dans B<kernel-pkg.conf>(5)."
+"Das Paket B<kernel-package> entwuchs dem Wunsch, die erforderlichen "
+"Routineschritte zum Kompilieren und Installieren eines benutzerdefinierten "
+"Kernels zu automatisieren. Falls Sie sich nach Anleitungen umsehen, wie "
+"B<kernel-package> benutzt wird, werfen Sie bitte einen Bick in das Handbuch "
+"B<make-kpkg (1).> Konfigurationsanleitungen können in B<kernel-pkg.conf(5)> "
+"gefunden werden."
 
-# type: SH
 #. type: SH
 #: kernel-package.5:42
 #, no-wrap
 msgid "Advantages of using kernel-package"
-msgstr "Avantages de l'utilisation de kernel-package"
+msgstr "Vorteile der Verwendung von kernel-package"
 
-# type: TP
 #. type: TP
 #: kernel-package.5:44
 #, no-wrap
 msgid "B<i) Convenience.>"
-msgstr "B<i) Le confort>"
+msgstr "B<i) Komfort>"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-package.5:53
 msgid ""
@@ -653,39 +599,34 @@ msgid ""
 "is especially important to novices: B<make-kpkg> takes all the steps "
 "required to compile a kernel, and installation of kernels is a snap."
 msgstr ""
-"Il est parfois habituel de compiler les noyaux à la main, ce qui implique "
-"toute une série d'étapes à suivre dans l'ordre\\ ; kernel-package a été "
-"écrit afin de prendre en charge toutes les étapes requises (il va plus loin "
-"maintenant, mais c'est ce qu'il fait essentiellement). Ce point est "
-"particulièrement important pour les débutants. B<make-kpkg> gère toutes les "
-"étapes nécessaires à la compilation d'un noyau, et l'installation de noyaux "
-"devient un jeu d'enfant."
+"Manuelles Kompilieren von Kerneln erforderte eine Serie von Schritten, damit "
+"es ordnungsgemäß ablief; kernel-package wurde geschrieben, um alle "
+"erforderlichen Maßnahmen zu ergreifen (es ist darüber hinausgewachsen, aber "
+"hauptsächlich ist das das, was es tut). Dies ist insbesondere für Anfänger "
+"wichtig: B<make-kpkg> unternimmt alle nötigen Schritte, um einen Kernel zu "
+"kompilieren und die Installation von Kerneln ist ein Knackpunkt."
 
-# type: TP
 #. type: TP
 #: kernel-package.5:53
 #, no-wrap
 msgid "B<ii) Multiple images support>"
-msgstr "B<ii) Gestion de plusieurs images>"
+msgstr "B<ii) Unterstützung mehrerer Images>"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-package.5:57
 msgid ""
 "It allows you to keep multiple version of kernel images on your machine with "
 "no fuss."
 msgstr ""
-"Vous pouvez maintenir plusieurs versions d'images de noyau sur la machine "
-"sans soucis."
+"Es ermöglicht Ihnen, mehrere Versionen von Kernel-Images auf Ihrem Rechner "
+"ohne Aufhebens aufzubewahren."
 
-# type: TP
 #. type: TP
 #: kernel-package.5:57
 #, no-wrap
 msgid "B<iii) Multiple Flavors of the same kernel version>"
-msgstr "B<iii) Plusieurs saveurs de la même version du noyau>"
+msgstr "B<iii) Mehrere Variationen der gleichen Kernel-Version>"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-package.5:64
 msgid ""
@@ -694,19 +635,18 @@ msgid ""
 "2.0.36 version patched with the latest drivers, and not worry about "
 "contaminating the modules in I</lib/modules>)."
 msgstr ""
-"Vous pouvez maintenir plusieurs «\\ saveurs\\ » d'une même version du noyau "
-"sur votre machine (vous pouvez avoir une version 2.0.36 stable, et une "
-"version 2.0.36 corrigée avec les derniers pilotes, sans risque de "
-"contamination des modules présents dans I</lib/modules)>."
+"Es hat eine Fertigkeit, für Sie mehrere Variationen der gleichen Kernel-"
+"Version auf Ihrem Rechner aufzubewahren (Sie könnten eine stabile Version "
+"2.0.36 und eine Version 2.0.36 haben, die mit den neusten Treibern gepatcht "
+"wurde und müssen sich nicht wegen der Verseuchung der Module in I</lib/"
+"modules> sorgen)."
 
-# type: TP
 #. type: TP
 #: kernel-package.5:64
 #, no-wrap
 msgid "B<iv) Built in defaults>"
-msgstr "B<iv) Réglages par défaut inclus>"
+msgstr "B<iv) Anhand von Vorgaben gebaut>"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-package.5:70
 msgid ""
@@ -714,18 +654,17 @@ msgid ""
 "instead), and other use zImage rather than bzImage, and calls the "
 "appropriate target, and takes care of moving the correct file into place."
 msgstr ""
-"Le paquet sait que certaines architectures utilisent vmlinuz (plutôt que "
-"vmlinux), et d'autres zImage plutôt que bzImage. Il appelle alors la bonne "
-"cible, et prend en charge la copie du bon fichier au bon endroit."
+"Es weiß, dass einige Architekturen kein »vmlinuz« haben (sie benutzen "
+"stattdessen »vmlinux«) und andere »zImage« statt »bzImage« benutzen. Es ruft "
+"das geeignete Ziel auf und berücksichtigt das Verschieben der korrekten "
+"Datei an Ort und Stelle."
 
-# type: TP
 #. type: TP
 #: kernel-package.5:70
 #, no-wrap
 msgid "B<v) Module hooks>"
-msgstr "B<v) Entrées pour les modules>"
+msgstr "B<v) Modul-Hooks>"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-package.5:78
 msgid ""
@@ -734,20 +673,17 @@ msgid ""
 "compiles a kernel, and be assured that the modules so compiled are "
 "compatible."
 msgstr ""
-"Plusieurs autres paquets de modules sont intégrés dans B<kernel-package>, ce "
-"qui permet de façon transparente la compilation (par exemple) des modules "
-"B<pcmcia> pendant que quelqu'un d'autre au même moment compile le noyau, "
-"tout en ayant l'assurance que les modules ainsi compilés seront compatibles "
-"avec ce noyau."
+"Mehrere andere Kernel-Module sind in B<kernel-package> eingehakt, so dass "
+"sie nahtlos kompiliert werden können, etwa B<pcmcia>-Module zur gleichen "
+"Zeit, in der jemand den Kernel kompiliert. Seien Sie versichert, dass die so "
+"kompilierten Module kompatibel sind."
 
-# type: TP
 #. type: TP
 #: kernel-package.5:78
 #, no-wrap
 msgid "B<vi) dpkg support>"
-msgstr "B<vi) Gestion par dpkg>"
+msgstr "B<vi) dpkg-Unterstützung>"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-package.5:84
 msgid ""
@@ -756,18 +692,17 @@ msgid ""
 "for you. This facilitates the task of other packages that depend on the "
 "kernel packages."
 msgstr ""
-"Vous pouvez gérer les noyaux ainsi créés avec le système de gestion des "
-"paquets, car un fichier .deb est créé, et dpkg peut en prendre le contrôle. "
-"Cela facilite la tâche des autres paquets qui dépendent des paquets du noyau."
+"Es befähigt Sie, das Paketverwaltungssystem zu benutzen, um den Überblick "
+"über die erstellten Kernel zu behalten. Die Verwendung von »make-kpkg« "
+"erstellt eine .deb-Datei, die Dpkg für Sie verfolgen kann. Dies erleichtert "
+"die Funktion anderer Pakete, die von den Kernel-Paketen abhängen."
 
-# type: TP
 #. type: TP
 #: kernel-package.5:84
 #, no-wrap
 msgid "B<vii) Configuration tracking>"
-msgstr "B<vii) Suivi de configuration>"
+msgstr "B<vii) Konfigurationsverfolgung>"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-package.5:91
 msgid ""
@@ -775,19 +710,16 @@ msgid ""
 "which is part of the image package, and hence is the kernel image and the "
 "configuration file are always together."
 msgstr ""
-"Il garde une trace du fichier de configuration de chacune des images du "
-"noyau dans I</boot>, fichier qui fait partie du paquet. Les images du noyau "
-"et le fichier de configuration sont, à partir de cet instant, toujours "
-"associés."
+"Es behält den Überblick über die Konfigurationsdatei für jedes Kernel-Image "
+"in I</boot,> das Teil des Image-Pakets ist. Daher liegen das Kernel-Image "
+"und die Konfigurationsdatei immer beisammen."
 
-# type: TP
 #. type: TP
 #: kernel-package.5:91
 #, no-wrap
 msgid "B<viii) Multiple config files>"
-msgstr "B<viii) Plusieurs fichiers de configuration>"
+msgstr "B<viii) Mehrere Konfigurationsdateien>"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-package.5:97
 msgid ""
@@ -796,20 +728,18 @@ msgid ""
 "i386, i486, etc). It is really neat for people who need to compile kernels "
 "for a variety of sub architectures."
 msgstr ""
-"Vous pouvez indiquer un répertoire de fichiers de configuration, contenant "
-"des fichiers différents pour chaque sous-architecture (et même différents "
-"fichiers de configuration pour i386, i486, etc.). C'est très pratique pour "
-"ceux qui ont besoin de compiler des noyaux pour une grande variété de sous-"
-"architectures."
+"Es erlaubt Ihnen, ein Verzeichnis mit Konfigurationsdateien anzugeben mit "
+"separaten Konfigurationsdateien für Unterarchitekturen (es ermöglicht sogar "
+"unterschiedliche Konfigurationsdateien für i386, i486, etc). Es ist wirklich "
+"toll für Leute, die Kernel für eine Vielzahl von Unterarchitekturen "
+"kompilieren müssen."
 
-# type: TP
 #. type: TP
 #: kernel-package.5:97
 #, no-wrap
 msgid "B<ix) Auxiliary kernel .deb packages>"
-msgstr "B<ix) Paquets .deb associés au noyau>"
+msgstr "B<ix) .deb-Pakete für Hilfs-Kernel>"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-package.5:103
 msgid ""
@@ -818,17 +748,16 @@ msgid ""
 "(and there are packages that depend on the package management system being "
 "aware of these packages)."
 msgstr ""
-"Vous pouvez créer un paquet contenant les entêtes, ou les sources, dans le "
-"format de fichier .deb, ce qui permet de les placer sous le contrôle du "
-"système de gestion des paquets (car parfois d'autres paquets ont besoin que "
-"le système de gestion en connaisse l'existence)."
+"Es ermöglicht, ein Paket mit den Headern oder den Quellen zu erstellen, "
+"ebenso wie eine deb-Datei und befähigt das Paketverwaltungssystem, den "
+"Überblick darüber zu behalten (und es gibt dort Pakete, die vom "
+"Paketverwaltungssystem abhängen, seien Sie sich dieser Pakete bewusst)."
 
-# type: TP
 #. type: TP
 #: kernel-package.5:103
 #, no-wrap
 msgid "B<x) Maintainer script services>"
-msgstr "B<x) Création de script du responsable>"
+msgstr "B<x) Betreuerskriptdienste>"
 
 #. type: Plain text
 #: kernel-package.5:108
@@ -837,35 +766,31 @@ msgid ""
 "with maintainer scripts, which allow the user to add hook scripts to run "
 "when the package status changes."
 msgstr ""
-"Lorsque le paquet image du noyau est un paquet Debian complet, il est fourni "
-"avec les scripts du mainteneur, ce qui permet à l'utilisateur l'ajout de "
-"scripts  «\\ hook\\ »  à exécuter lorsque l'état du paquet est modifié."
+"Da das Kernel-Image-Paket ein voll entwicketes Debian-Paket ist, bringt es "
+"Betreuerskripte mit, die dem Anwender ermöglichen, Hook-Skripte "
+"hinzuzufügen, die ausgeführt werden, wenn sich der Status des Pakets ändert."
 
-# type: TP
 #. type: TP
 #: kernel-package.5:108
 #, no-wrap
 msgid "B<xi) Sub architecture support>"
-msgstr "B<xi) Gestion des sous-architectures>"
+msgstr "B<xi) Unterstützung für Unterarchitekturen>"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-package.5:112
 msgid ""
 "There is support for the multitudinous sub architectures that have blossomed "
 "under the umbrella of the m68k and power-PC architectures."
 msgstr ""
-"La multitude des sous-architectures qui ont fleuris à l'ombre du m68k et du "
-"power-pc est gérée."
+"Es gibt Unterstützung für zahlreiche Unterarchitekturen, die unter dem "
+"Schirm der Architekturen m68k und Power-PC aufgeblüht sind."
 
-# type: TP
 #. type: TP
 #: kernel-package.5:112
 #, no-wrap
 msgid "B<xii) Portable kernel images>"
-msgstr "B<xii) Images de noyau portables>"
+msgstr "B<xii) Portierbare Kernel-Images>"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-package.5:118
 msgid ""
@@ -874,20 +799,18 @@ msgid ""
 "This is really nice since the modules are all included in the .deb; and one "
 "does not have to deal with modules manually."
 msgstr ""
-"Vous pouvez compiler un noyau pour un autre ordinateur, en utilisant par "
-"exemple une machine rapide pour la compilation d'un noyau à destination "
-"d'une machine plus lente. C'est vraiment très pratique puisque les modules "
-"sont inclus dans le fichier .deb, et que l'on n'a pas à gérer les modules à "
-"la main."
+"Ermöglicht, einen Kernel für einen anderen Rechner zu kompilieren. Ein "
+"schneller Rechner kann zum Beispiel benutzt werden, um den Kernel für einen "
+"langsameren Rechner zu kompilieren. Dies ist wirklich angenehm, da sämtliche "
+"Module in das .deb eingeschlossen werden und niemand manuell mit Modulen "
+"arbeiten muss."
 
-# type: TP
 #. type: TP
 #: kernel-package.5:118
 #, no-wrap
 msgid "B<xiii) runtime hooks>"
-msgstr "B<xiii) Points d'entrée lors de l'exécution>"
+msgstr "B<xiii) Laufzeit-Hooks>"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-package.5:132
 msgid ""
@@ -901,26 +824,23 @@ msgid ""
 "B<KERNEL_PACKAGE_VERSION> shall be set to the version of the kernel-package "
 "that created the package."
 msgstr ""
-"Les scripts de post-installations, de pré-suppression et de post-suppression "
-"offrent à l'administrateur de la machine locale la possibilité d'inclure un "
-"script «\\ hook\\ » dans le déroulement de l'installation. Cela permet, "
-"entre autres, aux utilisateurs du grub l'ajout ou la suppression d'items "
-"pointant sur les noyaux dans le menu de démarrage (des scripts d'exemple "
-"sont fournis dans le paquet). Des paquets associés pourront déposer des "
-"script dans certains  répertoires sous I</etc/kernel>, scripts qui seront "
-"exécutés par ceux des responsables des paquets créés par kernel-package. "
-"Avant l'exécution de ces scripts, la variable d'environnement "
-"B<KERNEL_PACKAGE_VERSION>  doit contenir la version de kernel-package qui a "
-"crée le paquet."
+"Die »preinst«-, »postinst«-, »prerm«- und »postrm«-Skripte ermöglichen dem "
+"lokalen Administrator auf dem Installationsrechner, den Laufzeit-Hooks ein "
+"Skript hinzuzufügen; dies kann unter anderem ermöglichen, dass Grub-Anwender "
+"dem Grub-Menü Kernel-Image-Stanzas hinzufügen oder daraus entfernen "
+"(Beispielskripte hierzu sind im Paket enthalten). Es gibt unter I</etc/"
+"kernel> Verzeichnisse, in denen zugehörige Pakete möglicherweise Skripte "
+"ablegen, die durch Betreuerskripte der von kernel-package erstellten Pakete "
+"ausgeführt werden. Bevor diese Skripte ausgeführt werden, soll die "
+"Umgebungsvariable B<KERNEL_PACKAGE_VERSION> auf die Version von kernel-"
+"package gesetzt werden, das das Paket erstellte."
 
-# type: TP
 #. type: TP
 #: kernel-package.5:132
 #, no-wrap
 msgid "B<xiv) Append descriptive bits to the kernel version>"
-msgstr "B<xiv) Description précise de la version du noyau>"
+msgstr "B<xiv) Beschreibende Teile an die Kernel-Version hängen>"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-package.5:138
 msgid ""
@@ -929,44 +849,39 @@ msgid ""
 "Home; it is unlikely to be overridden by the official 2.4.1 kernel, since "
 "they are not the same version."
 msgstr ""
-"Vous pouvez ajouter un descriptif à la version du noyau soit en ligne de "
-"commande, soit en définissant une variable d'environnement. De cette façon, "
-"si votre noyau s'appelle kernel-image-2\\.4\\.1Chez\\.Paulo, il a peu de "
-"chances d'être effacé par le noyau 2.4.1 officiel, puisqu'il ne s'agit pas "
-"de la même version."
+"Der Kernel-Version kann auf der Befehlszeile oder durch Setzen der "
+"Umgebungsvariable etwas angehängt werden. Daher ist es, falls Ihr Kernel "
+"kernel-image-2.4.1Max.Zuhause heißt, unwahrscheinlich, dass er vom "
+"offiziellen Kernel 2.4.1 außer Kraft gesetzt wird, da sie nicht die gleiche "
+"Version haben."
 
-# type: SH
 #. type: SH
 #: kernel-package.5:139
 #, no-wrap
 msgid "Disadvantages of using make-kpkg"
-msgstr "Inconvénients de l'utilisation de make-kpkg"
+msgstr "Nachteile der Verwendung von make-kpkg"
 
-# type: TP
 #. type: TP
 #: kernel-package.5:140
 #, no-wrap
 msgid "B<i) Automation.>"
-msgstr "B<i) Automatisation>"
+msgstr "B<i) Automatisierung>"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-package.5:144
 msgid ""
 "This is a cookie cutter approach to compiling kernels, and there are people "
 "who like being close to the bare metal."
 msgstr ""
-"La fabrication de noyaux par cette méthode est une approche prémâchée, et "
-"des gens préféreront le brut de fonderie."
+"Dies ist ein Standardschema, um Kernel zu kompilieren und es gibt Leute, die "
+"gerne am offenen Herzen operieren."
 
-# type: TP
 #. type: TP
 #: kernel-package.5:144
 #, no-wrap
 msgid "B<ii) Non traditional>"
-msgstr "B<ii) Non traditionnel>"
+msgstr "B<ii) Nicht traditionell>"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-package.5:149
 msgid ""
@@ -974,18 +889,16 @@ msgid ""
 "(It has been pointed out, though, that this is fast becoming Debian "
 "tradition)."
 msgstr ""
-"Ce n'est pas l'usage hors du monde Debian. Cela rompt avec la tradition "
-"(d'un autre coté, cela devient une tradition Debian de plus en plus "
-"répandue)."
+"So wird es in der Welt außerhalb Debians gemacht. Dies spottet der "
+"Tradition. (Es wurde jedoch hervorgehoben, dass dies sehr schnell Debian-"
+"Tradition wird.)"
 
-# type: TP
 #. type: TP
 #: kernel-package.5:149
 #, no-wrap
 msgid "B<iii) Needs superuser>"
-msgstr "B<iii) Il faut être administrateur>"
+msgstr "B<iii) Superuser nötig>"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-package.5:160
 msgid ""
@@ -993,50 +906,44 @@ msgid ""
 "a kernel image .deb file (this is not as bad as it used to be before "
 "B<fakeroot>)."
 msgstr ""
-"Vous êtes obligé d'utiliser soit B<fakeroot>, B<sudo>, B<super>, ou d'être "
-"l'administrateur pour créer le fichier .deb de l'image du noyau (ce n'est "
-"pas pire qu'avant, quand il n'y avait pas B<fakeroot>)."
+"Es erzwingt, dass Sie B<fakeroot,> B<sudo> oder B<super> benutzen oder Root "
+"sein müssen, um eine Kernel-Image-.deb-Datei zu erstellen (dies ist nicht so "
+"schlimm, wie es vor der Verwendung von B<fakeroot> war)."
 
-# type: Plain text
 #. type: TP
 #: kernel-package.5:162
 #, no-wrap
 msgid "I</etc/kernel-pkg.conf>"
 msgstr "I</etc/kernel-pkg.conf>"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-package.5:170
 msgid "B<make>(1), B<make-kpkg>(1), B<The GNU Make manual>"
-msgstr "B<make>(1), B<make-kpkg>(1), B<le manuel de GNU Make>"
+msgstr "B<make>(1), B<make-kpkg>(1), B<The GNU Make manual>"
 
-# type: TH
 #. type: TH
 #: kernel-packageconfig.8:27
 #, no-wrap
 msgid "KERNEL-PACKAGECONFIG"
 msgstr "KERNEL-PACKAGECONFIG"
 
-# type: TH
 #. type: TH
 #: kernel-packageconfig.8:27
 #, no-wrap
 msgid "Jan 7 1997"
-msgstr "7 janvier 1997"
+msgstr "7. Januar 1997"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-packageconfig.8:30
 msgid "kernel-packageconfig - internal handler of /etc/kernel-pkg.conf"
-msgstr "kernel-packageconfig - Gestionnaire interne de /etc/kernel-pkg.conf"
+msgstr ""
+"kernel-packageconfig - internes Steuerprogramm für /etc/kernel-pkg.conf"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-packageconfig.8:32
 msgid "B<kernel-packageconfig>"
 msgstr "B<kernel-packageconfig>"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-packageconfig.8:42
 msgid ""
@@ -1045,64 +952,55 @@ msgid ""
 "is idempotent, and only modifies the file if it contains factory default "
 "values. It is B<not> meant for general use."
 msgstr ""
-"L'utilitaire B<kernel-packageconfig> est appelé en interne par le script de "
-"post-installation de B<kernel-package> afin de construire le fichier de "
-"configuration /etc/kernel-pkg.conf. Il est idempotent, et ne modifie le "
-"fichier que s'il contient les valeurs par défaut d'origine. Il n'est B<pas> "
-"destiné à être utilisé directement."
+"Das Hilfswerkzeug B<kernel-packageconfig> wird intern durch das Skript "
+"B<kernel-package postinst> aufgerufen, um die Konfigurationsdatei /etc/"
+"kernel-pkg.conf einzurichten. Es ist idempotent und ändert die Datei nur, "
+"wenn sie werkseitige Vorgabewerte enthält. Sie ist B<nicht> für den "
+"allgemeinen Gebrauch bestimmt."
 
-# type: SH
 #. type: SH
 #: kernel-packageconfig.8:42 make-kpkg.8:85
 #, no-wrap
 msgid "OPTIONS"
-msgstr "OPTIONS"
+msgstr "OPTIONEN"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-packageconfig.8:44
 msgid "This utility does not have any options."
-msgstr "Cet utilitaire n'a aucune option."
+msgstr "Dieses Hilfswerkzeug hat keine Optionen."
 
-# type: Plain text
 #. type: Plain text
 #: kernel-packageconfig.8:47
 msgid "The file affected by this program is I</etc/kernel-pkg.conf>."
-msgstr "Le fichier modifié par ce programme est I</etc/kernel-pkg.conf>."
+msgstr "Die von diesem Programm beinflusste Datei ist I</etc/kernel-pkg.conf>."
 
-# type: Plain text
 #. type: Plain text
 #: kernel-packageconfig.8:49
 msgid "B<kernel-pkg.conf>(5)"
 msgstr "B<kernel-pkg.conf>(5)"
 
-# type: TH
 #. type: TH
 #: kernel-pkg.conf.5:26
 #, no-wrap
 msgid "KERNEL-PKG.CONF"
 msgstr "KERNEL-PKG.CONF"
 
-# type: TH
 #. type: TH
 #: kernel-pkg.conf.5:26
 #, no-wrap
 msgid "Jan  7 1997"
-msgstr "7 janvier 1997"
+msgstr "7. Januar 1997"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-pkg.conf.5:31
 msgid "kernel-pkg.conf - configuration file for make-kpkg"
-msgstr "kernel-pkg.conf - Fichier de configuration pour make-kpkg"
+msgstr "kernel-pkg.conf - Konfigurationsdatei für Make-Kpkg"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-pkg.conf.5:35
 msgid "I</etc/kernel-pkg.conf> or I<~/.kernel-pkg.conf>"
-msgstr "I</etc/kernel-pkg.conf> ou I<~/.kernel-pkg.conf>"
+msgstr "I</etc/kernel-pkg.conf> oder I<~/.kernel-pkg.conf>"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-pkg.conf.5:48
 msgid ""
@@ -1113,15 +1011,14 @@ msgid ""
 "kernel-pkg.conf> exists, it is loaded in favor of the system wide "
 "configuration file I</etc/kernel-pkg.conf>."
 msgstr ""
-"Les fichiers I</etc/kernel-pkg.conf> ou I<~/.kernel-pkg.conf> sont en fait "
-"des morceaux de code de type B<Makefile> inclus dans le processus de "
-"construction du paquet du noyau. Vous pourrez inclure de la sorte n'importe "
-"quelle directive de Makefile dans ce fichier (vérifiez simplement que vous "
-"savez vraiment ce que vous faites). S'il existe un fichier de configuration "
-"utilisateur I<~/.kernel-pkg.conf>, il sera prioritaire sur le fichier de "
-"configuration du système I</etc/kernel-pkg.conf>."
+"Die Datei I</etc/kernel-pkg.conf> oder I<~/.kernel-pkg.conf> ist tatsächlich "
+"ein B<Makefile>-Schnipsel, der während des Bauprozesses der Kernel-Pakete "
+"inbegriffen ist. Daher können Sie jede gültige Makefile-Direktive in dieser "
+"Datei ablegen (stellen Sie nur sicher, dass Sie wissen, was Sie tun). Falls "
+"die benutzerabhängige Konfigurationsdatei I<~/.kernel-pkg.conf> existiert, "
+"wird sie gegenüber der systemweiten Konfigurationsdatei I</etc/kernel-pkg."
+"conf> bevorzugt geladen."
 
-# type: Plain text
 #. type: Plain text
 #: kernel-pkg.conf.5:54
 msgid ""
@@ -1129,19 +1026,17 @@ msgid ""
 "per run or a per individual basis by using environment variables.  Some of "
 "the variables can further be overridden by options to B<make-kpkg>."
 msgstr ""
-"Toutes les variables ont des valeurs raisonnables par défaut, et peuvent "
-"être outrepassées ponctuellement ou sur la base de choix de l'utilisateur "
-"grâce aux variables d'environnement. Certaines de ces variables peuvent de "
-"plus être modifiées grâce à des options de B<make-kpkg>."
+"All die Variablen haben vernünftige Vorgabewerte und können pro Ausführung "
+"oder auf individueller Basis durch Verwendung einer Umgebungsvariable außer "
+"Kraft gesetzt werden. Einige der Variablen können obendrein durch Optionen "
+"für B<make-kpkg> aufgehoben gesetzt werden."
 
-# type: TP
 #. type: TP
 #: kernel-pkg.conf.5:56
 #, no-wrap
 msgid "B<maintainer>"
 msgstr "B<maintainer>"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-pkg.conf.5:65
 msgid ""
@@ -1151,39 +1046,35 @@ msgid ""
 "\"'\" shall have to be quoted like so: maintainer = John O'\\e''Brien. Yes, "
 "this is ugly, but this works."
 msgstr ""
-"Responsable local des paquets kernel-* (image, entêtes, "
-"documentations, etc.) Défini lors de l'installation du paquet par le script "
-"de I<post-installation>. Il est possible de l'outrepasser grâce à la "
-"variable d'environnement B<KPKG_MAINTAINER>. Veuillez noter que tout signe "
-"de type «\\ '\\ » doit être protégé, comme dans maintainer = John "
-"O'\\e''Brien. Oui, ce n'est pas terrible, mais ça marche."
+"der lokale Kernel-Paketbetreuer (Image, Header, Dokumentation, etc.); wird "
+"bei der Paketinstallation durch I<postinst> gesetzt; kann durch die "
+"Umgebungsvariable B<KPKG_MAINTAINER> außer Kraft gesetzt werden. Bitte "
+"achten Sie darauf, dass jegliche Apostrophe »'« wie folgt maskiert werden "
+"sollen: maintainer = John O'\\e''Brien. Ja, das ist hässlich, aber es "
+"funktioniert."
 
-# type: TP
 #. type: TP
 #: kernel-pkg.conf.5:65
 #, no-wrap
 msgid "B<email>"
 msgstr "B<email>"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-pkg.conf.5:72
 msgid ""
 "The email address of that person.  Set up at package installation by the "
 "I<postinst>.  Can be overridden by the environment variable B<KPKG_EMAIL>."
 msgstr ""
-"L'adresse électronique de cette personne. Définie lors de l'installation du "
-"paquet par le script de I<post-installation>. Il est possible de "
-"l'outrepasser grâce à la variable d'environnement B<KPKG_EMAIL>."
+"die E-Mail-Adresse dieser Person; wird bei der Paketinstallation durch "
+"I<postinst> gesetzt; kann durch die Umgebungsvariable B<KPKG_EMAIL> außer "
+"Kraft gesetzt werden"
 
-# type: TP
 #. type: TP
 #: kernel-pkg.conf.5:72
 #, no-wrap
 msgid "B<pgp>"
 msgstr "B<pgp>"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-pkg.conf.5:92
 msgid ""
@@ -1194,22 +1085,20 @@ msgid ""
 "variable B<PGP_SIGNATURE>, and is overridden (again) by the I<--pgpsign> "
 "option of B<make-kpkg>.  Defaults to I<maintainer>.  (Optional)"
 msgstr ""
-"La clef d'identification à utiliser pour signer le paquet. En général "
-"fournie à I<dpkg-buildpackage> grâce à l'option I<-k>, ainsi qu'aux modules "
-"de tierces parties par la variable d'environnement B<KMAINT>, si ces modules "
-"séparés (tels que pcmcia, etc.) sont construits dans le I<$MODULE_PATH>. Il "
-"est possible de l'outrepasser grâce à la variable d'environnement "
-"B<PGP_SIGNATURE>, et il peut être (à nouveau) outrepassé par l'option I<--"
-"pgpsign> de B<make-kpkg>. Valeur par défaut\\ : I<maintainer>. (Optionnel)"
+"eine Schlüsselkennzahl, die beim Signieren von Paketen verwandt wird; wird "
+"üblicherweise neben I<dpkg-buildpackage> unter Benutzung der Option I<-k> "
+"und Modulen Dritter in der Umbebungsvariablen B<KMAINT> mitgegeben, falls "
+"separate Module (wie PCMCIA etc.) in I<$MODULE_PATH> gebaut werden; kann "
+"durch die Umbebungsvariable B<PGP_SIGNATURE> außer Kraft gesetzt werden und "
+"wird (wieder) durch die Option I<--pgpsign> von B<make-kpkg> außer Kraft "
+"gesetzt. Vorgabe ist I<maintainer>. (optional)"
 
-# type: TH
 #. type: TP
 #: kernel-pkg.conf.5:92 make-kpkg.8:656
 #, no-wrap
 msgid "B<debian>"
 msgstr "B<debian>"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-pkg.conf.5:105
 msgid ""
@@ -1218,20 +1107,18 @@ msgid ""
 "B<DEBIAN_REVISION>, and is overridden (again) by the I<--revision> option of "
 "B<make-kpkg>.  Defaults to I<E<lt>VERSIONE<gt>-10.0.0.Custom> (Optional)"
 msgstr ""
-"Version des paquets du noyau, incluant aussi les versions officielles "
-"(upstream) et les modifications de Debian. Modifiable par la variable "
-"d’environnement B<DEBIAN_REVISION>, puis (encore) modifiable par l’option "
-"I<--revision> de B<make-kpkg>. Réglée par défaut à "
-"I<E<lt>VERSIONE<gt>-10.0.0.Custom>. (Optionnel)"
+"die Version der Kernel-Pakete, schließt sowohl die Version der "
+"Originalautoren als auch die Debian-Überarbeitung ein; kann durch die "
+"Umbebungsvariable B<DEBIAN_REVISION> außer Kraft gesetzt werden und wird "
+"(wieder) durch die Option I<--revision> von B<make-kpkg> außer Kraft "
+"gesetzt. Vorgabe ist I<E<lt>VERSIONE<gt>-10.0.0.Custom>. (optional)"
 
-# type: TP
 #. type: TP
 #: kernel-pkg.conf.5:105
 #, no-wrap
 msgid "B<debian_revision_mandatory>"
 msgstr "B<debian_revision_mandatory>"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-pkg.conf.5:112
 msgid ""
@@ -1240,19 +1127,17 @@ msgid ""
 "results in an error (and B<make-kpkg> shall not provide a default value of "
 "10.0.0.Custom)"
 msgstr ""
-"Habituellement non définie. Si elle, ou la variable d'environnement "
-"B<DEBIAN_REVISION_MANDATORY>, sont définies, alors l'absence de numéro de "
-"révision Debian entraînera une erreur (et B<make-kpkg> ne fournira pas la "
-"valeur par défaut «\\ 10.0.0.Custom\\ »)."
+"normalerweise nicht gesetzt. Falls dies oder die Umgebungsvariable "
+"B<DEBIAN_REVISION_MANDATORY> gesetzt sind, dann führt es zu einem Fehler, "
+"wenn die Debian-Überarbeitung nicht bereitgestellt wird (und B<make-kpkg> "
+"keinen Vorgabewert für 10.0.0.Custom bereitstellen soll)."
 
-# type: TP
 #. type: TP
 #: kernel-pkg.conf.5:112
 #, no-wrap
 msgid "B<kimage>"
 msgstr "B<kimage>"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-pkg.conf.5:126
 msgid ""
@@ -1261,19 +1146,17 @@ msgid ""
 "I<--zimage> or I<--bzimage> of B<make-kpkg>.  Defaults to I<bzImage>.  "
 "(Optional)"
 msgstr ""
-"Type d'image du noyau (zImage ou bzImage par exemple). Il est possible de "
-"l'outrepasser grâce à la variable d'environnement B<IMAGE_TYPE>, et il est "
-"possible de l'outrepasser (de nouveau) grâce aux options I<--zimage> ou I<--"
-"bzimage> de B<make-kpkg>. Valeur par défaut\\ : I<bzImage>. (Optionnel)"
+"der Kernel-Image-Typ (d.h. zImage oder bzImage); kann durch die "
+"Umbebungsvariable B<IMAGE_TYPE> außer Kraft gesetzt werden und wird (wieder) "
+"durch die Optionen I<--zimage> oder I<--bzimage> von B<make-kpkg> außer "
+"Kraft gesetzt. Vorgabe ist I<bzImage>. (optional)"
 
-# type: TP
 #. type: TP
 #: kernel-pkg.conf.5:126
 #, no-wrap
 msgid "B<config_target>"
 msgstr "B<config_target>"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-pkg.conf.5:135
 msgid ""
@@ -1282,20 +1165,18 @@ msgid ""
 "B<CONFIG_TARGET> overrides this setting.)  If the value of config_target is "
 "not recognized, then it is reset to oldconfig."
 msgstr ""
-"Choix du type de configuration à exécuter. Par défaut, c'est «\\ oldconfig\\ "
-"», ce qui est pratique pour les lancements non interactifs (ou aux "
-"interactions réduites au minimum). (La variable d'environnement "
-"B<CONFIG_TARGET> outrepasse ce choix). Si la valeur de config_target est "
-"inconnue, elle est alors réinitialisée à oldconfig."
+"welcher Typ von Konfigurationsschritt zu unternehmen ist. Vorgabe ist "
+"»oldconfig«, was bei der normalen, nicht interaktiven (oder minimal "
+"interaktiven) Ausführung gut ist. (Die Umgebungsvariable B<CONFIG_TARGET> "
+"setzt dies außer Kraft.) Falls der Wert von config_target nicht erkannt "
+"wird, wird er auf »oldconfig« zurückgesetzt."
 
-# type: TP
 #. type: TP
 #: kernel-pkg.conf.5:135
 #, no-wrap
 msgid "B<use_saved_config>"
 msgstr "B<use_saved_config>"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-pkg.conf.5:142
 msgid ""
@@ -1303,18 +1184,16 @@ msgid ""
 "B<USE_SAVED_CONFIG> overrides this), the file .config.save in the top level "
 "directory is ignored."
 msgstr ""
-"Variable réservée seulement aux experts. Si elle est réglée à «\\ NO\\ » (la "
-"variable d'environnement B<USE_SAVED_CONFIG> outrepasse cela), le fichier ."
-"config.save du répertoire au sommet de l'arborescence est ignoré."
+"Diese Variable ist nur für Experten. Falls sie auf NO gesetzt ist (die "
+"Umgebungsvariable B<USE_SAVED_CONFIG> setzt dies außer Kraft), wird die "
+"Datei .config.save auf der obersten Verzeichnisebene ignoriert."
 
-# type: TP
 #. type: TP
 #: kernel-pkg.conf.5:142
 #, no-wrap
 msgid "B<root_cmd>"
 msgstr "B<root_cmd>"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-pkg.conf.5:169
 msgid ""
@@ -1329,27 +1208,25 @@ msgid ""
 "I<buildpackage> target. Set the environment variable B<ROOT_CMD> if you just "
 "wish to build the kernel image, for instance."
 msgstr ""
-"C'est une variable dont le but est d'être transmise à B<dpkg-buildpackage> "
-"dans la cible I<buildpackage>. Elle doit fournir un moyen d'obtenir les "
-"droits d'accès du superutilisateur (I<«\\ sudo\\ »> ou I<«\\ fakeroot\\ »> "
-"par exemple), un peu à la façon de l'option -r de B<dpkg-buildpackage>. La "
-"variable d'environnement B<ROOT_CMD> a priorité sur celle-ci. La variable "
-"d'environnement B<UNSIGN_SOURCE> fournit à cette commande l'option qui force "
-"dpkg-buildpackage à ne pas signer la source, et de la même façon, la "
-"variable d'environnement B<UNSIGN_CHANGELOG> fournit à cette commande "
-"l'option qui force dpkg-buildpackage à ne pas signer le changelog. Là "
-"encore, cette variable n'est utile que pour la cible I<buildpackage>. Réglez "
-"la variable d'environnement ROOT_CMD si vous voulez juste construire l'image "
-"du noyau, par exemple."
+"Diese Variable ist dazu gedacht, im Ziel I<buildpackage> an B<dpkg-"
+"buildpackage> übergeben zu werden. Dies sollte als Mittel zum Erlangen von "
+"Superuser-Rechten gesetzt werden (beispielsweise I<»sudo«> oder "
+"I<»fakeroot«),> wie es die B<dpkg-buildpackages>-Option -r erfordert. Die "
+"Umgebungsvariable B<ROOT_CMD> setzt dies außer Kraft. Benutzen Sie die "
+"Umgebungsvariable B<UNSIGN_SOURCE,> um eine Option an dpkg-buildpackage zu "
+"übergeben, dass die Quelle nicht signiert wird; verwenden Sie gleichermaßen "
+"die Umgebungsvariable B<UNSIGN_CHANGELOG,> um eine Option an dpkg-"
+"buildpackage zu übergeben, dass das Änderungsprotokoll nicht signiert wird. "
+"Diese Variable ist wiederum nur nützlich für das I<buildpackage>-Ziel. "
+"Setzen Sie die Umgebungsvariable B<ROOT_CMD,> falls Sie zum Beispiel nur das "
+"Kernel-Image bauen möchten."
 
-# type: TP
 #. type: TP
 #: kernel-pkg.conf.5:169
 #, no-wrap
 msgid "B<delete_build_link>"
 msgstr "B<delete_build_link>"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-pkg.conf.5:178
 msgid ""
@@ -1358,20 +1235,18 @@ msgid ""
 "B<DELETE_BUILD_LINK> overrides this. The default is unset. Note that this is "
 "case sensitive, yes shall not work."
 msgstr ""
-"Si elle est définie à «\\ YES\\ », supprime le lien symbolique I</lib/"
-"modules/$VERSION/build> pointant sur le paquet .deb. La variable "
-"d'environnement B<DELETE_BUILD_LINK> a priorité sur cette option. Par "
-"défaut, elle n'est pas définie. Notez qu'elle est sensible à la casse, yes "
-"ne fonctionnant pas."
+"Falls dies auf »YES« gesetzt ist, soll der symbolische Verweis I</lib/"
+"modules/$VERSION/build> aus dem resultierenden .deb-Paket entfernt werden. "
+"Die Umgebungsvariable B<DELETE_BUILD_LINK> setzt dies außer Kraft. "
+"Standardmäßig ist sie nicht gesetzt. Beachten Sie, dass die Groß- und "
+"Kleinschreibung berücksichtigt wird, »yes« soll nicht funktionieren."
 
-# type: TP
 #. type: TP
 #: kernel-pkg.conf.5:178
 #, no-wrap
 msgid "B<do_clean>"
 msgstr "B<do_clean>"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-pkg.conf.5:185
 msgid ""
@@ -1380,20 +1255,18 @@ msgid ""
 "B<CLEAN_SOURCE> overrides this.  The default is unset. Note that this is "
 "case sensitive, yes shall not work."
 msgstr ""
-"Si elle est définie à «\\ YES\\ », un make clean sera lancé sur "
-"l'arborescence des sources du noyau après la construction du paquet de "
-"l'image du noyau. La variable d'environnement B<CLEAN_SOURCE> a priorité sur "
-"cette option. Par défaut, elle n'est pas définie. Notez qu'elle est sensible "
-"à la casse, yes ne fonctionnant pas."
+"Auf »YES« gesetzt, hat dies zur Folge, dass »make clean« im Kernel-"
+"Quellverzeichnisbaum ausgeführt wird, nachdem das Kernel-Image-Paket gebaut "
+"wurde. Die Umgebungsvariable B<CLEAN_SOURCE> setzt dies außer Kraft. "
+"Standardmäßig ist sie nicht gesetzt. Beachten Sie, dass die Groß- und "
+"Kleinschreibung berücksichtigt wird, »yes« soll nicht funktionieren."
 
-# type: TP
 #. type: TP
 #: kernel-pkg.conf.5:185
 #, no-wrap
 msgid "B<install_vmlinux>"
 msgstr "B<install_vmlinux>"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-pkg.conf.5:190
 msgid ""
@@ -1401,19 +1274,17 @@ msgid ""
 "bootable compressed kernel image (vmlinuz).  The default is unset. Note that "
 "this is case sensitive, yes shall not work."
 msgstr ""
-"Si elle est définie à «\\ YES\\ », l'image non compressée du noyau au format "
-"ELF sera installée en plus de l'image compressé (vmlinuz). Par défaut, elle "
-"n'est pas définie. Notez qu'elle est sensible à la casse, yes ne "
-"fonctionnant pas."
+"auf »YES« setzen, um das dekomprimierte ELF-Image zusammen mit dem bootbaren "
+"komprimierten Kernel-Image (vmlinuz) zu installieren. Standardmäßig ist es "
+"nicht gesetzt. Beachten Sie, dass die Groß- und Kleinschreibung "
+"berücksichtigt wird, »yes« soll nicht funktionieren."
 
-# type: TP
 #. type: TP
 #: kernel-pkg.conf.5:190
 #, no-wrap
 msgid "B<image_clean_hook>"
 msgstr "B<image_clean_hook>"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-pkg.conf.5:199
 msgid ""
@@ -1424,21 +1295,21 @@ msgid ""
 "children, the original source tree should remain intact.  This is to "
 "facilitate messaging of the kernel image that is packaged."
 msgstr ""
-"Lorsqu'elle correspond à un programme, celui-ci est alors exécuté sur la "
-"racine (temporaire) de l'arborescence du noyau avant l'empaquetage des "
-"sources. Cela n'a aucun effet sur quoi que ce soit d'autre que les sources "
-"en cours d'empaquetage. Si le script agit sur le répertoire actuel et ses "
-"sous-répertoires, l'arborescence originale des sources demeure inchangée. "
-"Utile pour faciliter le modelage de l'image du noyau en cours d'empaquetage."
+"gesetzt, dass es auf eine ausführbare Datei zeigt, sollte dies dafür sorgen, "
+"dass diese ausführbare Datei von der obersten Verzeichnisebene des "
+"(temporären) Kernel-Image-Baums ausgeführt wird, bevor das Kernel-Image "
+"gepackt wird. Dies hat auf nichts außer das Image Auswirkungen, das gepackt "
+"wird – falls das Skript im aktuellen Verzeichnis und seinen "
+"Unterverzeichnissen arbeitet, sollte der Originalquellverzeichnisbaum intakt "
+"bleiben. Dies soll Nachrichten des Kernel-Images erleichtern, das gepackt "
+"wird."
 
-# type: TP
 #. type: TP
 #: kernel-pkg.conf.5:199
 #, no-wrap
 msgid "B<source_clean_hook>"
 msgstr "B<source_clean_hook>"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-pkg.conf.5:211
 msgid ""
@@ -1451,24 +1322,23 @@ msgid ""
 "kernel sources that are packaged (for example, to remove version control "
 "directories, or to prune away unwanted architectures)."
 msgstr ""
-"Lorsqu'elle correspond à un programme, celui-ci est alors lancé sur la "
-"racine des répertoires des en-têtes du noyau avant leur empaquetage, I<./"
-"debian/tmp-source/usr/src/kernel-source-X.X.XX>. Cela n'a aucun effet sur "
-"quoi que ce soit d'autre que les sources en cours d'empaquetage. Si le "
-"script agit sur le répertoire actuel et ses sous-répertoires, l'arborescence "
-"originale des sources demeure inchangée. Utile pour faciliter le modelage "
-"des sources du noyau en cours d'empaquetage (en supprimant par exemple les "
-"répertoires de contrôle de version, ou en se débarrassant des architectures "
-"non désirées)."
+"gesetzt, dass es auf eine ausführbare Datei zeigt. Dies soll dafür sorgen, "
+"dass diese ausführbare Datei von der obersten Verzeichnisebene des "
+"(temporären) Kernel-Image-Baums ausgeführt wird, bevor die Quellen gepackt "
+"werden, I<./debian/tmp-source/usr/src/kernel-source-X.X.XX.> Dies hat auf "
+"nichts außer das Image Auswirkungen, das gepackt wird – falls das Skript im "
+"aktuellen Verzeichnis und seinen Unterverzeichnissen arbeitet, sollte der "
+"Originalquellverzeichnisbaum intakt bleiben. Dies soll Nachrichten des "
+"Kernel-Images erleichtern, das gepackt wird (um zum Beispiel Verzeichnisse "
+"der Versionskontrolle zu entfernen oder unerwünschte Architekturen zu "
+"reduzieren)."
 
-# type: TP
 #. type: TP
 #: kernel-pkg.conf.5:211
 #, no-wrap
 msgid "B<header_clean_hook>"
 msgstr "B<header_clean_hook>"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-pkg.conf.5:221
 msgid ""
@@ -1480,23 +1350,22 @@ msgid ""
 "of the kernel headers that are packaged (for example, to remove version "
 "control directories, or to prune away unwanted architectures)."
 msgstr ""
-"Lorsqu'elle correspond à un programme, celui-ci est alors lancé sur la "
-"racine des répertoires des en-têtes du noyau avant leur empaquetage. Cela "
-"n'a aucun effet sur quoi que ce soit d'autre que les sources en cours "
-"d'empaquetage. Si le script agit sur le répertoire actuel et ses sous-"
-"répertoires, l'arborescence originale des sources demeure inchangée. Utile "
-"pour faciliter la cure d'amaigrissement des en-têtes du noyau en cours "
-"d'empaquetage (en supprimant par exemple les répertoires de contrôle de "
-"version, ou en se débarrassant des architectures non désirées)."
+"gesetzt, dass es auf eine ausführbare Datei zeigt. Dies soll dafür sorgen, "
+"dass diese ausführbare Datei von der obersten Verzeichnisebene des Kernel-"
+"Headers ausgeführt wird, bevor die Header gepackt werden. Dies hat auf "
+"nichts außer das Image Auswirkungen, das gepackt wird – falls das Skript im "
+"aktuellen Verzeichnis und seinen Unterverzeichnissen arbeitet, sollte der "
+"Originalquellverzeichnisbaum intakt bleiben. Dies soll Nachrichten des "
+"Kernel-Images erleichtern, das gepackt wird (um zum Beispiel Verzeichnisse "
+"der Versionskontrolle zu entfernen oder unerwünschte Architekturen zu "
+"reduzieren)."
 
-# type: TP
 #. type: TP
 #: kernel-pkg.conf.5:221
 #, no-wrap
 msgid "B<doc_clean_hook>"
 msgstr "B<doc_clean_hook>"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-pkg.conf.5:231
 msgid ""
@@ -1509,23 +1378,23 @@ msgid ""
 "example, to remove version control directories, or to prune away unwanted "
 "architectures)."
 msgstr ""
-"Lorsqu'elle correspond à un programme, celui-ci est alors exécuté sur la "
-"racine de l'arborescence de la documentation avant son empaquetage. Cela n'a "
-"aucun effet sur quoi que soit d'autre que la documentation en cours "
-"d'empaquetage. Si le script agit sur le répertoire actuel et ses sous-"
-"répertoires, l'arborescence originale demeure inchangée. Utile pour "
-"faciliter le modelage de la documentation du noyau en cours d'empaquetage "
-"(en supprimant par exemple les répertoires de contrôle de version, ou en se "
-"débarrassant des architectures non désirées)."
+"gesetzt, dass es auf eine ausführbare Datei zeigt. Dies soll dafür sorgen, "
+"dass diese ausführbare Datei von der obersten Verzeichnisebene des "
+"Dokumentationsverzeichnisbaums ausgeführt wird, bevor die Kernel-"
+"Dokumentation gepackt wird. Dies hat auf nichts außer das Image "
+"Auswirkungen, das gepackt wird – falls das Skript im aktuellen Verzeichnis "
+"und seinen Unterverzeichnissen arbeitet, sollte der "
+"Originalquellverzeichnisbaum intakt bleiben. Dies soll Nachrichten des "
+"Kernel-Images erleichtern, das gepackt wird (um zum Beispiel Verzeichnisse "
+"der Versionskontrolle zu entfernen oder unerwünschte Architekturen zu "
+"reduzieren)."
 
-# type: TP
 #. type: TP
 #: kernel-pkg.conf.5:231
 #, no-wrap
 msgid "B<extra_docs>"
 msgstr "B<extra_docs>"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-pkg.conf.5:243
 msgid ""
@@ -1537,23 +1406,21 @@ msgid ""
 "B<EXTRA_DOCS> overrides this, and would most likely be how extra "
 "documentation is specified."
 msgstr ""
-"Cette variable pourra contenir le chemin vers toute documentation "
-"supplémentaire qui sera alors installée dans le répertoire I</usr/share/doc/"
-"kernel-image-X.X.XX/>. Il n'y a pas de détection de conflit de noms, et les "
-"fichiers ne sont pas compressés. De ce fait, si vous voulez que ces fichiers "
-"soient compressés, compressez-les et indiquez alors le chemin vers le "
-"fichier compressé. La variable d'environnement B<EXTRA_DOCS> a priorité sur "
-"cette option, et indiquera certainement la manière de spécifier la "
-"documentation supplémentaire."
+"Diese Variable sollte auf den Pfad jeder zusätzlichen Dokumentation gesetzt "
+"werden, die im Verzeichnis I</usr/share/doc/kernel-image-X.X.XX/> "
+"installiert sein sollte. Es gibt dort keine Überprüfung auf Namenskonflikte "
+"und die Dateien werden nicht komprimiert. Falls Sie also wollen, dass die "
+"Dateien komprimiert werden, komprimieren Sie sie vorher und stellen den Pfad "
+"der komprimierten Datei bereit. Die Umgebungsvariable B<EXTRA_DOCS> setzt "
+"dies außer Kraft und wäre höchstwahrscheinlich so wie zusätzliche "
+"Dokumentation angegeben."
 
-# type: TP
 #. type: TP
 #: kernel-pkg.conf.5:243
 #, no-wrap
 msgid "B<kpkg_follow_symlinks_in_src>"
 msgstr "B<kpkg_follow_symlinks_in_src>"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-pkg.conf.5:253
 msgid ""
@@ -1564,22 +1431,21 @@ msgid ""
 "flattened as well.  The environment variable B<KPKG_FOLLOW_SYMLINKS_IN_SRC> "
 "overrides this.  The default is unset."
 msgstr ""
-"Cette option est particulièrement utile à ceux qui se servent d'un ensemble "
-"de liens symboliques pour compiler leurs noyaux. Avec cette option, les "
-"paquets kernel-source et kernel-header ne seront pas une simple collection "
-"de liens morts, car les liens symboliques auront été suivis. Notez bien que "
-"tout lien symbolique présent dans les sources du noyau sera résolu. La "
-"variable d'environnement B<KPKG_FOLLOW_SYMLINKS_IN_SRC> a priorité sur cette "
-"option. Par défaut, elle est n'est pas définie."
+"Diese Option ist insbesondere für die Leute nützlich, die Ansammlungen "
+"symbolischer Verweise zum Kompilieren von Kerneln verwenden. Mit dieser "
+"Option sollen Kernel-Quell- und -Header-Pakete nicht voller defekter "
+"symbolischer Verweise sein, sondern stattdessen soll den symbolischen "
+"Verweisen gefolgt werden. Bitte beachten Sie, dass jegliche symbolische "
+"Verweise in den Kernel-Quellen zusätzlich abgeflacht werden. Die "
+"Umgebungsvariable B<KPKG_FOLLOW_SYMLINKS_IN_SRC> setzt dies außer Kraft. "
+"Standardmäßig ist sie nicht gesetzt."
 
-# type: TP
 #. type: TP
 #: kernel-pkg.conf.5:253
 #, no-wrap
 msgid "B<make_libc_headers>"
 msgstr "B<make_libc_headers>"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-pkg.conf.5:269
 msgid ""
@@ -1590,22 +1456,21 @@ msgid ""
 "compiled on your machine. You have been warned. The environment variable "
 "B<MAKE_LIBC_HEADERS> overrides this.  The default is unset."
 msgstr ""
-"Variable pour le responsable de la I<libc6> qui, lorsqu'il compile la "
-"I<libc6>, empaquette aussi les en-têtes correspondants. B<N'Y TOUCHEZ PAS> à "
-"moins de savoir ce que vous faites, car une différence entre les en-têtes "
-"que vous empaquetez et la I<libc6> peut vraiment déclencher de subtiles "
-"instabilités dans tous les codes compilés sur votre machine. Vous êtes "
-"prévenu. La variable d'environnement B<MAKE_LIBC_HEADERS> a priorité sur "
-"cette option. Par défaut, elle n'est pas définie."
+"Dies ist für die Verwendung durch den I<libc6>-Paketbetreuer gedacht, wenn "
+"er I<libc6> kompiliert bis hin zum Paketieren der zugehörigen Header. "
+"B<SETZEN SIE DIES NICHT,> es sei denn, Sie wissen was Sie tun, da eine "
+"falsche Zusammenstellung von Headern Ihres Pakets und I<libc6> eine "
+"hintergründige Instabilität in sämtlichem, auf Ihrem Rechner kompilierten "
+"Kode erzeugen könnte. Sie wurden gewarnt. Die Umgebungsvariable "
+"B<KPKG_FOLLOW_SYMLINKS_IN_SRC> setzt dies außer Kraft. Standardmäßig ist sie "
+"nicht gesetzt."
 
-# type: TP
 #. type: TP
 #: kernel-pkg.conf.5:269 make-kpkg.8:359
 #, no-wrap
 msgid "B<CONCURRENCY_LEVEL>"
 msgstr "B<CONCURRENCY_LEVEL>"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-pkg.conf.5:279
 msgid ""
@@ -1613,19 +1478,17 @@ msgid ""
 "the kernel and the modules set using I<-j> flags to the sub make in the "
 "B<build> target of B<make-kpkg.> Should be a (small) integer, if used."
 msgstr ""
-"Si elle est définie, cette variable règle le nombre de processus concurrents "
-"qu'utilisera make pour compiler le noyau et les modules, grâce à l'option I<-"
-"j> de la commande make lancée par la cible B<build> de B<make-kpkg>. Doit "
-"être, si elle est définie, un (petit) entier."
+"Diese Variable setzt, falls sie definiert ist, die Nebenläufigkeitsstufe von "
+"»make«, das benutzt wird, um den Kernel und die Module zu kompilieren, die "
+"mit I<-j>-Schaltern zur Untererstellung im Ziel B<build> von B<make-kpkg> "
+"gesetzt sind. Sie sollte, wenn sie benutzt wird, eine (kleine) Ganzzahl sein."
 
-# type: TP
 #. type: TP
 #: kernel-pkg.conf.5:279
 #, no-wrap
 msgid "B<ARCH_IN_NAME>"
 msgstr "B<ARCH_IN_NAME>"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-pkg.conf.5:290
 msgid ""
@@ -1635,21 +1498,19 @@ msgid ""
 "the other.  B<Please note> that only the package I<name> is affected, not "
 "module locations etc."
 msgstr ""
-"Si elle est définie, cette variable force B<make-kpkg> à utiliser un nom "
-"rallongé pour le paquet de l'image du noyau, en intégrant la sous-"
-"architecture dans le nom de l'image\\ ; ainsi, on peut écrire des scripts "
-"pour créer de multiples sous-architectures, l'une après l'autre. B<Notez "
-"bien> que seul le I<nom> du paquet est changé, pas l'emplacement des "
-"modules, etc."
+"Diese Variable veranlasst B<make-kpkg,> falls sie definiert ist, einen "
+"erweiterten Namen für das Kernel-Image-Paket durch Einbetten der "
+"Unterarchitektur in den Image-Namen zu benutzen. Daher könnte jemand ein "
+"Skript schreiben, um nacheinander mehrere Unterarchitekturen zu erstellen. "
+"B<Bitte beachten Sie,> dass nur der PaketI<name> davon beeinflusst wird, "
+"nicht Modulspeicherorte etc."
 
-# type: TP
 #. type: TP
 #: kernel-pkg.conf.5:290
 #, no-wrap
 msgid "B<CONFDIR>"
 msgstr "B<CONFDIR>"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-pkg.conf.5:301
 msgid ""
@@ -1659,21 +1520,19 @@ msgid ""
 "Config> for examples). This is useful for people who need to compile for "
 "several architectures. Defaults to I</usr/share/kernel-package/Config>"
 msgstr ""
-"Cette variable, qu'elle soit dans d'environnement ou dans le fichier de "
-"configuration,  pourra pointer sur un répertoire contenant les fichiers I<."
-"config> spécifiques aux différentes architectures (consultez I</usr/share/"
-"kernel-package/Config> pour voir des exemples). Pratique pour ceux qui ont "
-"besoin de compiler pour plusieurs architectures. Pointe par défaut sur I</"
-"usr/share/kernel-package/Config>."
+"Setzen Sie diese Variable entweder in der Umgebung oder in der "
+"Konfigurationsdatei, um auf den Ort zu verweisen, an dem die Kernel-"
+"Konfigurationsdateien liegen. Dies sind architekturspezifische I<.config>-"
+"Dateien (Beispiele finden Sie in I</usr/share/kernel-package/Config>). Dies "
+"ist nützlich für Leute, die für mehrere Architekturen kompilieren müssen. "
+"Vorgabe ist I</usr/share/kernel-package/Config>."
 
-# type: TP
 #. type: TP
 #: kernel-pkg.conf.5:301
 #, no-wrap
 msgid "B<IMAGEDIR>"
 msgstr "B<IMAGEDIR>"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-pkg.conf.5:310
 msgid ""
@@ -1681,18 +1540,16 @@ msgid ""
 "to the dir where you want the image. This may be of help to B<loadlin> "
 "users. Defaults to I</boot>."
 msgstr ""
-"Si vous voulez que l'image soit stockée ailleurs que dans I</boot>, "
-"définissez le répertoire de destination dans cette variable. Cela pourra "
-"être utile aux utilisateurs de B<loadlin>. Pointe par défaut sur I</boot>."
+"Falls Sie das Image anderswo als in I</boot> speichern möchten, setzen Sie "
+"diese Variable auf das Verzeichnis, in das Sie das Image ablegen möchten. "
+"Dies könnte B<loadlin>-Benutzern helfen. Vorgabe ist I</boot.>"
 
-# type: TP
 #. type: TP
 #: kernel-pkg.conf.5:310
 #, no-wrap
 msgid "B<MODULE_LOC>"
 msgstr "B<MODULE_LOC>"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-pkg.conf.5:316
 msgid ""
@@ -1700,142 +1557,123 @@ msgid ""
 "to the location where the add-on modules are located. Defaults to I</usr/src/"
 "modules>"
 msgstr ""
-"Réglez cette variable, soit dans votre environnement, soit dans le fichier "
-"de configuration, afin qu'elle pointe sur l'endroit où sont situés les "
-"modules additionnels. Pointe par défaut sur I</usr/src/modules>."
+"Setzen Sie diese Variable entweder in der Umgebung oder in der "
+"Konfigurationsdatei, um auf den Ort zu verweisen, an dem die Add-On-Module "
+"liegen. Vorgabe ist I</usr/src/modules>."
 
-# type: Plain text
 #. type: Plain text
 #: kernel-pkg.conf.5:319
 msgid "The value of a variable can be set so:"
-msgstr "Le contenu d'une variable est définie de la façon suivante\\ :"
+msgstr "Der Wert der Variablen kann wie folgt gesetzt werden:"
 
-# type: IP
 #. type: IP
 #: kernel-pkg.conf.5:319
 #, no-wrap
 msgid "a)"
 msgstr "a)"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-pkg.conf.5:322
 msgid ""
 "Defaults exist in the rules file. These are the values used if no "
 "customization is done."
 msgstr ""
-"Les valeurs par défaut sont présentes dans le fichier «\\ rules\\ ». Ces "
-"valeurs sont utilisées si aucun réglage n'est fait."
+"In der Regeldatei existieren Vorgaben. Dies sind Werte, die benutzt werden, "
+"falls keine Anpassungen vorgenommen werden."
 
-# type: IP
 #. type: IP
 #: kernel-pkg.conf.5:322
 #, no-wrap
 msgid "b)"
 msgstr "b)"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-pkg.conf.5:326
 msgid ""
 "Variables can be set in the config file I</etc/kernel-pkg.conf>.  These "
 "values override the defaults."
 msgstr ""
-"Les variables peuvent être réglées dans le fichier de configuration I</etc/"
-"kernel-pkg.conf>. Ces valeurs ont priorité sur les valeurs par défaut."
+"In der Konfigurationsdatei I</etc/kernel-pkg.conf> können Variablen gesetzt "
+"werden. Diese Werte setzen die Vorgaben außer Kraft."
 
-# type: IP
 #. type: IP
 #: kernel-pkg.conf.5:326
 #, no-wrap
 msgid "c)"
 msgstr "c)"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-pkg.conf.5:329
 msgid ""
 "Variables can also be set by setting a corresponding environment variable.  "
 "These values override the config file and the defaults."
 msgstr ""
-"Les variables peuvent aussi être définies en donnant une valeur à la "
-"variable d'environnement correspondante. Ces valeurs ont priorité sur le "
-"fichier de configuration et sur les valeurs par défaut."
+"Variablen können außerdem durch das Setzen der entsprechenden "
+"Umgebungsvariable gesetzt werden. Diese Werte setzen die Konfigurationsdatei "
+"und die Vorgaben außer Kraft."
 
-# type: IP
 #. type: IP
 #: kernel-pkg.conf.5:329
 #, no-wrap
 msgid "d)"
 msgstr "d)"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-pkg.conf.5:334
 msgid ""
 "Using B<make-kpkg> options, or, if using the rules file directly, on command "
 "line"
 msgstr ""
-"Par l'utilisation des options de B<make-kpkg>, ou, lorsqu'on utilise "
-"directement les fichiers «\\ rules\\ », sur la ligne de commande."
+"Unter Verwendung von B<make-kpkg>-Optionen, oder, bei direkter Benutzung der "
+"Regeldatei, auf der Kommandozeile"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-pkg.conf.5:336
 msgid "B<# xxx/rules DEBIAN_REVISION=2.0a kernel_image>"
 msgstr "B<# xxx/rules DEBIAN_REVISION=2.0a kernel_image>"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-pkg.conf.5:338
 msgid "This overrides all the above methods."
-msgstr "Cette commande a priorité sur toutes les méthodes décrites ci-dessus."
+msgstr "Dies setzt alle vorhergehenden Methoden außer Kraft."
 
-# type: Plain text
 #. type: Plain text
 #: kernel-pkg.conf.5:343
 msgid ""
 "The file described here is I</etc/kernel-pkg.conf> or I<~/.kernel-pkg.conf>."
 msgstr ""
-"Le fichier ici décrit est I</etc/kernel-pkg.conf> ou I<~/.kernel-pkg.conf>."
+"Die hier beschriebene Datei ist I</etc/kernel-pkg.conf.> oder I<~/.kernel-"
+"pkg.conf.>"
 
-# type: Plain text
 #. type: Plain text
 #: kernel-pkg.conf.5:348
 msgid ""
 "B<make>(1), B<make-kpkg>(1), B<kernel-img.conf>(5), B<The GNU Make manual>"
 msgstr ""
-"B<make>(1), B<make-kpkg>(1), B<kernel-img.conf>(5), B<le manuel de GNU Make>"
+"B<make>(1), B<make-kpkg>(1), B<kernel-img.conf>(5), B<The GNU Make manual>"
 
-# type: TH
 #. type: TH
 #: make-kpkg.8:27
 #, no-wrap
 msgid "MAKE-KPKG"
 msgstr "MAKE-KPKG"
 
-# type: TH
 #. type: TH
 #: make-kpkg.8:27
 #, no-wrap
 msgid "Nov 14 2002"
-msgstr "14 novembre 2002"
+msgstr "14. November 2002"
 
-# type: Plain text
 #. type: Plain text
 #: make-kpkg.8:30
 msgid "make-kpkg - build Debian kernel packages from Linux kernel sources"
-msgstr ""
-"make-kpkg\\ -\\ Construction de paquets Debian du noyau à partir des sources "
-"du noyau Linux "
+msgstr "make-kpkg - baut Debian-Kernel-Pakete aus den Linux-Kernel-Quellen"
 
-# type: Plain text
 #. type: Plain text
 #: make-kpkg.8:34
 msgid "B<make-kpkg> [I<options>] [I<target> [I<target> ...]]"
-msgstr "B<make-kpkg> [I<options>] [I<cible> [I<cible> ...]]"
+msgstr "B<make-kpkg> I<[Optionen]> [I<Ziel> [I<Ziel> …]]"
 
-# type: Plain text
 #. type: Plain text
 #: make-kpkg.8:53
 msgid ""
@@ -1849,36 +1687,33 @@ msgid ""
 "to let the user answer any new questions. Typically, you run this command as "
 "root, or under B<fakeroot>, or tell B<make-kpkg> how to become root, like so:"
 msgstr ""
-"Cette page de manuel décrit l'utilitaire Debian make-kpkg, utilisé pour "
-"créer les paquets Debian concernant le noyau. Cet utilitaire doit être lancé "
-"à partir du répertoire racine des sources du noyau Linux, noyau qui doit "
-"avoir été préalablement configuré (à moins que vous n'utilisiez la cible «\\ "
-"configure\\ »). Normalement, si kernel-package ne trouve pas de fichier I<."
-"config> dans le répertoire courant, il essaye absolument d'en trouver un "
-"autre qui fera l'affaire (en fait, un fichier de configuration déjà pré-"
-"réglé pour les noyaux Debian sur cette architecture) puis lancera un B<make "
-"oldconfig> pour permettre à l'utilisateur de répondre à toute nouvelle "
-"question. Typiquement, vous exécutez cette commande en tant que root ou avec "
-"B<fakeroot>, ou encore en indiquant à B<make-kpkg> comment devenir root, "
-"comme ceci\\ :"
+"Diese Handbuchseite erklärt das Debian-Hilfswerkzeug B<make-kpkg,> das "
+"benutzt wird, um Kernel-bezogene Debian-Pakete zu erstellen. Dieses "
+"Hilfswerkzeug muss von der obersten Ebene des Linux-Kernel-"
+"Quellverzeichnisses ausgeführt werden, das vorher konfiguriert wurde (außer, "
+"wenn Sie das Ziel »configure« verwenden). Falls kernel-package keine I<."
+"config>-Datei im aktuellen Verzeichnis findet, versucht es normalerweise "
+"sehr unnachgiebig eine geeignete zu finden (üblicherweise eine bereits "
+"maßgeschneiderte Datei für Debian-Kernel für diese Architektur) und ruft "
+"dann B<make oldconfig> auf, damit der Benutzer irgendwelche neuen Fragen "
+"beantwortet. Typischerweise führen Sie diesen Befehl als Root oder unter "
+"B<fakeroot> aus oder teilen B<make-kpkg> mit, wie es Root wird, "
+"beispielsweise so:"
 
-# type: Plain text
 #. type: Plain text
 #: make-kpkg.8:56
 msgid "make-kpkg --rootcmd fakeroot kernel_image"
 msgstr "make-kpkg --rootcmd fakeroot kernel_image"
 
-# type: Plain text
 #. type: Plain text
 #: make-kpkg.8:59
 msgid ""
 "The Debian package file is created in the parent directory of the kernel "
 "source directory where this command is run."
 msgstr ""
-"Le paquet Debian sera créé dans le répertoire père des sources du noyau "
-"depuis lequel la commande a été lancée."
+"Die Debian-Paketdatei wird im übergeordneten Verzeichnis der Kernel-"
+"Quellverzeichnisses erstellt, wo dieser Befehl ausgeführt wird."
 
-# type: Plain text
 #. type: Plain text
 #: make-kpkg.8:72
 msgid ""
@@ -1891,36 +1726,33 @@ msgid ""
 "HOSTCC in the top level kernel Makefile. You can do this simply by setting "
 "the environment variable B<MAKEFLAGS>.  To observe, try:"
 msgstr ""
-"De plus, sachez que certaines versions de gcc ne fonctionnent pas très bien "
-"avec les sources du noyau (gcc 2.95 rencontre des problèmes de compilation "
-"du noyau si on n'utilise pas l'option de compilation «\\ -fno-strict-aliasing"
-"\\ »). Ce problème a été réglé pour les noyaux récents (les séries 2.2 et "
-"2.4 n'ont pas ce problème) (je crois que, pour les noyaux plus anciens, vous "
-"risquez d'avoir à modifier le Makefile). Vous pouvez indiquer la version de "
-"gcc à utiliser pour la compilation du noyau en définissant les variables CC "
-"et HOSTCC du Makefile (le Makefile du premier niveau). Cela se fait tout "
-"simplement en définissant la variable d'environnement B<MAKEFLAGS>. Pour "
-"voir, essayez\\ :"
+"Beachten Sie außerdem, dass einige Versionen von gcc nicht gut mit den "
+"Kernel-Quellen zusammenspielen (gcc 2.95 hat Probleme, den Kernel ohne den "
+"Schalter I<»-fno-strict-aliasing«> zu kompilieren. Dieses Problem wurde bei "
+"aktuellen Kerneln berücksichtigt (die 2.2.- und 2.4.-Serien sind in "
+"Ordnung). Sie könnten laut Verfasser das Makefile bearbeiten oder etwas "
+"dergleichen tun). Möglicherweise möchten Sie steuern, welche Version von GCC "
+"für das Kompilieren von Kerneln benutzt wird, indem Sie die Variablen CC und "
+"HOSTCC auf der obersten Ebene des Kernel-Makefiles setzen. Sie können dies "
+"einfach durch Setzen der Umgebungsvariable B<MAKEFLAGS> erreichen. Versuchen "
+"Sie zum Betrachten Folgendes:"
 
-# type: Plain text
 #. type: Plain text
 #: make-kpkg.8:74
 #, no-wrap
 msgid "  % KBUILD_VERBOSE=1 MAKEFLAGS=\"CC=gcc-4.4\" make-kpkg configure\n"
 msgstr "  % KBUILD_VERBOSE=1 MAKEFLAGS=\"CC=gcc-4.4\" make-kpkg configure\n"
 
-# type: Plain text
 #. type: Plain text
 #: make-kpkg.8:80
 msgid ""
 "The B<KBUILD_VERBOSE> shows the details of the commands being run.  (please "
 "see the top level kernel Makefile for variables that can be set)."
 msgstr ""
-"B<KBUILD_VERBOSE> affiche le détail des commandes qui sont lancées "
-"(consultez le Makefile de premier niveau afin de connaître les variables qui "
-"peuvent être définies)."
+"B<KBUILD_VERBOSE> zeigt Einzelheiten der Befehle, die ausgeführt werden. "
+"(Bitte sehen Sie im Kernel-Makefile der obersten Ebene nach, welche "
+"Variablen Sie setzen können.)"
 
-# type: Plain text
 #. type: Plain text
 #: make-kpkg.8:85
 msgid ""
@@ -1928,29 +1760,27 @@ msgid ""
 "the build to fail. Use CONCURRENCY_LEVEL as specified below. There is also a "
 "-j flag that can be used."
 msgstr ""
-"B<Attention>\\ : Ne définissez pas l'option -j directement dans MAKEFLAGS, "
-"cela risque de faire échouer la construction. Utilisez CONCURRENCY_LEVEL "
-"comme défini plus haut. L'option -j peut aussi être utilisée."
+"B<WARNUNG:> Setzen Sie die Option -j NICHT direkt in MAKEFLAGS, dies soll "
+"zur Folge haben, dass das Bauen fehlschlägt. Benutzen Sie CONCURRENCY_LEVEL, "
+"wie oben angegeben. Dort gibt es ebenfalls einen -j-Schalter, der benutzt "
+"werden kann."
 
-# type: TP
 #. type: TP
 #: make-kpkg.8:86
 #, no-wrap
 msgid "B<--help>"
 msgstr "B<--help>"
 
-# type: Plain text
 #. type: Plain text
 #: make-kpkg.8:89
 msgid "Print out a usage message."
-msgstr "Afficher un message d'aide."
+msgstr "gibt eine Aufrufanleitung aus."
 
-# type: TP
 #. type: TP
 #: make-kpkg.8:89
 #, no-wrap
 msgid "B<--revision>I< number>"
-msgstr "B<--revision> I<numéro>"
+msgstr "B<--revision>I< Nummer>"
 
 #. type: Plain text
 #: make-kpkg.8:106
@@ -1967,32 +1797,31 @@ msgid ""
 "file to get the upstream version number prepended to your custom string "
 "E<lt>fooE<gt>."
 msgstr ""
-"Modifier le numéro de version pour les paquets construits par celui donné "
-"par l'argument I<numéro>. Cela impose plusieurs contraintes\\ : la version "
-"ne doit contenir que des caractères alphanumériques ou les caractères ~ + . "
-"(tilde, plus et point) et doit contenir un chiffre (Consultez le manuel "
-"Policy pour plus de détails). Vous pouvez éventuellement préfixer le numéro "
-"de modification par un chiffre suivi d'un deux points (:). La valeur par "
-"défaut est B<10.00.Custom> à moins que la variable d'environnement "
-"B<DEBIAN_REVISION_MANDATORY> ne soit définie, auquel cas une erreur sera "
-"produite si la modification n'est pas indiquée sur la ligne de commande ou "
-"dans le fichier de configuration. B<Conseil> : Vous pouvez le configurer à "
-"$(version)-E<lt>trucE<gt> dans le fichier de configuration pour que le "
-"numéro de version amont précède la chaîne personnalisée E<lt>trucE<gt>."
+"ändert die Versionsnummer der erstellten Pakete auf das Argument B<Nummer>. "
+"Dies hat bestimmte Einschränkungen: Die Versionsnummer kann nur "
+"alphanumerische Zeichen enthalten, sowie »~«, »+«, ».« (Tilde, Punkt und "
+"Plus) und muss eine Ziffer enthalten (Einzelheiten finden Sie im "
+"Richtlinienhandbuch). Optional könnten Sie die Überarbeitung mit einer "
+"Ziffer gefolgt von einem Doppelpunkt (:) voranstellen. Vorgabe ist B<10.00."
+"Benutzerdefiniert,> sofern nicht die Umgebungsvariable "
+"B<DEBIAN_REVISION_MANDATORY> gesetzt ist. In diesem Fall wird eine "
+"Fehlermeldung erzeugt, falls die Überarbeitung nicht auf der Befehlszeile "
+"oder in der Konfigurationsdatei gesetzt wurde. B<Hinweis:> Sie könnten sie "
+"in der Konfigurationsdatei auf $(version)-E<lt>fooE<gt> setzen, um die "
+"Versionsnummer der Originalautoren Ihrer angepassten Zeichenkette "
+"E<lt>fooE<gt> voranzustellen."
 
-# type: TP
 #. type: TP
 #: make-kpkg.8:106
 #, no-wrap
 msgid "B<--append-to-version>I< foo>"
-msgstr "B<--append-to-version> I<toto>"
+msgstr "B<--append-to-version>I< foo>"
 
-# type: TP
 #. type: TP
 #: make-kpkg.8:108
 #, no-wrap
 msgid "B<--append_to_version>I< foo>"
-msgstr "B<--append_to_version> I<toto>"
+msgstr "B<--append_to_version>I< foo>"
 
 #. type: Plain text
 #: make-kpkg.8:128
@@ -2008,33 +1837,30 @@ msgid ""
 "numbers set in the Makefile or in the I<localversion> file.  This option "
 "overrides the environment variable B<APPEND_TO_VERSION>."
 msgstr ""
-"L'argument I<toto> est ajouté à la valeur de la variable EXTRAVERSION "
-"présente dans le Makefile du noyau. Puisque EXTRAVERSION fait partie de la "
-"version du noyau, il est aussi ajouté au nom du paquet, et de ce fait doit "
-"obéir à la politique qui régit les noms de paquet. Ce qui signifie qu'il ne "
-"doit contenir que des caracactères alphanumérique en B<minuscules> et des "
-"caractères ~ - + . (tilde, point, tiret et plus). Les majuscules sont "
-"interdites selon la Charte pour les nouveaux paquets. Si la variable "
-"d'environnement B<IGNORE_UPPERCASE_VERSION> est définie, make-kpkg changera "
-"la casse en minuscules pour le numéro de version défini soit dans le "
-"Makefile ou dans le fichier I<localversion>. Cette option outrepasse la "
-"variable d'environnement B<APPEND_TO_VERSION>."
+"Dieses Argument (B<foo>) wird an den Wert der Variable EXTRAVERSION "
+"angehängt, die im Kernel-Makefile vorkommt. Da EXTRAVERSION ein Bestandteil "
+"der Kernel-Version ist, wird sie dem Debian-Paketnamen ebenfalls hinzugefügt "
+"und muss als solche der Richtlinie folgen, die den Debian-Paketnamen "
+"bestimmt. Dies bedeutet, dass Sie nur B<kleingeschriebene> alphanumerische "
+"Zeichen, sowie die Zeichen ~ - + . (Tilde, Bindestrich, Punkt und Plus) "
+"enthalten kann. Großgeschriebene Buchstaben sind in den Richtlinien für ein "
+"neues Paket nicht erlaubt. Falls die Umgebungsvariable "
+"B<IGNORE_UPPERCASE_VERSION> gesetzt ist, soll make-kpkg kleingeschriebene "
+"Versionsnummern im Makefile oder in der Datei I<localversion> setzen. Diese "
+"Option setzt die Umgebungsvariable B<APPEND_TO_VERSION> außer Kraft."
 
-# type: TP
 #. type: TP
 #: make-kpkg.8:128
 #, no-wrap
 msgid "B<--added-modules>I<\\ foo>"
-msgstr "B<--added-modules>\\ I<toto>"
+msgstr "B<--added-modules>I<\\ foo>"
 
-# type: TP
 #. type: TP
 #: make-kpkg.8:130
 #, no-wrap
 msgid "B<--added_modules>I<\\ foo>"
-msgstr "B<--added_modules>\\ I<toto>"
+msgstr "B<--added_modules>I<\\ foo>"
 
-# type: Plain text
 #. type: Plain text
 #: make-kpkg.8:143
 msgid ""
@@ -2046,23 +1872,20 @@ msgid ""
 "all modules in B<MODULE_LOC>, are compiled when the modules_blah targets are "
 "invoked."
 msgstr ""
-"Cet argument se présente sous la forme d'une liste de modules additionnels "
-"séparés par des virgules (modules non inclus dans l'arborescence principale "
-"du noyau) que vous souhaitez construire lorsque vous invoquez les cibles "
-"modules_truc. Vous devez indiquer le chemin complet des répertoires "
-"contenant les modules, ou simplement le nom du module s'il peut être trouvé "
-"dans B<MODULE_LOC>, qui pointe par défaut sur I</usr/src/modules>. Le "
-"comportement par défaut compile tous les modules qui sont dans "
-"B<MODULE_LOC>, quand les cibles modules_truc sont demandées."
+"Das Argument sollte eine durch Kommas getrennte Liste zusätzlicher Add-on-"
+"Module sein (nicht im Haupt-Kernel-Verzeichnisbaum), die Sie bauen wollen, "
+"wenn Sie die »modules-blah«-Ziele aufrufen. Sie können die vollständigen "
+"Pfadnamen der Verzeichnisse angeben, in denen die Module liegen oder nur den "
+"Modulnamen, falls es in B<MODULE_LOC,> das standardmäßig I</usr/src/modules> "
+"ist, gefunden werden kann. Vorgabe ist, dass alle Module in B<MODULE_LOC> "
+"kompiliert werden, wenn die »modules_blah«-Ziele aufgerufen werden."
 
-# type: TP
 #. type: TP
 #: make-kpkg.8:143
 #, no-wrap
 msgid "B<--arch\\ foo>"
-msgstr "B<--arch>\\ I<truc>"
+msgstr "B<--arch\\ foo>"
 
-# type: Plain text
 #. type: Plain text
 #: make-kpkg.8:156
 msgid ""
@@ -2073,29 +1896,26 @@ msgid ""
 "when I<dpkg-architecture> is run on the target machine, or it can be an "
 "other architecture in a multi-arch set (like i386/amd64)."
 msgstr ""
-"Pratique pour définir l'architecture quand vous utilisez la compilation "
-"croisée. Si vous ne faites pas de compilation croisée, l'architecture est "
-"automatiquement déterminée. On peut obtenir le même résultat en réglant la "
-"variable d'environnement B<KPKG_ARCH>. Cette valeur doit correspondre au "
-"contenu de B<DEB_HOST_ARCH_CPU> lorsque I<dpkg-architecture> est exécuté sur "
-"la machine cible, et elle peut correspondre à une autre architecture dans le "
-"cas d'un ensemble multiarchitecture (comme i386/amd64)."
+"Dies ist nützlich, um die Architektur zu setzen, wenn Sie cross-kompilieren. "
+"Falls Sie nicht cross-kompilieren, wird die Architektur automatisch "
+"festgelegt. Der gleiche Effekt kann durch Setzen der Umgebungsvariable "
+"B<KPKG_ARCH> erreicht werden. Der Wert sollte sein, was auch immer "
+"B<DEB_HOST_ARCH_CPU> enthält, wenn I<dpkg-architecture> auf dem Zielrechner "
+"ausgeführt wird oder es kann eine andere Architektur in einer Multiarch-"
+"Zusammenstellung (wie i386/amd64) sein."
 
-# type: TP
 #. type: TP
 #: make-kpkg.8:156
 #, no-wrap
 msgid "B<--cross-compile>I<\\ foo>"
-msgstr "B<--cross-compile>\\ I<truc>"
+msgstr "B<--cross-compile>I<\\ foo>"
 
-# type: TP
 #. type: TP
 #: make-kpkg.8:158
 #, no-wrap
 msgid "B<--cross_compile>I<\\ foo>"
-msgstr "B<--cross_compile>\\ I<truc>"
+msgstr "B<--cross_compile>I<\\ foo>"
 
-# type: Plain text
 #. type: Plain text
 #: make-kpkg.8:169
 msgid ""
@@ -2107,24 +1927,21 @@ msgid ""
 "the build process comes up with is not the one desired, please explicitly "
 "specify the compiler that should be used.  B<CROSS_COMPILE>"
 msgstr ""
-"Pratique pour définir la chaîne cible quand vous faites de la compilation "
-"croisée. Utilisez la cible fantôme «\\ -\\ » si vous construisez pour les "
-"autres architectures dans le cas d'un ensemble multiarchitecture, comme i386/"
-"amd64. Le même résultat peut être obtenu en définissant la variable "
-"d'environnement. Notez bien que cela ne règle en aucune manière le "
-"compilateur que le processus de construction du noyau doit utiliser. Si le "
-"compilateur par défaut utilisé par le processus de construction n'est pas "
-"celui dont vous avez besoin, définissez explicitement le compilateur qui "
-"doit être utilisé. B<CROSS_COMPILE>."
+"Dies ist nützlich, um die Zielzeichenkette zu setzen, wenn Sie cross-"
+"kompilieren. Benutzen Sie das Platzhalterziel »-«, falls Sie für andere "
+"Architekturen einer Multiarch-Zusammenstellung, wie i386/amd64, bauen. Der "
+"gleiche Effekt kann durch Setzen der Umgebungsvariable erreicht werden. "
+"Bitte beachten Sie, dass dies nicht auf irgendeine Art den Compiler setzt, "
+"den der Kernelbauprozess verwenden soll; falls der vorgegebene Compiler, den "
+"der Bauprozess mitbringt, nicht erwünscht ist, geben Sie explizit den "
+"Compiler an, der verwandt werden sollte. B<CROSS_COMPILE>"
 
-# type: TP
 #. type: TP
 #: make-kpkg.8:169
 #, no-wrap
 msgid "B<--subarch>I<\\ foo>"
-msgstr "B<--subarch>\\ I<truc>"
+msgstr "B<--subarch>I<\\ foo>"
 
-# type: Plain text
 #. type: Plain text
 #: make-kpkg.8:178
 msgid ""
@@ -2135,28 +1952,26 @@ msgid ""
 "anything. The same effect can be achieved by setting the environment "
 "variable B<KPKG_SUBARCH>."
 msgstr ""
-"Certaines architectures (comme Alpha, ou m68k) ont besoin de noyaux "
-"différents pour chacune des sous-architectures. Cette option offre un moyen "
-"de le spécifier en tant qu'argument de B<make-kpkg>. B<Notez bien> qu'une "
-"gestion de ces sous-architectures doit être présente dans les sources du "
-"noyau afin que cette option serve à quelque chose. On peut obtenir le même "
-"résultat en réglant la variable d'environnement B<KPKG_SUBARCH>."
+"Einige Architekturen (Alpha und m68k) benötigen einen unterschiedlichen "
+"Kernel für jede Unterarchitektur. Diese Option stellt eine Möglichkeit "
+"bereit, sie als ein Argument für B<make-kpkg> anzugeben. B<Bitte beachten "
+"Sie,> dass möglicherweise zusätzliche Unterstützung für Unterarchitekturen "
+"in den Kernel-Quellen nötig ist, damit dies tatsächlich klappt. Der gleiche "
+"Effekt kann durch Setzen der Umgebungsvariable B<KPKG_SUBARCH> erreicht "
+"werden."
 
-# type: TP
 #. type: TP
 #: make-kpkg.8:178
 #, no-wrap
 msgid "B<--arch-in-name>"
 msgstr "B<--arch-in-name>"
 
-# type: TP
 #. type: TP
 #: make-kpkg.8:180
 #, no-wrap
 msgid "B<--arch_in_name>"
 msgstr "B<--arch_in_name>"
 
-# type: Plain text
 #. type: Plain text
 #: make-kpkg.8:190
 msgid ""
@@ -2166,21 +1981,19 @@ msgid ""
 "by setting the environment variable B<ARCH_IN_NAME>.  B<Please note> that "
 "only the package I<name> is affected, not modules locations etc."
 msgstr ""
-"Cette option rallonge le nom du paquet de l'image du noyau en intégrant la "
-"sous-architecture dans le nom de l'image\\ ; ainsi on peut écrire des "
-"scripts pour créer de multiples sous-architectures, l'une après l'autre. On "
-"peut faire la même chose en réglant la variable d'environnement "
-"B<ARCH_IN_NAME>. B<Notez bien> que seul le I<nom> du paquet est changé, pas "
-"l'emplacement des modules, etc."
+"Diese Option benutzt einen erweiterten Namen für das Kernel-Image-Paket, "
+"indem es die Unterarchitektur in den Image-Namen einbettet. Daher könnte "
+"jemand ein Skript schreiben, um nacheinander mehrere Unterarchitekturen zu "
+"erstellen. Sie können dies ebenfalls durch Setzen der Umgebungsvariable "
+"B<ARCH_IN_NAME> erreichen. B<Bitte beachten Sie,> dass nur das Paket I<Name> "
+"betroffen ist, keine Modulspeicherorte etc."
 
-# type: TP
 #. type: TP
 #: make-kpkg.8:190
 #, no-wrap
 msgid "B<--pgpsign>I< name>"
-msgstr "B<--pgpsign> I<nom>"
+msgstr "B<--pgpsign>I< Name>"
 
-# type: Plain text
 #. type: Plain text
 #: make-kpkg.8:201
 msgid ""
@@ -2189,20 +2002,18 @@ msgid ""
 "default and the site wide customizations stored in the file I</etc/kernel-"
 "pkg.conf> or I<~/.kernel-pkg.conf>."
 msgstr ""
-"Définir la chaîne utilisée pour signer le fichier des B<modifications> "
-"(changes) pour les modules externes rangés dans I</usr/src/modules/> et qui "
-"utilisent PGP. Cette option prendra le pas sur le comportement par défaut et "
-"sur les préférences générales qui se trouvent dans le fichier I</etc/kernel-"
-"pkg.conf> ou I<~/.kernel-pkg.conf>."
+"setzt die Zeichenkette, die zum Signieren der Datei B<changes> für sämtliche "
+"externen Module in I</usr/src/modules/> unter Benutzung von PGP verwandt "
+"wird. Diese Option wird die integrierte Standardoption und die Site-weiten "
+"Anpassungen, die in der Datei I</etc/kernel-pkg.conf> oder I<~/.kernel-pkg."
+"conf.> gespeichert sind, außer Kraft setzen."
 
-# type: TP
 #. type: TP
 #: make-kpkg.8:201
 #, no-wrap
 msgid "B<--config>I< target>"
-msgstr "B<--config> I<cible>"
+msgstr "B<--config>I< Ziel>"
 
-# type: Plain text
 #. type: Plain text
 #: make-kpkg.8:209
 msgid ""
@@ -2211,13 +2022,11 @@ msgid ""
 "CW<xconfig>, CW<randconfig>, CW<defconfig>, CW<allmodconfig>, "
 "CW<allyesconfig>, CW<allnoconfig>, CW<old>, CW<menu>, CW<g>, or CW<x>."
 msgstr ""
-"Modifier le type de configuration utilisée, par défaut CW<oldconfig>. "
-"I<cible> doit prendre une des valeurs suivantes : CW<oldconfig>, CW<config>, "
-"CW<menuconfig>, CW<gconfig>, CW<xconfig>, CW<randconfig>, CW<defconfig>, "
-"CW<allmodconfig>, CW<allyesconfig>, CW<allnoconfig>, CW<old>, CW<menu>, "
-"CW<g> ou CW<x>."
+"ändert den Typ von configure, das vom Standard-CW<oldconfig> erledigt wurde. "
+"I<Ziel> muss entweder CW<oldconfig>, CW<config>, CW<menuconfig>, "
+"CW<gconfig>, CW<xconfig>, CW<randconfig>, CW<defconfig>, CW<allmodconfig>, "
+"CW<allyesconfig>, CW<allnoconfig>, CW<old>, CW<menu>, CW<g> oder CW<x> sein."
 
-# type: Plain text
 #. type: Plain text
 #: make-kpkg.8:218
 msgid ""
@@ -2227,35 +2036,32 @@ msgid ""
 "create the configuration file as close to the desired one before calling "
 "make-kpkg with this switch."
 msgstr ""
-"B<Remarquez> cependant que B<make-kpkg> explore au démarrage le fichier de "
-"configuration à la recherche de certaines options, notamment l'activation ou "
-"non des modules, et que la modification de ce choix pendant la configuration "
-"engendrera une erreur. Si nécessaire, créez un fichier de configuration le "
-"plus proche possible de celui désiré avant d'appeler B<make-kpkg> avec cette "
-"option."
+"B<Beachten Sie> jedoch, dass B<make-kpkg> die Konfigurationsdatei beim "
+"Starten nach irgendwelchen Optionen durchsucht, insbesondere die Tatsache, "
+"ob Module aktiviert sind oder nicht, weswegen das Umschalten während der "
+"verzögerten Konfiguration einen Fehler zur Folge hat. Erstellen Sie, falls "
+"nötig, die Konfigurationsdatei so, dass sie Ihren Wünschen nahe kommt, bevor "
+"Sie make-kpkg mit diesem Schalter aufrufen."
 
-# type: TP
 #. type: TP
 #: make-kpkg.8:218
 #, no-wrap
 msgid "B<--targets>"
 msgstr "B<--targets>"
 
-# type: Plain text
 #. type: Plain text
 #: make-kpkg.8:223
 msgid "Prints out a list of known targets. See the Section B<Targets> below."
 msgstr ""
-"Afficher la liste des cibles connues. Voir la section B<CIBLES> ci-dessous."
+"gibt eine Liste bekannter Ziele aus. Lesen Sie den nachfolgenden Abschnitt "
+"B<Ziele>."
 
-# type: TP
 #. type: TP
 #: make-kpkg.8:223
 #, no-wrap
 msgid "B<--noexec>"
 msgstr "B<--noexec>"
 
-# type: Plain text
 #. type: Plain text
 #: make-kpkg.8:231
 msgid ""
@@ -2263,28 +2069,25 @@ msgid ""
 "printed to the screen but not actually executed. This is very useful for "
 "debugging."
 msgstr ""
-"Passer l'option B<-n> au processus I<make> afin que les commandes soient "
-"simplement affichées à l'écran mais pas réellement exécutées. C'est très "
-"pratique pour le débogage."
+"übergibt eine B<-n>-Option an den I<make>-Prozess, so dass Befehle bloß auf "
+"dem Bildschirm ausgegeben, aber nicht tatsächlich ausgeführt werden. Dies "
+"ist sehr nützlich bei der Fehlersuche."
 
-# type: TP
 #. type: TP
 #: make-kpkg.8:231
 #, no-wrap
 msgid "B<--verbose>"
 msgstr "B<--verbose>"
 
-# type: Plain text
 #. type: Plain text
 #: make-kpkg.8:237
 msgid ""
 "This calls I<make> with the -V=1 option, which calls out the top level Make "
 "commands, also useful in seeing what is happening."
 msgstr ""
-"Appeler I<make> avec l'option -V=1, ce qui appelle les commandes Make du "
-"niveau supérieur, pratique pour voir ce qui est en train de se passer."
+"Dies ruft I<make> mit der Option -V=1 auf, was die Make-Befehle der obersten "
+"Stufe aufruft. Dies ist außerdem nützlich, um zu sehen, was geschieht."
 
-# type: TP
 #. type: TP
 #: make-kpkg.8:237
 #, no-wrap
@@ -2306,43 +2109,41 @@ msgid ""
 "bundled in example scripts are just examples -- user action is required "
 "before anything happens)."
 msgstr ""
-"Lorsque B<make-kpkg> fabrique un paquet I<kernel-image>, il prend ses "
-"dispositions pour transmettre aux scripts hook lancés par les scripts de fin "
-"d'installation que cette image a besoin d'un I<initrd>, et que les scripts "
-"hook de création d'I<initrd> ne doivent pas être court-circuités avant. Sans "
-"cette option, le script hook I<initramfs> fourni en exemple avec B<kernel-"
-"package> n'aura aucun effet lors de l'installation. Le même résultat peut "
-"être obtenu en définissant la variable d'environnement B<INITRD> avec "
-"n'importe quel contenu. Notez bien qu'à moins qu'il n'y ait des scripts hook "
-"dans I</etc/kernel> ou indiqués dans le paramètre hook script de I</etc/"
-"kernel-img.conf>, aucun initrd ne sera créé (les scripts fournis ne sont que "
-"des exemples)."
+"Falls B<make-kpkg> ein I<kernel-image>-Paket erzeugt, übermittelt dies den "
+"Hook-Skripten, die von den Betreuerskripten vor der Installation ausgeführt "
+"werden, einzuplanen, dass dieses Image ein I<initrd> benötigt und dass das "
+"I<initrd>-Erzeugungs-Hook-Skript nicht anfangs kurz laufen sollte. Ohne "
+"diese Option werden die mit B<kernel-package> gebündelten I<initramfs>-Hook-"
+"Skripte nicht tätig. Der gleiche Effekt kann durch Setzen der "
+"Umgebungsvariable B<INITRD> auf irgendeinen nicht leeren Wert erreicht "
+"werden. Bitte beachten Sie, dass, falls keine Hook-Skripte in I</etc/kernel> "
+"sind oder dem Hook-Skript-Parameter von I</etc/kernel-img.conf> hinzugefügt "
+"werden, kein Intitrd erzeugt wird (was in den Beispielskripten "
+"zusammengefasst wurde, sind nur Beispiele – es ist nötig, dass der Anwender "
+"eingreift, bevor etwas geschieht)."
 
-# type: TP
 #. type: TP
 #: make-kpkg.8:265
 #, no-wrap
 msgid "B<--jobs>I< number>"
-msgstr "B<--jobs> I<numéro>"
+msgstr "B<--jobs>I< Nummer>"
 
-# type: TP
 #. type: TP
 #: make-kpkg.8:267
 #, no-wrap
 msgid "B<-j>I< number>"
-msgstr "B<-j> I<numéro>"
+msgstr "B<-j>I< Nummer>"
 
 #. type: Plain text
 #: make-kpkg.8:273
 msgid "Set the environment variable B<CONCURRENCY_LEVEL> to I<number>."
-msgstr ""
-"Configurer la variable d'environnement B<CONCURRENCY_LEVEL> à I<numéro>."
+msgstr "setzt die Umgebungsvariable B<CONCURRENCY_LEVEL> auf I<Nummer>."
 
 #. type: TP
 #: make-kpkg.8:273
 #, no-wrap
 msgid "B<--overlay-dir>I< /path/to/directory>"
-msgstr "B<--overlay-dir> I</chemin/vers/répertoire>"
+msgstr "B<--overlay-dir>I< /Pfad/zum/Verzeichnis>"
 
 #. type: Plain text
 #: make-kpkg.8:289
@@ -2356,14 +2157,15 @@ msgid ""
 "pieces. The same effect can be achieved by setting the environment variable "
 "B<KPKG_OVERLAY_DIR>."
 msgstr ""
-"Le répertoire indiqué doit contenir les fichiers qui seront copiés dans le "
-"répertoire I<./debian> des sources du noyau, afin de construire les paquets "
-"debian. Les fichiers remplaceront tout ou partie du contenu de I</usr/share/"
-"kernel-package> qui y serait normalement placé, et il est à la charge de "
-"l'utilisateur de vérifier que les fichiers du répertoire indiqués sont "
-"compatible avec B<make-kpkg>. Si B<make-kpkg> est cassé par un de ces "
-"fichiers, vous pouvez garder les morceaux. Le même résultat peut être obtenu "
-"en définissant la variable d'environnement B<KPKG_OVERLAY_DIR>."
+"Das angegebene Verzeichnis sollte bestimmte Dateien enthalten, die als "
+"Vorbereitung des Baus von Debian-Paketen in das I<./debian>-Verzeichnis der "
+"Kernel-Quellen platziert werden. Die Dateien werden alles in I</usr/share/"
+"kernel-package> ersetzen, das normalerweise dort abgelegt würde und es liegt "
+"im Ermessen des Benutzers, sicherzustellen, dass die Dateien im "
+"überlagernden Verzeichnis kompatibel mit B<make-kpkg> sind. Falls Sie B<make-"
+"kpkg> mit einer überlagernden Datei zerstören, sollten Sie die Teile "
+"aufbewahren. Der gleiche Effekt kann durch Setzen der Umgebungsvariable "
+"B<KPKG_OVERLAY_DIR> erzielt werden."
 
 #. type: Plain text
 #: make-kpkg.8:300
@@ -2373,10 +2175,10 @@ msgid ""
 "share/kernel-package/Control> and I</usr/share/kernel-package/changelog> "
 "files as templates."
 msgstr ""
-"Veuillez noter que I<overlay-dir/Control> et I<overlay-dir/changelog> sont "
-"particuliers, et que des substitutions de variables sont exécutées sur ces "
-"fichiers. Utilisez ces fichiers  I</usr/share/kernel-package/Control> et I</"
-"usr/share/kernel-package/changelog> en tant que modèles (templates)."
+"Bitte beachten Sie, dass I<overlay-dir/Control> und I<overlay-dir/changelog> "
+"ungewöhnlich sind und bei diesen Dateien Variablenersetzung durchgeführt "
+"wird. Benutzen Sie I</usr/share/kernel-package/Control>- und I</usr/share/"
+"kernel-package/changelog>-Dateien als Schablone."
 
 #. type: Plain text
 #: make-kpkg.8:310
@@ -2387,54 +2189,48 @@ msgid ""
 "delete files the user does not want, or to take actions other than simple "
 "replacement."
 msgstr ""
-"Si un programme (ou un script exécutable) I<overlay-dir/post-install> est "
-"présent, il sera exécuté immédiatement après le remplissage de I<./debian>. "
-"Le script sera exécuté dans le répertoire I<./debian>. Cela peut servir par "
-"exemple à supprimer des fichiers dont l'utilisateur n'a pas besoin, ou "
-"exécuter des opérations autres qu'un simple remplacement."
+"Falls eine ausführbare I<overlay-dir/post-install>-Datei (oder ein "
+"ausführbares Skript) existiert, soll es sofort nach dem Füllen von I<./"
+"debian> ablaufen. Dies kann zum Beispiel benutzt werden, um Dateien zu "
+"löschen, die der Anwender nicht mag, oder andere Aktionen als einfaches "
+"Ersetzen durchzuführen."
 
-# type: TP
 #. type: TP
 #: make-kpkg.8:310
 #, no-wrap
 msgid "B<--zimage>"
 msgstr "B<--zimage>"
 
-# type: Plain text
 #. type: Plain text
 #: make-kpkg.8:314
 msgid ""
 "Makes a zImage kernel rather than a bzImage kernel (the default).  Useful "
 "for people having problems with bzImage kernels."
 msgstr ""
-"Créer un noyau en zImage plutôt qu'en bzImage (comportement par défaut). "
-"C'est utile en cas de problèmes avec les noyaux bzImage."
+"erstellt einen zImage-Kernel statt eines bzImage-Kernels (die Vorgabe). "
+"Nützlich für Leute, die Probleme mit bzImage-Kerneln haben."
 
-# type: TP
 #. type: TP
 #: make-kpkg.8:314
 #, no-wrap
 msgid "B<--bzimage>"
 msgstr "B<--bzimage>"
 
-# type: Plain text
 #. type: Plain text
 #: make-kpkg.8:318
 msgid ""
 "Makes a bzImage kernel. Useful for people who want a bzImage kernel on sites "
 "where the default is zImage kernels."
 msgstr ""
-"Créer un noyau en bzImage. C'est utile pour avoir un noyau bzImage sur les "
-"systèmes où le réglage par défaut est zImage."
+"erstellt einen bzImage-Kernel. Nützlich für Leute, die einen bzImage-Kernel "
+"auf Sites haben möchten, auf denen die Vorabe ein zImage-Kernel ist."
 
-# type: TP
 #. type: TP
 #: make-kpkg.8:318
 #, no-wrap
 msgid "B<--rootcmd foo>"
-msgstr "B<--rootcmd> I<commande>"
+msgstr "B<--rootcmd foo>"
 
-# type: Plain text
 #. type: Plain text
 #: make-kpkg.8:330
 msgid ""
@@ -2444,21 +2240,18 @@ msgid ""
 "indep>, and I<binary-arch>.  For those targets the entire I<make-kpkg> "
 "command must be run as (fake)root."
 msgstr ""
-"La commande qui offre la possibilité d'obtenir l'accès superutilisateur (par "
-"exemple, «\\ sudo\\ » ou «\\ fakeroot\\ ») pour les besoins de l'option -r "
-"de dpkg-buildpackage. Cette option ne fonctionne pas pour trois cibles "
-"précises, qui sont I<binary>, I<binary-indep> et I<binary-arch>. Pour ces "
-"cibles, la commande I<make-kpkg> doit être lancée en tant que root (ou "
-"fakeroot)."
+"der Befehl, der ein Mittel zum Erlangen von Superuser-Rechten bereitstellt "
+"(zum Beispiel »sudo« oder »fakeroot«), wie es die Option -r von dpkg-"
+"buildpackage erfordert. Diese Option funktioniert für drei der Ziele nicht, "
+"nämlich für I<binary>, I<binary-indep> und I<binary-arch>. Für diese Ziele "
+"muss der ganze Befehl als (Fake-)Root ausgeführt werden."
 
-# type: TP
 #. type: TP
 #: make-kpkg.8:330
 #, no-wrap
 msgid "B<--stem>I<\\ foo>"
-msgstr "B<--stem> I<truc>"
+msgstr "B<--stem>I<\\ foo>"
 
-# type: Plain text
 #. type: Plain text
 #: make-kpkg.8:342
 msgid ""
@@ -2470,49 +2263,46 @@ msgid ""
 "signs, and periods (`.').  It must be at least two characters long and must "
 "start with an alphanumeric character."
 msgstr ""
-"Appeler le paquet I<truc>-* à la place de kernel-*. Pratique pour assurer la "
-"transition du nommage des paquets de kernel-* à linux-*, afin de préparer "
-"les noyaux non-linux de la distribution. Défini à linux par défaut. Cette "
-"chaîne, puisqu'elle est le début du nom du paquet, ne doit comporter que des "
-"lettres minuscules (a-z), des chiffres (0-9), plus (+), moins (-) ou des "
-"points (.). Elle doit faire une longueur d'au moins 2 caractères, et "
-"commencer par une lettre."
+"ruft die Pakete I<foo>-* anstelle von kernel-* auf. Dies ist nützlich beim "
+"Übergang vom Aufruf der kernel-*-Pakete zu den linux-*-Paketen in der "
+"Vorbereitung für nicht Linux-Kernel in der Distribution. Vorgabe ist Linux. "
+"Die Hauptlinie darf, da sie der einleitende Teil des Paketnamens ist, nur "
+"aus kleingeschriebenen Zeichen (»a-z«), Ziffern (»0-9«), Plus (»+«), Minus "
+"(»-«), und Punkten (».«) bestehen. Sie muss mindestens zwei Zeichen lang "
+"sein und mit einem alphanumerischen Zeichen beginnen."
 
-# type: TP
 #. type: TP
 #: make-kpkg.8:342
 #, no-wrap
 msgid "B<--us>"
 msgstr "B<--us>"
 
-# type: Plain text
 #. type: Plain text
 #: make-kpkg.8:347
 msgid ""
 "This option is passed to dpkg-buildpackage, and directs that package not to "
 "sign the source. This is only relevant for the buildpackage target."
 msgstr ""
-"Cette option est transmise à dpkg-buildpackage et demande de ne pas signer "
-"la source. Elle n'a de sens que pour la cible buildpackage."
+"Diese Option wird an dpkg-buildpackage übergeben und weist das Paket an, die "
+"Quelle nicht zu signieren. Dies ist nur für das Ziel »buildpackage« "
+"maßgeblich."
 
-# type: TP
 #. type: TP
 #: make-kpkg.8:347
 #, no-wrap
 msgid "B<--uc>"
 msgstr "B<--uc>"
 
-# type: Plain text
 #. type: Plain text
 #: make-kpkg.8:352
 msgid ""
 "This option is passed to dpkg-buildpackage, and directs that package not to "
 "sign the changelog. This is only relevant for the buildpackage target."
 msgstr ""
-"Cette option est transmise à dpkg-buildpackage, et demande de ne pas signer "
-"le changelog. Elle n'a de sens que pour la cible buildpackage."
+"Diese Option wird an dpkg-buildpackage übergeben und weist das Paket an, das "
+"Änderungsprotokoll nicht zu signieren. Dies ist nur für das Ziel "
+"»buildpackage« maßgeblich."
 
-# type: Plain text
 #. type: Plain text
 #: make-kpkg.8:359
 msgid ""
@@ -2522,14 +2312,13 @@ msgid ""
 "option=value; for details these and other variant forms supported, please "
 "read B<Getopt::Long>(3perl)."
 msgstr ""
-"Les options peuvent être raccourcies en la plus petite chaîne de caractères "
-"non équivoque et peuvent être invoquées indifféremment avec les préfixes - "
-"ou --\\ ; Vous pouvez mettre un espace ou un symbole = entre une option et "
-"sa valeur. Vous pouvez aussi utiliser la forme option=valeur\\ ; pour plus "
-"d'informations sur ces variantes et d'autres qui sont reconnues, consultez "
-"la page de manuel B<Getopt::Long>(3perl)."
+"Die Optionen könnten auf die kleinste eindeutige Zeichenkette verkürzt und "
+"entweder mit einem Präfix »-« oder »--« eingegeben werden. Sie können ein "
+"Leerzeichen oder ein »=«-Symbol zwischen einer Option und einem Wert "
+"verwenden. Sie können auch die Form Option=Wert benutzen; Einzelheiten, wie "
+"diese oder abweichende Formen unterstützt werden, finden Sie in der "
+"Handbuchseite B<Getopt::Long>(3perl)."
 
-# type: Plain text
 #. type: Plain text
 #: make-kpkg.8:370
 msgid ""
@@ -2538,43 +2327,40 @@ msgid ""
 "make in the B<build> target of B<make-kpkg>.  Should be a (small) integer, "
 "if used. You can get the current number of CPUs using the command:"
 msgstr ""
-"Si elle est définie, cette variable d'environnement règle le nombre de "
-"processus concurrents qu'utilisera make pour compiler le noyau et les "
-"modules, grâce à l'option I<-j> de la commande make lancée par la cible "
-"B<build> de B<make-kpkg>. Elle doit être, si définie, un (petit) entier. Le "
-"nombre de CPU actuellement disponibles peut être obtenu avec la commande :"
+"Diese Umgebungsvariable setzt, falls sie definiert ist, die "
+"Nebenläufigkeitsstufe von »make«, das benutzt wird, um den Kernel und die "
+"Module zu kompilieren, die mit I<-j>-Schaltern zur Untererstellung im Ziel "
+"B<build> von B<make-kpkg> gesetzt sind. Sie sollte, wenn sie benutzt wird, "
+"eine (kleine) Ganzzahl sein. Sie können die aktuelle CPU-Anzahl mit dem "
+"folgenden Befehl abfragen:"
 
 #. type: Plain text
 #: make-kpkg.8:373
 msgid "grep -c '^processor' /proc/cpuinfo"
 msgstr "grep -c '^processor' /proc/cpuinfo"
 
-# type: Plain text
 #. type: Plain text
 #: make-kpkg.8:377
 msgid ""
 "B<WARNING>: Do NOT set the -j option in MAKEFLAGS directly, this shall call "
 "the build to fail. It is possible to set -j as a make-kpkg argument."
 msgstr ""
-"B<Attention>\\ : Ne définissez pas l'option -j directement dans MAKEFLAGS, "
-"cela risque de faire échouer la construction. L'option -j peut aussi être "
-"utilisée comme argument de make-kpkg."
+"B<WARNUNG:> Setzen Sie die Option -j NICHT direkt in MAKEFLAGS, dies soll "
+"zur Folge haben, dass das Bauen fehlschlägt. Es ist möglich, -j als ein "
+"»make-kpkg«-Argument zu setzen."
 
-# type: SH
 #. type: SH
 #: make-kpkg.8:377
 #, no-wrap
 msgid "TARGETS"
-msgstr "CIBLES"
+msgstr "ZIELE"
 
-# type: TP
 #. type: TP
 #: make-kpkg.8:378
 #, no-wrap
 msgid "B<clean>"
 msgstr "B<clean>"
 
-# type: Plain text
 #. type: Plain text
 #: make-kpkg.8:395
 msgid ""
@@ -2587,41 +2373,36 @@ msgid ""
 "target, so the subsequent targets shall be run with the old data, which may "
 "not be what you want."
 msgstr ""
-"Cette cible efface tous les fichiers créés dans le répertoire des sources du "
-"noyau par la cible B<build>, et lance un make distclean (consultez le "
-"Makefile du noyau Linux pour plus d'informations). Veuillez remarquer que "
-"malgré l'attention portée aux réglages du noyau actuel, contenus dans le "
-"fichier I<.config>, le fichier I<include/linux/autoconf.h> ne sera pas "
-"gardé. Cette cible ne doit pas être combinée avec une autre, puisque B<make-"
-"kpkg> lit toutes les données I<avant> de lancer une quelconque cible, donc "
-"les autres cibles seront exécutées avec les anciennes données, ce qui n'est "
-"pas forcément ce que vous désirez."
+"säubert das Kernel-Quellverzeichnis von allen durch das Ziel B<build> "
+"erstellten Dateien und führt ein »make distclean« aus. (Einzelheiten finden "
+"Sie im Linux-Kernel-Makefile.) Bitte beachten Sie, dass die Datei I<include/"
+"linux/autoconf.h> nicht aufbewahrt wird, obwohl die Liste der aktuellen "
+"Kernel-Konfiguration die Datei I<.config> enthält. Dieses Ziel sollte nicht "
+"mit anderen Zielen kombiniert werden, da B<make-kpkg> alle Daten liest, "
+"I<bevor> es irgendein Ziel ausführt, weswegen nachfolgende Ziele mit alten "
+"Daten ausgeführt werden, die Sie wahrscheinlich nicht wollen."
 
-# type: TP
 #. type: TP
 #: make-kpkg.8:395
 #, no-wrap
 msgid "B<buildpackage>"
 msgstr "B<buildpackage>"
 
-# type: Plain text
 #. type: Plain text
 #: make-kpkg.8:403
 msgid ""
 "This target runs the targets B<clean>, and B<binary>, and produces the "
 "complete package using B<dpkg-buildpackage>."
 msgstr ""
-"Cette cible lance les cibles B<clean>, et B<binary>, et génère le paquet "
-"complet grâce à B<dpkg-buildpackage>."
+"Dieses Ziel führt die Ziele B<clean> und B<binary> aus und erzeugt unter "
+"Benutzung von B<dpkg-buildpackage> das vollständige Paket."
 
-# type: TP
 #. type: TP
 #: make-kpkg.8:403
 #, no-wrap
 msgid "B<binary>"
 msgstr "B<binary>"
 
-# type: Plain text
 #. type: Plain text
 #: make-kpkg.8:415
 msgid ""
@@ -2629,18 +2410,17 @@ msgid ""
 "B<binary-indep> and B<binary-arch>.  However, this requires I<make-kpkg> to "
 "be run as root (or fakeroot), since I<--rootcmd> will not work."
 msgstr ""
-"Cette cible génère les quatre paquets Debian en lançant les cibles B<binary-"
-"indep> et B<binary-arch>. Toutefois, il faut lancer I<make-kpkg> en tant que "
-"root (ou fakeroot), car I<--rootcmd> ne fonctionnera pas."
+"Dieses Ziel erstellt alle Debian-Kernel-Pakete, indem es die Ziele B<binary-"
+"indep> und B<binary-arch> ausführt. Dies erfordert jedoch, dass I<make-kpkg> "
+"als Root (oder Fakeroot) ausgeführt wird, da I<--rootcmd> nicht "
+"funktionieren wird."
 
-# type: TP
 #. type: TP
 #: make-kpkg.8:415
 #, no-wrap
 msgid "B<binary-indep>"
 msgstr "B<binary-indep>"
 
-# type: Plain text
 #. type: Plain text
 #: make-kpkg.8:428
 msgid ""
@@ -2649,19 +2429,17 @@ msgid ""
 "requires I<make-kpkg> to be run as root (or fakeroot), since I<--rootcmd> "
 "will not work."
 msgstr ""
-"Cette cible génère les paquets indépendants de l'architecture en lançant les "
-"cibles B<kernel_source>, B<kernel_manual> et B<kernel_doc>. Toutefois, il "
-"faut lancer I<make-kpkg> en tant que root (ou fakeroot), car I<--rootcmd> ne "
-"fonctionnera pas."
+"Dieses Ziel erstellt die architekturunabhängigen Pakete, indem es die Ziele "
+"B<kernel_source,> B<kernel_manual> und B<kernel_doc> ausführt. Dies "
+"erfordert jedoch ebenfalls, dass I<make-kpkg> als Root (oder Fakeroot) "
+"ausgeführt wird, da I<--rootcmd> nicht funktionieren wird."
 
-# type: TP
 #. type: TP
 #: make-kpkg.8:428
 #, no-wrap
 msgid "B<binary-arch>"
 msgstr "B<binary-arch>"
 
-# type: Plain text
 #. type: Plain text
 #: make-kpkg.8:440
 msgid ""
@@ -2669,19 +2447,17 @@ msgid ""
 "B<kernel_headers> and B<kernel_image>.  However, this also requires I<make-"
 "kpkg> to be run as root (or fakeroot), since I<--rootcmd> will not work."
 msgstr ""
-"Cette cible génère les paquets dépendants de l'architecture en lançant les "
-"cibles B<kernel_headers> et B<kernel_image>. Toutefois, il faut lancer "
-"I<make-kpkg> en tant que root (ou fakeroot), car I<--rootcmd> ne "
-"fonctionnera pas."
+"Dieses Ziel erstellt die architekturabhängigen Pakete, indem es die Ziele "
+"B<kernel_headers> und B<kernel_image> ausführt. Dies erfordert jedoch, dass "
+"I<make-kpkg> als Root (oder Fakeroot) ausgeführt wird, da I<--rootcmd> nicht "
+"funktionieren wird."
 
-# type: TP
 #. type: TP
 #: make-kpkg.8:440
 #, no-wrap
 msgid "B<kernel_source>"
 msgstr "B<kernel_source>"
 
-# type: Plain text
 #. type: Plain text
 #: make-kpkg.8:463
 msgid ""
@@ -2701,25 +2477,25 @@ msgid ""
 "action they see fit. This also has no effect on anything other than the "
 "sources that are being packaged."
 msgstr ""
-"Cette cible génère un paquet Debian des sources du noyau Linux. Si la "
-"variable d'environnement B<SOURCE_CLEAN_HOOK> pointe sur un exécutable, "
-"alors cet exécutable sera lancé, juste avant de faire le paquet, sur le "
-"répertoire (racine) temporaire des sources du noyau, I<./debian/tmp-source/"
-"usr/src/kernel-source-X.X.XX>, de façon à ce qu'on puisse lancer toute "
-"commande appropriée (supprimer des arborescences liées à des architectures, "
-"ôter les répertoires de contrôle de version, I<find . -type d -name CVS -"
-"prune -exec rm -rf {} \\\\\\;>, etc.) Cela ne concerne que les sources du "
-"noyau qui sont en cours d'empaquetage. Si cette action porte sur le "
-"répertoire courant et ses répertoires fils, l'arborescence originale qui "
-"contient les sources reste, elle, inchangée. Les variables d'environnement "
-"B<HEADER_CLEAN_HOOK> et B<DOC_CLEAN_HOOK> sont semblables. Elles doivent "
-"pointer sur des exécutables\\ ; ces exécutables seront appliqués sur le "
-"répertoire (racine) temporaire des en-têtes du noyau et de la documentation "
-"juste avant la génération des paquets respectifs, de façon à ce que vous "
-"puissiez lancer toute action qui vous semble adéquate. De même, ne sont "
-"touchées que les sources qui sont en cours d'empaquetage."
+"Dieses Ziel erstellt ein an Debian angepasstes Paket der Linux-Kernel-"
+"Quellen. Falls die Umgebungsvariable B<SOURCE_CLEAN_HOOK> auf eine "
+"ausführbare Datei zeigt, dann soll diese ausführbare Datei von dem obersten "
+"temporären Verzeichnis der Kernel-Quellen (I<./debian/tmp-source/usr/src/"
+"kernel-source-X.X.XX>) ausgeführt werden, kurz bevor es paketiert wird, "
+"weswegen Leute nach Belieben irgendwelche Aktionen durchführen könnten "
+"(Architekturverzeichnisbäume entfernen, Versionskontrollverzeichnisse "
+"reduzieren, I<find . -type d -name CVS -prune -exec rm -rf {} \\;> etc). "
+"Dies hat keine Auswirkungen auf etwas anderes als die Kernel-Quellen, die "
+"gepackt werden – falls das Skript auf dem aktuellen Verzeichnis und dessen "
+"Unterverzeichnissen arbeitet, sollte der Original-Quellverzeichnisbaum "
+"intakt bleiben. Die Umgebungsvariablen B<HEADER_CLEAN_HOOK> und "
+"B<DOC_CLEAN_HOOK> sind ähnlich. Sie sollten auf ausführbare Dateien zeigen, "
+"dann soll diese ausführbare Datei von dem obersten temporären Verzeichnis "
+"der Kernel-Header und Dokumentation ausgeführt werden, kurz vor dem "
+"Paketieren, beziehungsweise bevor Leute nach Belieben irgendwelche Aktionen "
+"durchführen könnten. Dies hat ebenfalls keine Auswirkungen auf etwas "
+"anderes, als die Kernel-Quellen, die gepackt werden."
 
-# type: TP
 #. type: TP
 #: make-kpkg.8:463
 #, no-wrap
@@ -2734,37 +2510,33 @@ msgid ""
 "here is to keep the space in I</lib/modules/E<lt>kverE<gt>> under control, "
 "since this could be on a root partition with space restrictions."
 msgstr ""
-"Cette cible fabrique une paquet Debian contenant les symboles de debogages "
-"pour les modules contenu dans le paquet image correspondant. L'idée de base "
-"ici est de garder le contrôle sur l'encombrement dans I</lib/modules/"
-"E<lt>kverE<gt>>, puisqu'il pourrait s'agir d'une partition racine dotée de "
-"limites de taille."
+"Dieses Ziel erstellt ein Debian-Paket, das Fehlersuchsymbole für die im "
+"entsprechenden Image-Paket enthaltenen Module beinhaltet. Die "
+"zugrundeliegende Idee hierbei ist, den Platz in I</lib/modules/"
+"E<lt>kverE<gt>> unter Kontrolle zu halten, da dies eine Root-Partition mit "
+"Speicherbeschränkungen sein könnte."
 
-# type: TP
 #. type: TP
 #: make-kpkg.8:471
 #, no-wrap
 msgid "B<kernel_headers>"
 msgstr "B<kernel_headers>"
 
-# type: Plain text
 #. type: Plain text
 #: make-kpkg.8:475
 msgid ""
 "This target produces a Debian package containing the header files included "
 "in the Linux kernel."
 msgstr ""
-"Cette cible crée le paquet Debian des fichiers d'en-têtes contenus dans le "
-"noyau Linux."
+"Dieses Ziel erstellt ein Debian-Paket, das die im Kernel enthaltenen Header-"
+"Dateien beinhaltet."
 
-# type: TP
 #. type: TP
 #: make-kpkg.8:475
 #, no-wrap
 msgid "B<kernel_manual>"
 msgstr "B<kernel_manual>"
 
-# type: Plain text
 #. type: Plain text
 #: make-kpkg.8:482
 msgid ""
@@ -2773,19 +2545,17 @@ msgid ""
 "independent target; calling this shall also invoke the I<kernel_doc> target, "
 "and creates a kernel-doc package at the same time."
 msgstr ""
-"Cette cible génère le paquet Debian contenant les pages de manuel de la "
-"section 9 fournies dans le noyau Linux. Notez bien que ce n'est pas vraiment "
-"une cible indépendante, puisque son appel déclenchera l'appel de la cible "
-"I<kernel_doc>, et créera un paquet kernel-doc en même temps."
+"Dieses Ziel erstellt ein Debian-Paket, das die im Linux-Kernel enthaltenen "
+"Handbuchseiten aus Abschnitt neun beinhaltet. Bitte beachten Sie, dass dies "
+"kein tatsächlich unabhängiges Ziel ist; dies aufzurufen soll auch das Ziel "
+"I<kernel_doc> aufrufen und gleichzeitig ein kernel-doc-Paket erstellen."
 
-# type: TP
 #. type: TP
 #: make-kpkg.8:482
 #, no-wrap
 msgid "B<kernel_doc>"
 msgstr "B<kernel_doc>"
 
-# type: Plain text
 #. type: Plain text
 #: make-kpkg.8:488
 msgid ""
@@ -2793,18 +2563,16 @@ msgid ""
 "in the Linux kernel. This can be called independently of the "
 "I<kernel_manual> target, but not the other way around."
 msgstr ""
-"Cette cible génère un paquet Debian contenant la documentation contenue dans "
-"le noyau Linux. Elle peut être appelée indépendamment de la cible "
-"I<kernel_manual>, mais l'inverse n'est pas possible."
+"Dieses Ziel erstellt ein Debian-Paket, das die im Linux-Kernel enthaltene "
+"Dokumentation beinhaltet. Dies kann unabhängig vom Ziel I<kernel_manual> "
+"aufgerufen werden, aber nicht andersherum."
 
-# type: TP
 #. type: TP
 #: make-kpkg.8:488
 #, no-wrap
 msgid "B<kernel_image>"
 msgstr "B<kernel_image>"
 
-# type: Plain text
 #. type: Plain text
 #: make-kpkg.8:499
 msgid ""
@@ -2814,13 +2582,12 @@ msgid ""
 "configuration is provided similar to the one used to create the B<Debian> "
 "boot-floppies."
 msgstr ""
-"Cette cible génère un paquet Debian contenant un noyau Linux, et tous les "
-"modules définis dans le fichier de configuration du noyau I<.config>. S'il "
-"n'y a pas de fichier I<.config> dans les répertoires des sources du noyau, "
-"une configuration par défaut est utilisée, identique à celle utilisée pour "
-"créer les disquettes de démarrage B<Debian>."
+"Dieses Ziel erstellt ein Debian-Paket des Linux-Kernel-Quell-Images und den "
+"in der Kernel-Konfigurationsdatei I<.config> konfigurierten Modulen. Falls "
+"es im Kernel-Quell-Verzeichnis keine I<.config>-Datei gibt, wird eine "
+"Standardkonfiguration bereitgestellt, die der ähnelt, die zum Erstellen der "
+"B<Debian>-Boot-Disketten benutzt wird."
 
-# type: Plain text
 #. type: Plain text
 #: make-kpkg.8:514
 msgid ""
@@ -2832,16 +2599,15 @@ msgid ""
 "the environment variable B<IMAGE_TOP>, and the kernel version is passed in "
 "through the environment variable B<version> for all these scripts."
 msgstr ""
-"Si le fichier I<./debian/post-install> existe, et qu'il s'agit d'un "
-"exécutable, il est lancé juste avant la création du paquet de l'image du "
-"noyau. De même, notez que si des scripts existent dans le répertoire I<./"
-"debian/image.d/> , B<run-parts> sera lancé sur ce répertoire juste avant la "
-"création du paquet de l'image du noyau. L'emplacement de la racine de "
-"l'image pour le paquet en cours de construction peut être défini par la "
-"variable d'environnement B<IMAGE_TOP>, et la version du noyau est définie "
-"grâce à la variable d'environnement B<version> pour tous ces scripts."
+"Falls die Datei I<./debian/post-install> existiert und ausführbar ist, wird "
+"sie, kurz bevor das Kernel-Image-Paket erstellt wird, ausgeführt. Beachten "
+"Sie außerdem, dass, falls irgendwelche Skripte im Verzeichnis I<./debian/"
+"image.d/> liegen, B<run-parts> für dieses Verzeichnis aufgerufen werden "
+"soll, bevor das Kernel-Image-Paket gebaut wird. Der Speicherort des "
+"Wurzelverzeichnisses des zu bauenden Image-Pakets soll in der "
+"Umgebungsvariable B<IMAGE_TOP> übergeben werden und die Kernel-Version wird "
+"durch die Umgebungsvariable B<version> für all diese Skripte übergeben."
 
-# type: Plain text
 #. type: Plain text
 #: make-kpkg.8:522
 msgid ""
@@ -2851,14 +2617,13 @@ msgid ""
 "and remove times. A sample script to add lines to a grub menu file is "
 "included in the directory I</usr/share/doc/kernel-package/.>"
 msgstr ""
-"Consultez la documentation à propos des variables de type «\\ hook\\ "
-"» (points d'entrée) dans I<kernel-img.conf>(5). Ces variables peuvent "
-"indiquer des scripts qui ajoutent ou suppriment une ligne dans le menu du "
-"grub à l'installation ou à la suppression de l'image du noyau. Un exemple de "
-"script pour ajouter des lignes au menu du grub est fourni dans le répertoire "
-"I</usr/share/doc/kernel-package/>."
+"Bitte lesen Sie die Dokumentation über Hooks in B<kernel-img.conf>(5). Diese "
+"Hooks sind Variablen, die der lokale Systemadministrator auf Skripte zeigen "
+"lassen kann, die beim Installieren oder Entfernen von Kernel-Images der Grub-"
+"Menüliste eine Zeile hinzufügen oder entfernen. Ein Beispielskript, um einer "
+"Grub-Menüdatei Zeilen hinzuzufügen ist im Verzeichnis I</usr/share/doc/"
+"kernel-package/> enthalten."
 
-# type: Plain text
 #. type: Plain text
 #: make-kpkg.8:557
 msgid ""
@@ -2882,29 +2647,29 @@ msgid ""
 "to stdout -- while the postinst does call B<db_stop>, debconf does not "
 "restore stdout, so messages to stdout disappear."
 msgstr ""
-"En dehors de ces variables de type «\\ hook\\ » que l'administrateur peut "
-"définir, il existe un ensemble de répertoires dans lesquels des paquets, ou "
-"l'administrateur, peuvent déposer des scripts. Ces répertoires sont I</etc/"
-"kernel/preinst.d/>, I</etc/kernel/postinst.d/>, I</etc/kernel/prerm.d/>, I</"
-"etc/kernel/postrm.d/> et I</etc/kernel/preinst.d/E<lt>VERSIONE<gt>/>, I</etc/"
-"kernel/postinst.d/E<lt>VERSIONE<gt>/>, I</etc/kernel/prerm.d/"
-"E<lt>VERSIONE<gt>/> et I</etc/kernel/postrm.d/E<lt>VERSIONE<gt>/>. Si ces "
-"répertoires existent, le paquet kernel-image lancera le programme B<run-"
-"parts> sur ceux-ci, en passant en argument la version en cours "
-"d'installation ou de suppression, durant la phase correspondante "
-"(installation ou suppression). Avant d'appeler ces scripts, la variable "
-"d'environnement B<STEM> doit être réglée avec le contenu de l'argument I<--"
-"stem> (ou à sa valeur par défaut, linux), et la variable "
-"B<KERNEL_PACKAGE_VERSION> doit contenir la version de kernel-package qui a "
-"créé ce paquet. Ces scripts peuvent être appelés avec deux arguments, le "
-"premier étant la I<version> de l'image du noyau, et le second étant "
-"I<l'endroit> où est rangé l'image proprement dite. Lorsque debconf est lancé "
-"avant que le script ne soit appelé, ce dernier ne devra pas générer de "
-"message de diagnostic sur la sortie standard — en effet, au moment où la "
-"post-installation appelle B<db_stop>, debconf ne rétablit pas la sortie "
-"standard, tous les messages en sa direction disparaissent."
+"Abgesehen von Hook-Variablen, die der lokale Administrator setzen könnte, "
+"gibt es eine Zusammenstellung von Verzeichnissen, in denen Pakete oder der "
+"lokale Administrator die Skript-Dateien hinlegen können. Diese Verzeichnisse "
+"sind I</etc/kernel/preinst.d/,> I</etc/kernel/postinst.d/,> I</etc/kernel/"
+"prerm.d/,> I</etc/kernel/postrm.d/,> I</etc/kernel/preinst.d/"
+"E<lt>VERSIONE<gt>/>, I</etc/kernel/postinst.d/E<lt>VERSIONE<gt>/>, I</etc/"
+"kernel/prerm.d/E<lt>VERSIONE<gt>/> und I</etc/kernel/postrm.d/"
+"E<lt>VERSIONE<gt>/>. Falls sie existieren, soll das Kernel-Image-Paket ein "
+"B<run-parts>-Programm für das Verzeichnis ausführen (einschließlich dem, das "
+"versionsverwaltet ist), dessen installierte oder entfernte Version über ein "
+"Argument in der entsprechenden Phase der Installation oder des Entfernens "
+"angegeben wurde. Bevor diese Skripte aufgerufen werden, soll die "
+"Umgebungsvariable B<STEM> auf den Wert des Arguments I<--stem> (oder den "
+"Standardwert, linux) gesetzt werden und die Variable "
+"B<KERNEL_PACKAGE_VERSION> soll auf die Version von kernel-package  gesetzt "
+"werden, womit dieses Paket erzeugt wurde. Diese Skripte sollen mit zwei "
+"Argumenten aufgerufen werden. Das erste ist die I<Version> des Kernel-Images "
+"und das zweite ist der I<Speicherort> des Kernel-Images selbst. Da vor dem "
+"Aufruf des Skripts Debconf benutzt wird, sollte das Skript keine "
+"Diagnosenachrichten auf die Standardausgabe ausgeben – solange »postinst« "
+"B<db_stop> aufruft, stellt Debconf die Standardausgabe nicht wieder her, "
+"daher verschwinden Nachrichten an die Standardausgabe."
 
-# type: Plain text
 #. type: Plain text
 #: make-kpkg.8:580
 msgid ""
@@ -2918,44 +2683,39 @@ msgid ""
 "after installing a kernel image, though an automated change to the menu list "
 "would be nice on install and removal of kernel image packages."
 msgstr ""
-"À l'installation, vous aurez la possibilité de lancer le chargeur de "
-"démarrage I<LILO> (ou des équivalents tels que I<loadlin>, I<SILO>, I<QUIK>, "
-"I<VMELILO>, I<ZIPL>, I<yaboot>, I<PALO> ou I<GRUB>), en créant un fichier de "
-"configuration pour ces programmes de démarrage, si nécessaire. À ce moment, "
-"vous aurez aussi la possibilité de mettre ce nouveau noyau sur une "
-"disquette, en formatant la disquette si nécessaire. En cas de suppression, "
-"le paquet vérifie la version du noyau en cours d'exécution, et refuse alors "
-"d'effacer le noyau en cours d'utilisation. I<GRUB> mérite une mention "
-"particulière ici, puisque GRUB n'a pas besoin d'être relancé après "
-"l'installation d'une image de noyau, et qu'une modification automatisée du "
-"contenu du menu est suffisante pour l'installation ou la suppression d'une "
-"image d'un noyau."
+"Bei der Installation bietet es auch an, den Linux-Loader I<LILO> (oder "
+"Alternativen wie I<loadlin>, I<SILO>, I<QUIK>, I<VMELILO>, I<ZIPL>, "
+"I<yaboot>, I<PALO> oder I<GRUB>) auszuführen, und eine Konfigurationsdatei "
+"für unterstützte Boot-Loader zu erstellen, falls nötig. Zu diesem Zeitpunkt "
+"bietet es auch an, den neuen Kernel auf einer Diskette abzulegen und die "
+"Diskette zu formatieren, wenn dies erforderlich ist. Bei Löschungen prüft "
+"das Paket die Version des laufenden Kernels und verweigert einen laufenden "
+"Kernel zu löschen. I<grub> misst dem eine besondere Bedeutung bei, da Grub "
+"nicht nach der Installation eines Kernel-Images erneut ausgeführt werden "
+"braucht, obwohl eine automatische Änderung der Menüliste bei der "
+"Installation oder dem Entfernen von Kernel-Image Paketen angenehm wäre."
 
-# type: TP
 #. type: TP
 #: make-kpkg.8:580
 #, no-wrap
 msgid "B<build>"
 msgstr "B<build>"
 
-# type: Plain text
 #. type: Plain text
 #: make-kpkg.8:587
 msgid ""
 "This target, used by target B<kernel_image> above, compiles the Linux kernel "
 "image."
 msgstr ""
-"Cette cible, utilisée par la cible B<kernel_image> ci-dessus, compile le "
-"noyau Linux."
+"Dieses Ziel, das vom vorhergehenden Ziel B<kernel_image> benutzt wird, "
+"kompiliert das Kernel-Image."
 
-# type: TP
 #. type: TP
 #: make-kpkg.8:587
 #, no-wrap
 msgid "B<modules>"
 msgstr "B<modules>"
 
-# type: Plain text
 #. type: Plain text
 #: make-kpkg.8:609
 msgid ""
@@ -2971,28 +2731,25 @@ msgid ""
 "would be used to sign the kernel packages. This option is used by "
 "maintainers uploading the package to the Debian archives."
 msgstr ""
-"Cette cible permet de créer tous les modules et paquets additionnels qui "
-"dépendent fortement de la version du noyau pour laquelle ils ont été "
-"compilés, en même temps que vous construisez votre image du noyau. Cette "
-"cible s'attend à trouver les modules et paquets sous /usr/src/modules, et, "
-"pour chacun de ces répertoires, se déplacera dans MODULE_LOC/x (MODULE_LOC "
-"étant par défaut I</usr/src/modules>), et lancera la règle B<kdist> du "
-"fichier I<debian.rules> qui s'y trouve. Cette cible créera le ou les paquets "
-"B<Debian> du ou des modules, ainsi qu'un fichier tar compressé et un fichier "
-"diff compressé, les I<md5sums> correspondants, créés par B<dpkg-genchanges>, "
-"seront enregistrés dans un fichier des modifications (changes). Ce fichier "
-"sera signé avec la même identité que celle utilisée pour signer le paquet du "
-"noyau. Cette option est utilisée par les responsables qui déploient les "
-"paquets dans les archives de Debian."
+"Dieses Ziel ermöglicht es Ihnen, alle Add-On-Module und Pakete zu bauen, die "
+"stark von der genauen Kernel-Version abhängen, für das sie zur gleichen Zeit "
+"wie Ihr Kernel-Image gebaut wurden. Dieses Ziel erwartet, die Module oder "
+"Pakete unter /usr/src/modules und für all diese Verzeichnisse Änderungen an "
+"MODULE_LOC/x (Vorgabe für MODULE_LOC ist I</usr/src/modules>) zu finden und "
+"führt die Regel B<kdist> in der lokalen I<debian.rules>-Datei aus. Dieses "
+"Ziel sollte das B<Debian>-Modulpaket erstellen, außerdem eine komprimierte "
+"Tar-Datei und eine komprimierte Diff-Datei mit I<md5sums,> die unter "
+"Benutzung von B<dpkg-genchanges> in in einer »changes«-Datei aufgezeichnet "
+"wurden. Die Datei ist durch die gleiche Identität signiert, die zum "
+"Signieren der Kernel-Pakete benutzt würde. Diese Option wird von "
+"Paketbetreuern verwandt, die das Paket in die Debian-Archive hochladen."
 
-# type: TP
 #. type: TP
 #: make-kpkg.8:609
 #, no-wrap
 msgid "B<modules_config>"
 msgstr "B<modules_config>"
 
-# type: Plain text
 #. type: Plain text
 #: make-kpkg.8:618
 msgid ""
@@ -3002,20 +2759,19 @@ msgid ""
 "the add on modules.  This should not be called unless you already have a ./"
 "debian directory."
 msgstr ""
-"Cette cible permet de configurer tous les paquets de B<MODULE_LOC> qui "
-"pointent par défaut sur B</usr/src/modules>. À utiliser si vous avez besoin "
-"de modifier manuellement certains points de la configuration, ou si vous "
-"voulez compiler manuellement tous les modules additionnels. À n'utiliser que "
-"si vous disposez déjà d'un répertoire ./debian."
+"Dieses Ziel ermöglicht es Ihnen, alle Pakete unter B<MODULE_LOC> zu "
+"konfigurieren, die B</usr/src/modules> als Standard haben. Dies ist "
+"nützlich, falls Sie manuell einige Gesichtspunkte der Konfiguration ändern "
+"möchten oder falls Sie die Add-On-Module manuell kompilieren wollen. Dies "
+"sollte nicht aufgerufen werden, es sei denn, Sie haben bereits ein ./debian-"
+"Verzeichnis."
 
-# type: TP
 #. type: TP
 #: make-kpkg.8:618
 #, no-wrap
 msgid "B<modules_image>"
 msgstr "B<modules_image>"
 
-# type: Plain text
 #. type: Plain text
 #: make-kpkg.8:634
 msgid ""
@@ -3028,25 +2784,22 @@ msgid ""
 "B<append_to_version> (prevents spurious warnings).  This should not be "
 "called unless you already have a ./debian directory."
 msgstr ""
-"Cette cible permet de construire tous les paquets de B<MODULE_LOC> qui "
-"pointent par défaut sur B</usr/src/modules>, mais elle ne crée pas les "
-"fichiers sources ou diffs, ni ne crée ni ne signe un fichier des "
-"modifications (un fichier «\\ changes\\ »). C'est la seule option liée aux "
-"modules dont vous aurez besoin si vous voulez juste compiler les modules "
-"additionnels pour leur installation sur une ou plusieurs machines. Utilisée "
-"en général en conjonction avec B<kernel_image>, notamment si vous invoquez "
-"aussi l'option B<append_to_version> (afin d'éviter de faux messages "
-"d'avertissement). À n'utiliser que si vous disposez déjà d'un répertoire ./"
-"debian."
+"Dieses Ziel ermöglicht es Ihnen, alle Pakete unter B<MODULE_LOC> zu bauen, "
+"die B</usr/src/modules> als Standard haben, aber es erstellt nicht die "
+"Quell- oder Diff-Dateien und erzeugt und signiert nicht die Datei »changes«. "
+"Dies ist die einzige modulbezogene Option, falls Sie nur die Add-On-Modul-"
+"Image-Dateien auf einem oder mehreren Rechnern kompilieren möchten. Es wird "
+"im Allgemeinen in Verbindung mit B<kernel_image> aufgerufen, insbesondere "
+"falls außerdem die Option B<append_to_version> (verhindert störende "
+"Warnungen) benutzt wird. Dies sollte nicht aufgerufen werden, es sei denn, "
+"Sie haben bereits ein ./debian-Verzeichnis."
 
-# type: TP
 #. type: TP
 #: make-kpkg.8:634
 #, no-wrap
 msgid "B<modules_clean>"
 msgstr "B<modules_clean>"
 
-# type: Plain text
 #. type: Plain text
 #: make-kpkg.8:643
 msgid ""
@@ -3055,19 +2808,18 @@ msgid ""
 "undo the effect of any of the other modules_ targets.  This should not be "
 "called unless you already have a ./debian directory."
 msgstr ""
-"Cette cible permet de nettoyer tous les paquets de B<MODULE_LOC> qui "
-"pointent par défaut sur B</usr/src/modules>, ce qui devrait être suffisant "
-"pour défaire tout ce qu'ont pu faire toutes les autres cibles modules_truc. "
-"À n'utiliser que si vous disposez déjà d'un répertoire ./debian."
+"Dieses Ziel ermöglicht es Ihnen, alle Pakete unter B<MODULE_LOC> zu "
+"bereinigen, die B</usr/src/modules> als Standard haben. Dies sollte alles "
+"sein, was nötig ist, um die Auswirkungen auf irgendwelche anderen »modules_«-"
+"Ziele rückgängig zu machen. Dies sollte nicht aufgerufen werden, es sei "
+"denn, Sie haben bereits ein ./debian-Verzeichnis."
 
-# type: TP
 #. type: TP
 #: make-kpkg.8:643
 #, no-wrap
 msgid "B<configure>"
 msgstr "B<configure>"
 
-# type: Plain text
 #. type: Plain text
 #: make-kpkg.8:656
 msgid ""
@@ -3076,12 +2828,11 @@ msgid ""
 "B<make config> in the kernel source directory and not have them stomped by "
 "B<make-kpkg> later."
 msgstr ""
-"Cette cible lance configure (en fait B<config_target>, défini par B<--"
-"config> qui pointe par défaut sur I<oldconfig>) assez tôt, de sorte que vous "
-"puissiez éditer les fichiers créés par B<make config> dans le répertoire des "
-"sources du noyau, sans que B<make-kpkg> ne les écrase ensuite."
+"Dieses Ziel führt am Anfang »configure« aus (tatsächlich B<config_target,> "
+"gesetzt durch B<--config>, dessen Vorgabe I<oldconfig> ist), daher können "
+"Sie durch B<make config> im Kernel-Quellverzeichnis erzeugte Dateien "
+"bearbeiten ohne dass sie später durch B<make-kpkg> eingestampft werden."
 
-# type: Plain text
 #. type: Plain text
 #: make-kpkg.8:665
 msgid ""
@@ -3091,21 +2842,19 @@ msgid ""
 "step to update the configuration file, with any new configuration options "
 "the patches may have introduced."
 msgstr ""
-"Cette cible crée le répertoire I<./debian> et patche éventuellement le "
-"source. Cette cible est appelée par la cible B<configure>. Vous utiliserez "
-"cette cible pour corriger les sources, puis vous lancerez l'étape de "
-"configuration manuellement afin de mettre à jour le fichier de configuration "
-"avec toutes les nouvelles options de configuration que les patches "
-"pourraient avoir ajoutées."
+"Dieses Ziel erstellt ein I<./debian>-Verzeichnis und patcht wahlweise die "
+"Quelle. Dieses Ziel wird durch das Ziel B<configure> aufgerufen. Sie können "
+"dieses Ziel benutzen, damit Sie über gepatchte Quellen verfügen und dann "
+"manuell den Konfigurationsschritt ausführen, um die Konfigurationsdatei mit "
+"irgendwelchen neuen Konfigurationsoptionen zu aktualisieren, die durch die "
+"Patches eingeführt wurden."
 
-# type: TP
 #. type: TP
 #: make-kpkg.8:665
 #, no-wrap
 msgid "B<libc-kheaders>"
 msgstr "B<libc-kheaders>"
 
-# type: Plain text
 #. type: Plain text
 #: make-kpkg.8:677
 msgid ""
@@ -3117,23 +2866,21 @@ msgid ""
 "installing a self created libc-kheaders package may break your system unless "
 "you know what you are doing. You have been warned."
 msgstr ""
-"C'est une cible spéciale pour les responsables de libc-dev, qui peuvent s'en "
-"servir pour créer les paquets d'en-têtes dont la libc a besoin. Notez qu'il "
-"est dangereux de créer un paquet de libc-kheaders d'en-têtes différentes de "
-"celles avec lesquelles la libc a été compilée. C'est une cause B<connue> "
-"d'arrêts brutaux du système. Consultez I</usr/share/kernel-package/README."
-"headers> pour plus d'informations. Créer et installer votre propre paquet "
-"libc-kheaders peut endommager votre système, à moins que vous ne soyez sûr "
-"de ce vous faites. Vous êtes prévenus."
+"Dies ist ein Spezialziel für den Paketbetreuer von libc-dev, der es zum "
+"Erstellen des von libc benötigten Header-Pakets benutzen kann. Bitte "
+"beachten Sie, dass es gefährlich ist, ein libc-kheaders-Paket zu erstellen, "
+"das sich von der damit kompilierten libc des Headers unterscheidet; es ist "
+"B<bekannt,> dass es Systeme auf raffierte Weise zerstört. Einzelheiten "
+"finden Sie in I</usr/share/kernel-package/README.headers>. Das Erstellen und "
+"Installieren eines selbst erstellten libc-kheaders-Pakets könnte Ihr System "
+"zerstören, es sei denn, Sie wissen, was Sie tun. Sie wurden gewarnt."
 
-# type: SH
 #. type: SH
 #: make-kpkg.8:677
 #, no-wrap
 msgid "ENVIRONMENT VARIABLES"
-msgstr "VARIABLES D'ENVIRONNEMENT"
+msgstr "UMGEBUNGSVARIABLEN"
 
-# type: Plain text
 #. type: Plain text
 #: make-kpkg.8:699
 msgid ""
@@ -3146,17 +2893,16 @@ msgid ""
 "B<SOURCE_CLEAN_HOOK>, B<MODULE_LOC>, B<CONCURRENCY_LEVEL> and "
 "B<IGNORE_UPPERCASE_VERSION>."
 msgstr ""
-"B<KPKG_DEBUG>, s'il est défini, demande à make-kpkg de cracher des messages "
-"de mise au point (debug) concernant des fonctions du shell exécutées en "
-"interne. Cela n'intéressera probablement personne, à part ceux qui mettent "
-"au point B<make-kpkg>. Les variables suivantes (décrites plus haut) "
-"affectent B<make-kpkg>\\ : B<DEBIAN_REVISION_MANDATORY>, "
-"B<APPEND_TO_VERSION>, B<VERSION_H_OK>, B<KPKG_ARCH>, B<CROSS_COMPILE>, "
-"B<KPKG_SUBARCH>, B<KPKG_OVERLAY_DIR>, B<ARCH_IN_NAME>, B<INITRD>, "
-"B<SOURCE_CLEAN_HOOK>, B<MODULE_LOC>, B<CONCURRENCY_LEVEL> et "
-"B<IGNORE_UPPERCASE_VERSION>."
+"I<KPKG_DEBUG> veranlasst make-kpkg, falls es gesetzt wurde, "
+"Fehlersuchmeldungen über einige intern ausgeführte Shell-Funktionen "
+"auszuspucken. Dies ist wahrscheinlich nicht für jedermann von Interesse, der "
+"keine Fehlersuche für B<make-kpkg> durchführt. Die folgenden (oben "
+"dokumentierten) Variablen beeinflussen ebenfalls B<make-kpkg>: "
+"I<DEBIAN_REVISION_MANDATORY>, I<APPEND_TO_VERSION>, I<VERSION_H_OK>, "
+"I<KPKG_ARCH>, I<CROSS_COMPILE>, I<KPKG_SUBARCH>, I<KPKG_OVERLAY_DIR>, "
+"I<ARCH_IN_NAME>, I<INITRD>, I<SOURCE_CLEAN_HOOK>, I<MODULE_LOC>, "
+"I<CONCURRENCY_LEVEL> und I<IGNORE_UPPERCASE_VERSION>."
 
-# type: Plain text
 #. type: Plain text
 #: make-kpkg.8:724
 msgid ""
@@ -3175,24 +2921,22 @@ msgid ""
 "package/README.gz> and it is recommended that one read that before using "
 "this utility."
 msgstr ""
-"Outre les options de lancement, le fichier I<debian.rules> lancé par B<make-"
-"kpkg> recherche également un fichier de configuration propre à l'utilisateur "
-"I<~/.kernel-pkg.conf>. En cas d'absence de ce fichier, il recherche un "
-"réglage par défaut pour tout le système dans le fichier I</etc/kernel-pkg."
-"conf>. La configuration par défaut permet le remplacement pour tout le "
-"système du nom complet et du courriel de la personne responsable de la "
-"maintenance des paquets du noyau sur le site, mais les fichiers I</etc/"
-"kernel-pkg.conf> (ou I<~/.kernel-pkg.conf>) sont en fait des bribes de "
-"Makefile, et toute directive valide peut y être incluse. B<Remarque>\\ : la "
-"prudence est de mise avec ce fichier, puisque vous pouvez changer "
-"complètement le comportement du make en modifiant son contenu. Consultez le "
-"fichier I</usr/share/doc/kernel-package/Problems.gz> pour connaître la liste "
-"des problèmes recensés lors de la compilation des images du noyau. Un "
-"tutoriel exhaustif et une documentation sont aussi disponibles dans I</usr/"
-"share/doc/kernel-package/README.gz> et leurs lectures sont recommandées "
-"avant l'utilisation de cet utilitaire. "
+"Abseits der Laufzeitoptionen sucht außerdem die von B<make-kpkg> ausgeführte "
+"Datei I<debian.rules> nach einer benutzerspezifischen Konfigurationsdatei "
+"I<~/.kernel-pkg.conf>. Schlägt dies fehl, sucht sie nach den systemweiten "
+"Vorgaben in der Datei I</etc/kernel-pkg.conf>. Die Standardkonfiguration "
+"ermöglicht dort Site-weit den vollständigen Namen und die E-Mail-Adresse der "
+"für die Betreuung der Kernel-Pakete zuständigen Person auf der Site außer "
+"Kraft zu setzen, aber die Datei I</etc/kernel-pkg.conf> (oder I<~/.kernel-"
+"pkg.conf>) ist tatsächlich ein Makefile-Schnipsel. Jede zulässige make-"
+"Richtlinie könnte darin enthalten sein. B<Beachten Sie:> Bei dieser Datei "
+"ist Vorsicht angebracht, da Sie durch geeignetes Bearbeiten dieser Datei die "
+"Ausführung von make vollständig ändern können. Eine Liste bekannter Probleme "
+"beim Kompilieren von Kernel-Images finden Sie in I</usr/share/doc/kernel-"
+"package/Problems.gz>. Ausführlichere Anleitungen wie Dokumentation ist "
+"außerdem in I</usr/share/doc/kernel-package/README.gz> verfügbar und es wird "
+"empfohlen, dies vor dem Gebrauch dieses Hilfswerkzeugs zu lesen."
 
-# type: Plain text
 #. type: Plain text
 #: make-kpkg.8:736
 msgid ""
@@ -3202,57 +2946,6 @@ msgid ""
 "share/doc/kernel-package> directory"
 msgstr ""
 "B<dpkg-deb>(1), B<dpkg-source>(1), B<make>(1), B<Getopt::Long>(3perl), "
-"B<kernel-img.conf>(5), B<kernel-pkg.conf>(5), le B<manuel des Programmeurs>, "
-"le B<manuel de make du GNU> et la documentation complète du répertoire B</"
-"usr/share/doc/kernel-package>."
-
-# type: Plain text
-#~ msgid "I</etc/kernel-pkg.conf.> I</etc/kernel-img.conf.>"
-#~ msgstr "I</etc/kernel-pkg.conf>. I</etc/kernel-img.conf>."
-
-# type: Plain text
-#~ msgid ""
-#~ "If defined, this environment variable sets the concurrency level of\n"
-#~ "make used to compile the kernel and the modules set using\n"
-#~ "I<-j>\n"
-#~ "flags to the sub make in the \n"
-#~ "B<build>\n"
-#~ "target of \n"
-#~ "B<make-kpkg.>\n"
-#~ "Should be a (small) integer, if used. You can get the current number\n"
-#~ "of CPUs using the command:\n"
-#~ " \"grep -c '^processor' /proc/cpuinfo\"\n"
-#~ "B<WARNING:>\n"
-#~ "Do NOT set the -j option in MAKEFLAGS directly, this shall call the\n"
-#~ "build to fail. It is possible to set -j as a make-kpkg argument.\n"
-#~ msgstr ""
-#~ "Si elle est définie, cette variable d'environnement régle le niveau de "
-#~ "profondeur (NdT\\ :\\ concurrency) utilisé par make pour compiler le "
-#~ "noyau et l'ensemble des modules. Elle utilise le drapeau\n"
-#~ "I<-j>\n"
-#~ "dans le make qui est dans la cible\n"
-#~ "B<build>\n"
-#~ "de\n"
-#~ "B<make-kpkg>.\n"
-#~ "Elle doit être un (petit) entier, si vous la définissez. Vous pouvez "
-#~ "obtenir le nombre actuel de CPU grâce à la commande\\ :\n"
-#~ " \"grep -c '^processor' /proc/cpuinfo\"\n"
-#~ "B<ATTENTION\\ :>\n"
-#~ "NE définissez PAS l'option dans MAKEFLAGS directement, cela entraînerait "
-#~ "l'échec de la construction. L'option -j peut aussi être configurée en "
-#~ "argument à make-kpkg.\n"
-
-# type: TP
-#~ msgid "B<xii) kernel-patch support>"
-#~ msgstr "B<xii) Gestion des patchs du noyau>"
-
-# type: Plain text
-#~ msgid ""
-#~ "There is support there for optionally applying patches to the kernel "
-#~ "provided as a kernel-patch .deb file, and building a patched kernel auto-"
-#~ "magically, and still retain an UN-patched kernel source tree."
-#~ msgstr ""
-#~ "Il est possible d'appliquer des patches additionnels du noyau fournis "
-#~ "sous la forme d'un fichier .deb, et de fabriquer par magie un noyau "
-#~ "patché, tout en conservant une arborescence des sources du noyau "
-#~ "inchangée."
+"B<kernel-img.conf>(5), B<kernel-pkg.conf>(5), B<The\\ Programmers\\ manual,> "
+"B<The\\ GNU\\ Make\\ manual> und die ausführliche Dokumentation im "
+"Verzeichnis B</usr/share/doc/kernel-package>"

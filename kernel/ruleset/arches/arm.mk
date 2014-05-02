@@ -47,7 +47,7 @@ ifeq ($(strip $(architecture)),arm)
     NEED_DIRECT_GZIP_IMAGE=NO
     kimagesrc = arch/$(KERNEL_ARCH)/boot/zImage
     kimagedest = $(INT_IMAGE_DESTDIR)/vmlinuz-$(KERNELRELEASE)
-    DEBCONFIG = $(CONFDIR)/config.arm
+    DEBCONFIG = $(CONFDIR)/config.$(DEB_HOST_ARCH)
   endif
   kelfimagesrc = vmlinux
   kelfimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(KERNELRELEASE)

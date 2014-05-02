@@ -117,8 +117,8 @@ ifneq ($(filter kfreebsd, $(DEB_HOST_ARCH_OS)):$(strip $(shell grep -E ^[^\#]*CO
 	mv System.precious System.map
       endif
       ifneq ($(strip ($CONFIG_LGUEST)),)
-	test ! -f Documentation/lguest/lguest ||			     \
-	    $(install_file) Documentation/lguest/lguest $(TMPTOP)/lib/modules/$(KERNELRELEASE)/lguest
+	test ! -f $(LGUEST_SUBDIR)/lguest ||			     \
+	    $(install_file) $(LGUEST_SUBDIR)/lguest $(TMPTOP)/lib/modules/$(KERNELRELEASE)/lguest
 	test ! -f $(TMPTOP)/lib/modules/$(KERNELRELEASE)/lguest ||		   \
 	    chmod 755 $(TMPTOP)/lib/modules/$(KERNELRELEASE)/lguest
       endif
@@ -335,9 +335,10 @@ endif
 ifeq ($(strip $(do_clean)),YES)
 # just to be sure we are not nuking ./debian
 	$(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) ARCH=$(KERNEL_ARCH) clean
-	test ! -d Documentation/lguest	||					\
-	   $(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) ARCH=$(KERNEL_ARCH)	\
-	       -C Documentation/lguest clean
+  ifneq ($(LGUEST_SUBDIR),)
+	$(MAKE) $(EXTRAV_ARG) $(FLAV_ARG) $(CROSS_ARG) ARCH=$(KERNEL_ARCH)	\
+	       -C $(LGUEST_SUBDIR) clean
+  endif
 	rm -f stamp-$(package)
 endif
 	@echo done > $@

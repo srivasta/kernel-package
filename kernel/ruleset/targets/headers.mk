@@ -31,9 +31,7 @@
 ###############################################################################
 
 LINK_ARCH=$(KERNEL_ARCH)
-ifeq ($(shell if [ $(PATCHLEVEL) -eq 6 ] && [ $(SUBLEVEL) -gt 23 ] ; then \
-    if [ $(KERNEL_ARCH) = "i386" ] || [ $(KERNEL_ARCH) = "x86_64" ] ; then \
-		echo "yes" ; fi ; fi ),yes)
+ifneq ($(filter i386 x86_64,$(KERNEL_ARCH)),)
 	LINK_ARCH=x86
 endif
 INSTALL_HDR_PATH=$(SRCDIR)

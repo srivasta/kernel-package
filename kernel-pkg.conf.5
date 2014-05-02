@@ -44,31 +44,31 @@ you may put any legal Makefile directive in that file (just make very
 sure you know what you are doing).  If the per user configuration file
 .I ~/.kernel\-pkg.conf
 exists, it is loaded in favor of the system wide configuration file
-.I /etc/kernel\-pkg.conf.
+.IR /etc/kernel\-pkg.conf .
 .PP
 All the variables have reasonable default values, and maybe
 overridden on a per run or a per individual basis by using
 environment variables.  Some of the variables can further be
 overridden by options to
-.B make\-kpkg.
+.BR make\-kpkg .
 .PP
 At the moment, the user modifiable variables supported are:
 .TP
 .B maintainer
-Local kernel (image, header, doc, etc) package maintainer. Set up at
+Local kernel (image, header, doc, etc.) package maintainer. Set up at
 package installation by the
-.IR postinst.
+.IR postinst .
 Can be overridden by the environment variable
-.B KPKG_MAINTAINER.
+.BR KPKG_MAINTAINER .
 Please note that any apostrophes "'" shall have to be quoted like so:
 maintainer = John O'\\''Brien. Yes, this is ugly, but this works.
 .TP
 .B email
 The email address of that person.  Set up at package installation by
 the
-.IR postinst.
+.IR postinst .
 Can be overridden by the environment variable
-.B KPKG_EMAIL.
+.BR KPKG_EMAIL .
 .TP
 .B pgp
 A key-ID to use when signing packages. Usually passed along to
@@ -77,28 +77,28 @@ using the
 .I \-k
 option, and also third party modules in the
 .B KMAINT
-environment variable, if separate modules (like pcmcia etc) are being
+environment variable, if separate modules (like pcmcia, etc.) are being
 built in
-.IR $MODULE_PATH.
+.IR $MODULE_PATH .
 Can be overridden by the environment variable
-.B PGP_SIGNATURE,
+.BR PGP_SIGNATURE ,
 and is overridden (again) by the
 .IR \-\-pgpsign
 option of
-.B make\-kpkg.
+.BR make\-kpkg .
 Defaults to
-.I maintainer.
+.IR maintainer .
 (Optional)
 .TP
 .B debian
 The version of the kernel packages, includes both the upstream version
 and the Debian revision. Can be overridden
 by the environment variable
-.B DEBIAN_REVISION,
+.BR DEBIAN_REVISION ,
 and is overridden (again) by the
 .IR \-\-revision
 option of
-.B make\-kpkg.
+.BR make\-kpkg .
 Defaults to
 .I <VERSION>-10.0.0.Custom
 (Optional)
@@ -106,22 +106,22 @@ Defaults to
 .B debian_revision_mandatory
 Normally unset. If this, or the environment variable
 .B DEBIAN_REVISION_MANDATORY
-are set, then not providing a debian revision results in an error (and
+are set, then not providing a Debian revision results in an error (and
 .B make\-kpkg
 shall not provide a default value of 10.0.0.Custom)
 .TP
 .B kimage
 The kernel image type (i.e. zImage or bzImage). Can be
 overridden from the environment variable
-.B IMAGE_TYPE,
+.BR IMAGE_TYPE ,
 and is overridden (again) by the options
 .IR \-\-zimage
 or
 .IR \-\-bzimage
 of
-.B make\-kpkg.
+.BR make\-kpkg .
 Defaults to
-.I bzImage.
+.IR bzImage .
 (Optional)
 .TP
 .B config_target
@@ -150,9 +150,9 @@ This should be set to a means of gaining superuser access (for
 example,
 .I `sudo'
 or
-.I `fakeroot')
+.IR `fakeroot' )
 as needed by
-.B dpkg\-buildpackages'
+.BR dpkg\-buildpackages '
 \-r option. The environment variable
 .B ROOT_CMD
 overrides this. Use the environment variable
@@ -194,18 +194,18 @@ from the top level of the (temporary) kernel image tree before the
 kernel image is packaged. This has no effect on anything other than
 the image that is being packaged -- if the script operates on the
 current directory and its children, the original source tree should
-remain intact.  This is to facilitate massaging of the kernel image
+remain intact.  This is to facilitate messaging of the kernel image
 that is packaged.
 .TP
 .B source_clean_hook
 Set to point to an executable, this shall cause that executable to run
 from the top level of the (temporary) kernel source tree before the
 sources are packaged,
-.I ./debian/tmp\-source/usr/src/kernel\-source\-X.X.XX.
+.IR ./debian/tmp\-source/usr/src/kernel\-source\-X.X.XX .
 This has no effect on anything other than the sources that are being
 packaged -- if the script operates on the current directory and its
 children, the original source tree should remain intact. This is to
-facilitate massaging of the kernel sources that are packaged (for
+facilitate messaging of the kernel sources that are packaged (for
 example, to remove version control directories, or to prune away
 unwanted architectures).
 .TP
@@ -215,7 +215,7 @@ from the top level of the kernel headers before the headers are
 packaged. This has no effect on anything other than the sources that
 are being packaged -- if the script operates on the current directory
 and its children, the original source tree should remain intact. This
-is to facilitate massaging of the kernel headers that are packaged
+is to facilitate messaging of the kernel headers that are packaged
 (for example, to remove version control directories, or to prune away
 unwanted architectures).
 .TP
@@ -225,7 +225,7 @@ from the top of the documentation tree before kernel documentation is
 packaged.  This has no effect on anything other than the documentation
 that is being packaged -- if the script operates on the current
 directory and its children, the original source tree should remain
-intact. This is to facilitate massaging of the kernel documentation
+intact. This is to facilitate messaging of the kernel documentation
 that is packaged (for example, to remove version control directories,
 or to prune away unwanted architectures).
 .TP
@@ -255,7 +255,7 @@ overrides this.  The default is unset.
 This is meant to be used by the
 .I libc6
 maintainer, when he compiles
-.I libc6,
+.IR libc6 ,
 to also package up the corresponding headers.
 .B DO NOT SET THIS
 unless you know what you are doing, since a mismatch between the
@@ -306,7 +306,7 @@ set this variable to the dir where you want the image. This may be of
 help to
 .B loadlin
 users. Defaults to
-.I /boot.
+.IR /boot .
 .TP
 .B MODULE_LOC
 Set this variable, either in the environment or in the config file, to
@@ -321,7 +321,7 @@ Defaults exist in the rules file. These are the values used if no
 customization is done.
 .IP b)
 Variables can be set in the config file
-.I /etc/kernel\-pkg.conf.
+.IR /etc/kernel\-pkg.conf .
 These values override the defaults.
 .IP c)
 Variables can also be set by setting a corresponding environment
@@ -337,14 +337,14 @@ command line
 This overrides all the above methods.
 .SH FILES
 The file described here is
-.I /etc/kernel\-pkg.conf.
+.I /etc/kernel\-pkg.conf
 or
-.I ~/.kernel\-pkg.conf.
+.IR ~/.kernel\-pkg.conf .
 .SH "SEE ALSO"
+.BR make (1),
 .BR make\-kpkg (1),
 .BR kernel\-img.conf (5),
-.BR make (1),
-.B The GNU Make manual.
+.B The GNU Make manual
 .SH BUGS
 There are no bugs.  Any resemblance thereof is delirium. Really.
 .SH AUTHOR

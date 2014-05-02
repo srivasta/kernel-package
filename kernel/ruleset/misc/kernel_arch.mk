@@ -52,9 +52,6 @@ ifneq (,$(filter %-64,$(KPKG_SUBARCH)))
   KERNEL_ARCH = mips64
 endif
 
-ifeq ($(strip $(architecture)),armel)
-  KERNEL_ARCH := arm
-endif
 ifeq ($(strip $(architecture)),armeb)
   KERNEL_ARCH := arm
 endif

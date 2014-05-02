@@ -112,7 +112,7 @@ install: genpo4a
 	$(install_file)    kernel-package.5  	      $(MAN5DIR)/kernel-package.5
 	$(install_file)    make-kpkg.8       	      $(MAN1DIR)/make-kpkg.1
 	$(install_file)    kernel-packageconfig.8     $(MAN8DIR)/
-	for lang in fr; do                                                                             \
+	for lang in de fr; do                                                                             \
           test ! -f kernel-pkg.conf.$$lang.5          || test -d $(MANTOP)/$$lang/man5    ||           \
                                                          mkdir -p $(MANTOP)/$$lang/man5;               \
           test ! -f kernel-pkg.conf.$$lang.5          ||                                               \
@@ -158,15 +158,15 @@ install: genpo4a
 	chmod  0755          $(prefix)/usr/share/$(package)/rules
 
 clean distclean:
-	for lang in es fr; do                        \
+	for lang in de fr; do                        \
           test ! -f kernel-pkg.conf.$$lang.5 ||      \
             rm  kernel-pkg.conf.$$lang.5      ;      \
 	  test ! -f kernel-img.conf.$$lang.5 ||      \
             rm  kernel-img.conf.$$lang.5      ;      \
 	  test ! -f kernel-package.$$lang.5 ||       \
             rm  kernel-package.$$lang.5       ;      \
-	  test ! -f make-kpkg.$$lang.5 ||            \
+	  test ! -f make-kpkg.$$lang.8 ||            \
             rm  make-kpkg.$$lang.8            ;      \
-	  test ! -f kernel-packageconfig.$$lang.5 || \
+	  test ! -f kernel-packageconfig.$$lang.8 || \
             rm  kernel-packageconfig.$$lang.8 ;      \
         done

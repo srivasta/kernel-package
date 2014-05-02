@@ -30,18 +30,6 @@
 ##
 ###############################################################################
 
-# make it possible to build s390x kernels on s390 for 2.4 kernels only
-# because 2.6 always use s390 as architecture.
-ifeq (4,$(PATCHLEVEL))
-  ifeq (,$(findstring $(KPKG_SUBARCH),s390 s390x))
-    KPKG_SUBARCH = s390
-  endif
-  KERNEL_ARCH = $(KPKG_SUBARCH)
-  ifneq ($(shell uname -m),$(KPKG_SUBARCH))
-    UNAME_MACHINE = $(KPKG_SUBARCH)
-    export UNAME_MACHINE
-  endif
-endif
 kimage := vmlinuz
 target = image
 NEED_DIRECT_GZIP_IMAGE=NO

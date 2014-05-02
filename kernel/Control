@@ -30,7 +30,7 @@ Priority: optional
 Provides: =ST-source, =ST-source-=CV
 Depends: binutils, bzip2, file
 Recommends: libc6-dev | libc-dev, gcc | c-compiler, make (>= 3.80-10), po-debconf, gettext, binutils (>= 2.12), util-linux (>= 2.10o), module-init-tools (>= 0.9.10), debianutils (>= 2.30)
-Suggests: libncurses-dev | ncurses-dev, kernel-package, xmlto, libdb3-dev, libncurses-dev, docbook-utils, e2fsprogs (>= 1.29), linux-initramfs-tool, ksymoops
+Suggests: libncurses-dev | ncurses-dev, kernel-package, xmlto, libdb3-dev, libncurses-dev, docbook-utils, e2fsprogs (>= 1.29), linux-initramfs-tool
 Description: Linux kernel source for version =V
  This package provides the source code for the Linux kernel, specifically,
  version =V.

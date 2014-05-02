@@ -58,7 +58,9 @@ ifneq ($(strip $(shell if [ -x /usr/bin/db2html ]; then echo YSE; fi)),)
 	$(MAKE)  mandocs htmldocs
 endif
 	-tar cf - Documentation | (cd $(DOCDIR); umask 000; tar xsf -)
-	rm -f $(DOCDIR)/Documentation/lguest/lguest $(DOCDIR)/Documentation/lguest/lguest.lds
+ifneq ($(LGUEST_SUBDIR),)
+	rm -f $(DOCDIR)/$(LGUEST_SUBDIR)/lguest $(DOCDIR)/$(LGUEST_SUBDIR)/lguest.lds
+endif
 	test ! -d $(DOCDIR)/Documentation/DocBook ||                            \
 	   rm -f   $(DOCDIR)/Documentation/DocBook/Makefile                     \
 	           $(DOCDIR)/Documentation/DocBook/*.sgml                       \
@@ -75,15 +77,12 @@ endif
 ######################################################################
 #### 
 ######################################################################
-ifneq ($(shell if [ $(VERSION) -ge 2 ] && [ $(PATCHLEVEL) -ge 5 ]; then \
-	                  echo new;fi),)
 		find -name Kconfig -print0 | xargs -0r cat | \
 		     (umask 000 ; cat > $(DOCDIR)/Kconfig.collected)
 # removing if empty should be faster than running find twice
 	if ! test -s $(DOCDIR)/Kconfig.collected ; then \
 	    rm -f $(DOCDIR)/Kconfig.collected ;          \
          fi
-endif
 ifneq ($(strip $(doc_clean_hook)),)
 	(cd $(DOCDIR);              \
                test -x $(doc_clean_hook) && $(doc_clean_hook))

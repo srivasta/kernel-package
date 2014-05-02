@@ -38,11 +38,15 @@ process to allow local options for handling some aspects of the
 installation, overriding the defaults built into the image itself.
 .PP
 The format of the file is a simple
-.B VAR = VALUE
+.IB VAR = VALUE
 pair. Boolean values may be specified as
-.I Yes, True, 1,
+.IR Yes ,
+.IR True ,
+.IR 1 ,
 and
-.I No, False, 0,
+.IR No ,
+.IR False ,
+.IR 0 ,
 and are case insensitive.
 This file is automatically created by the installation script in
 certain circumstances.
@@ -50,7 +54,7 @@ certain circumstances.
 At the moment, the user modifiable variables supported are:
 .TP
 .B postinst_hook
-.BR DEPRECATED:
+.BR DEPRECATED :
 Set this variable to a script to be executed during installation. The
 path can be a relative path if the script lives in a safe path -- that
 is, if it lives in /bin, /sbin, /usr/bin, or /usr/sbin, or must be an
@@ -70,8 +74,8 @@ of the kernel image itself. Errors in the script shall cause the
 postinst to fail. Since debconf is in use before the script is called,
 this script should issue no diagnostic messages to stdout -- while the
 postinst does call
-.B db_stop
-, debconf does not restore stdout, so messages to stdout disappear.
+.BR db_stop ,
+debconf does not restore stdout, so messages to stdout disappear.
 An example script for grub users is present in
 /usr/share/doc/kernel\-package/ directory.
 This script is run
@@ -79,7 +83,7 @@ This script is run
 the scripts in /etc/kernel/postinst.d directory.
 .TP
 .B postrm_hook
-.BR DEPRECATED:
+.BR DEPRECATED :
 Set this variable to a script to be executed in the postrm (that is,
 after the image has been removed) after all the remove actions have
 been performed. The path can be a relative path if the script lives in
@@ -97,14 +101,14 @@ of the kernel image itself. Errors in the script shall produce a
 warning message, but shall be otherwise ignored. Since debconf is in
 use before the script is called, this script should issue no
 diagnostic messages to stdout --  while the postinst does call
-.B db_stop
-, debconf does not restore stdout, so messages to stdout disappear.
+.BR db_stop ,
+debconf does not restore stdout, so messages to stdout disappear.
 This script is run
 .I after
 the scripts in /etc/kernel/postrm.d directory.
 .TP
 .B preinst_hook
-.BR DEPRECATED:
+.BR DEPRECATED :
 Set this variable to a script to be executed before the package is
 unpacked, and can be used to put in additional checks. The path can be
 a relative path if the script lives in a safe path -- that is, if it
@@ -123,7 +127,7 @@ This script is run
 the scripts in /etc/kernel/preinst.d directory.
 .TP
 .B prerm_hook
-.BR DEPRECATED:
+.BR DEPRECATED :
 Set this variable to a script to be executed before the package files
 are removed (so any added files may be removed) . The path can be a
 relative path if the script lives in a safe path -- that is, if it
@@ -140,14 +144,14 @@ of the kernel image itself. Errors in the script shall cause the prerm
 to fail. Since debconf is in use before the script is called, this
 script should issue no diagnostic messages to stdout -- while the
 postinst does call
-.B db_stop
-, debconf does not restore stdout, so messages to stdout disappear.
+.BR db_stop ,
+debconf does not restore stdout, so messages to stdout disappear.
 This script is run
 .I after
 the scripts in /etc/kernel/prerm.d directory.
 .TP
 .B src_postinst_hook
-.BR DEPRECATED:
+.BR DEPRECATED :
 Unlike the other hook variables, this is meant for a script run during
 the post inst of a docs, headers or a source package. Using this hook
 for the headers package is now being deprecated, at some point the
@@ -170,7 +174,7 @@ This script is run
 the scripts in /etc/kernel/src_postinst.d directory.
 .TP
 .B header_postinst_hook
-.BR DEPRECATED:
+.BR DEPRECATED :
 Unlike the other hook variables, this is meant for a script run during
 the post inst of a headers package only. The path can be a relative
 path if the script lives in a safe path -- that is, if it lives in
@@ -227,7 +231,7 @@ is to relink (delete) the source link (YES).
 .B silent_modules
 This option has been put in for the people who are vastly irritated on
 being warned about preexisting modules directory
-.I /lib/modules/$version
+.IR /lib/modules/$version .
 That directory may belong to an old or defunct kernel image package,
 in which case problems may arise with leftover modules in that
 directory tree, or the directory may legitimately exist due to a
@@ -236,7 +240,7 @@ that has already been unpacked.  In this latter case the existence of
 the directory is benign.  If you set this variable, you shall no
 longer be given a chance to abort if a preexisting modules directory
 .I /lib/modules/$version
-is detected.  This is unset be default.
+is detected.  This is unset by default.
 .TP
 .B ignore_depmod_err
 If set, does not prompt to continue after a depmod problem in the
@@ -245,12 +249,12 @@ mask a problem with the kernel image. A diagnostic is still
 issued. This is unset be default.
 .SH FILES
 The file described here is
-.I /etc/kernel\-img.conf.
+.IR /etc/kernel\-img.conf .
 .SH "SEE ALSO"
+.BR make (1),
 .BR make\-kpkg (1),
 .BR kernel\-pkg.conf (5),
-.BR make (1),
-.B The GNU Make manual.
+.B The GNU Make manual
 .SH BUGS
 There are no bugs.  Any resemblance thereof is delirium. Really.
 .SH AUTHOR
