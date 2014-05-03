@@ -1,6 +1,6 @@
 ############################ -*- Mode: Makefile -*- ###########################
-## Makefile --- 
-## Author           : Manoj Srivastava ( srivasta@glaurung.green-gryphon.com ) 
+## Makefile ---
+## Author           : Manoj Srivastava ( srivasta@glaurung.green-gryphon.com )
 ## Created On       : Tue Nov 18 15:53:52 2003
 ## Created On Node  : glaurung.green-gryphon.com
 ## Last Modified By : Manoj Srivastava
@@ -8,11 +8,11 @@
 ## Last Machine Used: anzu.internal.golden-gryphon.com
 ## Update Count     : 36
 ## Status           : Unknown, Use with caution!
-## HISTORY          : 
-## Description      : 
-## 
+## HISTORY          :
+## Description      :
+##
 ###############################################################################
-prefix=
+prefix=$(DESTDIR)
 package = kernel-package
 
 CONFLOC    := /etc/kernel-pkg.conf
