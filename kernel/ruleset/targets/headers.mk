@@ -1,6 +1,6 @@
 ######################### -*- Mode: Makefile-Gmake -*- ########################
-## headers.mk --- 
-## Author           : Manoj Srivastava ( srivasta@glaurung.internal.golden-gryphon.com ) 
+## headers.mk ---
+## Author           : Manoj Srivastava ( srivasta@glaurung.internal.golden-gryphon.com )
 ## Created On       : Mon Oct 31 16:23:51 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
@@ -8,12 +8,12 @@
 ## Last Machine Used: anzu.internal.golden-gryphon.com
 ## Update Count     : 28
 ## Status           : Unknown, Use with caution!
-## HISTORY          : 
-## Description      : This file is responsible for creating the kernel-headers packages 
-## 
+## HISTORY          :
+## Description      : This file is responsible for creating the kernel-headers packages
+##
 ## arch-tag: 2280e193-fbb3-4990-ac8c-d0504ee9bab5
-## 
-## 
+##
+##
 ## This program is free software; you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
 ## the Free Software Foundation; either version 2 of the License, or
@@ -78,7 +78,7 @@ debian/stamp/install/$(h_package):
 	chmod 0644                                         $(DOCDIR)/Buildinfo
 	$(install_file) $(DEBDIR)/pkg/headers/copyright    $(DOCDIR)/copyright
 ######################################################################
-#### 
+####
 ######################################################################
 	$(install_file) Makefile                           $(SRCDIR)
 	test ! -e Rules.make || $(install_file) Rules.make $(SRCDIR)
@@ -141,6 +141,14 @@ debian/stamp/install/$(h_package):
 	for file in $(localversion_files) dummy; do                               \
           test ! -e $$file || $(install_file) $$file $(SRCDIR);                   \
         done
+######################################################################
+# if the file include/generated/uapi/linux/version.h exists then
+# include/linux/version.h must not be added to
+# linux-headers-... package.
+######################################################################
+	test ! -e $(SRCDIR)/include/linux/version.h ||                            \
+        test ! -e $(SRCDIR)/include/generated/uapi/linux/version.h ||             \
+        rm -f $(SRCDIR)/include/linux/version.h
 	(cd $(SRCDIR); find . -type d -name .git -print0       | xargs -0r rm -rf {} \; )
 	(cd $(SRCDIR); find . -type f -name .gitmodule -print0 | xargs -0r rm -f  {} \; )
 ######################################################################
@@ -181,7 +189,7 @@ ifeq (,$(findstring nostrip,$(DEB_BUILD_OPTIONS)))
 endif
 	@echo done > $@
 
-debian/stamp/binary/$(h_package): 
+debian/stamp/binary/$(h_package):
 	$(REASON)
 	@echo "This is kernel package version $(kpkg_version)."
 	$(checkdir)

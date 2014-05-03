@@ -3,14 +3,78 @@ kernel-package (13.000) unstable; urgency=low
   * Move to a new build system based on dh. This is just for
     kernel-package, no changes have yet been made to the generated package
     build system.
-  * Bug fix: "please do not depend on module-init-tools", thanks to
-    md@Linux.IT (Marco d&#39;Itri), Updated the dependency to kmod, since
-    the module-init-tools is an obsolete transitional package (Closes: #733701).
-  * Bug fix: "Fails to build linux-3.7.1 with module-support disabled",
-    thanks to Stefan Gehn. Modified the regular expression to detect
-    whether modules are configured as suggested by Stefan. (Closes: #696537).
+  * Move way from git modules to a flatter structure, to better use
+    standard git build frameworks. (Closes: #690002).
+  * Updated the dependency to from module-init-tools -> kmod, since the
+    module-init-tools is an obsolete transitional package.
+    (Closes: #733701, #663358, )
+  * As of 3.8-rc2, kernel building requires bc(1. Added bc as a dependency
+    for kernel-package, so that building a kernel will work again
+    (Closes: #705587, #702600,  #742674).
+  * There are new configuration options called CONFIG_MODULE_*, which
+    confuse the regular expression trying to detect whether modules are
+    configured or not. Modified the regular expression to detect
+    whether modules are configured as suggested by Stefan Gehn.
+    (Closes: #696537).
+  * make-kpkg failed to cross build armhf kernels. The supplied patch by
+    Karsten Merker adds a few missing definitions  which are only used in
+    the case of cross-building (Closes: #728014).
+  * The UTS_RELEASE definition was moved from
+    $(KERN_ROOT)/include/linux/utsrelease.h to
+    $(KERN_ROOT)/include/generated/utsrelease.h. The current version looks
+    in both places. Fix sggested by  mahashakti89, (Closes: #591793).
+  * find -perm syntax changed from -perl +XXX to -prem /xxx. Fixed
+    the use of find -perm in the one location I found it in
+    (Closes: #724775).
+  * Added a dependency on initramfs-tools into the generated linux-image
+    packages,  (Closes: #652637).
+  * kernel package was not building a vmlinuz image for mipsel loongson
+    cpu. Applied the patch from  liushiwei to allow make-kpkg build
+    vmlinuz on mipsel loongson cpu machines (Closes: #593857).
+  * if the file include/generated/uapi/linux/version.h exists then
+    include/linux/version.h must not be added to
+    linux-headers-... package. The former should not exist, and if it does
+    it is a mistake.     (Closes: #734310).
+  * dpkg: warning: obsolete option '--print-installation-architecture',
+    use '--print-architecture' instead. Replaced all instances of dpkg
+    --print-installation-architecture in the package. (Closes:  #597637).
+  * The following bugs were fixed in this release:
+  * Bug fix #733701: "please do not depend on module-init-tools", thanks
+    to md@Linux.IT (Marco d&#39;Itri)     .
+  * Bug fix #663358: "module-init-tools is now a transitional dummy
+    package for kmod.Please add the correct depend", thanks to Domenico
+    Pasella.
+  * Bug fix #705587,: "As of 3.8-rc2, kernel building requires bc(1)",
+    thanks to sacrificial-spam-address@horizon.com.
+  * Bug fix #702600: "1: bc: not found", thanks to Andrei Paulau
+  * Bug fix #742674: "bc should be added to the dependencies", thanks
+    to Erik Braun
+  * Bug fix #690002: "Git package repository contains empty directory
+    `debian/`", thanks to Paul Menzel. The problem is not that the git
+    repository had an empty debian directory, the issue was that
+    kernel-package uses git modules. One has to (recursively) expand the
+    modules. However, whith this commit, we move away from git modules to
+    a flat structure.
+  * Bug fix #696537: "Fails to build linux-3.7.1 with module-support
+    disabled", thanks to Stefan Gehn. Used the suggested new regular
+    expression.
+  * Bug fix #728014: "[PATCH] Fix cross-building armhf kernel packages",
+    thanks to Karsten Merker.
+  * Bug fix #591793: "Building 2.6.35 kernel fails with kernel-package
+    12.036", thanks to mahashakti89,
+  * Bug fix #724775: "kernel-package uses deprecated find -perm +xxx
+    syntax, please switch to find -perm /+++", thanks to Andreas Metzler.
+  * Bug fix #652637: "Generated linux-image package should depend on
+    initramfs-tools", thanks to Matthijs Kooijman. Added the suggested
+    dependency
+  * Bug fix #593857: "enable gzip for mipsel loongson cpu", thanks to
+    liushiwei. Applied the suggested patch
+  * Bug fix #734310: "exclude include/linux/version.h", thanks to Eduard
+    Bloch
+  * Bug fix #597637: "dpkg using obsolete option", thanks to Brian Minton
 
- -- Manoj Srivastava <srivasta@debian.org>  Sat, 03 May 2014 00:30:53 -0700
+
+ -- Manoj Srivastava <srivasta@debian.org>  Sat, 03 May 2014 12:57:47 -0700
 
 kernel-package (12.036+nmu3) unstable; urgency=low
 

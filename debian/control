@@ -22,7 +22,7 @@ Description: utility for building Linux kernel related Debian packages
  of this package.
 Depends: build-essential, make (>= 3.80-10), po-debconf, gettext, file,
           debianutils (>= 2.30), binutils (>= 2.12), util-linux (>= 2.10o),
-          kmod, ${misc:Depends}
+          kmod, ${misc:Depends}, bc
 Recommends: cpio
 Suggests: linux-source, e2fsprogs (>= 1.41.4), libncurses-dev,
  docbook-utils, xmlto, bzip2, linux-initramfs-tool, grub (>= 0.93) | grub2,
