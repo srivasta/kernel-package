@@ -75,7 +75,7 @@ Package: =ST-image-=V=SA-dbg
 Architecture: =A
 Section: debug
 Priority: optional
-Depends: initramfs-tools | linux-initramfs-toolm =ST-image-=V=SA
+Depends: initramfs-tools | linux-initramfs-tool, =ST-image-=V=SA
 Provides: =ST-debug,  =ST-debug-=CV, =ST-debug-=V=SA
 Suggests: systemtap
 Description: Linux kernel debug image for version =V=SA

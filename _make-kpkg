@@ -17,13 +17,14 @@ _make_kpkg()
     prev=${COMP_WORDS[COMP_CWORD-1]}
     options="--added_modules --added-modules --added_patches --added-patches \
              --append_to_version --append-to-version --arch --arch_in_name \
-             --arch-in-name binary build buildpackage --bzimage clean \
-             --config configure --cross_compile --cross-compile debian \
-             --help --initrd --overlay-dir kernel_doc kernel_headers kernel_image \
-             kernel_source linux_doc linux_headers linux_image \
-             linux_source libc-kheaders modules modules_clean modules_config \
-             modules_image --noexec --pgpsign --stem --revision --rootcmd --subarch \
-             --targets --uc --us --zimage"
+             --arch-in-name binary binary-arch binary-indep build \
+             buildpackage --bzimage clean --config configure --cross_compile \
+             --cross-compile debian --help --initrd -j --jobs --overlay-dir \
+             kernel_debug kernel_doc kernel_headers kernel_manual kernel_image \
+             kernel_source linux_doc linux_headers linux_image linux_source \
+             libc-kheaders modules modules_clean modules_config modules_image \
+             --noexec --pgpsign --stem --revision --rootcmd --subarch \
+             --targets --uc --us --verbose --zimage"
 
     paroptions="$options"
 
@@ -45,11 +46,11 @@ _make_kpkg()
 
     for (( i=0; i < ${#COMP_WORDS}-1; i++ )); do
 	#we need to start and end every line with '|' so it can be recognized.
-	if [[ ${COMP_WORDS[i]} == @(binary|build|buildpackage|clean|\
-	    |configure|debian|kernel_doc|kernel_headers|kernel_image|\
-	    |kernel_source|libc-kheaders|modules|modules_clean|\
-	    |modules_config|modules_image|binary-indep|binary-arch|\
-            |kernel-manual|kernel_manual|modules_clean) ]]; then
+	if [[ ${COMP_WORDS[i]} == @(binary|binary-arch|binary-indep|build|\
+        |buildpackage|clean|debian|kernel_debug|kernel_doc|kernel_headers|\
+        |kernel_manual|kernel_image|kernel_source|linux_doc|linux_headers|\
+        |linux_image|linux_source|libc-kheaders|modules|modules_clean|\
+            |modules_config|modules_image) ]]; then
 	    paroptions=$( echo $options | sed s/--[^\ ]*//g )
 	    COMPREPLY=( $( compgen -W "$paroptions" | grep ^$cur ) )
 	    return 0;

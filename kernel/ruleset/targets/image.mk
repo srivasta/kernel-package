@@ -165,27 +165,21 @@ endif
 ifeq ($(strip $(KERNEL_ARCH)),um)
 	cp $(kimagesrc) $(kimagedest)
 else
-  ifeq ($(strip $(HAVE_INST_PATH)),)
 	test ! -f System.map ||	 cp System.map			       \
 			$(TMPTOP)/$(IMAGEDIR)/System.map-$(KERNELRELEASE);
-	test ! -f System.map ||	 chmod 644			       \
+	test ! -f System.map ||	 chmod 600			       \
 			$(TMPTOP)/$(IMAGEDIR)/System.map-$(KERNELRELEASE);
 	cp $(kimagesrc) $(kimagedest)
-  else
 	$(restore_upstream_debianization)
-	$(MAKE) $(EXTRAV_ARG) INSTALL_MOD_PATH=$(INSTALL_MOD_PATH)	     \
-		INSTALL_FW_PATH=$(INSTALL_MOD_PATH)/lib/firmware/$(KERNELRELEASE)  \
-		INSTALL_PATH=$(INT_IMAGE_DESTDIR) $(CROSS_ARG) $(KPKG_KBUILD_INSTALL_TARGET)
-  endif
 endif
 ifeq ($(strip $(HAVE_COFF_IMAGE)),YES)
 	cp $(coffsrc)	$(coffdest)
-	chmod 644	$(coffdest)
+	chmod 600	$(coffdest)
 endif
 ifeq ($(strip $(int_install_vmlinux)),YES)
   ifneq ($(strip $(kelfimagesrc)),)
 	cp $(kelfimagesrc) $(kelfimagedest)
-	chmod 644 $(kelfimagedest)
+	chmod 600 $(kelfimagedest)
   endif
 endif
 ######################################################################
@@ -197,12 +191,12 @@ ifeq ($(strip $(NEED_DIRECT_GZIP_IMAGE)),YES)
 endif
 # Set permissions on the image
 ifeq ($(strip $(KERNEL_ARCH)),um)
-	chmod 755 $(kimagedest);
   ifeq (,$(findstring nostrip,$(DEB_BUILD_OPTIONS)))
 	strip --strip-unneeded --remove-section=.note --remove-section=.comment	 $(kimagedest);
   endif
+	chmod 700 $(kimagedest);
 else
-	chmod 644 $(kimagedest);
+	chmod 600 $(kimagedest);
 endif
 ######################################################################
 ###   Hooks and information
@@ -222,7 +216,7 @@ endif
 # For LKCD enabled kernels
 	test ! -f Kerntypes ||	cp Kerntypes				       \
 			$(TMPTOP)/$(IMAGEDIR)/Kerntypes-$(KERNELRELEASE)
-	test ! -f Kerntypes ||	chmod 644				       \
+	test ! -f Kerntypes ||	chmod 600				       \
 			$(TMPTOP)/$(IMAGEDIR)/Kerntypes-$(KERNELRELEASE)
 ifeq ($(strip $(delete_build_link)),YES)
 	rm -f $(TMPTOP)/lib/modules/$(KERNELRELEASE)/build
@@ -330,6 +324,9 @@ endif
 			-p$(package) -P$(TMPTOP)/
 	$(create_md5sum)	       $(TMPTOP)
 	chmod -R og=rX		       $(TMPTOP)
+	test ! -e $(kimagedest)        || chmod og-rx $(kimagedest)
+	test ! -e $(TMPTOP)/$(IMAGEDIR)/System.map-$(KERNELRELEASE)  || \
+           chmod og-rx $(TMPTOP)/$(IMAGEDIR)/System.map-$(KERNELRELEASE) $(kimagedest)
 	chown -R root:root	       $(TMPTOP)
 	dpkg --build		       $(TMPTOP) $(DEB_DEST)
 ifeq ($(strip $(do_clean)),YES)

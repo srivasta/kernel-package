@@ -94,6 +94,7 @@ debian/stamp/install/$(h_package):
                                                      $(SRCDIR)/arch/$(LINK_ARCH)
 	test ! -e Rules.make     || $(install_file) Rules.make     $(SRCDIR)
 	test ! -e Module.symvers || $(install_file) Module.symvers $(SRCDIR)
+	$(MAKE) INSTALL_HDR_PATH=$(SRCDIR) headers_install
   ifneq ($(strip $(int_follow_symlinks_in_src)),)
 	-tar cfh - include       |   (cd $(SRCDIR); umask 000; tar xsf -)
 	-tar cfh - scripts       |   (cd $(SRCDIR); umask 000; tar xsf -)

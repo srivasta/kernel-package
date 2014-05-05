@@ -1,3 +1,51 @@
+kernel-package (13.003) unstable; urgency=low
+
+  * The image installation process upstream has changed; and uses the
+    /sbin/installkernel method now (which is not really aware of
+    installing into a temp directory for packaging). Updating the install
+    process to match. This also means that this version of kernel-package
+    can not compile kernels older than July 2009.
+  * Fixed a typo in the control file for debug image packages.
+  * Just compiled a kernel linux-image-3.15.0-rc4 with these changes
+    (Closes: #745686).
+  * To build a kernel  with LZ4 compression enabled, lz4c is
+    needed. Added a suggests for liblz4-tool (Closes:  #746539).
+  * As part of an effort to deter kernel exploits, System.map and the
+    kernel image should be made readable by root only to prevent attackers
+    from getting knowledge of kernel addresses. This version of kernel
+    package does exactly that.  (Closes: #615029).
+  * Upstream kernel Makefiles provide an header_install target to install
+    sanitized headers into the destination. Use that while generating the
+    headers package.  (Closes: #696922).
+  * Bash autocomletion doesn't support all target commands.  Bartosz Janda
+    provided an updated autocomplete script (Closes: #696264).
+  * Previously the lguest source moved from Documentation/lguest to
+    Documentation/virtual/lguest, and more recently it moved again to
+    tools/lguest. Look now in all these places. (Closes: #690813).
+  * The documentation for the kernel requires db2html from the
+    docvoot-utils package to render. kernel-package has always Suggested
+    the package, but there was some surprise when the documentation
+    packages ended up mostly empty. Moved the relationship to Recommends.
+    (Closes: #593894).
+  * Bug fix #745686: "fails to build Linux 3.15-rc*", thanks to Darren Salt
+  * Bug fix #746539: "Please suggest liblz4-tool", thanks to Toby Speight
+  * Bug fix: #615029: "Please restrict permissions of System.map and
+    vmlinuz for security reasons", thanks to Pierre Ynard
+  * Bug fix #696922: "kernel-headers does not include linux/limits.h",
+    thanks to Michal Suchanek
+  * Bug fix: #696264: "[kernel-package] Bash autocompletion for missing
+    targets", thanks to Bartosz Janda
+  * Bug fix #690813: "kernel-package doesn&#39;t look for lguest in
+    tools/lguest", thanks to Dave Bechtel
+  * Bug fix: "[kernel-package] Makefile.build:44:
+    /usr/src/linux-headers-3.2.0-3-common/scripts/basic/Makefile: Datei
+    oder Verzeichnis nicht gefunden", thanks to deleo@gmx.de. This was
+    fixed in the last update. (Closes: #684888).
+  * Bug fi: #593894x: "Building linux-manual package without docbook-utils
+    quietly fails", thanks to Christoph Anton Mitterer
+
+ -- Manoj Srivastava <srivasta@debian.org>  Mon, 05 May 2014 01:23:16 -0700
+
 kernel-package (13.002) unstable; urgency=high
 
   * Set the kernel-package version correctly in the new dh build.
