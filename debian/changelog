@@ -15,10 +15,14 @@ kernel-package (13.004) UNRELEASED; urgency=low
     signed tagged state and LOCALVERSION= is not specified. This creates
     problems when packaging the resulting image. Updated the documentation
     for workarounds.
+  * Since the debug images all upload files in the same location, they
+    conflict with each other.  (Closes: #570635).
   * Bug fix: #717807: "kernel-release contains -dirty although the tree is
     clean", thanks to Michal Hocko
+  * Bug fix #570635: "-dbg packages should conflict each other", thanks to
+    Sebastian Bremicker
 
- -- Manoj Srivastava <srivasta@debian.org>  Wed, 07 May 2014 16:28:12 -0700
+ -- Manoj Srivastava <srivasta@debian.org>  Wed, 07 May 2014 16:44:58 -0700
 
 kernel-package (13.003) unstable; urgency=low
 

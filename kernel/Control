@@ -77,6 +77,7 @@ Section: debug
 Priority: optional
 Depends: initramfs-tools | linux-initramfs-tool, =ST-image-=V=SA
 Provides: =ST-debug,  =ST-debug-=CV, =ST-debug-=V=SA
+Conflicts: =ST-debug
 Suggests: systemtap
 Description: Linux kernel debug image for version =V=SA
  This package contains the Linux kernel debug image for version
