@@ -8,7 +8,7 @@
 
  a) Failure to format a floppy disk while installing kernel image.
 
-    fdformat from the obsolete package miscutils sometimes has problems 
+    fdformat from the obsolete package miscutils sometimes has problems
     formatting floppies.  Install the package fdutils instead.
     Also, sometimes the new fdformat fails for /dev/fd0 unless the
     parameters are set using setfdprm -- in short, make sure that you can
@@ -23,14 +23,14 @@
      too old for kernel-package; kernel-package version 3.X needs dpkg
      1.4.0.0 at least.
 
- c) dpkg-gencontrol fails with the error message 
+ c) dpkg-gencontrol fails with the error message
     failure: chown new files list file: Illegal seek
 
     This is an error in older versions of dpkg-dev. Upgrading to version
     1.4.0.9 should help.
 
  d) install: debian/changelog: No such file or directory
-   
+
      Remember to do make-kpkg clean with a patched/old kernel source tree
      (if this is not a clean tree, clean it first).
 
@@ -41,7 +41,7 @@
     become POSIX compliant) and the kernel sources (which did not expect
     expr to behave this way).
 
-    The fix is to apply the following patch to the kernel sources. 
+    The fix is to apply the following patch to the kernel sources.
 
 
 --- scripts/Configure.dist	Mon Jan 20 14:43:24 1997
@@ -85,7 +85,7 @@
       really confirm this works for anything except en_US. This is true as of
       dpkg/dpkg-dev 1.4.0.19. The error actually reported seems to be
       either that debian/substvars file can not be found, or that the
-      changelog file is empty (even when the file is not empty). 
+      changelog file is empty (even when the file is not empty).
 
       The work around seems to be to set the LC_ALL to en_US while compiling
       the kernel. This should be fixed soon.
@@ -127,7 +127,7 @@ make: *** [all] Error 2
         in the version number.
 
      l) The version number seems to be dropped in the name of the package,
-	i.e., you get results like kernel-image-.._300_i386.deb, where the 
+	i.e., you get results like kernel-image-.._300_i386.deb, where the
 	300 is from the --revision flag.
 
 	This seems to result from using the broken perl 5.005 packages
@@ -143,20 +143,20 @@ make: *** [all] Error 2
         kernel without the flag '-fno-strict-aliasing' (I think you
         may have to edit the makefile for this, or something). This is
         an universal problem, hopefully there shall be a compromise
-        somewhere 
- 
+        somewhere
+
         A symptom may be failures like:
 Makefile:153: arch/i586/Makefile: No such file or directory
 make[1]: *** No rule to make target `arch/i586/Makefile'.  Stop.
 
-      n) I keep getting this kind of messages:  
+      n) I keep getting this kind of messages:
 
- make[1]: i386-linux-gcc: Command not found        
+ make[1]: i386-linux-gcc: Command not found
 
-	This is a result of having the env variable ARCH set when you do 
+	This is a result of having the env variable ARCH set when you do
         not intend to cross compile the kernel.  Unsetting ARCH works fine.
 
-      o)  booting from the new kernel fails with 
+      o)  booting from the new kernel fails with
 VFS: Cannot open root device "308" or 03:08
           immediately followed by a kernel panic
 
@@ -168,7 +168,7 @@ VFS: Cannot open root device "308" or 03:08
 	You need to go back and recompile the kernel image, either
 	including the root file system type as a builtin, or adding a
 	--initrd flag to the make-kpkg run.
-      p) Even when the kernel is built with a regular user using fakeroot, 
+      p) Even when the kernel is built with a regular user using fakeroot,
          it fails with
 > install -p -d -o root -g root -m 755 debian/tmp-image/DEBIAN
 > install: cannot create directory `debian/tmp-image/DEBIAN': Permission
@@ -201,7 +201,7 @@ VFS: Cannot open root device "308" or 03:08
            string "-dirty" to the version. Since we change a couple of
            files in ./scripts/, this falls afoul of the make-kpkg
            checks, since the version number is now different from what
-           make-kpkg knows it to be. 
+           make-kpkg knows it to be.
 
       s) there is an additional truncated commit ID added by the
          script scripts/setlocalversion whenever it detects that we
@@ -238,8 +238,30 @@ VFS: Cannot open root device "308" or 03:08
              older versions of make. Specifically, the problem shows
              up as:
 ,----
-| $ fakeroot make-kpkg --initrd                  
-| exec make -f /usr/share/kernel-package/ruleset/minimal.mk debian INITRD=YES 
+| $ fakeroot make-kpkg --initrd
+| exec make -f /usr/share/kernel-package/ruleset/minimal.mk debian INITRD=YES
 | /usr/share/kernel-package/ruleset/misc/version_vars.mk:55: *** missing `endif'.  Stop.
 | Failed to create a ./debian directory: No such file or directory at /usr/bin/make-kpkg line 1096.
 `----
+
+        v) When compiling in a git checkout of the kernel sources, the
+           KERNELRELEASE variable contains the key word dirty, even
+           though the tree is clean, and verified by git status.
+           The value comes from include/config/kernel.release
+,----
+|  # Using fake root for the whole command causes this
+|  fakeroot make-kpkg .....
+|  # This does not cause the error
+|  make-kpkg --rootcmd fakeroot
+`----
+
+        w) If you build out of a kernel git repositoty, and if the
+           repository is not in a clean annotated or signed tagged
+           state and LOCALVERSION= is not specified. then the script
+           scripts/setlocalversion will append a plus sign to the
+           version. This creates a problem with the packaging tools.
+
+           Solutions:
+           + Create a LOCALVERSION variable in the kernel configuration
+           + export a shell LOCALVERSION variable
+           + create a signed or annotated tag.

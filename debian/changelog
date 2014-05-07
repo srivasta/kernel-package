@@ -1,3 +1,25 @@
+kernel-package (13.004) UNRELEASED; urgency=low
+
+  * There were some places where we still recommended custom.1.0 instead
+    of 1.0.custom, even though the former is now not acceptable. This
+    commit fixes the remaining locations where that advice was incorrect.
+  * When compiling in a git checkout of the kernel sources: the
+    KERNELRELEASE variable contains the key word dirty, even though the
+    tree is clean, and verified by git status. This is caused by using
+    fakeroot make-kpkg .../ Updated documentation to not the preferred
+    form is to use make-kpkg --rootcmd fakeroot to avoid this.
+    (Closes: #717807).
+  * If you build from the git tree of the linux kernel, and you are not on
+    a tagged branch, the script scripts/setlocalversion will append a plus
+    sign to the version if the repository is not in a clean annotated or
+    signed tagged state and LOCALVERSION= is not specified. This creates
+    problems when packaging the resulting image. Updated the documentation
+    for workarounds.
+  * Bug fix: #717807: "kernel-release contains -dirty although the tree is
+    clean", thanks to Michal Hocko
+
+ -- Manoj Srivastava <srivasta@debian.org>  Wed, 07 May 2014 16:28:12 -0700
+
 kernel-package (13.003) unstable; urgency=low
 
   * The image installation process upstream has changed; and uses the
