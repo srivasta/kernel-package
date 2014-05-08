@@ -15,14 +15,22 @@ kernel-package (13.004) UNRELEASED; urgency=low
     signed tagged state and LOCALVERSION= is not specified. This creates
     problems when packaging the resulting image. Updated the documentation
     for workarounds.
+  * Patch to build uImage kernels for ARM by  Andrew Bradford. This adds
+    the --uimage option to build a uImage kernel for ARM systems. Needs
+    uboot-mkimage installed to do so, This package contains the mkimage
+    utility, which encapsulates a compressed  "uImage" Linux kerel image
+    with header information, CRC32 checksum, etc,  for use with the U-Boot
+    bootloader.  (Closes: #572117).
   * Since the debug images all upload files in the same location, they
     conflict with each other.  (Closes: #570635).
   * Bug fix: #717807: "kernel-release contains -dirty although the tree is
     clean", thanks to Michal Hocko
   * Bug fix #570635: "-dbg packages should conflict each other", thanks to
     Sebastian Bremicker
+  * Bug fix #572117: "please, add support for uboot images (uimage)",
+    thanks to Hector Oron
 
- -- Manoj Srivastava <srivasta@debian.org>  Wed, 07 May 2014 16:44:58 -0700
+ --
 
 kernel-package (13.003) unstable; urgency=low
 

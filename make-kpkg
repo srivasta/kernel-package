@@ -37,6 +37,7 @@ my $append_to_version='';
 my $arch='';
 my $arch_in_name=0;
 my $bzimage;
+my $uimage;
 my $concurrency=0;
 my $config_target='oldconfig';
 my $cross_compile='';
@@ -85,6 +86,7 @@ my %option_ctl =
    "us"                  => \$unsign_source,
    "uc"                  => \$unsign_changelog,
    "bzimage"             => \$bzimage,
+   "uimage"              => \$uimage,
    "mkimage=s"           => \$mkimage,
    "jobs|j=i"            => \$concurrency
   );
@@ -323,6 +325,14 @@ on sites where the default is zImage kernels.
 
 =back
 
+=item B<--uimage>
+
+=over 2
+
+Makes a uImage kernel. Useful for people who want a uImage kernel.
+
+=back
+
 =item B<--rootcmd>
 
 =over 2
@@ -402,6 +412,8 @@ usage: $main::MYNAME [options] target [target ...]
  --bzimage             Create a kernel using bzImage (in case the site
                        wide default is zimage, as set in
                        /etc/kernel-pkg.conf)
+ --uimage              Create a kernel using uImage rather than zImage
+                       or bzImage
  --rootcmd method      A command that provides a means of gaining
                        superuser access (for example, `sudo' or
                        `fakeroot') as needed by dpkg-buildpackages'
@@ -416,7 +428,7 @@ usage: $main::MYNAME [options] target [target ...]
                        changelog. This is only relevant for the
                        buildpackage target.
 
-Use one of --zimage or --bzimage, or none, but not both.
+Optionally, use only one of --zimage, --bzimage, or --uimage.
 
 Option Format: The options may be shortened to the smallest unique
 string, and may be entered with either a - or a -- prefix, and you may
@@ -684,8 +696,8 @@ sub main (){
     exit 0;
   }
 
-  if ($bzimage && $zimage){
-    print "Use only one of bzimage and zimage options.\n";
+  if (($bzimage && $zimage) || ($bzimage && $uimage) || ( $zimage && $uimage)){
+    print "Use only one of bzimage, zimage, and uimage options.\n";
     print "use --help to display command line syntax help.\n";
     exit 1;
   }
@@ -943,6 +955,9 @@ EOERR3
   }
   elsif ($bzimage) {
     $command .= " IMAGE_TYPE=bzImage ";
+  }
+  elsif ($uimage) {
+    $command .= " IMAGE_TYPE=uImage ";
   }
 
   my $hostcc = $ENV{'HOSTCC'} if $ENV{'HOSTCC'};

@@ -148,7 +148,8 @@ elsif ( $kimage =~ m/^vmlinux$/o )  { my $nop = $kimage; }
 elsif ( $kimage =~ m/^xen[0u]-linux$/o ) {
   $package_name = "${kimage}-$version";
 }
-else { $kimage = "vmlinuz" }                # default
+elsif ( $kimage =~ m/^uImage$/o ) { my $nop = $kimage; }
+else                              { $kimage = "vmlinuz" }    # default
 
 $ENV{KERNEL_ARCH} = $kernel_arch if $kernel_arch;
 

@@ -114,7 +114,8 @@ elsif ( $kimage =~ m/^vmlinux$/o )  { my $nop = $kimage; }
 elsif ( $kimage =~ m/^xen[0u]-linux$/o ) {
   $package_name = "${kimage}-$version";
 }
-else { $kimage = "vmlinuz"; }               # Default
+elsif ( $kimage =~ m/^uImage$/msxo ) { my $nop = $kimage; }
+else                                 { $kimage = "vmlinuz"; }    # Default
 
 if ( -d "$kimage" ) {
   my $ret;
