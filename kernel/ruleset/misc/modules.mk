@@ -71,6 +71,11 @@ ifneq ($(filter kfreebsd, $(DEB_HOST_ARCH_OS)):$(strip $(shell grep -E '^[^\#]*C
   MODULES_ENABLED := YES
 endif
 
+# Are modules to be signed?
+ifneq ($(filter kfreebsd, $(DEB_HOST_ARCH_OS)):$(strip $(shell grep -E '^[^\#]*CONFIG_MODULE_SIG[^_]' $(CONFIG_FILE))),:)
+  MODULES_SIGNED := YES
+endif
+
 # accept both space separated list of modules, as well as comma
 # separated ones
 valid_modules:=

@@ -467,7 +467,13 @@ for the modules contained in the corresponding image package. The
 basic idea here is to keep the space in
 .I /lib/modules/<kver>
 under control, since this could be on a root partition with space
-restrictions.
+restrictions. Please
+.B note
+that if module signatures are enable in the kernel configuration the
+corresponding image package will not have modules with the debugging
+link pointing to these debugging symbol files. In order to turn on
+debugging links for modules in the image package you need to turn off
+module signatures.
 .TP
 .B kernel_headers
 This target produces a Debian package containing the header files
@@ -495,7 +501,11 @@ If there is no
 file in the kernel source directory, a default configuration is
 provided similar to the one used to create the
 .B Debian
-boot\-floppies.
+boot\-floppies. If the kernel configuration file has enabled support
+for modules, modules will be created and installed. If module
+signatures are not enabled, the resulting modules will have a link to
+the location of the debugging symbols file for the mdoule, usually
+installed by the debug package.
 .IP
 If the file
 .I ./debian/post\-install

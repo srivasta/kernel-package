@@ -1,3 +1,19 @@
+kernel-package (13.005) unstable; urgency=low
+
+  * Normally, if the kernel configuration file enables support for
+    modules, the kernel image package produced by kernel-package contains
+    the modules, and the modules have a link to the location of the
+    debugging symbols file for the mdoule, usually installed by the debug
+    package. However, adding this link changes the signature of the module,
+    which is not a good thing is module signing is also enabled. This
+    version does not install the link to debug symbols if module signing
+    is enabled in kernel configuration. Please recompile without moduile
+    signatures in order to debug modules. (Closes: #722946).
+  * Bug fix #722946: "corrupts module signatures due to objcopy
+    --add-gnu-debuglink", thanks to Henrique de Moraes Holschuh
+
+ -- Manoj Srivastava <srivasta@debian.org>  Thu, 08 May 2014 10:48:01 -0700
+
 kernel-package (13.004) unstable; urgency=low
 
   * There were some places where we still recommended custom.1.0 instead

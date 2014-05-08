@@ -102,6 +102,8 @@ ifneq ($(filter kfreebsd, $(DEB_HOST_ARCH_OS)):$(strip $(shell grep -E '^[^\#]*C
 	$(MAKE) $(EXTRAV_ARG) INSTALL_MOD_PATH=$(INSTALL_MOD_PATH)	              \
 		INSTALL_FW_PATH=$(INSTALL_MOD_PATH)/lib/firmware/$(KERNELRELEASE)     \
 		$(CROSS_ARG) ARCH=$(KERNEL_ARCH) INSTALL_MOD_STRIP=1 modules_install
+# Are modules to be signed? if do, do nothing, else add in a link to the debug module
+      ifeq ($(strip $(shell grep -E '^[^\#]*CONFIG_MODULE_SIG[^_]' $(CONFIG_FILE))),)
 	$(MAKE) $(EXTRAV_ARG) INSTALL_MOD_PATH=$(TMPTOP)$(DEBUGDIR)                   \
                 $(CROSS_ARG) ARCH=$(KERNEL_ARCH) modules_install
 	find $(TMPTOP)$(DEBUGDIR) -type f -name \*.ko |                               \
@@ -113,6 +115,7 @@ ifneq ($(filter kfreebsd, $(DEB_HOST_ARCH_OS)):$(strip $(shell grep -E '^[^\#]*C
                 $(OBJCOPY) --add-gnu-debuglink=$$file $$origfile;                        \
              done
 	rm -rf $(TMPTOP)$(DEBUGDIR)
+      endif
       ifneq ($(strip $(KERNEL_CROSS)),)
 	mv System.precious System.map
       endif
