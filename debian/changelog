@@ -1,3 +1,14 @@
+kernel-package (13.006) unstable; urgency=low
+
+  * make-kpkg warns Do NOT set the -j option in MAKEFLAGS directly, this
+    shall cause the build to fail, and provides an alternative. However,
+    there are lots of people who set DEB_BUILD_OPTIONS=parallel=N, which
+    causes dpkg-buildpackage to do effectively that.  This commit strips
+    out the setting from DEB_BUILD_OPTIONS, setting up instead the
+    make-kpkg alternative of CONCURRENCY_LEVEL. (Closes: #747142)
+
+ -- Manoj Srivastava <srivasta@debian.org>  Thu, 08 May 2014 13:37:23 -0700
+
 kernel-package (13.005) unstable; urgency=low
 
   * Normally, if the kernel configuration file enables support for
