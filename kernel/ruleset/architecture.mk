@@ -1,6 +1,6 @@
 ######################### -*- Mode: Makefile-Gmake -*- ########################
-## architecture.mk --- 
-## Author           : Manoj Srivastava ( srivasta@glaurung.internal.golden-gryphon.com ) 
+## architecture.mk ---
+## Author           : Manoj Srivastava ( srivasta@glaurung.internal.golden-gryphon.com )
 ## Created On       : Fri Oct 28 00:28:13 2005
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
@@ -8,12 +8,12 @@
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
 ## Update Count     : 6
 ## Status           : Unknown, Use with caution!
-## HISTORY          : 
-## Description      : 
+## HISTORY          :
+## Description      :
 ##
 ## arch-tag: ceaf3617-cfb1-4acb-a865-a87f280b2336
 ##
-## 
+##
 ## This program is free software; you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
 ## the Free Software Foundation; either version 2 of the License, or
@@ -54,7 +54,11 @@ endif
 
 ### ARM
 ifeq ($(strip $(architecture)),arm)
-include $(DEBDIR)/ruleset/arches/arm.mk
+  ifeq ($(strip $(DEB_HOST_ARCH)),armel)
+    include $(DEBDIR)/ruleset/arches/armel.mk
+  else
+    include $(DEBDIR)/ruleset/arches/arm.mk
+  endif
 endif
 ifeq ($(strip $(architecture)),armeb)
 include $(DEBDIR)/ruleset/arches/armeb.mk
@@ -64,7 +68,7 @@ include $(DEBDIR)/ruleset/arches/armhf.mk
 endif
 
 
-##### PowerPC and PowerPC architecture 
+##### PowerPC and PowerPC architecture
 ifneq ($(strip $(filter ppc powerpc ppc64 powerpc64,$(architecture))),)
     include $(DEBDIR)/ruleset/arches/powerpc.mk
 endif

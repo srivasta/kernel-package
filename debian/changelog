@@ -1,3 +1,14 @@
+kernel-package (13.007) unstable; urgency=low
+
+  * armel systems show upwith DEB_HOST_ARCH_CPU=arm, same as arm, but with
+    DEB_HOST_ARCH=armel. This commit loads the proper configuration file,
+    otherwise make-kpkg thought that building on a sheevaplug was cross
+    compiling for arm.  (Closes: #686159).
+  * Bug fix #686159: "On my Sheevaplug (armel) make-kpkg thinks I want to
+    do cross compilation", thanks to John Hughes
+
+ -- Manoj Srivastava <srivasta@debian.org>  Thu, 08 May 2014 15:03:36 -0700
+
 kernel-package (13.006) unstable; urgency=low
 
   * make-kpkg warns Do NOT set the -j option in MAKEFLAGS directly, this
