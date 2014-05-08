@@ -1,4 +1,4 @@
-kernel-package (13.004) UNRELEASED; urgency=low
+kernel-package (13.004) unstable; urgency=low
 
   * There were some places where we still recommended custom.1.0 instead
     of 1.0.custom, even though the former is now not acceptable. This
@@ -43,7 +43,7 @@ kernel-package (13.004) UNRELEASED; urgency=low
   * Bug fix #721482: "Can&#39;t build image: changelog says 3.11.0-rc7+,", thanks
     to Linus Lüssing
 
- -- Manoj Srivastava <srivasta@debian.org>  Wed, 07 May 2014 18:02:20 -0700
+ -- Manoj Srivastava <srivasta@debian.org>  Wed, 07 May 2014 22:45:30 -0700
 
 kernel-package (13.003) unstable; urgency=low
 
