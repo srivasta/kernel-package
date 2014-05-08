@@ -14,7 +14,7 @@ kernel-package (13.004) UNRELEASED; urgency=low
     sign to the version if the repository is not in a clean annotated or
     signed tagged state and LOCALVERSION= is not specified. This creates
     problems when packaging the resulting image. Updated the documentation
-    for workarounds.
+    for workarounds. (Closes: #721482).
   * Patch to build uImage kernels for ARM by  Andrew Bradford. This adds
     the --uimage option to build a uImage kernel for ARM systems. Needs
     uboot-mkimage installed to do so, This package contains the mkimage
@@ -26,6 +26,9 @@ kernel-package (13.004) UNRELEASED; urgency=low
   * Starting with 2.6.35 there is a new kernel config target (nconfig)
     which is something like menuconfig just a bit fancier. Added support
     for that. (Closes: #590446).
+  * The generated image packages now suggest the corresponding manual
+    packages, in addition to the doc packages. Made the doc and manual
+    packages suggest each other.  (Closes: #593895).
   * Bug fix: #717807: "kernel-release contains -dirty although the tree is
     clean", thanks to Michal Hocko
   * Bug fix #570635: "-dbg packages should conflict each other", thanks to
@@ -34,8 +37,13 @@ kernel-package (13.004) UNRELEASED; urgency=low
     thanks to Hector Oron
   * Bug fix #590446: "support ncurses kernel config target", thanks to
     Christoph Anton Mitterer
+  * Bug fix #593895: "generated linux-image-* packages should also suggest
+    the respective linux-manual-* packages", thanks to Christoph Anton
+    Mitterer
+  * Bug fix #721482: "Can&#39;t build image: changelog says 3.11.0-rc7+,", thanks
+    to Linus Lüssing
 
- -- Manoj Srivastava <srivasta@debian.org>  Wed, 07 May 2014 17:13:40 -0700
+ -- Manoj Srivastava <srivasta@debian.org>  Wed, 07 May 2014 18:02:20 -0700
 
 kernel-package (13.003) unstable; urgency=low
 

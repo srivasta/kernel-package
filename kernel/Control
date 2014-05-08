@@ -55,7 +55,7 @@ Priority: optional
 Provides: =ST-image,  =ST-image-=CV
 Pre-Depends: debconf (>= 0.2.17) | debconf-2.0
 Depends: =I coreutils (>= 5.96), initramfs-tools | linux-initramfs-tool
-Suggests: fdutils, =ST-doc-=V=SA | =ST-source-=V, ksymoops, =ST-image-=V=SA-dbg
+Suggests: fdutils, =ST-doc-=V=SA | =ST-source-=V, ksymoops, =ST-image-=V=SA-dbg, =ST-manual-=V
 Description: Linux kernel binary image for version =V=SA
  This package contains the Linux kernel image for version
  =V=SA.
@@ -92,7 +92,7 @@ Architecture: all
 Section: doc
 Priority: optional
 Provides: =ST-doc-=CV
-Suggests: =ST-image-=V=SA
+Suggests: =ST-image-=V=SA, =ST-manual-=V
 Description: Linux kernel specific documentation for version =V
  This package provides various Readme's in the =V
  kernel Documentation/ subdirectory: these typically contain
@@ -109,7 +109,7 @@ Section: doc
 Priority: optional
 Provides: =ST-manual-=CV
 Conflicts: =ST-manual-=CV
-Suggests: =ST-image-=V=SA
+Suggests: =ST-image-=V=SA, =ST-doc-=V
 Description: Linux kernel section 9 manual pages for version =V
  This package provides various Section 9 manual pages included with the kernel.
 
