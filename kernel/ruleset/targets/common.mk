@@ -319,7 +319,7 @@ ifeq ($(DEB_HOST_ARCH_OS), linux)
   else
 	$(MAKE) $(do_parallel) $(EXTRAV_ARG) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) \
 			    $(CROSS_ARG) $(target)
-    ifneq ($(strip $(shell grep -E ^[^\#]*CONFIG_MODULES[^_] $(CONFIG_FILE))),)
+    ifneq ($(strip $(shell grep -E '^[^\#]*CONFIG_MODULES[^_]' $(CONFIG_FILE))),)
 	$(MAKE) $(do_parallel) $(EXTRAV_ARG) $(FLAV_ARG) ARCH=$(KERNEL_ARCH) \
 			    $(CROSS_ARG) modules
     endif

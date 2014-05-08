@@ -89,7 +89,7 @@ endif
 ######################################################################
 ###   For linux, if modules are defined, install modules
 ######################################################################
-ifneq ($(filter kfreebsd, $(DEB_HOST_ARCH_OS)):$(strip $(shell grep -E ^[^\#]*CONFIG_MODULES[^_] $(CONFIG_FILE))),:)
+ifneq ($(filter kfreebsd, $(DEB_HOST_ARCH_OS)):$(strip $(shell grep -E '^[^\#]*CONFIG_MODULES[^_]' $(CONFIG_FILE))),:)
   ifeq	($(DEB_HOST_ARCH_OS):$(strip $(HAVE_NEW_MODLIB)),linux:)
 	$(old_mod_inst_cmds)
   else

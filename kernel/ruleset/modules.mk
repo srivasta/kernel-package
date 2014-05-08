@@ -77,7 +77,7 @@ endif
 
 # only generate module image packages
 modules-image modules_image: .config
-ifeq ($(strip $(shell grep -E ^[^\#]*CONFIG_MODULES[^_] $(CONFIG_FILE))),)
+ifeq ($(strip $(shell grep -E '^[^\#]*CONFIG_MODULES[^_]' $(CONFIG_FILE))),)
 	@echo Modules not configured, so not making $@
 else
 ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
@@ -122,7 +122,7 @@ endif
 
 # generate the modules packages and sign them
 modules: .config
-ifeq ($(strip $(shell grep -E ^[^\#]*CONFIG_MODULES[^_] $(CONFIG_FILE))),)
+ifeq ($(strip $(shell grep -E '^[^\#]*CONFIG_MODULES[^_]' $(CONFIG_FILE))),)
 	@echo Modules not configured, so not making $@
 else
 ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
@@ -167,7 +167,7 @@ endif
 
 # configure the modules packages
 modules-config modules_config: .config
-ifeq ($(strip $(shell grep -E ^[^\#]*CONFIG_MODULES[^_] $(CONFIG_FILE))),)
+ifeq ($(strip $(shell grep -E '^[^\#]*CONFIG_MODULES[^_]' $(CONFIG_FILE))),)
 	@echo Modules not configured, so not making $@
 else
 ifneq ($(strip $(HAVE_VERSION_MISMATCH)),)
@@ -205,7 +205,7 @@ endif
 endif
 
 modules-clean modules_clean:
-ifeq ($(strip $(shell if [ -e $(CONFIG_FILE) ]; then grep -E ^[^\#]*CONFIG_MODULES[^_] $(CONFIG_FILE); fi)),)
+ifeq ($(strip $(shell if [ -e $(CONFIG_FILE) ]; then grep -E '^[^\#]*CONFIG_MODULES[^_]' $(CONFIG_FILE); fi)),)
 	@echo Modules not configured, so not making $@
 else
 	$(if $(subst $(strip $(UTS_RELEASE_VERSION)),,$(strip $(KERNELRELEASE))), \

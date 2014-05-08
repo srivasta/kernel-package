@@ -66,7 +66,7 @@ debian/stamp/install/$(b_package):
 #####################################################################
 ###   For linux, if modules are defined, install modules
 ######################################################################
-ifneq ($(filter kfreebsd, $(DEB_HOST_ARCH_OS)):$(strip $(shell grep -E ^[^\#]*CONFIG_MODULES[^_] $(CONFIG_FILE))),:)
+ifneq ($(filter kfreebsd, $(DEB_HOST_ARCH_OS)):$(strip $(shell grep -E '^[^\#]*CONFIG_MODULES[^_]' $(CONFIG_FILE))),:)
   ifneq ($(strip $(KERNEL_ARCH)),um)
 	$(restore_upstream_debianization)
 	$(MAKE) $(EXTRAV_ARG) INSTALL_MOD_PATH=$(TMPTOP)$(DEBUGDIR)                   \
