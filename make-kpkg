@@ -36,7 +36,6 @@ my $added_modules     = '';
 my $append_to_version = '';
 my $arch              = '';
 my $arch_in_name      = 0;
-my $bzimage;
 my $uimage;
 my $concurrency   = 0;
 my $config_target = 'oldconfig';
@@ -54,9 +53,8 @@ my $stem             = '';
 my $targ_opt         = 0;
 my $unsign_changelog = '';
 my $unsign_source    = '';
-my $zimage;
-my $mkimage     = '';
-my $overlay_dir = '';
+my $mkimage          = '';
+my $overlay_dir      = '';
 
 my %option_ctl = (
   "help"                => \$help_opt,
@@ -80,11 +78,9 @@ my %option_ctl = (
   "pgpsign=s"           => \$signature,
   "key_id=s"            => \$key_id,
   "targets"             => \$targ_opt,
-  "zimage"              => \$zimage,
   "rootcmd=s"           => \$root_cmd,
   "us"                  => \$unsign_source,
   "uc"                  => \$unsign_changelog,
-  "bzimage"             => \$bzimage,
   "uimage"              => \$uimage,
   "mkimage=s"           => \$mkimage,
   "jobs|j=i"            => \$concurrency
@@ -306,24 +302,6 @@ does not want, or to take actions other than simple replacement.
 
 =back
 
-=item B<--zimage>
-
-=over 2
-
-Makes a zImage kernel rather than a bzImage  kernel (the  default).
-Useful for people having problems with bzImage kernels.
-
-=back
-
-=item B<--bzimage>
-
-=over 2
-
-Makes a bzImage kernel. Useful for people who  want a bzImage kernel
-on sites where the default is zImage kernels.
-
-=back
-
 =item B<--uimage>
 
 =over 2
@@ -378,8 +356,8 @@ This program should be run in a linux kernel source top level directory.
 usage: $main::MYNAME [options] target [target ...]
   where options are:
  --help                This message.
- --revision number     The debian revision number. ([a-zA-Z.~+0-9]) (Must
-                         have digit)
+ --revision number     The debian revision number. ([0-9][a-zA-Z.~+0-9]) (Must
+                       start with a digit)
  --append-to-version foo
  --append_to_version foo an additional kernel sub-version. ([-a-z.+0-9])
                          Does not require editing the kernel Makefile
@@ -406,10 +384,6 @@ usage: $main::MYNAME [options] target [target ...]
  --noexec              Pass a -n option to the make process
  --overlay dir         An overlay directory to (re))place file in ./debian
  --verbose             Pass a V=1 option to the make process
- --zimage              Create a kernel using zImage rather than bzImage
- --bzimage             Create a kernel using bzImage (in case the site
-                       wide default is zimage, as set in
-                       /etc/kernel-pkg.conf)
  --uimage              Create a kernel using uImage rather than zImage
                        or bzImage
  --rootcmd method      A command that provides a means of gaining
@@ -425,8 +399,6 @@ usage: $main::MYNAME [options] target [target ...]
                        directs that package not to sign the
                        changelog. This is only relevant for the
                        buildpackage target.
-
-Optionally, use only one of --zimage, --bzimage, or --uimage.
 
 Option Format: The options may be shortened to the smallest unique
 string, and may be entered with either a - or a -- prefix, and you may
@@ -690,14 +662,6 @@ sub main () {
     exit 0;
   }
 
-  if ( ( $bzimage && $zimage )
-    || ( $bzimage && $uimage )
-    || ( $zimage  && $uimage ) ) {
-    print "Use only one of bzimage, zimage, and uimage options.\n";
-    print "use --help to display command line syntax help.\n";
-    exit 1;
-  } ## end if ( ( $bzimage && $zimage...))
-
   if ( $config_target
     !~ /^(?:|silentold|old|menu|n|x|g|rand|def|all(mod|yes|no))(config)?$/ ) {
     print
@@ -821,19 +785,19 @@ EOERR3
     $alt_cmd .= "debian";
   }
 
-  if ( defined($revision) && !( "$revision" eq "" ) ) {
+  if ($revision) {
     if ( $Targets !~ m/^\s*clean\s*$/ )
     {    # No need to do all this for just clean
       $command .= " DEBIAN_REVISION=$revision ";
       $alt_cmd .= " DEBIAN_REVISION=$revision ";
-      if ( $revision !~ m/^(\d+:)?[a-zA-Z\d\~\.\+\-]+$/o ) {
+      if ( $revision !~ m/^(\d+:)?\d[a-zA-Z\d\~\.\+\-]*$/o ) {
         print STDERR " Error: The revision string may only contain\n";
         print STDERR " alphanumerics and  the  characters ~ +  .\n";
         print STDERR " If epochs are used, the colon : is also allowed\n";
         print STDERR " The current value is: $revision\n";
         print STDERR " Aborting.\n";
         exit 1;
-      } ## end if ( $revision !~ m/^(\d+:)?[a-zA-Z\d\~\.\+\-]+$/o)
+      } ## end if ( $revision !~ m/^(\d+:)?\d[a-zA-Z\d\~\.\+\-]*$/o)
 
       if ( $revision =~ m/\-/o ) {
         print STDERR
@@ -841,7 +805,7 @@ EOERR3
         print STDERR " Please ensure that the upstream and debian revision\n";
         print STDERR " numbers are policy compliant enough that dpkg and\n";
         print STDERR " shall not choke on them at the end of the compile\n";
-        if ( $revision !~ m/^(\d+:)?[a-zA-Z\d\~\.\+\-]+-\d+[^-]*$/o ) {
+        if ( $revision !~ m/^(\d+:)?\d[a-zA-Z\d\~\.\+\-]+-\d+[^-]*$/o ) {
           die " The revision $revision fails policy compliance, aborting\n";
         }
         else {
@@ -849,20 +813,20 @@ EOERR3
         }
       } ## end if ( $revision =~ m/\-/o)
 
-      if ( $revision !~ m/^(\d+:)?.*?\d.*$/ ) {
-        print STDERR " Error: The revision string must contain digits,\n";
+      if ( $revision !~ m/^(\d+:)?\d.*$/ ) {
+        print STDERR " Error: The revision string must start with digits,\n";
         print STDERR " or else the package creation scripts complain\n";
         print STDERR " The current value is: $revision\n";
         print STDERR " Aborting.\n";
         exit 1;
-      } ## end if ( $revision !~ m/^(\d+:)?.*?\d.*$/)
+      } ## end if ( $revision !~ m/^(\d+:)?\d.*$/)
     } ## end if ( $Targets !~ m/^\s*clean\s*$/)
     else {
       # No checking, since this is the clean target
       $command .= " DEBIAN_REVISION=$revision ";
       $alt_cmd .= " DEBIAN_REVISION=$revision ";
     }
-  } ## end if ( defined($revision...))
+  } ## end if ($revision)
 
   if ( $Targets !~ m/^\s*clean\s*$/ ) {
     if ($append_to_version) {
@@ -957,13 +921,7 @@ EOERR3
   if ($unsign_source) {
     $command .= " UNSIGN_SOURCE=YES ";
   }
-  if ($zimage) {
-    $command .= " IMAGE_TYPE=zImage ";
-  }
-  elsif ($bzimage) {
-    $command .= " IMAGE_TYPE=bzImage ";
-  }
-  elsif ($uimage) {
+  if ($uimage) {
     $command .= " IMAGE_TYPE=uImage ";
   }
 

@@ -1,3 +1,28 @@
+kernel-package (13.008) unstable; urgency=low
+
+  * The underlying kernel tree has long removed support for zImage
+    images. This makes bzImage the default, so there is no need to have
+    the user specify one or the other, so removed the --zImage and the
+    --bzImage options from kernel-package. Removing this also removed code
+    that caused confusion in the image names when --bzImage argment was
+    used.  (Closes: #574957).
+  * Modified the manual pages to reflect the changes aboue. Updated the
+    po4a .po files and .pot files.  Also clarified the requirements for
+    running as root,, and emphasized that fakeroot is th way to go, and
+    running as root is not recommended. Clarified that make-kpkg is
+    supposed to be run after configuring the kernel. (Closes: #704116).
+  * Previously, the Debian revision had to contain a digit. Now dpkg
+    complains if it does not start with a digit. Updated the  sanity
+    checks to test for this new constraint.   (Closes: #674101).
+  * Bug fix #574957: "Installation od XEN kernel images fails.", thanks to
+    Christian Motschke
+  * Bug fix #704116: "[make-kpkg] manpage not uptodate", thanks to
+    Christian Buhtz
+  * Bug fix #674101: "kernel-package -- please check parameters before you
+    build compiling", thanks to Kumar Appaiah
+
+ -- Manoj Srivastava <srivasta@debian.org>  Mon, 12 May 2014 01:05:20 -0700
+
 kernel-package (13.007) unstable; urgency=low
 
   * armel systems show upwith DEB_HOST_ARCH_CPU=arm, same as arm, but with

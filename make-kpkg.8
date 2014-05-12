@@ -44,15 +44,30 @@ file in the current directory, it tries very hard to get an
 appropriate one (usually a config file already tailored for Debian
 kernels for that architecture), and then calls
 .B make oldconfig
-to let the user answer any new questions. Typically, you run this
-command as root, or under
-.BR fakeroot ,
-or tell
-.B make\-kpkg
-how to become root, like so:
+to let the user answer any new questions. However, this might still
+result in an inappropriate configuration, you are encouraged to
+confugre the kernel by the usual means before invoking
+.B make\-kpkg.
+.PP
+Typically,
+.B make-kpkg
+should be run under
+.B fakeroot,
 .sp 1
 .ti +5
 make\-kpkg \-\-rootcmd fakeroot kernel_image
+.sp 1
+but instead you run this command as root (this is not recommended), or
+under
+.BR fakeroot ,
+or tell
+.B make\-kpkg
+how to become root (not recommended either,
+.B fakeroot
+is perhaps the safest option), like so:
+.sp 1
+.ti +5
+make\-kpkg \-\-rootcmd sudo kernel_image
 .sp 1
 The Debian package file is created in the parent directory of the
 kernel source directory where this command is run.
@@ -307,14 +322,6 @@ is populated. The script shall be executed in the
 .I ./debian
 directory. This can be used, for instance, to delete files the user
 does not want, or to take actions other than simple replacement.
-.TP
-.B \-\-zimage
-Makes a zImage kernel rather than a bzImage kernel (the default).
-Useful for people having problems with bzImage kernels.
-.TP
-.B \-\-bzimage
-Makes a bzImage kernel. Useful for people who want a bzImage kernel on
-sites where the default is zImage kernels.
 .TP
 .B \-\-rootcmd foo
 The command that provides a means of gaining super user access (for

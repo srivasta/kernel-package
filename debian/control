@@ -20,9 +20,9 @@ Description: utility for building Linux kernel related Debian packages
  step once was the initial motivation for this package). Please look at
  /usr/share/doc/kernel-package/Rationale.gz for a full list of advantages
  of this package.
-Depends: build-essential, make (>= 3.80-10), po-debconf, gettext, file,
+Depends: build-essential, po-debconf, gettext, file, ${misc:Depends}, bc,
           debianutils (>= 2.30), binutils (>= 2.12), util-linux (>= 2.10o),
-          kmod, ${misc:Depends}, bc
+          kmod
 Recommends: docbook-utils, cpio, uboot-mkimage
 Suggests: linux-source, e2fsprogs (>= 1.41.4), libncurses-dev,
  xmlto, bzip2, linux-initramfs-tool, grub (>= 0.93) | grub2,

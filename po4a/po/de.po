@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kernel-package 12.036+nmu3\n"
 "Report-Msgid-Bugs-To: kernel-package@packages.debian.org\n"
-"POT-Creation-Date: 2012-08-13 16:51-0400\n"
+"POT-Creation-Date: 2014-05-12 00:12-0700\n"
 "PO-Revision-Date: 2012-08-07 18:07+0200\n"
 "Last-Translator: Chris Leick <c.leick@vollbio.de>\n"
 "Language-Team: German <debian-l10n-german@lists.debian.org>\n"
@@ -493,7 +493,7 @@ msgstr ""
 
 #. type: SH
 #: kernel-img.conf.5:250 kernel-package.5:161 kernel-packageconfig.8:44
-#: kernel-pkg.conf.5:338 make-kpkg.8:699
+#: kernel-pkg.conf.5:338 make-kpkg.8:716
 #, no-wrap
 msgid "FILES"
 msgstr "DATEIEN"
@@ -505,7 +505,7 @@ msgstr "Die hier beschriebene Datei ist I</etc/kernel-img.conf.>"
 
 #. type: SH
 #: kernel-img.conf.5:253 kernel-package.5:166 kernel-packageconfig.8:47
-#: kernel-pkg.conf.5:343 make-kpkg.8:724
+#: kernel-pkg.conf.5:343 make-kpkg.8:741
 #, no-wrap
 msgid "SEE ALSO"
 msgstr "SIEHE AUCH"
@@ -530,14 +530,14 @@ msgstr "Es gibt hier keine Bugs. Jede Ähnlichkeit damit ist Wahn. Wirklich."
 
 #. type: SH
 #: kernel-img.conf.5:260 kernel-package.5:172 kernel-packageconfig.8:49
-#: kernel-pkg.conf.5:350 make-kpkg.8:736
+#: kernel-pkg.conf.5:350 make-kpkg.8:753
 #, no-wrap
 msgid "AUTHOR"
 msgstr "AUTOR"
 
 #. type: Plain text
 #: kernel-img.conf.5:262 kernel-package.5:174 kernel-packageconfig.8:52
-#: kernel-pkg.conf.5:352 make-kpkg.8:738
+#: kernel-pkg.conf.5:352 make-kpkg.8:755
 msgid ""
 "This manual page was written by Manoj Srivastava E<lt>srivasta@debian."
 "orgE<gt>, for the Debian GNU/Linux system."
@@ -742,9 +742,15 @@ msgstr "B<ix) .deb-Pakete für Hilfs-Kernel>"
 
 #. type: Plain text
 #: kernel-package.5:103
+#, fuzzy
+#| msgid ""
+#| "It allows to create a package with the headers, or the sources, also as a "
+#| "deb file, and enables the package management system to keep track of "
+#| "those (and there are packages that depend on the package management "
+#| "system being aware of these packages)."
 msgid ""
-"It allows to create a package with the headers, or the sources, also as a "
-"deb file, and enables the package management system to keep track of those "
+"It allows one to create a package with the headers, or the sources, also as "
+"a deb file, and enables the package management system to keep track of those "
 "(and there are packages that depend on the package management system being "
 "aware of these packages)."
 msgstr ""
@@ -959,7 +965,7 @@ msgstr ""
 "allgemeinen Gebrauch bestimmt."
 
 #. type: SH
-#: kernel-packageconfig.8:42 make-kpkg.8:85
+#: kernel-packageconfig.8:42 make-kpkg.8:100
 #, no-wrap
 msgid "OPTIONS"
 msgstr "OPTIONEN"
@@ -1094,7 +1100,7 @@ msgstr ""
 "gesetzt. Vorgabe ist I<maintainer>. (optional)"
 
 #. type: TP
-#: kernel-pkg.conf.5:92 make-kpkg.8:656
+#: kernel-pkg.conf.5:92 make-kpkg.8:673
 #, no-wrap
 msgid "B<debian>"
 msgstr "B<debian>"
@@ -1466,7 +1472,7 @@ msgstr ""
 "nicht gesetzt."
 
 #. type: TP
-#: kernel-pkg.conf.5:269 make-kpkg.8:359
+#: kernel-pkg.conf.5:269 make-kpkg.8:366
 #, no-wrap
 msgid "B<CONCURRENCY_LEVEL>"
 msgstr "B<CONCURRENCY_LEVEL>"
@@ -1675,7 +1681,19 @@ msgid "B<make-kpkg> [I<options>] [I<target> [I<target> ...]]"
 msgstr "B<make-kpkg> I<[Optionen]> [I<Ziel> [I<Ziel> …]]"
 
 #. type: Plain text
-#: make-kpkg.8:53
+#: make-kpkg.8:51
+#, fuzzy
+#| msgid ""
+#| "This manual page explains the Debian B<make-kpkg> utility, which is used "
+#| "to create the kernel related Debian packages. This utility needs to be "
+#| "run from a top level Linux kernel source directory, which has been "
+#| "previously configured (unless you are using the configure target). "
+#| "Normally, if kernel-package does not find a I<.config> file in the "
+#| "current directory, it tries very hard to get an appropriate one (usually "
+#| "a config file already tailored for Debian kernels for that architecture), "
+#| "and then calls B<make oldconfig> to let the user answer any new "
+#| "questions. Typically, you run this command as root, or under B<fakeroot>, "
+#| "or tell B<make-kpkg> how to become root, like so:"
 msgid ""
 "This manual page explains the Debian B<make-kpkg> utility, which is used to "
 "create the kernel related Debian packages. This utility needs to be run from "
@@ -1684,8 +1702,9 @@ msgid ""
 "package does not find a I<.config> file in the current directory, it tries "
 "very hard to get an appropriate one (usually a config file already tailored "
 "for Debian kernels for that architecture), and then calls B<make oldconfig> "
-"to let the user answer any new questions. Typically, you run this command as "
-"root, or under B<fakeroot>, or tell B<make-kpkg> how to become root, like so:"
+"to let the user answer any new questions. However, this might still result "
+"in an inappropriate configuration, you are encouraged to confugre the kernel "
+"by the usual means before invoking B<make-kpkg.>"
 msgstr ""
 "Diese Handbuchseite erklärt das Debian-Hilfswerkzeug B<make-kpkg,> das "
 "benutzt wird, um Kernel-bezogene Debian-Pakete zu erstellen. Dieses "
@@ -1702,11 +1721,31 @@ msgstr ""
 
 #. type: Plain text
 #: make-kpkg.8:56
+msgid "Typically, B<make-kpkg> should be run under B<fakeroot,>"
+msgstr ""
+
+#. type: Plain text
+#: make-kpkg.8:59
 msgid "make-kpkg --rootcmd fakeroot kernel_image"
 msgstr "make-kpkg --rootcmd fakeroot kernel_image"
 
 #. type: Plain text
-#: make-kpkg.8:59
+#: make-kpkg.8:68
+msgid ""
+"but instead you run this command as root (this is not recommended), or under "
+"B<fakeroot>, or tell B<make-kpkg> how to become root (not recommended "
+"either, B<fakeroot> is perhaps the safest option), like so:"
+msgstr ""
+
+#. type: Plain text
+#: make-kpkg.8:71
+#, fuzzy
+#| msgid "make-kpkg --rootcmd fakeroot kernel_image"
+msgid "make-kpkg --rootcmd sudo kernel_image"
+msgstr "make-kpkg --rootcmd fakeroot kernel_image"
+
+#. type: Plain text
+#: make-kpkg.8:74
 msgid ""
 "The Debian package file is created in the parent directory of the kernel "
 "source directory where this command is run."
@@ -1715,7 +1754,7 @@ msgstr ""
 "Quellverzeichnisses erstellt, wo dieser Befehl ausgeführt wird."
 
 #. type: Plain text
-#: make-kpkg.8:72
+#: make-kpkg.8:87
 msgid ""
 "Also, please note that some versions of gcc do not interact well with the "
 "kernel sources (gcc 2.95 has problems compiling the kernel without the flag "
@@ -1738,13 +1777,13 @@ msgstr ""
 "Sie zum Betrachten Folgendes:"
 
 #. type: Plain text
-#: make-kpkg.8:74
+#: make-kpkg.8:89
 #, no-wrap
 msgid "  % KBUILD_VERBOSE=1 MAKEFLAGS=\"CC=gcc-4.4\" make-kpkg configure\n"
 msgstr "  % KBUILD_VERBOSE=1 MAKEFLAGS=\"CC=gcc-4.4\" make-kpkg configure\n"
 
 #. type: Plain text
-#: make-kpkg.8:80
+#: make-kpkg.8:95
 msgid ""
 "The B<KBUILD_VERBOSE> shows the details of the commands being run.  (please "
 "see the top level kernel Makefile for variables that can be set)."
@@ -1754,7 +1793,7 @@ msgstr ""
 "Variablen Sie setzen können.)"
 
 #. type: Plain text
-#: make-kpkg.8:85
+#: make-kpkg.8:100
 msgid ""
 "B<WARNING>: Do NOT set the -j option in MAKEFLAGS directly, this shall cause "
 "the build to fail. Use CONCURRENCY_LEVEL as specified below. There is also a "
@@ -1766,24 +1805,24 @@ msgstr ""
 "werden kann."
 
 #. type: TP
-#: make-kpkg.8:86
+#: make-kpkg.8:101
 #, no-wrap
 msgid "B<--help>"
 msgstr "B<--help>"
 
 #. type: Plain text
-#: make-kpkg.8:89
+#: make-kpkg.8:104
 msgid "Print out a usage message."
 msgstr "gibt eine Aufrufanleitung aus."
 
 #. type: TP
-#: make-kpkg.8:89
+#: make-kpkg.8:104
 #, no-wrap
 msgid "B<--revision>I< number>"
 msgstr "B<--revision>I< Nummer>"
 
 #. type: Plain text
-#: make-kpkg.8:106
+#: make-kpkg.8:121
 msgid ""
 "Changes the version number for the packages produced to the argument "
 "I<number>.  This has certain constraints: the version may contain only "
@@ -1812,19 +1851,19 @@ msgstr ""
 "E<lt>fooE<gt> voranzustellen."
 
 #. type: TP
-#: make-kpkg.8:106
+#: make-kpkg.8:121
 #, no-wrap
 msgid "B<--append-to-version>I< foo>"
 msgstr "B<--append-to-version>I< foo>"
 
 #. type: TP
-#: make-kpkg.8:108
+#: make-kpkg.8:123
 #, no-wrap
 msgid "B<--append_to_version>I< foo>"
 msgstr "B<--append_to_version>I< foo>"
 
 #. type: Plain text
-#: make-kpkg.8:128
+#: make-kpkg.8:143
 msgid ""
 "This argument (I<foo>)  is appended to the value of the EXTRAVERSION "
 "variable present in the kernel Makefile. Since EXTRAVERSION is a component "
@@ -1850,19 +1889,19 @@ msgstr ""
 "Option setzt die Umgebungsvariable B<APPEND_TO_VERSION> außer Kraft."
 
 #. type: TP
-#: make-kpkg.8:128
+#: make-kpkg.8:143
 #, no-wrap
 msgid "B<--added-modules>I<\\ foo>"
 msgstr "B<--added-modules>I<\\ foo>"
 
 #. type: TP
-#: make-kpkg.8:130
+#: make-kpkg.8:145
 #, no-wrap
 msgid "B<--added_modules>I<\\ foo>"
 msgstr "B<--added_modules>I<\\ foo>"
 
 #. type: Plain text
-#: make-kpkg.8:143
+#: make-kpkg.8:158
 msgid ""
 "The argument should be a comma separated list of additional add-on modules "
 "(not in the main kernel tree) that you wish to build when you invoke the "
@@ -1881,20 +1920,28 @@ msgstr ""
 "kompiliert werden, wenn die »modules_blah«-Ziele aufgerufen werden."
 
 #. type: TP
-#: make-kpkg.8:143
+#: make-kpkg.8:158
 #, no-wrap
 msgid "B<--arch\\ foo>"
 msgstr "B<--arch\\ foo>"
 
 #. type: Plain text
-#: make-kpkg.8:156
+#: make-kpkg.8:171
+#, fuzzy
+#| msgid ""
+#| "This is useful for setting the architecture when you are cross compiling. "
+#| "If you are not cross compiling, the architecture is determined "
+#| "automatically. The same effect can be achieved by setting the environment "
+#| "variable B<KPKG_ARCH.> The value should be whatever B<DEB_HOST_ARCH_CPU> "
+#| "contains when I<dpkg-architecture> is run on the target machine, or it "
+#| "can be an other architecture in a multi-arch set (like i386/amd64)."
 msgid ""
 "This is useful for setting the architecture when you are cross compiling. If "
 "you are not cross compiling, the architecture is determined automatically. "
 "The same effect can be achieved by setting the environment variable "
 "B<KPKG_ARCH.> The value should be whatever B<DEB_HOST_ARCH_CPU> contains "
-"when I<dpkg-architecture> is run on the target machine, or it can be an "
-"other architecture in a multi-arch set (like i386/amd64)."
+"when I<dpkg-architecture> is run on the target machine, or it can be another "
+"architecture in a multi-arch set (like i386/amd64)."
 msgstr ""
 "Dies ist nützlich, um die Architektur zu setzen, wenn Sie cross-kompilieren. "
 "Falls Sie nicht cross-kompilieren, wird die Architektur automatisch "
@@ -1905,19 +1952,19 @@ msgstr ""
 "Zusammenstellung (wie i386/amd64) sein."
 
 #. type: TP
-#: make-kpkg.8:156
+#: make-kpkg.8:171
 #, no-wrap
 msgid "B<--cross-compile>I<\\ foo>"
 msgstr "B<--cross-compile>I<\\ foo>"
 
 #. type: TP
-#: make-kpkg.8:158
+#: make-kpkg.8:173
 #, no-wrap
 msgid "B<--cross_compile>I<\\ foo>"
 msgstr "B<--cross_compile>I<\\ foo>"
 
 #. type: Plain text
-#: make-kpkg.8:169
+#: make-kpkg.8:184
 msgid ""
 "This is useful for setting the target string when you are cross compiling. "
 "Use the dummy target \"-\" if you are building for other arches of a "
@@ -1937,13 +1984,13 @@ msgstr ""
 "Compiler an, der verwandt werden sollte. B<CROSS_COMPILE>"
 
 #. type: TP
-#: make-kpkg.8:169
+#: make-kpkg.8:184
 #, no-wrap
 msgid "B<--subarch>I<\\ foo>"
 msgstr "B<--subarch>I<\\ foo>"
 
 #. type: Plain text
-#: make-kpkg.8:178
+#: make-kpkg.8:193
 msgid ""
 "Some architectures (the Alpha, and the m68k) require a different kernel for "
 "each sub-architecture. This option provides a way of specifying it as an "
@@ -1961,19 +2008,19 @@ msgstr ""
 "werden."
 
 #. type: TP
-#: make-kpkg.8:178
+#: make-kpkg.8:193
 #, no-wrap
 msgid "B<--arch-in-name>"
 msgstr "B<--arch-in-name>"
 
 #. type: TP
-#: make-kpkg.8:180
+#: make-kpkg.8:195
 #, no-wrap
 msgid "B<--arch_in_name>"
 msgstr "B<--arch_in_name>"
 
 #. type: Plain text
-#: make-kpkg.8:190
+#: make-kpkg.8:205
 msgid ""
 "This option uses an extended name for the kernel image package by embedding "
 "the sub-architecture in the image name, so one could write a script to "
@@ -1989,13 +2036,13 @@ msgstr ""
 "betroffen ist, keine Modulspeicherorte etc."
 
 #. type: TP
-#: make-kpkg.8:190
+#: make-kpkg.8:205
 #, no-wrap
 msgid "B<--pgpsign>I< name>"
 msgstr "B<--pgpsign>I< Name>"
 
 #. type: Plain text
-#: make-kpkg.8:201
+#: make-kpkg.8:216
 msgid ""
 "Set the string used to sign the B<changes> file for any external modules in "
 "I</usr/src/modules/> using PGP. This option will override the builtin "
@@ -2009,17 +2056,24 @@ msgstr ""
 "conf.> gespeichert sind, außer Kraft setzen."
 
 #. type: TP
-#: make-kpkg.8:201
+#: make-kpkg.8:216
 #, no-wrap
 msgid "B<--config>I< target>"
 msgstr "B<--config>I< Ziel>"
 
 #. type: Plain text
-#: make-kpkg.8:209
+#: make-kpkg.8:224
+#, fuzzy
+#| msgid ""
+#| "Change the type of configure done from the default CW<oldconfig>.  "
+#| "I<target> must be one of CW<oldconfig>, CW<config>, CW<menuconfig>, "
+#| "CW<gconfig>, CW<xconfig>, CW<randconfig>, CW<defconfig>, "
+#| "CW<allmodconfig>, CW<allyesconfig>, CW<allnoconfig>, CW<old>, CW<menu>, "
+#| "CW<g>, or CW<x>."
 msgid ""
 "Change the type of configure done from the default CW<oldconfig>.  I<target> "
 "must be one of CW<oldconfig>, CW<config>, CW<menuconfig>, CW<gconfig>, "
-"CW<xconfig>, CW<randconfig>, CW<defconfig>, CW<allmodconfig>, "
+"CW<nconfig>, CW<xconfig>, CW<randconfig>, CW<defconfig>, CW<allmodconfig>, "
 "CW<allyesconfig>, CW<allnoconfig>, CW<old>, CW<menu>, CW<g>, or CW<x>."
 msgstr ""
 "ändert den Typ von configure, das vom Standard-CW<oldconfig> erledigt wurde. "
@@ -2028,7 +2082,7 @@ msgstr ""
 "CW<allyesconfig>, CW<allnoconfig>, CW<old>, CW<menu>, CW<g> oder CW<x> sein."
 
 #. type: Plain text
-#: make-kpkg.8:218
+#: make-kpkg.8:233
 msgid ""
 "B<Note> however that B<make-kpkg> scans the config file at start up for some "
 "options, notably the fact that modules are enabled or not, so toggling the "
@@ -2044,26 +2098,26 @@ msgstr ""
 "Sie make-kpkg mit diesem Schalter aufrufen."
 
 #. type: TP
-#: make-kpkg.8:218
+#: make-kpkg.8:233
 #, no-wrap
 msgid "B<--targets>"
 msgstr "B<--targets>"
 
 #. type: Plain text
-#: make-kpkg.8:223
+#: make-kpkg.8:238
 msgid "Prints out a list of known targets. See the Section B<Targets> below."
 msgstr ""
 "gibt eine Liste bekannter Ziele aus. Lesen Sie den nachfolgenden Abschnitt "
 "B<Ziele>."
 
 #. type: TP
-#: make-kpkg.8:223
+#: make-kpkg.8:238
 #, no-wrap
 msgid "B<--noexec>"
 msgstr "B<--noexec>"
 
 #. type: Plain text
-#: make-kpkg.8:231
+#: make-kpkg.8:246
 msgid ""
 "Pass a B<-n> option to the I<make> process so that commands are merely "
 "printed to the screen but not actually executed. This is very useful for "
@@ -2074,13 +2128,13 @@ msgstr ""
 "ist sehr nützlich bei der Fehlersuche."
 
 #. type: TP
-#: make-kpkg.8:231
+#: make-kpkg.8:246
 #, no-wrap
 msgid "B<--verbose>"
 msgstr "B<--verbose>"
 
 #. type: Plain text
-#: make-kpkg.8:237
+#: make-kpkg.8:252
 msgid ""
 "This calls I<make> with the -V=1 option, which calls out the top level Make "
 "commands, also useful in seeing what is happening."
@@ -2089,13 +2143,13 @@ msgstr ""
 "Stufe aufruft. Dies ist außerdem nützlich, um zu sehen, was geschieht."
 
 #. type: TP
-#: make-kpkg.8:237
+#: make-kpkg.8:252
 #, no-wrap
 msgid "B<--initrd>"
 msgstr "B<--initrd>"
 
 #. type: Plain text
-#: make-kpkg.8:265
+#: make-kpkg.8:280
 msgid ""
 "If B<make-kpkg> is generating a I<kernel-image> package, arrange to convey "
 "to the hook scripts run from the post installation maintainer scripts that "
@@ -2123,30 +2177,30 @@ msgstr ""
 "eingreift, bevor etwas geschieht)."
 
 #. type: TP
-#: make-kpkg.8:265
+#: make-kpkg.8:280
 #, no-wrap
 msgid "B<--jobs>I< number>"
 msgstr "B<--jobs>I< Nummer>"
 
 #. type: TP
-#: make-kpkg.8:267
+#: make-kpkg.8:282
 #, no-wrap
 msgid "B<-j>I< number>"
 msgstr "B<-j>I< Nummer>"
 
 #. type: Plain text
-#: make-kpkg.8:273
+#: make-kpkg.8:288
 msgid "Set the environment variable B<CONCURRENCY_LEVEL> to I<number>."
 msgstr "setzt die Umgebungsvariable B<CONCURRENCY_LEVEL> auf I<Nummer>."
 
 #. type: TP
-#: make-kpkg.8:273
+#: make-kpkg.8:288
 #, no-wrap
 msgid "B<--overlay-dir>I< /path/to/directory>"
 msgstr "B<--overlay-dir>I< /Pfad/zum/Verzeichnis>"
 
 #. type: Plain text
-#: make-kpkg.8:289
+#: make-kpkg.8:304
 msgid ""
 "The specified directory should contain files that will be placed in the I<./"
 "debian> directory of the kernel sources, in preparation to building the "
@@ -2168,7 +2222,7 @@ msgstr ""
 "B<KPKG_OVERLAY_DIR> erzielt werden."
 
 #. type: Plain text
-#: make-kpkg.8:300
+#: make-kpkg.8:315
 msgid ""
 "Please note that I<overlay-dir/Control> and I<overlay-dir/changelog> are "
 "special, and variable substitution is performed on these files. Use I</usr/"
@@ -2181,7 +2235,7 @@ msgstr ""
 "kernel-package/changelog>-Dateien als Schablone."
 
 #. type: Plain text
-#: make-kpkg.8:310
+#: make-kpkg.8:325
 msgid ""
 "If a I<overlay-dir/post-install> executable (or executable script) exists, "
 "it shall be run immediately after I<./debian> is populated. The script shall "
@@ -2196,43 +2250,13 @@ msgstr ""
 "Ersetzen durchzuführen."
 
 #. type: TP
-#: make-kpkg.8:310
-#, no-wrap
-msgid "B<--zimage>"
-msgstr "B<--zimage>"
-
-#. type: Plain text
-#: make-kpkg.8:314
-msgid ""
-"Makes a zImage kernel rather than a bzImage kernel (the default).  Useful "
-"for people having problems with bzImage kernels."
-msgstr ""
-"erstellt einen zImage-Kernel statt eines bzImage-Kernels (die Vorgabe). "
-"Nützlich für Leute, die Probleme mit bzImage-Kerneln haben."
-
-#. type: TP
-#: make-kpkg.8:314
-#, no-wrap
-msgid "B<--bzimage>"
-msgstr "B<--bzimage>"
-
-#. type: Plain text
-#: make-kpkg.8:318
-msgid ""
-"Makes a bzImage kernel. Useful for people who want a bzImage kernel on sites "
-"where the default is zImage kernels."
-msgstr ""
-"erstellt einen bzImage-Kernel. Nützlich für Leute, die einen bzImage-Kernel "
-"auf Sites haben möchten, auf denen die Vorabe ein zImage-Kernel ist."
-
-#. type: TP
-#: make-kpkg.8:318
+#: make-kpkg.8:325
 #, no-wrap
 msgid "B<--rootcmd foo>"
 msgstr "B<--rootcmd foo>"
 
 #. type: Plain text
-#: make-kpkg.8:330
+#: make-kpkg.8:337
 msgid ""
 "The command that provides a means of gaining super user access (for example, "
 "`sudo' or `fakeroot') as needed by dpkg-buildpackage's -r option. This "
@@ -2247,13 +2271,13 @@ msgstr ""
 "muss der ganze Befehl als (Fake-)Root ausgeführt werden."
 
 #. type: TP
-#: make-kpkg.8:330
+#: make-kpkg.8:337
 #, no-wrap
 msgid "B<--stem>I<\\ foo>"
 msgstr "B<--stem>I<\\ foo>"
 
 #. type: Plain text
-#: make-kpkg.8:342
+#: make-kpkg.8:349
 msgid ""
 "Call the packages I<foo>-* instead of kernel-*. This is useful in helping "
 "transition from calling the packages kernel-* to linux-* packages, in "
@@ -2272,13 +2296,13 @@ msgstr ""
 "sein und mit einem alphanumerischen Zeichen beginnen."
 
 #. type: TP
-#: make-kpkg.8:342
+#: make-kpkg.8:349
 #, no-wrap
 msgid "B<--us>"
 msgstr "B<--us>"
 
 #. type: Plain text
-#: make-kpkg.8:347
+#: make-kpkg.8:354
 msgid ""
 "This option is passed to dpkg-buildpackage, and directs that package not to "
 "sign the source. This is only relevant for the buildpackage target."
@@ -2288,13 +2312,13 @@ msgstr ""
 "maßgeblich."
 
 #. type: TP
-#: make-kpkg.8:347
+#: make-kpkg.8:354
 #, no-wrap
 msgid "B<--uc>"
 msgstr "B<--uc>"
 
 #. type: Plain text
-#: make-kpkg.8:352
+#: make-kpkg.8:359
 msgid ""
 "This option is passed to dpkg-buildpackage, and directs that package not to "
 "sign the changelog. This is only relevant for the buildpackage target."
@@ -2304,7 +2328,7 @@ msgstr ""
 "»buildpackage« maßgeblich."
 
 #. type: Plain text
-#: make-kpkg.8:359
+#: make-kpkg.8:366
 msgid ""
 "The options maybe shortened to the smallest unique string, and may be "
 "entered with either a - or a -- prefix, and you may use a space or an = "
@@ -2320,7 +2344,7 @@ msgstr ""
 "Handbuchseite B<Getopt::Long>(3perl)."
 
 #. type: Plain text
-#: make-kpkg.8:370
+#: make-kpkg.8:377
 msgid ""
 "If defined, this environment variable sets the concurrency level of make "
 "used to compile the kernel and the modules set using I<-j> flags to the sub "
@@ -2335,12 +2359,12 @@ msgstr ""
 "folgenden Befehl abfragen:"
 
 #. type: Plain text
-#: make-kpkg.8:373
+#: make-kpkg.8:380
 msgid "grep -c '^processor' /proc/cpuinfo"
 msgstr "grep -c '^processor' /proc/cpuinfo"
 
 #. type: Plain text
-#: make-kpkg.8:377
+#: make-kpkg.8:384
 msgid ""
 "B<WARNING>: Do NOT set the -j option in MAKEFLAGS directly, this shall call "
 "the build to fail. It is possible to set -j as a make-kpkg argument."
@@ -2350,19 +2374,19 @@ msgstr ""
 "»make-kpkg«-Argument zu setzen."
 
 #. type: SH
-#: make-kpkg.8:377
+#: make-kpkg.8:384
 #, no-wrap
 msgid "TARGETS"
 msgstr "ZIELE"
 
 #. type: TP
-#: make-kpkg.8:378
+#: make-kpkg.8:385
 #, no-wrap
 msgid "B<clean>"
 msgstr "B<clean>"
 
 #. type: Plain text
-#: make-kpkg.8:395
+#: make-kpkg.8:402
 msgid ""
 "Cleans the kernel source directory of all files created by target B<build,> "
 "and runs a make distclean. (Please look at a Linux kernel Makefile for "
@@ -2383,13 +2407,13 @@ msgstr ""
 "Daten ausgeführt werden, die Sie wahrscheinlich nicht wollen."
 
 #. type: TP
-#: make-kpkg.8:395
+#: make-kpkg.8:402
 #, no-wrap
 msgid "B<buildpackage>"
 msgstr "B<buildpackage>"
 
 #. type: Plain text
-#: make-kpkg.8:403
+#: make-kpkg.8:410
 msgid ""
 "This target runs the targets B<clean>, and B<binary>, and produces the "
 "complete package using B<dpkg-buildpackage>."
@@ -2398,13 +2422,13 @@ msgstr ""
 "Benutzung von B<dpkg-buildpackage> das vollständige Paket."
 
 #. type: TP
-#: make-kpkg.8:403
+#: make-kpkg.8:410
 #, no-wrap
 msgid "B<binary>"
 msgstr "B<binary>"
 
 #. type: Plain text
-#: make-kpkg.8:415
+#: make-kpkg.8:422
 msgid ""
 "This target produces all four Debian kernel packages by running the targets "
 "B<binary-indep> and B<binary-arch>.  However, this requires I<make-kpkg> to "
@@ -2416,13 +2440,13 @@ msgstr ""
 "funktionieren wird."
 
 #. type: TP
-#: make-kpkg.8:415
+#: make-kpkg.8:422
 #, no-wrap
 msgid "B<binary-indep>"
 msgstr "B<binary-indep>"
 
 #. type: Plain text
-#: make-kpkg.8:428
+#: make-kpkg.8:435
 msgid ""
 "This target produces the arch independent packages by running the targets "
 "B<kernel_source>, B<kernel_manual> and B<kernel_doc>.  However, this also "
@@ -2435,13 +2459,13 @@ msgstr ""
 "ausgeführt wird, da I<--rootcmd> nicht funktionieren wird."
 
 #. type: TP
-#: make-kpkg.8:428
+#: make-kpkg.8:435
 #, no-wrap
 msgid "B<binary-arch>"
 msgstr "B<binary-arch>"
 
 #. type: Plain text
-#: make-kpkg.8:440
+#: make-kpkg.8:447
 msgid ""
 "This target produces the arch dependent packages by running the targets "
 "B<kernel_headers> and B<kernel_image>.  However, this also requires I<make-"
@@ -2453,13 +2477,13 @@ msgstr ""
 "funktionieren wird."
 
 #. type: TP
-#: make-kpkg.8:440
+#: make-kpkg.8:447
 #, no-wrap
 msgid "B<kernel_source>"
 msgstr "B<kernel_source>"
 
 #. type: Plain text
-#: make-kpkg.8:463
+#: make-kpkg.8:470
 msgid ""
 "This target produces a debianised package of the Linux kernel sources.  If "
 "the environment variable B<SOURCE_CLEAN_HOOK> points to an executable, then "
@@ -2497,18 +2521,29 @@ msgstr ""
 "anderes, als die Kernel-Quellen, die gepackt werden."
 
 #. type: TP
-#: make-kpkg.8:463
+#: make-kpkg.8:470
 #, no-wrap
 msgid "B<kernel_debug>"
 msgstr "B<kernel_debug>"
 
 #. type: Plain text
-#: make-kpkg.8:471
+#: make-kpkg.8:484
+#, fuzzy
+#| msgid ""
+#| "This target produces a Debian package containing the debugging symbols "
+#| "for the modules contained in the corresponding image package. The basic "
+#| "idea here is to keep the space in I</lib/modules/E<lt>kverE<gt>> under "
+#| "control, since this could be on a root partition with space restrictions."
 msgid ""
 "This target produces a Debian package containing the debugging symbols for "
 "the modules contained in the corresponding image package. The basic idea "
 "here is to keep the space in I</lib/modules/E<lt>kverE<gt>> under control, "
-"since this could be on a root partition with space restrictions."
+"since this could be on a root partition with space restrictions. Please "
+"B<note> that if module signatures are enable in the kernel configuration the "
+"corresponding image package will not have modules with the debugging link "
+"pointing to these debugging symbol files. In order to turn on debugging "
+"links for modules in the image package you need to turn off module "
+"signatures."
 msgstr ""
 "Dieses Ziel erstellt ein Debian-Paket, das Fehlersuchsymbole für die im "
 "entsprechenden Image-Paket enthaltenen Module beinhaltet. Die "
@@ -2517,13 +2552,13 @@ msgstr ""
 "Speicherbeschränkungen sein könnte."
 
 #. type: TP
-#: make-kpkg.8:471
+#: make-kpkg.8:484
 #, no-wrap
 msgid "B<kernel_headers>"
 msgstr "B<kernel_headers>"
 
 #. type: Plain text
-#: make-kpkg.8:475
+#: make-kpkg.8:488
 msgid ""
 "This target produces a Debian package containing the header files included "
 "in the Linux kernel."
@@ -2532,13 +2567,13 @@ msgstr ""
 "Dateien beinhaltet."
 
 #. type: TP
-#: make-kpkg.8:475
+#: make-kpkg.8:488
 #, no-wrap
 msgid "B<kernel_manual>"
 msgstr "B<kernel_manual>"
 
 #. type: Plain text
-#: make-kpkg.8:482
+#: make-kpkg.8:495
 msgid ""
 "This target produces a Debian package containing the section 9 manual pages "
 "included in the Linux kernel. Please note that this is not really an "
@@ -2551,13 +2586,13 @@ msgstr ""
 "I<kernel_doc> aufrufen und gleichzeitig ein kernel-doc-Paket erstellen."
 
 #. type: TP
-#: make-kpkg.8:482
+#: make-kpkg.8:495
 #, no-wrap
 msgid "B<kernel_doc>"
 msgstr "B<kernel_doc>"
 
 #. type: Plain text
-#: make-kpkg.8:488
+#: make-kpkg.8:501
 msgid ""
 "This target produces a Debian package containing the documentation included "
 "in the Linux kernel. This can be called independently of the "
@@ -2568,19 +2603,30 @@ msgstr ""
 "aufgerufen werden, aber nicht andersherum."
 
 #. type: TP
-#: make-kpkg.8:488
+#: make-kpkg.8:501
 #, no-wrap
 msgid "B<kernel_image>"
 msgstr "B<kernel_image>"
 
 #. type: Plain text
-#: make-kpkg.8:499
+#: make-kpkg.8:516
+#, fuzzy
+#| msgid ""
+#| "This target produces a Debian package of the Linux kernel source image, "
+#| "and any modules configured in the kernel configuration file I<.config>.  "
+#| "If there is no I<.config> file in the kernel source directory, a default "
+#| "configuration is provided similar to the one used to create the B<Debian> "
+#| "boot-floppies."
 msgid ""
 "This target produces a Debian package of the Linux kernel source image, and "
 "any modules configured in the kernel configuration file I<.config>.  If "
 "there is no I<.config> file in the kernel source directory, a default "
 "configuration is provided similar to the one used to create the B<Debian> "
-"boot-floppies."
+"boot-floppies. If the kernel configuration file has enabled support for "
+"modules, modules will be created and installed. If module signatures are not "
+"enabled, the resulting modules will have a link to the location of the "
+"debugging symbols file for the mdoule, usually installed by the debug "
+"package."
 msgstr ""
 "Dieses Ziel erstellt ein Debian-Paket des Linux-Kernel-Quell-Images und den "
 "in der Kernel-Konfigurationsdatei I<.config> konfigurierten Modulen. Falls "
@@ -2589,7 +2635,7 @@ msgstr ""
 "B<Debian>-Boot-Disketten benutzt wird."
 
 #. type: Plain text
-#: make-kpkg.8:514
+#: make-kpkg.8:531
 msgid ""
 "If the file I<./debian/post-install> exists, and is an executable, it is run "
 "just before the kernel image package is created.  Also, please note that if "
@@ -2609,7 +2655,7 @@ msgstr ""
 "durch die Umgebungsvariable B<version> für all diese Skripte übergeben."
 
 #. type: Plain text
-#: make-kpkg.8:522
+#: make-kpkg.8:539
 msgid ""
 "Please see the documentation about hooks in B<kernel-img.conf>(5).  These "
 "hooks are variables that can be pointed by the local sysadmin to scripts "
@@ -2625,7 +2671,7 @@ msgstr ""
 "kernel-package/> enthalten."
 
 #. type: Plain text
-#: make-kpkg.8:557
+#: make-kpkg.8:574
 msgid ""
 "Apart from hook variables that the local admin may set, there are a set of "
 "directories where packages, or the local admin, may drop in script files. "
@@ -2671,7 +2717,7 @@ msgstr ""
 "daher verschwinden Nachrichten an die Standardausgabe."
 
 #. type: Plain text
-#: make-kpkg.8:580
+#: make-kpkg.8:597
 msgid ""
 "On installation, it also offers to run the Linux loader, I<LILO> (or "
 "alternates like I<loadlin>, I<SILO>, I<QUIK>, I<VMELILO>, I<ZIPL>, "
@@ -2696,13 +2742,13 @@ msgstr ""
 "Installation oder dem Entfernen von Kernel-Image Paketen angenehm wäre."
 
 #. type: TP
-#: make-kpkg.8:580
+#: make-kpkg.8:597
 #, no-wrap
 msgid "B<build>"
 msgstr "B<build>"
 
 #. type: Plain text
-#: make-kpkg.8:587
+#: make-kpkg.8:604
 msgid ""
 "This target, used by target B<kernel_image> above, compiles the Linux kernel "
 "image."
@@ -2711,13 +2757,13 @@ msgstr ""
 "kompiliert das Kernel-Image."
 
 #. type: TP
-#: make-kpkg.8:587
+#: make-kpkg.8:604
 #, no-wrap
 msgid "B<modules>"
 msgstr "B<modules>"
 
 #. type: Plain text
-#: make-kpkg.8:609
+#: make-kpkg.8:626
 msgid ""
 "This target allows you to build all add-on modules and packages that are "
 "very dependent on the precise kernel version they are compiled for at the "
@@ -2745,13 +2791,13 @@ msgstr ""
 "Paketbetreuern verwandt, die das Paket in die Debian-Archive hochladen."
 
 #. type: TP
-#: make-kpkg.8:609
+#: make-kpkg.8:626
 #, no-wrap
 msgid "B<modules_config>"
 msgstr "B<modules_config>"
 
 #. type: Plain text
-#: make-kpkg.8:618
+#: make-kpkg.8:635
 msgid ""
 "This target allows you to configure all packages under B<MODULE_LOC>, which "
 "defaults to B</usr/src/modules>.  This is useful if you need to manually "
@@ -2767,13 +2813,13 @@ msgstr ""
 "Verzeichnis."
 
 #. type: TP
-#: make-kpkg.8:618
+#: make-kpkg.8:635
 #, no-wrap
 msgid "B<modules_image>"
 msgstr "B<modules_image>"
 
 #. type: Plain text
-#: make-kpkg.8:634
+#: make-kpkg.8:651
 msgid ""
 "This target allows you to build all packages under B<MODULE_LOC>, which "
 "defaults to B</usr/src/modules>, but does not create the source or diff "
@@ -2795,13 +2841,13 @@ msgstr ""
 "Sie haben bereits ein ./debian-Verzeichnis."
 
 #. type: TP
-#: make-kpkg.8:634
+#: make-kpkg.8:651
 #, no-wrap
 msgid "B<modules_clean>"
 msgstr "B<modules_clean>"
 
 #. type: Plain text
-#: make-kpkg.8:643
+#: make-kpkg.8:660
 msgid ""
 "This target allows you to clean all packages under B<MODULE_LOC>, which "
 "defaults to B</usr/src/modules>, and this should be all that is needed to "
@@ -2815,13 +2861,13 @@ msgstr ""
 "denn, Sie haben bereits ein ./debian-Verzeichnis."
 
 #. type: TP
-#: make-kpkg.8:643
+#: make-kpkg.8:660
 #, no-wrap
 msgid "B<configure>"
 msgstr "B<configure>"
 
 #. type: Plain text
-#: make-kpkg.8:656
+#: make-kpkg.8:673
 msgid ""
 "This target runs configure (actually, B<config_target>, set by B<--config> "
 "which defaults to I<oldconfig>)  early, so you may edit files generated by "
@@ -2834,7 +2880,7 @@ msgstr ""
 "bearbeiten ohne dass sie später durch B<make-kpkg> eingestampft werden."
 
 #. type: Plain text
-#: make-kpkg.8:665
+#: make-kpkg.8:682
 msgid ""
 "This target creates the I<./debian> directory, and optionally patches the "
 "source. This target is called by the B<configure> target. You may use this "
@@ -2850,13 +2896,13 @@ msgstr ""
 "Patches eingeführt wurden."
 
 #. type: TP
-#: make-kpkg.8:665
+#: make-kpkg.8:682
 #, no-wrap
 msgid "B<libc-kheaders>"
 msgstr "B<libc-kheaders>"
 
 #. type: Plain text
-#: make-kpkg.8:677
+#: make-kpkg.8:694
 msgid ""
 "This is a special target for the libc-dev maintainer, who can use it to "
 "create the headers package that libc needs. Please note that it is dangerous "
@@ -2876,13 +2922,13 @@ msgstr ""
 "zerstören, es sei denn, Sie wissen, was Sie tun. Sie wurden gewarnt."
 
 #. type: SH
-#: make-kpkg.8:677
+#: make-kpkg.8:694
 #, no-wrap
 msgid "ENVIRONMENT VARIABLES"
 msgstr "UMGEBUNGSVARIABLEN"
 
 #. type: Plain text
-#: make-kpkg.8:699
+#: make-kpkg.8:716
 msgid ""
 "B<KPKG_DEBUG>, if set, causes make-kpkg to spit out debugging messages about "
 "some shell functions executed internally. This is probably of not interest "
@@ -2904,7 +2950,7 @@ msgstr ""
 "I<CONCURRENCY_LEVEL> und I<IGNORE_UPPERCASE_VERSION>."
 
 #. type: Plain text
-#: make-kpkg.8:724
+#: make-kpkg.8:741
 msgid ""
 "Apart from the runtime options, the I<debian.rules> file run by B<make-kpkg> "
 "also looks for a per user configuration file I<~/.kernel-pkg.conf>.  Failing "
@@ -2938,7 +2984,7 @@ msgstr ""
 "empfohlen, dies vor dem Gebrauch dieses Hilfswerkzeugs zu lesen."
 
 #. type: Plain text
-#: make-kpkg.8:736
+#: make-kpkg.8:753
 msgid ""
 "B<dpkg-deb>(1), B<dpkg-source>(1), B<make>(1), B<Getopt::Long>(3perl), "
 "B<kernel-img.conf>(5), B<kernel-pkg.conf>(5), B<The\\ Programmers\\ manual>, "
@@ -2949,3 +2995,24 @@ msgstr ""
 "B<kernel-img.conf>(5), B<kernel-pkg.conf>(5), B<The\\ Programmers\\ manual,> "
 "B<The\\ GNU\\ Make\\ manual> und die ausführliche Dokumentation im "
 "Verzeichnis B</usr/share/doc/kernel-package>"
+
+#~ msgid "B<--zimage>"
+#~ msgstr "B<--zimage>"
+
+#~ msgid ""
+#~ "Makes a zImage kernel rather than a bzImage kernel (the default).  Useful "
+#~ "for people having problems with bzImage kernels."
+#~ msgstr ""
+#~ "erstellt einen zImage-Kernel statt eines bzImage-Kernels (die Vorgabe). "
+#~ "Nützlich für Leute, die Probleme mit bzImage-Kerneln haben."
+
+#~ msgid "B<--bzimage>"
+#~ msgstr "B<--bzimage>"
+
+#~ msgid ""
+#~ "Makes a bzImage kernel. Useful for people who want a bzImage kernel on "
+#~ "sites where the default is zImage kernels."
+#~ msgstr ""
+#~ "erstellt einen bzImage-Kernel. Nützlich für Leute, die einen bzImage-"
+#~ "Kernel auf Sites haben möchten, auf denen die Vorabe ein zImage-Kernel "
+#~ "ist."
