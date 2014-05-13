@@ -118,6 +118,26 @@ if ( -r "$CONF_LOC" && -f "$CONF_LOC" ) {
     $have_conffile = "Yes";
   } ## end if ( open( CONF, "$CONF_LOC"...))
 } ## end if ( -r "$CONF_LOC" &&...)
+else {
+  if ( open( CONF, ">$CONF_LOC" ) ) {
+    print CONF "# Kernel Image management overrides\n";
+    print CONF "# See kernel-img.conf(5) for details\n";
+    if ( $loader =~ /palo/i ) {
+      print CONF "link_in_boot = Yes\n";
+      print CONF "do_symlinks = Yes\n";
+      print CONF "relative_links = Yes\n";
+    }
+    else {
+      print CONF "do_symlinks = No\n";
+      print CONF "do_bootloader = No\n";
+      print CONF "do_initrd = Yes\n";
+      print CONF "link_in_boot = No\n";
+
+    } ## end else [ if ( $loader =~ /palo/i)]
+    close CONF;
+    $have_conffile = "Yes";
+  } ## end if ( open( CONF, ">$CONF_LOC"...))
+} ## end else [ if ( -r "$CONF_LOC" &&...)]
 
 # For some versions of kernel-package, we had this warning in the
 # postinst, but the rules did not really interpolate the value in.

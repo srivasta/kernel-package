@@ -63,6 +63,9 @@ USE_KBUILD=$(shell if [ $(VERSION) -lt 2 ]; then			   \
 	   else								   \
 			   echo "YES";					   \
 	   fi)
+ifneq (YES,$(strip $(INITRD)))
+  RAMFS_DEPS := initramfs-tools | linux-initramfs-tool,
+endif
 
 LGUEST_SUBDIR = $(word 1,$(wildcard Documentation/lguest Documentation/virtual/lguest tools/lguest))
 
@@ -240,7 +243,7 @@ debian/control debian/changelog debian/rules debian/stamp/conf/full-changelog:
 		-e 's/=CV/$(VERSION).$(PATCHLEVEL)/g'			    \
 		-e 's/=M/$(maintainer) <$(email)>/g'			    \
 		-e 's/=ST/$(INT_STEM)/g'      -e 's/=B/$(KERNEL_ARCH)/g'    \
-                  $(CONTROL) > debian/control
+                -e 's/=R/$(RAMFS_DEPS)/g'  $(CONTROL) > debian/control
 	sed -e 's/=V/$(KERNELRELEASE)/g' -e 's/=D/$(debian)/g'	      \
 	    -e 's/=A/$(DEB_HOST_ARCH)/g' -e 's/=M/$(maintainer) <$(email)>/g' \
 	    -e 's/=ST/$(INT_STEM)/g'	 -e 's/=B/$(KERNEL_ARCH)/g'	      \
@@ -256,7 +259,8 @@ ifneq (,$(strip $(KPKG_OVERLAY_DIR)))
 		-e 's/=CV/$(VERSION).$(PATCHLEVEL)/g'			    \
 		-e 's/=M/$(maintainer) <$(email)>/g'			    \
 		-e 's/=ST/$(INT_STEM)/g'      -e 's/=B/$(KERNEL_ARCH)/g'    \
-                  $(strip $(KPKG_OVERLAY_DIR))/Control > debian/control
+                -e 's/=R/$(RAMFS_DEPS)/g'                                   \
+                     $(strip $(KPKG_OVERLAY_DIR))/Control > debian/control
 	test ! -f $(strip $(KPKG_OVERLAY_DIR))/changelog ||                 \
             sed -e 's/=V/$(KERNELRELEASE)/g'       \
             -e 's/=D/$(debian)/g'        -e 's/=A/$(DEB_HOST_ARCH)/g'       \

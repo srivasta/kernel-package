@@ -89,7 +89,7 @@ after the image has been removed) after all the remove actions have
 been performed. The path can be a relative path if the script lives in
 a safe path -- that is, if it lives in /bin, /sbin, /usr/bin, or
 /usr/sbin, or must be an absolute path instead. The environment
-variable 
+variable
 .B KERNEL_PACKAGE_VERSION
 shall be set to the version of the kernel\-package that created the
 package. This script shall be called with two arguments, the first
@@ -250,6 +250,10 @@ issued. This is unset be default.
 .SH FILES
 The file described here is
 .IR /etc/kernel\-img.conf .
+Also, there are example scripts suitable for dropping into
+.IR /etc/kernel/*.d
+installed in
+.IR /usr/share/doc/kernel-common/examples.
 .SH "SEE ALSO"
 .BR make (1),
 .BR make\-kpkg (1),
