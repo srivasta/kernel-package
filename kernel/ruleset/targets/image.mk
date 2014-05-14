@@ -323,7 +323,7 @@ endif
 ifneq ($(strip $(image_clean_hook)),)
 	(cd $(TMPTOP); test -x $(image_clean_hook) && $(image_clean_hook))
 endif
-	dpkg-gencontrol -DArchitecture=$(DEB_HOST_ARCH) -isp	     \
+	dpkg-gencontrol -DArchitecture=$(KERNEL_ARCH) -isp	     \
 			-p$(package) -P$(TMPTOP)/
 	$(create_md5sum)	       $(TMPTOP)
 	chmod -R og=rX		       $(TMPTOP)

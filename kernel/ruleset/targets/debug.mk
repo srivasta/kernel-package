@@ -100,7 +100,7 @@ debian/stamp/binary/$(b_package):
 	@test -d debian/stamp/binary || mkdir debian/stamp/binary
 	$(make_directory) $(TMPTOP)/DEBIAN
 	$(eval $(deb_rule))
-	dpkg-gencontrol -isp -DArchitecture=$(DEB_HOST_ARCH) -p$(package) \
+	dpkg-gencontrol -isp -DArchitecture=$(KERNEL_ARCH) -p$(package) \
                                           -P$(TMPTOP)/
 	$(create_md5sum)                   $(TMPTOP)
 	chown -R root:root                  $(TMPTOP)

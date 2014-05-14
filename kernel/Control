@@ -52,10 +52,10 @@ Package: =ST-image-=V=SA
 Architecture: =A
 Section: kernel
 Priority: optional
-Provides: =ST-image,  =ST-image-=CV
+Provides: =ST-image,  =ST-image-=CV, =ST-modules-=CV
 Pre-Depends: debconf (>= 0.2.17) | debconf-2.0
 Depends: =I coreutils (>= 5.96), =R kernel-common
-Suggests: fdutils, =ST-doc-=V=SA | =ST-source-=V, ksymoops, =ST-image-=V=SA-dbg, =ST-manual-=V
+Suggests: fdutils, =ST-doc-=V=SA | =ST-source-=V, =ST-image-=V=SA-dbg, =ST-manual-=V
 Description: Linux kernel binary image for version =V=SA
  This package contains the Linux kernel image for version
  =V=SA.

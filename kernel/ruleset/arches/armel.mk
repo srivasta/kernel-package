@@ -1,5 +1,5 @@
 ######################### -*- Mode: Makefile-Gmake -*- ########################
-## armel.mk --- 
+## armel.mk ---
 ##
 ## This program is free software; you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -15,13 +15,12 @@
 ## along with this program; if not, write to the Free Software
 ## Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 ##
-## arch-tag: 
+## arch-tag:
 ##
 ###############################################################################
 
 ### ARM (new abi)
-ifeq ($(strip $(architecture)),armel)
-
+ifeq ($(strip $(DEB_HOST_ARCH)),armel)
   kimage := vmlinuz
   target = zImage
   NEED_DIRECT_GZIP_IMAGE=NO
@@ -31,5 +30,4 @@ ifeq ($(strip $(architecture)),armel)
   kelfimagesrc = vmlinux
   kelfimagedest = $(INT_IMAGE_DESTDIR)/vmlinux-$(KERNELRELEASE)
   KERNEL_ARCH = arm
-
 endif

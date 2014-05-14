@@ -251,7 +251,7 @@ endif
         echo "Elf Files: $$K" >              $(DOCDIR)/elffiles;          \
         test -n "$$k" || perl -pli~ -e 's/\$$\{shlibs:Depends\}\,?//g' debian/control
 	test ! -e debian/control~ || rm -f debian/control~
-	dpkg-gencontrol -isp -DArchitecture=$(DEB_HOST_ARCH) -p$(package) \
+	dpkg-gencontrol -isp -DArchitecture=$(KERNEL_ARCH) -p$(package) \
                                           -P$(TMPTOP)/
 	$(create_md5sum)                   $(TMPTOP)
 	chown -R root:root                  $(TMPTOP)
