@@ -35,6 +35,11 @@ ifneq ($(filter i386 x86_64,$(KERNEL_ARCH)),)
 	LINK_ARCH=x86
 endif
 INSTALL_HDR_PATH=$(SRCDIR)
+ifneq ($(strip $(KPKG_SUBARCH)),)
+  BUILD_SUBARCH := $(shell $(DPKG_ARCH) -a$(KPKG_SUBARCH) -qDEB_HOST_ARCH)
+else
+  BUILD_SUBARCH := $(DEB_HOST_ARCH)
+endif
 
 debian/stamp/install/$(h_package):
 	$(REASON)
@@ -251,7 +256,7 @@ endif
         echo "Elf Files: $$K" >              $(DOCDIR)/elffiles;          \
         test -n "$$k" || perl -pli~ -e 's/\$$\{shlibs:Depends\}\,?//g' debian/control
 	test ! -e debian/control~ || rm -f debian/control~
-	dpkg-gencontrol -isp -DArchitecture=$(KERNEL_ARCH) -p$(package) \
+	dpkg-gencontrol -isp -DArchitecture=$(BUILD_SUBARCH) -p$(package) \
                                           -P$(TMPTOP)/
 	$(create_md5sum)                   $(TMPTOP)
 	chown -R root:root                  $(TMPTOP)

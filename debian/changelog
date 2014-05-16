@@ -1,3 +1,16 @@
+kernel-package (13.011) unstable; urgency=low
+
+  * The fix for building packages with the correct sub--architecture was
+    flawed, in the sense it always looked at theKPKG_ARCH, even when there
+    was no need to stray away from DEB_HOST_ARCH. This commit relieas on
+    dpkg-architecture to tell us what the proper arch should be for a
+    situation where we are building for a subarchitecture.
+    (Closes: #748316).
+  * Bug fix #748316: "Arch set to x86_64 instead of amd64", thanks to Geoff
+    Simonds
+
+ -- Manoj Srivastava <srivasta@debian.org>  Thu, 15 May 2014 21:16:25 -0700
+
 kernel-package (13.010) unstable; urgency=low
 
   * No longer have generated kernel images depend on ksymoops, a long
