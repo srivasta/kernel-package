@@ -167,7 +167,12 @@ ifeq ($(strip $(MODULES_ENABLED)),YES)
 	@echo "KPKG_SELECTED_MODULES = $(KPKG_SELECTED_MODULES)" >> debian/stamp/conf/mak
 endif
 	@echo "Debian Revision	= $(debian)"	    >> debian/stamp/conf/mak
-	@echo "KPKG_ARCH	= $(KPKG_ARCH)"	       >> debian/stamp/conf/mak
+	@echo "DEB_HOST_ARCH	= $(DEB_HOST_ARCH)" >> debian/stamp/conf/mak
+	@echo "DEB_BUILD_ARCH	= $(DEB_BUILD_ARCH)" >> debian/stamp/conf/mak
+	@echo "KPKG_ARCH	= $(KPKG_ARCH)"	    >> debian/stamp/conf/mak
+ifneq ($(strip $(KPKG_SUBARCH)),)
+	@echo "KPKG_SUBARCH	= $(KPKG_SUBARCH)"  >> debian/stamp/conf/mak
+endif
 # Fetch the rest of the information from the kernel's Makefile
 	$(eval $(which_debdir))
 ifeq ($(DEB_HOST_ARCH_OS), linux)

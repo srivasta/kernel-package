@@ -29,11 +29,6 @@
 ## Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 ##
 ###############################################################################
-ifneq ($(strip $(KPKG_SUBARCH)),)
-  BUILD_SUBARCH := $(shell $(DPKG_ARCH) -a$(KPKG_SUBARCH) -qDEB_HOST_ARCH)
-else
-  BUILD_SUBARCH := $(DEB_HOST_ARCH)
-endif
 
 debian/stamp/install/$(i_package):
 	$(REASON)
@@ -328,7 +323,7 @@ endif
 ifneq ($(strip $(image_clean_hook)),)
 	(cd $(TMPTOP); test -x $(image_clean_hook) && $(image_clean_hook))
 endif
-	dpkg-gencontrol -DArchitecture=$(BUILD_SUBARCH) -isp	     \
+	dpkg-gencontrol -DArchitecture=$(GENCONTROL_ARCH) -isp	     \
 			-p$(package) -P$(TMPTOP)/
 	$(create_md5sum)	       $(TMPTOP)
 	chmod -R og=rX		       $(TMPTOP)

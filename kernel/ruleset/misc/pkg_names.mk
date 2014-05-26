@@ -44,9 +44,9 @@
 INT_SUBARCH :=
 
 ifneq ($(strip $(ARCH_IN_NAME)),)
-ifneq ($(strip $(KPKG_SUBARCH)),)
-INT_SUBARCH := -$(KPKG_SUBARCH)
-endif
+  ifneq ($(strip $(KPKG_SUBARCH)),)
+    INT_SUBARCH := -$(KPKG_SUBARCH)
+  endif
 endif
 
 # The name of the packages

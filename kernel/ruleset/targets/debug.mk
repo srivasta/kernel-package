@@ -27,11 +27,6 @@
 ## Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 ##
 ###############################################################################
-ifneq ($(strip $(KPKG_SUBARCH)),)
-  BUILD_SUBARCH := $(shell $(DPKG_ARCH) -a$(KPKG_SUBARCH) -qDEB_HOST_ARCH)
-else
-  BUILD_SUBARCH := $(DEB_HOST_ARCH)
-endif
 
 debian/stamp/install/$(b_package):
 	$(REASON)
@@ -105,7 +100,7 @@ debian/stamp/binary/$(b_package):
 	@test -d debian/stamp/binary || mkdir debian/stamp/binary
 	$(make_directory) $(TMPTOP)/DEBIAN
 	$(eval $(deb_rule))
-	dpkg-gencontrol -isp -DArchitecture=$(BUILD_SUBARCH) -p$(package) \
+	dpkg-gencontrol -isp -DArchitecture=$(GENCONTROL_ARCH) -p$(package) \
                                           -P$(TMPTOP)/
 	$(create_md5sum)                   $(TMPTOP)
 	chown -R root:root                  $(TMPTOP)

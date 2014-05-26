@@ -110,7 +110,7 @@ CROSS_ARG:=
 # else. The real variable that we use for calling make on the top level
 # Makefile, for instance, really depends on KERNEL_ARCH, usually set by
 # arch specific makefile snippets.
-ifdef KPKG_ARCH
+ifneq ($(strip $(KPKG_ARCH)),)
   architecture:=$(KPKG_ARCH)
 else
   #architecture:=$(shell CC=$(HOSTCC) dpkg --print-gnu-build-architecture)

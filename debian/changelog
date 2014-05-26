@@ -1,3 +1,24 @@
+kernel-package (13.012) unstable; urgency=low
+
+  * There are three different views of what architecture a machine hasL
+    That of the linux kernel, that of dpkg, and that of the GNU
+    configuration systems, So, when the user specifies arch and subarch,
+    the information has to be transformed for all the systems, as
+    required. This commit tries to give the correct information to dpkg,
+    and also still take into account sub architecture specifications.
+    (Closes: #748702).
+  * Add a dependency on dpkg-dev for the kernel-common package, since the
+    maintainer scripts use dpkg-architecture. Alsom kernel-package can't
+    really do anything useful without pkg-dev, so added there as well.
+    (Closes: #748862).
+  * Bug fix #748702: "make-kpkg creates packages with missing architecture
+    on i386", thanks to Sven Joachim
+  * Bug fix #748862: "missing dependency on dpkg-dev", thanks to Adam
+    Borowski
+
+
+ -- Manoj Srivastava <srivasta@debian.org>  Sun, 25 May 2014 23:41:57 -0700
+
 kernel-package (13.011) unstable; urgency=low
 
   * The fix for building packages with the correct sub--architecture was

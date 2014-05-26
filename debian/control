@@ -10,7 +10,7 @@ Standards-Version: 3.9.5
 Package: kernel-package
 Architecture: all
 Depends: build-essential, po-debconf, gettext, file, ${misc:Depends},
-          bc, binutils, kmod, xz-utils, xmlto, lzma, bzip2
+          bc, binutils, kmod, xz-utils, xmlto, lzma, bzip2, dpkg-dev
 Recommends: docbook-utils, cpio, uboot-mkimage, kernel-common
 Suggests: linux-source, libncurses-dev
 Description: utility for building Linux kernel related Debian packages
@@ -28,7 +28,7 @@ Description: utility for building Linux kernel related Debian packages
 
 Package: kernel-common
 Architecture: all
-Depends: ${misc:Depends}
+Depends: ${misc:Depends}, dpkg-dev
 Suggests: kernel-package
 Enhances: kernel-package, linux-image
 Replaces: kernel-package (<= 13.008)
