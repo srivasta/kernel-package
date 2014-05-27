@@ -28,7 +28,7 @@ Description: utility for building Linux kernel related Debian packages
 
 Package: kernel-common
 Architecture: all
-Depends: ${misc:Depends}, dpkg-dev
+Depends: ${misc:Depends}
 Suggests: kernel-package
 Enhances: kernel-package, linux-image
 Replaces: kernel-package (<= 13.008)

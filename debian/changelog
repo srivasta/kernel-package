@@ -1,3 +1,21 @@
+kernel-package (13.013) unstable; urgency=low
+
+  * kernel-img built with the current kernel-package fails to install on
+    an older system (wheezy) due to dependency on kernel-common package
+    which is not available there. Based on a suggestion by Michal Hocko,
+    changed the relationship to a Recommends, which is what it should have
+    been in the first place.  (Closes: #749318).
+  * Since the linux-image packages produced by make-kpkg recommend
+    kernel-common, , development packages could be forced on to systems
+    which installl kernel-common just for the man page. A patch from Sven
+    Joachim fixes this oversight. (Closes: #749388).
+  * Bug fix #749318: "kernel-img depends on kernel-common", thanks to
+    Michal Hocko
+  * Bug fix #749388: "postinst should not call dpkg-architecture", thanks
+    to Sven Joachim
+
+ -- Manoj Srivastava <srivasta@debian.org>  Mon, 26 May 2014 17:19:04 -0700
+
 kernel-package (13.012) unstable; urgency=low
 
   * There are three different views of what architecture a machine hasL

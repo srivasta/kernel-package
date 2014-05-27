@@ -67,7 +67,7 @@ case "$1" in
     configure)
         # Configure this package.  If the package must prompt the user for
         # information, do it here.
-        my_arch=$(dpkg-architecture -qDEB_HOST_ARCH)
+        my_arch=$(dpkg --print-architecture)
         new_config=/etc/kernel-img.conf.ucf-new
         sample_config=/usr/share/doc/kernel-common/examples/etc/sample.kernel-img.conf
         cp -f "$sample_config" "$new_config"
