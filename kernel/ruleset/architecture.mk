@@ -103,6 +103,11 @@ ifeq ($(strip $(architecture)),s390)
 include $(DEBDIR)/ruleset/arches/s390.mk
 endif
 
+##### S/390x
+ifeq ($(strip $(architecture)),s390x)
+include $(DEBDIR)/ruleset/arches/s390x.mk
+endif
+
 ##### hppa
 ifeq ($(strip $(architecture)),hppa)
 include $(DEBDIR)/ruleset/arches/hppa.mk
