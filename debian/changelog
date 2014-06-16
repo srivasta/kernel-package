@@ -1,3 +1,18 @@
+kernel-package (13.014) unstable; urgency=medium
+
+  * There was a bug in the dh install configuration file, that moved all
+    kernel-package conf files to /etc/etc/. This commit fixes that.
+    (Closes: #751751).
+  * jumped on a s390x porterbox, and created initial support for a s390x
+    architecture, based mostly on what we did for s390. (Closes: #750604).
+  * Bug fix #751751: "conffiles not removed", thanks to Paul Wise. We
+    handled obsolete conffiles sub-optimally since they were not really
+    supposed to be obsolete.
+  * Bug fix #750604: "No Support in kernel-package for s390x
+    architecture", thanks to Stephen Powell
+
+ -- Manoj Srivastava <srivasta@debian.org>  Mon, 16 Jun 2014 12:22:12 -0700
+
 kernel-package (13.013) unstable; urgency=low
 
   * kernel-img built with the current kernel-package fails to install on
