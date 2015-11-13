@@ -4,10 +4,10 @@
 # Author           : Manoj Srivastava ( srivasta@glaurung.green-gryphon.com )
 # Created On       : Fri Nov 14 11:25:07 2003
 # Created On Node  : glaurung.green-gryphon.com
-# Last Modified By : Manoj Srivastava
-# Last Modified On : Sun Aug 20 16:28:01 2006
-# Last Machine Used: glaurung.internal.golden-gryphon.com
-# Update Count     : 11
+# Last Modified By : Jonathan Wiltshire
+# Last Modified On : Wed 26 Nov 22:06:03 GMT 2014
+# Last Machine Used:
+# Update Count     : 12
 # Status           : Unknown, Use with caution!
 # HISTORY          :
 # Description      :
@@ -69,7 +69,7 @@ case "$1" in
         # information, do it here.
         my_arch=$(dpkg --print-architecture)
         new_config=/etc/kernel-img.conf.ucf-new
-        sample_config=/usr/share/doc/kernel-common/examples/etc/sample.kernel-img.conf
+        sample_config=/usr/share/kernel-common/examples/etc/sample.kernel-img.conf
         cp -f "$sample_config" "$new_config"
         case $my_arch in
             mips|mipsel|m68k)

@@ -1,3 +1,19 @@
+kernel-package (13.014+nmu2) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * Install device-tree dtbs. (Closes: #782759)
+  * Support arm64 arch. (Closes: #796064, #796879, #799968)
+
+ -- Ying-Chun Liu (PaulLiu) <paulliu@debian.org>  Tue, 06 Oct 2015 22:46:33 +0800
+
+kernel-package (13.014+nmu1) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * Move examples to /usr/share/kernel-common and symlink from
+    /u/s/d (Closes: #767857)
+
+ -- Jonathan Wiltshire <jmw@debian.org>  Wed, 26 Nov 2014 21:56:16 +0000
+
 kernel-package (13.014) unstable; urgency=medium
 
   * There was a bug in the dh install configuration file, that moved all

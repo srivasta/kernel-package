@@ -1,13 +1,28 @@
-# Translation of the kernel-package documentation to German.
-# Copyright (C) 1996-2006 Manoj Srivastava.
-# This file is distributed under the GPL version 2 or later.
-# Copyright (C) of this file 2011, 2012 Chris Leick.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Free Software Foundation, Inc.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: kernel-package 12.036+nmu3\n"
-"Report-Msgid-Bugs-To: kernel-package@packages.debian.org\n"
-"POT-Creation-Date: 2014-05-12 00:12-0700\n"
+"Project-Id-Version: PACKAGE VERSION\n"
+"PO-Revision-Date: 2015-11-13 15:22-0800\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#~ # Translation of the kernel-package documentation to German.
+#~ # Copyright (C) 1996-2006 Manoj Srivastava.
+#~ # This file is distributed under the GPL version 2 or later.
+#~ # Copyright (C) of this file 2011, 2012 Chris Leick.
+#~ #
+#~ msgid ""
+#~ msgstr ""
+#~ "Project-Id-Version: kernel-package 12.036+nmu3\n"
+#~ "Report-Msgid-Bugs-To: kernel-package@packages.debian.org\n"
+"POT-Creation-Date: 2014-06-16 19:27+0000\n"
 "PO-Revision-Date: 2012-08-07 18:07+0200\n"
 "Last-Translator: Chris Leick <c.leick@vollbio.de>\n"
 "Language-Team: German <debian-l10n-german@lists.debian.org>\n"
@@ -499,44 +514,47 @@ msgid "FILES"
 msgstr "DATEIEN"
 
 #. type: Plain text
-#: kernel-img.conf.5:253
-msgid "The file described here is I</etc/kernel-img.conf>."
-msgstr "Die hier beschriebene Datei ist I</etc/kernel-img.conf.>"
+#: kernel-img.conf.5:257
+msgid ""
+"The file described here is I</etc/kernel-img.conf>.  Also, there are example "
+"scripts suitable for dropping into I</etc/kernel/*.d> installed in I</usr/"
+"share/doc/kernel-common/examples.>"
+msgstr ""
 
 #. type: SH
-#: kernel-img.conf.5:253 kernel-package.5:166 kernel-packageconfig.8:47
+#: kernel-img.conf.5:257 kernel-package.5:166 kernel-packageconfig.8:47
 #: kernel-pkg.conf.5:343 make-kpkg.8:741
 #, no-wrap
 msgid "SEE ALSO"
 msgstr "SIEHE AUCH"
 
 #. type: Plain text
-#: kernel-img.conf.5:258
+#: kernel-img.conf.5:262
 msgid ""
 "B<make>(1), B<make-kpkg>(1), B<kernel-pkg.conf>(5), B<The GNU Make manual>"
 msgstr ""
 "B<make>(1), B<make-kpkg>(1), B<kernel-pkg.conf>(5), B<The GNU Make manual>"
 
 #. type: SH
-#: kernel-img.conf.5:258 kernel-package.5:170 kernel-pkg.conf.5:348
+#: kernel-img.conf.5:262 kernel-package.5:170 kernel-pkg.conf.5:348
 #, no-wrap
 msgid "BUGS"
 msgstr "BUGS"
 
 #. type: Plain text
-#: kernel-img.conf.5:260 kernel-package.5:172 kernel-pkg.conf.5:350
+#: kernel-img.conf.5:264 kernel-package.5:172 kernel-pkg.conf.5:350
 msgid "There are no bugs.  Any resemblance thereof is delirium. Really."
 msgstr "Es gibt hier keine Bugs. Jede Ähnlichkeit damit ist Wahn. Wirklich."
 
 #. type: SH
-#: kernel-img.conf.5:260 kernel-package.5:172 kernel-packageconfig.8:49
+#: kernel-img.conf.5:264 kernel-package.5:172 kernel-packageconfig.8:49
 #: kernel-pkg.conf.5:350 make-kpkg.8:753
 #, no-wrap
 msgid "AUTHOR"
 msgstr "AUTOR"
 
 #. type: Plain text
-#: kernel-img.conf.5:262 kernel-package.5:174 kernel-packageconfig.8:52
+#: kernel-img.conf.5:266 kernel-package.5:174 kernel-packageconfig.8:52
 #: kernel-pkg.conf.5:352 make-kpkg.8:755
 msgid ""
 "This manual page was written by Manoj Srivastava E<lt>srivasta@debian."
@@ -2995,6 +3013,9 @@ msgstr ""
 "B<kernel-img.conf>(5), B<kernel-pkg.conf>(5), B<The\\ Programmers\\ manual,> "
 "B<The\\ GNU\\ Make\\ manual> und die ausführliche Dokumentation im "
 "Verzeichnis B</usr/share/doc/kernel-package>"
+
+#~ msgid "The file described here is I</etc/kernel-img.conf>."
+#~ msgstr "Die hier beschriebene Datei ist I</etc/kernel-img.conf.>"
 
 #~ msgid "B<--zimage>"
 #~ msgstr "B<--zimage>"
