@@ -1,6 +1,6 @@
 ######################### -*- Mode: Makefile-Gmake -*- ########################
-## kernel_arch.mk ---
-## Author           : Manoj Srivastava ( srivasta@glaurung.internal.golden-gryphon.com )
+## kernel_arch.mk --- 
+## Author           : Manoj Srivastava ( srivasta@glaurung.internal.golden-gryphon.com ) 
 ## Created On       : Tue Feb  7 09:17:03 2006
 ## Created On Node  : glaurung.internal.golden-gryphon.com
 ## Last Modified By : Manoj Srivastava
@@ -8,12 +8,12 @@
 ## Last Machine Used: glaurung.internal.golden-gryphon.com
 ## Update Count     : 6
 ## Status           : Unknown, Use with caution!
-## HISTORY          :
-## Description      :
-##
+## HISTORY          : 
+## Description      : 
+## 
 ## arch-tag: fe23148e-81e2-41f2-8be0-66048282d9d4
-##
-##
+## 
+## 
 ## This program is free software; you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
 ## the Free Software Foundation; either version 2 of the License, or
@@ -35,7 +35,7 @@
 # the kernel folks call that platform.
 
 # Set the default. The arch specific snippets can override this
-# Apparently, DEB_HOST_ARCH_CPU does not match what the kernel calls this.
+# Apparently, DEB_HOST_ARCH_CPU does not match what the kernel calls this. 
 # However, DEB_HOST_GNU_CPU does. Anyway, we have to hack around it
 KERNEL_ARCH:=$(architecture)
 ifeq ($(architecture), amd64)
@@ -43,6 +43,9 @@ ifeq ($(architecture), amd64)
 endif
 ifeq ($(architecture), mipsel)
   KERNEL_ARCH:=mips
+endif
+ifeq ($(architecture), s390x)
+  KERNEL_ARCH:=s390
 endif
 
 ifneq (,$(filter mips64%,$(KPKG_SUBARCH)))

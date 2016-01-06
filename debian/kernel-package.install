@@ -1,4 +1,5 @@
-/etc              /
+/etc/*.conf       /etc
+/etc/bash_completion.d/*      /usr/share/bash-completion/completions
 /usr/bin          /usr
 /usr/sbin         /usr
 /usr/share/doc/kernel-package /usr/share/doc

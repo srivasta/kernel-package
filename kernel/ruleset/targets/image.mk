@@ -105,6 +105,11 @@ ifneq ($(filter kfreebsd, $(DEB_HOST_ARCH_OS)):$(strip $(shell grep -E '^[^\#]*C
 	$(MAKE) $(EXTRAV_ARG) INSTALL_MOD_PATH=$(INSTALL_MOD_PATH)	              \
 		INSTALL_FW_PATH=$(INSTALL_MOD_PATH)/lib/firmware/$(KERNELRELEASE)     \
 		$(CROSS_ARG) ARCH=$(KERNEL_ARCH) INSTALL_MOD_STRIP=1 dtbs || echo "no dtb target"
+	$(MAKE) $(EXTRAV_ARG) INSTALL_MOD_PATH=$(INSTALL_MOD_PATH)	              \
+		INSTALL_FW_PATH=$(INSTALL_MOD_PATH)/lib/firmware/$(KERNELRELEASE)     \
+		$(CROSS_ARG) ARCH=$(KERNEL_ARCH) INSTALL_MOD_STRIP=1                  \
+		INSTALL_DTBS_PATH=$(TMPTOP)/usr/lib/linux-image-$(KERNELRELEASE)      \
+		dtbs_install || echo "no dtbs_install target"
 # Are modules to be signed? if do, do nothing, else add in a link to the debug module
       ifeq ($(strip $(shell grep -E '^[^\#]*CONFIG_MODULE_SIG[^_]' $(CONFIG_FILE))),)
 	$(MAKE) $(EXTRAV_ARG) INSTALL_MOD_PATH=$(TMPTOP)$(DEBUGDIR)                   \
@@ -177,7 +182,6 @@ else
 			$(TMPTOP)/$(IMAGEDIR)/System.map-$(KERNELRELEASE);
 	cp $(kimagesrc) $(kimagedest)
 	mkdir -p $(TMPTOP)/usr/lib/linux-image-$(KERNELRELEASE)
-	-cp arch/$(KERNEL_ARCH)/boot/dts/*.dtb $(TMPTOP)/usr/lib/linux-image-$(KERNELRELEASE)
 	$(restore_upstream_debianization)
 endif
 ifeq ($(strip $(HAVE_COFF_IMAGE)),YES)

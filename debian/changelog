@@ -1,3 +1,11 @@
+kernel-package (13.014+nmu3) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * Fix the install device-tree rule by dtbs_install (Closes: #804518)
+  * Include patches to support s390x (Closes: #751928)
+
+ -- Ying-Chun Liu (PaulLiu) <paulliu@debian.org>  Wed, 18 Nov 2015 12:27:43 +0800
+
 kernel-package (13.014+nmu2) unstable; urgency=low
 
   * Non-maintainer upload.
