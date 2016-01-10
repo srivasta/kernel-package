@@ -1,6 +1,6 @@
 kernel-package (12.028) unstable; urgency=low
 
-  * Rework handling of XEN packages 
+  Rework handling of XEN packages 
   
     So far, kernel-package would pay special attention to the
     configuration files that enabled XEN hypervisor/guest images, mangling

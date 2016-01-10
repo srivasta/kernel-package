@@ -103,7 +103,7 @@ install: genpo4a
 	$(install_file)    Problems                          $(DOCDIR)/Problems
 	$(install_file)    debian/NEWS.Debian                $(DOCDIR)/
 	$(install_file)    _make-kpkg                        $(BASH_DIR)/make_kpkg
-	gzip -9fqr         $(DOCDIR)
+	gzip -9fqrn        $(DOCDIR)
 	(cd $(DOCDIR);     for file in $(DOCFILES); do                  \
                             ln -s ../../$(package)/docs/$$file $$file;  \
                            done)
@@ -135,7 +135,7 @@ install: genpo4a
           test ! -f kernel-packageconfig.$$lang.8     ||                                               \
            $(install_file) kernel-packageconfig.$$lang.8 $(MANTOP)/$$lang/man8/kernel-packageconfig.8; \
         done
-	gzip -9fqr         $(prefix)/usr/share/man
+	gzip -9fqrn        $(prefix)/usr/share/man
 	$(install_file)    kernel-pkg.conf            $(prefix)/etc/kernel-pkg.conf
 	$(install_program) kernel-packageconfig       $(prefix)/usr/sbin/kernel-packageconfig
 	$(install_program) make-kpkg                  $(prefix)/usr/bin/make-kpkg

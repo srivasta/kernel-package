@@ -1,4 +1,4 @@
-kernel-package (13.015) UNRELEASED; urgency=low
+kernel-package (13.015) unstable; urgency=low
 
   * Updated the Copyright file to machine readable format
   * Updated to policy version 3.6.0. No changes required
@@ -9,8 +9,11 @@ kernel-package (13.015) UNRELEASED; urgency=low
     Actually, in this case, it is the documentation which is broken; it
     fails to mention that the revision number must start with a
     digit. (Closes: #782447).
+  * Bug fix: "make-kpkg(1) says initramfs hook scripts need to be
+    explicitly enabled", thanks to Ben Hutchings> Explicitly note that
+    initramfs-tools installs scripts, as does dracut. (Closes: #765609).
 
- -- Manoj Srivastava <srivasta@debian.org>  Sun, 10 Jan 2016 00:04:47 -0800
+ -- Manoj Srivastava <srivasta@debian.org>  Sun, 10 Jan 2016 00:53:17 -0800
 
 kernel-package (13.014+nmu3) unstable; urgency=low
 

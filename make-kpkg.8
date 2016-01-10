@@ -277,6 +277,10 @@ or added into the hook script parameter of
 .IR /etc/kernel-img.conf ,
 no initrd will be created (the bundled in example scripts are
 just examples -- user action is required before anything happens).
+On most systems, however
+.I initramfs-tools
+installs scripts (since version 0.94 (and they have respected the INITRD
+variable since 0.98)).  dracut also does this.
 .TP
 .BI \-\-jobs " number"
 .TP
