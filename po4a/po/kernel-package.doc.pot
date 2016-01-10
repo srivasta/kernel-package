@@ -1,28 +1,13 @@
-# SOME DESCRIPTIVE TITLE.
+# SOME DESCRIPTIVE TITLE
 # Copyright (C) YEAR Free Software Foundation, Inc.
+# This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"PO-Revision-Date: 2016-01-09 19:49-0800\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
-"Content-Transfer-Encoding: 8bit\n"
-
-#~ # SOME DESCRIPTIVE TITLE
-#~ # Copyright (C) YEAR Free Software Foundation, Inc.
-#~ # This file is distributed under the same license as the PACKAGE package.
-#~ # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#~ #
-#~ #, fuzzy
-#~ msgid ""
-#~ msgstr ""
-#~ "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2014-12-23 14:34-0400\n"
+"POT-Creation-Date: 2016-01-10 00:07-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -372,7 +357,7 @@ msgstr ""
 msgid ""
 "The file described here is I</etc/kernel-img.conf>.  Also, there are example "
 "scripts suitable for dropping into I</etc/kernel/*.d> installed in "
-"I</usr/share/doc/kernel-common/examples.>"
+"I</usr/share/doc/kernel-common/examples>."
 msgstr ""
 
 #. type: SH
@@ -1299,7 +1284,7 @@ msgid ""
 "tailored for Debian kernels for that architecture), and then calls B<make "
 "oldconfig> to let the user answer any new questions. However, this might "
 "still result in an inappropriate configuration, you are encouraged to "
-"confgure the kernel by the usual means before invoking B<make-kpkg.>"
+"configure the kernel by the usual means before invoking B<make-kpkg>."
 msgstr ""
 
 #. type: Plain text
@@ -1387,16 +1372,16 @@ msgstr ""
 #: make-kpkg.8:121
 msgid ""
 "Changes the version number for the packages produced to the argument "
-"I<number>.  This has certain constraints: the version may contain only "
-"alphanumerics and the characters ~ + . (tilde, full stop and plus) and must "
-"contain a digit. (Look at the Policy manual for details). Optionally, you "
-"may prepend the revision with a digit followed by a colon (:). The default "
-"is B<10.00.Custom> unless the environment variable "
-"B<DEBIAN_REVISION_MANDATORY> is set, in which case an error is generated if "
-"the revision is not set on the command line or the configuration file.  "
-"B<Hint>: You may set it to $(version)-E<lt>fooE<gt> in the configuration "
-"file to get the upstream version number prepended to your custom string "
-"E<lt>fooE<gt>."
+"I<number>.  This has certain constraints: the version must start with a "
+"digit. the version may contain only alphanumerics and the characters ~ + "
+". (tilde, full stop and plus) and must contain a digit. (Look at the Policy "
+"manual for details). Optionally, you may prepend the revision with a digit "
+"followed by a colon (:). The default is B<10.00.Custom> unless the "
+"environment variable B<DEBIAN_REVISION_MANDATORY> is set, in which case an "
+"error is generated if the revision is not set on the command line or the "
+"configuration file.  B<Hint>: You may set it to $(version)-E<lt>fooE<gt> in "
+"the configuration file to get the upstream version number prepended to your "
+"custom string E<lt>fooE<gt>."
 msgstr ""
 
 #. type: TP

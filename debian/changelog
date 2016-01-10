@@ -3,8 +3,10 @@ kernel-package (13.015) UNRELEASED; urgency=low
   * Updated the Copyright file to machine readable format
   * Updated to policy version 3.6.0. No changes required
   * Updated the VCS-* fields in the control file to use https transport.
+  * Bug fix: "French translation update", thanks to David Prévot (Closes:
+    #789078).
 
- -- Manoj Srivastava <srivasta@debian.org>  Sat, 09 Jan 2016 16:28:55 -0800
+ -- Manoj Srivastava <srivasta@debian.org>  Sat, 09 Jan 2016 23:46:38 -0800
 
 kernel-package (13.014+nmu3) unstable; urgency=low
 
