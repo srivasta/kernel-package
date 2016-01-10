@@ -5,8 +5,12 @@ kernel-package (13.015) UNRELEASED; urgency=low
   * Updated the VCS-* fields in the control file to use https transport.
   * Bug fix: "French translation update", thanks to David Prévot (Closes:
     #789078).
+  * Bug fix: "--revision is broken (again)", thanks to Roland Koebler
+    Actually, in this case, it is the documentation which is broken; it
+    fails to mention that the revision number must start with a
+    digit. (Closes: #782447).
 
- -- Manoj Srivastava <srivasta@debian.org>  Sat, 09 Jan 2016 23:46:38 -0800
+ -- Manoj Srivastava <srivasta@debian.org>  Sun, 10 Jan 2016 00:04:47 -0800
 
 kernel-package (13.014+nmu3) unstable; urgency=low
 

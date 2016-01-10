@@ -105,11 +105,11 @@ Print out a usage message.
 .BI \-\-revision " number"
 Changes the version number for the packages produced to the argument
 .IR number .
-This has certain constraints: the version may contain only
-alphanumerics and the characters ~ + . (tilde, full stop and plus) and
-must contain a digit. (Look at the Policy manual for
-details). Optionally, you may prepend the revision with a digit
-followed by a colon (:). The default is
+This has certain constraints: the version must start with a digit. the
+version may contain only alphanumerics and the characters ~
++ . (tilde, full stop and plus) and must contain a digit. (Look at the
+Policy manual for details). Optionally, you may prepend the revision
+with a digit followed by a colon (:). The default is
 .B 10.00.Custom
 unless the environment variable
 .B DEBIAN_REVISION_MANDATORY

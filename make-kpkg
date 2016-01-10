@@ -111,13 +111,12 @@ kernel source directory.
 
 =over 2
 
-Sets the Debian revision number for the packages produced to the
-argument B<number>. This has certain constraints: It only has an
-effect during the configure phase. I suggest you run make-kpkg clean
-unless you know what you are doing. Secondly, it may contain only
-alphanumerics and the characters + . (full stop, and plus)
-and must contain a digit. B<NOTE>: No hyphens allowed. (Look at the
-Debian policy manual for details).
+Sets the Debian revision number for the packages produced to the argument
+B<number>. This has certain constraints: It only has an effect during the
+configure phase. I suggest you run make-kpkg clean unless you know what you are
+doing. Secondly, it must start with a digit, it may contain only alphanumerics
+and the characters + . (full stop, and plus) and must contain a digit. B<NOTE>:
+No hyphens allowed. (Look at the Debian policy manual for details).
 
 Optionally, you may prepend the revision with a digit followed by a colon (:)
 
