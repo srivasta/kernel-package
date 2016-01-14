@@ -1,3 +1,17 @@
+kernel-package (13.016) unstable; urgency=high
+
+  * New bug fixing release
+  * Bug fix: "sample.module.control.dpkg-new missing", thanks to Adam
+    Borowski. dpkg does not like converting a link to a directory.
+    (Closes: #810901).
+  * Bug fix: "Description refers to wrong file name", thanks to Ben Harris
+    (Closes: #766107).
+  * Bug fix: "Wheezy compatibility: &quot;dpkg-parsechangelog
+    --show-field&quot; unsupported", thanks to Sven-Haegar Koch. Used
+    suggested change  (Closes: #779309).
+
+ -- Manoj Srivastava <srivasta@debian.org>  Wed, 13 Jan 2016 22:32:26 -0800
+
 kernel-package (13.015) unstable; urgency=low
 
   * Updated the Copyright file to machine readable format

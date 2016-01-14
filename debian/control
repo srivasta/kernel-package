@@ -23,7 +23,7 @@ Description: utility for building Linux kernel related Debian packages
  meaner kernel.  It also scripts the steps that need be taken to
  compile the kernel, which is quite convenient (forgetting a crucial
  step once was the initial motivation for this package). Please look at
- /usr/share/doc/kernel-package/Rationale.gz for a full list of advantages
+ /usr/share/doc/kernel-package/Rationale for a full list of advantages
  of this package.
 
 Package: kernel-common

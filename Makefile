@@ -33,7 +33,8 @@ MAN1DIR    = $(prefix)/usr/share/man/man1
 MAN5DIR    = $(prefix)/usr/share/man/man5
 MAN8DIR    = $(prefix)/usr/share/man/man8
 
-version := $(shell dpkg-parsechangelog --show-field Version)
+version := $(strip $(shell LC_ALL=C dpkg-parsechangelog          |       \
+                                      egrep '^Version:' | cut -f 2 -d ' '))
 
 
 BASH_DIR:= $(prefix)/etc/bash_completion.d
