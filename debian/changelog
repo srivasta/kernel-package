@@ -6,8 +6,10 @@ kernel-package (13.017) unstable; urgency=low
     thanks to Toby Speight (Closes: #775834).
   * Bug fix: "please document passing CFLAGS (actually KCFLAGS) to kernel
     makefile", thanks to Arthur Marsh (Closes: #777105).
+  * Bug fix: "does not depends on initramfs-tools when using --initrd",
+    thanks to Cyril B. (Closes: #780278).
 
- -- Manoj Srivastava <srivasta@debian.org>  Mon, 15 Feb 2016 09:51:51 -0800
+ -- Manoj Srivastava <srivasta@debian.org>  Mon, 15 Feb 2016 09:56:03 -0800
 
 kernel-package (13.016) unstable; urgency=high
 

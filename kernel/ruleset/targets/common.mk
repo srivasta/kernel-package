@@ -63,7 +63,7 @@ USE_KBUILD=$(shell if [ $(VERSION) -lt 2 ]; then			   \
 	   else								   \
 			   echo "YES";					   \
 	   fi)
-ifneq (YES,$(strip $(INITRD)))
+ifeq (YES,$(strip $(INITRD)))
   RAMFS_DEPS := initramfs-tools | linux-initramfs-tool,
 endif
 

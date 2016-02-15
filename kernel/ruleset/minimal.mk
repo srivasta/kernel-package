@@ -61,7 +61,7 @@ FILES_TO_CLEAN  = modules/modversions.h modules/ksyms.ver  \
 STAMPS_TO_CLEAN =
 DIRS_TO_CLEAN   = debian/stamp
 
-ifneq (YES,$(strip $(INITRD)))
+ifeq (YES,$(strip $(INITRD)))
   RAMFS_DEPS := initramfs-tools | linux-initramfs-tool,
 endif
 
