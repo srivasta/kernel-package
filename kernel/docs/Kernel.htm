@@ -184,7 +184,7 @@ allow you to install the most recent version of a package, if there is a newer
 version than the one on the CD.&nbsp;
 (Packages in the stable release are not
 normally updated during the life of the release except to fix bugs involving
-security vulnerabilities or to replace data that is highly volatile in 
+security vulnerabilities or to replace data that is highly volatile in
 nature.&nbsp;
 An example is the virus signature data for an
 anti-virus software package.)&nbsp;
@@ -529,7 +529,7 @@ will be required for the menuconfig method:
      libncurses5-dev
      binutils
      make
-     module-init-tools
+     kmod
      mawk | gawk (one or the other, not both)
      gzip
      coreutils
@@ -773,7 +773,7 @@ these instructions that you are going to do the same.&nbsp;
 If not, then you must do three things:
 (1) You must make sure that all kernel function needed to get
 the permanent root file system mounted is built-in to the kernel.&nbsp;
-(2) You must not supply the "--initrd" flag to make-kpkg when you 
+(2) You must not supply the "--initrd" flag to make-kpkg when you
 invoke it.&nbsp;
 (3) You must change your boot loader configuration so that it does
 not expect an initial RAM disk image.&nbsp;

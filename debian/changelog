@@ -1,3 +1,10 @@
+kernel-package (13.017) unstable; urgency=low
+
+  * Bug fix: "Resultant kernels may need to depend upon kmod", thanks to
+    Elliott Mitchell (Closes: #774601).
+
+ -- Manoj Srivastava <srivasta@debian.org>  Mon, 15 Feb 2016 09:25:29 -0800
+
 kernel-package (13.016) unstable; urgency=high
 
   * New bug fixing release
