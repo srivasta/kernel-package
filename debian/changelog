@@ -1,4 +1,4 @@
-kernel-package (13.017) unstable; urgency=low
+kernel-package (13.017) unstable; urgency=high
 
   * Bug fix: "Resultant kernels may need to depend upon kmod", thanks to
     Elliott Mitchell (Closes: #774601).
@@ -8,8 +8,13 @@ kernel-package (13.017) unstable; urgency=low
     makefile", thanks to Arthur Marsh (Closes: #777105).
   * Bug fix: "does not depends on initramfs-tools when using --initrd",
     thanks to Cyril B. (Closes: #780278).
+  * Bug fix: "cannot produce debs anymore", thanks to Ritesh Raj Sarraf
+    The real issue here was that the kernel was built using the deprecated
+    sudo, instead of fakeroot, and created ./debian directory as
+    root. Clean, however, is not run as root, so it could not delete
+    ./debian, and failed. This is now documented. (Closes: #812470).
 
- -- Manoj Srivastava <srivasta@debian.org>  Mon, 15 Feb 2016 09:56:03 -0800
+ -- Manoj Srivastava <srivasta@debian.org>  Mon, 15 Feb 2016 10:53:24 -0800
 
 kernel-package (13.016) unstable; urgency=high
 

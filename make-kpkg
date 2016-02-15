@@ -416,11 +416,14 @@ EOUSAGE
 
 =over 3
 
-Cleans the kernel source directory of all files created by target
-B<build>, and runs a I<make distclean>. (Please look at a Linux kernel
-Makefile for details).  Please note that although we take care of the
-list of current kernel configuration contained in the file I<.config>,
-the file I<include/linux/autoconf.h> is not preserved.
+Cleans the kernel source directory of all files created by target B<build>, and
+runs a I<make distclean>. (Please look at a Linux kernel Makefile for details).
+Please note that although we take care of the list of current kernel
+configuration contained in the file I<.config>, the file
+I<include/linux/autoconf.h> is not preserved. Please note that by default the
+clean target is not run as root, whic works fine of the command I<fakeroot> was
+used. However, if previously the build was done using I<sudo>, you need to run
+I<make-kpkg clean> also under I<sudo>
 
 =back
 
@@ -636,6 +639,8 @@ my $targets_help = <<EOTRGT;
 ===============================================================================
  *: make-kpkg needs to be run as root (or fakeroot), --rootcmd will not work
 See /usr/share/kernel-package/rules for details.
+Also, please note that running clean requires using sudo if sudo had been
+used to buikd the image (using sudo is deprecated)
 EOTRGT
 
 sub main () {

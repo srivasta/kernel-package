@@ -404,7 +404,15 @@ targets, since
 reads in all data
 .I before
 running any target, so the subsequent targets shall be run with the old
-data, which may not be what you want.
+data, which may not be what you want. Please note that by default the
+clean target is not run as root, whic works fine of the command
+.BR fakeroot
+was used. However, if previously the build was done using
+.BR sudo,
+you need to run
+.BR make-kpkg clean
+also under
+.BR sudo.
 .TP
 .B buildpackage
 This target runs the targets
