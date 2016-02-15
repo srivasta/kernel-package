@@ -2,8 +2,10 @@ kernel-package (13.017) unstable; urgency=low
 
   * Bug fix: "Resultant kernels may need to depend upon kmod", thanks to
     Elliott Mitchell (Closes: #774601).
+  * Bug fix: "Installed vmlinuz file has insufficient read permissions",
+    thanks to Toby Speight (Closes: #775834).
 
- -- Manoj Srivastava <srivasta@debian.org>  Mon, 15 Feb 2016 09:25:29 -0800
+ -- Manoj Srivastava <srivasta@debian.org>  Mon, 15 Feb 2016 09:37:36 -0800
 
 kernel-package (13.016) unstable; urgency=high
 

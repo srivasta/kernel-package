@@ -178,7 +178,7 @@ ifeq ($(strip $(KERNEL_ARCH)),um)
 else
 	test ! -f System.map ||	 cp System.map			       \
 			$(TMPTOP)/$(IMAGEDIR)/System.map-$(KERNELRELEASE);
-	test ! -f System.map ||	 chmod 600			       \
+	test ! -f System.map ||	 chmod 644			       \
 			$(TMPTOP)/$(IMAGEDIR)/System.map-$(KERNELRELEASE);
 	cp $(kimagesrc) $(kimagedest)
 	mkdir -p $(TMPTOP)/usr/lib/linux-image-$(KERNELRELEASE)
@@ -186,12 +186,12 @@ else
 endif
 ifeq ($(strip $(HAVE_COFF_IMAGE)),YES)
 	cp $(coffsrc)	$(coffdest)
-	chmod 600	$(coffdest)
+	chmod 644	$(coffdest)
 endif
 ifeq ($(strip $(int_install_vmlinux)),YES)
   ifneq ($(strip $(kelfimagesrc)),)
 	cp $(kelfimagesrc) $(kelfimagedest)
-	chmod 600 $(kelfimagedest)
+	chmod 644 $(kelfimagedest)
   endif
 endif
 ######################################################################
@@ -206,9 +206,9 @@ ifeq ($(strip $(KERNEL_ARCH)),um)
   ifeq (,$(findstring nostrip,$(DEB_BUILD_OPTIONS)))
 	strip --strip-unneeded --remove-section=.note --remove-section=.comment	 $(kimagedest);
   endif
-	chmod 700 $(kimagedest);
+	chmod 744 $(kimagedest);
 else
-	chmod 600 $(kimagedest);
+	chmod 644 $(kimagedest);
 endif
 ######################################################################
 ###   Hooks and information
@@ -228,7 +228,7 @@ endif
 # For LKCD enabled kernels
 	test ! -f Kerntypes ||	cp Kerntypes				       \
 			$(TMPTOP)/$(IMAGEDIR)/Kerntypes-$(KERNELRELEASE)
-	test ! -f Kerntypes ||	chmod 600				       \
+	test ! -f Kerntypes ||	chmod 644				       \
 			$(TMPTOP)/$(IMAGEDIR)/Kerntypes-$(KERNELRELEASE)
 ifeq ($(strip $(delete_build_link)),YES)
 	rm -f $(TMPTOP)/lib/modules/$(KERNELRELEASE)/build
