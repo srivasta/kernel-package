@@ -1,3 +1,15 @@
+kernel-package (13.018) unstable; urgency=low
+
+  * Remove the configuration files that only appeared in one rleease to
+    unstable due to a misunderstanding of ./debian/conffile whicle moving
+    to dh.
+  * Bug fix: "conffiles not removed", thanks to Paul Wise (Closes:
+    #776340).
+  * Bug fix: "doesn&#39;t clean up correctly", thanks to Christoph Anton
+    Mitterer (Closes: #751825).
+
+ -- Manoj Srivastava <srivasta@debian.org>  Tue, 16 Feb 2016 15:34:41 -0800
+
 kernel-package (13.017) unstable; urgency=high
 
   * Bug fix: "Resultant kernels may need to depend upon kmod", thanks to

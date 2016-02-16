@@ -1,0 +1,2 @@
+rm_conffile /etc/etc/bash_completion.d/make_kpkg
+rm_conffile /etc/etc/kernel-pkg.conf
